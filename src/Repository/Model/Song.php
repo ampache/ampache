@@ -1124,6 +1124,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // insert stats for each object type
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
+            Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
+            Stats::insert('artist', $this->artist, $user_id, $agent, $location, 'stream', $date);
             $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
                 ? (int)$user_data['play_size']
@@ -1574,7 +1576,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('artist', $new_artist, $song_id, 50);
 
         // migrate stats for the old artist
-        //Stats::migrate('artist', $old_artist, $new_artist);
+        Stats::migrate('artist', $old_artist, $new_artist, $song_id);
         Useractivity::migrate('artist', $old_artist, $new_artist);
         Recommendation::migrate('artist', $old_artist);
         Share::migrate('artist', $old_artist, $new_artist);
@@ -1601,7 +1603,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         self::_update_item('album', $new_album, $song_id, 50, true);
 
         // migrate stats for the old album
-        //Stats::migrate('album', $old_album, $new_album);
+        Stats::migrate('album', $old_album, $new_album, $song_id);
         Useractivity::migrate('album', $old_album, $new_album);
         //Recommendation::migrate('album', $old_album);
         Share::migrate('album', $old_album, $new_album);
@@ -1956,7 +1958,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $results = array();
         $sql     = ($type == 'album')
-            ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
+            ? "SELECT DISTINCT `object_id` FROM `albumartist_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
             : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_id));
 

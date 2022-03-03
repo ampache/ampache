@@ -57,6 +57,9 @@ If you don't use these tags nothing will change and will function as normal.
 * Album and Artist count value sql
 * Don't remove Genre tags when they have been merged (hidden) into a different tag
 * Don't delete merged (hidden) Genres from the tag table
+* Album song_artist_count not calculated
+* Search:
+  * played search for album and artist was including your user in the results
 * Subsonic:
   * Artist was missing starred status
 

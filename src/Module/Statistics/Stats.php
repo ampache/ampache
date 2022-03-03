@@ -88,15 +88,20 @@ class Stats
      * @param string $object_type
      * @param integer $old_object_id
      * @param integer $new_object_id
+     * @param int|null $child_id
      * @return PDOStatement|boolean
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id = null)
     {
-        if (!in_array($object_type, array('song', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'))) {
+        if (!in_array($object_type, array('song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'))) {
             return false;
         }
         $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = array($new_object_id, $object_type, $old_object_id);
+        if ($child_id) {
+            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND object_id = ?)";
+            $params[] = $child_id;
+        }
 
 
         return Dba::write($sql, $params);
@@ -161,7 +166,7 @@ class Stats
                 Dba::write($sql, array($object_id));
                 static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
             }
-            if ($type = 'song') {
+            if ($type == 'song') {
                 // update the counts for parent objects
                 $sql  = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (SELECT DISTINCT `artist_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?);";
                 Dba::write($sql, array($object_id));

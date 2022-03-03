@@ -897,7 +897,7 @@ class Album extends database_object implements library_item
     public static function get_parent_array($album_id)
     {
         $results    = array();
-        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
+        $sql        = "SELECT DISTINCT `object_id` FROM `albumartist_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1135,7 +1135,7 @@ class Album extends database_object implements library_item
             }
             $current_id = $album_id;
             $updated    = true;
-            //Stats::migrate('album', $this->id, $album_id);
+            Stats::migrate('album', $this->id, $album_id, $song_id);
             Useractivity::migrate('album', $this->id, $album_id);
             //Recommendation::migrate('album', $this->id);
             Share::migrate('album', $this->id, $album_id);
@@ -1297,7 +1297,7 @@ class Album extends database_object implements library_item
     {
         if ((int)$album_id > 0) {
             debug_event(__CLASS__, "$object_type update_artist_map $album_id: $object_id", 5);
-            $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            $sql = "INSERT IGNORE INTO `albumartist_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
     }
@@ -1309,13 +1309,13 @@ class Album extends database_object implements library_item
     {
         if ($album_id > 0) {
             debug_event(__CLASS__, "$object_type remove_artist_map $album_id: $object_id", 5);
-            $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
+            $sql = "DELETE FROM `albumartist_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
     }
 
     /**
-     * get_album_map
+     * get_albumartist_map
      *
      * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
@@ -1325,7 +1325,7 @@ class Album extends database_object implements library_item
     public static function get_artist_map($object_type, $album_id)
     {
         $results    = array();
-        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?";
+        $sql        = "SELECT `object_id` FROM `albumartist_map` WHERE `object_type` = ? AND `album_id` = ?";
         $db_results = Dba::read($sql, array($object_type, $album_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
@@ -1358,7 +1358,10 @@ class Album extends database_object implements library_item
             $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`id` = `song`.`album`;";
             Dba::write($sql, $params);
             // album.artist_count
-            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`album_id` = ? AND `album_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
+            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`album_id` = ? AND `albumartist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`artist_count` != `albumartist_map`.`artist_count` AND `album`.`id` = `albumartist_map`.`album_id`;";
+            Dba::write($sql, $params);
+            // album.song_artist_count
+            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`album_id` = ? AND `albumartist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`song_artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`song_artist_count` != `albumartist_map`.`artist_count` AND `album`.`id` = `albumartist_map`.`album_id`;";
             Dba::write($sql, $params);
         }
     }

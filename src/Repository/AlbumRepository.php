@@ -243,11 +243,11 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function collectGarbage(): void
     {
         // delete old mappings or bad ones
-        Dba::write("DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
-        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
-        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`id` IN (SELECT DISTINCT `album_map`.`id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album');");
+        Dba::write("DELETE FROM `albumartist_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
+        Dba::write("DELETE FROM `albumartist_map` WHERE `albumartist_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
+        Dba::write("DELETE FROM `albumartist_map` WHERE `albumartist_map`.`id` IN (SELECT DISTINCT `albumartist_map`.`id` FROM `albumartist_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `albumartist_map`.`object_type` AND `artist_map`.`artist_id` = `albumartist_map`.`object_id` AND `artist_map`.`object_id` = `albumartist_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `albumartist_map`.`object_type` = 'album');");
         // delete the albums that don't have any songs left
-        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`);");
+        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `albumartist_map`);");
         // also clean up some bad data that might creep in
         Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
         Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
@@ -373,9 +373,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name`" . $sort_disk . ", $original_year";
         }
 
-        $sql = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
+        $sql = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `albumartist_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `albumartist_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
         if ($allow_group_disks) {
-            $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY $sql_sort";
+            $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `albumartist_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `albumartist_map`.`object_id` = ? $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY $sql_sort";
         }
         //debug_event(self::class, 'getByArtist ' . $sql, 5);
 
