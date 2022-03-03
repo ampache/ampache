@@ -844,6 +844,23 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Get the primary album_artist
+     * @param int $album_id
+     * @return int|null
+     */
+    public static function get_album_artist($album_id)
+    {
+        $sql        = "SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($album_id));
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int)$row['album_artist'];
+        }
+
+        return null;
+    }
+
+    /**
      * Get item album_artist name.
      * @return string
      */

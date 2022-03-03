@@ -1099,8 +1099,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return '';
         }
         if (!isset($this->albumartist)) {
-            $album             = new Album($this->album);
-            $this->albumartist = $album->album_artist;
+            $this->albumartist = Album::get_album_artist($this->album);
         }
 
         return self::get_artist_fullname($this->albumartist);
@@ -1741,7 +1740,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($this->albumartists)) {
             $this->albumartists = self::get_parent_array($this->album, 'album');
         }
-        $this->albumartist = $this->albumartists[0] ?? null;
+        $this->albumartist = Album::get_album_artist($this->album);
 
         $this->get_album_disk();
 
