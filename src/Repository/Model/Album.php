@@ -651,7 +651,7 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => ($this->f_album_artist_name)
+            'value' => ($this->get_album_artist_fullname())
         );
         $keywords['album'] = array(
             'important' => true,
@@ -815,8 +815,7 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_album_artist_name)) {
             if ($this->album_artist) {
-                $album_artist              = new Artist($this->album_artist);
-                $this->f_album_artist_name = $album_artist->get_fullname();
+                $this->f_album_artist_name = Artist::get_fullname_by_id($this->album_artist);
             } else {
                 $this->f_album_artist_name = '';
             }
@@ -833,8 +832,7 @@ class Album extends database_object implements library_item
     {
         if (empty($this->album_artists)) {
             if ($this->album_artist) {
-                $album_artist              = new Artist($this->album_artist);
-                $this->f_album_artist_name = $album_artist->get_fullname();
+                $this->f_album_artist_name = Artist::get_fullname_by_id($this->album_artist);
             } else {
                 $this->f_album_artist_name = '';
             }
