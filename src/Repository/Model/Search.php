@@ -1927,7 +1927,7 @@ class Search extends playlist_object
                         $table['played'] = '';
                     }
                     $table['played'] .= (!strpos((string) $table['played'], "played_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `played_" . $my_type . "_" . $user_id . "` ON `album`.`$column`=`played_" . $my_type . "_" . $user_id . "`.`object_id` AND `played_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `played_" . $my_type . "_" . $user_id . "` ON `artist`.`$column`=`played_" . $my_type . "_" . $user_id . "`.`object_id` AND `played_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
                         : "";
                     $where[] = "`played_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
