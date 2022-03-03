@@ -4,9 +4,39 @@
 
 ### Added
 
+* Additional xhtml templates added
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
+  * Allow empty/null searches for all mbid searches
+  * Allow empty/null searches for label searches
+
+### Changed
+
+* Clean up artists with a duplicate MBID (Use the lowest artist id)
+* Delete cached recommendations instead of trying to update (Really slow)
+* Subsonic:
+  * Check for art instead of always sending an art attribute
+
+### Removed
+
+* search:
+  * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
+
+### Fixed
+
+* VaInfo time for size/playtime_seconds
+* Deleted item tables would not record some deletions
+* Updating the artist name would always migrate data when not required
+* Artist::check would always create and artist object with readonly set
+* Genres would not update the parent (Song->Album->Artist) whan using update from tags
+* Random sql that uses search rules
+* Use configured Ampache temp directory in Seafile catalog
+* Prepare media before update from tags (Seafile needs to download the file first)
+* Seafile catalog checks for a local file before downloading it again
+* Delete custom_metadata when removed from the object
+* Subsonic:
+  * Artist was missing starred status
 
 ## API develop
 
@@ -704,7 +734,7 @@ This version of the API is the first semantic version. "5.0.0"
   * don't return null Genre counts
   * fix getting artist indexes for large libraries
 * Don't get null playlist objects from the DB
-* Using 'Save Track Order' would not apply the offset 
+* Using 'Save Track Order' would not apply the offset
 * Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
 * Automated Label creation when updating from tags
 * Grouped album downloads and rightbar actions
