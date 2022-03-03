@@ -1633,8 +1633,7 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT ?) AS `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
-                    $parameters[]            = $input;
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
                     $where[]      = "`album`.`catalog` $sql_match_operator ?";
@@ -2242,12 +2241,8 @@ class Search extends playlist_object
                         $table['last_skip'] = '';
                     }
                     $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
-                        ?
-                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' " .
-                        "AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` " .
-                        "ON `song`.`id`=`last_skip_" . $my_type . "_" . $user_id . "`.`object_id` " .
-                        "AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type' " : "";
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id`=`last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type' "
+                        : "";
                     $where[] = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_play_or_skip':
