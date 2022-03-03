@@ -52,7 +52,6 @@ class TvShow extends database_object implements library_item
     public $link;
     public $f_link;
 
-
     // Constructed vars
     private static $_mapcache = array();
 

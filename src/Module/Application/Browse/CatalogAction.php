@@ -39,7 +39,6 @@ final class CatalogAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui

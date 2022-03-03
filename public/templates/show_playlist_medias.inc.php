@@ -20,7 +20,6 @@
  *
  */
 
-
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;

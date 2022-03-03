@@ -92,7 +92,6 @@ final class GrantAction implements ApplicationActionInterface
             }
         }
 
-
         $this->ui->show(
             'show_preferences.inc.php',
             [

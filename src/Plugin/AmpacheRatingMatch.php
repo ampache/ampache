@@ -141,7 +141,6 @@ class AmpacheRatingMatch
         return true;
     } // upgrade
 
-
     /**
      * save_rating
      * Rate an artist and album after rating the song

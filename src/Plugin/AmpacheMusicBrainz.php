@@ -99,7 +99,6 @@ class AmpacheMusicBrainz
         return false;
     }
 
-
     /**
      * load
      * This is a required plugin function; here it populates the prefs we

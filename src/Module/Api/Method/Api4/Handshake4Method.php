@@ -161,8 +161,6 @@ final class Handshake4Method
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
-
-
                 // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
                 $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
                 $db_results = Dba::read($sql);

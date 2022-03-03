@@ -1189,7 +1189,6 @@ function show_user_select($name, $selected = '', $style = '')
     echo "</select>\n";
 } // show_user_select
 
-
 function xoutput_headers()
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';

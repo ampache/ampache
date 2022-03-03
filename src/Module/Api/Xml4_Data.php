@@ -1046,7 +1046,6 @@ class Xml4_Data
                 break;
         } // end switch on type
 
-
         return $footer;
     }
 

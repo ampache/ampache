@@ -534,7 +534,6 @@ class Podcast extends database_object implements library_item
             ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
             : (int) $ptime;
 
-
         $pubdate    = 0;
         $pubdatestr = (string)$episode->pubDate;
         if ($pubdatestr) {

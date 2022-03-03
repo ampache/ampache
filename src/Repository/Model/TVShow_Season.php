@@ -205,7 +205,6 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return $this->link;
     }
 
-
     /**
      * @return array
      */

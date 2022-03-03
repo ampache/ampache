@@ -72,7 +72,6 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             return false;
         }
 
-
         // Switch on the type
         switch ($type) {
             case AccessLevelEnum::TYPE_LOCALPLAY:

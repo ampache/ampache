@@ -107,7 +107,6 @@ class AccessListItemTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
-
         $this->assertSame(
             sprintf('%s (%s)', $userFullName, $userName),
             $this->subject->getUserName()

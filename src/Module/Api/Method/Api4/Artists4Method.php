@@ -67,7 +67,6 @@ final class Artists4Method
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-
         $artists = $browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];

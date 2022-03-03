@@ -265,7 +265,6 @@ final class SongViewAdapter implements SongViewAdapterInterface
         return Ui::get_icon('statistics', T_('Graphs'));
     }
 
-
     public function isEditable(): bool
     {
         return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || (
