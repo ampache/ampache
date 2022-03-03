@@ -2,6 +2,20 @@
 
 ## Ampache develop
 
+This cycle we have added support for multiple Album and Song artists.
+This allows multiple artists to be part of a single song/album object and is created from file tags.
+
+We rely on:
+
+* musicbrainz_albumartistid: Array of MBID values that denote Album Artist
+* musicbrainz_artistid: Array of MBID values that denote Song Artist
+* artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as musicbrainz_artistid)
+
+If these are not arrays, we try to split and create arrays to do the lookups
+The reason the regular artist and albumartist tags are ignored is due to how awful these fields can be.
+
+If you don't use these tags nothing will change and will function as normal.
+
 ### Added
 
 * Additional xhtml templates added
@@ -15,17 +29,21 @@
 
 * Clean up artists with a duplicate MBID (Use the lowest artist id)
 * Delete cached recommendations instead of trying to update (Really slow)
+* Artist::check uses MBID on lookups as well as name
+* update_from_tags: Only update counts, tags and garbage collect after changes found
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
 ### Removed
 
+* stat counts are all counted from song, Album and Artist rows are removed
 * search:
   * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
 
 ### Fixed
 
 * VaInfo time for size/playtime_seconds
+* Tag arrays for Mbid and Artists lookup
 * Deleted item tables would not record some deletions
 * Updating the artist name would always migrate data when not required
 * Artist::check would always create and artist object with readonly set
@@ -35,6 +53,10 @@
 * Prepare media before update from tags (Seafile needs to download the file first)
 * Seafile catalog checks for a local file before downloading it again
 * Delete custom_metadata when removed from the object
+* Artist Garbage Collection was way too slow
+* Album and Artist count value sql
+* Don't remove Genre tags when they have been merged (hidden) into a different tag
+* Don't delete merged (hidden) Genres from the tag table
 * Subsonic:
   * Artist was missing starred status
 
