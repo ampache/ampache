@@ -596,7 +596,7 @@ class Update
         $update_string = "* Use song_count & artist_count with albumartist_map";
         $version[]     = array('version' => '530002', 'description' => $update_string);
 
-        $update_string = "* ALTER TABLE `catalog_map` DROP COLUMN `id`;";
+        $update_string = "* Drop id column from catalog_map table";
         $version[]     = array('version' => '530003', 'description' => $update_string);
 
         return $version;
