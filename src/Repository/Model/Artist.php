@@ -761,7 +761,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $name = $trimmed[0];
 
         // If Ampache support multiple artists per song one day, we should also handle other artists here
-        $mbid = Catalog::trim_slashed_list($mbid);
+        $mbid = VaInfo::parse_mbid($mbid);
 
         if (!$name) {
             $name   = T_('Unknown (Orphaned)');
@@ -779,75 +779,39 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $exists    = false;
         $matches   = array();
 
-        // check for artists by mbid and split-mbid
-        if ($mbid !== '') {
-            $sql     = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
-            $matches = VaInfo::get_mbid_array($mbid);
-            foreach ($matches as $mbid_string) {
-                $db_results = Dba::read($sql, array($mbid_string));
-
-                if (!$exists && $row = Dba::fetch_assoc($db_results)) {
-                    $artist_id = (int)$row['id'];
-                    $exists    = ($artist_id > 0);
-                    $mbid      = ($exists)
-                        ? $mbid_string
-                        : $mbid;
+        // check for artists by mbid (there should only ever be one sent here)
+        if (!empty($mbid)) {
+            $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
+            $db_results = Dba::read($sql, array($mbid));
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $artist_id = (int)$row['id'];
+                $exists    = ($artist_id > 0);
+            }
+            // still missing? Match on the name and update the mbid
+            $sql        = "SELECT `id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `mbid` IS NULL;";
+            $db_results = Dba::read($sql, array($name, $full_name));
+            $id_array   = array();
+            while ($row = Dba::fetch_assoc($db_results)) {
+                if (!$readonly) {
+                    $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
+                    Dba::write($sql, array($mbid, $row['id']));
                 }
             }
-            if (!$exists) {
-                // try the whole string if it didn't work
-                $db_results = Dba::read($sql, array($mbid));
-
-                if ($row = Dba::fetch_assoc($db_results)) {
-                    $artist_id = (int)$row['id'];
-                    $exists    = ($artist_id > 0);
-                }
-            }
-        }
-        // search by the artist name and build an array
-        if (!$exists) {
+        } else {
             $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?);";
             $db_results = Dba::read($sql, array($name, $full_name));
             $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
-                $key            = $row['mbid'] ?? 'null';
-                $id_array[$key] = $row['id'];
+                $id_array[] = $row['id'];
             }
             if (count($id_array)) {
-                if ($mbid !== '') {
-                    $matches = VaInfo::get_mbid_array($mbid);
-                    foreach ($matches as $mbid_string) {
-                        // reverse search artist id if it's still not found for some reason
-                        if (isset($id_array[$mbid_string])) {
-                            $artist_id = (int)$id_array[$mbid_string];
-                            $exists    = ($artist_id > 0);
-                            $mbid      = ($exists)
-                                ? $mbid_string
-                                : $mbid;
-                        }
-                        // update empty artists that match names
-                        if (isset($id_array['null']) && !$readonly) {
-                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-                            Dba::write($sql, array($mbid_string, $id_array['null']));
-                        }
-                    }
-                    if (isset($id_array['null'])) {
-                        if (!$readonly) {
-                            $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
-                            Dba::write($sql, array($mbid, $id_array['null']));
-                        }
-                        $artist_id = (int)$id_array['null'];
-                        $exists    = true;
-                    }
-                } else {
-                    // Pick one at random
-                    $artist_id = array_shift($id_array);
-                    $exists    = true;
-                }
+                // Pick one at random
+                $artist_id = array_shift($id_array);
+                $exists    = true;
             }
         }
         // cache and return the result
-        if ($exists) {
+        if ($exists && (int)$artist_id > 0) {
             self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
             return (int)$artist_id;
