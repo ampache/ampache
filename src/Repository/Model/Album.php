@@ -1360,7 +1360,6 @@ class Album extends database_object implements library_item
         // album.song_artist_count
         $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`song_artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`song_artist_count` != `albumartist_map`.`artist_count` AND `album`.`id` = `albumartist_map`.`album_id`;";
         Dba::write($sql);
-        }
     }
 
     /**
