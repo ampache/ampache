@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
 

@@ -2006,7 +2006,16 @@ abstract class Catalog extends database_object
             }
             if ($album || $artist) {
                 Album::update_album_counts($libitem->id);
-                Artist::update_artist_counts($libitem->album_artist);
+            }
+            if ($artist) {
+                foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
+                    Artist::update_artist_counts($album_artist_id);
+                    Artist::update_artist_counts($album_artist_id);
+                }
+                foreach (Album::get_artist_map('song', $libitem->id) as $song_artist_id) {
+                    Artist::update_artist_counts($song_artist_id);
+                    Artist::update_artist_counts($song_artist_id);
+                }
             }
         }
         // artist

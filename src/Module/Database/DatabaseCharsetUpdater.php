@@ -54,7 +54,6 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 
         // Go through the tables!
         while ($row = Dba::fetch_row($db_results)) {
-
             $sql              = "DESCRIBE `" . $row['0'] . "`";
             $describe_results = Dba::read($sql);
 
