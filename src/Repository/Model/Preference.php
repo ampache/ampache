@@ -191,7 +191,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
 
-        return $data['value'];
+        return $data['value'] ?? '';
     } // get_by_user
 
     /**
