@@ -1959,6 +1959,7 @@ abstract class Catalog extends database_object
         $album  = false;
         $artist = false;
         $tags   = false;
+        $maps   = false;
         foreach ($songs as $song_id) {
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
@@ -1967,6 +1968,7 @@ abstract class Catalog extends database_object
             $album  = ($album == true) || ($diff && array_key_exists('album', $info['element']));
             $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
             $tags   = ($tags == true) || ($diff && array_key_exists('tags', $info['element']));
+            $maps   = ($maps == true) || ($diff && array_key_exists('maps', $info));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if ($diff && array_key_exists($type, $info['element'])) {
@@ -1986,7 +1988,7 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            if ($tags) {
+            if ($tags || $maps) {
                 $artists = array();
                 $tags    = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
@@ -2004,10 +2006,10 @@ abstract class Catalog extends database_object
                     }
                 }
             }
-            if ($album || $artist) {
+            if ($album) {
                 Album::update_album_counts();
             }
-            if ($artist) {
+            if ($artist || $maps) {
                 Artist::update_artist_counts();
             }
         }
@@ -2432,10 +2434,6 @@ abstract class Catalog extends database_object
                     ? implode(',', $new_song->tags)
                     : '';
                 Tag::update_tag_list($tag_comma, 'song', $song->id, true);
-                self::updateAlbumTags($song->album);
-                self::updateArtistTags($song->id);
-                self::updateAlbumArtistTags($song->album);
-                $map_change = false;
             }
             if ($song->license != $new_song->license) {
                 Song::update_license($new_song->license, $song->id);
@@ -2456,6 +2454,7 @@ abstract class Catalog extends database_object
         Song::update_utime($song->id, $update_time);
         if ($map_change) {
             $info['change'] = true;
+            $info['maps']   = true;
             self::updateArtistTags($song->id);
             self::updateAlbumArtistTags($song->album);
         }
