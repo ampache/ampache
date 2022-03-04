@@ -177,7 +177,7 @@ class Preference extends database_object
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
-        if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
+        if (parent::is_cached('get_by_user-' . $pref_name, $user_id) && is_array((parent::get_from_cache('get_by_user-' . $pref_name, $user_id)))) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
