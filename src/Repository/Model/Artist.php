@@ -960,7 +960,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
         // Save our current ID
-        $prefix      = Catalog::trim_prefix($data['name'])['prefix'] ?? $this->prefix;
+        $prefix      = Catalog::trim_prefix($data['name'])['prefix'] ?? '';
         $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
         $mbid        = $data['mbid'] ?? $this->mbid;
         $summary     = $data['summary'] ?? $this->summary;
