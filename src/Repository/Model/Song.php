@@ -543,7 +543,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $song_artist_id = Artist::check_mbid($song_artist_mbid);
             if ($song_artist_id > 0) {
                 Artist::update_artist_map($song_artist_id, 'song', $song_id);
-                //Artist::update_artist_counts($song_artist_id);
                 Album::update_artist_map($album_id, 'song', $song_artist_id);
             }
         }
@@ -551,7 +550,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = Artist::check_mbid($album_artist_mbid);
             if ($album_artist_id > 0) {
                 Artist::update_artist_map($album_artist_id, 'album', $album_id);
-                //Artist::update_artist_counts($album_artist_id);
                 Album::update_artist_map($album_id, 'album', $album_artist_id);
             }
         }

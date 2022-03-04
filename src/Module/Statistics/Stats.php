@@ -108,6 +108,36 @@ class Stats
     }
 
     /**
+     * When creating an artist_map, duplicate the stat rows
+     */
+    public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id)
+    {
+        if ($source_id > 0 && $dest_id > 0) {
+            $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
+            $db_results = Dba::read($sql, array($source_type, $source_id));
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                Dba::write($sql, array($dest_type, $dest_id, $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
+            }
+        }
+    }
+
+    /**
+     * When deleting an artist_map, remove the stat rows too
+     */
+    public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id)
+    {
+        if ($source_id > 0 && $dest_id > 0) {
+            $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
+            $db_results = Dba::read($sql, array($source_type, $source_id));
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $sql = "DELETE FROM `object_count` WHERE `object_count`.`object_type` = ? AND `object_count`.`object_id` = ? AND `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`geo_latitude` = ? AND `object_count`.`geo_longitude` = ? AND `object_count`.`geo_name` = ? AND `object_count`.`count_type` = ?";
+                Dba::write($sql, array($dest_type, $dest_id, $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
+            }
+        }
+    }
+
+    /**
      * insert
      * This inserts a new record for the specified object
      * with the specified information, amazing!

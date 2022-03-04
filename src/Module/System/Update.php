@@ -599,6 +599,9 @@ class Update
         $update_string = "* Drop id column from catalog_map table";
         $version[]     = array('version' => '530003', 'description' => $update_string);
 
+        $update_string = "* Make sure the object_count table has all the correct primary artist/album rows";
+        $version[]     = array('version' => '530004', 'description' => $update_string);
+
         return $version;
     }
 
@@ -3995,5 +3998,21 @@ class Update
     public static function update_530003(): bool
     {
         return (Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;") !== false);
+    }
+
+    /**
+     * update_530004
+     *
+     * Make sure the object_count table has all the correct primary artist/album rows
+     */
+    public static function update_530004(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `album_count`.`id` IS NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `artist_count`.`id` IS NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
     }
 } // end update.class
