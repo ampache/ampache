@@ -245,7 +245,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         // delete old mappings or bad ones
         Dba::write("DELETE FROM `albumartist_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
         Dba::write("DELETE FROM `albumartist_map` WHERE `albumartist_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
-        Dba::write("DELETE FROM `albumartist_map` WHERE `albumartist_map`.`id` IN (SELECT DISTINCT `albumartist_map`.`id` FROM `albumartist_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `albumartist_map`.`object_type` AND `artist_map`.`artist_id` = `albumartist_map`.`object_id` AND `artist_map`.`object_id` = `albumartist_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `albumartist_map`.`object_type` = 'album');");
+        Dba::write("DELETE FROM `albumartist_map` WHERE `albumartist_map`.`album_id` IN (SELECT DISTINCT `albumartist_map`.`album_id` FROM `albumartist_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `albumartist_map`.`object_type` AND `artist_map`.`artist_id` = `albumartist_map`.`object_id` AND `artist_map`.`object_id` = `albumartist_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `albumartist_map`.`object_type` = 'album');");
         // delete the albums that don't have any songs left
         Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `albumartist_map`);");
         // also clean up some bad data that might creep in

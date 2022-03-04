@@ -1186,7 +1186,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * Migrate an object associate stats to a new object
+     * Migrate an object's associate stats to a new object
      * @param integer $old_object_id
      * @param integer $new_object_id
      */
@@ -1197,6 +1197,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
         Dba::write($sql, $params);
         $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;";
         Dba::write($sql, $params);
+        // migrate the maps and delete ones that aren't required
+        $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;";
+        Dba::write($sql, $params);
+        $sql = "UPDATE IGNORE `albumartist_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';";
+        Dba::write($sql, $params);
+        $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?;";
+        Dba::write($sql, $params);
+        $sql = "DELETE FROM `albumartist_map` WHERE `object_id` = ? AND `object_type` = 'album';";
+        Dba::write($sql, $params);
+        self::update_artist_counts($new_object_id);
     }
 
     /**
