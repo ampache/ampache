@@ -287,7 +287,7 @@ class AmpacheMusicBrainz
         if (is_array($results) && !empty($results)) {
             $results = $results[0];
         }
-        if (!empty($results)) {
+        if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
             $data = array(
                 'name' => $results->{'name'},
                 'mbid' => $results->{'id'}
