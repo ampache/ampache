@@ -555,7 +555,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // update the counts too
         Album::update_album_counts();
-        Artist::update_album_counts();
+        Artist::update_artist_counts();
 
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
@@ -1591,8 +1591,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Art::duplicate('artist', $old_artist, $new_artist);
         Wanted::migrate('artist', $old_artist, $new_artist);
         Catalog::migrate_map('artist', $old_artist, $new_artist);
-        Artist::update_artist_counts($old_artist);
-        Artist::update_artist_counts($new_artist);
+        Artist::update_artist_counts();
+        Artist::update_artist_counts();
     } // update_artist
 
     /**
