@@ -2852,7 +2852,7 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(__CLASS__, "clean_duplicate_artists " . $row['maxid'] . "=>" . $row['minid'], 5);
             // migrate linked tables first
-            Stats::migrate('artist', $row['maxid'], $row['minid']);
+            //Stats::migrate('artist', $row['maxid'], $row['minid']);
             Useractivity::migrate('artist', $row['maxid'], $row['minid']);
             Recommendation::migrate('artist', $row['maxid'], $row['minid']);
             Share::migrate('artist', $row['maxid'], $row['minid']);
