@@ -96,8 +96,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     true
                 );
                 // update counts after cleaning a missing file
-                Album::update_album_counts($album_id);
-                Artist::update_artist_counts($artist_id);
+                Album::update_album_counts();
+                Artist::update_artist_counts();
 
                 return;
             }
@@ -144,8 +144,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     }
                 }
                 // update counts after adding/verifying
-                Album::update_album_counts($album_id);
-                Artist::update_artist_counts($artist_id);
+                Album::update_album_counts();
+                Artist::update_artist_counts();
             }
         }
 

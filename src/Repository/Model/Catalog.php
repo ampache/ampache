@@ -2005,17 +2005,10 @@ abstract class Catalog extends database_object
                 }
             }
             if ($album || $artist) {
-                Album::update_album_counts($libitem->id);
+                Album::update_album_counts();
             }
             if ($artist) {
-                foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
-                    Artist::update_artist_counts($album_artist_id);
-                    Artist::update_artist_counts($album_artist_id);
-                }
-                foreach (Album::get_artist_map('song', $libitem->id) as $song_artist_id) {
-                    Artist::update_artist_counts($song_artist_id);
-                    Artist::update_artist_counts($song_artist_id);
-                }
+                Artist::update_artist_counts();
             }
         }
         // artist
@@ -2025,14 +2018,16 @@ abstract class Catalog extends database_object
                 foreach ($libitem->get_child_ids() as $album_id) {
                     $album_tags = self::getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-                    Album::update_album_counts($album_id);
                 }
                 // refresh the artist tags after everything else
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
             }
             if ($album || $artist) {
-                Artist::update_artist_counts($libitem->id);
+                Album::update_album_counts();
+            }
+            if ($artist) {
+                Artist::update_artist_counts();
             }
         }
         // collect the garage too
@@ -2638,44 +2633,15 @@ abstract class Catalog extends database_object
             $sql = "UPDATE `video`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
         }
+        // missing map tables
+        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album`;";
+        Dba::write($sql);
+        $sql = "INSERT IGNORE INTO `albumartist_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        Dba::write($sql);
         //debug_event(__CLASS__, 'update_counts artist table', 5);
-        // artist.time
-        $sql = "UPDATE `artist`, (SELECT SUM(`song`.`time`) AS `time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`time` != `song`.`time` AND `artist`.`id` = `song`.`artist_id`;";
-        Dba::write($sql);
-        // artist.total_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`object_id`;";
-        Dba::write($sql);
-        // artist.album_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
-        Dba::write($sql);
-        // artist.album_group_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
-        Dba::write($sql);
-        // artist.song_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";
-        Dba::write($sql);
+        Artist::update_artist_counts();
         //debug_event(__CLASS__, 'update_counts album table', 5);
-        // album.time
-        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`time` != `song`.`time` AND `album`.`id` = `song`.`album`;";
-        Dba::write($sql);
-        // album.addition_time
-        $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
-        Dba::write($sql);
-        // album.total_count
-        $sql = "UPDATE `album`, (SELECT COUNT(`album`.`id`) AS `total_count`, `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
-        Dba::write($sql);
-        // album.total_count 0 plays
-        $sql = "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` NOT IN ( SELECT `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`)) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
-        Dba::write($sql);
-        // album.song_count
-        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
-        Dba::write($sql);
-        // album.artist_count
-        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`artist_count` != `albumartist_map`.`artist_count` AND `album`.`id` = `albumartist_map`.`album_id`;";
-        Dba::write($sql);
-        // album.song_artist_count
-        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`song_artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`song_artist_count` != `albumartist_map`.`artist_count` AND `album`.`id` = `albumartist_map`.`album_id`;";
-        Dba::write($sql);
+        Album::update_album_counts();
         //debug_event(__CLASS__, 'update_counts song table', 5);
         // song.total_count
         $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
@@ -3807,12 +3773,12 @@ abstract class Catalog extends database_object
             self::migrate_map($object_type, $old_object_id, $new_object_id);
             switch ($object_type) {
                 case 'artist':
-                    Artist::update_artist_counts($old_object_id);
-                    Artist::update_artist_counts($new_object_id);
+                    Artist::update_artist_counts();
+                    Artist::update_artist_counts();
                     break;
                 case 'album':
-                    Album::update_album_counts($old_object_id);
-                    Album::update_album_counts($new_object_id);
+                    Album::update_album_counts();
+                    Album::update_album_counts();
                     break;
             }
 
