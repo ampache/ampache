@@ -1283,9 +1283,9 @@ class Album extends database_object implements library_item
             // Update the album
             if ($artist_id > 0) {
                 debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
-                Album::update_field('album_artist', $artist_id, $album_id);
+                self::update_field('album_artist', $artist_id, $album_id);
                 Artist::update_artist_map($artist_id, 'album', $album_id);
-                Album::update_artist_map($album_id, 'album', $artist_id);
+                self::update_albumartist_map($album_id, 'album', $artist_id);
             }
         }
     }
@@ -1293,10 +1293,10 @@ class Album extends database_object implements library_item
     /**
      * Update the album map for a single item
      */
-    public static function update_artist_map($album_id, $object_type, $object_id)
+    public static function update_albumartist_map($album_id, $object_type, $object_id)
     {
-        if ((int)$album_id > 0) {
-            debug_event(__CLASS__, "$object_type update_artist_map $album_id: $object_id", 5);
+        if ((int)$album_id > 0 && (int)$object_id > 0) {
+            debug_event(__CLASS__, "update_albumartist_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
             $sql = "INSERT IGNORE INTO `albumartist_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
@@ -1307,8 +1307,8 @@ class Album extends database_object implements library_item
      */
     public static function remove_artist_map($album_id, $object_type, $object_id)
     {
-        if ($album_id > 0) {
-            debug_event(__CLASS__, "$object_type remove_artist_map $album_id: $object_id", 5);
+        if ((int)$album_id > 0 && (int)$object_id > 0) {
+            debug_event(__CLASS__, "remove_albumartist_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
             $sql = "DELETE FROM `albumartist_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }
