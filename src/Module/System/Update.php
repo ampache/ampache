@@ -611,6 +611,9 @@ class Update
         $update_string = "* Convert basic text columns into utf8 to reduce index sizes";
         $version[]     = array('version' => '530007', 'description' => $update_string);
 
+        $update_string = "* Remove `user_activity` columns that are useless";
+        $version[]     = array('version' => '530008', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4082,6 +4085,24 @@ class Update
         $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530008
+     *
+     * Remove `user_activity` columns that are useless
+     */
+    public static function update_530008(): bool
+    {
+        $retval = true;
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_track`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_artist`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_album`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_track`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_artist`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;") !== false);
 
         return $retval;
     }

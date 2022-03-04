@@ -254,12 +254,6 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `action` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `name_track` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `name_artist` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `name_album` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `mbid_track` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `mbid_artist` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `mbid_album` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `user_preference` MODIFY COLUMN `value` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `user_pvmsg` MODIFY COLUMN `subject` varchar(80) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");

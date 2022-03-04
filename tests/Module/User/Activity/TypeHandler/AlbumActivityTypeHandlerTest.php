@@ -35,69 +35,32 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
     /** @var UserActivityRepositoryInterface|MockInterface|null */
     private MockInterface $useractivityRepository;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?AlbumActivityTypeHandler $subject;
 
     public function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new AlbumActivityTypeHandler(
-            $this->useractivityRepository,
-            $this->modelFactory
+            $this->useractivityRepository
         );
     }
 
     public function testRegisterActivityRegisterAlbumActivity(): void
     {
-        $album = $this->mock(Album::class);
-
         $objectId           = 666;
         $objectType         = 'some-object-type';
         $action             = 'some-action';
         $userId             = 42;
         $date               = 123;
-        $albumArtistName    = 'some-album-artist-name';
-        $albumName          = 'some-album-name';
-        $musicBrainzIdGroup = 'some-mbid-group';
-        $musicBrainzId      = 'some-mbid';
 
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($objectId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $album->f_album_artist_name = $albumArtistName;
-        $album->mbid_group          = $musicBrainzIdGroup;
-        $album->mbid                = $musicBrainzId;
-
-        $album->shouldReceive('get_album_artist_fullname')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($albumArtistName);
-
-        $album->shouldReceive('get_fullname')
-            ->with(true)
-            ->once()
-            ->andReturn($albumName);
-
-        $this->useractivityRepository->shouldReceive('registerAlbumEntry')
+        $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
                 $objectType,
                 $objectId,
-                $date,
-                $albumArtistName,
-                $albumName,
-                $musicBrainzIdGroup,
-                $musicBrainzId
+                $date
             )
             ->once();
 

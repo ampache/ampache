@@ -31,16 +31,12 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
 {
     private UserActivityRepositoryInterface $userActivityRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
         UserActivityRepositoryInterface $userActivityRepository,
-        ModelFactoryInterface $modelFactory
     ) {
         parent::__construct($userActivityRepository);
 
         $this->userActivityRepository = $userActivityRepository;
-        $this->modelFactory           = $modelFactory;
     }
 
     public function registerActivity(
@@ -50,31 +46,11 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
         int $userId,
         int $date
     ): void {
-        $artist = $this->modelFactory->createArtist($objectId);
-        $artist->format();
-
-        $artistName    = $artist->get_fullname();
-        $musicBrainzId = $artist->mbid;
-
-        if ($artistName) {
-            $this->userActivityRepository->registerArtistEntry(
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date,
-                $artistName,
-                (string) $musicBrainzId
-            );
-
-            return;
-        }
-
-        parent::registerActivity(
-            $objectId,
-            $objectType,
-            $action,
+        $this->userActivityRepository->registerGenericEntry(
             $userId,
+            $action,
+            $objectType,
+            $objectId,
             $date
         );
     }
