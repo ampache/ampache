@@ -122,13 +122,13 @@ class Update
         /* Define the array */
         $version = array();
 
-        $update_string = "* Add MBID (MusicBrainz ID) fields<br />- Remove useless preferences<br />";
+        $update_string = "* Add MBID (MusicBrainz ID) fields<br />* Remove useless preferences<br />";
         $version[]     = array('version' => '360001', 'description' => $update_string);
 
-        $update_string = "* Add Bandwidth and Feature preferences to simplify how interface is presented<br />- Change Tables to FULLTEXT() for improved searching<br />- Increase Filename lengths to 4096<br />- Remove useless KEY reference from ACL and Catalog tables<br />- Add new Remote User / Remote Password fields to Catalog<br />";
+        $update_string = "* Add Bandwidth and Feature preferences to simplify how interface is presented<br />* Change Tables to FULLTEXT() for improved searching<br />* Increase Filename lengths to 4096<br />* Remove useless KEY reference from ACL and Catalog tables<br />* Add new Remote User / Remote Password fields to Catalog<br />";
         $version[]     = array('version' => '360002', 'description' => $update_string);
 
-        $update_string = "* Add image table to store images.<br /> - Drop album_data and artist_data.<br />";
+        $update_string = "* Add image table to store images.<br />* Drop album_data and artist_data.<br />";
         $version[]     = array('version' => '360003', 'description' => $update_string);
 
         $update_string = "* Add uniqueness constraint to ratings.<br />";
@@ -200,7 +200,7 @@ class Update
         $update_string = "* Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />";
         $version[]     = array('version' => '360027', 'description' => $update_string);
 
-        $update_string = "* Personnal information: allow/disallow to show in now playing.<br />- Personnal information: allow/disallow to show in recently played.<br />- Personnal information: allow/disallow to show time and/or agent in recently played.<br />";
+        $update_string = "* Personnal information: allow/disallow to show in now playing.<br />* Personnal information: allow/disallow to show in recently played.<br />* Personnal information: allow/disallow to show time and/or agent in recently played.<br />";
         $version[]     = array('version' => '360028', 'description' => $update_string);
 
         $update_string = "* Add new table to store wanted releases.<br />";
@@ -596,11 +596,20 @@ class Update
         $update_string = "* Use song_count & artist_count with albumartist_map";
         $version[]     = array('version' => '530002', 'description' => $update_string);
 
-        $update_string = "* Drop id column from catalog_map table";
+        $update_string = "* Drop id column from catalog_map table<br />* Alter `catalog_map` charset and engine to MyISAM if engine set";
         $version[]     = array('version' => '530003', 'description' => $update_string);
 
-        $update_string = "* Make sure the object_count table has all the correct primary artist/album rows";
+        $update_string = "* Alter `albumartist_map` table charset and engine to MyISAM if engine set";
         $version[]     = array('version' => '530004', 'description' => $update_string);
+
+        $update_string = "* Alter `artist_map` table charset and engine to MyISAM if engine set";
+        $version[]     = array('version' => '530005', 'description' => $update_string);
+
+        $update_string = "* Make sure `object_count` table has all the correct primary artist/album rows";
+        $version[]     = array('version' => '530006', 'description' => $update_string);
+
+        $update_string = "* Convert basic text columns into utf8 to reduce index sizes";
+        $version[]     = array('version' => '530007', 'description' => $update_string);
 
         return $version;
     }
@@ -3938,9 +3947,9 @@ class Update
     public static function update_530000(): bool
     {
         $retval    = true;
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $collation = 'utf8_unicode_ci';
+        $charset   = 'utf8';
+        $engine    = 'MyISAM';
         // create the table
         $sql = "CREATE TABLE IF NOT EXISTS `artist_map` (`artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
@@ -3959,9 +3968,9 @@ class Update
     public static function update_530001(): bool
     {
         $retval    = true;
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $collation = 'utf8_unicode_ci';
+        $charset   = 'utf8';
+        $engine    = 'MyISAM';
         // create the table
         $sql = "CREATE TABLE IF NOT EXISTS `albumartist_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, UNIQUE KEY `unique_albumartist_map` (`object_id`, `object_type`, `album_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
@@ -3994,24 +4003,85 @@ class Update
      * update_530003
      *
      * Drop id column from catalog_map
+     * Alter `catalog_map` charset and engine to MyISAM if engine set
      */
     public static function update_530003(): bool
     {
-        return (Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;") !== false);
+        $retval = true;
+        //$sql    = "ALTER TABLE `catalog_map` DROP COLUMN `id`;";
+        //$retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
     }
 
     /**
      * update_530004
      *
-     * Make sure the object_count table has all the correct primary artist/album rows
+     * Alter `albumartist_map` charset and engine to MyISAM if engine set
      */
     public static function update_530004(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `albumartist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `albumartist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530005
+     *
+     * Alter `artist_map` charset and engine to MyISAM if engine set
+     */
+    public static function update_530005(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `artist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530006
+     *
+     * Make sure the object_count table has all the correct primary artist/album rows
+     */
+    public static function update_530006(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `album_count`.`id` IS NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `artist_count`.`id` IS NULL;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530007
+     *
+     * Convert basic text columns into utf8/utf8_unicode_ci
+     */
+    public static function update_530007(): bool
+    {
+        $retval = true;
+        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
 
         return $retval;
     }
