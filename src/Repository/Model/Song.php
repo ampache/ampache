@@ -536,12 +536,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         $song_id = (int)Dba::insert_id();
+        $artists = array((int)$artist_id, (int)$albumartist_id);
 
         // map the catalog and artists
         Catalog::update_map((int)$catalog, 'song', $song_id);
         foreach ($artist_mbid_array as $song_artist_mbid) {
             $song_artist_id = Artist::check_mbid($song_artist_mbid);
             if ($song_artist_id > 0) {
+                $artists[] = $song_artist_id;
                 Artist::update_artist_map($song_artist_id, 'song', $song_id);
                 Album::update_albumartist_map($album_id, 'song', $song_artist_id);
             }
@@ -549,6 +551,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         foreach ($albumartist_mbid_array as $album_artist_mbid) {
             $album_artist_id = Artist::check_mbid($album_artist_mbid);
             if ($album_artist_id > 0) {
+                $artists[] = $album_artist_id;
                 Artist::update_artist_map($album_artist_id, 'album', $album_id);
                 Album::update_albumartist_map($album_id, 'album', $album_artist_id);
             }
@@ -573,7 +576,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 if (!empty($tag)) {
                     Tag::add('song', $song_id, $tag, false);
                     Tag::add('album', $album_id, $tag, false);
-                    Tag::add('artist', $artist_id, $tag, false);
+                    foreach (array_unique($artists) as $found_artist_id) {
+                        if ($found_artist_id > 0) {
+                            Tag::add('artist', $found_artist_id, $tag, false);
+                        }
+                    }
                 }
             }
         }
