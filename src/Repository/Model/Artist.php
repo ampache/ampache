@@ -969,7 +969,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $current_id  = $this->id;
 
         // Check if name is different than the current name
-        if ($this->name != $name) {
+        if ($this->prefix != $prefix && $this->name != $name) {
             $updated   = false;
             $artist_id = (int)self::check($name, $mbid, true);
 
