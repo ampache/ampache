@@ -3757,7 +3757,7 @@ abstract class Catalog extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id, $song_id)
     {
         if ($old_object_id != $new_object_id) {
-            debug_event(__CLASS__, "migrate $object_type: {{$old_object_id}} to {{$new_object_id}}", 4);
+            debug_event(__CLASS__, "migrate $song_id $object_type: {{$old_object_id}} to {{$new_object_id}}", 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
