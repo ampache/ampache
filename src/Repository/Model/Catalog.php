@@ -3774,16 +3774,6 @@ abstract class Catalog extends database_object
             Metadata::migrate($object_type, $old_object_id, $new_object_id);
             Bookmark::migrate($object_type, $old_object_id, $new_object_id);
             self::migrate_map($object_type, $old_object_id, $new_object_id);
-            switch ($object_type) {
-                case 'artist':
-                    Artist::update_artist_counts();
-                    Artist::update_artist_counts();
-                    break;
-                case 'album':
-                    Album::update_album_counts();
-                    Album::update_album_counts();
-                    break;
-            }
 
             return true;
         }
