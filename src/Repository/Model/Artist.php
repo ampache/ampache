@@ -796,7 +796,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         } else {
-            // look for artists with no mbid (if they exists) and then match on mbid artists last
+            // look for artists with no mbid (if they exist) and then match on mbid artists last
             $id_array   = array();
             $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
             $db_results = Dba::read($sql, array($name, $full_name));
