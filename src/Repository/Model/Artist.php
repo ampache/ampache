@@ -768,7 +768,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $prefix = null;
         }
         if ($name == 'Various Artists') {
-            $mbid = '';
+            $mbid = '89ad4ac3-39f7-470e-963a-56509c54637';
         }
 
         if (isset(self::$_mapcache[$name][$prefix][$mbid])) {
@@ -777,10 +777,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         $artist_id = 0;
         $exists    = false;
-        $matches   = array();
 
-        // check for artists by mbid (there should only ever be one sent here)
         if (!empty($mbid)) {
+            // check for artists by mbid (there should only ever be one sent here)
             $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $db_results = Dba::read($sql, array($mbid));
             if ($row = Dba::fetch_assoc($db_results)) {
@@ -790,7 +789,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
             // still missing? Match on the name and update the mbid
             $sql        = "SELECT `id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `mbid` IS NULL;";
             $db_results = Dba::read($sql, array($name, $full_name));
-            $id_array   = array();
             while ($row = Dba::fetch_assoc($db_results)) {
                 if (!$readonly) {
                     $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
@@ -798,15 +796,21 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         } else {
-            $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?);";
-            $db_results = Dba::read($sql, array($name, $full_name));
+            // look for artists with no mbid (if they exists) and then match on mbid artists last
             $id_array   = array();
+            $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
+            $db_results = Dba::read($sql, array($name, $full_name));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $id_array[] = $row['id'];
+                $id_array[] = (int)$row['id'];
             }
-            if (count($id_array)) {
-                // Pick one at random
-                $artist_id = array_shift($id_array);
+            $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id`;";
+            $db_results = Dba::read($sql, array($name, $full_name));
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $id_array[] = (int)$row['id'];
+            }
+            if (!empty($id_array)) {
+                // Pick the first one (nombid and nombid used before matching on mbid)
+                $artist_id = $id_array[0];
                 $exists    = true;
             }
         }
@@ -821,7 +825,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
         // if all else fails, insert a new artist, cache it and return the id
         $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) ' . 'VALUES(?, ?, ?)';
-        $mbid = (!empty($matches)) ? $matches[0] : $mbid; // TODO only use primary mbid until multi-artist is ready
+        $mbid = !empty($mbid) ? $mbid : null;
 
         $db_results = Dba::write($sql, array($name, $prefix, $mbid));
         if (!$db_results) {
