@@ -2556,6 +2556,8 @@ abstract class Catalog extends database_object
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
+            // this isn't really needed often and is slow
+            Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
             // Delete duplicates from the object_count table
             //debug_event(__CLASS__, 'update_counts delete object_count duplicates', 5);
             $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING count(`date`) >1)) AS `count`);";
