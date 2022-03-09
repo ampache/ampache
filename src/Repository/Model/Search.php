@@ -1436,6 +1436,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`mbid`";
                 $group[] = "`album`.`year`";
                 $group[] = "`album`.`original_year`";
+                $group[] = "`album`.`mbid_group`";
             } else {
                 $group[] = "`album`.`id`";
                 $group[] = "`album`.`disk`";
