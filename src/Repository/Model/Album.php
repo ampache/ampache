@@ -679,9 +679,8 @@ class Album extends database_object implements library_item
         if ($simple) {
             return trim(trim($this->prefix . ' ' . trim($this->name)));
         }
-        if ($force_year) {
+        if ($force_year && $this->year > 0) {
             return trim(trim($this->prefix . ' ' . trim($this->name))) . " (" . $this->year . ")";
-            ;
         }
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
@@ -1346,10 +1345,10 @@ class Album extends database_object implements library_item
         $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
         Dba::write($sql);
         // album.total_count
-        $sql = "UPDATE `album`, (SELECT COUNT(`album`.`id`) AS `total_count`, `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
+        $sql = "UPDATE `album`, (SELECT COUNT(`album`.`id`) AS `total_count`, `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
         Dba::write($sql);
         // album.total_count 0 plays
-        $sql = "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` NOT IN ( SELECT `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`)) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
+        $sql = "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` NOT IN ( SELECT `album`.`id` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_id` = `song`.`id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' LEFT JOIN `album` ON `song`.`album` = `album`.`id` WHERE `album`.`id` IS NOT NULL GROUP BY `album`.`id`)) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
         Dba::write($sql);
         // album.song_count
         $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
