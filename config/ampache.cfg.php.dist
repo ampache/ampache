@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 59
+config_version = 60
 
 ;#########################################################
 ; Auto Update                                            #
@@ -202,6 +202,13 @@ require_localnet_session = "true"
 ; IP address at any one time, this is to prevent sharing of accounts
 ; DEFAULT: "false"
 ;prevent_multiple_logins = "true"
+
+; Allow Embedding Ampache in Frames
+; Whether a browser should be allowed to render a page in a <frame>, <iframe>, <embed> or <object>.
+; This is used to avoid click-jacking attacks, by ensuring that their content is not embedded into other sites.
+; By default Ampache pages can only be displayed in a frame on the same origin as the page itself.
+; DEFAULT: "false"
+;disable_xframe_sameorigin = "true"
 
 ;#########################################################
 ; Metadata                                               #
