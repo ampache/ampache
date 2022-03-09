@@ -311,7 +311,7 @@ class Userflag extends database_object
             $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `count` DESC, `date` DESC "
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY `count` DESC, `date` DESC "
             : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 

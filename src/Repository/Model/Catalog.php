@@ -2682,7 +2682,7 @@ abstract class Catalog extends database_object
             self::set_update_info($table, (int)($row[0] ?? 0));
         }
         // grouped album counts
-        $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`);";
+        $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`);";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
         self::set_update_info('album_group', (int)($row[0] ?? 0));

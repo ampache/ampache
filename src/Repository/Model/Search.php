@@ -1426,7 +1426,7 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'] ?? '';
             if ($groupdisks) {
                 /* 'album_group' DEFAULT:
-                 * `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`
+                 * `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`
                  */
                 $group[] = "`album`.`prefix`";
                 $group[] = "`album`.`name`";
