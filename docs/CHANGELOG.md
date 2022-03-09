@@ -19,6 +19,16 @@ If you don't use these tags nothing will change and will function as normal.
 ### Added
 
 * Additional xhtml templates added
+* Database 5.3.0 Build 8:
+  * Create `artist_map` table and fill it with data
+  * Create `albumartist_map` table and fill it with data
+  * Use `song_count` & `artist_count` using `albumartist_map`
+  * Drop id column from `catalog_map` table and alter object_type charset and collation
+  * Alter `albumartist_map` table charset and engine to MyISAM if engine set
+  * Alter `artist_map` table charset and engine to MyISAM if engine set
+  * Make sure `object_count` table has all the correct primary artist/album rows
+  * Convert basic text columns into utf8 to reduce index sizes
+  * Remove `user_activity` columns that are useless
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -58,6 +68,7 @@ If you don't use these tags nothing will change and will function as normal.
 * Don't remove Genre tags when they have been merged (hidden) into a different tag
 * Don't delete merged (hidden) Genres from the tag table
 * Album song_artist_count not calculated
+* Grouping with mbid_group was missing making some albums not possible to view
 * Search:
   * played search for album and artist was including your user in the results
 * Subsonic:
