@@ -1598,6 +1598,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Art::duplicate('artist', $old_artist, $new_artist);
         Wanted::migrate('artist', $old_artist, $new_artist);
         Catalog::migrate_map('artist', $old_artist, $new_artist);
+        Artist::update_artist_map($new_artist, 'song', $song_id);
+        Artist::remove_artist_map($old_artist, 'song', $song_id);
         Artist::update_artist_counts();
         Artist::update_artist_counts();
     } // update_artist
@@ -1624,6 +1626,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Rating::migrate('album', $old_album, $new_album);
         Art::duplicate('album', $old_album, $new_album);
         Catalog::migrate_map('album', $old_album, $new_album);
+        Album::update_albumartist_map($new_album, 'song', $song_id);
+        Album::remove_artist_map($old_album, 'song', $song_id);
         Album::update_album_counts();
     } // update_album
 
