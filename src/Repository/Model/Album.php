@@ -1377,7 +1377,6 @@ class Album extends database_object implements library_item
         $row        = Dba::fetch_assoc($db_results);
         if (!empty($row)) {
             return (int)$row['artist_count'];
-
         }
 
         return 0;
