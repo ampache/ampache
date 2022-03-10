@@ -89,7 +89,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `album` MODIFY COLUMN `release_type` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `album` MODIFY COLUMN `barcode` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `album` MODIFY COLUMN `catalog_number` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `albumartist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `prefix` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");

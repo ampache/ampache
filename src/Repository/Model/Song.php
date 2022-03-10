@@ -545,7 +545,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($song_artist_id > 0) {
                 $artists[] = $song_artist_id;
                 Artist::update_artist_map($song_artist_id, 'song', $song_id);
-                Album::update_albumartist_map($album_id, 'song', $song_artist_id);
+                Album::update_album_map($album_id, 'song', $song_artist_id);
             }
         }
         foreach ($albumartist_mbid_array as $album_artist_mbid) {
@@ -553,7 +553,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($album_artist_id > 0) {
                 $artists[] = $album_artist_id;
                 Artist::update_artist_map($album_artist_id, 'album', $album_id);
-                Album::update_albumartist_map($album_id, 'album', $album_artist_id);
+                Album::update_album_map($album_id, 'album', $album_artist_id);
             }
         }
         // update the counts too
@@ -1626,8 +1626,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Rating::migrate('album', $old_album, $new_album);
         Art::duplicate('album', $old_album, $new_album);
         Catalog::migrate_map('album', $old_album, $new_album);
-        Album::update_albumartist_map($new_album, 'song', $song_id);
-        Album::remove_albumartist_map($old_album, 'song', $song_id);
+        Album::update_album_map($new_album, 'song', $song_id);
+        Album::remove_album_map($old_album, 'song', $song_id);
         Album::update_album_counts();
     } // update_album
 
@@ -1973,7 +1973,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $results = array();
         $sql     = ($type == 'album')
-            ? "SELECT DISTINCT `object_id` FROM `albumartist_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
+            ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
             : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_id));
 

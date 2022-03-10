@@ -590,16 +590,16 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create artist_map table and fill it with data";
         $version[]     = array('version' => '530000', 'description' => $update_string);
 
-        $update_string = "* Create albumartist_map table and fill it with data";
+        $update_string = "* Create album_map table and fill it with data";
         $version[]     = array('version' => '530001', 'description' => $update_string);
 
-        $update_string = "* Use song_count & artist_count with albumartist_map";
+        $update_string = "* Use song_count & artist_count with album_map";
         $version[]     = array('version' => '530002', 'description' => $update_string);
 
         $update_string = "* Drop id column from catalog_map table<br />* Alter `catalog_map` object_type charset and collation";
         $version[]     = array('version' => '530003', 'description' => $update_string);
 
-        $update_string = "* Alter `albumartist_map` table charset and engine to MyISAM if engine set";
+        $update_string = "* Alter `album_map` table charset and engine to MyISAM if engine set";
         $version[]     = array('version' => '530004', 'description' => $update_string);
 
         $update_string = "* Alter `artist_map` table charset and engine to MyISAM if engine set";
@@ -3966,7 +3966,7 @@ class Update
     /**
      * update_530001
      *
-     * Create albumartist_map table and fill it with data
+     * Create album_map table and fill it with data
      */
     public static function update_530001(): bool
     {
@@ -3975,10 +3975,10 @@ class Update
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = 'MyISAM';
         // create the table
-        $sql = "CREATE TABLE IF NOT EXISTS `albumartist_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_albumartist_map` (`object_id`, `object_type`, `album_id`), INDEX `object_id_index` (`object_id`), INDEX `object_id_index` (`object_id`), INDEX `album_id_type_index` (`album_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $sql = "CREATE TABLE IF NOT EXISTS `album_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`), INDEX `object_id_index` (`object_id`), INDEX `object_id_index` (`object_id`), INDEX `album_id_type_index` (`album_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         // fill the data
-        $sql = "INSERT IGNORE INTO `albumartist_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -3987,7 +3987,7 @@ class Update
     /**
      * update_530002
      *
-     * Use song_count & artist_count with albumartist_map
+     * Use song_count & artist_count with album_map
      */
     public static function update_530002(): bool
     {
@@ -3996,7 +3996,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
-        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`albumartist_map`.`object_id`)) AS `artist_count`, `album_id` FROM `albumartist_map` LEFT JOIN `album` ON `album`.`id` = `albumartist_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `albumartist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `albumartist_map` SET `album`.`song_artist_count` = `albumartist_map`.`artist_count` WHERE `album`.`id` = `albumartist_map`.`album_id`;";
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`song_artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
         Dba::write($sql);
 
         return $retval;
@@ -4022,14 +4022,14 @@ class Update
     /**
      * update_530004
      *
-     * Alter `albumartist_map` charset and engine to MyISAM if engine set
+     * Alter `album_map` charset and engine to MyISAM if engine set
      */
     public static function update_530004(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `albumartist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $sql    = "ALTER TABLE `album_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `albumartist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

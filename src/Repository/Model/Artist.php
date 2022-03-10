@@ -1158,12 +1158,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
         // migrate the maps and delete ones that aren't required
         $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;";
         Dba::write($sql, $params);
-        $sql = "UPDATE IGNORE `albumartist_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';";
+        $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';";
         Dba::write($sql, $params);
         // delete the old one if it's a dupe row above
         $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?;";
         Dba::write($sql, array($old_object_id));
-        $sql = "DELETE FROM `albumartist_map` WHERE `object_id` = ? AND `object_type` = 'album';";
+        $sql = "DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';";
         Dba::write($sql, array($old_object_id));
         self::update_artist_counts($new_object_id);
     }
