@@ -43,7 +43,7 @@ $album->allow_group_disks = true;
 // Title for this album
 $f_album_name = $album->get_album_artist_fullname();
 $f_name       = $album->get_fullname(false, true);
-$title        = ($album->artist_count > 0)
+$title        = ($album->album_artist > 0)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_album_artist_link()) ?: '')
     : scrub_out($f_name);
 

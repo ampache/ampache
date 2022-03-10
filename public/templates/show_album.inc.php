@@ -45,7 +45,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 // Title for this album
 $web_path = AmpConfig::get('web_path');
 $f_name   = $album->get_fullname(false, true);
-$title    = ($album->artist_count > 0)
+$title    = ($album->album_artist > 0)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_album_artist_link()) ?: '')
     : scrub_out($f_name);
 
