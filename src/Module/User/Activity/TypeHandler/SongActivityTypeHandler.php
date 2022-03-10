@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity\TypeHandler;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class SongActivityTypeHandler extends GenericActivityTypeHandler
@@ -32,7 +31,7 @@ final class SongActivityTypeHandler extends GenericActivityTypeHandler
     private UserActivityRepositoryInterface $userActivityRepository;
 
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository,
+        UserActivityRepositoryInterface $userActivityRepository
     ) {
         parent::__construct($userActivityRepository);
 
