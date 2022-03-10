@@ -19,7 +19,7 @@ If you don't use these tags nothing will change and will function as normal.
 ### Added
 
 * Additional xhtml templates added
-* Database 5.3.0 Build 8:
+* Database 5.3.0 Build 9:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -29,6 +29,7 @@ If you don't use these tags nothing will change and will function as normal.
   * Make sure `object_count` table has all the correct primary artist/album rows
   * Convert basic text columns into utf8 to reduce index sizes
   * Remove `user_activity` columns that are useless
+  * Delete duplicate rows and require unique data on `object_count`
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search

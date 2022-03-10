@@ -614,6 +614,9 @@ class Update
         $update_string = "* Remove `user_activity` columns that are useless";
         $version[]     = array('version' => '530008', 'description' => $update_string);
 
+        $update_string = "* Delete duplicate rows and require unique data on `object_count`";
+        $version[]     = array('version' => '530009', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4101,6 +4104,28 @@ class Update
         $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_track`;") !== false);
         $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_artist`;") !== false);
         $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;") !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530009
+     *
+     * Delete duplicate rows and require unique data on `object_count`
+     */
+    public static function update_530009(): bool
+    {
+        $retval     = true;
+        $sql        = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type` HAVING COUNT(`id`) > 1;";
+        $db_results = Dba::read($sql);
+        $duplicates = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $duplicates[] = $row['id'];
+        }
+        $sql = "DELETE FROM `object_count` WHERE `id` IN (" . implode(',', $duplicates) . ");";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }
