@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -90,6 +91,13 @@ final class CatalogAction4Method
                     $catalog->add_to_catalog($options);
                     break;
             }
+            // clean up after the action
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_mapping('artist');
+            Catalog::update_mapping('album');
+            Catalog::update_counts();
+
             Api4::message('success', 'successfully started: ' . $task, null, $input['api_format']);
         } else {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);

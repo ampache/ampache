@@ -2586,9 +2586,6 @@ abstract class Catalog extends database_object
         // object_count.artist
         $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) AS `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` AS `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `artist_count`.`count_type` = 'stream' AND `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`, `user`, `agent`, `count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
         Dba::write($sql);
-        // object count = 0
-        $sql = "UPDATE `artist`, (SELECT 0 AS `total_count`, `artist`.`id` FROM `artist` WHERE `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' AND `count_type` = 'stream')) AS `object_count` SET `artist`.`total_count` = `object_count`.`total_count` WHERE `artist`.`total_count` != `object_count`.`total_count` AND `artist`.`id` = `object_count`.`id`;";
-        Dba::write($sql);
         // song.played might have had issues
         $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         Dba::write($sql);
@@ -2646,9 +2643,7 @@ abstract class Catalog extends database_object
         Dba::write($sql);
         $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         Dba::write($sql);
-        //debug_event(__CLASS__, 'update_counts artist table', 5);
         Artist::update_artist_counts();
-        //debug_event(__CLASS__, 'update_counts album table', 5);
         Album::update_album_counts();
         //debug_event(__CLASS__, 'update_counts song table', 5);
         // song.total_count
@@ -3633,6 +3628,8 @@ abstract class Catalog extends database_object
                         echo AmpError::display('catalog_add');
                     }
                 }
+                Artist::update_artist_counts();
+                Album::update_album_counts();
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -3674,6 +3671,8 @@ abstract class Catalog extends database_object
                         }
                     } // end foreach catalogs
                     Dba::optimize_tables();
+                    Artist::update_artist_counts();
+                    Album::update_album_counts();
                 }
                 break;
             case 'update_from':

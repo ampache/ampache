@@ -1342,6 +1342,7 @@ class Album extends database_object implements library_item
      */
     public static function update_album_counts()
     {
+        debug_event(__CLASS__, 'update_album_counts', 5);
         // album.time
         $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`time` != `song`.`time` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
