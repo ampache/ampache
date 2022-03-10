@@ -4116,13 +4116,7 @@ class Update
     public static function update_530009(): bool
     {
         $retval     = true;
-        $sql        = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type` HAVING COUNT(`id`) > 1;";
-        $db_results = Dba::read($sql);
-        $duplicates = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $duplicates[] = $row['id'];
-        }
-        $sql = "DELETE FROM `object_count` WHERE `id` IN (" . implode(',', $duplicates) . ");";
+        $sql        = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
         $retval &= (Dba::write($sql) !== false);

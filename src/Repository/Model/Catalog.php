@@ -2559,24 +2559,17 @@ abstract class Catalog extends database_object
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
-            $sql        = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type` HAVING COUNT(`id`) > 1;";
-            $db_results = Dba::read($sql);
-            $duplicates = array();
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $duplicates[] = $row['id'];
-            }
-            $sql = "DELETE FROM `object_count` WHERE `id` IN (" . implode(',', $duplicates) . ");";
-            Dba::write($sql);
             // this isn't really needed often and is slow
             Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
             // Delete duplicates from the object_count table
-            //debug_event(__CLASS__, 'update_counts delete object_count duplicates', 5);
-            $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING count(`date`) >1)) AS `count`);";
+            debug_event(__CLASS__, 'update_counts delete object_count duplicates', 5);
+            $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
             Dba::write($sql);
             // Fill in null Agents with a value
             $sql = "UPDATE `object_count` SET `agent` = 'Unknown' WHERE `agent` IS NULL;";
             Dba::write($sql);
             // fix object_count table missing artist row
+            debug_event(__CLASS__, 'update_counts object_count table missing artist row', 5);
             $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`,`object_count`.`user`,`object_count`.`agent`,`object_count`.`geo_latitude`,`object_count`.`geo_longitude`,`object_count`.`geo_name`,`object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type`  AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT object_id FROM `artist_map` WHERE `object_type` = 'song')) AND `artist_check`.`object_id` IS NULL GROUP BY `artist_map`.`artist_id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`date`,`object_count`.`user`,`object_count`.`agent`,`object_count`.`geo_latitude`,`object_count`.`geo_longitude`,`object_count`.`geo_name`,`object_count`.`count_type`;";
             Dba::write($sql);
             // fix object_count table missing album row

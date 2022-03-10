@@ -700,6 +700,7 @@ class Catalog_local extends Catalog
             $chunks = floor($total / 10000);
             $dead   = array();
             foreach (range(0, $chunks) as $chunk) {
+                debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             }
 
@@ -735,7 +736,6 @@ class Catalog_local extends Catalog
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
         $dead  = array();
         $count = $chunk * $chunk_size;
 
