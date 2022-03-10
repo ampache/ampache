@@ -92,9 +92,8 @@ class Update
      * need_update
      *
      * Checks to see if we need to update ampache at all.
-     * @return boolean
      */
-    public static function need_update()
+    public static function need_update(): bool
     {
         $current_version = self::get_version();
 
@@ -123,13 +122,13 @@ class Update
         /* Define the array */
         $version = array();
 
-        $update_string = "* Add MBID (MusicBrainz ID) fields<br />- Remove useless preferences<br />";
+        $update_string = "* Add MBID (MusicBrainz ID) fields<br />* Remove useless preferences<br />";
         $version[]     = array('version' => '360001', 'description' => $update_string);
 
-        $update_string = "* Add Bandwidth and Feature preferences to simplify how interface is presented<br />- Change Tables to FULLTEXT() for improved searching<br />- Increase Filename lengths to 4096<br />- Remove useless KEY reference from ACL and Catalog tables<br />- Add new Remote User / Remote Password fields to Catalog<br />";
+        $update_string = "* Add Bandwidth and Feature preferences to simplify how interface is presented<br />* Change Tables to FULLTEXT() for improved searching<br />* Increase Filename lengths to 4096<br />* Remove useless KEY reference from ACL and Catalog tables<br />* Add new Remote User / Remote Password fields to Catalog<br />";
         $version[]     = array('version' => '360002', 'description' => $update_string);
 
-        $update_string = "* Add image table to store images.<br /> - Drop album_data and artist_data.<br />";
+        $update_string = "* Add image table to store images.<br />* Drop album_data and artist_data.<br />";
         $version[]     = array('version' => '360003', 'description' => $update_string);
 
         $update_string = "* Add uniqueness constraint to ratings.<br />";
@@ -201,7 +200,7 @@ class Update
         $update_string = "* Add option to allow/disallow to show personnal information to other users (now playing and recently played).<br />";
         $version[]     = array('version' => '360027', 'description' => $update_string);
 
-        $update_string = "* Personnal information: allow/disallow to show in now playing.<br />- Personnal information: allow/disallow to show in recently played.<br />- Personnal information: allow/disallow to show time and/or agent in recently played.<br />";
+        $update_string = "* Personnal information: allow/disallow to show in now playing.<br />* Personnal information: allow/disallow to show in recently played.<br />* Personnal information: allow/disallow to show time and/or agent in recently played.<br />";
         $version[]     = array('version' => '360028', 'description' => $update_string);
 
         $update_string = "* Add new table to store wanted releases.<br />";
@@ -588,6 +587,36 @@ class Update
         $update_string = "* Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients";
         $version[]     = array('version' => '520005', 'description' => $update_string);
 
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow!<br />* Create artist_map table and fill it with data";
+        $version[]     = array('version' => '530000', 'description' => $update_string);
+
+        $update_string = "* Create album_map table and fill it with data";
+        $version[]     = array('version' => '530001', 'description' => $update_string);
+
+        $update_string = "* Use song_count & artist_count with album_map";
+        $version[]     = array('version' => '530002', 'description' => $update_string);
+
+        $update_string = "* Drop id column from catalog_map table<br />* Alter `catalog_map` object_type charset and collation";
+        $version[]     = array('version' => '530003', 'description' => $update_string);
+
+        $update_string = "* Alter `album_map` table charset and engine to MyISAM if engine set";
+        $version[]     = array('version' => '530004', 'description' => $update_string);
+
+        $update_string = "* Alter `artist_map` table charset and engine to MyISAM if engine set";
+        $version[]     = array('version' => '530005', 'description' => $update_string);
+
+        $update_string = "* Make sure `object_count` table has all the correct primary artist/album rows";
+        $version[]     = array('version' => '530006', 'description' => $update_string);
+
+        $update_string = "* Convert basic text columns into utf8 to reduce index sizes";
+        $version[]     = array('version' => '530007', 'description' => $update_string);
+
+        $update_string = "* Remove `user_activity` columns that are useless";
+        $version[]     = array('version' => '530008', 'description' => $update_string);
+
+        $update_string = "* Delete duplicate rows and require unique data on `object_count`";
+        $version[]     = array('version' => '530009', 'description' => $update_string);
+
         return $version;
     }
 
@@ -624,7 +653,7 @@ class Update
      * that need to be run. Checking to make sure
      * the function exists first.
      */
-    public static function run_update()
+    public static function run_update(): bool
     {
         debug_event(self::class, 'run_update: starting', 4);
         /* Nuke All Active session before we start the mojo */
@@ -701,7 +730,7 @@ class Update
      * This adds the MB UUIDs to the different tables as well as some additional
      * cleanup.
      */
-    public static function update_360001()
+    public static function update_360001(): bool
     {
         $retval = true;
 
@@ -727,7 +756,7 @@ class Update
      * This update makes changes to the cataloging to accomodate the new method
      * for syncing between Ampache instances.
      */
-    public static function update_360002()
+    public static function update_360002(): bool
     {
         $retval = true;
         // Drop the key from catalog and ACL
@@ -774,7 +803,7 @@ class Update
      *
      * This update moves the image data to its own table.
      */
-    public static function update_360003()
+    public static function update_360003(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -804,7 +833,7 @@ class Update
      */
     public static function update_360004()
     {
-        return (Dba::write("CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`)") !== false);
+        return (Dba::write("CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`);") !== false);
     }
 
     /**
@@ -812,7 +841,7 @@ class Update
      *
      * This changes the tmp_browse table around.
      */
-    public static function update_360005()
+    public static function update_360005(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -831,12 +860,12 @@ class Update
      *
      * This adds the table for newsearch/dynamic playlists
      */
-    public static function update_360006()
+    public static function update_360006(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private', 'public') CHARACTER SET $charset DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset") !== false);
+        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private', 'public') CHARACTER SET $charset DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;") !== false);
     }
 
     /**
@@ -845,7 +874,7 @@ class Update
      * Fix bug that caused the remote_username/password fields to not be created.
      * FIXME: Huh?
      */
-    public static function update_360008()
+    public static function update_360008(): bool
     {
         $retval          = true;
         $remote_username = false;
@@ -881,9 +910,9 @@ class Update
      * The main session table was already updated to use varchar(64) for the ID,
      * tmp_playlist needs the same change
      */
-    public static function update_360009()
+    public static function update_360009(): bool
     {
-        return (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64)") !== false);
+        return (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64);") !== false);
     }
 
     /**
@@ -892,9 +921,9 @@ class Update
      * MBz NGS means collaborations have more than one MBID (the ones
      * belonging to the underlying artists).  We need a bigger column.
      */
-    public static function update_360010()
+    public static function update_360010(): bool
     {
-        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369)") !== false);
+        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369);") !== false);
     }
 
     /**
@@ -903,9 +932,9 @@ class Update
      * We need a place to store actual playlist data for downloadable
      * playlist files.
      */
-    public static function update_360011()
+    public static function update_360011(): bool
     {
-        return (Dba::write("CREATE TABLE `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`))") !== false);
+        return (Dba::write("CREATE TABLE `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`));") !== false);
     }
 
     /**
@@ -913,9 +942,9 @@ class Update
      *
      * Drop the enum on session.type
      */
-    public static function update_360012()
+    public static function update_360012(): bool
     {
-        return (Dba::write("ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL") !== false);
+        return (Dba::write("ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL;") !== false);
     }
 
     /**
@@ -923,12 +952,12 @@ class Update
      *
      * MyISAM works better out of the box for the stream_playlist table
      */
-    public static function update_360013()
+    public static function update_360013(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("ALTER TABLE `stream_playlist` ENGINE=$engine") !== false);
+        return (Dba::write("ALTER TABLE `stream_playlist` ENGINE=$engine;") !== false);
     }
 
     /**
@@ -936,13 +965,13 @@ class Update
      *
      * PHP session IDs are an ever-growing beast.
      */
-    public static function update_360014()
+    public static function update_360014(): bool
     {
         $retval = true;
 
-        $retval &= (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256)") !== false);
-        $retval &= (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(256)") !== false);
-        $retval &= (Dba::write("ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL") !== false);
+        $retval &= (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256);") !== false);
+        $retval &= (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(256);") !== false);
+        $retval &= (Dba::write("ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL;") !== false);
 
         return $retval;
     }
@@ -952,7 +981,7 @@ class Update
      *
      * This inserts the Iframes preference...
      */
-    public static function update_360015()
+    public static function update_360015(): bool
     {
         $retval = true;
 
@@ -970,7 +999,7 @@ class Update
      *
      * Add Now Playing filtered per user preference option
      */
-    public static function update_360016()
+    public static function update_360016(): bool
     {
         $retval = true;
 
@@ -988,12 +1017,12 @@ class Update
      *
      * New table to store user flags.
      */
-    public static function update_360017()
+    public static function update_360017(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1001,7 +1030,7 @@ class Update
      *
      * Add Album default sort preference...
      */
-    public static function update_360018()
+    public static function update_360018(): bool
     {
         $retval = true;
 
@@ -1019,7 +1048,7 @@ class Update
      *
      * Add Show number of times a song was played preference
      */
-    public static function update_360019()
+    public static function update_360019(): bool
     {
         $retval = true;
 
@@ -1037,7 +1066,7 @@ class Update
      *
      * Catalog types are plugins now
      */
-    public static function update_360020()
+    public static function update_360020(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -1080,7 +1109,7 @@ class Update
      *
      * Add insertion date on Now Playing and option to show the current song in page title for Web player
      */
-    public static function update_360021()
+    public static function update_360021(): bool
     {
         $retval = true;
 
@@ -1100,7 +1129,7 @@ class Update
      *
      * Remove unused live_stream fields and add codec field
      */
-    public static function update_360022()
+    public static function update_360022(): bool
     {
         $retval = true;
 
@@ -1117,7 +1146,7 @@ class Update
      *
      * Enable/Disable SubSonic and Plex backend
      */
-    public static function update_360023()
+    public static function update_360023(): bool
     {
         $retval = true;
 
@@ -1140,9 +1169,9 @@ class Update
      *
      * Drop unused flagged table
      */
-    public static function update_360024()
+    public static function update_360024(): bool
     {
-        return (Dba::write("DROP TABLE IF EXISTS `flagged`") !== false);
+        return (Dba::write("DROP TABLE IF EXISTS `flagged`;") !== false);
     }
 
     /**
@@ -1150,7 +1179,7 @@ class Update
      *
      * Add options to enable HTML5 / Flash on web players
      */
-    public static function update_360025()
+    public static function update_360025(): bool
     {
         $retval = true;
 
@@ -1173,9 +1202,9 @@ class Update
      *
      * Add agent field in `object_count` table
      */
-    public static function update_360026()
+    public static function update_360026(): bool
     {
-        return (Dba::write("ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`") !== false);
+        return (Dba::write("ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`;") !== false);
     }
 
     /**
@@ -1183,7 +1212,7 @@ class Update
      *
      * Personal information: allow/disallow to show my personal information into now playing and recently played lists.
      */
-    public static function update_360027()
+    public static function update_360027(): bool
     {
         $retval = true;
 
@@ -1203,7 +1232,7 @@ class Update
      * Personal information: allow/disallow to show in recently played.
      * Personal information: allow/disallow to show time and/or agent in recently played.
      */
-    public static function update_360028()
+    public static function update_360028(): bool
     {
         $retval = true;
 
@@ -1240,12 +1269,12 @@ class Update
      *
      * New table to store wanted releases
      */
-    public static function update_360029()
+    public static function update_360029(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1253,12 +1282,12 @@ class Update
      *
      * New table to store song previews
      */
-    public static function update_360030()
+    public static function update_360030(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `song_preview` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `session` varchar(256) CHARACTER SET $charset NOT NULL, `artist` int(11) NOT NULL, `title` varchar(255) CHARACTER SET $charset NOT NULL, `album_mbid` varchar(36) CHARACTER SET $charset NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `disk` int(11) NULL, `track` int(11) NULL, `file` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `song_preview` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `session` varchar(256) CHARACTER SET $charset NOT NULL, `artist` int(11) NOT NULL, `title` varchar(255) CHARACTER SET $charset NOT NULL, `album_mbid` varchar(36) CHARACTER SET $charset NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `disk` int(11) NULL, `track` int(11) NULL, `file` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1266,7 +1295,7 @@ class Update
      *
      * Add option to fix header/sidebars position on compatible themes
      */
-    public static function update_360031()
+    public static function update_360031(): bool
     {
         $retval = true;
 
@@ -1284,7 +1313,7 @@ class Update
      *
      * Add check update automatically option
      */
-    public static function update_360032()
+    public static function update_360032(): bool
     {
         $retval = true;
 
@@ -1306,7 +1335,7 @@ class Update
      *
      * Add song waveform as song data
      */
-    public static function update_360033()
+    public static function update_360033(): bool
     {
         $retval = true;
 
@@ -1323,7 +1352,7 @@ class Update
      *
      * Add settings for confirmation when closing window and auto-pause between tabs
      */
-    public static function update_360034()
+    public static function update_360034(): bool
     {
         $retval = true;
 
@@ -1351,7 +1380,7 @@ class Update
      * Fix for this is update_380012 that actually readds the preference string.
      * So all users have a consistent database.
      */
-    public static function update_360035()
+    public static function update_360035(): bool
     {
         $retval = true;
 
@@ -1369,7 +1398,7 @@ class Update
      *
      * Remove some unused parameters
      */
-    public static function update_360036()
+    public static function update_360036(): bool
     {
         $retval = true;
 
@@ -1392,7 +1421,7 @@ class Update
      *
      * Add sharing features
      */
-    public static function update_360037()
+    public static function update_360037(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1419,7 +1448,7 @@ class Update
      *
      * Add missing albums browse on missing artists
      */
-    public static function update_360038()
+    public static function update_360038(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1440,11 +1469,11 @@ class Update
      *
      * Add website field on users
      */
-    public static function update_360039()
+    public static function update_360039(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        return (Dba::write("ALTER TABLE `user` ADD `website` varchar(255) CHARACTER SET $charset NULL AFTER `email`") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD `website` varchar(255) CHARACTER SET $charset NULL AFTER `email`;") !== false);
     }
 
     /**
@@ -1456,12 +1485,12 @@ class Update
      *
      * Add channels
      */
-    public static function update_360041()
+    public static function update_360041(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `channel` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(64) CHARACTER SET $charset NULL, `description` varchar(256) CHARACTER SET $charset NULL, `url` varchar(256) CHARACTER SET $charset NULL, `interface` varchar(64) CHARACTER SET $charset NULL, `port` int(11) unsigned NOT NULL DEFAULT '0', `fixed_endpoint` tinyint(1) unsigned NOT NULL DEFAULT '0', `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0', `random` tinyint(1) unsigned NOT NULL DEFAULT '0', `loop` tinyint(1) unsigned NOT NULL DEFAULT '0', `admin_password` varchar(20) CHARACTER SET $charset NULL, `start_date` int(11) unsigned NOT NULL DEFAULT '0', `max_listeners` int(11) unsigned NOT NULL DEFAULT '0', `peak_listeners` int(11) unsigned NOT NULL DEFAULT '0', `listeners` int(11) unsigned NOT NULL DEFAULT '0', `connections` int(11) unsigned NOT NULL DEFAULT '0', `stream_type` varchar(8) CHARACTER SET $charset NOT NULL DEFAULT 'mp3', `bitrate` int(11) unsigned NOT NULL DEFAULT '128', `pid` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `channel` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(64) CHARACTER SET $charset NULL, `description` varchar(256) CHARACTER SET $charset NULL, `url` varchar(256) CHARACTER SET $charset NULL, `interface` varchar(64) CHARACTER SET $charset NULL, `port` int(11) unsigned NOT NULL DEFAULT '0', `fixed_endpoint` tinyint(1) unsigned NOT NULL DEFAULT '0', `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0', `random` tinyint(1) unsigned NOT NULL DEFAULT '0', `loop` tinyint(1) unsigned NOT NULL DEFAULT '0', `admin_password` varchar(20) CHARACTER SET $charset NULL, `start_date` int(11) unsigned NOT NULL DEFAULT '0', `max_listeners` int(11) unsigned NOT NULL DEFAULT '0', `peak_listeners` int(11) unsigned NOT NULL DEFAULT '0', `listeners` int(11) unsigned NOT NULL DEFAULT '0', `connections` int(11) unsigned NOT NULL DEFAULT '0', `stream_type` varchar(8) CHARACTER SET $charset NOT NULL DEFAULT 'mp3', `bitrate` int(11) unsigned NOT NULL DEFAULT '128', `pid` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1469,7 +1498,7 @@ class Update
      *
      * Add broadcasts and player control
      */
-    public static function update_360042()
+    public static function update_360042(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1488,7 +1517,7 @@ class Update
      *
      * Add slideshow on currently played artist preference
      */
-    public static function update_360043()
+    public static function update_360043(): bool
     {
         $retval = true;
 
@@ -1506,7 +1535,7 @@ class Update
      *
      * Add artist description/recommendation external service data cache
      */
-    public static function update_360044()
+    public static function update_360044(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1527,9 +1556,9 @@ class Update
      *
      * Set user field on playlists as optional
      */
-    public static function update_360045()
+    public static function update_360045(): bool
     {
-        return (Dba::write("ALTER TABLE `playlist` MODIFY `user` int(11) NULL") !== false);
+        return (Dba::write("ALTER TABLE `playlist` MODIFY `user` int(11) NULL;") !== false);
     }
 
     /**
@@ -1537,7 +1566,7 @@ class Update
      *
      * Add broadcast web player by default preference
      */
-    public static function update_360046()
+    public static function update_360046(): bool
     {
         $retval = true;
 
@@ -1555,11 +1584,11 @@ class Update
      *
      * Add apikey field on users
      */
-    public static function update_360047()
+    public static function update_360047(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        return (Dba::write("ALTER TABLE `user` ADD `apikey` varchar(255) CHARACTER SET $charset NULL AFTER `website`") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD `apikey` varchar(255) CHARACTER SET $charset NULL AFTER `website`;") !== false);
     }
 
     /**
@@ -1567,7 +1596,7 @@ class Update
      *
      * Add concerts options
      */
-    public static function update_360048()
+    public static function update_360048(): bool
     {
         $retval = true;
 
@@ -1590,7 +1619,7 @@ class Update
      *
      * Add album group multiple disks setting
      */
-    public static function update_360049()
+    public static function update_360049(): bool
     {
         $retval = true;
 
@@ -1608,7 +1637,7 @@ class Update
      *
      * Add top menu setting
      */
-    public static function update_360050()
+    public static function update_360050(): bool
     {
         $retval = true;
 
@@ -1626,7 +1655,7 @@ class Update
      *
      * REMOVED
      */
-    public static function update_360051()
+    public static function update_360051(): bool
     {
         return true;
     }
@@ -1636,7 +1665,7 @@ class Update
      *
      * Drop unused dynamic_playlist tables and add session id to votes
      */
-    public static function update_370001()
+    public static function update_370001(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1661,9 +1690,9 @@ class Update
      *
      * Add tag persistent merge reference
      */
-    public static function update_370002()
+    public static function update_370002(): bool
     {
-        return (Dba::write("ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`") !== false);
+        return (Dba::write("ALTER TABLE `tag` ADD `merged_to` int(11) NULL AFTER `name`;") !== false);
     }
 
     /**
@@ -1671,7 +1700,7 @@ class Update
      *
      * Add show/hide donate button preference
      */
-    public static function update_370003()
+    public static function update_370003(): bool
     {
         $retval = true;
 
@@ -1689,7 +1718,7 @@ class Update
      *
      * Add license information and user's artist association
      */
-    public static function update_370004()
+    public static function update_370004(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1769,9 +1798,9 @@ class Update
      * Add new column album_artist into table album
      *
      */
-    public static function update_370005()
+    public static function update_370005(): bool
     {
-        return (Dba::write("ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`") !== false);
+        return (Dba::write("ALTER TABLE `song` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `artist`;") !== false);
     }
 
     /**
@@ -1780,9 +1809,9 @@ class Update
      * Add random and limit options to smart playlists
      *
      */
-    public static function update_370006()
+    public static function update_370006(): bool
     {
-        return (Dba::write("ALTER TABLE `search` ADD `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`") !== false);
+        return (Dba::write("ALTER TABLE `search` ADD `random` tinyint(1) unsigned NOT NULL DEFAULT '0' AFTER `logic_operator`, ADD `limit` int(11) unsigned NOT NULL DEFAULT '0' AFTER `random`;") !== false);
     }
 
     /**
@@ -1790,7 +1819,7 @@ class Update
      *
      * Add DAAP backend preference
      */
-    public static function update_370007()
+    public static function update_370007(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1818,7 +1847,7 @@ class Update
      * Add UPnP backend preference
      *
      */
-    public static function update_370008()
+    public static function update_370008(): bool
     {
         $retval = true;
 
@@ -1836,7 +1865,7 @@ class Update
      *
      * Enhance video support with TVShows and Movies
      */
-    public static function update_370009()
+    public static function update_370009(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1872,11 +1901,11 @@ class Update
      *
      * Add MusicBrainz Album Release Group identifier
      */
-    public static function update_370010()
+    public static function update_370010(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        return (Dba::write("ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET $charset NULL") !== false);
+        return (Dba::write("ALTER TABLE `album` ADD `mbid_group` varchar(36) CHARACTER SET $charset NULL;") !== false);
     }
 
     /**
@@ -1884,7 +1913,7 @@ class Update
      *
      * Add Prefix to TVShows and Movies
      */
-    public static function update_370011()
+    public static function update_370011(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1902,7 +1931,7 @@ class Update
      *
      * Add metadata information to albums / songs / videos
      */
-    public static function update_370012()
+    public static function update_370012(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -1927,7 +1956,7 @@ class Update
      *
      * Replace iframe with ajax page load
      */
-    public static function update_370013()
+    public static function update_370013(): bool
     {
         $retval = true;
 
@@ -1947,9 +1976,9 @@ class Update
      *
      * Modified release_date of table video to signed int(11)
      */
-    public static function update_370014()
+    public static function update_370014(): bool
     {
-        return (Dba::write("ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL") !== false);
+        return (Dba::write("ALTER TABLE `video` CHANGE COLUMN `release_date` `release_date` INT NULL DEFAULT NULL;") !== false);
     }
 
     /**
@@ -1957,12 +1986,12 @@ class Update
      *
      * Add session_remember table to store remember tokens
      */
-    public static function update_370015()
+    public static function update_370015(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1970,7 +1999,7 @@ class Update
      *
      * Add limit of media count for direct play preference
      */
-    public static function update_370016()
+    public static function update_370016(): bool
     {
         $retval = true;
 
@@ -1988,7 +2017,7 @@ class Update
      *
      * Add home display settings
      */
-    public static function update_370017()
+    public static function update_370017(): bool
     {
         $retval = true;
 
@@ -2026,7 +2055,7 @@ class Update
      *
      * Enhance tag persistent merge reference.
      */
-    public static function update_370018()
+    public static function update_370018(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -2049,7 +2078,7 @@ class Update
      *
      * Add album group order setting
      */
-    public static function update_370019()
+    public static function update_370019(): bool
     {
         $retval = true;
 
@@ -2067,7 +2096,7 @@ class Update
      *
      * Add webplayer browser notification settings
      */
-    public static function update_370020()
+    public static function update_370020(): bool
     {
         $retval = true;
 
@@ -2090,9 +2119,9 @@ class Update
      *
      * Add rating to playlists, tvshows and tvshows seasons
      */
-    public static function update_370021()
+    public static function update_370021(): bool
     {
-        return (Dba::write("ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist', 'album', 'song', 'stream', 'video', 'playlist', 'tvshow', 'tvshow_season') NULL") !== false);
+        return (Dba::write("ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist', 'album', 'song', 'stream', 'video', 'playlist', 'tvshow', 'tvshow_season') NULL;") !== false);
     }
 
     /**
@@ -2100,7 +2129,7 @@ class Update
      *
      * Add users geolocation
      */
-    public static function update_370022()
+    public static function update_370022(): bool
     {
         $retval = true;
 
@@ -2122,7 +2151,7 @@ class Update
      *
      * Add Aurora.js webplayer option
      */
-    public static function update_370023()
+    public static function update_370023(): bool
     {
         $retval = true;
 
@@ -2140,9 +2169,9 @@ class Update
      *
      * Add count_type column to object_count table
      */
-    public static function update_370024()
+    public static function update_370024(): bool
     {
-        return (Dba::write("ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream'") !== false);
+        return (Dba::write("ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream';") !== false);
     }
 
     /**
@@ -2150,9 +2179,9 @@ class Update
      *
      * Add state and city fields to user table
      */
-    public static function update_370025()
+    public static function update_370025(): bool
     {
-        return (Dba::write("ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL;") !== false);
     }
 
     /**
@@ -2160,9 +2189,9 @@ class Update
      *
      * Add replay gain fields to song_data table
      */
-    public static function update_370026()
+    public static function update_370026(): bool
     {
-        return (Dba::write("ALTER TABLE `song_data` ADD COLUMN `replaygain_track_gain` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_track_peak` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_album_gain` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_album_peak` DECIMAL(10,6) NULL") !== false);
+        return (Dba::write("ALTER TABLE `song_data` ADD COLUMN `replaygain_track_gain` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_track_peak` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_album_gain` DECIMAL(10,6) NULL, ADD COLUMN `replaygain_album_peak` DECIMAL(10,6) NULL;") !== false);
     }
 
     /**
@@ -2171,7 +2200,7 @@ class Update
      * Move column album_artist from table song to table album
      *
      */
-    public static function update_370027()
+    public static function update_370027(): bool
     {
         $retval = true;
 
@@ -2193,17 +2222,17 @@ class Update
      * Add width and height in table image
      *
      */
-    public static function update_370028()
+    public static function update_370028(): bool
     {
         $retval = true;
 
-        $sql        = "select `width` from `image`";
+        $sql        = "select `width` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql        = "select `height` from `image`";
+        $sql        = "select `height` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`";
@@ -2219,9 +2248,9 @@ class Update
      * Set image column from image table as nullable.
      *
      */
-    public static function update_370029()
+    public static function update_370029(): bool
     {
-        return (Dba::write("ALTER TABLE `image` CHANGE COLUMN `image` `image` MEDIUMBLOB NULL DEFAULT NULL") !== false);
+        return (Dba::write("ALTER TABLE `image` CHANGE COLUMN `image` `image` MEDIUMBLOB NULL DEFAULT NULL;") !== false);
     }
 
     /**
@@ -2229,7 +2258,7 @@ class Update
      *
      * Add an option to allow users to remove uploaded songs.
      */
-    public static function update_370030()
+    public static function update_370030(): bool
     {
         $retval = true;
 
@@ -2247,7 +2276,7 @@ class Update
      *
      * Add an option to customize login art, favicon and text footer.
      */
-    public static function update_370031()
+    public static function update_370031(): bool
     {
         $retval = true;
 
@@ -2275,7 +2304,7 @@ class Update
      *
      * Add WebDAV backend preference.
      */
-    public static function update_370032()
+    public static function update_370032(): bool
     {
         $retval = true;
 
@@ -2293,7 +2322,7 @@ class Update
      *
      * Add Label tables.
      */
-    public static function update_370033()
+    public static function update_370033(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -2312,7 +2341,7 @@ class Update
      *
      * Add User messages and user follow tables.
      */
-    public static function update_370034()
+    public static function update_370034(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -2336,9 +2365,9 @@ class Update
      *
      * Add option on user fullname to show/hide it publicly
      */
-    public static function update_370035()
+    public static function update_370035(): bool
     {
-        return (Dba::write("ALTER TABLE `user` ADD COLUMN `fullname_public` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD COLUMN `fullname_public` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';") !== false);
     }
 
     /**
@@ -2346,9 +2375,9 @@ class Update
      *
      * Add field for track number when generating streaming playlists
      */
-    public static function update_370036()
+    public static function update_370036(): bool
     {
-        return (Dba::write("ALTER TABLE `stream_playlist` ADD COLUMN `track_num` SMALLINT(5) DEFAULT '0'") !== false);
+        return (Dba::write("ALTER TABLE `stream_playlist` ADD COLUMN `track_num` SMALLINT(5) DEFAULT '0';") !== false);
     }
 
     /**
@@ -2356,9 +2385,9 @@ class Update
      *
      * Delete http_port preference (use ampache.cfg.php configuration instead)
      */
-    public static function update_370037()
+    public static function update_370037(): bool
     {
-        return (Dba::write("DELETE FROM `preference` WHERE `name` = 'http_port'") !== false);
+        return (Dba::write("DELETE FROM `preference` WHERE `name` = 'http_port';") !== false);
     }
 
     /**
@@ -2366,7 +2395,7 @@ class Update
      *
      * Add theme color option
      */
-    public static function update_370038()
+    public static function update_370038(): bool
     {
         $retval = true;
 
@@ -2384,9 +2413,9 @@ class Update
      *
      * Renamed false named sample_rate option name in preference table
      */
-    public static function update_370039()
+    public static function update_370039(): bool
     {
-        return (Dba::write("UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate'") !== false);
+        return (Dba::write("UPDATE `preference` SET `name` = 'transcode_bitrate' WHERE `preference`.`name` = 'sample_rate';") !== false);
     }
 
     /**
@@ -2394,12 +2423,12 @@ class Update
      *
      * Add user_activity table
      */
-    public static function update_370040()
+    public static function update_370040(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` VARCHAR(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` VARCHAR(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -2407,7 +2436,7 @@ class Update
      *
      * Add Metadata tables and preferences
      */
-    public static function update_370041()
+    public static function update_370041(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -2437,7 +2466,7 @@ class Update
      *
      * Add podcasts
      */
-    public static function update_380001()
+    public static function update_380001(): bool
     {
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
@@ -2468,12 +2497,12 @@ class Update
      *
      * Add bookmarks
      */
-    public static function update_380002()
+    public static function update_380002(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine") !== false);
+        return (Dba::write("CREATE TABLE `bookmark` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` int(11) UNSIGNED NOT NULL, `position` int(11) UNSIGNED DEFAULT '0' NOT NULL, `comment` varchar(255) CHARACTER SET $charset NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT '0' NOT NULL, `update_date` int(11) UNSIGNED DEFAULT '0' NOT NULL) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -2481,9 +2510,9 @@ class Update
      *
      * Add unique constraint on tag_map table
      */
-    public static function update_380003()
+    public static function update_380003(): bool
     {
-        return (Dba::write("ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`, `tag_id`)") !== false);
+        return (Dba::write("ALTER IGNORE TABLE `tag_map` ADD UNIQUE INDEX `UNIQUE_TAG_MAP` (`object_id`, `object_type`, `user`, `tag_id`);") !== false);
     }
 
     /**
@@ -2491,11 +2520,11 @@ class Update
      *
      * Add preference subcategory
      */
-    public static function update_380004()
+    public static function update_380004(): bool
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        return (Dba::write("ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET $charset DEFAULT NULL AFTER `catagory`") !== false);
+        return (Dba::write("ALTER TABLE `preference` ADD `subcatagory` varchar(128) CHARACTER SET $charset DEFAULT NULL AFTER `catagory`;") !== false);
     }
 
     /**
@@ -2503,9 +2532,9 @@ class Update
      *
      * Add manual update flag on artist
      */
-    public static function update_380005()
+    public static function update_380005(): bool
     {
-        return (Dba::write("ALTER TABLE `artist` ADD COLUMN `manual_update` SMALLINT(1) DEFAULT '0'") !== false);
+        return (Dba::write("ALTER TABLE `artist` ADD COLUMN `manual_update` SMALLINT(1) DEFAULT '0';") !== false);
     }
 
     /**
@@ -2513,7 +2542,7 @@ class Update
      *
      * Add library item context menu option
      */
-    public static function update_380006()
+    public static function update_380006(): bool
     {
         $retval = true;
 
@@ -2531,7 +2560,7 @@ class Update
      *
      * Add upload rename pattern and ignore duplicate options
      */
-    public static function update_380007()
+    public static function update_380007(): bool
     {
         $retval = true;
 
@@ -2555,7 +2584,7 @@ class Update
      *
      * Add browse filter and light sidebar options
      */
-    public static function update_380008()
+    public static function update_380008(): bool
     {
         $retval = true;
 
@@ -2579,9 +2608,9 @@ class Update
      *
      * Add update date to playlist
      */
-    public static function update_380009()
+    public static function update_380009(): bool
     {
-        return (Dba::write("ALTER TABLE `playlist` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT '0'") !== false);
+        return (Dba::write("ALTER TABLE `playlist` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT '0';") !== false);
     }
 
     /**
@@ -2589,7 +2618,7 @@ class Update
      *
      * Add custom blank album/video default image and alphabet browsing options
      */
-    public static function update_380010()
+    public static function update_380010(): bool
     {
         $retval = true;
 
@@ -2619,7 +2648,7 @@ class Update
      *
      * Fix username max size to be the same one across all tables.
      */
-    public static function update_380011()
+    public static function update_380011(): bool
     {
         $retval = true;
 
@@ -2645,7 +2674,7 @@ class Update
      * That left the user base with an inconsistent database.
      * For more information, please look at update_360035.
      */
-    public static function update_380012()
+    public static function update_380012(): bool
     {
         $retval = true;
 
@@ -2675,7 +2704,7 @@ class Update
      *   plex_match_email
      * Add preference for master/develop branch selection
      */
-    public static function update_400000()
+    public static function update_400000(): bool
     {
         $retval = true;
 
@@ -2732,7 +2761,7 @@ class Update
      *
      * Make sure people on older databases have the same preference categories
      */
-    public static function update_400001()
+    public static function update_400001(): bool
     {
         $retval = true;
         $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;";
@@ -2811,7 +2840,7 @@ class Update
      * Add barcode catalog_number and original_year
      * Drop catalog_number from song_data
      */
-    public static function update_400002()
+    public static function update_400002(): bool
     {
         $retval = true;
         $sql    = "UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;";
@@ -2831,7 +2860,7 @@ class Update
      *
      * Make sure preference names are updated to current strings
      */
-    public static function update_400003()
+    public static function update_400003(): bool
     {
         $retval = true;
         $sql    = "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play' ";
@@ -2965,7 +2994,7 @@ class Update
      *
      * delete upload_user_artist database settings
      */
-    public static function update_400004()
+    public static function update_400004(): bool
     {
         $retval = true;
 
@@ -2983,7 +3012,7 @@ class Update
      *
      * Add a last_count to searches to speed up access requests
      */
-    public static function update_400005()
+    public static function update_400005(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
@@ -2997,7 +3026,7 @@ class Update
      *
      * drop shoutcast_active preferences and localplay_shoutcast table
      */
-    public static function update_400006()
+    public static function update_400006(): bool
     {
         $retval = true;
 
@@ -3019,7 +3048,7 @@ class Update
      * Add ui option for skip_count display
      * Add ui option for displaying dates in a custom format
      */
-    public static function update_400007()
+    public static function update_400007(): bool
     {
         $retval = true;
 
@@ -3043,7 +3072,7 @@ class Update
      *
      * Add system option for cron based cache and create related tables
      */
-    public static function update_400008()
+    public static function update_400008(): bool
     {
         $retval = true;
 
@@ -3073,7 +3102,7 @@ class Update
      *
      * Add ui option for forcing unique items to playlists
      */
-    public static function update_400009()
+    public static function update_400009(): bool
     {
         $retval = true;
 
@@ -3091,7 +3120,7 @@ class Update
      *
      * Add a last_duration to searches to speed up access requests
      */
-    public static function update_400010()
+    public static function update_400010(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
@@ -3106,7 +3135,7 @@ class Update
      * Allow negative track numbers for albums
      * Truncate database tracks to 0 when greater than 32767
      */
-    public static function update_400011()
+    public static function update_400011(): bool
     {
         $retval = true;
         $sql    = "UPDATE `song` SET `track` = 0 WHERE `track` > 32767;";
@@ -3123,7 +3152,7 @@ class Update
      *
      * Add a rss token to use an RSS unauthenticated feed.
      */
-    public static function update_400012()
+    public static function update_400012(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
@@ -3137,7 +3166,7 @@ class Update
      *
      * Extend Democratic cooldown beyond 255.
      */
-    public static function update_400013()
+    public static function update_400013(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
@@ -3152,7 +3181,7 @@ class Update
      * Add last_duration to playlist
      * Add time to artist and album
      */
-    public static function update_400014()
+    public static function update_400014(): bool
     {
         $retval = true;
 
@@ -3173,7 +3202,7 @@ class Update
      *
      * Extend artist time. smallint was too small
      */
-    public static function update_400015()
+    public static function update_400015(): bool
     {
         $retval = true;
 
@@ -3188,7 +3217,7 @@ class Update
      *
      * Extend album and make artist even bigger. This should cover everyone.
      */
-    public static function update_400016()
+    public static function update_400016(): bool
     {
         $retval = true;
 
@@ -3206,7 +3235,7 @@ class Update
      *
      * Removed.
      */
-    public static function update_400017()
+    public static function update_400017(): bool
     {
         return true;
     }
@@ -3216,7 +3245,7 @@ class Update
      *
      * Extend video bitrate to unsigned. There's no reason for a negative bitrate.
      */
-    public static function update_400018()
+    public static function update_400018(): bool
     {
         $retval = true;
         $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
@@ -3233,7 +3262,7 @@ class Update
      *
      * Put of_the_moment into a per user preference
      */
-    public static function update_400019()
+    public static function update_400019(): bool
     {
         $retval = true;
 
@@ -3251,7 +3280,7 @@ class Update
      *
      * Customizable login background image
      */
-    public static function update_400020()
+    public static function update_400020(): bool
     {
         $retval = true;
 
@@ -3269,7 +3298,7 @@ class Update
      *
      * Add r128 gain columns to song_data
      */
-    public static function update_400021()
+    public static function update_400021(): bool
     {
         $retval = true;
 
@@ -3284,7 +3313,7 @@ class Update
      *
      * Extend allowed time for podcast_episodes
      */
-    public static function update_400022()
+    public static function update_400022(): bool
     {
         $retval = true;
 
@@ -3299,7 +3328,7 @@ class Update
      *
      * delete concerts_limit_past and concerts_limit_future database settings
      */
-    public static function update_400023()
+    public static function update_400023(): bool
     {
         $retval = true;
 
@@ -3317,7 +3346,7 @@ class Update
      *
      * Add song_count, album_count and album_group_count to artist
      */
-    public static function update_400024()
+    public static function update_400024(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `artist` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
@@ -3335,7 +3364,7 @@ class Update
      *
      * Delete duplicate files in the song table
      */
-    public static function update_500000()
+    public static function update_500000(): bool
     {
         $retval = true;
         $sql    = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
@@ -3352,7 +3381,7 @@ class Update
      * Fill the album `catalog` and `time` values using the song table
      * Fill the artist `album_count`, `album_group_count` and `song_count` values
      */
-    public static function update_500001()
+    public static function update_500001(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `album` ADD `release_status` varchar(32) DEFAULT NULL;";
@@ -3367,17 +3396,17 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `label` ADD `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `album`, (SELECT min(`song`.`catalog`) as `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
+        $sql = "UPDATE `album`, (SELECT min(`song`.`catalog`) AS `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
-        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) as `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album` AND `album`.`time` != `song`.`time`;";
+        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`time` != `song`.`time` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
         $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
         Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`album_artist`;";
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
         Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `album_artist` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album_artist`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`album_artist`;";
+        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
         Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist`;";
+        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";
         Dba::write($sql);
 
         return $retval;
@@ -3389,7 +3418,7 @@ class Update
      * Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables
      * Fill counts into the columns
      */
-    public static function update_500002()
+    public static function update_500002(): bool
     {
         $retval = true;
         // tables which usually calculate a count
@@ -3417,12 +3446,12 @@ class Update
      *
      * add `catalog` to podcast_episode table
      */
-    public static function update_500003()
+    public static function update_500003(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) as `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
+        $sql = "UPDATE `podcast_episode`, (SELECT min(`podcast`.`catalog`) AS `catalog`, `podcast`.`id` FROM `podcast` GROUP BY `podcast`.`id`) AS `podcast` SET `podcast_episode`.`catalog` = `podcast`.`catalog` WHERE `podcast_episode`.`catalog` != `podcast`.`catalog` AND `podcast_episode`.`podcast` = `podcast`.`id` AND `podcast`.`catalog` > 0;";
         Dba::write($sql);
 
         return $retval;
@@ -3433,7 +3462,7 @@ class Update
      *
      * Create catalog_map table and fill it with data
      */
-    public static function update_500004()
+    public static function update_500004(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -3462,14 +3491,14 @@ class Update
      *
      * Add song_count, artist_count to album
      */
-    public static function update_500005()
+    public static function update_500005(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `album` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `album` ADD `artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) from `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`));";
+        $sql = "REPLACE INTO `update_info` SET `key`= 'album_group', `value`= (SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`));";
         Dba::write($sql);
         $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
         Dba::write($sql);
@@ -3484,7 +3513,7 @@ class Update
      *
      * Add user_playlist table
      */
-    public static function update_500006()
+    public static function update_500006(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -3504,7 +3533,7 @@ class Update
      * Add a 'Browse' category to interface preferences
      * Add ui option ('show_license') for hiding license column in song rows
      */
-    public static function update_500007()
+    public static function update_500007(): bool
     {
         $retval = true;
         $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')";
@@ -3524,7 +3553,7 @@ class Update
      *
      * Add filter_user to catalog table, set unique on user_data
      */
-    public static function update_500008()
+    public static function update_500008(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;";
@@ -3546,7 +3575,7 @@ class Update
      *
      * Add ui option ('use_original_year') Browse by Original Year for albums (falls back to Year)
      */
-    public static function update_500009()
+    public static function update_500009(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
@@ -3563,7 +3592,7 @@ class Update
      *
      * Add ui option ('hide_single_artist') Hide the Song Artist column for Albums with one Artist
      */
-    public static function update_500010()
+    public static function update_500010(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
@@ -3580,7 +3609,7 @@ class Update
      *
      * Add `total_count` to podcast table and fill counts into the column
      */
-    public static function update_500011()
+    public static function update_500011(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
@@ -3596,7 +3625,7 @@ class Update
      *
      * Move user bandwidth calculations out of the user format function into the user_data table
      */
-    public static function update_500012()
+    public static function update_500012(): bool
     {
         $retval          = true;
         $sql             = "SELECT `id` FROM `user`";
@@ -3609,17 +3638,17 @@ class Update
         foreach ($user_list as $user_id) {
             $params = array($user_id);
             $total  = 0;
-            $sql_s  = "SELECT SUM(`song`.`size`) as `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'song' AND `object_count`.`user` = ?;";
+            $sql_s  = "SELECT SUM(`song`.`size`) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
             $db_s   = Dba::read($sql_s, $params);
             while ($results  = Dba::fetch_assoc($db_s)) {
                 $total = $total + (int)$results['size'];
             }
-            $sql_v = "SELECT SUM(`video`.`size`) as `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+            $sql_v = "SELECT SUM(`video`.`size`) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
             $db_v  = Dba::read($sql_v, $params);
             while ($results  = Dba::fetch_assoc($db_v)) {
                 $total = $total + (int)$results['size'];
             }
-            $sql_p = "SELECT SUM(`podcast_episode`.`size`) as `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+            $sql_p = "SELECT SUM(`podcast_episode`.`size`) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
             $db_p  = Dba::read($sql_p, $params);
             while ($results  = Dba::fetch_assoc($db_p)) {
                 $total = $total + (int)$results['size'];
@@ -3636,7 +3665,7 @@ class Update
      * Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)
      * Add username to the playlist table to stop pulling user all the time
      */
-    public static function update_500013()
+    public static function update_500013(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -3678,7 +3707,7 @@ class Update
      *
      * Add `episodes` to podcast table to track episode count
      */
-    public static function update_500014()
+    public static function update_500014(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `podcast` ADD `episodes` int(11) UNSIGNED NOT NULL DEFAULT '0';";
@@ -3694,7 +3723,7 @@ class Update
      *
      * Add ui option ('hide_genres') Hide the Genre column in browse table rows
      */
-    public static function update_500015()
+    public static function update_500015(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse')";
@@ -3711,7 +3740,7 @@ class Update
      *
      * Add podcast to the object_count table
      */
-    public static function update_510000()
+    public static function update_510000(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
@@ -3725,7 +3754,7 @@ class Update
      *
      * Add podcast to the cache_object_count tables
      */
-    public static function update_510001()
+    public static function update_510001(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album', 'artist', 'song', 'playlist', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode');";
@@ -3741,7 +3770,7 @@ class Update
      *
      * Removed.
      */
-    public static function update_510002()
+    public static function update_510002(): bool
     {
         return true;
     }
@@ -3751,7 +3780,7 @@ class Update
      *
      * Add live_stream to the rating table
      */
-    public static function update_510003()
+    public static function update_510003(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist', 'album', 'song', 'stream', 'live_stream', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');";
@@ -3765,7 +3794,7 @@ class Update
      *
      * Add waveform column to podcast_episode table
      */
-    public static function update_510004()
+    public static function update_510004(): bool
     {
         $retval = true;
 
@@ -3780,7 +3809,7 @@ class Update
      *
      * Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)
      */
-    public static function update_510005()
+    public static function update_510005(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic')";
@@ -3798,7 +3827,7 @@ class Update
      * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
      * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
      */
-    public static function update_520000()
+    public static function update_520000(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
@@ -3830,7 +3859,7 @@ class Update
      *
      * Make sure preference names are always unique
      */
-    public static function update_520001()
+    public static function update_520001(): bool
     {
         $sql             = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
         $dupe_prefs      = Dba::read($sql);
@@ -3843,7 +3872,7 @@ class Update
             $sql    = "DELETE FROM `preference` WHERE `id` = ?;";
             Dba::write($sql, array($pref_id));
         }
-        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` from `preference`);";
+        $sql    = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);";
         Dba::write($sql);
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
         $retval = (Dba::write($sql) !== false);
@@ -3856,7 +3885,7 @@ class Update
      *
      * Add ui option ('show_playlist_username') Show playlist owner username in titles
      */
-    public static function update_520002()
+    public static function update_520002(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
@@ -3873,7 +3902,7 @@ class Update
      *
      * Add ui option ('api_hidden_playlists') Hide playlists in Subsonic and API clients that start with this string
      */
-    public static function update_520003()
+    public static function update_520003(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
@@ -3890,7 +3919,7 @@ class Update
      *
      * Set 'plugins' category to lastfm_challenge preference
      */
-    public static function update_520004()
+    public static function update_520004(): bool
     {
         $retval = true;
         $sql    = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
@@ -3904,7 +3933,7 @@ class Update
      *
      * Add ui option ('api_hide_dupe_searches') Hide smartlists that match playlist names in Subsonic and API clients
      */
-    public static function update_520005()
+    public static function update_520005(): bool
     {
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
@@ -3912,6 +3941,185 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530000
+     *
+     * Create artist_map table and fill it with data
+     */
+    public static function update_530000(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = 'MyISAM';
+        // create the table
+        $sql = "CREATE TABLE IF NOT EXISTS `artist_map` (`artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`), INDEX `object_id_index` (`object_id`), INDEX `artist_id_index` (`artist_id`), INDEX `artist_id_type_index` (`artist_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+        // fill the data
+        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530001
+     *
+     * Create album_map table and fill it with data
+     */
+    public static function update_530001(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = 'MyISAM';
+        // create the table
+        $sql = "CREATE TABLE IF NOT EXISTS `album_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`), INDEX `object_id_index` (`object_id`), INDEX `object_id_index` (`object_id`), INDEX `album_id_type_index` (`album_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+        // fill the data
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530002
+     *
+     * Use song_count & artist_count with album_map
+     */
+    public static function update_530002(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` ADD `song_artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`song_artist_count` = `album_map`.`artist_count` WHERE `album`.`id` = `album_map`.`album_id`;";
+        Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_530003
+     *
+     * Drop id column from catalog_map
+     * Alter `catalog_map` object_type charset and collation
+     */
+    public static function update_530003(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `catalog_map` DROP COLUMN `id`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530004
+     *
+     * Alter `album_map` charset and engine to MyISAM if engine set
+     */
+    public static function update_530004(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530005
+     *
+     * Alter `artist_map` charset and engine to MyISAM if engine set
+     */
+    public static function update_530005(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `artist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530006
+     *
+     * Make sure the object_count table has all the correct primary artist/album rows
+     */
+    public static function update_530006(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `artist_count`.`id` IS NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530007
+     *
+     * Convert basic text columns into utf8/utf8_unicode_ci
+     */
+    public static function update_530007(): bool
+    {
+        $retval = true;
+        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530008
+     *
+     * Remove `user_activity` columns that are useless
+     */
+    public static function update_530008(): bool
+    {
+        $retval = true;
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_track`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_artist`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_album`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_track`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_artist`;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;") !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530009
+     *
+     * Delete duplicate rows and require unique data on `object_count`
+     */
+    public static function update_530009(): bool
+    {
+        $retval     = true;
+        $sql        = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }

@@ -167,6 +167,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     T_('Update artist information and fetch similar artists from last.fm'),
                     true
                 );
+                // clean out the bad artists first
+                Catalog::clean_duplicate_artists();
+                // clear up all the things first
+                Catalog::update_counts();
 
                 // Look for updated artist information. (1 month since last update MBID IS NOT NULL) LIMIT 500
                 $artists = $catalog->get_artist_ids('time');

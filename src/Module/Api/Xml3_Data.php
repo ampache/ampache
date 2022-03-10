@@ -210,7 +210,6 @@ class Xml3_Data
         return $string;
     } // tags_string
 
-
     /**
      * playlist_song_tracks_string
      *
@@ -710,7 +709,6 @@ class Xml3_Data
                 $footer = "\n</root>\n";
                 break;
         } // end switch on type
-
 
         return $footer;
     } // _footer

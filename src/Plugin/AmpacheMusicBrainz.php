@@ -99,7 +99,6 @@ class AmpacheMusicBrainz
         return false;
     }
 
-
     /**
      * load
      * This is a required plugin function; here it populates the prefs we
@@ -263,4 +262,38 @@ class AmpacheMusicBrainz
 
         return false;
     } // get_external_metadata
+
+    /**
+     * get_artist
+     * Get an artist from musicbrainz
+     * @param string $mbid
+     * @return array
+     */
+    public function get_artist(string $mbid)
+    {
+        //debug_event(self::class, "get_artist: {{$mbid}}", 4);
+        $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+        $results = array();
+        $data    = array();
+        if (Vainfo::is_mbid($mbid)) {
+            try {
+                $results = $mbrainz->lookup('artist', $mbid);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return $data;
+            }
+        }
+        if (is_array($results) && !empty($results)) {
+            $results = $results[0];
+        }
+        if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
+            $data = array(
+                'name' => $results->{'name'},
+                'mbid' => $results->{'id'}
+            );
+        }
+
+        return $data;
+    } // get_artist
 }

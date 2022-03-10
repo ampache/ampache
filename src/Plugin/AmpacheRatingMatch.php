@@ -141,7 +141,6 @@ class AmpacheRatingMatch
         return true;
     } // upgrade
 
-
     /**
      * save_rating
      * Rate an artist and album after rating the song
@@ -152,26 +151,31 @@ class AmpacheRatingMatch
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
             if ($rating->type == 'song') {
-                $song   = new Song($rating->id);
-                $artist = new Rating($song->artist, 'artist');
-                $album  = new Rating($song->album, 'album');
-
-                $rating_artist = $artist->get_user_rating($this->user->id);
-                $rating_album  = $album->get_user_rating($this->user->id);
-                if ($rating_artist < $new_rating) {
-                    $artist->set_rating($new_rating, $this->user->id);
+                $song = new Song($rating->id);
+                // rate all the song artists (If there are more than one)
+                foreach ($song->artists as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist < $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
                 }
+                // album is a single object
+                $album         = new Rating($song->album, 'album');
+                $rating_album  = $album->get_user_rating($this->user->id);
                 if ($rating_album < $new_rating) {
                     $album->set_rating($new_rating, $this->user->id);
                 }
             }
             if ($rating->type == 'album') {
-                $album  = new Album($rating->id);
-                $artist = new Rating($album->album_artist, 'artist');
-
-                $rating_artist = $artist->get_user_rating($this->user->id);
-                if ($rating_artist <= $new_rating) {
-                    $artist->set_rating($new_rating, $this->user->id);
+                $album = new Album($rating->id);
+                // rate all the album artists (If there are more than one)
+                foreach ($album->album_artists as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist <= $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
                 }
             }
         }

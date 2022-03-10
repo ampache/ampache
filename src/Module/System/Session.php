@@ -491,6 +491,7 @@ final class Session implements SessionInterface
 
         return '';
     }
+
     /**
      * update_username
      *

@@ -112,7 +112,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getArt(): string
     {
         $albumID = $this->album->getId();
-        $name    = '[' . $this->album->f_album_artist_name . '] ' . scrub_out($this->album->get_fullname());
+        $name    = '[' . $this->album->get_album_artist_fullname() . '] ' . scrub_out($this->album->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 

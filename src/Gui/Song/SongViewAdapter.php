@@ -265,7 +265,6 @@ final class SongViewAdapter implements SongViewAdapterInterface
         return Ui::get_icon('statistics', T_('Graphs'));
     }
 
-
     public function isEditable(): bool
     {
         return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || (
@@ -336,11 +335,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         $songprops = [];
 
-        $songprops[T_('Title')]        = scrub_out($this->song->title);
-        $songprops[T_('Song Artist')]  = $this->song->f_artist_link;
-        if (!empty($this->song->f_albumartist_link)) {
-            $songprops[T_('Album Artist')]   = $this->song->f_albumartist_link;
-        }
+        $songprops[T_('Title')]         = scrub_out($this->song->title);
+        $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
+        $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
         $songprops[T_('Album')]         = $this->song->f_album_link;
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
@@ -449,7 +446,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return $this->song->f_artist_link;
+        return $this->song->get_f_artist_link();
     }
 
     public function getAlbumLink(): string

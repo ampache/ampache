@@ -391,7 +391,6 @@ class Json_Data
             $artist = new Artist($artist_id);
             $artist->format();
 
-
             $rating = new Rating($artist_id, 'artist');
             $flag   = new Userflag($artist_id, 'artist');
 

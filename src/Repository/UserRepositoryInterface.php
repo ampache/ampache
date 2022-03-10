@@ -111,7 +111,6 @@ interface UserRepositoryInterface
      */
     public function updateRssToken(int $userId, string $rssToken): void;
 
-
     /**
      * Updates a users api key
      */

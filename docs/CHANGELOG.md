@@ -2,9 +2,36 @@
 
 ## Ampache develop
 
+This cycle we have added support for multiple Album and Song artists.
+This allows multiple artists to be part of a single song/album object and is created from file tags.
+
+We rely on:
+
+* musicbrainz_albumartistid: Array of MBID values that denote Album Artist
+* musicbrainz_artistid: Array of MBID values that denote Song Artist
+* artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as musicbrainz_artistid)
+
+If these are not arrays, we try to split and create arrays to do the lookups
+The reason the regular artist and albumartist tags are ignored is due to how awful these fields can be.
+
+If you don't use these tags nothing will change and will function as normal.
+
 ### Added
 
 * Additional xhtml templates added
+* Config version 60
+  * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
+* Database 5.3.0 Build 9:
+  * Create `artist_map` table and fill it with data
+  * Create `album_map` table and fill it with data
+  * Use `song_count` & `artist_count` using `album_map`
+  * Drop id column from `catalog_map` table and alter object_type charset and collation
+  * Alter `album_map` table charset and engine to MyISAM if engine set
+  * Alter `artist_map` table charset and engine to MyISAM if engine set
+  * Make sure `object_count` table has all the correct primary artist/album rows
+  * Convert basic text columns into utf8 to reduce index sizes
+  * Remove `user_activity` columns that are useless
+  * Delete duplicate rows and require unique data on `object_count`
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -15,17 +42,22 @@
 
 * Clean up artists with a duplicate MBID (Use the lowest artist id)
 * Delete cached recommendations instead of trying to update (Really slow)
+* Artist::check uses MBID on lookups as well as name
+* update_from_tags: Only update counts, tags and garbage collect after changes found
+* Use albums instead of songs for catalog verify actions
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
 ### Removed
 
+* stat counts are all counted from song, Album and Artist rows are removed
 * search:
   * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
 
 ### Fixed
 
 * VaInfo time for size/playtime_seconds
+* Tag arrays for Mbid and Artists lookup
 * Deleted item tables would not record some deletions
 * Updating the artist name would always migrate data when not required
 * Artist::check would always create and artist object with readonly set
@@ -35,6 +67,16 @@
 * Prepare media before update from tags (Seafile needs to download the file first)
 * Seafile catalog checks for a local file before downloading it again
 * Delete custom_metadata when removed from the object
+* Artist Garbage Collection was way too slow
+* Album and Artist count value sql
+* Don't remove Genre tags when they have been merged (hidden) into a different tag
+* Don't delete merged (hidden) Genres from the tag table
+* Album song_artist_count not calculated correctly
+* Grouping with mbid_group was missing making some albums not possible to view
+* Display and hide of artist columns in some pages based on count
+* Clean and verify would count totals based on all items instead of item type
+* Search:
+  * played search for album and artist was including your user in the results
 * Subsonic:
   * Artist was missing starred status
 

@@ -47,9 +47,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $cleanupMode,
         bool $searchArtMode
     ): void {
-        $catname    = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $catname));
-        $sql        = "SELECT `id` FROM `catalog` WHERE `name` = '$catname' AND `catalog_type`='local'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
+        $db_results = Dba::read($sql, array($catname));
 
         ob_end_clean();
         ob_start();
@@ -97,8 +96,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     true
                 );
                 // update counts after cleaning a missing file
-                Album::update_album_counts($album_id);
-                Artist::update_artist_counts($artist_id);
+                Album::update_album_counts();
+                Artist::update_artist_counts();
 
                 return;
             }
@@ -145,8 +144,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     }
                 }
                 // update counts after adding/verifying
-                Album::update_album_counts($album_id);
-                Artist::update_artist_counts($artist_id);
+                Album::update_album_counts();
+                Artist::update_artist_counts();
             }
         }
 

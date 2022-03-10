@@ -2083,7 +2083,6 @@ class Subsonic_Api
             }
         }
 
-
         $response = Subsonic_Xml_Data::createSuccessResponse('scrobble');
         self::apiOutput($input, $response);
     }

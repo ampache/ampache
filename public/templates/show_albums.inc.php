@@ -127,21 +127,21 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
-                ->setContext('USER_IS_REGISTERED', User::is_registered())
-                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
-                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                ->setContext('IS_TABLE_VIEW', $is_table)
-                ->setContext('IS_HIDE_GENRE', $hide_genres)
-                ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
-                ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                ->setContext('CLASS_COVER', $cel_cover)
-                ->setContext('CLASS_ALBUM', $cel_album)
-                ->setContext('CLASS_ARTIST', $cel_artist)
-                ->setContext('CLASS_TAGS', $cel_tags)
-                ->setContext('CLASS_COUNTER', $cel_counter)
-                ->setTemplate('album_row.xhtml')
-                ->render();
+                    ->setContext('USER_IS_REGISTERED', User::is_registered())
+                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                    ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
+                    ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                    ->setContext('IS_TABLE_VIEW', $is_table)
+                    ->setContext('IS_HIDE_GENRE', $hide_genres)
+                    ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+                    ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+                    ->setContext('CLASS_COVER', $cel_cover)
+                    ->setContext('CLASS_ALBUM', $cel_album)
+                    ->setContext('CLASS_ARTIST', $cel_artist)
+                    ->setContext('CLASS_TAGS', $cel_tags)
+                    ->setContext('CLASS_COUNTER', $cel_counter)
+                    ->setTemplate('album_row.xhtml')
+                    ->render();
 
             echo $content; ?>
         </tr>

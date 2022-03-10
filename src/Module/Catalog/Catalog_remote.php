@@ -405,7 +405,7 @@ class Catalog_remote extends Catalog
             $max_bitrate = $user_bit_rate;
         }
         $handshake  = $remote_handle->info();
-        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) as `extension` FROM `song` WHERE `catalog` = ?;";
+        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];

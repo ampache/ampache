@@ -37,7 +37,7 @@ $t_search = T_('Search'); ?>
         <input type="hidden" name="object_type" value="song" />
         <select name="rule_1" id="searchStringRule">
             <option value="anywhere"><?php echo T_('Anywhere')?></option>
-            <option value="title"><?php echo T_('Titles')?></option>
+            <option value="title"><?php echo T_('Songs')?></option>
             <option value="album"><?php echo $t_albums?></option>
             <option value="artist"><?php echo $t_artists?></option>
             <option value="playlist_name"><?php echo $t_playlists?></option>
