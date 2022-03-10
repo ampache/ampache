@@ -21,10 +21,10 @@ If you don't use these tags nothing will change and will function as normal.
 * Additional xhtml templates added
 * Database 5.3.0 Build 8:
   * Create `artist_map` table and fill it with data
-  * Create `albumartist_map` table and fill it with data
-  * Use `song_count` & `artist_count` using `albumartist_map`
+  * Create `album_map` table and fill it with data
+  * Use `song_count` & `artist_count` using `album_map`
   * Drop id column from `catalog_map` table and alter object_type charset and collation
-  * Alter `albumartist_map` table charset and engine to MyISAM if engine set
+  * Alter `album_map` table charset and engine to MyISAM if engine set
   * Alter `artist_map` table charset and engine to MyISAM if engine set
   * Make sure `object_count` table has all the correct primary artist/album rows
   * Convert basic text columns into utf8 to reduce index sizes
