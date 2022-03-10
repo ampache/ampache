@@ -601,6 +601,7 @@ class Catalog_local extends Catalog
                 if ($chunk > 0) {
                     $media_type::clear_cache();
                 }
+                debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $type . " on chunk $chunk", 5);
                 $total_updated += $this->_verify_chunk($type, $chunk, 1000);
             }
         }
@@ -622,7 +623,6 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "catalog " . $this->id . " starting verify on chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
@@ -690,17 +690,17 @@ class Catalog_local extends Catalog
         }
 
         $dead_total  = 0;
-        $stats       = self::get_stats($this->id);
+        $stats       = self::get_server_counts(0);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats['items'];
+            $total = $stats[$media_type];
             if ($total == 0) {
                 continue;
             }
             $chunks = floor($total / 10000);
             $dead   = array();
             foreach (range(0, $chunks) as $chunk) {
-                debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
+                debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk", 5);
                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             }
 
