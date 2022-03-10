@@ -19,6 +19,8 @@ If you don't use these tags nothing will change and will function as normal.
 ### Added
 
 * Additional xhtml templates added
+* Config version 60
+  * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
 * Database 5.3.0 Build 9:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
@@ -42,6 +44,7 @@ If you don't use these tags nothing will change and will function as normal.
 * Delete cached recommendations instead of trying to update (Really slow)
 * Artist::check uses MBID on lookups as well as name
 * update_from_tags: Only update counts, tags and garbage collect after changes found
+* Use albums instead of songs for catalog verify actions
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
@@ -68,8 +71,10 @@ If you don't use these tags nothing will change and will function as normal.
 * Album and Artist count value sql
 * Don't remove Genre tags when they have been merged (hidden) into a different tag
 * Don't delete merged (hidden) Genres from the tag table
-* Album song_artist_count not calculated
+* Album song_artist_count not calculated correctly
 * Grouping with mbid_group was missing making some albums not possible to view
+* Display and hide of artist columns in some pages based on count
+* Clean and verify would count totals based on all items instead of item type
 * Search:
   * played search for album and artist was including your user in the results
 * Subsonic:
