@@ -1162,12 +1162,13 @@ class Album extends database_object implements library_item
 
             if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
+                self::update_albumartist_map($this->id, 'album', $album_artist);
+                self::remove_albumartist_map($this->id, 'album', $this->album_artist);
             }
             if (!empty($year) && $year != $this->year) {
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
-
                     $this->getSongTagWriter()->write(new Song($song_id));
                 }
             }
@@ -1304,7 +1305,7 @@ class Album extends database_object implements library_item
     /**
      * Delete the album map for a single item
      */
-    public static function remove_artist_map($album_id, $object_type, $object_id)
+    public static function remove_albumartist_map($album_id, $object_type, $object_id)
     {
         if ((int)$album_id > 0 && (int)$object_id > 0) {
             debug_event(__CLASS__, "remove_albumartist_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);

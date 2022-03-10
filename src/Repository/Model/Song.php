@@ -1627,7 +1627,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Art::duplicate('album', $old_album, $new_album);
         Catalog::migrate_map('album', $old_album, $new_album);
         Album::update_albumartist_map($new_album, 'song', $song_id);
-        Album::remove_artist_map($old_album, 'song', $song_id);
+        Album::remove_albumartist_map($old_album, 'song', $song_id);
         Album::update_album_counts();
     } // update_album
 
