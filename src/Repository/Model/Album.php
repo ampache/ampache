@@ -592,7 +592,7 @@ class Album extends database_object implements library_item
         $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
-        $this->album_artists  = self::get_parent_array($this->id);
+        $this->album_artists  = self::get_parent_array($this->id, $this->album_artist);
 
         if ($details) {
             /* Pull the advanced information */
@@ -738,7 +738,7 @@ class Album extends database_object implements library_item
             $this->f_album_artist_link = '';
             $web_path                  = AmpConfig::get('web_path');
             if (empty($this->album_artists)) {
-                $this->album_artists = self::get_parent_array($this->id);
+                $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
             }
             foreach ($this->album_artists as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
@@ -891,19 +891,22 @@ class Album extends database_object implements library_item
     /**
      * Get parent album artists.
      * @param int $album_id
+     * @param int $primary_id
      * @return array
      */
-    public static function get_parent_array($album_id)
+    public static function get_parent_array($album_id, $primary_id)
     {
         $results    = array();
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
         }
+        $primary = ($primary_id > 0)
+            ? array($primary_id)
+            : array();
 
-        return $results;
+        return array_unique(array_merge($primary, $results));
     }
 
     /**
