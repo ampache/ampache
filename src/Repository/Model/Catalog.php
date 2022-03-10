@@ -1925,7 +1925,7 @@ abstract class Catalog extends database_object
      * @param string $type
      * @param integer $object_id
      * @param boolean $api
-     * @return integer
+     * @return array
      */
     public static function update_single_item($type, $object_id, $api = false)
     {
@@ -2040,7 +2040,10 @@ abstract class Catalog extends database_object
             Artist::garbage_collection();
         }
 
-        return $result;
+        return array(
+            'object_id' => $result,
+            'change' => ($album || $artist || $maps || $tags)
+        );
     } // update_single_item
 
     /**

@@ -582,24 +582,26 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $stats         = self::get_stats($this->id);
-        $number        = $stats['items'];
+        $stats         = self::get_server_counts(0);
+        $number        = 0;
         $total_updated = 0;
         $this->count   = 0;
 
-        /** @var Song|Video $media_type */
-        foreach (array(Video::class, Song::class) as $media_type) {
-            $total = $stats['items'];
+        /** @var Album|Video $media_type */
+        foreach (array(Video::class, Album::class) as $media_type) {
+            $type  = ObjectTypeToClassNameMapper::reverseMap($media_type);
+            $total = $stats[$type];
             if ($total == 0) {
                 continue;
             }
-            $chunks = (int)floor($total / 10000);
+            $number = $number + $total;
+            $chunks = (int)floor($total / 1000);
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
                     $media_type::clear_cache();
                 }
-                $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
+                $total_updated += $this->_verify_chunk($type, $chunk, 1000);
             }
         }
 
@@ -624,8 +626,8 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql = ($tableName == 'song')
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . " AND (`song`.`update_time` < `catalog`.`last_update` OR `song`.`addition_time` > `catalog`.`last_update`)) ORDER BY `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
+        $sql = ($tableName == 'album')
+            ? "SELECT `song`.`album`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `song`.`update_time` LIMIT $count, $chunk_size"
             : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
@@ -636,6 +638,7 @@ class Catalog_local extends Catalog
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
+            /** @var Album|Video $class_name */
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
@@ -660,12 +663,9 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            $media = new $class_name($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
-            if ($info['change']) {
+            if (self::update_single_item($tableName, $row['id'], true)['change'] == true) {
                 $changed++;
             }
-            unset($info);
         }
 
         Ui::update_text('verify_count_' . $this->id, $count);
