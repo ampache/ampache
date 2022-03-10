@@ -1363,6 +1363,23 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * does the item have a single album artist and song artist?
+     * @return int
+     */
+    public function get_artist_count()
+    {
+        $sql        = "SELECT COUNT(DISTINCT(`object_id`)) AS `artist_count` FROM `albumartist_map` WHERE `album_id` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
+        if (empty($row)) {
+            return (int)$row['artist_count'];
+
+        }
+
+        return 0;
+    }
+
+    /**
      * sanitize_disk
      * Change letter disk numbers (like vinyl/cassette) to an integer
      * @param string|integer $disk
