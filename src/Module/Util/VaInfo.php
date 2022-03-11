@@ -862,7 +862,7 @@ final class VaInfo implements VaInfoInterface
                     case 'wma':
                         $key = 'asf';
                         //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_generic($tag_array);
+                        $parsed = $this->_cleanup_asf($tag_array);
                         break;
                     case 'lyrics3':
                         //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -1636,6 +1636,129 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
+     * _cleanup_asf
+     *
+     * This does WMA cleanup.
+     * @param $tags
+     * @return array
+     * @throws Exception
+     */
+    private function _cleanup_asf($tags)
+    {
+        $parsed = array();
+        foreach ($tags as $tagname => $data) {
+            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            switch (strtolower($tagname)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
+                case 'genre':
+                    // Pass the array through
+                    $parsed['genre'] = $this->parseGenres($data[0]);
+                    break;
+                case 'partofset':
+                    $elements             = explode('/', $data[0]);
+                    $parsed['disk']       = $elements[0];
+                    $parsed['totaldisks'] = $elements[1] ?? null;
+                    break;
+                case 'track_number':
+                case 'track':
+                    $parsed['track'] = $data[0];
+                    break;
+                case 'musicbrainz_artistid':
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_albumid':
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumartistid':
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_releasegroupid':
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_trackid':
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumtype':
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
+                case 'originalreleaseyear':
+                    $parsed['original_year'] = str_replace("\x00", '', $data[0]);
+                    break;
+                default:
+                    $parsed[$tagname] = $data[0];
+                    break;
+            }
+        }
+
+        // WMA isn't read very well so dig into the raw data
+        if (array_key_exists('asf', $this->_raw) && is_array($this->_raw['asf'])) {
+            $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
+            foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
+                $value = str_replace("\x00", '', $wmaTag['value']);
+                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                switch (strtolower($this->trimAscii($wmaTag['name']))) {
+                    case 'wm/artists':
+                        $parsed['artists'] = $this->parseArtists($value);
+                        break;
+                    case 'wm/albumartist':
+                        $parsed['albumartist'] = $value;
+                        break;
+                    case 'musicbrainz/artist id':
+                        $parsed['mb_artistid']       = self::parse_mbid($value);
+                        $parsed['mb_artistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album artist id':
+                        $parsed['mb_albumartistid']       = self::parse_mbid($value);
+                        $parsed['mb_albumartistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album id':
+                        $parsed['mb_albumid'] = self::parse_mbid($value);
+                        break;
+                    case 'musicbrainz/release group id':
+                        $parsed['mb_albumid_group'] = self::parse_mbid($value);;
+                        break;
+                    case 'musicbrainz/album type':
+                        $parsed['release_type'] = $value;
+                        break;
+                    case 'musicbrainz/album status':
+                        $parsed['release_status'] = $value;
+                        break;
+                    case 'wm/originalreleaseyear':
+                        $parsed['original_year'] = (int)$value;
+                        break;
+                    case 'wm/barcode':
+                        $parsed['barcode'] = $value;
+                        break;
+                    case 'wm/catalogno':
+                        $parsed['catalog_number'] = $value;
+                        break;
+                    case 'wm/publisher':
+                        $parsed['publisher'] = $value;
+                        break;
+                    default:
+                        $frame = strtolower($this->trimAscii($wmaTag['name']));
+                        if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
+                            $parsed[strtolower($this->trimAscii($wmaTag['name']))] = $value;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return $parsed;
+    }
+
+    /**
      * _parse_filename
      * This function uses the file and directory patterns to pull out extra tag
      * information.
@@ -1891,32 +2014,34 @@ final class VaInfo implements VaInfoInterface
      *
      * @param array|string $data
      * @return array
-     * @throws Exception
      */
     private function parseArtists($data)
     {
         $result = null;
-        if (is_array($data[0])) {
-            $result = array();
-            foreach ($data[0] as $row) {
-                if (!empty($row)) {
-                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                        $result[] = $artist;
-                    }
-                }
-            }
-        } elseif (is_array($data)) {
+        if (is_array($data)) {
             $result = array();
             foreach ($data as $row) {
                 if (!empty($row)) {
-                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                        $result[] = $artist;
+                    if (is_string($row) && !empty($row)) {
+                        if (strpos(';', str_replace("\x00", ';', $row))) {
+                            foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                                $result[] = $artist;
+                            }
+                        } else {
+                            $result[] = trim($row);
+                        }
+                    } else {
+                        foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                            $result[] = $artist;
+                        }
                     }
                 }
             }
         }
         if (is_string($data) && !empty($data)) {
-            $result = explode(';', str_replace("\x00", ';', $data));
+            $result = (strpos(';', str_replace("\x00", ';', $data)))
+                ? explode(';', str_replace("\x00", ';', $data))
+                : array(trim($data));
         }
 
         return $result;

@@ -19,6 +19,7 @@ If you don't use these tags nothing will change and will function as normal.
 ### Added
 
 * Additional xhtml templates added
+* Parse lots more WMA (ASF) file tags
 * Config version 60
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
 * Database 5.3.0 Build 9:
