@@ -1545,8 +1545,11 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Quicktime tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('Quicktime tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $this->parseGenres($data);
