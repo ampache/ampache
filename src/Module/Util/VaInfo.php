@@ -819,7 +819,7 @@ final class VaInfo implements VaInfoInterface
     private function _get_tags()
     {
         $results = array();
-
+        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         // The tags can come in many different shapes and colors depending on the encoding.
         if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
@@ -1083,20 +1083,11 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
                 case 'artists':
-                    if (is_array($data)) {
-                        $parsed['artists'] = array();
-                        foreach ($data as $row) {
-                            if (!empty($row)) {
-                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
-                            }
-                        }
-                    }
-                    if (is_string($data) && !empty($data)) {
-                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
-                    }
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     // Pass the array through
-                    $parsed['genre'] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data[0]);
                     break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
@@ -1182,17 +1173,8 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'artists':
-                    if (is_array($data)) {
-                        $parsed['artists'] = array();
-                        foreach ($data as $row) {
-                            if (!empty($row)) {
-                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
-                            }
-                        }
-                    }
-                    if (is_string($data) && !empty($data)) {
-                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
-                    }
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     // Pass the array through
                     $parsed[$tag] = $this->parseGenres($data);
@@ -1345,17 +1327,8 @@ final class VaInfo implements VaInfoInterface
             //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
                 case 'artists':
-                    if (is_array($data)) {
-                        $parsed['artists'] = array();
-                        foreach ($data as $row) {
-                            if (!empty($row)) {
-                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
-                            }
-                        }
-                    }
-                    if (is_string($data) && !empty($data)) {
-                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
-                    }
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
@@ -1446,18 +1419,7 @@ final class VaInfo implements VaInfoInterface
                 //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
-                        // return artists as array not as string of artists with delimiter, don't process metadata in catalog
-                        if (is_array($id3v2['comments']['text'][$txxx['description']])) {
-                            $parsed['artists'] = array();
-                            foreach ($id3v2['comments']['text'][$txxx['description']] as $row) {
-                                if (!empty($row)) {
-                                    $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
-                                }
-                            }
-                        }
-                        if (is_string($id3v2['comments']['text'][$txxx['description']]) && !empty($id3v2['comments']['text'][$txxx['description']])) {
-                            $parsed['artists'] = explode(';', str_replace("\x00", ';', $id3v2['comments']['text'][$txxx['description']]));
-                        }
+                        $parsed['artists'] = $this->parseArtists($data);
                         break;
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1926,6 +1888,41 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $data;
+    }
+
+    /**
+     *
+     * @param array|string $data
+     * @return array
+     * @throws Exception
+     */
+    private function parseArtists($data)
+    {
+        $result = null;
+        if (is_array($data[0])) {
+            $result = array();
+            foreach ($data[0] as $row) {
+                if (!empty($row)) {
+                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                        $result[] = $artist;
+                    }
+                }
+            }
+        } elseif (is_array($data)) {
+            $result = array();
+            foreach ($data as $row) {
+                if (!empty($row)) {
+                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                        $result[] = $artist;
+                    }
+                }
+            }
+        }
+        if (is_string($data) && !empty($data)) {
+            $result = explode(';', str_replace("\x00", ';', $data));
+        }
+
+        return $result;
     }
 
     /**
