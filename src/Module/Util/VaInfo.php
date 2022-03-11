@@ -1082,6 +1082,18 @@ final class VaInfo implements VaInfoInterface
         foreach ($tags as $tagname => $data) {
             //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
+                case 'artists':
+                    if (is_array($data)) {
+                        $parsed['artists'] = array();
+                        foreach ($data as $row) {
+                            if (!empty($row)) {
+                                $parsed['artists'][] = explode(';', str_replace("\x00", ';', $row));
+                            }
+                        }
+                    }
+                    if (is_string($data) && !empty($data)) {
+                        $parsed['artists'] = explode(';', str_replace("\x00", ';', $data));
+                    }
                 case 'genre':
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1120,6 +1132,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
+                case 'originalreleaseyear':
+                    $parsed['original_year'] = $data[0];
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
