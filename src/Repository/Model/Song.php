@@ -1131,11 +1131,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
-            if (!isset($this->artists)) {
-                $this->artists = self::get_parent_array($this->id);
-            }
-            foreach ($this->artists as $song_artist_id) {
-                Stats::insert('artist', $song_artist_id, $user_id, $agent, $location, 'stream', $date);
+            // insert plays for song and album artists
+            $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
+            foreach ($artists as $artist_id) {
+                Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
             $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
