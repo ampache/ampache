@@ -153,7 +153,7 @@ class AmpacheRatingMatch
             if ($rating->type == 'song') {
                 $song = new Song($rating->id);
                 // rate all the song artists (If there are more than one)
-                foreach ($song->artists as $artist_id) {
+                foreach (Song::get_parent_array($song->id) as $artist_id) {
                     $artist        = new Rating($artist_id, 'artist');
                     $rating_artist = $artist->get_user_rating($this->user->id);
                     if ($rating_artist < $new_rating) {
@@ -170,7 +170,7 @@ class AmpacheRatingMatch
             if ($rating->type == 'album') {
                 $album = new Album($rating->id);
                 // rate all the album artists (If there are more than one)
-                foreach ($album->album_artists as $artist_id) {
+                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                     $artist        = new Rating($artist_id, 'artist');
                     $rating_artist = $artist->get_user_rating($this->user->id);
                     if ($rating_artist <= $new_rating) {

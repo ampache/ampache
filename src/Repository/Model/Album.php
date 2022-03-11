@@ -902,8 +902,8 @@ class Album extends database_object implements library_item
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
         }
-        $primary = ($primary_id > 0)
-            ? array($primary_id)
+        $primary = ((int)$primary_id > 0)
+            ? array((int)$primary_id)
             : array();
 
         return array_unique(array_merge($primary, $results));
