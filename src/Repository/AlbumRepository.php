@@ -186,33 +186,11 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($f_name == '') {
             return array();
         }
-        $album_artist   = "is null";
-        $release_type   = "is null";
-        $release_status = "is null";
-        $mbid           = "is null";
-        $original_year  = "is null";
-        $year           = (string)$album->year;
-
-        if ($album->album_artist) {
-            $album_artist = "= '" . ucwords((string) $album->album_artist) . "'";
-        }
-        if ($album->release_type) {
-            $release_type = "= '" . ucwords((string) $album->release_type) . "'";
-        }
-        if ($album->release_status) {
-            $release_status = "= '" . ucwords((string) $album->release_status) . "'";
-        }
-        if ($album->mbid) {
-            $mbid = "= '$album->mbid'";
-        }
-        if ($album->original_year) {
-            $original_year = "= '$album->original_year'";
-        }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
+        $where         = "WHERE `album`.`album_artist` = ? AND `album`.`mbid` = ? AND `album`.`release_type` = ? AND `album`.`release_status` = ? AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) AND `album`.`year` = ? AND `album`.`original_year` = ? ";
         $catalog_where = "";
         $catalog_join  = "";
-        $params        = array($f_name, $f_name);
+        $params        = array($album->album_artist, $album->mbid, $album->release_type, $album->release_status, $f_name, $f_name, $album->year, $album->original_year);
 
         if ($catalogId > 0) {
             $catalog_where .= " AND `catalog`.`id` = ?";
@@ -222,12 +200,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
-        $sql = sprintf(
-            'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
-            $catalog_join,
-            $where,
-            $catalog_where
-        );
+        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
+        //debug_event(self::class, 'getAlbumSuite ' . $sql, 5);
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
