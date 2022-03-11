@@ -120,13 +120,12 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
-        $name    = Dba::escape($data['name'] ?? null);
-        $url     = Dba::escape($data['url'] ?? null);
-        $user_id = Dba::escape(Core::get_global('user')->id);
+        $sql     = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
+        $user_id = !empty(Core::get_global('user'))
+            ? Core::get_global('user')->id
+            : -1;
 
-        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
-
-        return Dba::query($sql, array($name, $url, $user_id));
+        return Dba::query($sql, array($data['name'] ?? null, $data['url'] ?? null, $user_id));
     }
 
     /**
