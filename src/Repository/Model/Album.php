@@ -656,7 +656,7 @@ class Album extends database_object implements library_item
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
-            'value' => $this->get_fullname()
+            'value' => $this->get_fullname(true)
         );
         $keywords['year'] = array(
             'important' => false,
