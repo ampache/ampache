@@ -198,13 +198,6 @@ class Stats
                 Dba::write($sql, array($object_id));
                 static::getUserActivityPoster()->post((int) $user_id, 'play', $type, (int) $object_id, (int) $date);
             }
-            if ($type == 'song') {
-                // update the counts for parent objects
-                $sql  = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (SELECT DISTINCT `artist_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?);";
-                Dba::write($sql, array($object_id));
-                $sql  = "UPDATE `album` SET `total_count` = `total_count` + 1 WHERE `id` IN (SELECT DISTINCT `album` FROM `song` WHERE `id` = ?);";
-                Dba::write($sql, array($object_id));
-            }
 
             return true;
         }
@@ -441,7 +434,7 @@ class Stats
             Dba::write($sql, array($song->id));
             $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0";
             Dba::write($sql, array($song->album));
-            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` IN (" . implode(',', Song::get_parent_array($song->id)) . ")  AND `total_count` > 0";
+            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` IN (" . implode(',', array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')))) . ")  AND `total_count` > 0";
             Dba::write($sql);
             if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
                 $sql  = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";

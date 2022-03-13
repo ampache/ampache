@@ -1136,6 +1136,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             foreach ($artists as $artist_id) {
                 Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
+            // update the counts for parent objects
+            $sql  = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (" . implode(',', $artists) . ");";
+            Dba::write($sql);
+            $sql  = "UPDATE `album` SET `total_count` = `total_count` + 1 WHERE `id` = ?;";
+            Dba::write($sql, array($this->album));
+            // running total of the user stream data
             $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
                 ? (int)$user_data['play_size']
