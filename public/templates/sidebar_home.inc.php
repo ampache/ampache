@@ -42,7 +42,8 @@ $allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCou
 $allowDemocratic = AmpConfig::get('allow_democratic_playback');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
-$access50        = Access::check('interface', 50); ?>
+$access50        = Access::check('interface', 50);
+$web_path        = AmpConfig::get('web_path'); ?>
 <ul class="sb2" id="sb_home">
     <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";

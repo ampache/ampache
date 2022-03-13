@@ -838,7 +838,7 @@ class Subsonic_Xml_Data
         $db_results  = Dba::read($sqllook, [$catalogId]);
         $resultcheck = Dba::fetch_assoc($db_results);
         if (!empty($resultcheck)) {
-            if ($resultcheck['catalog_type'] == 'catalog_seafile') {
+            if ($resultcheck['catalog_type'] == 'seafile') {
                 $results['path'] = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file_Path;
 
                 return $results;
