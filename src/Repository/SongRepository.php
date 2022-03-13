@@ -132,8 +132,8 @@ final class SongRepository implements SongRepositoryInterface
         int $artistId
     ): array {
         $sql   = (AmpConfig::get('catalog_disable'))
-            ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
-            : "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
+            ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
+            : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
@@ -154,8 +154,8 @@ final class SongRepository implements SongRepositoryInterface
         int $artistId
     ): array {
         $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `catalog`.`enabled` = '1' "
-            : "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? ";
+            ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `catalog`.`enabled` = '1' "
+            : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? ";
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
