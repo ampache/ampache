@@ -99,7 +99,7 @@ class Stats
         $sql    = "UPDATE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = array($new_object_id, $object_type, $old_object_id);
         if ($child_id) {
-            $sql .= " AND `date` IN (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND object_id = ?)";
+            $sql .= " AND `date` IN (SELECT `date` FROM (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND object_id = ?) AS `song_date`)";
             $params[] = $child_id;
         }
 
