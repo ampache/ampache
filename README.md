@@ -8,17 +8,20 @@
 
 ## News
 
-Still want to use Power Ampache but don't have an Ampache3 server? Multi-API support has landed!
+This cycle we have added support for multiple Album and Song artists.
+This allows multiple artists to be part of a single song/album object and is created from file tags.
 
-* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
-* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
-* Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
+We rely on 3 tags right now [picard-docs](https://picard-docs.musicbrainz.org/downloads/MusicBrainz_Picard_Tag_Map.html)
 
-* Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
-  * Then put your client ID and secret in your ampache config
-  * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
+* Artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as MusicBrainz Artist ID)
+* MusicBrainz Artist ID: Array of MBID values that denote Song Artist
+* MusicBrainz Release Artist ID: Array of MBID values that denote Album Artist
+
+If these are not arrays, we try to split and create arrays to do the lookups
+The reason the regular artist and albumartist tags are ignored (for now) is due to how awful these fields can be.
+If you don't use these tags nothing will change and will function as normal.
+
+To do a full catalog verify, disable catalog_verify_by_time in your config file.
 
 ## Basics
 
@@ -32,6 +35,9 @@ Ampache is not a media organiser; it is meant to be a tool which
 presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
+
+* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
 
 ## Recommended Version
 

@@ -12,9 +12,10 @@ We rely on 3 tags right now [picard-docs](https://picard-docs.musicbrainz.org/do
 * MusicBrainz Release Artist ID: Array of MBID values that denote Album Artist
 
 If these are not arrays, we try to split and create arrays to do the lookups
-The reason the regular artist and albumartist tags are ignored is due to how awful these fields can be.
-
+The reason the regular artist and albumartist tags are ignored (for now) is due to how awful these fields can be.
 If you don't use these tags nothing will change and will function as normal.
+
+To do a full catalog verify, disable catalog_verify_by_time in your config file.
 
 ### Added
 
