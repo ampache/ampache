@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 60
+config_version = 61
 
 ;#########################################################
 ; Auto Update                                            #
@@ -335,8 +335,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Only verify the files that have been modified since the last verify.
 ; For large catalogs the verify process can be terribly long so this will help
 ; speed things up by checking modification date using filemtime() before loading
-; DEFAULT: "true"
-catalog_verify_by_time = "true"
+; DEFAULT: "false"
+;catalog_verify_by_time = "true"
 
 ;#########################################################
 ; Program Settings                                       #

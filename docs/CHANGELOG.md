@@ -20,8 +20,9 @@ If you don't use these tags nothing will change and will function as normal.
 
 * Additional xhtml templates added
 * Parse lots more WMA (ASF) file tags
-* Config version 60
+* Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
+  * Disable catalog_verify_by_time by default
 * Database 5.3.0 Build 9:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
