@@ -627,7 +627,7 @@ class Catalog_local extends Catalog
         $changed = 0;
 
         $sql = ($tableName == 'album')
-            ? "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `song`.`update_time` LIMIT $count, $chunk_size"
+            ? "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size"
             : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
