@@ -383,8 +383,8 @@
             this.scan();
         },
         remove: function(index) {
+            //console.log("remove " + index);
             var self = this;
-            // console.log("remove track " + index);
             if (typeof index === "undefined") {
                 this._initPlaylist([]);
                 this._refresh(function() {
@@ -400,7 +400,6 @@
                         this.removing = true;
 
                         if ("playlist" === jplaylist.type) {
-                            console.log("delete track index " + index);
                             var trackId = $($(".jp-playlist-item-remove")[index]).parent().parent().attr("track_id");
                             jplaylist.rmTrack(trackId, jplaylist.name);
                         }
