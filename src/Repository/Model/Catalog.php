@@ -2262,7 +2262,7 @@ abstract class Catalog extends database_object
         // don't update counts unless something changes
         $map_change = false;
 
-        // add song artists to the list
+        // add song artists with a valid mbid to the list
         if (!empty($artist_mbid_array)) {
             foreach ($artist_mbid_array as $song_artist_mbid) {
                 $song_artist_id = Artist::check_mbid($song_artist_mbid);
@@ -2271,7 +2271,7 @@ abstract class Catalog extends database_object
                 }
             }
         }
-        // add song artists found by mbid to the list (Ignore artist names when we have the same amount of MBID's)
+        // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
                 $song_artist_id = Artist::check($artist_name);
