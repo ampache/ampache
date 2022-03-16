@@ -1419,7 +1419,7 @@ final class VaInfo implements VaInfoInterface
                 //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
-                        $parsed['artists'] = $this->parseArtists($data);
+                        $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']);
                         break;
                     case 'album artist':
                         $parsed['albumartist'] = $id3v2['comments']['text'][$txxx['description']];
