@@ -616,12 +616,12 @@
                     }
                 },
                 fullScreen: {
-                    key: 70, // f
-                    fn: function(f) {
-                        if(f.status.video || f.options.audioFullScreen) {
-                            f._setOption("fullScreen", !f.options.fullScreen);
-                        }
-                    }
+                    //key: 70, // f
+                    //fn: function(f) {
+                    //    if(f.status.video || f.options.audioFullScreen) {
+                    //        f._setOption("fullScreen", !f.options.fullScreen);
+                    //    }
+                    //}
                 },
                 muted: {
                     key: 77, // m

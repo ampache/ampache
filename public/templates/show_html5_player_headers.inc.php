@@ -48,8 +48,6 @@ function update_action()
 <?php } ?>
 <script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/jplayer.ext.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/jplayer.playlist.ext.js"></script>
 
 <script>
 var jplaylist = new Array();
