@@ -125,9 +125,7 @@ $web_path        = AmpConfig::get('web_path'); ?>
     <?php } ?>
     <li class="sb2_search">
         <h4 class="header"><span class="sidebar-header-title"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_search']) && $_COOKIE['sb_search'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-        <ul class="sb3" id="sb_home_search" style="<?php if (!(isset($_COOKIE['sb_search']))) {
-            echo 'display: none;';
-        } ?>">
+        <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
@@ -168,7 +166,9 @@ $web_path        = AmpConfig::get('web_path'); ?>
     } ?>
     <li class="sb2_information">
         <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . ((isset($_COOKIE['sb_info']) && $_COOKIE['sb_info'] == 'expanded') ? 'expanded' : 'collapsed')); ?></h4>
-        <ul class="sb3" id="sb_home_info">
+        <ul class="sb3" id="sb_home_info" style="<?php if (!(isset($_COOKIE['sb_info']))) {
+        echo 'display: none;';
+    } ?>">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
