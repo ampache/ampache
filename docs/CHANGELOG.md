@@ -48,6 +48,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Artist::check uses MBID on lookups as well as name
 * update_from_tags: Only update counts, tags and garbage collect after changes found
 * Use albums instead of songs for catalog verify actions
+* Expand search sidebar menu and collapse information without cookies
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
