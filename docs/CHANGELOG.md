@@ -80,6 +80,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Clean and verify would count totals based on all items instead of item type
 * Search:
   * played search for album and artist was including your user in the results
+  * other_user artist search sql
 * Subsonic:
   * Artist was missing starred status
 
