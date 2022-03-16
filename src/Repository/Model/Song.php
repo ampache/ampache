@@ -491,7 +491,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!isset($results['albumartist_id'])) {
             $albumartist_id = null;
             if ($albumartist) {
-                // TODO Multiple artist per songs not supported for now
                 $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
                 $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
             }
@@ -499,7 +498,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $albumartist_id = (int)($results['albumartist_id']);
         }
         if (!isset($results['artist_id'])) {
-            // TODO Multiple artist per songs not supported for now
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
             $artist_id   = Artist::check($artist, $artist_mbid);
         } else {
@@ -1623,7 +1621,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Catalog::migrate_map('artist', $old_artist, $new_artist);
         Artist::update_artist_map($new_artist, 'song', $song_id);
         Artist::remove_artist_map($old_artist, 'song', $song_id);
-        Artist::update_artist_counts();
         Artist::update_artist_counts();
     } // update_artist
 
