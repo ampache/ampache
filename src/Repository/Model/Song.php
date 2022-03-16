@@ -544,9 +544,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $song_id = (int)Dba::insert_id();
         $artists = array((int)$artist_id, (int)$albumartist_id);
-        // get the artists / album_artists for this song
-        $artist_song_array  = array((int)$artist_id);
-        $artist_album_array = array((int)$albumartist_id);
 
         // map the catalog and artists
         Catalog::update_map((int)$catalog, 'song', $song_id);
@@ -562,7 +559,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
                 $song_artist_id = Artist::check($artist_name);
-                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
+                if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
                     Artist::update_artist_map($song_artist_id, 'song', $song_id);
                     Album::update_album_map($album_id, 'song', $song_artist_id);
