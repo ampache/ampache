@@ -1057,7 +1057,7 @@ class Art extends database_object
                     if (!isset($image['picturetype']) && !isset($image['description'])) {
                         break;
                     }
-                    if ($data['title'] == 'ID3 ' . $image['picturetype'] || $data['title'] == 'ID3 ' . $image['description']) {
+                    if ((isset($image['picturetype']) && $data['title'] == 'ID3 ' . $image['picturetype']) || (isset($image['description']) && $data['title'] == 'ID3 ' . $image['description'])) {
                         return $image['data'];
                     }
                 }
