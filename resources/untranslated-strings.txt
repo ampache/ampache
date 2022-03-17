@@ -14,3 +14,7 @@ msgstr ""
 #: ../../resources/untranslated-strings.txt:15
 msgid "Total Users"
 msgstr ""
+
+#: ../../resources/untranslated-strings.txt:19
+msgid "Update Now!"
+msgstr ""
