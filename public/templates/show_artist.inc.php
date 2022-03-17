@@ -118,8 +118,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($object_type == 'album') { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_('Show Songs')); ?>
-                <?php echo T_('Show Songs'); ?>
+                <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
+                <?php echo T_('Show Artist Songs'); ?>
             </a>
         </li>
         <li>
