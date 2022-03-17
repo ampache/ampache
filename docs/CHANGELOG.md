@@ -44,6 +44,8 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
   * Allow empty/null searches for all mbid searches
   * Allow empty/null searches for label searches
+  * Add `song_count` to album and artist search
+  * Add `album_count` to artist search
 
 ### Changed
 

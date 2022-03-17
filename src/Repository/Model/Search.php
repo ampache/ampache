@@ -663,6 +663,8 @@ class Search extends playlist_object
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
+        $this->type_numeric('album_count', T_('Album Count'), 'numeric', $t_artist_data);
+        $this->type_numeric('song_count', T_('Song Count'), 'numeric', $t_artist_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -732,6 +734,7 @@ class Search extends playlist_object
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
         $this->type_text('release_type', T_('Release Type'), $t_album_data);
         $this->type_text('release_status', T_('Release Status'), $t_album_data);
+        $this->type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
 
         $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
@@ -1600,6 +1603,10 @@ class Search extends playlist_object
                     $where[]      = "(`album`.`total_count` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
+                case 'song_count':
+                    $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
                 case 'release_type':
                     $where[]      = "`album`.`release_type` $sql_match_operator ?";
                     $parameters[] = $input;
@@ -1974,6 +1981,15 @@ class Search extends playlist_object
                     break;
                 case 'played_times':
                     $where[]      = "(`artist`.`total_count` $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'album_count':
+                    $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
+                    $where[]      = "($group_column $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'song_count':
+                    $where[]      = "(`artist`.`song_count` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
                 case 'other_user':
