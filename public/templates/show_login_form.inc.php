@@ -72,7 +72,7 @@ $_SESSION['login'] = true; ?>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                 <div class="loginfield" id="usernamefield">
                     <label for="username"><?php echo T_('Username'); ?>:</label>
-                    <input type="text" id="username" name="username" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
+                    <input type="text" id="username" name="username" maxlength="128" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
                 </div>
                 <div class="loginfield" id="passwordfield">
                     <label for="password"><?php echo T_('Password'); ?>:</label>

@@ -617,6 +617,12 @@ class Update
         $update_string = "* Delete duplicate rows and require unique data on `object_count`";
         $version[]     = array('version' => '530009', 'description' => $update_string);
 
+        $update_string = "* Compact mbid columns back to 36 characters";
+        $version[]     = array('version' => '530010', 'description' => $update_string);
+
+        $update_string = "* Compact some `user` columns<br />* enum `object_count`.`count_type`";
+        $version[]     = array('version' => '530010', 'description' => $update_string);
+
         return $version;
     }
 
@@ -923,7 +929,7 @@ class Update
      */
     public static function update_360010(): bool
     {
-        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(1369);") !== false);
+        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(36);") !== false);
     }
 
     /**
@@ -1274,7 +1280,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE=$engine;") !== false);
+        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1287,7 +1293,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `song_preview` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `session` varchar(256) CHARACTER SET $charset NOT NULL, `artist` int(11) NOT NULL, `title` varchar(255) CHARACTER SET $charset NOT NULL, `album_mbid` varchar(36) CHARACTER SET $charset NULL, `mbid` varchar(36) CHARACTER SET $charset NULL, `disk` int(11) NULL, `track` int(11) NULL, `file` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine;") !== false);
+        return (Dba::write("CREATE TABLE `song_preview` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `session` varchar(256) CHARACTER SET $charset NOT NULL, `artist` int(11) NOT NULL, `title` varchar(255) CHARACTER SET $charset NOT NULL, `album_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL, `disk` int(11) NULL, `track` int(11) NULL, `file` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1450,13 +1456,12 @@ class Update
      */
     public static function update_360038(): bool
     {
-        $retval  = true;
-        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $sql     = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(1369) CHARACTER SET $charset NULL AFTER `artist`";
+        $retval = true;
+        $sql    = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `wanted` MODIFY `artist` int(11) NULL";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `song_preview` ADD `artist_mbid` varchar(1369) CHARACTER SET $charset NULL AFTER `artist`";
+        $sql = "ALTER TABLE `song_preview` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL";
         $retval &= (Dba::write($sql) !== false);
@@ -1545,7 +1550,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE `recommendation` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `last_update` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `recommendation_item` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `recommendation` int(11) unsigned NOT NULL, `recommendation_id` int(11) unsigned NULL, `name` varchar(256) NULL, `rel` varchar(256) NULL, `mbid` varchar(1369) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
+        $sql = "CREATE TABLE `recommendation_item` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `recommendation` int(11) unsigned NOT NULL, `recommendation_id` int(11) unsigned NULL, `name` varchar(256) NULL, `rel` varchar(256) NULL, `mbid` varchar(36) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4080,7 +4085,7 @@ class Update
         $retval = true;
         $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
@@ -4115,10 +4120,55 @@ class Update
      */
     public static function update_530009(): bool
     {
-        $retval     = true;
-        $sql        = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        $retval = true;
+        $sql    = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530010
+     *
+     * Compact mbid columns back to 36 characters
+     */
+    public static function update_530010(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `recommendation_item` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `song_preview` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `wanted` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+    /**
+     * update_530011
+     *
+     * Compact `user` columns and enum `object_count`.`count_type`
+     */
+    public static function update_530011(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $sql       = "ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `user` MODIFY COLUMN `validation` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `user` MODIFY COLUMN `password` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `user` MODIFY COLUMN `apikey` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `user` MODIFY COLUMN `username` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

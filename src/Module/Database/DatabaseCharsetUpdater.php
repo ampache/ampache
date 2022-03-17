@@ -92,7 +92,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `prefix` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `summary` text CHARACTER SET $target_charset COLLATE $target_collation;");
         Dba::write("ALTER TABLE `artist` MODIFY COLUMN `placeformed` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
@@ -191,7 +191,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `recommendation` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `name` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `rel` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `logic_operator` varchar(3) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -216,7 +216,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `song_data` MODIFY COLUMN `label` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `song_data` MODIFY COLUMN `language` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `session` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `artist_mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `title` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `album_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `song_preview` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
@@ -266,7 +266,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `video` MODIFY COLUMN `audio_codec` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `video` MODIFY COLUMN `mime` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `artist_mbid` varchar(1369) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `wanted` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
     }
