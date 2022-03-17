@@ -41,8 +41,7 @@ use Ampache\Module\Util\Ui;
     if (Stream_Playlist::check_autoplay_append()) {
         echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
     }
-}
-    echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $libitem->id); ?>
+} ?>
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
