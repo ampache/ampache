@@ -119,7 +119,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Songs')); ?>
-                <?php echo T_('Show All'); ?>
+                <?php echo T_('Show Songs'); ?>
             </a>
         </li>
         <li>
