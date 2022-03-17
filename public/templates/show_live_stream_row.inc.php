@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -32,10 +33,16 @@ use Ampache\Module\Util\Ui;
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
-    <?php
-        if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play live stream'), 'play_live_stream_' . $libitem->id);
-        } ?>
+    <?php if (AmpConfig::get('directplay')) {
+    echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play'), 'play_live_stream_' . $libitem->id);
+    if (Stream_Playlist::check_autoplay_next()) {
+        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $libitem->id);
+    }
+    if (Stream_Playlist::check_autoplay_append()) {
+        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
+    }
+}
+    echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $libitem->id); ?>
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
