@@ -29,6 +29,7 @@ fi
 [[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
+xhtmltxt='../../resources/untranslated-strings.txt'
 ampconf='../../config/ampache.cfg.php'
 
 ##############################################################
@@ -69,8 +70,10 @@ generate_pot() {
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then
-#        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
-#        cat $tdstxt >> $potfile
+        #echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+        #cat $tdstxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
+        cat $xhtmltxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"
