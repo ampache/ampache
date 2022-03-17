@@ -621,7 +621,7 @@ class Update
         $version[]     = array('version' => '530010', 'description' => $update_string);
 
         $update_string = "* Compact some `user` columns<br />* enum `object_count`.`count_type`";
-        $version[]     = array('version' => '530010', 'description' => $update_string);
+        $version[]     = array('version' => '530011', 'description' => $update_string);
 
         return $version;
     }
