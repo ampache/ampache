@@ -43,6 +43,7 @@ return [
     Artist\ConfirmDeleteAction::class => autowire(Artist\ConfirmDeleteAction::class),
     Artist\ShowAction::class => autowire(Artist\ShowAction::class),
     Artist\ShowAllSongsAction::class => autowire(Artist\ShowAllSongsAction::class),
+    Artist\ShowSongsAction::class => autowire(Artist\ShowSongsAction::class),
     Artist\UpdateFromTagsAction::class => autowire(Artist\UpdateFromTagsAction::class),
     Artist\ShowMissingAction::class => autowire(Artist\ShowMissingAction::class),
     Stats\ShowUserAction::class => autowire(Stats\ShowUserAction::class),

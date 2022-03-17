@@ -115,19 +115,27 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
+        <?php if ($object_type == 'album') { ?>
         <li>
-            <?php if ($object_type == 'album') { ?>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_("Show All")); ?>
-                <?php echo T_("Show All"); ?>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show Songs')); ?>
+                <?php echo T_('Show All'); ?>
             </a>
-            <?php } else { ?>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_("Show Albums")); ?>
-                <?php echo T_("Show Albums"); ?>
-            </a>
-            <?php } ?>
         </li>
+        <li>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show All')); ?>
+                <?php echo T_('Show All'); ?>
+            </a>
+        </li>
+        <?php } else { ?>
+        <li>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show Albums')); ?>
+                <?php echo T_('Show Albums'); ?>
+            </a>
+        </li>
+        <?php } ?>
         <?php if ($show_direct_play) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
