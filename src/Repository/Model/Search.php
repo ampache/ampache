@@ -1707,7 +1707,7 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['album_map']) {
+        if (array_key_exists('album_map', $join)) {
             $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
             $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
         }
@@ -2045,8 +2045,6 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if (array_key_exists('artist_map', $join)) {
-        }
         if ($join['song']) {
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
@@ -2724,16 +2722,14 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['playlist_data'] = true;
-        $join['song']          = array_key_exists('song', $join) || $catalog_disable || $catalog_filter;
-        $join['catalog']       = $catalog_disable || $catalog_filter;
-        $join['catalog_map']   = $catalog_filter;
+        $join['song']        = array_key_exists('song', $join) || $catalog_disable || $catalog_filter;
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['playlist_data']) {
-            $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
-        }
+        // always join the table data
+        $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id`";
             $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
