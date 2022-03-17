@@ -21,10 +21,11 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 
 * Additional xhtml templates added
 * Parse lots more WMA (ASF) file tags
+* Add play next and play last to radio station rows
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 5.3.0 Build 9:
+* Database 5.3.0 Build 11:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -35,6 +36,9 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Convert basic text columns into utf8 to reduce index sizes
   * Remove `user_activity` columns that are useless
   * Delete duplicate rows and require unique data on `object_count`
+  * Compact mbid columns back to 36 characters
+  * Compact some `user` columns
+  * enum `object_count`.`count_type`
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -49,6 +53,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * update_from_tags: Only update counts, tags and garbage collect after changes found
 * Use albums instead of songs for catalog verify actions
 * Expand search sidebar menu and collapse information without cookies
+* Moved all the extended functions into the forked jplayer module
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
