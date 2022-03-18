@@ -29,7 +29,7 @@ fi
 [[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
-xhtmltxt='../../resources/untranslated-strings.txt'
+xhtmltxt='untranslated-strings.txt'
 ampconf='../../config/ampache.cfg.php'
 
 ##############################################################
