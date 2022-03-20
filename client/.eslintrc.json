@@ -26,6 +26,7 @@
         "@typescript-eslint/explicit-function-return-type": 0,
         "@typescript-eslint/no-use-before-define": 0,
         "@typescript-eslint/explicit-module-boundary-types": 0,
+        "react/react-in-jsx-scope": 0,
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "immutable/no-mutation": 2
