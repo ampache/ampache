@@ -18,3 +18,4 @@ yarn-error.log*
 /dist
 !/yarn.lock
 !/yarn-error.log
+.env
