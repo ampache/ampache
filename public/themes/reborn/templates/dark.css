@@ -1,0 +1,618 @@
+/* vim:set tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab: */
+
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+/* --------------------------
+   General style rules
+   -------------------------- */
+
+body {
+    color: #fff;
+    background-color: #222;
+    height: 90%;
+}
+
+.error {
+    color: #c33;
+}
+
+a {
+    color: #ff9d00;
+}
+
+a:hover {
+    color: #ffc466;
+}
+
+hr {
+    border-top-color: #eee;
+}
+
+input[type=password],
+input[type=text],
+input[type=url],
+input[type=year],
+textarea {
+    background-color: #f5f5f5;
+    background-image: linear-gradient(to top, #eee, #fff);
+    border-color: #fff;
+}
+
+input[type=button],
+input[type=submit],
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
+    background-image: linear-gradient(to top, #ff9d00, #cc6200);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+input[type=button]:hover,
+input[type=button]:focus,
+input[type=submit]:hover,
+input[type=submit]:focus,
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
+    background-color: #cc6200;
+}
+
+input[type=button]:focus:active,
+input[type=submit]:focus:active {
+    box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.edit_dialog_content input[type=text],
+.edit_dialog_content select {
+    color: #fff;
+}
+
+.playlistdialogstyle.ui-dialog .ui-dialog-content,
+.sharedialogstyle.ui-dialog .ui-dialog-content,
+.playlistdialogstyle.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-widget-content a,
+.sharedialogstyle.ui-widget-content a {
+    background-color: #222;
+    color: #999;
+}
+
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover {
+    background-color: unset;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover,
+.playlistdialogstyle.ui-widget-content a:hover,
+.broadcastsdialogstyle.ui-widget-content a:hover,
+.sharedialogstyle.ui-widget-content a:hover {
+    color: #fff;
+}
+
+.ui-icon-close {
+    background-color: #f0f0f0;
+}
+
+/* --------------------------
+   Main
+   -------------------------- */
+#ajax-loading {
+    color: #ff9d00;
+    background-image: url('../images/ajax-loader.gif');
+}
+
+/* --------------------------
+   Header
+   -------------------------- */
+#header {
+    background-color: #000;
+    border-bottom: 2px solid #2d2d2d;
+    box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
+}
+
+#sb_Subsearch input[type=text] {
+    border-color: #444;
+}
+
+#sb_Subsearch input[type=text]:focus {
+    color: #555;
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #ff9d00;
+}
+
+#headerbox select {
+    color: #555;
+}
+
+/* --------------------------
+   Login
+   -------------------------- */
+#loginPage {
+    background-color: #000;
+}
+
+#loginPage #maincontainer { /* , #registerPage #maincontainer */
+    background-color: rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#loginPage #headerlogo,
+#registerPage #headerlogo {
+    background-image: url('../images/ampache-dark.png');
+}
+
+#loginPage #loginbox {
+    color: #999;
+}
+
+#loginPage #loginbox div,
+#registerPage #registerbox div {
+    text-shadow: 0 1px 0 #000;
+    color: #999;
+}
+
+#loginPage #loginbox #usernamefield input:focus,
+#loginPage #loginbox #emailfield input:focus,
+#loginPage #loginbox #passwordfield input:focus {
+    border-color: #f1b720;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+#loginPage #loginbox #remembermefield {
+    color: #eee;
+}
+
+.formValidation input {
+    color: #fff;
+}
+
+#loginPage span.error {
+    background: #f99;
+    border-color: #c33;
+    color: #900;
+}
+
+#loginPage #footer {
+    color: #888;
+}
+
+#loginPage #footer a {
+    color: #555;
+}
+
+#loginPage #footer #donate {
+    color: #ff9d00;
+}
+
+/* --------------------------
+   Sidebar
+   -------------------------- */
+#sidebar {
+    color: #999;
+}
+
+#sidebar-header {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: #999;
+}
+
+#sidebar-header:hover {
+    color: #fff;
+}
+
+#sidebar-content,
+#sidebar-content-light,
+#sidebar-light {
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    background-color: #1a1a1a;
+}
+
+/* Tabs content */
+#sidebar-page {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#sidebar-tabs .sb2 li h4 {
+    color: #fff;
+    background-color: #262626;
+    border-bottom-color: #0f0f0f;
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+}
+
+#sidebar-tabs .sb2 li ul li a {
+    color: #999;
+}
+
+#sidebar-tabs .sb2 li ul li a:hover {
+    color: #fff;
+}
+
+#sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
+    border-color: #bbb;
+}
+
+/* Localplay */
+.active_instance {
+    border-color: #fff;
+}
+
+/* --------------------------
+   Rightbar
+   -------------------------- */
+#rightbar {
+    background-color: #222;
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+#rightbar #rb_current_playlist li {
+    color: #fff;
+}
+
+#rightbar #rb_current_playlist li a {
+    color: #eee;
+}
+
+#rightbar #rb_current_playlist li a:hover,
+#rightbar #rb_current_playlist li a:focus {
+    color: #fff;
+    background-color: #c85a00;
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
+}
+
+#rightbar .submenu {
+    background-color: #222;
+    border-color: silver;
+}
+
+#rightbar .submenu a {
+    border-bottom-color: #ddd;
+    color: #eee;
+}
+
+#rightbar .submenu a:hover {
+    color: #ff9d00;
+}
+
+/* --------------------------
+   Content
+   -------------------------- */
+#content {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.list-header,
+.list-header a {
+    color: #999;
+}
+
+.list-header a:hover,
+.list-header a:focus {
+    color: #fff;
+}
+
+span.page-nb {
+    color: #ff9d00;
+}
+
+table.tabledata {
+    color: #eee;
+}
+
+span.page-text,
+table.tabledata a {
+    color: #eee;
+}
+
+#catalog_type_fields table.tabledata a {
+    color: #ff9d00;
+}
+
+table.tabledata a:hover,
+table.tabledata a:focus {
+    color: #ffc466;
+}
+
+table.tabledata thead .th-top,
+table.tabledata tfoot .th-bottom {
+    background-color: #262626;
+    box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
+}
+
+table.tabledata thead .th-top {
+    border-bottom-color: #0f0f0f;
+}
+
+table.tabledata tfoot .th-bottom {
+    border-top-color: #0f0f0f;
+}
+
+table.tabledata th a {
+    color: #ff9d00;
+}
+
+table.tabledata tr:hover,
+table.tabledata tr:focus {
+    background-color: #c85a00;
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
+}
+
+table.tabledata .th-top:hover,
+table.tabledata .th-bottom:hover,
+table.tabledata .th-top:focus,
+table.tabledata .th-bottom:focus {
+    color: #fff;
+    background-color: #262626;
+}
+
+table.striped-rows tbody tr:nth-child(odd),
+ul.striped-rows > li:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+table.tabledata tbody .cel_cover img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+table.tabledata tbody .cel_cover img:hover {
+    border-color: #ff9d00;
+}
+
+input:invalid {
+    border: 4px solid red;
+}
+
+/* --------------------------
+   Content (info-box)
+   -------------------------- */
+.random_selection .random_album .art_album img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.random_selection .random_video .art_album img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.random_selection .random_album .art_album img:hover {
+    border-color: #ff9d00;
+}
+
+#content .missing {
+    background-image: url('../images/missing.png');
+}
+
+/* --------------------------
+    Content (now playing)
+   -------------------------- */
+#now_playing .cel_albumart img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+#now_playing .cel_lyrics a:hover {
+    color: #09c;
+}
+
+/* --------------------------
+    Content (Tag cloud)
+   -------------------------- */
+span.fatalerror {
+    color: #c60;
+}
+
+.box-content #tag_filter .tag_button {
+    color: #fff;
+}
+
+.box-content #tag_filter .tag_button span:hover {
+    background-color: #c85a00;
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
+}
+
+/* --------------------------
+    Content (information-actions)
+   -------------------------- */
+.item_properties {
+    color: #999;
+}
+
+.item_art .item_art_play .item_art_play_icon {
+    background-image: url('../images/videoplay.png');
+}
+
+.item_art .item_art_actions {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.item_art img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+.item_art:hover {
+    color: #ff9d00;
+}
+
+#information_actions ul li {
+    color: #999;
+}
+
+#information_actions a:hover,
+#information_actions li:hover {
+    color: #fff;
+}
+
+/* ------------------------
+    Styles for ratings / user flags
+   ------------------------ */
+.star-rating .global-rating {
+    color: #999;
+}
+
+.userflag a.userflag_true,
+.userflag a:hover.userflag_false {
+    background: url('../../../images/icon_flag.png') left top;
+}
+
+.userflag a:hover.userflag_true,
+.userflag a.userflag_false {
+    background: url('../../../images/icon_flag_off.png') left top;
+}
+
+/* --------------------------
+   Content (Track view)
+   -------------------------- */
+dl.media_details dt {
+    color: #c60;
+}
+
+/* --------------------------
+   Footer
+   -------------------------- */
+#footer a:hover {
+    color: #09c;
+}
+
+#ampache_link {
+    color: #555;
+}
+
+/* --------------------------
+   Web Player
+   -------------------------- */
+div.jp-audio,
+div.jp-audio-stream,
+div.jp-video {
+    color: #999;
+    border: 1px solid #191919;
+}
+
+div.jp-video div.jp-interface {
+    border-top: 1px solid #191919;
+}
+
+div.jp-title,
+div.jp-playlist {
+    background-color: #202020;
+    border-top: 1px solid #191919;
+}
+
+.jp-no-solution {
+    background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    border-top: 1px solid #191919;
+}
+
+#webplayer {
+    background-color: #191919 !important;
+}
+
+div.playing_title a,
+div.playing_artist a,
+div.playing_lyrics a {
+    color: #eee;
+}
+
+div.jp-interface {
+    background-color: #191919;
+}
+
+div.jp-playlist li {
+    border-bottom: 1px solid #121212;
+}
+
+.jp-type-playlist .jp-playlist a {
+    color: #fff;
+}
+
+.jp-type-playlist .jp-playlist a:hover,
+.jp-type-playlist .jp-playlist a:active,
+.jp-type-playlist .jp-playlist a:focus {
+    color: #ff9d00;
+}
+
+.jp-type-playlist .jp-playlist a.jp-playlist-current {
+    color: #ff9d00;
+}
+
+/* --------------------------
+   Other
+   -------------------------- */
+.jscroll-next {
+    border-color: #ccc;
+    background-color: #eee;
+    color: #999;
+}
+
+.followbtn {
+    background-color: #363f4a;
+}
+
+.missing_album {
+    color: #bbb !important;
+}
+
+.user_online {
+    background: #0f0;
+}
+
+.user_offline {
+    background: #7f0000;
+}
+
+.user_disabled {
+    background: #ccc;
+}
+
+.list-header-navmenu-border {
+    border-color: #1d1d1d;
+}
+
+span.item-count,
+span.item-duration,
+span.query-count {
+    color: #999;
+}
+
+a.option-list:hover {
+    border-color: #1d1d1d;
+}
+
+.editdialogstyle.ui-dialog {
+    background-image: url('../../../images/background.png') !important;
+}
+
+#tabs li a {
+    color: #ff9d00;
+}
+
+#tabs li a:hover {
+    color: #ffc466;
+}
+
+#tabs li.tab_active a {
+    color: #fff;
+}

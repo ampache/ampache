@@ -1,50 +1,32 @@
-<?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
- *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2019 Ampache.org
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
-require_once 'lib/init.php';
-
-UI::show_header();
-
-$action = Core::get_request('action');
-
-if (!Core::is_session_started()) {
-    debug_event('index', 'no session, calling session_start()', 4);
-    session_start();
-}
-$_SESSION['catalog'] = 0;
-
-/**
- * Check for the refresh mojo, if it's there then require the
- * refresh_javascript include. Must be greater then 5, I'm not
- * going to let them break their servers
- */
-if (AmpConfig::get('refresh_limit') > 5 && AmpConfig::get('home_now_playing')) {
-    $refresh_limit = AmpConfig::get('refresh_limit');
-    $ajax_url      = '?page=index&action=reloadnp';
-    require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
-}
-
-require_once AmpConfig::get('prefix') . UI::find_template('show_index.inc.php');
-
-/* Show the Footer */
-UI::show_query_stats();
-UI::show_footer();
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <!-- Propelled by Ampache | ampache.org -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ampache -- Debug Page</title>
+        <link rel='shortcut icon' href='./public/favicon.ico' />
+        <link href="./public/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./public/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./public/templates/install.css" type="text/css" media="screen" />
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container" style="height: 70px;">
+                <a class="navbar-brand" href="#">
+                    <img src="./public/themes/reborn/images/ampache-dark.png" title="Ampache" alt="Ampache">
+                    Ampache :: For the Love of Music                </a>
+            </div>
+        </div>
+        <div id="guts" class="container" role="main">
+            <div class="jumbotron" style="margin-top: 70px">
+                <h1>Warning</h1>
+                <p>The root Ampache folder has changed to <a href="./public" target="_blank">./public</a></p>
+            </div>
+            <div class="alert alert-danger">
+                <p>You must update your DocumentRoot to the new path.</p>
+                <p><a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes" target="_blank">Please check the Ampache wiki for more information</a></p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'DejaVuSansCondensed';
+    src: url('dejavusanscondensed.eot');
+    src:
+         url('dejavusanscondensed.eot') format('embedded-opentype'),
+         url('dejavusanscondensed.woff') format('woff'),
+         url('dejavusanscondensed.ttf') format('truetype'),
+         url('dejavusanscondensed.svg#DejaVuSansCondensed') format('svg');
+}

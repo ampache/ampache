@@ -1,0 +1,99 @@
+#uberviz {
+    visibility: hidden;
+    z-index: 99999;
+}
+
+#uberviz #viz {
+    position: fixed;
+    background-color: #000;
+}
+
+#uberviz #controls {
+    position: absolute;
+    background-color: #000;
+    bottom: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    display: none;
+}
+
+#uberviz #preloader {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+    background: url(loader.gif) center center no-repeat;
+}
+
+#uberviz #debugText {
+    position: absolute;
+    background-color: #000;
+    height: 38px;
+    width: 150px;
+    top: 0;
+    right: 80px;
+    font-size: 16px;
+    padding: 15px 10px 10px;
+}
+
+#uberviz #stats {
+    position: absolute;
+    background-color: #003;
+    right: 0;
+    top: 0;
+}
+
+#uberviz #audioDebug {
+    position: fixed;
+    background-color: #000;
+    width: 250px;
+    bottom: 0;
+    right: 0;
+    opacity: 0.5;
+    z-index: 9999;
+}
+
+#uberviz #settings {
+    position: absolute;
+    background-color: #003;
+    top: 248px;
+}
+
+#uberviz #info {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    line-height: 20px;
+}
+
+#uberviz a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: thin dotted #999;
+}
+
+#equalizer {
+    position: absolute;
+    z-index: 9999;
+    bottom: 1px;
+    right: 25%;
+    visibility: hidden;
+    margin-right: 5px;
+}
+
+#equalizer .eq {
+    display: inline-block;
+    height: 45px;
+    width: 8px;
+    border: 2px solid orange;
+    background: #000 none;
+}
+
+#equalizer .ui-slider-handle {
+    width: 10px;
+    height: 10px;
+}

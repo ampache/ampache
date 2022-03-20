@@ -1,0 +1,6 @@
+[Unit]
+Description=restart channel_run.service
+
+[Service]
+Type=oneshot
+ExecStart=systemctl restart channel_run.service

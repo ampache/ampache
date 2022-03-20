@@ -1,0 +1,94 @@
+<html>
+    <td class="cel_play">
+        <span class="cel_play_content">
+            <b tal:condition="IS_SHOW_TRACK" tal:content="SONG/getTrackNumber">TRACK NUMBER</b>
+        </span>
+        <div class="cel_play_hover">
+            <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+                <tal:block tal:replace="structure SONG/getDirectplayButton">DIRECTPLAY</tal:block>
+                <tal:block tal:condition="SONG/canAutoplayNext" tal:replace="structure SONG/getAutoplayNextButton">PLAY NEXT</tal:block>
+                <tal:block tal:condition="SONG/canAppendNext" tal:replace="structure SONG/getAppendNextButton">APPEND NEXT</tal:block>
+            </tal:block>
+        </div>
+    </td>
+    <td tal:condition="IS_TABLE_VIEW" class="cel_song" tal:content="structure SONG/getSongLink">LINK</td>
+    <td tal:condition="not:IS_TABLE_VIEW" class="mash_song" tal:content="structure SONG/getSongLink">LINK</td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+            <tal:block tal:replace="structure SONG/getTemporaryPlaylistButton">TEMPORARY PLAYLIST BUTTON</tal:block>
+            <tal:block tal:condition="SONG/canEditPlaylist">
+                <a
+                        id="add_playlist_${SONG/getId}"
+                        onclick="showPlaylistDialog(event, 'song', '${SONG/getId}')"
+                        tal:content="structure SONG/getAddToPlaylistIcon"
+                >PLAYLIST ICON</a>
+                <tal:block tal:condition="CONFIG/isDirectplayEnabled" tal:replace="structure SONG/getCustomPlayActions">CUSTOM PLAY ACTIONS</tal:block>
+            </tal:block>
+        </span>
+    </td>
+    <tal:block tal:condition="IS_TABLE_VIEW">
+        <td tal:condition="not:IS_HIDE_ARTIST" class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td tal:condition="not:IS_HIDE_ALBUM" class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+    </tal:block>
+    <tal:block tal:condition="not:IS_TABLE_VIEW">
+        <td class="mash_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td tal:condition="not:IS_HIDE_ALBUM" class="mash_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+    </tal:block>
+    <td tal:condition="not:IS_HIDE_YEAR" class="cel_year" tal:content="SONG/getYear">YEAR</td>
+    <tal:block tal:condition="IS_TABLE_VIEW">
+        <td tal:condition="not:IS_HIDE_GENRE" class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td class="cel_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
+        <td tal:condition="IS_SHOW_LICENSE" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
+        <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
+    </tal:block>
+    <tal:block tal:condition="not:IS_TABLE_VIEW">
+        <td tal:condition="not:IS_HIDE_GENRE" class="mash_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td class="mash_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
+        <td tal:condition="IS_SHOW_LICENSE" class="mash_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
+        <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
+    </tal:block>
+    <tal:block tal:condition="USING_RATINGS">
+        <td class="cel_ratings">
+            <span class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
+        </td>
+    </tal:block>
+    <td class="cel_action">
+        <a
+                tal:condition="SONG/canPostShout"
+                tal:attributes="href SONG/getPostShoutUrl"
+                tal:content="structure SONG/getPostShoutIcon"
+        >POST SHOUT</a>
+        <tal:block tal:condition="SONG/canShare" tal:content="structure SONG/getShareUi">SHARE</tal:block>
+        <a
+                class="nohtml"
+                tal:condition="SONG/canDownload"
+                tal:attributes="href SONG/getDownloadUrl"
+                tal:content="structure SONG/getDownloadIcon"
+        >DOWNLOAD</a>
+        <a
+                tal:condition="SONG/isEditable"
+                id="edit_song_${SONG/getId}"
+                onclick="showEditDialog('song_row', '${SONG/getId}', 'edit_song_${SONG/getId}', '${SONG/getEditButtonTitle}', 'song_', '${ARGUMENT_PARAM}')"
+                tal:content="structure SONG/getEditIcon"
+        >EDIT</a>
+        <span
+                id="button_flip_state_${SONG/getId}"
+                tal:condition="SONG/canToggleState"
+                tal:content="structure SONG/getToggleStateButton"
+        >TOGGLE STATE</span>
+        <a
+                tal:condition="SONG/canBeDeleted"
+                id="delete_song_${SONG/getId}"
+                tal:attributes="href SONG/getDeletionUrl"
+                tal:content="structure SONG/getDeletionIcon"
+        >DELETION</a>
+    </td>
+    <tal:block tal:condition="not:IS_HIDE_DRAG">
+        <td class="cel_drag" tal:condition="SONG/canBeReordered" tal:content="structure SONG/getReorderIcon">
+            REORDER
+        </td>
+    </tal:block>
+</html>

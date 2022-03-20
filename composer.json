@@ -7,84 +7,117 @@
     "license": "AGPL-3.0",
     "config":
     {
-        "vendor-dir": "lib/vendor",
-        "component-dir": "lib/components",
-
+        "component-dir": "public/lib/components",
         "platform": {
             "ext-curl": "1.0",
+            "ext-date": "1.0",
+            "ext-dom": "1.0",
             "ext-gd": "1.0",
             "ext-gmp": "1.0",
-            "ext-dom": "1.0",
+            "ext-http": "1.0",
+            "ext-mbstring": "1.0",
+            "ext-openssl": "1.0",
             "ext-pcre": "1.0",
             "ext-spl": "1.0",
             "ext-simplexml": "1.0",
             "ext-ctype": "1.0",
-            "ext-date": "1.0",
             "ext-iconv": "1.0",
             "ext-libxml": "1.0",
-            "ext-mbstring": "1.0",
+            "ext-xml": "1.0",
             "ext-xmlwriter": "1.0",
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
+        },
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "robloach/component-installer": true,
+            "oomphinc/composer-installers-extender": true
         }
     },
     "require": {
-        "php": ">=7.2",
-        "wikimedia/composer-merge-plugin": "1.*",
-
-        "doctrine/cache": "1.*.*",
-        "gettext/gettext": "4.*.*",
-        "james-heinrich/getid3": "dev-master",
-        "mikealmond/musicbrainz": "dev-master",
-        "phpmailer/phpmailer": "5.2.*",
-        "rmccue/requests": "1.7.*",
+        "php": ">=7.4 || >=8.0",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-gd": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-xml": "*",
+        "adhocore/cli": "^0.9.0",
+        "aehlke/tag-it": "2.*",
+        "ampache/ampacheapi-php": "^1.0",
+        "aterrien/jquery-knob": "1.2.*",
+        "blueimp/jquery-file-upload": "v10.2.0",
         "cboden/ratchet": "0.4.*",
-        "symfony/event-dispatcher": "^3.0",
-        "symfony/routing": "^3.0",
-        "symfony/http-foundation": "^3.0",
-        "symfony/process": "^3.0",
-        "evenement/evenement": "2.*",
-        "happyworm/jplayer": "2.*",
-        "needim/noty": "2.4.*",
-        "openid/php-openid": "2.*",
-        "sabre/dav": "3.*.*",
-        "maennchen/zipstream-php": "0.4.*",
-
-        "afterster/php-echonest-api": "dev-master",
-
+        "clue/multicast-react": "^1.1.0",
+        "components/bootstrap": "3.*",
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
-        "vakata/jstree": "3.*",
-        "components/bootstrap": "3.*",
-        "aehlke/tag-it": "2.*",
-        "scaron/prettyphoto": "3.*",
+        "doctrine/cache": "1.*.*",
+        "evenement/evenement": "2.*",
+        "gettext/gettext": "4.*.*",
+        "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
-        "carhartl/jquery-cookie": "1.*",
-        "xdan/datetimepicker": "2.*",
-        "aterrien/jquery-knob": "1.2.*",
-        "pklauzinski/jscroll": "2.*",
-        "kumailht/responsive-elements": "dev-master",
-        "swisnl/jquery-contextmenu": "2.1.*",
-        "blueimp/jquery-file-upload": "10.2.0",
+        "js-cookie/js-cookie": "2.*",
+        "jwilsson/spotify-web-api-php": "^5",
         "krixon/xbmc-php-rpc": "dev-master",
-        "friendsofphp/php-cs-fixer": "~2.15.0",
+        "kumailht/responsive-elements": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
+        "maennchen/zipstream-php": "0.4.*",
+        "mikealmond/musicbrainz": "dev-master",
+        "moinax/tvdb": "1.*",
+        "mptre/php-soundcloud": "2.*",
+        "narrowspark/http-emitter": "^1.0 || ^2.0",
+        "nyholm/psr7": "^1.3",
+        "nyholm/psr7-server": "^1.0",
+        "oomphinc/composer-installers-extender": "^2.0",
+        "openid/php-openid": "^3",
+        "php-di/php-di": "^6.0",
+        "php-tmdb/api": "2.*",
+        "phpmailer/phpmailer": "6.5.*",
+        "pklauzinski/jscroll": "2.*",
+        "psr/log": "^1",
+        "rmccue/requests": "1.8.*",
+        "robloach/component-installer": "^0.0.12",
+        "rsd/seafile-php-sdk": "^1",
+        "sabre/dav": "3.*.*",
+        "scaron/prettyphoto": "3.*",
+        "scn/phptal": "^3.0",
+        "shrikeh/teapot": "^2.3",
+        "swisnl/jquery-contextmenu": "2.1.*",
+        "symfony/event-dispatcher": "^3.0",
+        "symfony/http-foundation": "^3.0",
+        "symfony/process": "^3.0",
+        "symfony/routing": "^3.0",
         "tightenco/collect": "5.2.*",
-        "ampache/ampacheapi-php": "^1.0",
-      "ext-json": "*"
+        "vakata/jstree": "3.*",
+        "xdan/datetimepicker": "2.*"
     },
-
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "2.19.*",
+        "mikey179/vfsstream": "^1.6",
+        "mockery/mockery": "^1.3",
+        "phpunit/phpunit": "^9",
+        "squizlabs/php_codesniffer": "^3.5",
+        "szymach/c-pchart": "^3.0"
+    },
     "repositories":
     [
         {
             "type": "package",
             "package": {
-                "name": "Afterster/php-echonest-api",
-                "version": "dev-master",
+                "name": "mptre/php-soundcloud",
+                "version": "2.3.2",
                 "source": {
-                    "url": "https://github.com/Afterster/php-echonest-api.git",
+                    "url": "https://github.com/mptre/php-soundcloud.git",
                     "type": "git",
-                    "reference": "master"
+                    "reference": "v2.3.2"
                 }
             }
         },
@@ -97,18 +130,9 @@
                     "url": "https://github.com/krixon/xbmc-php-rpc.git",
                     "type": "git",
                     "reference": "master"
-                }
-            }
                 },
-        {
-            "type": "package",
-            "package": {
-                "name": "krixon/xbmc-php-rpc",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/krixon/xbmc-php-rpc.git",
-                    "type": "git",
-                    "reference": "master"
+                "autoload": {
+                    "classmap": ["."]
                 }
             }
         },
@@ -130,32 +154,26 @@
                             "src/qrcode.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "name": "carhartl/jquery-cookie",
+                "name": "js-cookie/js-cookie",
                 "type": "component",
-                "version": "1.4.1",
+                "version": "2.2.1",
                 "source": {
-                    "url": "https://github.com/carhartl/jquery-cookie.git",
+                    "url": "https://github.com/js-cookie/js-cookie.git",
                     "type": "git",
-                    "reference": "v1.4.1"
+                    "reference": "v2.2.1"
                 },
                 "extra": {
                     "component": {
                         "scripts": [
-                            "jquery.cookie.js"
+                            "src/js.cookie.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -182,11 +200,9 @@
                             "js/tag-it.min.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
+
         },
         {
             "type": "package",
@@ -208,9 +224,6 @@
                             "css/prettyPhoto.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -234,22 +247,19 @@
                             "jquery.datetimepicker.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "name": "blueimp/jQuery-File-Upload",
+                "name": "blueimp/jquery-file-upload",
                 "type": "component",
-                "version": "9.18.0",
+                "version": "v10.2.0",
                 "source": {
                     "url": "https://github.com/blueimp/jQuery-File-Upload.git",
                     "type": "git",
-                    "reference": "9.11.2"
+                    "reference": "v10.2.0"
                 },
                 "extra": {
                     "component": {
@@ -262,16 +272,13 @@
                             "js/jquery.iframe-transport.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "name": "aterrien/jQuery-Knob",
+                "name": "aterrien/jquery-knob",
                 "type": "component",
                 "version": "1.2.11",
                 "source": {
@@ -285,9 +292,6 @@
                             "js/jquery.knob.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -311,9 +315,6 @@
                             "jquery.jscroll.min.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
@@ -334,16 +335,13 @@
                             "responsive-elements.js"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         },
         {
             "type": "package",
             "package": {
-                "name": "swisnl/jQuery-contextMenu",
+                "name": "swisnl/jquery-contextmenu",
                 "type": "component",
                 "version": "2.1.0",
                 "source": {
@@ -365,31 +363,45 @@
                             "dist/jquery.contextMenu.min.css"
                         ]
                     }
-                },
-                "require": {
-                    "robloach/component-installer": "*"
                 }
             }
         }
     ],
-
     "extra": {
-        "merge-plugin": {
-            "include": [
-                "modules/catalog/*/composer.module.json",
-                "modules/localplay/*/composer.module.json",
-                "modules/plugins/*/composer.module.json"
-            ],
-            "recurse": false,
-            "replace": false,
-            "merge-extra": false
+        "sort-packages": true,
+        "installer-types": ["component"],
+        "installer-paths": {
+            "public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
+            "public/lib/components/{$name}/": ["type:component"]
         }
     },
-
     "autoload": {
         "psr-4": {
-            "Lib\\": "lib/class",
-            "Beets\\": "modules/Beets"
+            "Ampache\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ampache\\": "tests/"
+        }
+    },
+    "scripts": {
+        "coverage": "./vendor/bin/phpunit --warm-coverage-cache && XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
+        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests",
+        "tests": "./vendor/bin/phpunit tests",
+        "codestyle": "resources/scripts/tests/codestyle.sh",
+        "syntax": "resources/scripts/tests/syntax.sh",
+        "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
+        "post-autoload-dump": [
+            "@php resources/scripts/composer/check_tag_tools.php"
+        ]
+    },
+    "suggest": {
+        "szymach/c-pchart": "Enable graphical statistics",
+        "ext-ldap": "Needed to support ldap authentication",
+        "ext-gd": "Needed for graphical statistics",
+        "ext-pthreads": "Needed to support async functions",
+        "ext-sockets": "Needed for upnp functions",
+        "ext-xmlreader": "Needed for upnp functions"
     }
 }

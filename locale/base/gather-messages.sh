@@ -2,7 +2,7 @@
 #
 # vim:set softtabstop=4 shiftwidth=4 expandtab:
 #
-# Copyright 2001 - 2017 Ampache.org
+# Copyright 2001 - 2020 Ampache.org
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License v2
@@ -29,6 +29,7 @@ fi
 [[ $OLANG ]] || OLANG=$(echo $LANG | sed 's/\..*//;')
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
+xhtmltxt='untranslated-strings.txt'
 ampconf='../../config/ampache.cfg.php'
 
 ##############################################################
@@ -69,8 +70,10 @@ generate_pot() {
                 -o $potfile \
                 $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
     if [[ $? -eq 0 ]]; then
-        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
-        cat $tdstxt >> $potfile
+        #echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+        #cat $tdstxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
+        cat $xhtmltxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"
@@ -189,9 +192,9 @@ generate_pot_utds() {
                 fi
             fi
         done
-        
+
         echo "Done for preference description"
-        
+
         mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
         while read dbprefid; do
             dbprefdesc=$(mysql -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcatagory FROM preference where id=$dbprefid AND subcatagory IS NOT NULL")
@@ -209,11 +212,13 @@ generate_pot_utds() {
                 fi
             fi
         done
-        
+
         echo "Done for subcategory"
-        
+
         echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
         cat $tdstxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
+        cat $xhtmltxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"

@@ -1,0 +1,142 @@
+/* ----------------------------
+    The file upload form
+
+    http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/
+   ----------------------------- */
+
+#dropfile {
+    background-color: #2e3134;
+    padding: 40px 50px;
+    margin-bottom: 30px;
+    border: 20px solid rgba(0, 0, 0, 0);
+    border-radius: 3px;
+    border-image: url('../images/fileupload-border.png') 25 repeat;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+    color: #7f858a;
+}
+
+#dropfile a {
+    background-color: #007a96;
+    padding: 12px 26px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 12px;
+    line-height: 1;
+}
+
+#dropfile a:hover {
+    background-color: #0986a3;
+}
+
+#dropfile input {
+    display: none;
+}
+
+#uploadfile ul {
+    list-style: none;
+    margin: 0 -30px;
+    border-top: 1px solid #2b2e31;
+    border-bottom: 1px solid #3d4043;
+}
+
+#uploadfile ul li {
+    background-color: #333639;
+    background-image: -moz-linear-gradient(top, #333639, #303335);
+    background-image: -webkit-linear-gradient(top, #333639, #303335);
+    background-image: -webkit-gradient(top, #333639, #303335);
+    background-image: -o-linear-gradient(top, #333639, #303335);
+    background-image: -ms-linear-gradient(top, #333639, #303335);
+    background-image: linear-gradient(top, #333639, #303335);
+    border-top: 1px solid #3d4043;
+    border-bottom: 1px solid #2b2e31;
+    padding: 15px;
+    height: 52px;
+    position: relative;
+}
+
+#uploadfile ul li input {
+    display: none;
+}
+
+#uploadfile ul li p {
+    width: 144px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #eee;
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    top: 20px;
+    left: 100px;
+}
+
+#uploadfile ul li i {
+    font-weight: normal;
+    font-style: normal;
+    color: #7f7f7f;
+    display: block;
+}
+
+#uploadfile ul li canvas {
+    top: 15px;
+    left: 32px;
+    position: absolute;
+}
+
+#uploadfile ul li span {
+    width: 15px;
+    height: 12px;
+    background: url('../images/fileupload-icons.png') no-repeat;
+    position: absolute;
+    top: 34px;
+    right: 33px;
+    cursor: pointer;
+}
+
+#uploadfile ul li.working span {
+    height: 16px;
+    background-position: 0 -12px;
+}
+
+#uploadfile ul li.error p {
+    color: red;
+}
+
+/* ----------------------------
+    The file tree
+   ----------------------------- */
+
+#container {
+    min-width: 620px;
+    margin: 0 auto 0 auto;
+    border-radius: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#tree {
+    float: right;
+    min-width: 600px;
+    border-right: 1px solid silver;
+    overflow: auto;
+    padding: 0 0;
+}
+
+#data { float: left; }
+
+#data textarea {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    border: 0;
+    display: block;
+    line-height: 18px;
+    resize: none;
+}

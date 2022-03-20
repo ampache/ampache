@@ -1,0 +1,9 @@
+parameters:
+	level: 8
+	paths:
+	- src
+	excludePaths:
+	- tests
+	- src/Module/Playback/Scrobble/ScrobblerAsync.php
+includes:
+	- phpstan-baseline.neon

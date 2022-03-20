@@ -1,0 +1,64 @@
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+/**
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+.requirements {
+    padding-top: 20px;
+}
+
+navbar-brand {
+    padding-top: 0;
+}
+
+.navbar-brand img {
+    height: 48px;
+    width: 48px;
+    display: inline;
+}
+
+.panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
+    float: right;
+    color: grey;
+}
+
+.panel-heading a.collapsed:after {
+    content: "\e080";
+}
+
+body {
+    margin-bottom: 10px;
+}
+
+body#install-page {
+    min-width: 720px;
+}
+
+.navbar-inverse {
+    background-color: #000;
+    background-image: none;
+    height: 70px;
+}
+
+.database-update {
+    text-align: center;
+}

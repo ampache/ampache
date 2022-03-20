@@ -13,7 +13,6 @@ Please be as descriptive as you can be about your feature. No request is too big
 
 The quickest way for a feature to make it into Ampache, is for you to submit a pull request yourself! -->
 
-**Describe what you don't like about Ampache, or what it is missing**
+## Describe what you don't like about Ampache, or what it is missing
 
-
-**Describe how you would like the feature to work**
+## Describe how you would like the feature to work**
