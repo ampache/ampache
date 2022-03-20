@@ -28,7 +28,12 @@
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/installers": true,
+            "robloach/component-installer": true,
+            "oomphinc/composer-installers-extender": true
+        }
     },
     "require": {
         "php": ">=7.4 || >=8.0",
@@ -44,12 +49,11 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "ext-xml": "*",
-        "adhocore/cli": "^0.8.3",
+        "adhocore/cli": "^0.9.0",
         "aehlke/tag-it": "2.*",
         "ampache/ampacheapi-php": "^1.0",
         "aterrien/jquery-knob": "1.2.*",
         "blueimp/jquery-file-upload": "v10.2.0",
-        "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
         "components/bootstrap": "3.*",
@@ -58,10 +62,10 @@
         "doctrine/cache": "1.*.*",
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",
-        "happyworm/jplayer": "2.*",
         "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
-        "jwilsson/spotify-web-api-php": "^3.5",
+        "js-cookie/js-cookie": "2.*",
+        "jwilsson/spotify-web-api-php": "^5",
         "krixon/xbmc-php-rpc": "dev-master",
         "kumailht/responsive-elements": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
@@ -69,17 +73,18 @@
         "mikealmond/musicbrainz": "dev-master",
         "moinax/tvdb": "1.*",
         "mptre/php-soundcloud": "2.*",
-        "narrowspark/http-emitter": "^1.0",
+        "narrowspark/http-emitter": "^1.0 || ^2.0",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-di/php-di": "^6.0",
         "php-tmdb/api": "2.*",
-        "phpmailer/phpmailer": "6.1.*",
+        "phpmailer/phpmailer": "6.5.*",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
-        "rmccue/requests": "1.7.*",
+        "rmccue/requests": "1.8.*",
+        "robloach/component-installer": "^0.0.12",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
         "scaron/prettyphoto": "3.*",
@@ -95,7 +100,7 @@
         "xdan/datetimepicker": "2.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "2.19.*",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^9",
@@ -155,18 +160,18 @@
         {
             "type": "package",
             "package": {
-                "name": "carhartl/jquery-cookie",
+                "name": "js-cookie/js-cookie",
                 "type": "component",
-                "version": "1.4.1",
+                "version": "2.2.1",
                 "source": {
-                    "url": "https://github.com/carhartl/jquery-cookie.git",
+                    "url": "https://github.com/js-cookie/js-cookie.git",
                     "type": "git",
-                    "reference": "v1.4.1"
+                    "reference": "v2.2.1"
                 },
                 "extra": {
                     "component": {
                         "scripts": [
-                            "jquery.cookie.js"
+                            "src/js.cookie.js"
                         ]
                     }
                 }
@@ -248,7 +253,7 @@
         {
             "type": "package",
             "package": {
-                "name": "blueimp/jQuery-File-Upload",
+                "name": "blueimp/jquery-file-upload",
                 "type": "component",
                 "version": "v10.2.0",
                 "source": {
@@ -273,7 +278,7 @@
         {
             "type": "package",
             "package": {
-                "name": "aterrien/jQuery-Knob",
+                "name": "aterrien/jquery-knob",
                 "type": "component",
                 "version": "1.2.11",
                 "source": {
@@ -336,7 +341,7 @@
         {
             "type": "package",
             "package": {
-                "name": "swisnl/jQuery-contextMenu",
+                "name": "swisnl/jquery-contextmenu",
                 "type": "component",
                 "version": "2.1.0",
                 "source": {
@@ -367,7 +372,6 @@
         "installer-types": ["component"],
         "installer-paths": {
             "public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
-            "public/lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
             "public/lib/components/{$name}/": ["type:component"]
         }
     },
@@ -383,6 +387,7 @@
     },
     "scripts": {
         "coverage": "./vendor/bin/phpunit --warm-coverage-cache && XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
+        "qa": "composer run-script syntax && composer run-script fix-cs && composer run-script tests",
         "tests": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",

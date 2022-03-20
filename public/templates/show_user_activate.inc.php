@@ -49,7 +49,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
-    <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>
+    <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . $web_path . '/login.php">' . T_('Login') . '</a>'); ?>
 </p>
 <?php
     } else { ?>

@@ -96,7 +96,6 @@ final class ShowAction implements ApplicationActionInterface
                         $gatekeeper,
                         $album
                     ),
-                    'albumRepository' => $this->albumRepository,
                 ]
             );
         } else {

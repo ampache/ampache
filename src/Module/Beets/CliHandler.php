@@ -43,7 +43,7 @@ class CliHandler extends Handler
     protected $handlerCommand;
 
     /**
-     * Field seperator for beets field format
+     * Field separator for beets field format
      * @var string
      */
     protected $seperator = '###';
@@ -86,7 +86,7 @@ class CliHandler extends Handler
 
     /**
      * Defines the differences between beets and ampache fields
-     * @var array Defines the differences between beets and ampache fields
+     * @var array
      */
     protected $fieldMapping = array(
         'disc' => array('disk', '%d'),

@@ -135,12 +135,12 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) === true) {
             if (!$_POST['accept_agreement']) {
-                AmpError::add('user_agreement', T_("You must accept the user agreement"));
+                AmpError::add('user_agreement', T_('You must accept the user agreement'));
             }
         } // if they have to agree to something
 
         if (!filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
-            AmpError::add('username', T_("You must enter a Username"));
+            AmpError::add('username', T_('You must enter a Username'));
         }
 
         // Check the mail for correct address formation.
@@ -163,15 +163,15 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         if (!$pass1) {
-            AmpError::add('password', T_("You must enter a password"));
+            AmpError::add('password', T_('You must enter a password'));
         }
 
         if ($pass1 != $pass2) {
-            AmpError::add('password', T_("Passwords do not match"));
+            AmpError::add('password', T_('Passwords do not match'));
         }
 
-        if ($this->userRepository->findByUsername((string) $username) !== null) {
-            AmpError::add('duplicate_user', T_("That Username already exists"));
+        if ($this->userRepository->idByUsername((string) $username) > 0) {
+            AmpError::add('duplicate_user', T_('That Username already exists'));
         }
 
         // If we've hit an error anywhere up there break!

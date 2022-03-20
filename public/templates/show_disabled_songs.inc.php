@@ -21,12 +21,13 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\Ui;
+
+/** @var Ampache\Repository\Model\Song[] $songs */
 
 ?>
 <br />
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
-    <table class="tabledata">
+    <table class="tabledata striped-rows">
         <thead>
             <tr class="th-top">
                 <th class="cel_select"><a href="#" onclick="check_select('song'); return false;"><?php echo T_('Select'); ?></a></th>
@@ -39,21 +40,20 @@ use Ampache\Module\Util\Ui;
         </thead>
         <tbody>
             <?php foreach ($songs as $song) { ?>
-                <tr class="<?php echo Ui::flip_class(); ?>">
+                <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
                     <td class="cel_song"><?php echo $song->title; ?></td>
-                    <td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
-                    <td class="cel_artist"><?php echo $song->get_artist_name($song->album); ?></td>
+                    <td class="cel_album"><?php echo $song->get_album_fullname(); ?></td>
+                    <td class="cel_artist"><?php echo $song->get_artist_fullname(); ?></td>
                     <td class="cel_filename"><?php echo $song->file; ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>
-            <?php
-} if (!count($songs)) { ?>
-                <tr class="<?php echo Ui::flip_class(); ?>">
+            <?php } ?>
+            <?php if (!count($songs)) { ?>
+                <tr>
                     <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
                 </tr>
-            <?php
-    } ?>
+            <?php } ?>
         </tbody>
         <tfoot>
             <tr class="th-bottom">

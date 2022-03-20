@@ -25,46 +25,36 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
+/** @var array $biography */
 
 ?>
 
 <div class="item_info">
-    <?php if ($biography['id']) {
-    $thumb = Ui::is_grid_view('artist') ? 2 : 11;
-    Art::display('artist', $biography['id'], $artist->f_name, $thumb);
-} else { ?>
-        <div class="item_art">
-            <?php if ($biography && is_array($biography)) { ?>
-                <a href="<?php echo $biography['megaphoto']; ?>" rel="prettyPhoto"><img src="<?php echo $biography['largephoto']; ?>" alt="<?php echo $artist->f_name; ?>" width="128"></a>
-            <?php
-    } ?>
-        </div>
-    <?php
+    <?php if ($artist instanceof Artist) {
+    $thumb = (empty(trim($biography['summary']))) ? 32 : 2;
+    Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
 } ?>
     <div class="item_properties">
-        <?php
-        if (! empty($biography) && is_array($biography)) {
-            $dcol = array();
-            if ($biography['placeformed']) {
-                $dcol[] = $biography['placeformed'];
-            }
-            if ($biography['yearformed']) {
-                $dcol[] = $biography['yearformed'];
-            }
-            if (count($dcol) > 0) {
-                echo implode(',', $dcol);
-            }
+        <?php $dcol = array();
+        if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
+            $dcol[] = $biography['placeformed'];
+        }
+        if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
+            $dcol[] = $biography['yearformed'];
+        }
+        if (count($dcol) > 0) {
+            echo implode(', ', $dcol);
         } ?>
     </div>
 </div>
 <div id="item_summary">
-    <?php if (! empty($biography) && is_array($biography)) { ?>
-        <?php echo nl2br($biography['summary'], true); ?>
-    <?php
-        }?>
+    <?php if (array_key_exists('summary', $biography) && !empty(trim($biography['summary']))) { ?>
+        <?php echo nl2br($biography['summary']); ?>
+        <?php
+    }?>
 </div>
 <script>
-$(document).ready(function(){
-    $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
-});
+    $(document).ready(function(){
+        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+    });
 </script>

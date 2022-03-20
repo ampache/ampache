@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
  *  #                               Warning                             #
  *  #                               #######                             #
  *  # This external file is Ampache-adapted and probably unsynced with  #
- *  # origin because abandonned by its original authors.                #
+ *  # origin because abandoned by its original authors.                #
  *  #                                                                   #
  *  #####################################################################
  *
@@ -138,9 +138,6 @@ class Horde_Browser
 
     /**
      * Creates a browser instance (Constructor).
-     *
-     * @param string $userAgent The browser string to parse.
-     * @param string $accept The HTTP_ACCEPT settings to use.
      */
     public function __construct()
     {
@@ -148,7 +145,7 @@ class Horde_Browser
     }
 
     /**
-     * Parses the user agent string and inititializes the object with all the
+     * Parses the user agent string and initializes the object with all the
      * known features and quirks for the given browser.
      *
      * @param string $userAgent The browser string to parse.
@@ -158,7 +155,7 @@ class Horde_Browser
     {
         // Set our agent string.
         if ($userAgent == null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_USER_AGENT')) {
+            if (isset($_SERVER['HTTP_USER_AGENT'])) {
                 $this->_agent = trim($_SERVER['HTTP_USER_AGENT']);
             }
         } else {
@@ -168,7 +165,7 @@ class Horde_Browser
 
         // Set our accept string.
         if ($accept === null) {
-            if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT')) {
+            if (isset($_SERVER['HTTP_ACCEPT'])) {
                 $this->_accept = strtolower(trim($_SERVER['HTTP_ACCEPT']));
             }
         } else {
@@ -176,7 +173,7 @@ class Horde_Browser
         }
 
         // Check for UTF support.
-        if (filter_has_var(INPUT_SERVER, 'HTTP_ACCEPT_CHARSET')) {
+        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
             $this->setFeature('utf', strpos(strtolower($_SERVER['HTTP_ACCEPT_CHARSET']), 'utf') !== false);
         }
 
@@ -307,7 +304,6 @@ class Horde_Browser
                         $this->setFeature('dataurl', ($this->_majorVersion == 8) ? 32768 : true);
                     }
                     break;
-
                 case 6:
                     $this->setFeature('javascript', 1.4);
                     $this->setFeature('dom');
@@ -321,7 +317,6 @@ class Horde_Browser
                     $this->setQuirk('broken_multipart_form');
                     $this->setQuirk('windowed_controls');
                     break;
-
                 case 5:
                     if ($this->getPlatform() == 'mac') {
                         $this->setFeature('javascript', 1.2);
@@ -345,7 +340,6 @@ class Horde_Browser
                         $this->setQuirk('broken_multipart_form');
                     }
                     break;
-
                 case 4:
                     $this->setFeature('javascript', 1.2);
                     $this->setFeature('accesskey');
@@ -354,7 +348,6 @@ class Horde_Browser
                         $this->setFeature('utf');
                     }
                     break;
-
                 case 3:
                     $this->setFeature('javascript', 1.1);
                     $this->setQuirk('avoid_popup_windows');
@@ -497,12 +490,10 @@ class Horde_Browser
                         $this->_mobile = true;
                     }
                     break;
-
                 case 4:
                     $this->setFeature('javascript', 1.3);
                     $this->setQuirk('buggy_compression');
                     break;
-
                 case 3:
                 case 2:
                 case 1:
@@ -758,8 +749,9 @@ class Horde_Browser
         $inline = false,
         $cLength = null
     ): array {
-        /* Remove linebreaks from file names. */
+        /* Remove linebreaks (and ',', ';') from file names. */
         $filename = str_replace(array("\r\n", "\r", "\n"), ' ', $filename);
+        $filename = str_replace(array(",", ";"), '', $filename);
 
         /* Some browsers don't like spaces in the filename. */
         if ($this->hasQuirk('no_filename_spaces')) {

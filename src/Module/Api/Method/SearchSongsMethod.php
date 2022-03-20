@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SearchSongsMethod
 {
-    private const ACTION = 'search_songs';
+    public const ACTION = 'search_songs';
 
     /**
      * search_songs
@@ -52,7 +52,7 @@ final class SearchSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function search_songs(array $input)
+    public static function search_songs(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -69,16 +69,15 @@ final class SearchSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($results, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

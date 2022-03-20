@@ -20,12 +20,13 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Browse;
 
 $tag_types = array(
     'artist' => T_('Artist'),
@@ -33,37 +34,35 @@ $tag_types = array(
     'song' => T_('Song'),
     'video' => T_('Video'),
 );
+
+/** @var UiInterface $ui */
+/** @var Browse $browse2 */
+/** @var array $object_ids */
+/** @var string $browse_type */
+
 global $dic;
+$ui = $dic->get(UiInterface::class);
+
 ?>
+<?php $ui->show(
+        'show_genre_browse_form.inc.php',
+    [
+        'type' => $browse_type
+    ]
+); ?>
 <?php Ajax::start_container('tag_filter'); ?>
-
-<form action="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag" method="POST">
-    <?php echo T_('View'); ?>:
-    <select name="type">
-        <?php
-        foreach ($tag_types as $tag_type => $tag_name) {
-            echo "<option value='" . $tag_type . "'";
-            if ($tag_type == (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                echo " selected";
-            }
-            echo ">" . $tag_name . "</option>";
-        } ?>
-    </select>
-<input type="submit" value="Ok" />
-</form>
-
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">
         <div class="tag_button">
-            <span id="click_tag_<?php echo $data['id']; ?>"><?php echo $data['name']; ?></span>
+            <span id="click_tag_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
             <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
         </div>
         <?php if (Access::check('interface', 50)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Edit') ?>', 'click_tag_')">
-                        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo addslashes(T_('Edit')) ?>', 'click_tag_')">
+                        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>
@@ -79,7 +78,7 @@ global $dic;
 
 <br /><br /><br />
 <?php
-if (filter_has_var(INPUT_GET, 'show_tag')) {
+if (isset($_GET['show_tag'])) {
             $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {

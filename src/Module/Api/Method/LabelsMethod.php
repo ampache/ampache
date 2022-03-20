@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LabelsMethod
@@ -37,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class LabelsMethod
 {
-    private const ACTION = 'labels';
+    public const ACTION = 'labels';
 
     /**
      * labels
@@ -52,7 +51,7 @@ final class LabelsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function labels(array $input)
+    public static function labels(array $input): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -65,8 +64,8 @@ final class LabelsMethod
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
         $labels = $browse->get_objects();
         if (empty($labels)) {
             Api::empty('label', $input['api_format']);
@@ -77,16 +76,15 @@ final class LabelsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::labels($labels);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::labels($labels);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

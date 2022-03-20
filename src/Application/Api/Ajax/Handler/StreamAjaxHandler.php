@@ -35,8 +35,6 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
-        debug_event('stream.ajax', 'Called for action {' . Core::get_request('action') . '}', 5);
-
         $results = array();
 
         // Switch on the actions
@@ -91,21 +89,22 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
-                    if ($_REQUEST['custom_play_action']) {
+                    if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
                     }
-                    if (!empty($_REQUEST['append'])) {
+                    if (array_key_exists('append', $_REQUEST) && !empty($_REQUEST['append'])) {
                         $_SESSION['iframe']['target'] .= '&append=true';
                     }
-                    if (!empty($_REQUEST['playnext'])) {
+                    if (array_key_exists('playnext', $_REQUEST) && !empty($_REQUEST['playnext'])) {
                         $_SESSION['iframe']['target'] .= '&playnext=true';
                     }
-                    if ($_REQUEST['subtitle']) {
+                    if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
-                    } else {
-                        if (isset($_SESSION['iframe']['subtitle'])) {
-                            unset($_SESSION['iframe']['subtitle']);
-                        }
+                    } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
+                        unset($_SESSION['iframe']['subtitle']);
+                    }
+                    if (AmpConfig::get('play_type') == 'localplay') {
+                        $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
                     $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
                 }
@@ -113,7 +112,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
             case 'basket':
                 // Go ahead and see if we should clear the playlist here or not,
                 // we might not actually clear it in the session.
-                if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
+                if ((array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear') || (AmpConfig::get('playlist_method') == 'clear')) {
                     define('NO_SONGS', '1');
                     ob_start();
                     require_once Ui::find_template('rightbar.inc.php');
@@ -121,7 +120,9 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
+                $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
+                    ? AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
+                    : AmpConfig::get('web_path') . '/stream.php?action=basket';
                 $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
                 break;
             default:

@@ -25,7 +25,9 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php
-$t_ampache = T_('Ampache'); ?>
+$t_ampache = T_('Ampache');
+$htmllang  = $htmllang ?? 'en_US';
+$dir       = $dir ?? 'ltr'; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
     xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
@@ -35,7 +37,7 @@ $t_ampache = T_('Ampache'); ?>
 <!-- Propelled by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url;?>" />
 <?php Ui::show_custom_style(); ?>
-<title><?php echo T_("Ampache Error Page");?></title>
+<title><?php echo T_('Ampache Error Page');?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />

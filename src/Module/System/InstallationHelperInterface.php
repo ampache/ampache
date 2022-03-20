@@ -73,8 +73,8 @@ interface InstallationHelperInterface
         $create_db = true,
         $overwrite = false,
         $create_tables = true,
-        $charset = 'utf8',
-        $collation = 'utf8_unicode_ci'
+        $charset = 'utf8mb4',
+        $collation = 'utf8mb4_unicode_ci'
     );
 
     /**
@@ -117,10 +117,9 @@ interface InstallationHelperInterface
 
     /**
      * Write new configuration into the current configuration file by keeping old values.
-     * @param $current_file_path
-     * @throws Exception
+     * @param string $current_file_path
      */
-    public function write_config(string $current_file_path): void;
+    public function write_config(string $current_file_path): bool;
 
     /**
      * This takes an array of results and re-generates the config file

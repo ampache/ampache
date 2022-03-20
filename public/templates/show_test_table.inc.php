@@ -104,7 +104,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 </tr>
 <tr>
     <td><?php echo T_('PHP intl extension'); ?></td>
-    <td><?php echo debug_wresult($environment->check_php_intl()); ?></td>
+    <td><?php echo debug_result($environment->check_php_intl()); ?></td>
     <td><?php echo T_('This tests whether you have the intl extension enabled. This extension is required by Ampache.'); ?></td>
 </tr>
 <tr>
@@ -176,7 +176,7 @@ if (!defined('INSTALL')) { ?>
     <td><?php echo T_("This test makes sure that you have set all of the required configuration variables and that Ampache is able to completely parse your config file."); ?></td>
 </tr>
 <tr>
-    <td><?php echo T_("Database connection"); ?></td>
+    <td><?php echo T_('Database Connection'); ?></td>
     <td><?php echo debug_result($environment->check_php_pdo() && Dba::check_database()); ?></td>
     <td><?php echo T_('This attempts to connect to your database using the values read from your configuration file.'); ?></td>
 </tr>
@@ -186,7 +186,7 @@ if (!defined('INSTALL')) { ?>
     <td><?php echo T_('This checks a few key tables to make sure that the Ampache database exists, and the user has access to the database'); ?></td>
 </tr>
 <tr>
-    <td><?php echo T_('Web path'); ?></td>
+    <td><?php echo T_('Web Path'); ?></td>
     <td>
     <?php
         if ($results && check_config_values($results)) {

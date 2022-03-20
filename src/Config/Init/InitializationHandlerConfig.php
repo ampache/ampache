@@ -33,7 +33,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = 'develop';
-    private const CONFIG_VERSION = '48';
+    private const CONFIG_VERSION = '61';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -70,7 +70,6 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         }
 
         if ($this->environment->isCli() === false) {
-            $results['raw_web_path'] = $results['web_path'];
             if (empty($results['http_host'])) {
                 $results['http_host'] = $_SERVER['SERVER_NAME'];
             }
@@ -80,44 +79,40 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                     $protocol,
                     $_SERVER['SERVER_NAME'],
                     $_SERVER['SERVER_PORT'],
-                    $results['raw_web_path']
+                    $results['web_path'] ?? ''
                 );
             }
-            $results['http_port'] = !empty($results['http_port']) ?
-                $results['http_port'] :
-                $this->environment->getHttpPort();
+            $results['http_port'] = (!empty($results['http_port']))
+                ? $results['http_port']
+                : $this->environment->getHttpPort();
 
-            $port = $results['http_port'] != 80 && $results['http_port'] != 443 ?
-                ':' . $results['http_port'] :
-                '';
+            $port = ($results['http_port'] != 80 && $results['http_port'] != 443)
+                ? ':' . $results['http_port']
+                : '';
 
-            $results['web_path'] = sprintf(
+            $results['raw_web_path'] = empty($results['web_path']) ? '/' : $results['web_path'];
+            $results['web_path']     = sprintf(
                 '%s://%s%s%s',
                 $protocol,
                 $results['http_host'],
                 $port,
-                $results['web_path']
+                $results['web_path'] ?? ''
             );
-
-            $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
-            $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
+            $results['site_charset'] = $results['site_charset'] ?? 'UTF-8';
             if (!isset($results['max_upload_size'])) {
                 $results['max_upload_size'] = 1048576;
             }
-            $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+            $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?? '';
             if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
                 $results['user_ip_cardinality'] = 42;
             }
 
             // Variables needed for Auth class
             $results['cookie_path']   = $results['raw_web_path'];
-            $results['cookie_domain'] = $results['http_port'];
+            $results['cookie_domain'] = $results['http_host'];
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }
-
-        // Make sure all default preferences are set
-        Preference::set_defaults();
 
         // Temp Fixes
         $results = Preference::fix_preferences($results);

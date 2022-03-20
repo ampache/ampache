@@ -25,7 +25,6 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\TvShow;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -33,6 +32,8 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var TvShow $libitem */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
 
 ?>
 <td class="cel_play">
@@ -41,40 +42,40 @@ use Ampache\Module\Util\Ui;
     <?php
         if (AmpConfig::get('directplay')) {
             echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id, 'play', T_('Play'), 'play_season_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_next()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_season_' . $libitem->id);
+            }
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_season_' . $libitem->id);
             }
         } ?>
     </div>
 </td>
-<?php if (Art::is_enabled()) { ?>
-<td class="cel_cover">
-    <?php Art::display('tvshow_season', $libitem->id, $libitem->f_name, 6, $libitem->link); ?>
+<td class="<?php echo $cel_cover; ?>">
+    <?php Art::display('tvshow_season', $libitem->id, $libitem->get_fullname(), 6, $libitem->get_link()); ?>
 </td>
-<?php
-    } ?>
 <td class="cel_season"><?php echo $libitem->f_link; ?></td>
 <td class="cel_tvshow"><?php echo $libitem->f_tvshow_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
-        <?php echo Rating::show($libitem->id, 'tvshow_season'); ?>
-    </td>
+    if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_tvshow_season">
+                    <?php echo Rating::show($libitem->id, 'tvshow_season'); ?>
+                </span>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
+                    <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
+                </span>
+            <?php
+            } ?>
+        </td>
     <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
-        <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
-    </td>
-    <?php
-        }
     } ?>
 <td class="cel_action">
 <?php
     if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo T_('Season Edit') ?>', 'tvshow_season_')">
+    <a id="<?php echo 'edit_tvshow_season_' . $libitem->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_season_' . $libitem->id ?>', '<?php echo addslashes(T_('Season Edit')) ?>', 'tvshow_season_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php

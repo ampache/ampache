@@ -88,14 +88,14 @@ final class ShowAction implements ApplicationActionInterface
         } else {
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE) === true) {
                 $multi_object_ids = $this->albumRepository->getByArtist(
-                    $artist,
+                    $artistId,
                     $catalogId,
                     true
                 );
                 $object_ids = null;
             } else {
                 $object_ids = $this->albumRepository->getByArtist(
-                    $artist,
+                    $artistId,
                     $catalogId
                 );
                 $multi_object_ids = null;

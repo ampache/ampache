@@ -67,7 +67,7 @@ final class Cron
         $name = Dba::escape('cron_date');
 
         $db_results = Dba::read(
-            'SELECT * FROM `update_info` WHERE `key` = ?',
+            'SELECT `key`, `value` FROM `update_info` WHERE `key` = ?',
             [$name]
         );
 
@@ -114,7 +114,7 @@ final class Cron
                 Song::build_cache($songs);
 
                 // cache playlist details
-                $playlists = Playlist::get_playlists(true, -1);
+                $playlists = Playlist::get_playlists(-1);
                 Playlist::build_cache($playlists);
 
                 // cache art details
@@ -147,7 +147,7 @@ final class Cron
                         Userflag::build_cache('video', $videos, $user_id);
                     }
                     // playlists
-                    $user_playlist = Playlist::get_playlists(true, $user_id);
+                    $user_playlist = Playlist::get_playlists($user_id);
                     Rating::build_cache('playlist', $user_playlist, $user_id);
                     Userflag::build_cache('playlist', $user_playlist, $user_id);
                     // podcasts

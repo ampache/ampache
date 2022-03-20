@@ -25,7 +25,7 @@
  * #                               Warning                             #
  * #                               #######                             #
  * # This external file is Ampache-adapted and probably unsynced with  #
- * # origin because abandonned by its original authors.                #
+ * # origin because abandoned by its original authors.                #
  * #                                                                   #
  * #####################################################################
  *

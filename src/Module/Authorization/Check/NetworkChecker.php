@@ -65,7 +65,7 @@ final class NetworkChecker implements NetworkCheckerInterface
         switch ($type) {
             case AccessLevelEnum::TYPE_API:
                 $type = 'rpc';
-            // Intentional break fall-through
+                // Intentional break fall-through
             case AccessLevelEnum::TYPE_NETWORK:
             case AccessLevelEnum::TYPE_INTERFACE:
             case AccessLevelEnum::TYPE_STREAM:

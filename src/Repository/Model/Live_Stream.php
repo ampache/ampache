@@ -89,6 +89,10 @@ class Live_Stream extends database_object implements Media, library_item
      * @var string $f_url_link
      */
     public $f_url_link;
+    /**
+     * @var string $f_site_url_link
+     */
+    public $f_site_url_link;
 
     /**
      * Constructor
@@ -119,13 +123,11 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function format($details = true)
     {
-        unset($details); // dead code but called from other format calls
-        // Default link used on the rightbar
-        $this->f_name      = scrub_out($this->name);
-        $this->link        = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
-        $this->f_link      = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
-        $this->f_name_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
-        $this->f_url_link  = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
+        unset($details);
+        $this->f_link          = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
+        $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
+        $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
 
         return true;
     } // format
@@ -143,7 +145,26 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_fullname()
     {
-        return $this->name;
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        }
+
+        return $this->link;
     }
 
     /**
@@ -233,7 +254,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'live_stream') || $force) {
-            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -256,7 +277,7 @@ class Live_Stream extends database_object implements Media, library_item
         $elements = explode(":", (string)$data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
+            AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
@@ -282,7 +303,7 @@ class Live_Stream extends database_object implements Media, library_item
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
      * @param array $data
-     * @return PDOStatement|boolean
+     * @return string|null
      */
     public static function create(array $data)
     {
@@ -316,14 +337,16 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
+        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
+        $insert_id = Dba::insert_id();
+        Catalog::count_table('live_stream');
 
-        return Dba::write($sql,
-            array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
+        return $insert_id;
     } // create
 
     /**

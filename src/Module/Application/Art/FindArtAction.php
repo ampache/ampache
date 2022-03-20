@@ -67,7 +67,7 @@ final class FindArtAction extends AbstractArtAction
         $object_id = $item->id;
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -75,7 +75,7 @@ final class FindArtAction extends AbstractArtAction
         $keyword  = '';
         $options  = [];
         foreach ($keywords as $key => $word) {
-            if (isset($_REQUEST['option_' . $key])) {
+            if (array_key_exists('option_' . $key, $_REQUEST)) {
                 $word['value'] = $_REQUEST['option_' . $key];
             }
             $options[$key] = $word['value'];
@@ -90,20 +90,20 @@ final class FindArtAction extends AbstractArtAction
 
         $art       = $this->modelFactory->createArt($object_id, $object_type);
         $cover_url = [];
-
         $limit     = 0;
-        if (isset($_REQUEST['artist_filter'])) {
-            $options['artist_filter'] =true;
+
+        if (array_key_exists('artist_filter', $_REQUEST)) {
+            $options['artist_filter'] = true;
         }
-        if (isset($_REQUEST['search_limit'])) {
+        if (array_key_exists('search_limit', $_REQUEST)) {
             $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
         }
-        if (isset($_REQUEST['year_filter']) && !empty($_REQUEST['year_filter'])) {
+        if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
         }
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -112,19 +112,20 @@ final class FindArtAction extends AbstractArtAction
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
             $path_info      = pathinfo($_FILES['file']['name']);
+            $upload         = array();
             $upload['file'] = $_FILES['file']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data != '') {
-                if ($art->insert($image_data, $upload['0']['mime'])) {
-                    $this->ui->showConfirmation(
+                if ($art->insert($image_data, $upload['mime'])) {
+                    $this->ui->showContinue(
                         T_('No Problem'),
                         T_('Art has been added'),
                         $burl
                     );
                 } else {
-                    $this->ui->showConfirmation(
+                    $this->ui->showContinue(
                         T_("There Was a Problem"),
                         T_('Art file failed to insert, check the dimensions are correct.'),
                         $burl
@@ -152,7 +153,7 @@ final class FindArtAction extends AbstractArtAction
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
             foreach ($images as $index => $image) {
-                if ($image['raw']) {
+                if (is_array($image) && array_key_exists('raw', $image)) {
                     unset($images[$index]['raw']);
                 }
             } // end foreach

@@ -31,15 +31,15 @@ use Ampache\Module\Util\Ui;
             </div>
         </div> <!-- end id="maincontainer"-->
         <?php
-            $count_temp_playlist = 1;
+            $count_temp_playlist = 0;
             if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                if (Core::get_global('user')->playlist) {
+                if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
                     $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
                 }
             } ?>
         <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) { ?>
-            <a id="donate" href="//ampache.github.io/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
+            <a id="donate" href="//ampache.org/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php
         } ?>
         <?php

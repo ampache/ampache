@@ -33,9 +33,8 @@ class Repository
     protected $modelClassName;
 
     /**
-     *
-     * @var array Stores relation between SQL field name and class name so we
-     * can initialize objects the right way
+     * Stores relation between SQL field name and class name so we can initialize objects the right way
+     * @var array
      */
     protected $fieldClassRelations = array();
 
@@ -168,8 +167,7 @@ class Repository
      */
     protected function insertRecord($properties)
     {
-        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
-                . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
+        $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ") VALUES(" . implode(',', array_fill(0, count($properties), '?')) . ")";
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
@@ -199,8 +197,8 @@ class Repository
      */
     protected function deleteRecord($object_id)
     {
-        $sql = 'DELETE FROM ' . $this->getTableName()
-                . ' WHERE id = ?';
+        $sql = 'DELETE FROM `' . $this->getTableName()
+                . '` WHERE id = ?';
         Dba::write($sql, array($object_id));
     }
 
@@ -258,14 +256,14 @@ class Repository
      */
     public function assembleQuery($table, $fields)
     {
-        $sql = 'SELECT * FROM ' . $table;
+        $sql = "SELECT * FROM `$table`";
         if (!empty($fields)) {
             $sql .= ' WHERE ';
             $sqlParts = array();
             foreach ($fields as $field) {
                 $sqlParts[] = '`' . $this->camelCaseToUnderscore($field) . '` = ?';
             }
-            $sql .= implode(' and ', $sqlParts);
+            $sql .= implode(' AND ', $sqlParts);
         }
         if ($table == 'metadata_field') {
             $sql .= ' ORDER BY `metadata_field`.`name`';

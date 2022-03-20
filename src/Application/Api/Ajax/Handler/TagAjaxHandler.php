@@ -51,7 +51,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'show_add_tag':
                 break;
             case 'get_tag_map':
@@ -89,7 +89,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 debug_event('tag.ajax', 'Deleting tag...', 5);
                 $tag = new Tag($_GET['tag_id']);
                 $tag->delete();
-                header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
+                header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag&type=artist');
 
                 return;
             case 'remove_tag_map':

@@ -23,36 +23,38 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
-/** @var Label $libitem */
+/** @var Ampache\Repository\Model\Label $libitem */
+/** @var string $cel_cover */
 ?>
-<?php
-if (Art::is_enabled()) {
-    $name = scrub_out($libitem->f_name); ?>
-    <td class="cel_cover">
-        <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
-    </td>
-    <?php
-} ?>
+<?php $name = scrub_out($libitem->get_fullname()); ?>
+<td class="<?php echo $cel_cover; ?>">
+    <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
+</td>
 <td class="cel_label"><?php echo $libitem->f_link; ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
 <td class="cel_artists"><?php echo $libitem->artists; ?></td>
+<td class="cel_country"><?php echo $libitem->country; ?></td>
+<?php if ($libitem->active == 1) {
+    echo "<td class=\"cel_active\">" . T_('Active') . "</td>";
+} else {
+    echo "<td class=\"cel_active\">" . T_('Inactive') . "</td>";
+} ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
-        if (AmpConfig::get('sociable')) { ?>
+    if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->id ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')) ?>
     </a>
     <?php
     }
-        if (Catalog::can_remove($libitem)) { ?>
+    if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_label_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>
     <?php
     }
-    } ?>
+} ?>
 </td>

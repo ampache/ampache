@@ -25,36 +25,31 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
 
 final class UpdateCatalogCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private UpdateCatalogInterface $updateCatalog;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         UpdateCatalogInterface $updateCatalog
     ) {
-        parent::__construct('run:updateCatalog', 'Performs catalog actions for all files of a catalog');
+        parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog'));
 
-        $this->configContainer = $configContainer;
         $this->updateCatalog   = $updateCatalog;
 
         $this
-            ->option('-c|--cleanup', 'Cleans the catalog', 'boolval', false)
-            ->option('-e|--verify', 'Verifies the catalog', 'boolval', false)
-            ->option('-a|--add', 'Adds new media to the catalog', 'boolval', false)
-            ->option('-g|--art', 'Searches for new art for the catalog', 'boolval', false)
-            ->option('-u|--update', 'Update artist information and fetch similar artists from last.fm', 'boolval', false)
-            ->option('-i|--import', 'Imports playlists',  'boolval',false)
-            ->option('-o|--optimize', 'Optimize database tables', 'boolval', false)
-            ->option('-m|--memorylimit', 'Temporarily deactivating PHP memory limit', 'boolval', false)
-            ->argument('[catalogName]', 'The name of the catalog to update', null)
-            ->argument('[catalogType]', 'Type of the catalog', 'local')
-            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## Update the local catalog with name `some-catalog`</end><eol/>');
+            ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
+            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
+            ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
+            ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
+            ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
+            ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
+            ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
+            ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
+            ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
+            ->usage('<bold>  run:updateCatalog some-catalog local</end> <comment> ## ' . T_('Update the local catalog called `some-catalog`') . '</end><eol/>');
     }
 
     public function execute(
@@ -62,6 +57,13 @@ final class UpdateCatalogCommand extends Command
         string $catalogType
     ): void {
         $values = $this->values();
+        // do a default list of actions if you don't have anything set
+        if (empty($values['cleanup']) && empty($values['verify']) && empty($values['add']) && empty($values['art']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local') {
+            $values['cleanup'] = true;
+            $values['add']     = true;
+            $values['art']     = true;
+            $values['verify']  = true;
+        }
 
         $this->updateCatalog->update(
             $this->io(),

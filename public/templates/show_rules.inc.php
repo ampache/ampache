@@ -27,14 +27,14 @@ use Ampache\Module\Util\Ui;
 
 /** @var null|Search $playlist */
 
-if ($playlist) {
+if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
     $logic_operator = Core::get_request('operator');
 }
 $logic_operator = strtolower($logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) scrub_out(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) ?: 'song'; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
@@ -66,7 +66,7 @@ $logic_operator = strtolower($logic_operator); ?>
 <?php Ui::show_box_bottom(); ?>
 
 <?php
-if ($playlist) {
+if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
     $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));

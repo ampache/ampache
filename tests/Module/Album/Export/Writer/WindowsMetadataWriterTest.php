@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Album\Export\Writer;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Album;
 use org\bovigo\vfs\vfsStream;
 
 class WindowsMetadataWriterTest extends MockeryTestCase
@@ -38,8 +37,6 @@ class WindowsMetadataWriterTest extends MockeryTestCase
 
     public function testWriteWritesData(): void
     {
-        $album = $this->mock(Album::class);
-
         $dir  = vfsStream::setup();
         $file = vfsStream::newFile('desktop.ini');
 
@@ -48,11 +45,10 @@ class WindowsMetadataWriterTest extends MockeryTestCase
         $dirName      = $dir->url();
         $iconFileName = 'some-file-name';
         $fullName     = 'some-full-name';
-
-        $album->full_name = $fullName;
+        $fileName     = $fullName;
 
         $this->subject->write(
-            $album,
+            $fileName,
             $dirName,
             $iconFileName
         );

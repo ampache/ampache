@@ -41,8 +41,7 @@ class AmpacheLastfm
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $challenge;
     private $user_id;
     private $api_key;
@@ -101,16 +100,19 @@ class AmpacheLastfm
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 4) {
             Preference::rename('lastfm_pass', 'lastfm_md5_pass');
         }
-        if ($from_version < 5) {
+        if ($from_version < (int)$this->version) {
             Preference::delete('lastfm_md5_pass');
             Preference::delete('lastfm_user');
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins');
+            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
         }
 
         return true;
@@ -145,8 +147,7 @@ class AmpacheLastfm
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time,
-            $song->track)) {
+        if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time, $song->track)) {
             return false;
         }
 
@@ -193,7 +194,7 @@ class AmpacheLastfm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param string $user_id
+     * @param int $user_id
      * @param string $token
      * @return boolean
      */

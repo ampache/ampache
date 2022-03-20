@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogActionMethod
 {
-    private const ACTION = 'catalog_action';
+    public const ACTION = 'catalog_action';
 
     /**
      * catalog_action
@@ -51,7 +51,7 @@ final class CatalogActionMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action(array $input)
+    public static function catalog_action(array $input): bool
     {
         if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
@@ -71,11 +71,12 @@ final class CatalogActionMethod
         $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog) {
             define('API', true);
-            unset($SSE_OUTPUT);
+            if (defined('SSE_OUTPUT')) {
+                unset($SSE_OUTPUT);
+            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
-                    Catalog::clean_empty_albums();
                     break;
                 case 'verify_catalog':
                     $catalog->verify_catalog_proc();
@@ -85,19 +86,23 @@ final class CatalogActionMethod
                     break;
                 case 'add_to_catalog':
                     $options = array(
-                        'gather_art' => false,
+                        'gather_art' => true,
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
-                    Album::update_album_artist();
                     break;
             }
+            // clean up after the action
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_mapping('artist');
+            Catalog::update_mapping('album');
+            Catalog::update_counts();
+
             Api::message('successfully started: ' . $task, $input['api_format']);
-            Catalog::count_server();
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

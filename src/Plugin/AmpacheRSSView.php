@@ -38,8 +38,7 @@ class AmpacheRSSView
     public $min_ampache = '370021';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $feed_url;
     private $maxitems;
 
@@ -105,13 +104,12 @@ class AmpacheRSSView
         if ($xml->channel) {
             Ui::show_box_top($xml->channel->title);
             $count = 0;
-            echo '<div class="home_plugin"><table class="tabledata">';
+            echo '<div class="home_plugin"><table class="tabledata striped-rows">';
             foreach ($xml->channel->item as $item) {
-                echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
+                echo '<tr><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short',
-                        "m/d/Y H:i") . '</div>';
+                echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (isset($item->image)) {

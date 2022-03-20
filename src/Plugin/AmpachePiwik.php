@@ -38,8 +38,7 @@ class AmpachePiwik
     public $min_ampache = '370034';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $site_id;
     private $piwik_url;
 
@@ -67,8 +66,7 @@ class AmpachePiwik
         }
 
         Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik');
-        Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string',
-            'plugins', $this->name);
+        Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name);
 
         return true;
     }
@@ -101,9 +99,7 @@ class AmpachePiwik
      */
     public function display_on_footer()
     {
-        $currentUrl = scrub_out("http" . (filter_has_var(INPUT_SERVER,
-                'HTTPS') ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
-
+        $currentUrl = scrub_out("http" . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . Core::get_server('HTTP_HOST') . Core::get_server('REQUEST_URI'));
         echo "<!-- Piwik -->\n";
         echo "<script>\n";
         echo "var _paq = _paq || [];\n";

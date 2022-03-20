@@ -87,7 +87,7 @@ final class InstallPluginAction implements ApplicationActionInterface
             );
 
             $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
-            $title = T_("There Was a Problem");
+            $title = T_('There Was a Problem');
             $body  = T_('Unable to install this Plugin');
             $this->ui->showConfirmation($title, $body, $url);
 

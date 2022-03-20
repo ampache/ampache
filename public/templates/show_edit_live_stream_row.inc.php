@@ -19,10 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Live_Stream $libitem */
 
-use Ampache\Repository\Model\Live_Stream;
-
+/** @var Ampache\Repository\Model\Live_Stream $libitem */
 ?>
 <div>
     <form method="post" id="edit_live_stream_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -36,7 +34,7 @@ use Ampache\Repository\Model\Live_Stream;
                 <td><input type="text" name="url" value="<?php echo scrub_out($libitem->url); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Homepage') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Website') ?></td>
                 <td><input type="text" name="site_url" value="<?php echo scrub_out($libitem->site_url); ?>" /></td>
             </tr>
             <tr>

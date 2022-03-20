@@ -141,7 +141,7 @@ final class Environment implements EnvironmentInterface
     }
 
     /**
-     * This checks to make sure that the php timelimit is set to some
+     * This checks to make sure that the php time limit is set to some
      * semi-sane limit, IE greater then 60 seconds
      */
     public function check_php_timelimit(): bool
@@ -158,7 +158,7 @@ final class Environment implements EnvironmentInterface
     {
         /* Check memory */
         $current_memory = ini_get('memory_limit');
-        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
+        $current_memory = (int)substr($current_memory, 0, strlen((string) $current_memory) - 1);
         $new_limit      = ($current_memory + 16) . "M";
 
         /* Bump it by 16 megs (for getid3)*/
@@ -237,10 +237,10 @@ final class Environment implements EnvironmentInterface
     {
         return (
             (
-                filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO') &&
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
                 Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
             ) || (
-                filter_has_var(INPUT_SERVER, 'HTTPS') &&
+                isset($_SERVER['HTTPS']) &&
                 Core::get_server('HTTPS') == 'on'
             )
         );
@@ -248,7 +248,7 @@ final class Environment implements EnvironmentInterface
 
     public function isMobile(): bool
     {
-        $user_agent = (string) $_SERVER['HTTP_USER_AGENT'];
+        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
 
         return strpos($user_agent, 'Mobile') && (
             strpos($user_agent, 'Android') ||
@@ -260,10 +260,10 @@ final class Environment implements EnvironmentInterface
     public function getHttpPort(): int
     {
         $port = 80;
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PORT')) {
+        if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
             $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
         } else {
-            if (filter_has_var(INPUT_SERVER, 'SERVER_PORT')) {
+            if (isset($_SERVER['SERVER_PORT'])) {
                 $port = (int) $_SERVER['SERVER_PORT'];
             }
         }

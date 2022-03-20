@@ -28,6 +28,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -56,9 +57,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $category;
     public $pubdate;
     public $enabled;
-
+    public $total_count;
     public $catalog;
-    public $f_title;
+    public $waveform;
+    public $has_art;
+    public $f_name;
     public $f_file;
     public $f_size;
     public $f_time;
@@ -79,15 +82,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * Constructor
      *
      * Podcast Episode class
-     * @param integer $podcastep_id
+     * @param integer $episode_id
      */
-    public function __construct($podcastep_id = null)
+    public function __construct($episode_id = null)
     {
-        if ($podcastep_id === null) {
+        if ($episode_id === null) {
             return false;
         }
 
-        $this->id = (int)$podcastep_id;
+        $this->id = (int)$episode_id;
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -120,7 +123,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public static function garbage_collection()
     {
-        Dba::write('DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL');
+        Dba::write("DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL;");
     }
 
     /**
@@ -136,19 +139,18 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
     {
-        $this->f_title       = scrub_out($this->title);
         $this->f_description = scrub_out($this->description);
         $this->f_category    = scrub_out($this->category);
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = get_datetime((int)$this->pubdate);
+        $this->f_pubdate     = date("c", (int)$this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -160,28 +162,39 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
         $this->f_size = Ui::format_bytes($this->size);
-        $this->f_file = $this->f_title . '.' . $this->type;
+        $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
             $podcast->format();
-            $this->catalog        = $podcast->catalog;
-            $this->f_podcast      = $podcast->f_title;
+            $this->f_podcast      = $podcast->get_fullname();
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
         if (AmpConfig::get('show_played_times')) {
-            $this->object_cnt = Stats::get_object_count('podcast_episode', $this->id);
+            $this->total_count = (int) $this->total_count;
         }
 
         return true;
     }
 
     /**
-     * @return array|mixed
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->podcast, 'podcast');
+        }
+
+        return $this->has_art;
+    }
+
+    /**
+     * @return array
      */
     public function get_keywords()
     {
@@ -194,7 +207,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $keywords['title'] = array(
             'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_title
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -205,7 +218,26 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -237,7 +269,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -297,7 +329,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -340,8 +372,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public function set_played($user, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if ($this->check_play_history($user, $agent, $date)) {
-            Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
+        if (!$this->check_play_history($user, $agent, $date)) {
+            return false;
+        }
+        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
         }
 
         if (!$this->played) {
@@ -359,7 +394,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function check_play_history($user, $agent, $date)
     {
-        return Stats::has_played_history($this, $user, $agent, $date);
+        return Stats::has_played_history('podcast_episode', $this, $user, $agent, $date);
     }
 
     /**
@@ -409,7 +444,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name()
     {
-        return $this->f_podcast . " - " . $this->f_title;
+        return $this->f_podcast . " - " . $this->get_fullname();
     }
 
     /**
@@ -432,7 +467,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param string $uid
+     * @param int|string $uid
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
@@ -462,7 +497,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return Stream_Url::format($url);
     }
 
     /**
@@ -484,14 +519,19 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         debug_event(self::class, 'Removing podcast episode ' . $this->id, 5);
 
         if (AmpConfig::get('delete_from_disk') && !empty($this->file)) {
-            if (!unlink($this->file)) {
-                debug_event(self::class, 'Cannot delete file ' . $this->file, 3);
+            if (Core::is_readable($this->file)) {
+                unlink($this->file);
             }
         }
 
+        // keep details about deletions
+        $params = array($this->id);
+        $sql    = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` = ?;";
+        Dba::write($sql, $params);
+
         $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
 
-        return Dba::write($sql, array($this->id));
+        return Dba::write($sql, $params);
     }
 
     /**
@@ -520,11 +560,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
                 $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
                 debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
+                if (file_put_contents($file, fopen($this->source, 'r'))) {
                     debug_event(self::class, 'Download completed.', 4);
                     $this->file = $file;
 
-                    $vainfo = new VaInfo($this->file);
+                    $vainfo = $this->getUtilityFactory()->createVaInfo($this->file);
                     $vainfo->get_info();
                     $key   = VaInfo::get_tag_type($vainfo->tags);
                     $infos = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
@@ -546,6 +586,23 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
+     * get_deleted
+     * get items from the deleted_podcast_episodes table
+     * @return int[]
+     */
+    public static function get_deleted()
+    {
+        $deleted    = array();
+        $sql        = "SELECT * FROM `deleted_podcast_episode`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $deleted[] = $row;
+        }
+
+        return $deleted;
+    } // get_deleted
+
+    /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
@@ -555,5 +612,15 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public static function type_to_mime($type)
     {
         return Song::type_to_mime($type);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

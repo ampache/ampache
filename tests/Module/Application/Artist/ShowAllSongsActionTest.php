@@ -102,8 +102,8 @@ class ShowAllSongsActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->songRepository->shouldReceive('getByArtist')
-            ->with($artist)
+        $this->songRepository->shouldReceive('getAllByArtist')
+            ->with($artistId)
             ->once()
             ->andReturn($songList);
 

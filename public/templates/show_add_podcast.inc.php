@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
-    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed']) ?: 'http://'; ?>" />
+    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed']) ?? 'http://'; ?>" />
         <?php echo AmpError::display('feed'); ?>
     </td>
 </tr>

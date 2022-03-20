@@ -47,7 +47,7 @@ $_SESSION['login'] = true; ?>
             <div id="content">
                 <div id="guts">
                     <?php
-                    $url  = AmpConfig::get('web_path') . '/login.php';
+                    $url  = $web_path . '/login.php';
                     $text = T_('Return to Login Page');
                     if (AmpConfig::get('admin_enable_required')) {
                         $text = T_('Please wait for an administrator to activate your account');
@@ -55,7 +55,7 @@ $_SESSION['login'] = true; ?>
                     if (!AmpConfig::get('user_no_email_confirm')) {
                         $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
                     }
-                    $this->ui->showConfirmation(T_('Your Account Has Been Created'), $text, $url); ?>
+                    $this->ui->showConfirmation(T_('Your account has been created'), $text, $url); ?>
                 </div>
             </div>
         </div>

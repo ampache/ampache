@@ -67,6 +67,10 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
         if ($userId !== null) {
             $user = $this->modelFactory->createUser($userId);
         }
+        // an empty string is an empty global
+        if ($user == '' || $user == null) {
+            return false;
+        }
 
         // Switch on the type
         switch ($type) {

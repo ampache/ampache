@@ -25,7 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
@@ -62,14 +64,13 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
 
         $options = [
-            'gather_art' => $addArt,
+            'gather_art' => false,
             'parse_playlist' => $importPlaylists
         ];
 
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
 
         ob_end_clean();
-        ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
@@ -80,73 +81,163 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
 
             if ($cleanup === true) {
+                ob_start();
+
                 // Clean out dead files
                 $interactor->info(
                     T_('Start cleaning orphaned media entries'),
                     true
                 );
                 $catalog->clean_catalog();
-                $interactor->info('------------------', true);
-            }
-            if ($verification === true) {
-                // Verify Existing
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
                 $interactor->info(
-                    T_('Start verifying media related to Catalog entries'),
+                    $this->cleanBuffer($buffer),
                     true
                 );
-                $catalog->verify_catalog_proc();
                 $interactor->info('------------------', true);
             }
-            if ($addNew === true) {
+            if ($addNew === true || $importPlaylists === true) {
+                ob_start();
+
                 // Look for new files
                 $interactor->info(
                     T_('Start adding new media'),
                     true
                 );
                 $catalog->add_to_catalog($options);
-                Album::update_album_artist();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
-            } elseif ($addArt === true) {
+            }
+            if ($verification === true) {
+                ob_start();
+
+                // Verify Existing
+                $interactor->info(
+                    T_('Start verifying media related to Catalog entries'),
+                    true
+                );
+                $catalog->verify_catalog_proc();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
+                $interactor->info('------------------', true);
+            }
+            if ($addArt === true) {
+                ob_start();
+
                 // Look for media art
                 $interactor->info(
                     T_('Start searching new media art'),
                     true
                 );
                 $catalog->gather_art();
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
                 $interactor->info('------------------', true);
             }
             if ($updateInfo === true) {
-                // Look for updated artist information. (missing or < 6 months since last update)
+                ob_start();
+
                 $interactor->info(
                     T_('Update artist information and fetch similar artists from last.fm'),
                     true
                 );
+                // clean out the bad artists first
+                Catalog::clean_duplicate_artists();
+                // clear up all the things first
+                Catalog::update_counts();
+
+                // Look for updated artist information. (1 month since last update MBID IS NOT NULL) LIMIT 500
+                $artists = $catalog->get_artist_ids('time');
+                $catalog->update_from_external($artists, 'artist');
+
+                // Look for updated recommendations / similar artists  LIMIT 500
                 $artist_info = $catalog->get_artist_ids('info');
                 $catalog->gather_artist_info($artist_info);
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer($buffer),
+                    true
+                );
+                if (AmpConfig::get('label')) {
+                    $interactor->info(
+                        T_('Update Label information and fetch details using the MusicBrainz plugin'),
+                        true
+                    );
+                    $labels = $catalog->get_label_ids('tag_generated');
+                    $catalog->update_from_external($labels, 'label');
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                }
                 $interactor->info('------------------', true);
             }
         }
         if ($cleanup === true || $verification === true) {
             $this->catalogGarbageCollector->collect();
         }
+        // clean up after the action
+        Catalog::clean_empty_albums();
+        Album::update_album_artist();
+        Catalog::update_mapping('artist');
+        Catalog::update_mapping('album');
+        Catalog::update_counts();
         if ($optimizeDatabase === true) {
+            ob_start();
+
             // Optimize Database Tables
             $interactor->info(
                 T_('Optimizing database tables'),
                 true
             );
             Dba::optimize_tables();
+
+            $buffer = ob_get_contents();
+
+            ob_end_clean();
+
+            $interactor->info(
+                $this->cleanBuffer($buffer),
+                true
+            );
+
             $interactor->info('------------------', true);
         }
-
-        $buffer = ob_get_contents();
-
-        ob_end_clean();
-
-        $interactor->info(
-            $this->cleanBuffer($buffer),
-            true
-        );
     }
 
     public function updatePath(
@@ -155,10 +246,17 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ?string $catalogName,
         ?string $newPath
     ): void {
-        $result = $this->lookupCatalogs(
+        // argument may be incorrect when not setting a type
+        if (is_dir($catalogType) && !$newPath) {
+            $newPath     = $catalogType;
+            $catalogType = 'local';
+        }
+        $result  = $this->lookupCatalogs(
             $catalogType,
             $catalogName
         );
+        // trim everything
+        $newPath = rtrim(trim((string)$newPath), "/");
 
         if ($newPath === null || !is_dir($newPath)) {
             $interactor->error('The new path is invalid', true);

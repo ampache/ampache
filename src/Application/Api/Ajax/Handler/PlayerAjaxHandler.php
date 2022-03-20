@@ -46,7 +46,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'show_broadcasts':
                 ob_start();
                 require Ui::find_template('show_broadcasts_dialog.inc.php');
@@ -65,8 +65,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 if ($broadcast->id) {
                     $key  = Broadcast::generate_key();
                     $broadcast->update_state(true, $key);
-                    $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
-                        '<script>startBroadcast(\'' . $key . '\');</script>';
+                    $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }
                 break;
             case 'unbroadcast':
@@ -74,8 +73,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 $broadcast    = new Broadcast((int) $broadcast_id);
                 if ($broadcast->id) {
                     $broadcast->update_state(false);
-                    $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
-                        '<script>stopBroadcast();</script>';
+                    $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }
                 break;
             default:

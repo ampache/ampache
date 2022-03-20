@@ -54,6 +54,11 @@ interface UiInterface
     public function accessDenied(string $error = 'Access Denied'): void;
 
     /**
+     * Displays an error page when you can't write the config
+     */
+    public function permissionDenied(string $fileName): void;
+
+    /**
      * shows a confirmation of an action
      *
      * @param string $title The Title of the message
@@ -72,5 +77,29 @@ interface UiInterface
         $visible = true
     ): void;
 
+    /**
+     * shows a simple continue button after an action
+     */
+    public function showContinue(
+        string $title,
+        string $text,
+        string $next_url
+    ): void;
+
     public function scrubOut(?string $string): string;
+
+    /**
+     * takes the key and then creates the correct type of input for updating it
+     */
+    public function createPreferenceInput(
+        string $name,
+        $value
+    );
+
+    /**
+     * This shows the preference box for the preferences pages.
+     *
+     * @var array<string, mixed> $preferences
+     */
+    public function showPreferenceBox(array $preferences): void;
 }

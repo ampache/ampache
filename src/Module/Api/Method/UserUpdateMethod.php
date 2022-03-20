@@ -40,7 +40,7 @@ use Ampache\Module\Util\Mailer;
  */
 final class UserUpdateMethod
 {
-    private const ACTION = 'user_update';
+    public const ACTION = 'user_update';
 
     /**
      * user_update
@@ -61,7 +61,7 @@ final class UserUpdateMethod
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
-    public static function user_update(array $input)
+    public static function user_update(array $input): bool
     {
         if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -70,14 +70,14 @@ final class UserUpdateMethod
             return false;
         }
         $username   = $input['username'];
-        $fullname   = $input['fullname'];
-        $email      = $input['email'];
-        $website    = $input['website'];
-        $password   = $input['password'];
-        $state      = $input['state'];
-        $city       = $input['city'];
-        $disable    = $input['disable'];
-        $maxbitrate = $input['maxbitrate'];
+        $password   = $input['password'] ?? null;
+        $fullname   = $input['fullname'] ?? null;
+        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
+        $website    = $input['website'] ?? null;
+        $state      = $input['state'] ?? null;
+        $city       = $input['city'] ?? null;
+        $disable    = $input['disable'] ?? null;
+        $maxbitrate = $input['maxbitrate'] ?? null;
 
         // identify the user to modify
         $user    = User::get_from_username($username);
@@ -125,7 +125,6 @@ final class UserUpdateMethod
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
         return false;
     }

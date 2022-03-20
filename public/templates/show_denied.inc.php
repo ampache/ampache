@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$logo_url = AmpConfig::get('custom_login_logo');
+$logo_url = AmpConfig::get('custom_login_logo', '');
 if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
@@ -33,10 +33,10 @@ $web_path = AmpConfig::get('web_path'); ?>
 <html lang="en-US">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <meta http-equiv="refresh" content="10;URL=<?php echo(AmpConfig::get('web_path'));?>" />
+        <meta http-equiv="refresh" content="10;URL=<?php echo($web_path);?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo T_("Ampache") . ' -- ' . T_("Debug Page"); ?></title>
+        <title><?php echo T_('Ampache') . ' -- ' . T_("Debug Page"); ?></title>
         <?php Ui::show_custom_style(); ?>
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="<?php echo $web_path; ?>">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo scrub_out(AmpConfig::get('site_title')); ?>
                 </a>
@@ -60,10 +60,10 @@ $web_path = AmpConfig::get('web_path'); ?>
                 <?php if (!AmpConfig::get('demo_mode')) { ?>
                 <p><?php echo T_('You have been redirected to this page because you do not have access to this function'); ?></p>
                 <p><?php echo T_('If you believe this is an error please contact an Ampache administrator'); ?></p>
-                <p><?php echo T_('This event has been logged') . ": " . T_("You will be automatically redirected in 10 seconds."); ?></p>
+                <p><?php echo T_('This event has been logged') . ": " . T_('You will be automatically redirected in 10 seconds.'); ?></p>
                 <?php
 } else { ?>
-                <p><?php echo T_("You have been redirected to this page because you attempted to access a function that is disabled in the demo."); ?></p>
+                <p><?php echo T_('You have been redirected to this page because you attempted to access a function that is disabled in the demo.'); ?></p>
                 <?php
     } ?>
             </div>

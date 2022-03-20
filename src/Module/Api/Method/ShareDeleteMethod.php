@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class ShareDeleteMethod
 {
-    private const ACTION = 'share_delete';
+    public const ACTION = 'share_delete';
 
     /**
      * share_delete
@@ -50,7 +50,7 @@ final class ShareDeleteMethod
      * filter = (string) UID of share to delete
      * @return boolean
      */
-    public static function share_delete(array $input)
+    public static function share_delete(array $input): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -62,7 +62,7 @@ final class ShareDeleteMethod
         }
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
-        if (in_array($object_id, Share::get_share_list())) {
+        if (in_array($object_id, Share::get_share_list($user))) {
             if (Share::delete_share($object_id, $user)) {
                 Api::message('share ' . $object_id . ' deleted', $input['api_format']);
                 Catalog::count_table('share');
@@ -74,7 +74,6 @@ final class ShareDeleteMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     } // share_delete

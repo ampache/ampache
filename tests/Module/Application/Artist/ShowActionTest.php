@@ -180,7 +180,7 @@ class ShowActionTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->albumRepository->shouldReceive('getByArtist')
-            ->with($artist, $catalogId, true)
+            ->with($artistId, $catalogId, true)
             ->once()
             ->andReturn($multi_object_ids);
 
@@ -248,7 +248,7 @@ class ShowActionTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->albumRepository->shouldReceive('getByArtist')
-            ->with($artist, $catalogId)
+            ->with($artistId, $catalogId)
             ->once()
             ->andReturn($object_ids);
 

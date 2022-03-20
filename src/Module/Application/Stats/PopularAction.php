@@ -72,8 +72,11 @@ final class PopularAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Information'));
 
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $user_id      = (int) Core::get_global('user')->id;
+        $thresh_value   = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $catalog_filter = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER);
+        $user_id        = ($catalog_filter)
+            ? Core::get_global('user')->id
+            : null;
 
         /**
          * We limit threshold for all items otherwise the counter will not be the same that the top_sql query.
@@ -118,7 +121,7 @@ final class PopularAction implements ApplicationActionInterface
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(
                 'video',
-                Stats::get_top_sql('video', $thresh_value)
+                Stats::get_top_sql('video', $thresh_value, 'stream', $user_id)
             );
             $browse->set_simple_browse(true);
             $browse->show_objects(null);

@@ -192,7 +192,7 @@ final class FileNameConverter implements FileNameConverterInterface
 
         foreach ($data as $dir) {
             $dir = $this->charset_clean_name($dir);
-            $path .= "/" . $dir;
+            $path .= '/' . $dir;
 
             if (!is_dir($path)) {
                 $interactor->info(printf(T_('Making directory: %s'), $path), true);
@@ -224,7 +224,7 @@ final class FileNameConverter implements FileNameConverterInterface
         $old_sum = Core::get_filesize($full_file);
         $new_sum = Core::get_filesize($translated_filename);
 
-        if ($old_sum != $new_sum || !$new_sum) {
+        if ($old_sum != $new_sum || $new_sum == 0) {
             $interactor->error(
                 sprintf(T_('Size comparison failed. Not deleting "%s"'), $full_file),
                 true

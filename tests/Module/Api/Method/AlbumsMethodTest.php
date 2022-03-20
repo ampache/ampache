@@ -144,6 +144,7 @@ class AlbumsMethodTest extends MockeryTestCase
                 $include,
                 $userId,
                 true,
+                true,
                 $limit,
                 $offset
             )

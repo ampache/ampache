@@ -41,8 +41,7 @@ class Ampachelibrefm
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $challenge;
     private $user_id;
     private $api_key;
@@ -76,8 +75,7 @@ class Ampachelibrefm
             return false;
         }
 
-        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal',
-            $this->name);
+        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
         Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
@@ -101,16 +99,19 @@ class Ampachelibrefm
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 2) {
             Preference::rename('librefm_pass', 'librefm_md5_pass');
         }
-        if ($from_version < 3) {
+        if ($from_version < (int)$this->version) {
             Preference::delete('librefm_md5_pass');
             Preference::delete('librefm_user');
             Preference::delete('librefm_url');
             Preference::delete('librefm_host');
             Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins');
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
         }
 
         return true;
@@ -194,8 +195,8 @@ class Ampachelibrefm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param $user_id
-     * @param $token
+     * @param int $user_id
+     * @param string $token
      * @return boolean
      */
     public function get_session($user_id, $token)

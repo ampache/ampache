@@ -54,6 +54,7 @@ class Channel extends database_object implements Media, library_item
     public $name;
     public $description;
     public $fixed_endpoint;
+    public $url;
 
     public $header_chunk;
     public $chunk_size              = 4096;
@@ -252,7 +253,7 @@ class Channel extends database_object implements Media, library_item
             Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
         }
 
-        $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " . "WHERE `id` = ?";
+        $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? WHERE `id` = ?";
         $params = array(
             $data['name'],
             $data['description'],
@@ -260,11 +261,11 @@ class Channel extends database_object implements Media, library_item
             $data['interface'],
             $data['port'],
             (!empty($data['interface']) && !empty($data['port'])),
-            $data['admin_password'],
-            !empty($data['private']),
+            $data['admin_password'] ?? null,
+            (isset($data['private'])) ? 1 : 0,
             $data['max_listeners'],
-            $data['random'],
-            $data['loop'],
+            (isset($data['random'])) ? 1 : 0,
+            (isset($data['loop'])) ? 1 : 0,
             $data['stream_type'],
             $data['bitrate'],
             $data['object_id'],
@@ -343,6 +344,15 @@ class Channel extends database_object implements Media, library_item
     public function get_fullname()
     {
         return $this->name;
+    }
+
+    /**
+     * get_link
+     * @return string
+     */
+    public function get_link()
+    {
+        return $this->url;
     }
 
     /**
@@ -488,7 +498,7 @@ class Channel extends database_object implements Media, library_item
      */
     public function start_channel()
     {
-        $path = __DIR__ . '/../../bin/cli';
+        $path = __DIR__ . '/../../../bin/cli';
         $cmd  = sprintf(
             'env php %s run:channel %d > /dev/null &',
             $path,
@@ -645,7 +655,7 @@ class Channel extends database_object implements Media, library_item
                     $this->media_bytes_streamed += strlen((string)$chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        // debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
+                        //debug_event(self::class, 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {

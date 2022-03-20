@@ -29,6 +29,8 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * API Class
@@ -43,117 +45,128 @@ class Api
      * This dict contains all known api-methods (key) and their respective handler (value)
      */
     public const METHOD_LIST = [
-        'handshake' => Method\HandshakeMethod::class,
-        'ping' => Method\PingMethod::class,
-        'goodbye' => Method\GoodbyeMethod::class,
-        'url_to_song' => Method\UrlToSongMethod::class,
-        'get_indexes' => Method\GetIndexesMethod::class,
-        'get_bookmark' => Method\GetBookmarkMethod::class,
-        'get_similar' => Method\GetSimilarMethod::class,
-        'advanced_search' => Method\AdvancedSearchMethod::class,
-        'artists' => Method\ArtistsMethod::class,
-        'artist' => Method\ArtistMethod::class,
-        'artist_albums' => Method\ArtistAlbumsMethod::class,
-        'artist_songs' => Method\ArtistSongsMethod::class,
+        Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
+        Method\PingMethod::ACTION => Method\PingMethod::class,
+        Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
+        Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
+        Method\GetIndexesMethod::ACTION => Method\GetIndexesMethod::class,
+        Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
+        Method\GetSimilarMethod::ACTION => Method\GetSimilarMethod::class,
+        Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
+        Method\ArtistsMethod::ACTION => Method\ArtistsMethod::class,
+        Method\ArtistMethod::ACTION => Method\ArtistMethod::class,
+        Method\ArtistAlbumsMethod::ACTION => Method\ArtistAlbumsMethod::class,
+        Method\ArtistSongsMethod::ACTION => Method\ArtistSongsMethod::class,
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,
-        'album_songs' => Method\AlbumSongsMethod::class,
-        'licenses' => Method\LicensesMethod::class,
-        'license' => Method\LicenseMethod::class,
-        'license_songs' => Method\LicenseSongsMethod::class,
-        'tags' => Method\TagsMethod::class,
-        'tag' => Method\TagMethod::class,
-        'tag_artists' => Method\TagArtistsMethod::class,
-        'tag_albums' => Method\TagAlbumsMethod::class,
-        'tag_songs' => Method\TagSongsMethod::class,
-        'genres' => Method\GenresMethod::class,
-        'genre' => Method\GenreMethod::class,
-        'genre_artists' => Method\GenreArtistsMethod::class,
-        'genre_albums' => Method\GenreAlbumsMethod::class,
-        'genre_songs' => Method\GenreSongsMethod::class,
-        'labels' => Method\LabelsMethod::class,
-        'label' => Method\LabelMethod::class,
-        'label_artists' => Method\LabelArtistsMethod::class,
-        'songs' => Method\SongsMethod::class,
-        'song' => Method\SongMethod::class,
-        'song_delete' => Method\SongDeleteMethod::class,
-        'playlists' => Method\PlaylistsMethod::class,
-        'playlist' => Method\PlaylistMethod::class,
-        'playlist_songs' => Method\PlaylistSongsMethod::class,
-        'playlist_create' => Method\PlaylistCreateMethod::class,
-        'playlist_edit' => Method\PlaylistEditMethod::class,
-        'playlist_delete' => Method\PlaylistDeleteMethod::class,
-        'playlist_add_song' => Method\PlaylistAddSongMethod::class,
-        'playlist_remove_song' => Method\PlaylistRemoveSongMethod::class,
-        'playlist_generate' => Method\PlaylistGenerateMethod::class,
-        'search_songs' => Method\SearchSongsMethod::class,
-        'shares' => Method\SharesMethod::class,
-        'share' => Method\ShareMethod::class,
-        'share_create' => Method\ShareCreateMethod::class,
-        'share_delete' => Method\ShareDeleteMethod::class,
-        'share_edit' => Method\ShareEditMethod::class,
-        'bookmarks' => Method\BookmarksMethod::class,
-        'bookmark_create' => Method\BookmarkCreateMethod::class,
-        'bookmark_edit' => Method\BookmarkEditMethod::class,
-        'bookmark_delete' => Method\BookmarkDeleteMethod::class,
-        'videos' => Method\VideosMethod::class,
-        'video' => Method\VideoMethod::class,
-        'stats' => Method\StatsMethod::class,
-        'podcasts' => Method\PodcastsMethod::class,
-        'podcast' => Method\PodcastMethod::class,
-        'podcast_create' => Method\PodcastCreateMethod::class,
-        'podcast_delete' => Method\PodcastDeleteMethod::class,
-        'podcast_edit' => Method\PodcastEditMethod::class,
-        'podcast_episodes' => Method\PodcastEpisodesMethod::class,
-        'podcast_episode' => Method\PodcastEpisodeMethod::class,
-        'podcast_episode_delete' => Method\PodcastEpisodeDeleteMethod::class,
-        'users' => Method\UsersMethod::class,
-        'user' => Method\UserMethod::class,
-        'user_preferences' => Method\UserPreferencesMethod::class,
-        'user_preference' => Method\UserPreferenceMethod::class,
-        'user_create' => Method\UserCreateMethod::class,
-        'user_update' => Method\UserUpdateMethod::class,
-        'user_delete' => Method\UserDeleteMethod::class,
-        'followers' => Method\FollowersMethod::class,
-        'following' => Method\FollowingMethod::class,
-        'toggle_follow' => Method\ToggleFollowMethod::class,
-        'last_shouts' => Method\LastShoutsMethod::class,
-        'rate' => Method\RateMethod::class,
-        'flag' => Method\FlagMethod::class,
-        'record_play' => Method\RecordPlayMethod::class,
-        'scrobble' => Method\ScrobbleMethod::class,
-        'catalogs' => Method\CatalogsMethod::class,
-        'catalog' => Method\CatalogMethod::class,
-        'catalog_action' => Method\CatalogActionMethod::class,
-        'catalog_file' => Method\CatalogFileMethod::class,
-        'timeline' => Method\TimelineMethod::class,
-        'friends_timeline' => Method\FriendsTimelineMethod::class,
-        'update_from_tags' => Method\UpdateFromTagsMethod::class,
-        'update_artist_info' => Method\UpdateArtistInfoMethod::class,
-        'update_art' => Method\UpdateArtMethod::class,
-        'update_podcast' => Method\UpdatePodcastMethod::class,
-        'stream' => Method\StreamMethod::class,
-        'download' => Method\DownloadMethod::class,
-        'get_art' => Method\GetArtMethod::class,
-        'localplay' => Method\LocalplayMethod::class,
-        'democratic' => Method\DemocraticMethod::class,
-        'system_update' => Method\SystemUpdateMethod::class,
-        'system_preferences' => Method\SystemPreferencesMethod::class,
-        'system_preference' => Method\SystemPreferenceMethod::class,
-        'preference_create' => Method\PreferenceCreateMethod::class,
-        'preference_edit' => Method\PreferenceEditMethod::class,
-        'preference_delete' => Method\PreferenceDeleteMethod::class,
+        Method\AlbumSongsMethod::ACTION => Method\AlbumSongsMethod::class,
+        Method\LicensesMethod::ACTION => Method\LicensesMethod::class,
+        Method\LicenseMethod::ACTION => Method\LicenseMethod::class,
+        Method\LicenseSongsMethod::ACTION => Method\LicenseSongsMethod::class,
+        Method\TagsMethod::ACTION => Method\TagsMethod::class,
+        Method\TagMethod::ACTION => Method\TagMethod::class,
+        Method\TagArtistsMethod::ACTION => Method\TagArtistsMethod::class,
+        Method\TagAlbumsMethod::ACTION => Method\TagAlbumsMethod::class,
+        Method\TagSongsMethod::ACTION => Method\TagSongsMethod::class,
+        Method\GenresMethod::ACTION => Method\GenresMethod::class,
+        Method\GenreMethod::ACTION => Method\GenreMethod::class,
+        Method\GenreArtistsMethod::ACTION => Method\GenreArtistsMethod::class,
+        Method\GenreAlbumsMethod::ACTION => Method\GenreAlbumsMethod::class,
+        Method\GenreSongsMethod::ACTION => Method\GenreSongsMethod::class,
+        Method\LabelsMethod::ACTION => Method\LabelsMethod::class,
+        Method\LabelMethod::ACTION => Method\LabelMethod::class,
+        Method\LabelArtistsMethod::ACTION => Method\LabelArtistsMethod::class,
+        Method\LiveStreamsMethod::ACTION => Method\LiveStreamsMethod::class,
+        Method\LiveStreamMethod::ACTION => Method\LiveStreamMethod::class,
+        Method\SongsMethod::ACTION => Method\SongsMethod::class,
+        Method\SongMethod::ACTION => Method\SongMethod::class,
+        Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
+        Method\PlaylistsMethod::ACTION => Method\PlaylistsMethod::class,
+        Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
+        Method\PlaylistSongsMethod::ACTION => Method\PlaylistSongsMethod::class,
+        Method\PlaylistCreateMethod::ACTION => Method\PlaylistCreateMethod::class,
+        Method\PlaylistEditMethod::ACTION => Method\PlaylistEditMethod::class,
+        Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
+        Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,
+        Method\PlaylistRemoveSongMethod::ACTION => Method\PlaylistRemoveSongMethod::class,
+        Method\PlaylistGenerateMethod::ACTION => Method\PlaylistGenerateMethod::class,
+        Method\SearchSongsMethod::ACTION => Method\SearchSongsMethod::class,
+        Method\SharesMethod::ACTION => Method\SharesMethod::class,
+        Method\ShareMethod::ACTION => Method\ShareMethod::class,
+        Method\ShareCreateMethod::ACTION => Method\ShareCreateMethod::class,
+        Method\ShareDeleteMethod::ACTION => Method\ShareDeleteMethod::class,
+        Method\ShareEditMethod::ACTION => Method\ShareEditMethod::class,
+        Method\BookmarksMethod::ACTION => Method\BookmarksMethod::class,
+        Method\BookmarkCreateMethod::ACTION => Method\BookmarkCreateMethod::class,
+        Method\BookmarkEditMethod::ACTION => Method\BookmarkEditMethod::class,
+        Method\BookmarkDeleteMethod::ACTION => Method\BookmarkDeleteMethod::class,
+        Method\VideosMethod::ACTION => Method\VideosMethod::class,
+        Method\VideoMethod::ACTION => Method\VideoMethod::class,
+        Method\StatsMethod::ACTION => Method\StatsMethod::class,
+        Method\PodcastsMethod::ACTION => Method\PodcastsMethod::class,
+        Method\PodcastMethod::ACTION => Method\PodcastMethod::class,
+        Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
+        Method\PodcastDeleteMethod::ACTION => Method\PodcastDeleteMethod::class,
+        Method\PodcastEditMethod::ACTION => Method\PodcastEditMethod::class,
+        Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,
+        Method\PodcastEpisodeMethod::ACTION => Method\PodcastEpisodeMethod::class,
+        Method\PodcastEpisodeDeleteMethod::ACTION => Method\PodcastEpisodeDeleteMethod::class,
+        Method\UsersMethod::ACTION => Method\UsersMethod::class,
+        Method\UserMethod::ACTION => Method\UserMethod::class,
+        Method\UserPreferencesMethod::ACTION => Method\UserPreferencesMethod::class,
+        Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
+        Method\UserCreateMethod::ACTION => Method\UserCreateMethod::class,
+        Method\UserUpdateMethod::ACTION => Method\UserUpdateMethod::class,
+        Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,
+        Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
+        Method\FollowingMethod::ACTION => Method\FollowingMethod::class,
+        Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
+        Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
+        Method\RateMethod::ACTION => Method\RateMethod::class,
+        Method\FlagMethod::ACTION => Method\FlagMethod::class,
+        Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
+        Method\ScrobbleMethod::ACTION => Method\ScrobbleMethod::class,
+        Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,
+        Method\CatalogMethod::ACTION => Method\CatalogMethod::class,
+        Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
+        Method\CatalogFileMethod::ACTION => Method\CatalogFileMethod::class,
+        Method\TimelineMethod::ACTION => Method\TimelineMethod::class,
+        Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
+        Method\UpdateFromTagsMethod::ACTION => Method\UpdateFromTagsMethod::class,
+        Method\UpdateArtistInfoMethod::ACTION => Method\UpdateArtistInfoMethod::class,
+        Method\UpdateArtMethod::ACTION => Method\UpdateArtMethod::class,
+        Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
+        Method\StreamMethod::ACTION => Method\StreamMethod::class,
+        Method\DownloadMethod::ACTION => Method\DownloadMethod::class,
+        Method\GetArtMethod::ACTION => Method\GetArtMethod::class,
+        Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
+        Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
+        Method\DemocraticMethod::ACTION => Method\DemocraticMethod::class,
+        Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
+        Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
+        Method\SystemPreferenceMethod::ACTION => Method\SystemPreferenceMethod::class,
+        Method\PreferenceCreateMethod::ACTION => Method\PreferenceCreateMethod::class,
+        Method\PreferenceEditMethod::ACTION => Method\PreferenceEditMethod::class,
+        Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
+        Method\DeletedSongsMethod::ACTION => Method\DeletedSongsMethod::class,
+        Method\DeletedVideosMethod::ACTION => Method\DeletedVideosMethod::class,
+        Method\DeletedPodcastEpisodesMethod::ACTION => Method\DeletedPodcastEpisodesMethod::class,
     ];
 
     /**
-     *  @var string $auth_version
+     * @var string $auth_version
      */
     public static $auth_version = '350001';
 
     /**
      * @var string $version
      */
-    public static $version = '5.0.0';
+    public static $version = '5.2.1';
+
+    /**
+     * @var string $version_numeric
+     */
+    public static $version_numeric = '521000';
 
     /**
      * @var Browse $browse
@@ -249,22 +262,22 @@ class Api
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
-                    $elements = explode('/', $value);
-                    $browse->set_filter('add_lt', strtotime($elements['1']));
-                    $browse->set_filter('add_gt', strtotime($elements['0']));
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $browse->set_filter('add_lt', strtotime((string)$elements['1']));
+                    $browse->set_filter('add_gt', strtotime((string)$elements['0']));
                 } else {
-                    $browse->set_filter('add_gt', strtotime($value));
+                    $browse->set_filter('add_gt', strtotime((string)$value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos($value, '/')) {
-                    $elements = explode('/', $value);
-                    $browse->set_filter('update_lt', strtotime($elements['1']));
-                    $browse->set_filter('update_gt', strtotime($elements['0']));
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $browse->set_filter('update_lt', strtotime((string)$elements['1']));
+                    $browse->set_filter('update_gt', strtotime((string)$elements['0']));
                 } else {
-                    $browse->set_filter('update_gt', strtotime($value));
+                    $browse->set_filter('update_gt', strtotime((string)$value));
                 }
                 break;
             case 'alpha_match':
@@ -297,10 +310,10 @@ class Api
     public static function check_parameter($input, $parameters, $method)
     {
         foreach ($parameters as $parameter) {
-            if ($input[$parameter] === 0 || $input[$parameter] === '0') {
+            if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
                 continue;
             }
-            if (empty($input[$parameter])) {
+            if (!array_key_exists($parameter, $input)) {
                 debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -355,30 +368,49 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $counts    = Catalog::count_server(true);
+        $client      = static::getUserRepository()->findByApiKey(trim($token));
+        $counts      = Catalog::get_server_counts($client->id);
+        $album_count = (Preference::get('album_group', $client->id))
+            ? (int)$counts['album_group']
+            : (int)$counts['album'];
+        $playlists = (AmpConfig::get('hide_search', false))
+            ? ((int)$counts['playlist'])
+            : ((int)$counts['playlist'] + (int)$counts['search']);
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('api' => Api::$version,
-            'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-            'update' => date("c", (int) $details['update']),
-            'add' => date("c", (int) $details['add']),
-            'clean' => date("c", (int) $details['clean']),
-            'songs' => (int) $counts['song'],
-            'albums' => (int) $counts['album'],
-            'artists' => (int) $counts['artist'],
-            'genres' => (int) $counts['tag'],
-            'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-            'users' => ((int) $counts['user'] + (int) $counts['user']),
-            'catalogs' => (int) $counts['catalog'],
-            'videos' => (int) $counts['video'],
-            'podcasts' => (int) $counts['podcast'],
-            'podcast_episodes' => (int) $counts['podcast_episode'],
-            'shares' => (int) $counts['share'],
-            'licenses' => (int) $counts['license'],
-            'live_streams' => (int) $counts['live_stream'],
-            'labels' => (int) $counts['label']);
+        $outarray = array('api' => self::$version,
+            'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
+            'update' => date("c", (int)$details['update']),
+            'add' => date("c", (int)$details['add']),
+            'clean' => date("c", (int)$details['clean']),
+            'songs' => (int)$counts['song'],
+            'albums' => $album_count,
+            'artists' => (int)$counts['artist'],
+            'genres' => (int)$counts['tag'],
+            'playlists' => (int)$counts['playlist'],
+            'searches' => (int)$counts['search'],
+            'playlists_searches' => $playlists,
+            'users' => ((int)$counts['user'] + (int)$counts['user']),
+            'catalogs' => (int)$counts['catalog'],
+            'videos' => (int)$counts['video'],
+            'podcasts' => (int)$counts['podcast'],
+            'podcast_episodes' => (int)$counts['podcast_episode'],
+            'shares' => (int)$counts['share'],
+            'licenses' => (int)$counts['license'],
+            'live_streams' => (int)$counts['live_stream'],
+            'labels' => (int)$counts['label']);
 
         return array_merge($autharray, $outarray);
     } // server_details
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
 }

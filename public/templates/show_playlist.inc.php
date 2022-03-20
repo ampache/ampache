@@ -42,78 +42,87 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Playlist $playlist */
+/** @var array $object_ids */
 
 ?>
 <?php
 ob_start();
 require Ui::find_template('show_playlist_title.inc.php');
-$title = ob_get_contents();
+$title    = ob_get_contents();
+$web_path = AmpConfig::get('web_path');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
+<div class="item_right_info">
+    <?php
+    $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
+    $playlist->display_art($thumb, false, false) ?>
+</div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-    <div style="display:table-cell;" id="rating_<?php echo $playlist->id; ?>_playlist">
-            <?php echo Rating::show($playlist->id, 'playlist'); ?>
-    </div>
-    <?php
-    } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $playlist->id; ?>_playlist">
-            <?php echo Userflag::show($playlist->id, 'playlist'); ?>
-    </div>
-    <?php
-    } ?>
-<?php
-} ?>
+    <span id="rating_<?php echo $playlist->id; ?>_playlist">
+        <?php echo Rating::show($playlist->id, 'playlist'); ?>
+    </span>
+    <span id="userflag_<?php echo $playlist->id; ?>_playlist">
+        <?php echo Userflag::show($playlist->id, 'playlist'); ?>
+    </span>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <ul>
     <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
+                                            '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 <?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('sort', T_('Sort Tracks by Artist, Album, Song')); ?>
                 <?php echo T_('Sort Tracks by Artist, Album, Song'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('wand', T_('Remove Duplicates')); ?>
                 <?php echo T_('Remove Duplicates'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php
     // @todo remove after refactoring
     global $dic;
     $zipHandler = $dic->get(ZipHandlerInterface::class);
     if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
-                <?php echo T_('Batch Download'); ?>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
+                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo T_('Batch download'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
+    <?php if (AmpConfig::get('share')) { ?>
+        <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
+                <?php echo UI::get_icon('share', T_('Share playlist')); ?>
+        &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
+        </a>
+    <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play All'), 'directplay_full_' . $playlist->id); ?>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
+    <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_playlist_' . $playlist->id); ?>
+        </li>
+    <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
         </li>
@@ -122,22 +131,35 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
+            <a href="<?php echo $web_path; ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('flow'); ?>
-                <?php echo T_('Create channel'); ?>
+                <?php echo T_('Create Channel'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
+        <?php $search_id = $playlist->has_search($playlist->user);
+        if ($search_id > 0) { ?>
+            <li>
+                <a href="<?php echo $web_path; ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
+                    <?php echo Ui::get_icon('file_refresh'); ?>
+                    <?php echo T_('Refresh from Smartlist'); ?>
+                </a>
+            </li>
+        <?php } ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
+            <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Playlist Edit')) ?>', '')">
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo T_('Edit'); ?>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
                 <?php echo Ui::get_icon('delete'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-    <?php
-    } ?>
+    <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

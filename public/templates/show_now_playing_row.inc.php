@@ -30,6 +30,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 
 /** @var Song $media */
+/** @var Ampache\Repository\Model\User $np_user */
+/** @var string $web_path */
+/** @var string $agent */
 
 ?>
 <div class="np_group" id="np_group_1">
@@ -46,45 +49,40 @@ use Ampache\Module\Api\Ajax;
 </div>
 
 <div class="np_group" id="np_group_2">
-    <div class="np_cell cel_song">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Song'); ?></label>
         <?php echo $media->f_link; ?>
     </div>
-    <div class="np_cell cel_album">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Album'); ?></label>
         <?php echo $media->f_album_link; ?>
     </div>
-    <div class="np_cell cel_artist">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
-        <?php echo $media->f_artist_link; ?>
+        <?php echo $media->get_f_artist_link(); ?>
     </div>
-    <div class="np_cell cel_year">
+    <div class="np_cell cel_left">
         <label><?php echo T_('Year'); ?></label>
         <?php echo $media->f_year_link; ?>
     </div>
     <?php
         if (!empty($media->f_tags)) { ?>
-            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
+            <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_left">
                 <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
-        <?php
-        } ?>
+        <?php } ?>
 </div>
 
-<?php if (Art::is_enabled()) { ?>
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
-      <?php
-      $playing = (AmpConfig::get('show_song_art')) ? new Song($media->id) : new Album($media->album);
+      <?php $playing = (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) ? new Song($media->id) : new Album($media->album);
       if ($playing->id) {
           $playing->format();
           $playing->display_art(1);
       } ?>
   </div>
 </div>
-<?php
-    } ?>
 
 <?php if (AmpConfig::get('show_similar')) { ?>
 <div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
@@ -106,31 +104,17 @@ $(document).ready(function(){
     <?php echo Ajax::action('?page=index&action=similar_now_playing&media_id=' . $media->id . '&media_artist=' . $media->artist, 'similar_now_playing'); ?>
 });
 </script>
-<?php
-    } ?>
+<?php } ?>
 
-<?php
-    if (Access::check('interface', 25)) { ?>
+<?php if (Access::check('interface', 25)) { ?>
         <div class="np_group" id="np_group_4">
-    <?php
-        if (AmpConfig::get('ratings')) { ?>
-            <div class="np_cell cel_rating">
-                <label><?php echo T_('Rating'); ?></label>
-                <div id="rating_<?php echo $media->id; ?>_song">
-                    <?php echo Rating::show($media->id, 'song'); ?>
-                </div>
-            </div>
-        <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-            <div class="np_cell cel_userflag">
-                <label><?php echo T_('Fav.'); ?></label>
-                <div id="userflag_<?php echo $media->id; ?>_song">
-                    <?php echo Userflag::show($media->id, 'song'); ?>
-                </div>
-            </div>
-        <?php
-        } ?>
+    <?php if (AmpConfig::get('ratings')) { ?>
+            <span id="rating_<?php echo $media->id; ?>_song">
+                <?php echo Rating::show($media->id, 'song'); ?>
+            </span>
+            <span id="userflag_<?php echo $media->id; ?>_song">
+                <?php echo Userflag::show($media->id, 'song'); ?>
+            </span>
+        <?php } ?>
         </div>
-    <?php
-    } ?>
+    <?php } ?>

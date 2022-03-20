@@ -29,13 +29,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
+if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800)) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));
-is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
-
-$web_path       = AmpConfig::get('web_path');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+$dir      = is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';
+$web_path = AmpConfig::get('web_path');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;
@@ -65,9 +64,9 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 } ?>
         <div id="loginbox">
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
-            <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path ?>/lostpassword.php">
+            <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/lostpassword.php">
                 <div class="loginfield" id="emailfield">
-                    <label for="email"><?php echo  T_('E-mail'); ?>:</label>
+                    <label for="email"><?php echo T_('E-mail'); ?>:</label>
                     <input type="hidden" id="action" name="action" value="send" />
                     <input type="text" id="email" name="email" autofocus />
                 </div>

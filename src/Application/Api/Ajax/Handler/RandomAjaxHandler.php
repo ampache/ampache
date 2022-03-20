@@ -53,12 +53,11 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
-        $action  = Core::get_request('action');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'song':
-                $songs = Random::get_default(null, Core::get_global('user')->id);
+                $songs = Random::get_default(null, Core::get_global('user'));
 
                 if (!count($songs)) {
                     $results['rfc3514'] = '0x1';
@@ -72,7 +71,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'album':
                 $album_id = $this->albumRepository->getRandom(
-                    Core::get_global('user')->id,
+                    Core::get_global('user')->id ?? -1,
                     null
                 );
 
@@ -109,8 +108,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                $artist = new Artist($artist_id);
-                $songs  = $this->songRepository->getByArtist($artist);
+                $songs  = $this->songRepository->getByArtist($artist_id);
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

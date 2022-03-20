@@ -81,14 +81,13 @@ final class DefaultAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Avoid form login if still connected
-        if ($this->configContainer->get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
+        if ($this->configContainer->get('use_auth') && !isset($_GET['force_display'])) {
             $auth = false;
-            if (Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
+            $name = $this->configContainer->getSessionName();
+            if (array_key_exists($name, $_COOKIE) && Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
                 $auth = true;
-            } else {
-                if (Session::auth_remember()) {
-                    $auth = true;
-                }
+            } elseif (Session::auth_remember()) {
+                $auth = true;
             }
             if ($auth) {
                 return $this->responseFactory
@@ -124,23 +123,24 @@ final class DefaultAction implements ApplicationActionInterface
 
         if (empty($_REQUEST['step'])) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
-            if (($_POST['username']) ||
+            if ((isset($_POST['username'])) ||
                 (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) &&
-                    (filter_has_var(INPUT_SERVER, 'REMOTE_USER') || filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')))) {
+                    (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth['success']                 = true;
-                    $auth['info']['username']        = 'Admin - DEMO';
-                    $auth['info']['fullname']        = 'Administrative User';
-                    $auth['info']['offset_limit']    = 25;
+                    $auth                         = array();
+                    $auth['success']              = true;
+                    $auth['info']['username']     = 'Admin - DEMO';
+                    $auth['info']['fullname']     = 'Administrative User';
+                    $auth['info']['offset_limit'] = 25;
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string) scrub_in(Core::get_post('username'));
                         $password = Core::get_post('password');
                     } else {
-                        if (filter_has_var(INPUT_SERVER, 'REMOTE_USER')) {
+                        if (isset($_SERVER['REMOTE_USER'])) {
                             $username = (string) Core::get_server('REMOTE_USER');
-                        } elseif (filter_has_var(INPUT_SERVER, 'HTTP_REMOTE_USER')) {
+                        } elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
                             $username = (string) Core::get_server('HTTP_REMOTE_USER');
                         } else {
                             $username = '';
@@ -152,7 +152,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if ($auth['success']) {
                         $username = $auth['username'];
-                    } elseif ($auth['ui_required']) {
+                    } elseif (array_key_exists('ui_required', $auth)) {
                         echo $auth['ui_required'];
 
                         return null;
@@ -182,7 +182,6 @@ final class DefaultAction implements ApplicationActionInterface
             /**
              * postAuth may return null, so this has to be considered in here
              */
-
             if ($auth['success']) {
                 $username = $auth['username'];
             } else {
@@ -226,14 +225,14 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && ! $user->username) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
-                $fullname = array_key_exists('name', $auth) ? $auth['name']    : '';
-                $email    = array_key_exists('email', $auth) ? $auth['email']   : '';
+                $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
+                $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
-                $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
-                $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
+                $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
+                $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
 
                 // Attempt to create the user
-                if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
+                if (User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $state, $city) > 0) {
                     $user = User::get_from_username($username);
 
                     if (array_key_exists('avatar', $auth)) {
@@ -257,8 +256,7 @@ final class DefaultAction implements ApplicationActionInterface
             //   to retrieve for each user
             Session::create($auth);
 
-            // Not sure if it was me or php tripping out,
-            //   but naming this 'user' didn't work at all
+            // Not sure if it was me or php tripping out, but naming this 'user' didn't work at all
             $_SESSION['userdata'] = $auth;
 
             // You really don't want to store the avatar
@@ -272,7 +270,7 @@ final class DefaultAction implements ApplicationActionInterface
 
             if (isset($username)) {
                 Session::create_user_cookie($username);
-                if ($_POST['rememberme']) {
+                if (isset($_POST['rememberme'])) {
                     Session::create_remember_cookie($username);
                 }
             }
@@ -305,7 +303,10 @@ final class DefaultAction implements ApplicationActionInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ) {
+                // admins need to know if an update is available
                 AutoUpdate::is_update_available();
+                // Make sure all default preferences are set
+                Preference::set_defaults();
             }
             // fix preferences that are missing for user
             User::fix_preferences($user->id);

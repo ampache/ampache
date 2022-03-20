@@ -30,19 +30,20 @@ use Ampache\Module\Util\Ui;
 <?php Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
-$addlocal   = T_('Add Local Network Definition'); ?>
+$addlocal   = T_('Add Local Network Definition');
+$web_path   = AmpConfig::get('web_path'); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_icon('add_user', $addcurrent) . ' ' . $addcurrent; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_icon('add_user', $addcurrent) . ' ' . $addcurrent; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
-        <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>
 </ul>
 </div>
@@ -50,7 +51,7 @@ $addlocal   = T_('Add Local Network Definition'); ?>
 <?php Ui::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
 <?php if ($list !== []) { ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <thead>
     <tr class="th-top">
         <th><?php echo T_('Name'); ?></th>
@@ -68,7 +69,7 @@ $addlocal   = T_('Add Local Network Definition'); ?>
     /** @var AccessListItemInterface $access $access */
     foreach ($list as $access) {
         ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td><?php echo scrub_out($access->getName()); ?></td>
     <td><?php echo $access->getStartIp(); ?></td>
     <td><?php echo $access->getEndIp(); ?></td>
@@ -76,8 +77,8 @@ $addlocal   = T_('Add Local Network Definition'); ?>
     <td><?php echo $access->getUserName(); ?></td>
     <td><?php echo $access->getTypeName(); ?></td>
     <td>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
     <?php

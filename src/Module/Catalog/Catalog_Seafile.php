@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -47,9 +48,10 @@ class Catalog_Seafile extends Catalog
     private static $version     = '000001';
     private static $type        = 'seafile';
     private static $description = 'Seafile Remote Catalog';
-    private static $table_name  = 'Ampache\Module\Catalog\Catalog_Seafile';
+    private static $table_name  = 'catalog_seafile';
 
-    private $seafile;
+    private int $count = 0;
+    private SeafileAdapter $seafile;
 
     /**
      * get_description
@@ -109,11 +111,11 @@ class Catalog_Seafile extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `" . self::$table_name . "` (" . "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`server_uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`api_key` VARCHAR( 100 ) COLLATE $collation NOT NULL , " . "`library_name` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`api_call_delay` INT NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `" . self::$table_name . "` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE $collation NOT NULL, `api_key` VARCHAR(100) COLLATE $collation NOT NULL, `library_name` VARCHAR(255) COLLATE $collation NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -123,9 +125,12 @@ class Catalog_Seafile extends Catalog
      * catalog_fields
      *
      * Return the necessary settings fields for creating a new Seafile catalog
+     * @return array
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['server_uri'] = array(
             'description' => T_('Server URI'),
             'type' => 'text',
@@ -190,7 +195,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if (!is_numeric($api_call_delay)) {
-            AmpError::add('general', T_('API call delay must have a numeric value'));
+            AmpError::add('general', T_('API Call Delay must have a numeric value'));
 
             return false;
         }
@@ -227,6 +232,9 @@ class Catalog_Seafile extends Catalog
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
             $info     = $this->get_info($catalog_id);
+            foreach ($info as $key => $value) {
+                $this->$key = $value;
+            }
 
             $this->seafile = new SeafileAdapter($info['server_uri'], $info['library_name'], $info['api_call_delay'],
                 $info['api_key']);
@@ -241,7 +249,7 @@ class Catalog_Seafile extends Catalog
     {
         $arr = $this->seafile->from_virtual_path($file_path);
 
-        return $arr['path'] . "/" . $arr['filename'];
+        return $arr['path'] . '/' . $arr['filename'];
     }
 
     /**
@@ -282,8 +290,7 @@ class Catalog_Seafile extends Catalog
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
-                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.",
-                        5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.", 5);
                 }
 
                 return 0;
@@ -336,8 +343,7 @@ class Catalog_Seafile extends Catalog
                 return $added;
             } catch (Exception $error) {
                 /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_catalog',
-                    sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }
@@ -361,36 +367,57 @@ class Catalog_Seafile extends Catalog
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
+        $is_cached = (is_string($file) && is_file($file));
 
-        debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
-
-        $tempfilename = $this->seafile->download($file, true);
+        if ($is_cached) {
+            debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
+            $tempfilename = $file;
+        } else {
+            debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
+            $tempfilename = $this->seafile->download($file, true);
+        }
 
         if ($gather_types === null) {
             $gather_types = $this->get_gather_types('music');
         }
 
-        $vainfo = new VaInfo($tempfilename, $gather_types, '', '', '', $sort_pattern, $rename_pattern, true);
-        $vainfo->forceSize($file->size);
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $tempfilename,
+            $gather_types,
+            '',
+            '',
+            $sort_pattern,
+            $rename_pattern,
+            true
+        );
+        if (!$is_cached) {
+            $vainfo->forceSize($file->size);
+        }
         $vainfo->get_info();
-
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        // maybe fix stat-ing-nonexistent-file bug?
-        $vainfo->tags['general']['size'] = (int)($file->size);
+        if (!$is_cached) {
+            $vainfo->tags['general']['size'] = (int)($file->size);
+        }
 
-        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
+        $results = ($is_cached)
+            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
+            : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
         // Set the remote path
         $results['catalog'] = $this->id;
+        $results['file']    = ($is_cached)
+            ? $file
+            : $this->seafile->to_virtual_path($file);
 
-        $results['file'] = $this->seafile->to_virtual_path($file);
+        // remove the temp file
+        self::clean_tmp_file($tempfilename);
 
         return $results;
     }
 
     /**
-     * @return array|mixed
+     * @return array
      * @throws ReflectionException
      */
     public function verify_catalog_proc()
@@ -421,14 +448,14 @@ class Catalog_Seafile extends Catalog
                     $song = new Song($row['id']);
                     $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
-                        Ui::update_text('', sprintf(T_('Updated song: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results['updated']++;
                     } else {
-                        Ui::update_text('', sprintf(T_('Song up to date: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
                     debug_event('seafile_catalog', 'Verify removing song', 5, 'ampache-catalog');
-                    Ui::update_text('', sprintf(T_('Removing song: %s'), $row['title']));
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     //$dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -450,6 +477,10 @@ class Catalog_Seafile extends Catalog
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
+        // if you have the file it's all good
+        if (is_file($media->file)) {
+            return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
+        }
         if ($this->seafile->prepare()) {
             $fileinfo = $this->seafile->from_virtual_path($media->file);
 
@@ -462,6 +493,19 @@ class Catalog_Seafile extends Catalog
 
         return null;
     }
+    /**
+     * clean_tmp_file
+     *
+     * Clean up temp files after use.
+     *
+     * @param string $tempfilename
+     */
+    public function clean_tmp_file($tempfilename)
+    {
+        if (file_exists($tempfilename)) {
+            unlink($tempfilename);
+        }
+    } // clean_file
 
     /**
      * clean_catalog_proc
@@ -498,7 +542,7 @@ class Catalog_Seafile extends Catalog
                     Ui::update_text('', sprintf(T_('Keeping song: %s'), $file['filename']));
                 } else {
                     /* HINT: filename (File path) */
-                    Ui::update_text('', sprintf(T_('Removing song: %s'), $file['filename']));
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $file['filename']));
                     debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
@@ -518,6 +562,14 @@ class Catalog_Seafile extends Catalog
      * @return boolean
      */
     public function move_catalog_proc($new_path)
+    {
+        return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
     {
         return false;
     }
@@ -585,5 +637,15 @@ class Catalog_Seafile extends Catalog
         }
 
         return $media;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getUtilityFactory(): UtilityFactoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UtilityFactoryInterface::class);
     }
 }

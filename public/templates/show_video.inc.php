@@ -35,17 +35,20 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
+/** @var Video $video */
+
+$web_path = AmpConfig::get('web_path');
 ?>
-<?php Ui::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
+<?php Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;
 // The release type is not the video itself, we probably want preview
 if (get_class($video) != Movie::class) {
-    $gart = Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
+    $gart = Art::display('video', $video->id, $video->f_name, 8, null, false, 'preview');
 }
 if (!$gart) {
-    $gart = Art::display('video', $video->id, $video->f_title, 7);
+    $gart = Art::display('video', $video->id, $video->f_name, 7);
 } ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
@@ -56,7 +59,7 @@ if (!$gart) {
 $subtitles = $video->get_subtitles();
     foreach ($subtitles as $subtitle) {
         echo "<option value='" . $subtitle['lang_code'] . "' ";
-        if (isset($_SESSION['iframe']['subtitle']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {
             echo "selected";
         }
         echo ">" . $subtitle['lang_name'] . "</option>";
@@ -69,41 +72,40 @@ $subtitles = $video->get_subtitles();
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
-            <div id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?>
+        <dt><?php echo T_('Rating'); ?></dt>
+        <dd>
+            <div id="rating_<?php echo $video->id; ?>_video">
+                <?php echo Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php
-        } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
-            <div id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?>
+        <dt><?php echo T_('Fav.'); ?></dt>
+        <dd>
+            <div id="userflag_<?php echo $video->id; ?>_video">
+                <?php echo Userflag::show($video->id, 'video'); ?>
             </div>
         </dd>
     <?php
         } ?>
 <?php
     } ?>
-<?php $rowparity = Ui::flip_class(); ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_video_' . $video->id); ?>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
+                <?php
+            } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php
         } ?>
         <?php
     } ?>
-        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to temporary playlist'), 'add_video_' . $video->id); ?>
+        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
             <?php
         } ?>
         <?php
@@ -116,29 +118,29 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php if (Access::check_function('download')) { ?>
-            <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
-            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Video Edit') ?>', '')">
+            <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
     } ?>
         <?php if (Catalog::can_remove($video)) { ?>
-            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
+            <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
     } ?>
     </dd>
 <?php
-  $videoprops[T_('Title')]   = scrub_out($video->f_title);
+  $videoprops[T_('Title')]   = scrub_out($video->f_name);
   $videoprops[T_('Length')]  = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
@@ -159,13 +161,12 @@ if (get_class($video) != Video::class) {
   }
   $videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
-      $videoprops[T_('# Played')]   = scrub_out($video->object_cnt);
+      $videoprops[T_('# Played')]   = scrub_out($video->total_count);
   }
 
     foreach ($videoprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = Ui::flip_class();
-            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
         }
     } ?>
 </dl>

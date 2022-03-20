@@ -70,7 +70,7 @@ final class SelectArtAction extends AbstractArtAction
         $object_id = $item->id;
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -84,7 +84,7 @@ final class SelectArtAction extends AbstractArtAction
         if (!Art::check_dimensions($dimensions)) {
             $this->ui->showHeader();
 
-            $this->ui->showConfirmation(
+            $this->ui->showContinue(
                 T_('There Was a Problem'),
                 T_('Art file failed size check'),
                 $burl

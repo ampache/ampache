@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Label;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LabelMethod
@@ -38,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class LabelMethod
 {
-    private const ACTION = 'label';
+    public const ACTION = 'label';
 
     /**
      * label
@@ -50,7 +49,7 @@ final class LabelMethod
      * filter = (string) UID of label
      * @return boolean
      */
-    public static function label(array $input)
+    public static function label(array $input): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -77,7 +76,6 @@ final class LabelMethod
             default:
                 echo Xml_Data::labels(array($object_id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

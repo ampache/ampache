@@ -54,6 +54,9 @@ class Stream_Url extends MemoryObject
      */
     public static function parse($url)
     {
+        if (empty($url)) {
+            return array();
+        }
         if (AmpConfig::get('stream_beautiful_url')) {
             $posargs = strpos($url, '/play/');
             if ($posargs !== false) {
@@ -76,19 +79,30 @@ class Stream_Url extends MemoryObject
 
         $results['base_url'] = $url;
 
-        foreach ($elements as $element) {
-            list($key, $value) = explode('=', $element);
-            switch ($key) {
-                case 'oid':
-                    $key = 'id';
-                    break;
-                case 'video':
-                    if (make_bool($value)) {
-                        $results['type'] = 'video';
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                if (strpos((string)$element, '=')) {
+                    list($key, $value) = explode('=', $element);
+                    switch ($key) {
+                        case 'oid':
+                            $key = 'id';
+                            break;
+                        case 'video':
+                            if (make_bool($value)) {
+                                $results['type'] = 'video';
+                            }
+                            break;
+                        case 'demo_id':
+                            if (make_bool($value)) {
+                                $results['type'] = 'democratic';
+                            }
+                            break;
                     }
-                    break;
+                    if (!empty($value)) {
+                        $results[$key] = $value;
+                    }
+                }
             }
-            $results[$key] = $value;
         }
 
         return $results;
@@ -112,9 +126,9 @@ class Stream_Url extends MemoryObject
             $newel = explode('&', $options);
 
             if (count($curel) > 2) {
-                foreach ($newel as $el) {
-                    if (!empty($el)) {
-                        $el = explode('=', $el);
+                foreach ($newel as $element) {
+                    if (strpos((string)$element, '=')) {
+                        $el = explode('=', $element);
                         array_splice($curel, count($curel) - 2, 0, $el);
                     }
                 }
@@ -143,5 +157,25 @@ class Stream_Url extends MemoryObject
         }
 
         return $url;
+    }
+
+    /**
+     * get_title
+     * Get a translated title for the webplayer
+     * @param string $url
+     * @return string
+     */
+    public static function get_title($url): string
+    {
+        $urlinfo = self::parse($url);
+        $type    = $urlinfo['type'] ?? 'URL-Add';
+        switch ($type) {
+            case 'random':
+                return T_('Random');
+            case 'democratic':
+                return T_('Democratic');
+            default:
+                return $type;
+        }
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -96,9 +97,9 @@ class Stream
     public static function get_allowed_bitrate()
     {
         $max_bitrate = AmpConfig::get('max_bit_rate');
-        $min_bitrate = AmpConfig::get('min_bit_rate');
+        $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = AmpConfig::get('transcode_bitrate', '128');
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -107,19 +108,11 @@ class Stream
 
         // Are there site-wide constraints? (Dynamic downsampling.)
         if ($max_bitrate > 1) {
-            $sql = 'SELECT COUNT(*) FROM `now_playing` ' .
-                'WHERE `user` IN ' .
-                '(SELECT DISTINCT `user_preference`.`user` ' .
-                'FROM `preference` JOIN `user_preference` ' .
-                'ON `preference`.`id` = ' .
-                '`user_preference`.`preference` ' .
-                "WHERE `preference`.`name` = 'play_type' " .
-                "AND `user_preference`.`value` = 'downsample')";
-
+            $sql        = "SELECT COUNT(*) FROM `now_playing` WHERE `user` IN (SELECT DISTINCT `user_preference`.`user` FROM `preference` JOIN `user_preference` ON `preference`.`id` = `user_preference`.`preference` WHERE `preference`.`name` = 'play_type' AND `user_preference`.`value` = 'downsample')";
             $db_results = Dba::read($sql);
-            $results    = Dba::fetch_row($db_results);
+            $row        = Dba::fetch_row($db_results);
 
-            $active_streams = (int) ($results[0]) ?: 0;
+            $active_streams = (int) ($row[0] ?? 0);
             debug_event(self::class, 'Active transcoding streams: ' . $active_streams, 5);
 
             // We count as one for the algorithm
@@ -139,12 +132,11 @@ class Stream
             if ($bit_rate > $user_bit_rate) {
                 $bit_rate = $user_bit_rate;
             }
-        } // end if we've got bitrates
-        else {
+        } else {
             $bit_rate = $user_bit_rate;
         }
 
-        return (int) $bit_rate;
+        return (int)$bit_rate;
     }
 
     /**
@@ -160,6 +152,12 @@ class Stream
      */
     public static function start_transcode($media, $type = null, $player = null, $options = array())
     {
+        $out_file = false;
+        if ($player == 'cache_catalog_proc') {
+            $out_file = $options[0];
+            $player   = 'api';
+            $options  = array();
+        }
         $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
         if ($transcode_settings === false) {
@@ -167,27 +165,10 @@ class Stream
 
             return false;
         }
-
-        // don't ignore user bitrates
-        $bit_rate = (int) self::get_allowed_bitrate();
-        if (!$options['bitrate']) {
-            debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
-            // Validate the bitrate
-            $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
-            // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
-        }
-
-        // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
-            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
-        }
+        $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
+        $song_file = self::scrub_arg($media->file);
 
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
-
-        $song_file = self::scrub_arg($media->file);
 
         // Finalise the command line
         $command = $transcode_settings['command'];
@@ -213,7 +194,7 @@ class Stream
         if (isset($options['resolution'])) {
             $string_map['%RESOLUTION%'] = $options['resolution'];
         } else {
-            $string_map['%RESOLUTION%'] = ($media->f_resolution) ?: '1280x720';
+            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
         }
         if (isset($options['quality'])) {
             $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
@@ -231,6 +212,14 @@ class Stream
                 debug_event(self::class, "$search not in transcode command", 5);
             }
         }
+        if ($out_file) {
+            // when running cache_catalog_proc redirect to the file path instead of piping
+            $command = str_replace("pipe:1", $out_file, $command);
+            debug_event(self::class, 'Final command is ' . $command, 4);
+            shell_exec($command);
+
+            return array();
+        }
 
         return self::start_process($command, array('format' => $transcode_settings['format']));
     }
@@ -247,6 +236,46 @@ class Stream
         } else {
             return "'" . str_replace("'", "'\\''", $arg) . "'";
         }
+    }
+
+    /**
+     * get_max_bitrate
+     *
+     * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
+     * @param $media
+     * @param string $type
+     * @param string $player
+     * @param array $options
+     * @return integer
+     */
+    public static function get_max_bitrate($media, $type = null, $player = null, $options = array())
+    {
+        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
+        // Bail out early if we're unutterably broken
+        if ($transcode_settings === false) {
+            debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
+
+            return $media->bitrate;
+        }
+
+        // don't ignore user bitrates
+        $bit_rate = (int)self::get_allowed_bitrate();
+        if (!array_key_exists('bitrate', $options)) {
+            // Validate the bitrate
+            $bit_rate = self::validate_bitrate($bit_rate);
+        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate == 0) {
+            // use the file bitrate if lower than the gathered
+            $bit_rate = $options['bitrate'];
+        }
+        debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
+
+        // Never upsample a media
+        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
+            debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
+        }
+
+        return $bit_rate;
     }
 
     /**
@@ -370,9 +399,7 @@ class Stream
     public static function garbage_collection()
     {
         // Remove any Now Playing entries for sessions that have been GC'd
-        $sql = "DELETE FROM `now_playing` USING `now_playing` " .
-            "LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` " .
-            "WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
+        $sql = "DELETE FROM `now_playing` USING `now_playing` LEFT JOIN `session` ON `session`.`id` = `now_playing`.`id` WHERE (`session`.`id` IS NULL AND `now_playing`.`id` NOT IN (SELECT `username` FROM `user`)) OR `now_playing`.`expire` < '" . time() . "'";
         Dba::write($sql);
     }
 
@@ -385,14 +412,16 @@ class Stream
      * @param integer $length
      * @param string $sid
      * @param string $type
+     * @param integer $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null)
     {
+        if (!$previous) {
+            $previous = time();
+        }
         // Ensure that this client only has a single row
-        $sql = 'REPLACE INTO `now_playing` ' .
-            '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
     }
 
     /**
@@ -415,49 +444,48 @@ class Stream
      *
      * This returns the Now Playing information
      * @return array
+     * <array{
+     *  media: \Ampache\Repository\Model\library_item,
+     *  client: \Ampache\Repository\Model\User,
+     *  agent: string,
+     *  expire: int
+     * }>
      */
     public static function get_now_playing()
     {
-        $sql = 'SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` ';
-        $sql .= 'LEFT JOIN `session` ON `session`.`id` = `np`.`id` ';
+        $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
         if (AmpConfig::get('now_playing_per_user')) {
-            $sql .= 'INNER JOIN ( ' .
-                'SELECT MAX(`insertion`) AS `max_insertion`, `user` ' .
-                'FROM `now_playing` ' .
-                'GROUP BY `user`' .
-                ') `np2` ' .
-                'ON `np`.`user` = `np2`.`user` ' .
-                'AND `np`.`insertion` = `np2`.`max_insertion` ';
+            $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
         if (!Access::check('interface', 100)) {
-            // We need to check only for users which have allowed view of personnal info
+            // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id) {
+            if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
                 $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
+        $sql .= "ORDER BY `np`.`expire` DESC";
 
-        $sql .= 'ORDER BY `np`.`expire` DESC';
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            $media->format();
-            $client = new User($row['user']);
-            $client->format();
-            $results[] = array(
-                'media' => $media,
-                'client' => $client,
-                'agent' => $row['agent'],
-                'expire' => $row['expire']
-            );
+            if (Catalog::has_access($media->catalog, $media->id)) {
+                $media->format();
+                $client = new User($row['user']);
+                $client->format();
+                $results[] = array(
+                    'media' => $media,
+                    'client' => $client,
+                    'agent' => $row['agent'],
+                    'expire' => $row['expire']
+                );
+            }
         } // end while
 
         return $results;
@@ -473,8 +501,7 @@ class Stream
      */
     public static function check_lock_media($media_id, $type)
     {
-        $sql = 'SELECT `object_id` FROM `now_playing` WHERE ' .
-            '`object_id` = ? AND `object_type` = ?';
+        $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
         $db_results = Dba::read($sql, array($media_id, $type));
 
         if (Dba::num_rows($db_results)) {
@@ -549,9 +576,9 @@ class Stream
         $http_port = AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", $web_path, $matches)) {
-                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, $web_path);
+                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
             } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, $web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
         }
 

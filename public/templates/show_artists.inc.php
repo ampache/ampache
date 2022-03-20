@@ -30,50 +30,53 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+/** @var string $limit_threshold */
+
 session_start();
 
-$web_path = AmpConfig::get('web_path');
-$thcount  = 8;
-$is_table = $browse->is_grid_view();
-//mashup and grid view need different css
-$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
-$cel_album  = ($is_table) ? "cel_album" : 'mash_album';
-$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist';
-$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags';
-$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
+$web_path     = AmpConfig::get('web_path');
+$thcount      = 8;
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres  = AmpConfig::get('hide_genres');
+$is_table     = $browse->is_grid_view();
+// translate depending on the browse type
+$artist_text  = ($browse->is_album_artist())
+    ? T_('Album Artist')
+    : T_('Artist');
+// mashup and grid view need different css
+$cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
+$cel_album   = ($is_table) ? "cel_album" : 'grid_album';
+$cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
+$cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
+$cel_time    = ($is_table) ? "cel_time" : 'grid_time';
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="artist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
-            <?php
-} ?>
-            <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', $artist_text, 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
-            <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <th class="cel_songs optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', T_('Songs'), 'artist_sort_song_count'); ?></th>
+            <th class="cel_albums optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_count', T_('Albums'), 'artist_sort_album_count'); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('# Played'), 'artist_sort_total_count'); ?></th>
             <?php
     } ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) {
+            <?php if (!$hide_genres) {
         ++$thcount; ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
+                <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php
     } ?>
-                <?php if (AmpConfig::get('userflags')) {
+            <?php if ($show_ratings) {
         ++$thcount; ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-    } ?>
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -84,8 +87,6 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
         // Cache the ratings we are going to use
         if (AmpConfig::get('ratings')) {
             Rating::build_cache('artist', $object_ids);
-        }
-        if (AmpConfig::get('userflags')) {
             Userflag::build_cache('artist', $object_ids);
         }
 
@@ -94,7 +95,7 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id, $_SESSION['catalog']);
+            $libitem = new Artist($artist_id, $_SESSION['catalog'] ?? 0);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);
@@ -104,13 +105,13 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
                     $show_direct_play = $show_playlist_add;
                 }
             } ?>
-        <tr id="artist_<?php echo $libitem->id ?>" class="<?php echo Ui::flip_class() ?> libitem_menu">
+        <tr id="artist_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
         } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>
         <?php
@@ -119,29 +120,21 @@ $cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
-            <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
-            <?php
-        } ?>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
-            <th class="cel_time essential"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
-                    <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
-                <?php
-            } ?>
-                <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
-                <?php
-            } ?>
+            <?php if (!$hide_genres) { ?>
+                <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
+            <?php } ?>
+            <?php if ($show_ratings) { ?>
+                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php
         } ?>
             <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>

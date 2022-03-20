@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use PDOStatement;
 
 /**
  * This is the class responsible for handling the Label object
@@ -49,6 +50,10 @@ class Label extends database_object implements library_item
      */
     public $name;
     /**
+     * @var string $mbid
+     */
+    public $mbid; // MusicBrainz ID
+    /**
      * @var string $category
      */
     public $category;
@@ -68,6 +73,14 @@ class Label extends database_object implements library_item
      * @var string $summary
      */
     public $summary;
+    /**
+     * @var string $country
+     */
+    public $country;
+    /**
+     * @var integer $active
+     */
+    public $active;
     /**
      * @var integer $user
      */
@@ -97,10 +110,14 @@ class Label extends database_object implements library_item
     public function __construct($label_id)
     {
         $info = $this->get_info($label_id);
+        if (empty($info)) {
+            return false;
+        }
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+        $this->active = (int)$this->active;
 
         return true;
     }
@@ -118,7 +135,7 @@ class Label extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'label') || $force) {
-            Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('label', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -128,9 +145,9 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_name  = scrub_out($this->name);
-        $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
-        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
+        $this->get_fullname();
+        $this->get_link();
+        $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         $this->artists = count($this->get_artists());
     }
 
@@ -180,7 +197,26 @@ class Label extends database_object implements library_item
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/labels.php?action=show&label=' . scrub_out($this->id);
+        }
+
+        return $this->link;
     }
 
     /**
@@ -201,7 +237,7 @@ class Label extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -272,21 +308,17 @@ class Label extends database_object implements library_item
         }
 
         $name     = isset($data['name']) ? $data['name'] : $this->name;
+        $mbid     = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $category = isset($data['category']) ? $data['category'] : $this->category;
         $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
         $address  = isset($data['address']) ? $data['address'] : $this->address;
+        $country  = isset($data['country']) ? $data['country'] : $this->country;
         $email    = isset($data['email']) ? $data['email'] : $this->email;
         $website  = isset($data['website']) ? $data['website'] : $this->website;
+        $active   = isset($data['active']) ? (int)$data['active'] : $this->active;
 
-        $sql = "UPDATE `label` SET `name` = ?, `category` = ?, `summary` = ?, `address` = ?, `email` = ?, `website` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $this->id));
-
-        $this->name     = $name;
-        $this->category = $category;
-        $this->summary  = $summary;
-        $this->address  = $address;
-        $this->email    = $email;
-        $this->website  = $website;
+        $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
+        Dba::write($sql, array($name, $mbid, strtolower($category), $summary, $address, $country, $email, $website, $active, $this->id));
 
         return $this->id;
     }
@@ -300,11 +332,14 @@ class Label extends database_object implements library_item
     {
         $label_data = array(
             'name' => $name,
+            'mbid' => null,
             'category' => 'tag_generated',
             'summary' => null,
             'address' => null,
+            'country' => null,
             'email' => null,
             'website' => null,
+            'active' => 1,
             'user' => 0,
             'creation_date' => time()
         );
@@ -324,16 +359,19 @@ class Label extends database_object implements library_item
         }
 
         $name          = $data['name'];
+        $mbid          = $data['mbid'];
         $category      = $data['category'];
         $summary       = $data['summary'];
         $address       = $data['address'];
+        $country       = $data['country'];
         $email         = $data['email'];
         $website       = $data['website'];
-        $user          = $data['user'] ?: Core::get_global('user')->id;
-        $creation_date = $data['creation_date'] ?: time();
+        $user          = $data['user'] ?? Core::get_global('user')->id;
+        $active        = $data['active'];
+        $creation_date = $data['creation_date'] ?? time();
 
-        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
+        $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));
 
         return Dba::insert_id();
     }
@@ -356,7 +394,7 @@ class Label extends database_object implements library_item
 
     /**
      * get_display
-     * This returns a csv formated version of the labels that we are given
+     * This returns a csv formatted version of the labels that we are given
      * @param $labels
      * @param boolean $link
      * @return string
@@ -385,6 +423,35 @@ class Label extends database_object implements library_item
 
         return $results;
     } // get_display
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
+            $params = array($new_object_id, $old_object_id);
+
+            return Dba::write($sql, $params);
+        }
+
+        return false;
+    }
+
+    /**
+     * garbage_collection
+     *
+     * This cleans out unused artists
+     */
+    public static function garbage_collection()
+    {
+        Dba::write("DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`);");
+    }
 
     private static function getLabelRepository(): LabelRepositoryInterface
     {

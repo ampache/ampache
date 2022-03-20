@@ -1,6 +1,6 @@
 ---
-title: "Errors"
-metaTitle: "Errors"
+title: "API 5 Errors"
+metaTitle: "API 5 Errors"
 metaDescription: "API documentation"
 ---
 
@@ -19,11 +19,11 @@ An Ampache5 error has the following parts:
 
 * XML and JSON errors are always in an 'error' object.
 * Errors will always provide a code
-* The data names user in the error must use names that don't conflict with other data objects
-* Allow the ability to drill down even further using the action and type of error
-  * errorAction will return the method used that caused the error
-  * Use errorType 'system' for things users can't change / server config
-  * Use errorType 'account' for user issues (password, perms, auth, etc)
+* The data names used in the error must use names that don't conflict with other data objects
+* errorAction will return the method used that caused the error
+* Use errorType 'system' for things users can't change / server config
+* Use errorType 'account' for user issues (password, perms, auth, etc)
+* All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
 * errorMessage must be a translated string to allow devs to show things for the user in their language.
 
 ## Error Codes
@@ -50,6 +50,16 @@ To separate Ampache from the http codes it's been decided to prefix our codes wi
   * You can check the error message for details, but do not re-attempt the exact same request
 * **4742** Failed Access Check
   * Access denied to the requested object or function for this user
+
+## Error Types
+
+There are three error types; two are static 'account' and 'system'
+
+Account errors are things that your user can't do. Either the permission level or something with the session is incorrect.
+
+System errors tell you whether a system feature is disabled or something else has failed on the server. Check the debug logs for further information.
+
+Everything else will be a parameter from the call that caused your error. Maybe the email you used was malformed or the song you looked for doesn't exist?
 
 ## Example Error messages
 
@@ -88,11 +98,11 @@ Error 4701: Received Invalid Handshake
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4701">
-		<errorAction><![CDATA[playlist_create]]></errorAction>
-		<errorType><![CDATA[account]]></errorType>
-		<errorMessage><![CDATA[Session Expired]]></errorMessage>
-	</error>
+    <error errorCode="4701">
+        <errorAction><![CDATA[playlist_create]]></errorAction>
+        <errorType><![CDATA[account]]></errorType>
+        <errorMessage><![CDATA[Session Expired]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -144,11 +154,11 @@ Error 4704: Not Found
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4704">
-		<errorAction><![CDATA[scrobble]]></errorAction>
-		<errorType><![CDATA[song]]></errorType>
-		<errorMessage><![CDATA[Not Found]]></errorMessage>
-	</error>
+    <error errorCode="4704">
+        <errorAction><![CDATA[scrobble]]></errorAction>
+        <errorType><![CDATA[song]]></errorType>
+        <errorMessage><![CDATA[Not Found]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -172,11 +182,11 @@ Error 4705: Missing Method
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4705">
-		<errorAction><![CDATA[plafgfylist_create]]></errorAction>
-		<errorType><![CDATA[system]]></errorType>
-		<errorMessage><![CDATA[Invalid Request]]></errorMessage>
-	</error>
+    <error errorCode="4705">
+        <errorAction><![CDATA[plafgfylist_create]]></errorAction>
+        <errorType><![CDATA[system]]></errorType>
+        <errorMessage><![CDATA[Invalid Request]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -200,11 +210,11 @@ Error 4706: Depreciated Method
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4706">
-		<errorAction><![CDATA[tag_songs]]></errorAction>
-		<errorType><![CDATA[removed]]></errorType>
-		<errorMessage><![CDATA[Depreciated]]></errorMessage>
-	</error>
+    <error errorCode="4706">
+        <errorAction><![CDATA[tag_songs]]></errorAction>
+        <errorType><![CDATA[removed]]></errorType>
+        <errorMessage><![CDATA[Depreciated]]></errorMessage>
+    </error>
 </root>
 ```
 
@@ -228,11 +238,11 @@ Error 4710: Bad Request
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4710">
-		<errorAction><![CDATA[playlist_create]]></errorAction>
-		<errorType><![CDATA[system]]></errorType>
-		<errorMessage><![CDATA[Bad Request: name]]></errorMessage>
-	</error>
+    <error errorCode="4710">
+        <errorAction>user_create</errorAction>
+        <errorType>username</errorType>
+        <errorMessage>Bad Request: temp_user</errorMessage>
+    </error>
 </root>
 ```
 
@@ -242,9 +252,9 @@ Error 4710: Bad Request
 {
     "error": {
         "errorCode": "4710",
-        "errorAction": "playlist_create",
-        "errorType": "system",
-        "errorMessage": "Bad Request: name"
+        "errorAction": "user_create",
+        "errorType": "username",
+        "errorMessage": "Bad Request: temp_user"
     }
 }
 ```
@@ -256,11 +266,11 @@ Error 4742: Failed Access Check
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<error errorCode="4710">
-		<errorAction><![CDATA[playlist_delete]]></errorAction>
-		<errorType><![CDATA[account]]></errorType>
-		<errorMessage><![CDATA[Require: 100]]></errorMessage>
-	</error>
+    <error errorCode="4710">
+        <errorAction><![CDATA[playlist_delete]]></errorAction>
+        <errorType><![CDATA[account]]></errorType>
+        <errorMessage><![CDATA[Require: 100]]></errorMessage>
+    </error>
 </root>
 ```
 

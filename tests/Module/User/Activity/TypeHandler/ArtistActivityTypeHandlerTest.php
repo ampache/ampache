@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -35,55 +33,32 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
     /** @var UserActivityRepositoryInterface|MockInterface|null */
     private MockInterface $useractivityRepository;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?ArtistActivityTypeHandler $subject;
 
     public function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new ArtistActivityTypeHandler(
-            $this->useractivityRepository,
-            $this->modelFactory
+            $this->useractivityRepository
         );
     }
 
     public function testRegisterActivityRegisterArtistActivity(): void
     {
-        $artist = $this->mock(Artist::class);
-
         $objectId           = 666;
         $objectType         = 'some-object-type';
         $action             = 'some-action';
         $userId             = 42;
         $date               = 123;
-        $artistName         = 'some-artist-name';
-        $musicBrainzId      = 'some-mbid';
 
-        $this->modelFactory->shouldReceive('createArtist')
-            ->with($objectId)
-            ->once()
-            ->andReturn($artist);
-
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-
-        $artist->f_name = $artistName;
-        $artist->mbid   = $musicBrainzId;
-
-        $this->useractivityRepository->shouldReceive('registerArtistEntry')
+        $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
                 $objectType,
                 $objectId,
-                $date,
-                $artistName,
-                $musicBrainzId
+                $date
             )
             ->once();
 
@@ -98,23 +73,11 @@ class ArtistActivityTypeHandlerTest extends MockeryTestCase
 
     public function testRegisterActivityRegisterGenericActivity(): void
     {
-        $artist = $this->mock(Artist::class);
-
-        $objectId            = 666;
-        $objectType          = 'some-object-type';
-        $action              = 'some-action';
-        $userId              = 42;
-        $date                = 123;
-
-        $this->modelFactory->shouldReceive('createArtist')
-            ->with($objectId)
-            ->once()
-            ->andReturn($artist);
-
-        $artist->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $artist->f_title             = '';
+        $objectId   = 666;
+        $objectType = 'some-object-type';
+        $action     = 'some-action';
+        $userId     = 42;
+        $date       = 123;
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

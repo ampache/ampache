@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistEditMethod
 {
-    private const ACTION = 'playlist_edit';
+    public const ACTION = 'playlist_edit';
 
     /**
      * playlist_edit
@@ -51,21 +51,20 @@ final class PlaylistEditMethod
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
+     * owner  = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit(array $input)
+    public static function playlist_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $name  = $input['name'];
-        $type  = $input['type'];
-        $items = explode(',', (string) $input['items']);
-        $order = explode(',', (string) $input['tracks']);
-        $sort  = (int) $input['sort'];
+        $items = explode(',', (string)($input['items'] ?? ''));
+        $order = explode(',', (string)($input['tracks'] ?? ''));
+        $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -82,11 +81,15 @@ final class PlaylistEditMethod
 
             return false;
         }
+        $name  = $input['name'] ?? $playlist->name;
+        $type  = $input['type'] ?? $playlist->type;
+        $owner = $input['owner'] ?? $playlist->user;
         // update name/type
-        if ($name || $type) {
+        if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [
                 "name" => $name,
                 "pl_type" => $type,
+                "pl_user" => $owner,
             ];
             $playlist->update($array);
         }
@@ -104,7 +107,6 @@ final class PlaylistEditMethod
             $playlist->sort_tracks();
             $change_made = true;
         }
-        Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);

@@ -62,13 +62,19 @@ final class EditShoutAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $body = $request->getParsedBody();
-
+        $data  = $request->getParsedBody();
         $shout = $this->modelFactory->createShoutbox(
-            (int) $body['shout_id'] ?? 0
+            (int)(filter_var($data['shout_id'], FILTER_SANITIZE_NUMBER_INT) ?? 0)
         );
+
         if ($shout->id) {
-            $shout->update($body);
+            $data['comment'] = (array_key_exists('license_id', $data))
+                ? filter_var($data['comment'], FILTER_SANITIZE_STRING)
+                : '';
+            $data['sticky']  = (array_key_exists('license_id', $data))
+                ? filter_var($data['sticky'], FILTER_SANITIZE_STRING)
+                : '';
+            $shout->update($data);
         }
         $this->ui->showConfirmation(
             T_('No Problem'),

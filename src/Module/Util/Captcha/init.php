@@ -33,7 +33,7 @@ declare(strict_types=0);
  * #                               Warning                             #
  * #                               #######                             #
  * # This external file is Ampache-adapted and probably unsynced with  #
- * # origin because abandonned by its original authors.                #
+ * # origin because abandoned by its original authors.                #
  * #                                                                   #
  * #####################################################################
  *
@@ -46,7 +46,7 @@ declare(strict_types=0);
  * config:
  * <const name="CAPTCHA_PERSISTENT" value="1"  type="boolean" title="persistent cookie" description="sets a cookie after user successfully solved it, spares further captchas for a few days" />
  * <const name="CAPTCHA_NEW_URLS" value="0"  type="boolean" title="new URLs only Javascript" description="uses Javascript detection to engage CAPTCHA only if a new URL was entered into any input box" />
- * <const name="CAPTCHA_AJAX" value="1" type="boolean" title="AJAX quickcheck" description="verfies the solution (visually) while user enters it" />
+ * <const name="CAPTCHA_AJAX" value="1" type="boolean" title="AJAX quickcheck" description="verifies the solution (visually) while user enters it" />
  * <const name="CAPTCHA_IMAGE_SIZE" value="200x60" type="string" regex="\d+x\d+" title="image size" description="height x width of CAPTCHA image" />
  * <const name="CAPTCHA_INVERSE" value="1"  type="boolean" title="inverse color" description="make captcha white on black" />
  * <const name="CAPTCHA_PIXEL" value="1" type="multi" multi="1=single pixel|2=greyscale 2x2|3=smooth color" title="smooth drawing" description="image pixel assembly method and speed" />
@@ -127,7 +127,7 @@ define("CAPTCHA_PARAM_INPUT", "__ec_s");
 define("CAPTCHA_BGCOLOR", 0xFFFFFF);   // initial background color (non-inverse, white)
 define("CAPTCHA_SALT", ",e?c:7<");
 #define("CAPTCHA_DATA_URLS", 0);     // RFC2397-URLs exclude MSIE users
-define("CAPTCHA_FONT_DIR", __DIR__ . '/../../resources/fonts');
+define("CAPTCHA_FONT_DIR", __DIR__ . '/../../../../resources/fonts');
 #define("CAPTCHA_BASE_URL",
 #    (empty($_SERVER['HTTPS']) ? "http" : "https") . "://$_SERVER[SERVER_NAME]:$_SERVER[SERVER_PORT]/" . substr(realpath(__FILE__),
 #        strlen(realpath($_SERVER["DOCUMENT_ROOT"]))));
@@ -138,6 +138,6 @@ define("CAPTCHA_WHATIS_TEXT", 'What is %s = ');
 define("CAPTCHA_REDRAW_TEXT", 'click on image to redraw');
 
 #-- init (triggered if *this* script is called directly)
-if ((basename($_SERVER["SCRIPT_FILENAME"]) == basename(__FILE__)) || (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
-    //easy_captcha_utility::API();
-}
+//if ((basename($_SERVER["SCRIPT_FILENAME"]) == basename(__FILE__)) || (easy_captcha_utility::canonical_path("http://ignored.xxx/$_SERVER[REQUEST_URI]") == easy_captcha_utility::canonical_path(CAPTCHA_BASE_URL))) {
+//    //easy_captcha_utility::API();
+//}

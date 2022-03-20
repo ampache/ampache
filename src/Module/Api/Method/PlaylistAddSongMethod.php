@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistAddSongMethod
 {
-    private const ACTION = 'playlist_add_song';
+    public const ACTION = 'playlist_add_song';
 
     /**
      * playlist_add_song
@@ -52,7 +52,7 @@ final class PlaylistAddSongMethod
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      * @return boolean
      */
-    public static function playlist_add_song(array $input)
+    public static function playlist_add_song(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'song'), self::ACTION)) {
             return false;
@@ -66,15 +66,14 @@ final class PlaylistAddSongMethod
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
+        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int)$input['check'] == 1)) && in_array($song, $playlist->get_songs())) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $song), '4710', self::ACTION, 'duplicate', $input['api_format']);
 
             return false;
         }
-        $playlist->add_songs(array($song), (bool) AmpConfig::get('unique_playlist'));
+        $playlist->add_songs(array($song));
         Api::message('song added to playlist', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

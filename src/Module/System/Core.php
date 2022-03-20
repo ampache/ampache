@@ -58,20 +58,17 @@ class Core
      */
     public static function get_request($variable)
     {
-        if (filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if (filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== null) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if (isset($_REQUEST[$variable])) {
-            return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if ($_REQUEST[$variable] === null) {
+        if (!array_key_exists($variable, $_REQUEST)) {
             return '';
         }
+        if (filter_has_var(INPUT_POST, $variable)) {
+            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        if (filter_has_var(INPUT_GET, $variable)) {
+            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
 
-        return $_REQUEST[$variable];
+        return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -83,17 +80,14 @@ class Core
      */
     public static function get_get($variable)
     {
+        if (!array_key_exists($variable, $_GET)) {
+            return '';
+        }
         if (filter_has_var(INPUT_GET, $variable)) {
             return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if (isset($_GET[$variable])) {
-            return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if ($_GET[$variable] === null) {
-            return '';
-        }
 
-        return $_GET[$variable];
+        return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -107,17 +101,14 @@ class Core
      */
     public static function get_cookie($variable)
     {
+        if (!array_key_exists($variable, $_COOKIE)) {
+            return '';
+        }
         if (filter_has_var(INPUT_COOKIE, $variable)) {
             return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if (isset($_COOKIE[$variable])) {
-            return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if ($_COOKIE[$variable] === null) {
-            return '';
-        }
 
-        return $_COOKIE[$variable];
+        return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -129,6 +120,9 @@ class Core
      */
     public static function get_server($variable)
     {
+        if (!array_key_exists($variable, $_SERVER)) {
+            return '';
+        }
         if (filter_has_var(INPUT_SERVER, $variable)) {
             return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
@@ -136,14 +130,8 @@ class Core
         if (filter_has_var(INPUT_ENV, $variable)) {
             return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if (isset($_SERVER[$variable])) {
-            return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if ($_SERVER[$variable] === null) {
-            return '';
-        }
 
-        return $_SERVER[$variable];
+        return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -155,17 +143,14 @@ class Core
      */
     public static function get_post($variable)
     {
+        if (!array_key_exists($variable, $_POST)) {
+            return '';
+        }
         if (filter_has_var(INPUT_POST, $variable)) {
             return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        if (isset($_POST[$variable])) {
-            return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if ($_POST[$variable] === null) {
-            return '';
-        }
 
-        return $_POST[$variable];
+        return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
@@ -196,7 +181,7 @@ class Core
     {
         // Make ourselves a nice little sid
         $sid    = md5(uniqid((string)rand(), true));
-        $window = AmpConfig::get('session_length');
+        $window = AmpConfig::get('session_length', 3600);
         $expire = time() + $window;
 
         // Register it
@@ -234,16 +219,16 @@ class Core
     {
         switch ($type) {
             case 'post':
-                $sid = $_POST['form_validation'];
+                $sid = $_POST['form_validation'] ?? '';
                 break;
             case 'get':
-                $sid = $_GET['form_validation'];
+                $sid = $_GET['form_validation'] ?? '';
                 break;
             case 'cookie':
-                $sid = $_COOKIE['form_validation'];
+                $sid = $_COOKIE['form_validation'] ?? '';
                 break;
             case 'request':
-                $sid = $_REQUEST['form_validation'];
+                $sid = $_REQUEST['form_validation'] ?? '';
                 break;
             default:
                 return false;
@@ -311,7 +296,7 @@ class Core
      */
     public static function image_dimensions($image_data)
     {
-        if (!function_exists('ImageCreateFromString')) {
+        if (!function_exists('imagecreatefromstring')) {
             return array('width' => 0, 'height' => 0);
         }
 
@@ -321,7 +306,7 @@ class Core
             return array('width' => 0, 'height' => 0);
         }
 
-        $image = ImageCreateFromString($image_data);
+        $image = imagecreatefromstring($image_data);
 
         if ($image == false) {
             return array('width' => 0, 'height' => 0);
@@ -348,23 +333,27 @@ class Core
      */
     public static function is_readable($path)
     {
-        if (is_dir($path)) {
-            $handle = opendir($path);
+        if (file_exists($path)) {
+            if (is_dir($path)) {
+                $handle = opendir($path);
+                if ($handle === false) {
+                    return false;
+                }
+                closedir($handle);
+
+                return true;
+            }
+
+            $handle = @fopen($path, 'rb');
             if ($handle === false) {
                 return false;
             }
-            closedir($handle);
+            fclose($handle);
 
             return true;
         }
 
-        $handle = @fopen($path, 'rb');
-        if ($handle === false) {
-            return false;
-        }
-        fclose($handle);
-
-        return true;
+        return false;
     }
 
     /**
@@ -375,16 +364,19 @@ class Core
      */
     public static function get_filesize($filename)
     {
+        if (!file_exists($filename)) {
+            return 0;
+        }
         $size = filesize($filename);
         if ($size === false) {
             $filepointer = fopen($filename, 'rb');
             if (!$filepointer) {
-                return false;
+                return 0;
             }
             $offset = PHP_INT_MAX - 1;
             $size   = (float)$offset;
             if (!fseek($filepointer, $offset)) {
-                return false;
+                return 0;
             }
             $chunksize = 8192;
             while (!feof($filepointer)) {
@@ -395,7 +387,7 @@ class Core
             $size = sprintf("%u", $size);
         }
 
-        return $size;
+        return (int)$size;
     }
 
     /**

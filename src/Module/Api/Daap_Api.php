@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
@@ -96,7 +97,7 @@ class Daap_Api
             $headers      = apache_request_headers();
             $reqheaders   = array();
             $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
-            if (isset($headers['Range'])) {
+            if (array_key_exists('Range', $headers)) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
@@ -255,7 +256,7 @@ class Daap_Api
 
         self::check_auth($code);
 
-        if (!filter_has_var(INPUT_GET, 'session-id')) {
+        if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
@@ -377,7 +378,7 @@ class Daap_Api
             $tlv = self::tlv('dmap.itemid', 1);
             $tlv .= self::tlv('dmap.persistentid', 1);
             $tlv .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_server();
+            $counts = Catalog::get_server_counts(0);
             $tlv .= self::tlv('dmap.itemcount', $counts['song']);
             $tlv .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
             $tlv = self::tlv('dmap.listingitem', $tlv);
@@ -406,13 +407,11 @@ class Daap_Api
                 $library = self::base_library();
                 foreach ($playlists as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
-                    $playlist->format();
                     $library .= self::tlv_playlist($playlist);
                 }
-                foreach ($searches as $search_id) {
-                    $playlist = new Search($search_id, 'song');
-                    $playlist->format();
-                    $library .= self::tlv_playlist($playlist);
+                foreach ($searches as $search) {
+                    $playlist = new Search($search['id'], 'song');
+                    $library .= self::tlv_playlist($playlist, true);
                 }
                 $output .= self::tlv('dmap.listing', $library);
 
@@ -434,8 +433,9 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $media = new $type($object_id);
-                    $url   = $media->play_url($params, 'api', true);
+                    $className = ObjectTypeToClassNameMapper::map($type);
+                    $media     = new $className($object_id);
+                    $url       = $media->play_url($params, 'api', true);
                     self::follow_stream($url);
 
                     return false;
@@ -512,7 +512,7 @@ class Daap_Api
             foreach ($meta as $tag) {
                 switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($tag, $song->f_title);
+                        $output .= self::tlv($tag, $song->f_name);
                         break;
                     case 'dmap.containeritemid':
                         /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);
@@ -587,7 +587,7 @@ class Daap_Api
         $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
         $library .= self::tlv('dmap.itemname', 'Music');
         $library .= self::tlv('daap.baseplaylist', 1);
-        $counts = Catalog::count_server();
+        $counts = Catalog::get_server_counts(0);
         $library .= self::tlv('dmap.itemcount', $counts['song']);
 
         return self::tlv('dmap.listingitem', $library);
@@ -595,18 +595,15 @@ class Daap_Api
 
     /**
      * @param Playlist|Search $playlist
+     * @param bool $isSmart
      * @return string
      */
-    public static function tlv_playlist($playlist)
+    public static function tlv_playlist($playlist, $isSmart = false)
     {
-        $isSmart = false;
-        if (get_class($playlist) == Search::class) {
-            $isSmart = true;
-        }
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist = self::tlv('dmap.itemid', $pl_id);
         $plist .= self::tlv('dmap.persistentid', $pl_id);
-        $plist .= self::tlv('dmap.itemname', $playlist->f_name);
+        $plist .= self::tlv('dmap.itemname', $playlist->name);
         $plist .= self::tlv('dmap.itemcount', count($playlist->get_items()));
         if ($isSmart) {
             $plist .= self::tlv('com.apple.itunes.smart-playlist', 1);
@@ -931,7 +928,6 @@ class Daap_Api
             case 404:
                 $error = "Not Found";
                 break;
-
             case 401:
                 $error = "Unauthorized";
                 break;

@@ -35,6 +35,7 @@ interface ZipHandlerInterface
      *
      * @param string $name name of the zip file to be created
      * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
+     * @param bool $flat_path put the files into a single folder
      */
-    public function zip(string $name, array $media_files): void;
+    public function zip(string $name, array $media_files, bool $flat_path): void;
 }

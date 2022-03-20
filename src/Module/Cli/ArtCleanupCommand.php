@@ -38,7 +38,7 @@ final class ArtCleanupCommand extends Command
         ConfigContainerInterface $configContainer,
         ArtCleanupInterface $artCleanup
     ) {
-        parent::__construct('cleanup:art', 'Removed art which does not fit to the settings');
+        parent::__construct('cleanup:art', T_('Remove art which does not fit to the settings'));
 
         $this->configContainer = $configContainer;
         $this->artCleanup      = $artCleanup;
@@ -54,15 +54,15 @@ final class ArtCleanupCommand extends Command
         );
 
         $runable = (
-            !$this->configContainer->get('album_art_min_width') && !$this->configContainer->get('album_art_max_width')
+            !$this->configContainer->get('album_art_min_width') && $this->configContainer->get('album_art_min_height')
             ) || (
-            !$this->configContainer->get('album_art_min_height') && !$this->configContainer->get('album_art_max_height')
+            !$this->configContainer->get('album_art_max_width') && !$this->configContainer->get('album_art_max_height')
         );
 
         if ($runable === false) {
-            $io->error('ERROR: A minimum OR maximum height/width must be specified in the config', true);
-            $io->error('Minimum Dimensions: album_art_min_width AND album_art_min_height', true);
-            $io->error('Maximum Dimensions: album_art_max_width AND album_art_max_height');
+            $io->error(T_('Error: A minimum OR maximum height/width must be specified in the config'), true);
+            $io->error(T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'), true);
+            $io->error(T_('Maximum Dimensions: album_art_max_width AND album_art_max_height'));
 
             return;
         }

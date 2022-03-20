@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class GetBookmarkMethod
 {
-    private const ACTION = 'get_bookmark';
+    public const ACTION = 'get_bookmark';
 
     /**
      * get_bookmark
@@ -53,7 +53,7 @@ final class GetBookmarkMethod
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function get_bookmark(array $input)
+    public static function get_bookmark(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
@@ -67,9 +67,9 @@ final class GetBookmarkMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -78,7 +78,7 @@ final class GetBookmarkMethod
 
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -111,7 +111,6 @@ final class GetBookmarkMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

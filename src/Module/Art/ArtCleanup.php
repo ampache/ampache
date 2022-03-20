@@ -42,10 +42,10 @@ final class ArtCleanup implements ArtCleanupInterface
      */
     public function cleanup(): void
     {
-        $minw = $this->configContainer->get('album_art_min_width') ?: null;
-        $maxw = $this->configContainer->get('album_art_max_width') ?: null;
-        $minh = $this->configContainer->get('album_art_min_height') ?: null;
-        $maxh = $this->configContainer->get('album_art_max_height') ?: null;
+        $minw = $this->configContainer->get('album_art_min_width') ?? null;
+        $maxw = $this->configContainer->get('album_art_max_width') ?? null;
+        $minh = $this->configContainer->get('album_art_min_height') ?? null;
+        $maxh = $this->configContainer->get('album_art_max_height') ?? null;
 
         // minimum width is set and current width is too low
         if ($minw) {

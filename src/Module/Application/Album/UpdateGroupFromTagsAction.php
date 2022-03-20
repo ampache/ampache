@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,24 +44,20 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        AlbumRepositoryInterface $albumRepository
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
-        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Make sure they are a 'power' user at least
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
@@ -75,9 +70,10 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         $this->ui->show(
             'show_update_item_group.inc.php',
             [
+                'object_id' => $albumId,
                 'catalog_id' => $album->get_catalogs(),
                 'type' => 'album',
-                'objects' => $this->albumRepository->getAlbumSuite($album),
+                'objects' => $album->album_suite,
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&amp;album=%d',
                     $this->configContainer->getWebPath(),

@@ -26,9 +26,14 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check('interface', 50)) { ?>
-<?php Ui::show_box_top(T_('Manage'), 'info-box'); ?>
+<?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -39,19 +44,19 @@ use Ampache\Module\Util\Ui;
 </li>
 </ul>
 </div>
-<?php Ui::show_box_bottom(); ?>
+<?php UI::show_box_bottom(); ?>
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
-            <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
             <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
-            <th class="cel_streamurl optional"><?php echo T_('Stream URL'); ?></th>
+            <th class="cel_siteurl optional"><?php echo T_('Website'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
@@ -61,24 +66,23 @@ use Ampache\Module\Util\Ui;
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
             $libitem->format(); ?>
-        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="live_stream_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
-        } // end foreach ($artists as $artist)?>
+        } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <th class="cel_cover"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
-            <th class="cel_streamurl"><?php echo T_('Stream URL'); ?></th>
+            <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec_bottom');  ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?> </th>
         </tr>

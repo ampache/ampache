@@ -70,7 +70,6 @@ class ShowActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
-
     public function testRunShowsAndReturnsNull(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);

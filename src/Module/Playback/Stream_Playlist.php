@@ -49,7 +49,6 @@ class Stream_Playlist
     public $id;
     public $urls = array();
     public $user;
-
     public $title;
 
     /**
@@ -119,34 +118,28 @@ class Stream_Playlist
      */
     private function _add_urls($urls)
     {
-        $sql       = 'INSERT INTO `stream_playlist` ';
-        $value_sql = 'VALUES ';
-        $values    = array();
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $count     = true;
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        $sql    = '';
+        $values = array();
         foreach ($urls as $url) {
             $this->urls[] = $url;
+            $fields       = array();
+            $fields[]     = '`sid`';
             $values[]     = $this->id;
             $holders      = array();
             $holders[]    = '?';
 
             foreach ($url->properties as $field) {
-                if ($url->$field) {
-                    $holders[] = '?';
+                if ($url->$field !== null) {
+                    $fields[]  = '`' . $field . '`';
                     $values[]  = $url->$field;
-                    if ($count) {
-                        $fields[] = '`' . $field . '`';
-                    }
+                    $holders[] = '?';
                 }
             }
-            $count = false;
-            $value_sql .= '(' . implode(',', $holders) . '), ';
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
         }
-        $sql .= '(' . implode(',', $fields) . ') ';
 
-        return Dba::write($sql . rtrim($value_sql, ', '), $values);
+        return Dba::write($sql, $values);
     }
 
     /**
@@ -154,7 +147,7 @@ class Stream_Playlist
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' . 'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' . 'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` WHERE `session`.`id` IS NULL';
 
         return Dba::write($sql);
     }
@@ -194,11 +187,29 @@ class Stream_Playlist
         $object     = new $class_name($object_id);
         $object->format();
 
-        if ($media['custom_play_action']) {
+        if (array_key_exists('client', $media)) {
+            $additional_params .= "&client=" . $media['client'];
+        }
+        if (array_key_exists('action', $media)) {
+            $additional_params .= "&action=" . $media['action'];
+        }
+        if (array_key_exists('cache', $media)) {
+            $additional_params .= "&cache=" . $media['cache'];
+        }
+        if (array_key_exists('player', $media)) {
+            $additional_params .= "&player=" . $media['player'];
+        }
+        if (array_key_exists('format', $media)) {
+            $additional_params .= "&format=" . $media['format'];
+        }
+        if (array_key_exists('transcode_to', $media)) {
+            $additional_params .= "&transcode_to=" . $media['transcode_to'];
+        }
+        if (array_key_exists('custom_play_action', $media)) {
             $additional_params .= "&custom_play_action=" . $media['custom_play_action'];
         }
 
-        if ($_SESSION['iframe']['subtitle']) {
+        if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
@@ -244,19 +255,20 @@ class Stream_Playlist
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
-            $url['time']   = $object->time;
+            $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
                 case 'song':
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
                     $show_song_art    = AmpConfig::get('show_song_art', false);
-                    $art_object       = ($show_song_art) ? $object->id : $object->album;
-                    $art_type         = ($show_song_art) ? 'song' : 'album';
+                    $has_art          = Art::has_db($object->id, 'song');
+                    $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
+                    $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
                     $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['codec']     = $object->type;
-                    //$url['track_num'] = $object->f_track;
+                    $url['track_num'] = (string)$object->track;
                     break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
@@ -269,6 +281,7 @@ class Stream_Playlist
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
+                    $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->codec;
                     break;
@@ -282,7 +295,7 @@ class Stream_Playlist
                     $url['codec'] = $object->stream_type;
                     break;
                 case 'podcast_episode':
-                    $url['title']     = $object->f_title;
+                    $url['title']     = $object->f_name;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
@@ -292,7 +305,7 @@ class Stream_Playlist
                     $url['title'] = 'Random URL';
                     break;
                 default:
-                    $url['title'] = 'URL-Add';
+                    $url['title'] = Stream_Url::get_title($url);
                     $url['time']  = -1;
                     break;
             }
@@ -372,7 +385,7 @@ class Stream_Playlist
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
-                $ext   = $type   = 'm3u';
+                $ext   = $type = 'm3u';
                 $ctype = 'audio/x-mpegurl';
                 break;
         }
@@ -424,8 +437,8 @@ class Stream_Playlist
         foreach ($urls as $url) {
             $this->_add_url(new Stream_Url(array(
                 'url' => $url,
-                'title' => 'URL-Add',
-                'author' => 'Ampache',
+                'title' => Stream_Url::get_title($url),
+                'author' => T_('Ampache'),
                 'time' => '-1'
             )));
         }
@@ -593,7 +606,7 @@ class Stream_Playlist
         $ret .= "#EXT-X-VERSION:1\n";
         $ret .= "#EXT-X-ALLOW-CACHE:NO\n";
         $ret .= "#EXT-X-MEDIA-SEQUENCE:0\n";
-        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n";   // Static list of segments
+        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n"; // Static list of segments
 
         foreach ($this->urls as $url) {
             $soffset = 0;
@@ -603,17 +616,17 @@ class Stream_Playlist
                 $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
-                $purl = Stream_Url::parse($url->url);
-                $id   = $purl['id'];
+                $url_data = Stream_Url::parse($url->url);
+                $id       = $url_data['id'];
 
-                unset($purl['id']);
-                unset($purl['ssid']);
-                unset($purl['type']);
-                unset($purl['base_url']);
-                unset($purl['uid']);
-                unset($purl['name']);
+                unset($url_data['id']);
+                unset($url_data['ssid']);
+                unset($url_data['type']);
+                unset($url_data['base_url']);
+                unset($url_data['uid']);
+                unset($url_data['name']);
 
-                foreach ($purl as $key => $value) {
+                foreach ($url_data as $key => $value) {
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
@@ -672,7 +685,7 @@ class Stream_Playlist
     {
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
-        $append = $_REQUEST['append'];
+        $append = $_REQUEST['append'] ?? false;
         if (!$append) {
             $localplay->delete_all();
         }
@@ -707,8 +720,8 @@ class Stream_Playlist
         $items = array();
 
         foreach ($this->urls as $url) {
-            $data    = Stream_Url::parse($url->url);
-            $items[] = array($data['type'], $data['id']);
+            $url_data = Stream_Url::parse($url->url);
+            $items[]  = array($url_data['type'], $url_data['id']);
         }
         if (!empty($items)) {
             $democratic->add_vote($items);
@@ -729,7 +742,7 @@ class Stream_Playlist
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_URL::add_options($url->url, '&action=download');
+        $url = Stream_Url::add_options($url->url, '&action=download&cache=1');
         header('Location: ' . $url);
 
         return false;

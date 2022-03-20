@@ -76,7 +76,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $metadataWriter = $this->mock(MetadataWriterInterface::class);
         $art            = $this->mock(Art::class);
 
-        $albumId = 666;
+        $albumId  = 666;
 
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
@@ -114,6 +114,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $songId   = 42;
         $file     = $fs_root->url() . '/some-file';
         $raw_mime = '/some-raw-mime.png';
+        $fileName = 'some-full-name';
 
         $album->id = $albumId;
 
@@ -183,6 +184,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $file_name = $fs_root->url() . '/some-file';
         $raw_mime  = 'image/png';
         $raw_art   = 'some-raw-bytes';
+        $fileName  = 'some-full-name';
 
         $album->id = $albumId;
 
@@ -225,11 +227,16 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $metadataWriter->shouldReceive('write')
             ->with(
-                $album,
+                $fileName,
                 'vfs:',
                 'vfs:///folder.png'
             )
             ->once();
+
+        $album->shouldReceive('get_fullname')
+            ->with(true)
+            ->once()
+            ->andReturn($fileName);
 
         $this->subject->export(
             $interactor,

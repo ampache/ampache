@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Exception;
 use Seafile\Client\Http\Client;
 use Seafile\Client\Resource\Library;
@@ -243,7 +244,7 @@ class SeafileAdapter
         }
     }
 
-    // run a function for all files in the seafile library.
+    // run a function for all files in the Seafile library.
     // the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
     // (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
     // Returns number added, or -1 on failure
@@ -318,7 +319,7 @@ class SeafileAdapter
             return $this->client['Client']->request('GET', $url, $opts);
         });
 
-        $tempfilename = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $file->name;
+        $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
 
         $tempfile = fopen($tempfilename, 'wb');
 

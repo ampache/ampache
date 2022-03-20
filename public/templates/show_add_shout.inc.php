@@ -38,7 +38,7 @@ $boxtitle = T_('Post to Shoutbox');
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
 <table id="shoutbox-input">
 <tr>
-    <td><strong><?php echo T_('Comment:'); ?></strong>
+    <td><strong><?php echo T_('Comment'); ?></strong>
 </tr>
 <tr>
     <td><textarea rows="5" cols="35" maxlength="2000" name="comment"></textarea></td>
@@ -65,7 +65,7 @@ $boxtitle = T_('Post to Shoutbox');
 } ?>
 <div style="display: inline;">
 <?php
-$boxtitle = $object->f_title . ' ' . T_('Shoutbox');
+$boxtitle = $object->get_fullname() . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 if (count($shouts)) {

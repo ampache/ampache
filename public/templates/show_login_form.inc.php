@@ -31,23 +31,24 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$remember_disabled = '';
-if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
-    $remember_disabled = 'disabled="disabled"';
-}
-$htmllang                             = str_replace("_", "-", AmpConfig::get('lang'));
-is_rtl(AmpConfig::get('lang')) ? $dir = 'rtl' : $dir = 'ltr';
-
 $web_path = AmpConfig::get('web_path');
+$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
+$dir      = is_rtl(AmpConfig::get('lang'))
+    ? 'rtl'
+    : 'ltr';
 
-$_SESSION['login'] = true;
-define('TABLE_RENDERED', 1);
-$mobile_session = false;
+$remember_disabled = (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800))
+    ? 'disabled="disabled"'
+    : '';
+
 $user_agent     = Core::get_server('HTTP_USER_AGENT');
+$mobile_session = strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'));
 
-if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'))) {
-    $mobile_session = true;
-} ?>
+define('TABLE_RENDERED', 1);
+if (!AmpConfig::get('disable_xframe_sameorigin', false)) {
+    header("X-Frame-Options: SAMEORIGIN");
+}
+$_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
 
@@ -70,11 +71,11 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                 <div class="loginfield" id="usernamefield">
-                    <label for="username"><?php echo  T_('Username'); ?>:</label>
-                    <input type="text" id="username" name="username" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
+                    <label for="username"><?php echo T_('Username'); ?>:</label>
+                    <input type="text" id="username" name="username" maxlength="128" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
                 </div>
                 <div class="loginfield" id="passwordfield">
-                    <label for="password"><?php echo  T_('Password'); ?>:</label>
+                    <label for="password"><?php echo T_('Password'); ?>:</label>
                     <input type="password" id="password" name="password" value="" />
                 </div>
                 <?php echo AmpError::display('general'); ?>
@@ -92,11 +93,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                 </div>
                 <div class="loginoptions">
                 <?php if (AmpConfig::get('allow_public_registration')) { ?>
-
-                            <a class="button nohtml" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
+                            <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
-                        <a class="button nohtml" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
+                        <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
 
                 <?php } ?>
                 </div>
@@ -115,4 +115,4 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
         echo T_("By logging in you agree to the use of cookies while using this site.");
         echo '</div>';
     }
-    UI::show_footer(); ?>
+    UI::show_footer();

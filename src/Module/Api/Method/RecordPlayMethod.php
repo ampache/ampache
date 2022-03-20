@@ -36,7 +36,7 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 final class RecordPlayMethod
 {
-    private const ACTION = 'record_play';
+    public const ACTION = 'record_play';
 
     /**
      * record_play
@@ -53,9 +53,9 @@ final class RecordPlayMethod
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function record_play(array $input)
+    public static function record_play(array $input): bool
     {
-        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
         $api_user  = User::get_from_username(Session::username($input['auth']));
@@ -69,7 +69,7 @@ final class RecordPlayMethod
         ob_end_clean();
         $object_id = (int) $input['id'];
         $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
-        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
@@ -80,8 +80,8 @@ final class RecordPlayMethod
         }
 
         // validate client string or fall back to 'api'
-        $agent = ($input['client'])
-            ? $input['client']
+        $agent = (array_key_exists('client', $input))
+            ? filter_var($input['client'], FILTER_SANITIZE_STRING)
             : 'api';
 
         $media = new Song($object_id);
@@ -100,7 +100,6 @@ final class RecordPlayMethod
         }
 
         Api::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

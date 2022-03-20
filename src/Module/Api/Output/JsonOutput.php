@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json_Data;
 
 final class JsonOutput implements ApiOutputInterface
@@ -43,13 +44,33 @@ final class JsonOutput implements ApiOutputInterface
 
     /**
      * At the moment, this method just acts as a proxy
+     */
+    public function error3(int $code, string $message): string
+    {
+        return '';
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     */
+    public function error4(int $code, string $message): string
+    {
+        return Json4_Data::error(
+            $code,
+            $message
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
      *
      * @param integer[] $albums
      * @param array $include
      * @param integer|null $user_id
      * @param bool $encode
-     * @param int $limit
-     * @param int $offset
+     * @param bool $asObject
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return array|string
      */
@@ -58,12 +79,13 @@ final class JsonOutput implements ApiOutputInterface
         array $include = [],
         ?int $user_id = null,
         bool $encode = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
         Json_Data::set_offset($offset);
         Json_Data::set_limit($limit);
 
-        return Json_Data::albums($albums, $include, $user_id, $encode);
+        return Json_Data::albums($albums, $include, $user_id, $encode, $asObject);
     }
 }

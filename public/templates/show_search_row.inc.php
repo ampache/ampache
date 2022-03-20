@@ -37,16 +37,19 @@ use Ampache\Module\Util\ZipHandlerInterface;
     <?php
         if (AmpConfig::get('directplay')) {
             echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_next()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
+            }
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
             }
         } ?>
     </div>
 </td>
-<td class="cel_playlist"><?php echo $libitem->f_link; ?></td>
+<td class="cel_playlist"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_playlist_' . $libitem->id); ?>
+        <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
@@ -55,7 +58,6 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
-<td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php
             // @todo remove after refactoring
@@ -68,7 +70,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
         <?php
             }
             if ($libitem->has_access()) { ?>
-                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Smart Playlist Edit') ?>', 'smartplaylist_row_')">
+                <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <?php

@@ -39,7 +39,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
  */
 final class BookmarkDeleteMethod
 {
-    private const ACTION = 'bookmark_delete';
+    public const ACTION = 'bookmark_delete';
 
     /**
      * bookmark_delete
@@ -53,7 +53,7 @@ final class BookmarkDeleteMethod
      * client = (string) Agent string Default: 'AmpacheAPI' // optional
      * @return boolean
      */
-    public static function bookmark_delete(array $input)
+    public static function bookmark_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter','type'), self::ACTION)) {
             return false;
@@ -61,16 +61,16 @@ final class BookmarkDeleteMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? (string) $input['client'] : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -79,7 +79,7 @@ final class BookmarkDeleteMethod
 
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -113,7 +113,6 @@ final class BookmarkDeleteMethod
         }
 
         Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     } // bookmark_delete

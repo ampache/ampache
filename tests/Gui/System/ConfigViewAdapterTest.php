@@ -46,18 +46,6 @@ class ConfigViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testIsUserFlagsEnabledReturnsValue(): void
-    {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::USER_FLAGS)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->isUserFlagsEnabled()
-        );
-    }
-
     public function testIsWaveformEnabledReturnsValue(): void
     {
         $this->configContainer->shouldReceive('isFeatureEnabled')

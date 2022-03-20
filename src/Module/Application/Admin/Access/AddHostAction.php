@@ -78,8 +78,7 @@ final class AddHostAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $data = $request->getParsedBody();
-
+        $data    = $request->getParsedBody();
         $startIp = $data['start'] ?? '';
         $endIp   = $data['end'] ?? '';
 
@@ -88,7 +87,7 @@ final class AddHostAction implements ApplicationActionInterface
                 $startIp,
                 $endIp,
                 $data['name'] ?? '',
-                (int) ($data['user'] ?: -1),
+                (int) ($data['user'] ?? -1),
                 (int) $data['level'] ?? 0,
                 $data['type'] ?? '',
                 $data['addtype'] ?? ''
@@ -121,7 +120,10 @@ final class AddHostAction implements ApplicationActionInterface
         } else {
             $this->ui->show(
                 'show_add_access.inc.php',
-                ['action' => 'show_add_' . Core::get_post('type')]
+                [
+                    'action' => 'show_add_' . Core::get_post('type'),
+                    'add_type' => 'add_host'
+                ]
             );
         }
 

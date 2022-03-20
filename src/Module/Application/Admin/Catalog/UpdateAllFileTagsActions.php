@@ -57,7 +57,7 @@ final class UpdateAllFileTagsActions extends AbstractCatalogAction
 
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('The catalog write file tags has started'),
+            T_('The Catalog write file tags has started'),
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
             0,
             'confirmation',

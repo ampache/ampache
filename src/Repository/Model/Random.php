@@ -43,21 +43,21 @@ class Random
      */
     public static function artist()
     {
-        $multi_where = 'WHERE';
-        $sql         = "SELECT `artist`.`id` FROM `artist` " . "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
+        $join = 'WHERE';
+        $sql  = "SELECT `artist`.`id` FROM `artist` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . "WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `catalog_map`.`catalog_id` WHERE `catalog`.`enabled` = '1' ";
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " " . $multi_where . " `artist`.`id` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'artist'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $join `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
-        $sql .= "GROUP BY `artist`.`id` " . "ORDER BY RAND() LIMIT 1";
-        $db_results = Dba::read($sql);
+        $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1";
 
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
 
         return $results['id'];
     } // artist
@@ -70,10 +70,10 @@ class Random
      */
     public static function playlist()
     {
-        $sql        = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` " . " ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL " . " ORDER BY RAND()";
-        $db_results = Dba::read($sql);
+        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
 
-        $results = Dba::fetch_assoc($db_results);
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['id'];
     } // playlist
@@ -81,17 +81,23 @@ class Random
     /**
      * get_single_song
      * This returns a single song pulled based on the passed random method
-     * @param $type
-     * @return mixed
+     * @param string $random_type
+     * @param User $user
+     * @param int $object_id
+     * @return int|null
      */
-    public static function get_single_song($type)
+    public static function get_single_song($random_type, $user, $object_id = 0)
     {
-        $method_name = 'get_' . $type;
-
-        if (!method_exists(Random::class, $method_name)) {
-            $method_name = 'get_default';
+        switch ($random_type) {
+            case 'artist':
+                $song_ids = self::get_artist(1, $user);
+                break;
+            case 'playlist':
+                $song_ids = self::get_playlist($user, $object_id);
+                break;
+            default:
+                $song_ids = self::get_default(1, $user);
         }
-        $song_ids = self::$method_name(1);
 
         return array_pop($song_ids);
     } // get_single_song
@@ -101,30 +107,30 @@ class Random
      * This just randomly picks a song at whim from all catalogs
      * nothing special here...
      * @param string $limit
-     * @param integer $user_id
+     * @param User $user
      * @return integer[]
      */
-    public static function get_default($limit = '', $user_id = null)
+    public static function get_default($limit = '', $user = null)
     {
         $results = array();
 
         if (empty($limit)) {
-            $limit = AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25';
+            $limit = AmpConfig::get('offset_limit', 25);
         }
-        if ((int)$user_id < 1) {
-            $user_id = Core::get_global('user')->id;
+        if (empty($user)) {
+            $user = Core::get_global('user');
         }
-
-        $multi_where = 'WHERE';
-        $sql         = "SELECT `song`.`id` FROM `song` ";
+        $user_id = $user->id ?? null;
+        $join    = 'WHERE';
+        $sql     = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . "WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " " . $multi_where . " `song`.`artist` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'artist'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
-            $sql .= " AND `song`.`album` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'album'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $join `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= " AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
@@ -140,39 +146,63 @@ class Random
      * get_artist
      * This looks at the last artist played and then randomly picks a song from the
      * same artist
-     * @param $limit
-     * @return array
+     * @param integer $limit
+     * @param User $user
+     * @return integer[]
      */
-    public static function get_artist($limit)
+    public static function get_artist($limit, $user = null)
     {
         $results = array();
 
-        $data        = Core::get_global('user')->get_recently_played('1', 'artist');
-        $where_sql   = "";
-        $multi_where = 'WHERE';
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $data      = $user->get_recently_played('artist', 1);
+        $where_sql = "";
+        $join      = 'WHERE';
         if ($data[0]) {
             $where_sql = " AND `song`.`artist`='" . $data[0] . "' ";
         }
 
         $sql = "SELECT `song`.`id` FROM `song` ";
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` " . "WHERE `catalog`.`enabled` = '1' ";
-            $multi_where = 'AND';
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' ";
+            $join = 'AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user)) {
             $user_id = Core::get_global('user')->id;
-            $sql .= " " . $multi_where . " `song`.`artist` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'artist'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " $join `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
     } // get_artist
+
+    /**
+     * get_playlist
+     * Get a random song from a playlist (that you own)
+     * @param User $user
+     * @param int $playlist_id
+     * @return integer[]
+     */
+    public static function get_playlist($user, $playlist_id = 0)
+    {
+        $results  = array();
+        $playlist = new Playlist($playlist_id);
+        if ($playlist->has_access($user->id)) {
+            foreach ($playlist->get_random_items(1) as $songs) {
+                $results[] = $songs['object_id'];
+            }
+        }
+
+        return $results;
+    } // get_playlist
 
     /**
      * advanced
@@ -185,7 +215,7 @@ class Random
     public static function advanced($type, $data)
     {
         /* Figure out our object limit */
-        $limit     = (int)($data['random']);
+        $limit     = (int)$data['random'];
         $limit_sql = "LIMIT " . Dba::escape($limit);
 
         /* If they've passed -1 as limit then get everything */
@@ -194,25 +224,25 @@ class Random
             $limit_sql = "";
         }
 
-        $sql     = self::advanced_sql($data, $type, $limit_sql);
-        $results = self::advanced_results($sql, $data);
+        $search  = self::advanced_sql($data, $type, $limit_sql);
+        $results = self::advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
 
         switch ($type) {
             case 'song':
+            case 'video':
                 return $results;
             case 'album':
                 $songs = array();
-                foreach ($results as $result) {
-                    $album = new Album($result);
-                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($album->id));
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
                 }
 
                 return $songs;
             case 'artist':
                 $songs = array();
-                foreach ($results as $result) {
-                    $artist = new Artist($result);
-                    $songs  = array_merge($songs, static::getSongRepository()->getByArtist($artist));
+                foreach ($results as $object_id) {
+                    $songs = array_merge($songs, static::getSongRepository()->getByArtist($object_id));
                 }
 
                 return $songs;
@@ -224,23 +254,26 @@ class Random
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
-     * @param string $sql
+     * @param array $sql_data
+     * @param array $sql_params
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql, $data)
+    private static function advanced_results($sql_data, $sql_params, $data)
     {
         // Run the query generated above so we can while it
-        $db_results = Dba::read($sql, $data);
+        $db_results = Dba::read($sql_data, $sql_params);
         $results    = array();
 
         $size_total = 0;
         $fuzzy_size = 0;
         $time_total = 0;
         $fuzzy_time = 0;
+        $size_limit = (array_key_exists('size_limit', $data) && $data['size_limit'] > 0);
+        $length     = (array_key_exists('length', $data) && $data['length'] > 0);
         while ($row = Dba::fetch_assoc($db_results)) {
             // If size limit is specified
-            if ($data['size_limit']) {
+            if ($size_limit) {
                 // Convert
                 $new_size = ($row['size'] / 1024) / 1024;
 
@@ -265,7 +298,7 @@ class Random
             } // if size_limit
 
             // If length really does matter
-            if ($data['length']) {
+            if ($length) {
                 // base on min, seconds are for chumps and chumpettes
                 $new_time = floor($row['time'] / 60);
 
@@ -288,8 +321,8 @@ class Random
                 }
             } // if length does matter
 
-            if (!$data['size_limit'] && !$data['length']) {
-                $results[] = $row['id'];
+            if (!$size_limit && !$length) {
+                $results[] = (int) $row['id'];
             }
         } // end while results
 
@@ -302,7 +335,7 @@ class Random
      * @param array $data
      * @param string $type
      * @param string $limit_sql
-     * @return string
+     * @return array
      */
     private static function advanced_sql($data, $type, $limit_sql)
     {
@@ -318,65 +351,59 @@ class Random
 
         $catalog_disable_sql = "";
         if ($catalog_disable) {
-            $catalog_disable_sql = " LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1'";
+            $catalog_disable_sql = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1'";
         }
 
         $sql = "";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id`, `size`, `time` " . "FROM `song` ";
+                $sql = "SELECT `song`.`id`, `song`.`size`, `song`.`time` FROM `song` ";
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
-                if ($search_info) {
-                    if ($catalog_disable) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
+                if (!empty($search_info['where_sql'])) {
+                    $sql .= ($catalog_disable)
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
                 }
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
-                if (!$search_info || !$search_info['join']['song']) {
-                    $sql .= "LEFT JOIN `song` ON `song`.`album`=`album`.`id` ";
-                }
-                if ($search_info) {
-                    $sql .= $search_info['table_sql'];
-                }
-                $sql .= $catalog_disable_sql;
-                if ($search_info) {
-                    if ($catalog_disable) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
-                }
-                $sql .= ' GROUP BY `album`.`id`';
-                break;
             case 'artist':
-                $sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
+                $sql = "SELECT `$type`.`id`, SUM(`song`.`size`) AS `size`, SUM(`$type`.`time`) AS `time` FROM `$type` ";
                 if (!$search_info || !$search_info['join']['song']) {
-                    $sql .= "LEFT JOIN `song` ON `song`.`artist`=`artist`.`id` ";
+                    $sql .= "LEFT JOIN `song` ON `song`.`$type`=`$type`.`id` ";
                 }
                 if ($search_info) {
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
-                if ($search_info) {
-                    if ($catalog_disable) {
-                        $sql .= ' AND ' . $search_info['where_sql'];
-                    } else {
-                        $sql .= ' WHERE ' . $search_info['where_sql'];
-                    }
+                if (!empty($search_info['where_sql'])) {
+                    $sql .= ($catalog_disable)
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
                 }
-                $sql .= ' GROUP BY `artist`.`id`';
+                $sql .= " GROUP BY `$type`.`id`";
+                break;
+            case 'video':
+                $sql = "SELECT `video`.`id`, `video`.`size`, `video`.`time` FROM `video` ";
+                if ($search_info) {
+                    $sql .= $search_info['table_sql'];
+                }
+                $sql .= $catalog_disable_sql;
+                if (!empty($search_info['where_sql'])) {
+                    $sql .= ($catalog_disable)
+                        ? " AND " . $search_info['where_sql']
+                        : " WHERE " . $search_info['where_sql'];
+                }
                 break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 
-        return $sql;
+        return array(
+            'sql' => $sql,
+            'parameters' => $search_info['parameters']
+        );
     }
 
     /**

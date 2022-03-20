@@ -32,37 +32,33 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Podcast $podcast */
+/** @var string $object_type */
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
-Ui::show_box_top($podcast->f_title, 'info-box'); ?>
+Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    $thumb = Ui::is_grid_view('podcast') ? 2 : 11;
-    Art::display('podcast', $podcast->id, $podcast->f_title, $thumb); ?>
-    <?php if ($podcast->description) { ?>
-    <div id="item_summary">
-        <?php echo $podcast->description; ?>
-    </div>
-    <?php
-    } ?>
+    $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
+    Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
 </div>
+<?php if ($podcast->description) { ?>
+<div id="item_summary">
+    <?php echo $podcast->description; ?>
+</div>
+<?php } ?>
 <?php if (User::is_registered()) { ?>
-    <?php
-    if (AmpConfig::get('ratings')) { ?>
-    <div id="rating_<?php echo (int) ($podcast->id); ?>_podcast" style="display:inline;">
+    <?php if (AmpConfig::get('ratings')) { ?>
+    <span id="rating_<?php echo (int) ($podcast->id); ?>_podcast">
         <?php echo Rating::show($podcast->id, 'podcast'); ?>
-    </div>
-    <?php
-    } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $podcast->id; ?>_podcast">
-            <?php echo Userflag::show($podcast->id, 'podcast'); ?>
-    </div>
-    <?php
-    } ?>
-<?php
-    } ?>
+    </span>
+    <span id="userflag_<?php echo $podcast->id; ?>_podcast">
+        <?php echo Userflag::show($podcast->id, 'podcast'); ?>
+    </span>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
@@ -72,6 +68,12 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
+        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+            <li>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&playnext=true', 'play_next', T_('Play All Next'), 'addnext_podcast_' . $podcast->id); ?>
+            </li>
+            <?php
+        } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>
@@ -98,11 +100,11 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
         <li>
             <a href="<?php echo $podcast->website; ?>" target="_blank">
                 <?php echo Ui::get_icon('link', T_('Website')); ?>
-                <?php echo T_('Graphs'); ?>
+                <?php echo T_('Website'); ?>
             </a>
         </li>
         <li>
-            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
+            <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo addslashes(T_('Podcast Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Podcast'); ?>
             </a>

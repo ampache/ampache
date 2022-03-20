@@ -34,7 +34,7 @@ use Ampache\Module\Util\OAuth\Exception\OAuthException;
 class OAuthServer
 {
     protected $timestamp_threshold = 300; // in seconds, five minutes
-    protected $version             = '1.0';             // hi blaine
+    protected $version             = '1.0';
     protected $signature_methods   = array();
 
     protected $data_store;
@@ -86,7 +86,7 @@ class OAuthServer
      * process an access_token request
      * returns the access token on success
      * @param $request
-     * @return
+     * @return mixed
      * @throws OAuthException
      */
     public function fetch_access_token(&$request)
@@ -116,7 +116,7 @@ class OAuthServer
     {
         $this->get_version($request);
         $consumer = $this->get_consumer($request);
-        $token    = $this->get_token($request, $consumer, "access");
+        $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
         return array($consumer, $token);
@@ -135,7 +135,7 @@ class OAuthServer
         $version = $request->get_parameter("oauth_version");
         if (!$version) {
             // Service Providers MUST assume the protocol version to be 1.0 if this parameter is not present.
-            // Chapter 7.0 ("Accessing Protected Ressources")
+            // Chapter 7.0 ("Accessing Protected Resources")
             $version = '1.0';
         }
         if ($version !== $this->version) {
@@ -156,7 +156,7 @@ class OAuthServer
         $signature_method = $request instanceof OAuthRequest ? $request->get_parameter("oauth_signature_method") : null;
 
         if (!$signature_method) {
-            // According to chapter 7 ("Accessing Protected Ressources") the signature-method
+            // According to chapter 7 ("Accessing Protected Resources") the signature-method
             // parameter is required, and we can't just fallback to PLAINTEXT
             throw new OAuthException('No signature method parameter. This parameter is required');
         }
@@ -221,8 +221,8 @@ class OAuthServer
     private function check_signature($request, $consumer, $token)
     {
         // this should probably be in a different method
-        $timestamp = $request instanceof OAuthRequest ? $request->get_parameter('oauth_timestamp') : null;
-        $nonce     = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
+        $timestamp = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_timestamp') : null;
+        $nonce     = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_nonce') : null;
 
         $this->check_timestamp($timestamp);
         $this->check_nonce($consumer, $token, $nonce, $timestamp);
@@ -248,7 +248,7 @@ class OAuthServer
             throw new OAuthException('Missing timestamp parameter. The parameter is required');
         }
 
-        // verify that timestamp is recentish
+        // verify that timestamp is recent
         $now = time();
         if (abs($now - $timestamp) > $this->timestamp_threshold) {
             throw new OAuthException("Expired timestamp, yours $timestamp, ours $now");
@@ -269,7 +269,7 @@ class OAuthServer
             throw new OAuthException('Missing nonce parameter. The parameter is required');
         }
 
-        // verify that the nonce is uniqueish
+        // verify that the nonce is unique
         $found = $this->data_store->lookup_nonce($consumer, $token, $nonce, $timestamp);
         if ($found) {
             throw new OAuthException("Nonce already used: $nonce");

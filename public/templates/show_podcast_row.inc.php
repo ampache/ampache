@@ -24,7 +24,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -32,6 +31,9 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Podcast $libitem */
+/** @var bool $show_ratings */
+/** @var string $cel_cover */
+/** @var string $cel_counter */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -39,40 +41,37 @@ use Ampache\Module\Util\Ui;
     <?php
         if (AmpConfig::get('directplay')) {
             echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->id, 'play', T_('Play'), 'play_podcast_' . $libitem->id);
+            if (Stream_Playlist::check_autoplay_next()) {
+                echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_' . $libitem->id);
+            }
             if (Stream_Playlist::check_autoplay_append()) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_' . $libitem->id);
             }
         } ?>
     </div>
 </td>
-<?php if (Art::is_enabled()) { ?>
-<td class="cel_cover">
-    <?php Art::display('podcast', $libitem->id, $libitem->f_name, 2, $libitem->link); ?>
+<td class="<?php echo $cel_cover; ?>">
+    <?php Art::display('podcast', $libitem->id, $libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
-<?php
-    } ?>
 <td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
-<?php
-    if (User::is_registered()) {
-        if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast">
-        <?php echo Rating::show($libitem->id, 'podcast'); ?>
-    </td>
-    <?php
-        }
-        if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast">
-        <?php echo Userflag::show($libitem->id, 'podcast'); ?>
-    </td>
-    <?php
-        }
-    } ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
+<?php } ?>
+<?php if ($show_ratings) { ?>
+        <td class="cel_ratings">
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast"><?php echo Rating::show($libitem->id, 'podcast'); ?></span>
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast"><?php echo Userflag::show($libitem->id, 'podcast'); ?></span>
+            <?php
+            } ?>
+        </td>
+    <?php } ?>
 <td class="cel_action">
 <?php
-    echo " <a href=\"" . $libitem->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>";
     if (Access::check('interface', 50)) { ?>
-    <a id="<?php echo 'edit_podcast_' . $libitem->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_' . $libitem->id ?>', '<?php echo T_('Podcast Edit') ?>', 'podcast_')">
+    <a id="<?php echo 'edit_podcast_' . $libitem->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_' . $libitem->id ?>', '<?php echo addslashes(T_('Podcast Edit')) ?>', 'podcast_')">
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <span id="button_sync_<?php echo $libitem->id; ?>">

@@ -30,14 +30,14 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <div id="browse_header">
-<?php require_once UI::find_template('show_browse_form.inc.php'); ?>
+<?php require_once Ui::find_template('show_browse_form.inc.php'); ?>
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
-if ($user) {
+if (isset($user->id)) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
-        if ($plugin->load(Core::get_global('user'))) {
+        if ($plugin->load($user)) {
             $plugin->_plugin->display_home();
         }
     }
@@ -50,17 +50,15 @@ if ($user) {
 <?php
 } ?>
 <!-- Randomly selected Albums of the Moment -->
-<?php
-if (Art::is_enabled()) {
-    if (AmpConfig::get('home_moment_albums')) {
-        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
+<?php if (AmpConfig::get('home_moment_albums')) {
+    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
 <div id="random_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Albums of the Moment'));
-        echo T_('Loading...');
-        Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
 </div>
 <?php
-    }
+}
     if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
         echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_videos', 'random_videos')); ?>
 <div id="random_video_selection" class="random_selection">
@@ -70,14 +68,13 @@ if (Art::is_enabled()) {
 </div>
     <?php
     } ?>
-<?php
-} ?>
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
         $data = Song::get_recently_played();
         Song::build_cache(array_keys($data));
+        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
 <?php

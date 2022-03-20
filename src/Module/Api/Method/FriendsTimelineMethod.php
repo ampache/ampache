@@ -51,7 +51,7 @@ final class FriendsTimelineMethod
      * since = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function friends_timeline(array $input)
+    public static function friends_timeline(array $input): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -81,7 +81,6 @@ final class FriendsTimelineMethod
             default:
                 echo Xml_Data::timeline($activities);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

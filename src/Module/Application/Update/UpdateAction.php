@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -77,6 +78,7 @@ final class UpdateAction implements ApplicationActionInterface
             set_time_limit(300);
             AutoUpdate::update_files();
             AutoUpdate::update_dependencies($this->configContainer);
+            Preference::translate_db();
 
             return $this->responseFactory
                 ->createResponse(StatusCode::FOUND)

@@ -32,6 +32,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -40,21 +41,25 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Check to see if they've got an interface session or a valid API session, if not GTFO
+        // Check to see if they've got an interface session or a valid API session
         if (
             !Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()]) &&
             !Session::exists('api', $_REQUEST['auth'])
@@ -82,10 +87,9 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type = $_REQUEST['type'];
-
-        $user_id     = (int) ($_REQUEST['user_id']);
-        $object_type = (string) scrub_in($_REQUEST['object_type']);
+        $action_type = $this->requestParser->getFromRequest('type');
+        $object_type = $this->requestParser->getFromRequest('object_type');
+        $user_id     = (int)$this->requestParser->getFromRequest('user_id');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             $object_type = null;
         }
@@ -96,10 +100,9 @@ final class ShowAction implements ApplicationActionInterface
 
         $width  = (int) ($_REQUEST['width']);
         $height = (int) ($_REQUEST['height']);
+        $graph  = new Graph();
 
-        $graph = new Graph();
-
-        switch ($type) {
+        switch ($action_type) {
             case 'user_hits':
                 $graph->render_user_hits($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, $width, $height);
                 break;

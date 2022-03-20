@@ -34,7 +34,7 @@ use Ampache\Module\System\AmpError;
  *
  * has static methods, this uses the global config
  * creating a 'Config' object will allow for local
- * config overides and/or local configs (for like dba)
+ * config overrides and/or local configs (for like dba)
  * The class should be a static var in the other classes
  */
 class AmpConfig
@@ -89,8 +89,7 @@ class AmpConfig
         }
 
         return 0;
-    }
-    // get_rating_filter
+    } // get_rating_filter
 
     /**
      * set

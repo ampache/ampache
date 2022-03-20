@@ -66,7 +66,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        if (isset($_REQUEST['browse_id'])) {
+        if (array_key_exists('browse_id', $_REQUEST)) {
             $browse_id = $_REQUEST['browse_id'];
         } else {
             $browse_id = null;
@@ -76,13 +76,17 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
         $browse = $this->modelFactory->createBrowse($browse_id);
 
-        if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
+        if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
         }
 
         $argument = false;
-        if ($_REQUEST['argument']) {
+        if (array_key_exists('argument', $_REQUEST)) {
             $argument = scrub_in($_REQUEST['argument']);
+        }
+        // hide some of the useless columns in a browse
+        if (array_key_exists('hide', $_REQUEST)) {
+            $argument = array('hide' => explode(',', scrub_in((string)$_REQUEST['hide'])));
         }
 
         $results = array();

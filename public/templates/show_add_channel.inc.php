@@ -44,25 +44,25 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Description'); ?></td>
-    <td><input type="text" name="description" value="<?php echo scrub_out($_REQUEST['description']); ?>" />
+    <td><input type="text" name="description" value="<?php echo scrub_out($_REQUEST['description'] ?? ''); ?>" />
         <?php echo AmpError::display('description'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('URL'); ?></td>
-    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url'] ?: AmpConfig::get('web_path')); ?>" />
+    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url'] ?? AmpConfig::get('web_path')); ?>" />
         <?php echo AmpError::display('url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Interface'); ?></td>
-    <td><input type="text" name="interface" value="<?php echo scrub_out($_REQUEST['interface'] ?: '127.0.0.1'); ?>" />
+    <td><input type="text" name="interface" value="<?php echo scrub_out($_REQUEST['interface'] ?? '127.0.0.1'); ?>" />
         <?php echo AmpError::display('interface'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Port'); ?></td>
-    <td><input type="text" name="port" value="<?php echo scrub_out($_REQUEST['port'] ?: Channel::get_next_port()); ?>" />
+    <td><input type="text" name="port" value="<?php echo scrub_out($_REQUEST['port'] ?? Channel::get_next_port()); ?>" />
         <?php echo AmpError::display('port'); ?>
     </td>
 </tr>
@@ -80,19 +80,19 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Max Listeners'); ?></td>
-    <td><input type="text" name="max_listeners" value="<?php echo scrub_out($_REQUEST['max_listeners'] ?: '32'); ?>" />
+    <td><input type="text" name="max_listeners" value="<?php echo scrub_out($_REQUEST['max_listeners'] ?? '32'); ?>" />
         <?php echo AmpError::display('max_listeners'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Stream Type'); ?></td>
-    <td><input type="text" name="stream_type" value="<?php echo scrub_out($_REQUEST['stream_type'] ?: 'mp3'); ?>" />
+    <td><input type="text" name="stream_type" value="<?php echo scrub_out($_REQUEST['stream_type'] ?? 'mp3'); ?>" />
         <?php echo AmpError::display('stream_type'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Bitrate'); ?></td>
-    <td><input type="text" name="bitrate" value="<?php echo scrub_out($_REQUEST['bitrate'] ?: '128'); ?>" />
+    <td><input type="text" name="bitrate" value="<?php echo scrub_out($_REQUEST['bitrate'] ?? '128'); ?>" />
         <?php echo AmpError::display('bitrate'); ?>
     </td>
 </tr>

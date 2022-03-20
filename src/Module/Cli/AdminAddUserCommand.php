@@ -35,18 +35,18 @@ final class AdminAddUserCommand extends Command
     public function __construct(
         ConfigContainerInterface $configContainer
     ) {
-        parent::__construct('admin:addUser', 'Adds a user');
+        parent::__construct('admin:addUser', T_('Add a User'));
 
         $this->configContainer = $configContainer;
 
         $this
-            ->option('-p|--password', 'Password', 'strval', mt_rand())
-            ->option('-e|--email', 'E-Mail', 'strval', '')
-            ->option('-w|--website', 'Website', 'strval', '')
-            ->option('-n|--name', 'Name', 'strval', '')
-            ->option('-l|--level', 'Access Level', 'intval', $this->configContainer->get('auto_user') ?? 5)
-            ->argument('<username>', 'The name of the new user')
-            ->usage('<bold>  admin:addUser some-user</end> <comment> ## Add the user `some-user`</end><eol/>');
+            ->option('-p|--password', T_('Password'), 'strval', bin2hex(random_bytes(20)))
+            ->option('-e|--email', T_('E-mail'), 'strval', '')
+            ->option('-w|--website', T_('Website'), 'strval', '')
+            ->option('-n|--name', T_('Name'), 'strval', '')
+            ->option('-l|--level', T_('Access Level'), 'intval', User::access_name_to_level(($this->configContainer->get('auto_user') ?? 'guest')))
+            ->argument('<username>', T_('Username'))
+            ->usage('<bold>  admin:addUser some-user</end> <comment> ## ' . T_('Add a User with the name `some-user`') . '</end><eol/>');
     }
 
     public function execute(
@@ -55,7 +55,7 @@ final class AdminAddUserCommand extends Command
         $values     = $this->values();
         $interactor = $this->io();
 
-        $result = (int) User::create(
+        $result = (int)User::create(
             $username,
             $values['name'],
             $values['email'],
@@ -64,7 +64,7 @@ final class AdminAddUserCommand extends Command
             $values['level']
         );
 
-        if ($result !== null) {
+        if ($result > 0) {
             $interactor->ok(
                 sprintf(
                     T_('Created %s user %s with password %s'),

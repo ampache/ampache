@@ -44,8 +44,8 @@ class Catalog_beets extends Catalog
     protected $listCommand = 'ls';
 
     /**
-     *
-     * @var string Beets Database File
+     * Beets Database File
+     * @var string $beetsdb
      */
     protected $beetsdb;
 
@@ -55,7 +55,7 @@ class Catalog_beets extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul>" . "<li>Fetch songs from beets command over CLI.</li>" . "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
+        return "<ul><li>Fetch songs from beets command over CLI.</li><li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
     }
 
     /**
@@ -76,21 +76,23 @@ class Catalog_beets extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_beets` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`beetsdb` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
 
         return $fields;

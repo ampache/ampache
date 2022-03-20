@@ -26,11 +26,11 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 class AmpacheCatalogFavorites
@@ -43,8 +43,7 @@ class AmpacheCatalogFavorites
     public $min_ampache = '370021';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
     private $gridview;
 
@@ -71,10 +70,8 @@ class AmpacheCatalogFavorites
             return false;
         }
 
-        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins',
-            $this->name);
-        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean',
-            'plugins', $this->name);
+        Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name);
+        Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
 
         return true;
     }
@@ -99,9 +96,11 @@ class AmpacheCatalogFavorites
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version < 2) {
-            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean',
-                'plugins');
+        if ($from_version == 0) {
+            return false;
+        }
+        if ($from_version < (int)$this->version) {
+            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
         }
 
         return true;
@@ -113,41 +112,43 @@ class AmpacheCatalogFavorites
      */
     public function display_home()
     {
-        if (AmpConfig::get('userflags')) {
-            $userflags = Userflag::get_latest(null, 0, $this->maxitems);
+        if (AmpConfig::get('ratings')) {
+            $userflags = Userflag::get_latest('song', 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';
             Ui::show_box_top(T_('Highlight'));
-            echo '<table class="tabledata';
+            echo '<table class="tabledata striped-rows';
             if (!$this->gridview) {
                 echo " disablegv";
             }
             echo '">';
             foreach ($userflags as $userflag) {
-                $class_name = ObjectTypeToClassNameMapper::map($userflag['type']);
-                $item       = new $class_name($userflag['id']);
+                $item = new Song($userflag);
                 $item->format();
-                $user = new User($userflag['user']);
-                $user->format();
 
                 if ($item->id) {
-                    echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
+                    echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
                         echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'],
-                                'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
+                            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
+                                'play', T_('Play'), 'play_song_' . $userflag);
+                            if (Stream_Playlist::check_autoplay_next()) {
+                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
+                                    'play_next', T_('Play next'),
+                                    'nextplay_song_' . $userflag);
+                            }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'] . '&append=true',
+                                echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
                                     'play_add', T_('Play last'),
-                                    'addplay_' . $userflag['type'] . '_' . $userflag['id']);
+                                    'addplay_song_' . $userflag);
                             }
                         }
-                        echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to temporary playlist'), 'play_full_' . $userflag['id']);
+                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
                         echo '</span></td>';
                     }
-                    echo '<td class=mash_cover>';
+                    echo '<td class=grid_cover>';
                     $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
                     echo '</td>';
@@ -159,10 +160,6 @@ class AmpacheCatalogFavorites
                     echo '<td class="optional">';
                     echo '<div style="white-space: normal;">' . $item->get_description() . '</div>';
                     echo '</div>';
-                    if ($this->gridview) {
-                        echo '<div style="float: right; opacity: 0.5;">' . T_('recommended by') . ' ' . $user->f_link . '</div>';
-                        echo '</div><br />';
-                    }
                     echo '</td></tr>';
 
                     $count++;

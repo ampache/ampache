@@ -25,10 +25,15 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Preference;
 
 /**
  * A collection of methods related to the user interface
@@ -51,7 +56,7 @@ class Ui implements UiInterface
     /**
      * find_template
      *
-     * Return the path to the template file wanted. The file can be overwriten
+     * Return the path to the template file wanted. The file can be overwritten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
      * @param string $template
@@ -79,6 +84,14 @@ class Ui implements UiInterface
         ob_end_clean();
         header("HTTP/1.1 403 $error");
         require_once self::find_template('show_denied.inc.php');
+    }
+
+    public function permissionDenied(string $fileName): void
+    {
+        // Clear any buffered crap
+        ob_end_clean();
+        header("HTTP/1.1 403 Permission Denied");
+        require_once self::find_template('show_denied_permission.inc.php');
     }
 
     /**
@@ -161,23 +174,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * flip_class
-     *
-     * First initialized with an array of two class names. Subsequent calls
-     * reverse the array then return the first element.
-     * @return mixed
-     */
-    public static function flip_class()
-    {
-        if (self::$_classes === null) {
-            self::$_classes = ['odd', 'even'];
-        }
-        self::$_classes = array_reverse(self::$_classes);
-
-        return self::$_classes[0];
-    }
-
-    /**
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
@@ -223,6 +219,7 @@ class Ui implements UiInterface
      * Parses a human-readable size
      * @param $value
      * @return string
+     * @noinspection PhpMissingBreakStatementInspection
      */
     public static function unformat_bytes($value)
     {
@@ -542,15 +539,15 @@ class Ui implements UiInterface
 
     public static function show_custom_style()
     {
-        if (AmpConfig::get('custom_login_background')) {
+        if (AmpConfig::get('custom_login_background', false)) {
             echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
         }
 
-        if (AmpConfig::get('custom_login_logo')) {
+        if (AmpConfig::get('custom_login_logo', false)) {
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon') ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
@@ -618,7 +615,7 @@ class Ui implements UiInterface
     {
         $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
-        if (filter_has_var(INPUT_COOKIE, $name)) {
+        if (isset($_COOKIE[$name])) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 
@@ -655,6 +652,25 @@ class Ui implements UiInterface
     }
 
     /**
+     * shows a simple continue button after an action
+     */
+    public function showContinue(
+        string $title,
+        string $text,
+        string $next_url
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+
+        if (substr_count($next_url, $webPath)) {
+            $path = $next_url;
+        } else {
+            $path = sprintf('%s/%s', $webPath, $next_url);
+        }
+
+        require Ui::find_template('show_continue.inc.php');
+    }
+
+    /**
      * This function is used to escape user data that is getting redisplayed
      * onto the page, it htmlentities the mojo
      * This is the inverse of the scrub_in function
@@ -665,6 +681,443 @@ class Ui implements UiInterface
             return '';
         }
 
-        return htmlentities((string) $string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
+        return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
+    }
+
+    /**
+     * takes the key and then creates the correct type of input for updating it
+     */
+    public function createPreferenceInput(
+        string $name,
+        $value
+    ) {
+        if (!Preference::has_access($name)) {
+            if ($value == '1') {
+                echo T_("Enabled");
+            } elseif ($value == '0') {
+                echo T_("Disabled");
+            } else {
+                if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
+                    echo "******";
+                } else {
+                    echo $value;
+                }
+            }
+
+            return;
+        } // if we don't have access to it
+
+        switch ($name) {
+            case 'display_menu':
+            case 'download':
+            case 'quarantine':
+            case 'upload':
+            case 'access_list':
+            case 'lock_songs':
+            case 'xml_rpc':
+            case 'force_http_play':
+            case 'no_symlinks':
+            case 'use_auth':
+            case 'access_control':
+            case 'allow_stream_playback':
+            case 'allow_democratic_playback':
+            case 'allow_localplay_playback':
+            case 'demo_mode':
+            case 'condPL':
+            case 'rio_track_stats':
+            case 'rio_global_stats':
+            case 'direct_link':
+            case 'ajax_load':
+            case 'now_playing_per_user':
+            case 'show_played_times':
+            case 'use_original_year':
+            case 'hide_single_artist':
+            case 'hide_genres':
+            case 'show_skipped_times':
+            case 'show_playlist_username':
+            case 'show_license':
+            case 'song_page_title':
+            case 'subsonic_backend':
+            case 'webplayer_flash':
+            case 'webplayer_html5':
+            case 'allow_personal_info_now':
+            case 'allow_personal_info_recent':
+            case 'allow_personal_info_time':
+            case 'allow_personal_info_agent':
+            case 'ui_fixed':
+            case 'autoupdate':
+            case 'autoupdate_lastversion_new':
+            case 'webplayer_confirmclose':
+            case 'webplayer_pausetabs':
+            case 'stream_beautiful_url':
+            case 'share':
+            case 'share_social':
+            case 'broadcast_by_default':
+            case 'album_group':
+            case 'topmenu':
+            case 'demo_clear_sessions':
+            case 'show_donate':
+            case 'allow_upload':
+            case 'upload_subdir':
+            case 'upload_user_artist':
+            case 'upload_allow_edit':
+            case 'daap_backend':
+            case 'upnp_backend':
+            case 'album_release_type':
+            case 'home_moment_albums':
+            case 'home_moment_videos':
+            case 'home_recently_played':
+            case 'api_hide_dupe_searches':
+            case 'home_now_playing':
+            case 'browser_notify':
+            case 'allow_video':
+            case 'geolocation':
+            case 'webplayer_aurora':
+            case 'upload_allow_remove':
+            case 'webdav_backend':
+            case 'notify_email':
+            case 'libitem_contextmenu':
+            case 'upload_catalog_pattern':
+            case 'catalogfav_gridview':
+            case 'personalfav_display':
+            case 'ratingmatch_write_tags':
+            case 'ratingmatch_flags':
+            case 'catalog_check_duplicate':
+            case 'browse_filter':
+            case 'sidebar_light':
+            case 'cron_cache':
+            case 'show_lyrics':
+            case 'unique_playlist':
+            case 'tadb_overwrite_name':
+            case 'mb_overwrite_name':
+            case 'subsonic_always_download':
+            case 'api_enable_3':
+            case 'api_enable_4':
+            case 'api_enable_5':
+                $is_true  = '';
+                $is_false = '';
+                if ($value == '1') {
+                    $is_true = "selected=\"selected\"";
+                } else {
+                    $is_false = "selected=\"selected\"";
+                }
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"1\" $is_true>" . T_('On') . "</option>\n";
+                echo "\t<option value=\"0\" $is_false>" . T_('Off') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'upload_catalog':
+                show_catalog_select('upload_catalog', $value, '', true);
+                break;
+            case 'play_type':
+                $is_stream     = '';
+                $is_localplay  = '';
+                $is_democratic = '';
+                $is_web_player = '';
+                switch ($value) {
+                    case 'localplay':
+                        $is_localplay = 'selected="selected"';
+                        break;
+                    case 'democratic':
+                        $is_democratic = 'selected="selected"';
+                        break;
+                    case 'web_player':
+                        $is_web_player = 'selected="selected"';
+                        break;
+                    default:
+                        $is_stream = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"\">" . T_('None') . "</option>\n";
+                if (AmpConfig::get('allow_stream_playback')) {
+                    echo "\t<option value=\"stream\" $is_stream>" . T_('Stream') . "</option>\n";
+                }
+                if (AmpConfig::get('allow_democratic_playback')) {
+                    echo "\t<option value=\"democratic\" $is_democratic>" . T_('Democratic') . "</option>\n";
+                }
+                if (AmpConfig::get('allow_localplay_playback')) {
+                    echo "\t<option value=\"localplay\" $is_localplay>" . T_('Localplay') . "</option>\n";
+                }
+                echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'playlist_type':
+                $is_m3u        = '';
+                $is_simple_m3u = '';
+                $is_pls        = '';
+                $is_asx        = '';
+                $is_ram        = '';
+                $is_xspf       = '';
+                switch ($value) {
+                    case 'simple_m3u':
+                        $is_simple_m3u = 'selected="selected"';
+                        break;
+                    case 'pls':
+                        $is_pls = 'selected="selected"';
+                        break;
+                    case 'asx':
+                        $is_asx = 'selected="selected"';
+                        break;
+                    case 'ram':
+                        $is_ram = 'selected="selected"';
+                        break;
+                    case 'xspf':
+                        $is_xspf = 'selected="selected"';
+                        break;
+                    case 'm3u':
+                    default:
+                        $is_m3u = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"m3u\" $is_m3u>" . T_('M3U') . "</option>\n";
+                echo "\t<option value=\"simple_m3u\" $is_simple_m3u>" . T_('Simple M3U') . "</option>\n";
+                echo "\t<option value=\"pls\" $is_pls>" . T_('PLS') . "</option>\n";
+                echo "\t<option value=\"asx\" $is_asx>" . T_('Asx') . "</option>\n";
+                echo "\t<option value=\"ram\" $is_ram>" . T_('RAM') . "</option>\n";
+                echo "\t<option value=\"xspf\" $is_xspf>" . T_('XSPF') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'lang':
+                $languages = get_languages();
+                echo '<select name="' . $name . '">' . "\n";
+                foreach ($languages as $lang => $tongue) {
+                    $selected = ($lang == $value) ? 'selected="selected"' : '';
+                    echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
+                } // end foreach
+                echo "</select>\n";
+                break;
+            case 'localplay_controller':
+                $controllers = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"\">" . T_('None') . "</option>\n";
+                foreach ($controllers as $controller) {
+                    if (!LocalPlay::is_enabled($controller)) {
+                        continue;
+                    }
+                    $is_selected = '';
+                    if ($value == $controller) {
+                        $is_selected = 'selected="selected"';
+                    }
+                    echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
+                } // end foreach
+                echo "</select>\n";
+                break;
+            case 'api_force_version':
+                $is_0 = '';
+                $is_3 = '';
+                $is_4 = '';
+                $is_5 = '';
+                if ($value == 0) {
+                    $is_0 = 'selected="selected"';
+                } elseif ($value == 3) {
+                    $is_3 = 'selected="selected"';
+                } elseif ($value == 4) {
+                    $is_4 = 'selected="selected"';
+                } elseif ($value == 5) {
+                    $is_5 = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
+                echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
+                echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
+                echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'ratingmatch_stars':
+                $is_0 = '';
+                $is_1 = '';
+                $is_2 = '';
+                $is_3 = '';
+                $is_4 = '';
+                $is_5 = '';
+                if ($value == 0) {
+                    $is_0 = 'selected="selected"';
+                } elseif ($value == 1) {
+                    $is_1 = 'selected="selected"';
+                } elseif ($value == 2) {
+                    $is_2 = 'selected="selected"';
+                } elseif ($value == 3) {
+                    $is_3 = 'selected="selected"';
+                } elseif ($value == 4) {
+                    $is_4 = 'selected="selected"';
+                } elseif ($value == 5) {
+                    $is_5 = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\" $is_0>" . T_('Disabled') . "</option>\n";
+                echo "<option value=\"1\" $is_1>" . T_('1 Star') . "</option>\n";
+                echo "<option value=\"2\" $is_2>" . T_('2 Stars') . "</option>\n";
+                echo "<option value=\"3\" $is_3>" . T_('3 Stars') . "</option>\n";
+                echo "<option value=\"4\" $is_4>" . T_('4 Stars') . "</option>\n";
+                echo "<option value=\"5\" $is_5>" . T_('5 Stars') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'localplay_level':
+                $is_user    = '';
+                $is_admin   = '';
+                $is_manager = '';
+                if ($value == '25') {
+                    $is_user = 'selected="selected"';
+                } elseif ($value == '100') {
+                    $is_admin = 'selected="selected"';
+                } elseif ($value == '50') {
+                    $is_manager = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
+                echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
+                echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
+                echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'theme_name':
+                $themes = get_themes();
+                echo "<select name=\"$name\">\n";
+                foreach ($themes as $theme) {
+                    $is_selected = "";
+                    if ($value == $theme['path']) {
+                        $is_selected = "selected=\"selected\"";
+                    }
+                    echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
+                } // foreach themes
+                echo "</select>\n";
+                break;
+            case 'theme_color':
+                // This include a two-step configuration (first change theme and save, then change theme color and save)
+                $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+                if ($theme_cfg !== null) {
+                    echo "<select name=\"$name\">\n";
+                    foreach ($theme_cfg['colors'] as $color) {
+                        $is_selected = "";
+                        if ($value == strtolower((string) $color)) {
+                            $is_selected = "selected=\"selected\"";
+                        }
+                        echo "\t<option value=\"" . strtolower((string) $color) . "\" $is_selected>" . $color . "</option>\n";
+                    } // foreach themes
+                    echo "</select>\n";
+                }
+                break;
+            case 'playlist_method':
+                $is_send       = '';
+                $is_send_clear = '';
+                $is_clear      = '';
+                $is_default    = '';
+                if ($value == 'send') {
+                    $is_send = 'selected="selected"';
+                } elseif ($value == 'send_clear') {
+                    $is_send_clear = 'selected="selected"';
+                } elseif ($value == 'clear') {
+                    $is_clear = 'selected="selected"';
+                } elseif ($value == 'default') {
+                    $is_default = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"send\"$is_send>" . T_('Send on Add') . "</option>\n";
+                echo "\t<option value=\"send_clear\"$is_send_clear>" . T_('Send and Clear on Add') . "</option>\n";
+                echo "\t<option value=\"clear\"$is_clear>" . T_('Clear on Send') . "</option>\n";
+                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'transcode':
+                $is_never   = '';
+                $is_default = '';
+                $is_always  = '';
+                if ($value == 'never') {
+                    $is_never = 'selected="selected"';
+                } elseif ($value == 'default') {
+                    $is_default = 'selected="selected"';
+                } elseif ($value == 'always') {
+                    $is_always = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"never\"$is_never>" . T_('Never') . "</option>\n";
+                echo "\t<option value=\"default\"$is_default>" . T_('Default') . "</option>\n";
+                echo "\t<option value=\"always\"$is_always>" . T_('Always') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'album_sort':
+                $is_sort_year_asc  = '';
+                $is_sort_year_desc = '';
+                $is_sort_name_asc  = '';
+                $is_sort_name_desc = '';
+                $is_sort_default   = '';
+                if ($value == 'year_asc') {
+                    $is_sort_year_asc = 'selected="selected"';
+                } elseif ($value == 'year_desc') {
+                    $is_sort_year_desc = 'selected="selected"';
+                } elseif ($value == 'name_asc') {
+                    $is_sort_name_asc = 'selected="selected"';
+                } elseif ($value == 'name_desc') {
+                    $is_sort_name_desc = 'selected="selected"';
+                } else {
+                    $is_sort_default = 'selected="selected"';
+                }
+
+                echo "<select name=\"$name\">\n";
+                echo "\t<option value=\"default\" $is_sort_default>" . T_('Default') . "</option>\n";
+                echo "\t<option value=\"year_asc\" $is_sort_year_asc>" . T_('Year ascending') . "</option>\n";
+                echo "\t<option value=\"year_desc\" $is_sort_year_desc>" . T_('Year descending') . "</option>\n";
+                echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
+                echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'disabled_custom_metadata_fields':
+                $ids             = explode(',', $value);
+                $options         = array();
+                $fieldRepository = new MetadataField();
+                foreach ($fieldRepository->findAll() as $field) {
+                    $selected  = in_array($field->getId(), $ids) ? ' selected="selected"' : '';
+                    $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
+                }
+                echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+                break;
+            case 'personalfav_playlist':
+            case 'personalfav_smartlist':
+                $ids       = explode(',', $value);
+                $options   = array();
+                $playlists = ($name == 'personalfav_smartlist') ? Playlist::get_details('search') : Playlist::get_details();
+                if (!empty($playlists)) {
+                    foreach ($playlists as $list_id => $list_name) {
+                        $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
+                        $options[] = '<option value="' . $list_id . '"' . $selected . '>' . $list_name . '</option>';
+                    }
+                    echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+                }
+                break;
+            case 'lastfm_grant_link':
+            case 'librefm_grant_link':
+                // construct links for granting access Ampache application to Last.fm and Libre.fm
+                $plugin_name = ucfirst(str_replace('_grant_link', '', $name));
+                $plugin      = new Plugin($plugin_name);
+                $url         = $plugin->_plugin->url;
+                $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
+                $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                /* HINT: Plugin Name */
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                break;
+            default:
+                if (preg_match('/_pass$/', $name)) {
+                    echo '<input type="password" name="' . $name . '" value="******" />';
+                } else {
+                    echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
+                }
+                break;
+        }
+    }
+
+    /**
+     * This shows the preference box for the preferences pages.
+     *
+     * @var array<string, mixed> $preferences
+     */
+    public function showPreferenceBox(array $preferences): void
+    {
+        $this->show(
+            'show_preference_box.inc.php',
+            [
+                'preferences' => $preferences,
+                'ui' => $this
+            ]
+        );
     }
 }

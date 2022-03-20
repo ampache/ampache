@@ -23,11 +23,15 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
+use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -36,8 +40,10 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * This is a wrapper for all of the different database cleaning
@@ -51,27 +57,36 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private UserActivityRepositoryInterface $useractivityRepository;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
-        UserActivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;
         $this->useractivityRepository = $useractivityRepository;
+        $this->userRepository         = $userRepository;
     }
 
     public function collect(): void
     {
         Song::garbage_collection();
         $this->albumRepository->collectGarbage();
-        Artist::garbage_collection();
         Video::garbage_collection();
+        Podcast_Episode::garbage_collection();
+        Wanted::garbage_collection();
+        Artist::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
         Rating::garbage_collection();
         Userflag::garbage_collection();
+        Label::garbage_collection();
+        Recommendation::garbage_collection();
         $this->useractivityRepository->collectGarbage();
+        $this->userRepository->collectGarbage();
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
@@ -80,5 +95,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
+
+        Catalog::garbage_collect_mapping();
     }
 }

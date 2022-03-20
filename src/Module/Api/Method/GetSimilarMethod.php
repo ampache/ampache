@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class GetSimilarMethod
 {
-    private const ACTION = 'get_similar';
+    public const ACTION = 'get_similar';
 
     /**
      * get_similar
@@ -53,7 +53,7 @@ final class GetSimilarMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar(array $input)
+    public static function get_similar(array $input): bool
     {
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
@@ -61,7 +61,7 @@ final class GetSimilarMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array($type, array('song', 'artist'))) {
+        if (!in_array(strtolower($type), array('song', 'artist'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -89,16 +89,15 @@ final class GetSimilarMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type, $user->id);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::indexes($objects, $type, $user->id);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                XML_Data::set_offset($input['offset'] ?? 0);
+                XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::indexes($objects, $type, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

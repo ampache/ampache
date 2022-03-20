@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SongDeleteMethod
 {
-    private const ACTION = 'song_delete';
+    public const ACTION = 'song_delete';
 
     /**
      * song_delete
@@ -50,7 +50,7 @@ final class SongDeleteMethod
      * filter = (string) UID of song to delete
      * @return boolean
      */
-    public static function song_delete(array $input)
+    public static function song_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -72,12 +72,11 @@ final class SongDeleteMethod
         }
         if (static::getSongDeleter()->delete($song)) {
             Api::message('song ' . $object_id . ' deleted', $input['api_format']);
+            Catalog::count_table('song');
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Catalog::count_table('song');
-        Session::extend($input['auth']);
 
         return true;
     }

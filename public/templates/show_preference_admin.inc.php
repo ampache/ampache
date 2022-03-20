@@ -25,7 +25,7 @@ use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Preferences')); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_preference" />
   <col id="col_level" />
@@ -36,7 +36,7 @@ Ui::show_box_top(T_('Preferences')); ?>
 </tr>
 <?php foreach ($preferences as $preference) {
     unset($is_25, $is_5, $is_100); ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td class="cel_preference"><?php echo scrub_out(T_($preference['description'])); ?></td>
     <td class="cel_level">
         <?php $level_name = "is_" . $preference['level'];

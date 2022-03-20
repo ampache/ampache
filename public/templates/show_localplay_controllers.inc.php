@@ -24,9 +24,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
+/** @var array $controllers */
+
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -44,13 +46,13 @@ $web_path = AmpConfig::get('web_path'); ?>
             }
             $localplay->format();
             if (LocalPlay::is_enabled($controller)) {
-                $action        = 'confirm_uninstall_localplay';
-                $action_txt    = T_('Disable');
+                $action     = 'confirm_uninstall_localplay';
+                $action_txt = T_('Disable');
             } else {
-                $action        = 'install_localplay';
-                $action_txt    = T_('Enable');
+                $action     = 'install_localplay';
+                $action_txt = T_('Enable');
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
             <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
             <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
@@ -58,7 +60,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </tr>
         <?php
         } if (!count($controllers)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="4"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php

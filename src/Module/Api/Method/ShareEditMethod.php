@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class ShareEditMethod
 {
-    private const ACTION = 'share_edit';
+    public const ACTION = 'share_edit';
 
     /**
      * share_edit
@@ -53,7 +53,7 @@ final class ShareEditMethod
      * description = (string) update description //optional
      * @return boolean
      */
-    public static function share_edit(array $input)
+    public static function share_edit(array $input): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,14 +63,14 @@ final class ShareEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user     = User::get_from_username(Session::username($input['auth']));
         $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list())) {
+        if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);
-            $description = isset($input['description']) ? $input['description'] : $share->description;
-            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
-            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
-            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
-            $user        = User::get_from_username(Session::username($input['auth']));
+            $description = (isset($input['description'])) ? filter_var($input['description'], FILTER_SANITIZE_STRING) : $share->description;
+            $stream      = (isset($input['stream'])) ? filter_var($input['stream'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_stream;
+            $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
+            $expires     = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) : $share->expire_days;
 
             $data = array(
                 'max_counter' => $share->max_counter,
@@ -89,7 +89,6 @@ final class ShareEditMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

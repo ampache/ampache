@@ -50,7 +50,7 @@ final class UploadArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -65,7 +65,7 @@ final class UploadArtAction extends AbstractArtAction
 
         // we didn't find anything
         if (empty($_FILES['file']['tmp_name'])) {
-            $this->ui->showConfirmation(
+            $this->ui->showContinue(
                 T_('There Was a Problem'),
                 T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'),
                 $burl
@@ -82,22 +82,21 @@ final class UploadArtAction extends AbstractArtAction
         if ($image_data !== '') {
             $art = $this->modelFactory->createArt($item->id, $object_type);
             if ($art->insert($image_data, $_FILES['file']['type'])) {
-                $this->ui->showConfirmation(
+                $this->ui->showContinue(
                     T_('No Problem'),
                     T_('Art has been added'),
                     $burl
                 );
             } else {
-                $this->ui->showConfirmation(
+                $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Art file failed to insert, check the dimensions are correct.'),
                     $burl
                 );
             }
-        }
-        // Else it failed
-        else {
-            $this->ui->showConfirmation(
+        } else {
+            // Else it failed
+            $this->ui->showContinue(
                 T_('There Was a Problem'),
                 T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'),
                 $burl

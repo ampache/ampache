@@ -24,92 +24,76 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DisableActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
+    /** @var UiInterface|null */
     private MockInterface $ui;
 
-    /** @var MockInterface|ModelFactoryInterface|null */
+    /** @var ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
-    /** @var MockInterface|UserStateTogglerInterface|null */
-    private MockInterface $userStateToggler;
+    /** @var ConfigContainerInterface|null */
+    private MockInterface $configContainer;
 
     private ?DisableAction $subject;
 
     public function setUp(): void
     {
-        $this->ui               = $this->mock(UiInterface::class);
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
-        $this->userStateToggler = $this->mock(UserStateTogglerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new DisableAction(
             $this->ui,
             $this->modelFactory,
-            $this->userStateToggler
+            $this->configContainer
         );
     }
 
-    public function testRunDisablesUser(): void
+    public function testRunThrowsExceptionIfAccessDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    public function testRunReturnsNullIfDemoModeIsEnabled(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->mock(User::class);
-
-        $userId       = 42;
-        $userFullName = 'some-full-name';
-        $userName     = 'some-name';
-
-        $user->fullname = $userFullName;
-        $user->username = $userName;
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['user_id' => (string) $userId]);
-
-        $this->modelFactory->shouldReceive('createUser')
-            ->with($userId)
-            ->once()
-            ->andReturn($user);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
 
-        $this->userStateToggler->shouldReceive('disable')
-            ->with($user)
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnTrue();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showConfirmation')
-            ->with(
-                'No Problem',
-                /* HINT: Username and fullname together: Username (fullname) */
-                sprintf('%s (%s) has been disabled', $user->username, $user->fullname),
-                'admin/users.php'
-            )
-            ->once();
 
         $this->assertNull(
             $this->subject->run(
@@ -119,18 +103,16 @@ class DisableActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunShowsErrorOnFailure(): void
+    public function testRunRendersConfirmation(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $user       = $this->mock(User::class);
 
-        $userId       = 42;
-        $userFullName = 'some-full-name';
-        $userName     = 'some-name';
+        $userId   = 42;
+        $username = 'some-name';
 
-        $user->fullname = $userFullName;
-        $user->username = $userName;
+        $user->fullname = $username;
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -147,8 +129,8 @@ class DisableActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->userStateToggler->shouldReceive('disable')
-            ->with($user)
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
 
@@ -163,9 +145,14 @@ class DisableActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('showConfirmation')
             ->with(
-                'There Was a Problem',
-                'You need at least one active Administrator account',
-                'admin/users.php'
+                'Are You Sure?',
+                sprintf('This will disable the user "%s"', $username),
+                sprintf(
+                    'admin/users.php?action=confirm_disable&amp;user_id=%s',
+                    $userId
+                ),
+                1,
+                'disable_user'
             )
             ->once();
 

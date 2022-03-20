@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\AutoUpdate;
@@ -36,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class SystemUpdateMethod
 {
-    private const ACTION = 'system_update';
+    public const ACTION = 'system_update';
 
     /**
      * system_update
@@ -47,9 +49,10 @@ final class SystemUpdateMethod
      * @param array $input
      * @return boolean
      */
-    public static function system_update(array $input)
+    public static function system_update(array $input): bool
     {
-        $user = User::get_from_username(Session::username($input['auth']));
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $updated = false;
 
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -58,6 +61,7 @@ final class SystemUpdateMethod
             // run the update
             AutoUpdate::update_files(true);
             AutoUpdate::update_dependencies(static::getConfigContainer(), true);
+            Preference::translate_db();
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
@@ -65,6 +69,15 @@ final class SystemUpdateMethod
 
                 return false;
             }
+            $updated = true;
+        }
+        // update the database
+        if (Update::need_update()) {
+            if (Update::run_update()) {
+                $updated = true;
+            }
+        }
+        if ($updated) {
             // there was an update and it was successful
             Api::message('update successful', $input['api_format']);
             Session::extend($input['auth']);
@@ -73,7 +86,6 @@ final class SystemUpdateMethod
         }
         //no update available but you are an admin so tell them
         Api::message('No update available', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -36,6 +36,8 @@ use Ampache\Module\System\Session;
  */
 final class UserPreferencesMethod
 {
+    public const ACTION = 'user_preferences';
+
     /**
      * user_preferences
      * MINIMUM_API_VERSION=5.0.0
@@ -51,7 +53,7 @@ final class UserPreferencesMethod
         User::fix_preferences($user->id);
 
         $preferences  = Preference::get_all($user->id);
-        $output_array =  array('preference' => $preferences);
+        $output_array = array('preference' => $preferences);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
@@ -59,6 +61,5 @@ final class UserPreferencesMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
     }
 }

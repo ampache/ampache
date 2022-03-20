@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class CatalogsMethod
@@ -50,11 +51,12 @@ final class CatalogsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function catalogs(array $input)
+    public static function catalogs(array $input): bool
     {
         // filter for specific catalog types
-        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = Catalog::get_catalogs($filter);
+        $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $catalogs = Catalog::get_catalogs($filter, $user->id);
 
         if (empty($catalogs)) {
             Api::empty('catalog', $input['api_format']);
@@ -65,16 +67,15 @@ final class CatalogsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::catalogs($catalogs);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::catalogs($catalogs);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

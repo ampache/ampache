@@ -89,11 +89,11 @@ class AmpacheXbmc extends localplay_controller
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`port` INT( 11 ) UNSIGNED NOT NULL , " . "`user` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`pass` VARCHAR( 255 ) COLLATE $collation NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `user` VARCHAR(255) COLLATE $collation NOT NULL, `pass` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -125,16 +125,12 @@ class AmpacheXbmc extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) " . "VALUES (?, ?, ?, ?, ?, ?)";
+        $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
+        $user_id = !empty(Core::get_global('user'))
+            ? Core::get_global('user')->id
+            : -1;
 
-        return Dba::query($sql, array(
-            $data['name'],
-            $data['host'],
-            $data['port'],
-            $data['user'],
-            $data['pass'],
-            Core::get_global('user')->id
-        ));
+        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['password'] ?? null, $user_id));
     } // add_instance
 
     /**
@@ -208,9 +204,9 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
-        $sql        = ($instance < 1) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -219,20 +215,17 @@ class AmpacheXbmc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @param string $user_id
      * @return boolean
      */
-    public function set_active_instance($uid, $user_id = '')
+    public function set_active_instance($uid)
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
-
-        Preference::update('xbmc_active', $user_id, $uid);
+        Preference::update('xbmc_active', $user->id, $uid);
         AmpConfig::set('xbmc_active', $uid, true);
+        debug_event('xbmc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     } // set_active_instance
@@ -273,10 +266,10 @@ class AmpacheXbmc extends localplay_controller
     /**
      * delete_track
      * Delete a track from the xbmc playlist
-     * @param $track
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($track)
+    public function delete_track($object_id)
     {
         if (!$this->_xbmc) {
             return false;
@@ -285,7 +278,7 @@ class AmpacheXbmc extends localplay_controller
         try {
             $this->_xbmc->Playlist->Remove(array(
                 'playlistid' => $this->_playlistId,
-                'position' => $track
+                'position' => $object_id
             ));
 
             return true;
@@ -629,7 +622,7 @@ class AmpacheXbmc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     if ($song != null) {
-                        $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
+                        $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                     }
                 }
                 if (!$data['name']) {
@@ -682,10 +675,10 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($array['track']);
                 $song     = new Song($url_data['oid']);
-                if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
+                if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
                     $array['track_title']  = $song->title;
-                    $array['track_artist'] = $song->get_artist_name();
-                    $array['track_album']  = $song->get_album_name();
+                    $array['track_artist'] = $song->get_artist_fullname();
+                    $array['track_album']  = $song->get_album_fullname();
                 }
             } catch (XBMC_RPC_Exception $ex) {
                 debug_event(self::class, 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);

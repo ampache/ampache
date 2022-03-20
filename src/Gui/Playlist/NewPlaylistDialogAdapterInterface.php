@@ -29,7 +29,7 @@ interface NewPlaylistDialogAdapterInterface
 
     public function getObjectType(): string;
 
-    public function getObjectId(): int;
+    public function getObjectIds(): string;
 
     public function getNewPlaylistTitle(): string;
 }

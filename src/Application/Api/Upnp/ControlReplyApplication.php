@@ -42,7 +42,7 @@ final class ControlReplyApplication implements ApplicationInterface
         // Make sure beautiful url is enabled
         // (including upnp)
         debug_event('control-reply', "\r\nEntering control-reply", 5);
-        AmpConfig::set('stream_beautiful_url', true, true);  // XXX needs t be false true
+        AmpConfig::set('stream_beautiful_url', true, true); // XXX needs t be false true
 
         // set_time_limit(600); // may be ok, disabled in testing
         // Response type should be text/xml, not text/html; libupnp checks this and borks if it's incorrect
@@ -51,7 +51,7 @@ final class ControlReplyApplication implements ApplicationInterface
         header("Content-Type: text/xml; charset=UTF-8");
         //header("Content-Type: text/html; charset=UTF-8" );
 
-        header("Content-length: 200");  // set up the header for modification later
+        header("Content-length: 200"); // set up the header for modification later
 
         // Parse the request from UPnP player
         $requestRaw = file_get_contents('php://input');
@@ -84,8 +84,8 @@ final class ControlReplyApplication implements ApplicationInterface
         debug_event('control-reply', 'Action: ' . $upnpRequest['action'] . ' with filter [' . $filter . ']', 5);
         switch ($upnpRequest['action']) {
             case 'systemupdateID':
-                // Should reflect changes to the database; Catalog::GetLaststUpdate() doesn't cut it though
-                // debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
+                // Should reflect changes to the database; Catalog::GetLatestUpdate() doesn't cut it though
+                //debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
                 $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
                 $soapXML = "<?xml version=\"1.0\"?>" .
                     "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
@@ -140,14 +140,14 @@ final class ControlReplyApplication implements ApplicationInterface
                             'upnp:class' => 'object.container',
                         );
                     } else {
-                        $filter = '*';      // Some devices don't seem to specify a sensible filter (may remove)
+                        $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
                         //$items[] = array();
                         $items[]                  = Upnp_Api::_musicMetadata('');
                         $items[]                  = Upnp_Api::_videoMetadata('');
                         list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
-                        debug_event('control-reply', 'Root items returning' . $items[0] . $items[1] , 5);
-                        // debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
-                        // debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
+                        debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
+                        //debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
+                        //debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
                     }
                 } else {
                     /**

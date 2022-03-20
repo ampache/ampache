@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -42,28 +44,52 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error3(int $code, string $message): string
+    {
+        return Xml3_Data::error(
+            $code,
+            $message
+        );
+    }
+
+    /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error4(int $code, string $message): string
+    {
+        return Xml4_Data::error(
+            $code,
+            $message
+        );
+    }
+
+    /**
      * At the moment, this method just acts as a proxy
      *
      * @param integer[] $albums
      * @param array $include
      * @param integer|null $user_id
-     * @param bool $fullXml
-     * @param int $limit
-     * @param int $offset
+     * @param bool $encode
+     * @param bool $asObject
+     * @param integer $limit
+     * @param integer $offset
      *
-     * @return array|string
+     * @return string
      */
     public function albums(
         array $albums,
         array $include = [],
         ?int $user_id = null,
-        bool $fullXml = true,
+        bool $encode = true,
+        bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ) {
         Xml_Data::set_offset($offset);
         Xml_Data::set_limit($limit);
 
-        return Xml_Data::albums($albums, $include, $user_id, $fullXml);
+        return Xml_Data::albums($albums, $include, $user_id, $encode);
     }
 }

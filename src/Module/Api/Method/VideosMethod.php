@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class VideosMethod
 {
-    private const ACTION = 'videos';
+    public const ACTION = 'videos';
 
     /**
      * videos
@@ -51,7 +51,7 @@ final class VideosMethod
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function videos(array $input)
+    public static function videos(array $input): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,8 +63,8 @@ final class VideosMethod
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
 
         $video_ids = $browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -77,16 +77,15 @@ final class VideosMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::videos($video_ids, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::videos($video_ids, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

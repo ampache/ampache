@@ -20,13 +20,15 @@
  *
  */
 
-/* HINT: Democratic Playlist Name */
-
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Democratic;
 
+/** @var Democratic $democratic */
+
+/* HINT: Democratic Playlist Name */
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
 Ui::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">
@@ -64,21 +66,21 @@ Ui::show_box_top($string, 'info-box'); ?>
             if (obj.checked) {
                 setTimeout(function() {
                     if (obj.checked) {
-                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!filter_has_var(INPUT_GET, 'reloadpage')) {
+                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) {
         echo " + '&reloadpage=1'";
     } ?>;
                     }
                 }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
         }
-        <?php if (filter_has_var(INPUT_GET, 'reloadpage')) { ?>
+        <?php if (isset($_GET['reloadpage'])) { ?>
         $(document).ready(function() {
             reloadPageChanged(document.getElementById('chkreloadpage'));
         });
         <?php
     } ?>
     </script>
-    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (filter_has_var(INPUT_GET, 'reloadpage')) {
+    <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) {
         echo "checked";
     } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>

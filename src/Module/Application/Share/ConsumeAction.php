@@ -26,6 +26,9 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Batch\DefaultAction;
+use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -35,7 +38,7 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,20 +46,24 @@ final class ConsumeAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'consume';
 
-    private ConfigContainerInterface $configContainer;
+    private RequestParserInterface $requestParser;
 
-    private UiInterface $ui;
+    private ConfigContainerInterface $configContainer;
 
     private NetworkCheckerInterface $networkChecker;
 
+    private ContainerInterface $dic;
+
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        ContainerInterface $dic
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
-        $this->ui              = $ui;
         $this->networkChecker  = $networkChecker;
+        $this->dic             = $dic;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,7 +74,7 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+        $action = $_REQUEST['action'] ?? '';
 
         /**
          * If Access Control is turned on then we don't
@@ -85,7 +92,7 @@ final class ConsumeAction implements ApplicationActionInterface
             }
         } // access_control is enabled
 
-        $share_id = Core::get_request('id');
+        $share_id = $this->requestParser->getFromRequest('id');
         $secret   = $_REQUEST['secret'];
 
         $share = new Share($share_id);
@@ -107,12 +114,13 @@ final class ConsumeAction implements ApplicationActionInterface
                 $_REQUEST['action']                    = 'download';
                 $_REQUEST['type']                      = $share->object_type;
                 $_REQUEST[$share->object_type . '_id'] = $share->object_id;
-                require __DIR__ . '/../../../../public/stream.php';
+
+                return $this->dic->get(DownloadAction::class)->run($request, $gatekeeper);
             } else {
                 $_REQUEST['action'] = $share->object_type;
                 $_REQUEST['id']     = $share->object_id;
-                $object_type        = $share->object_type;
-                require __DIR__ . '/../../../../public/batch.php';
+
+                return $this->dic->get(DefaultAction::class)->run($request, $gatekeeper);
             }
         } elseif ($action == 'stream') {
             require Ui::find_template('show_share.inc.php');

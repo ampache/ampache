@@ -59,7 +59,7 @@ final class AddLabelAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false ||
-            !Core::form_verify('add_label', 'post')
+            !Core::form_verify('add_label')
         ) {
             throw new AccessDeniedException();
         }
@@ -67,10 +67,10 @@ final class AddLabelAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Remove unauthorized defined values from here
-        if (filter_has_var(INPUT_POST, 'user')) {
+        if (isset($_POST['user'])) {
             unset($_POST['user']);
         }
-        if (filter_has_var(INPUT_POST, 'creation_date')) {
+        if (isset($_POST['creation_date'])) {
             unset($_POST['creation_date']);
         }
 

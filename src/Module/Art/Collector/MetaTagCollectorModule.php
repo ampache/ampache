@@ -61,7 +61,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * itself
      *
      * @param Art $art
-     * @param int $limit
+     * @param integer $limit
      * @param array $data
      *
      * @return array
@@ -75,12 +75,12 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $limit = 5;
         }
 
-        if ($art->type == "video") {
+        if ($art->type == 'video') {
             $data = $this->gatherVideoTags($art);
         } elseif ($art->type == 'album' || $art->type == 'artist') {
             $data = $this->gatherSongTags($art, $limit);
         } elseif (($art->type == 'song') && (AmpConfig::get('gather_song_art', false))) {
-            $data = $this->gatherSsongTagsSingle($art, $limit);
+            $data = $this->gatherSongTagsSingle($art, $limit);
         } else {
             $data = [];
         }
@@ -95,11 +95,12 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $video = new Video($art->uid);
 
-        return $this->gatherMediaTags($video);
+        return $this->gatherMediaTags($video, 'video', array());
     }
 
     /**
      * Gather tags from audio files.
+     * @param Art $art
      * @param integer $limit
      * @return array
      */
@@ -107,11 +108,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         // We need the filenames
         if ($art->type == 'album') {
-            $album = new Album($art->uid);
-            $songs = $this->songRepository->getByAlbum((int) $album->id);
+            $songs = $this->songRepository->getByAlbum($art->uid);
         } else {
-            $artist = new Artist($art->uid);
-            $songs  = $this->songRepository->getByArtist($artist);
+            $songs  = $this->songRepository->getByArtist($art->uid);
         }
 
         $data  = [];
@@ -119,7 +118,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $data = array_merge($data, $this->gatherMediaTags($song));
+            $data = $this->gatherMediaTags($song, $art->type, $data);
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
@@ -130,14 +129,15 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     /**
-     * Gather tags from files.
+     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
      * @param Song|Video $media
+     * @param string $art_type
+     * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media)
+    private function gatherMediaTags($media, $art_type, $data)
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        $data   = [];
         try {
             $id3 = $this->getID3->analyze($media->file);
         } catch (Exception $error) {
@@ -147,26 +147,107 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             );
         }
 
+        // stop collecting dupes for each album/]/
+        $raw_array = array();
+        foreach ($data as $image) {
+            $raw_array[] = $image['raw'];
+        }
+
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['mime'],
-                'title' => 'ID3'
-            );
+            if (array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                $raw_array[] = $image['data'];
+                $data[]      = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3 asf'
+                );
+            }
         }
 
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
-                if ($image['picturetypeid'] == $this_picturetypeid) {
-                    $data[] = [
+                if ($art_type == 'artist' && array_key_exists('picturetypeid', $image) && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    $this->logger->debug(
+                        'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                } elseif (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['picturetypeid']);
+                    $data[]      = [
                         $mtype => $media->file,
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
-                        'title' => 'ID3'
+                        'title' => 'ID3 ' . $type
+                    ];
+                }
+            }
+        }
+
+        if (isset($id3['id3v2']['PIC'])) {
+            // Foreach in case they have more than one
+            foreach ($id3['id3v2']['PIC'] as $image) {
+                if ($art_type == 'artist' && array_key_exists('picturetypeid', $image) && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    $this->logger->debug(
+                        'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                } elseif (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['picturetypeid']);
+                    $data[]      = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $type
+                    ];
+                }
+            }
+        }
+
+        if (isset($id3['flac']['PICTURE'])) {
+            // Foreach in case they have more than one
+            foreach ($id3['flac']['PICTURE'] as $image) {
+                if ($art_type == 'artist' && array_key_exists('typeid', $image) && !in_array((int)$image['typeid'], array(0, 7, 8, 9, 10, 11, 12))) {
+                    $this->logger->debug(
+                        'Skipping picture id ' . $image['typeid'] . ' for artist search',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                } elseif (isset($image['typeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $type        = self::getPictureType((int)$image['typeid']);
+                    $data[]      = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $type
+                    ];
+                }
+            }
+        }
+
+        if (isset($id3['comments']['picture'])) {
+            // Foreach in case they have more than one
+            foreach ($id3['comments']['picture'] as $image) {
+                if (isset($image['picturetype']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $data[]      = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $image['picturetype']
+                    ];
+                }
+                if (isset($image['description']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                    $raw_array[] = $image['data'];
+                    $data[]      = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['image_mime'],
+                        'title' => 'ID3 ' . $image['description']
                     ];
                 }
             }
@@ -178,20 +259,83 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from single song instead of full album
      * (taken from function gather_song_tags with some changes)
-     * @param int $limit
+     * @param integer $limit
      * @return array
      */
-    public function gatherSsongTagsSingle(Art $art, $limit = 5)
+    public function gatherSongTagsSingle(Art $art, $limit = 5)
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);
-        $data = array();
-        $data = array_merge($data, $this->gatherMediaTags($song));
+        $data = $this->gatherMediaTags($song, 'song', array());
 
         if ($limit && count($data) >= $limit) {
             return array_slice($data, 0, $limit);
         }
 
         return $data;
+    }
+
+    public function gatherTagsDirectFromSong($song_id, $type)
+    {
+        // get song object directly from id, not by loop through album
+        $song = new Song($song_id);
+        $data = $this->gatherMediaTags($song, $type, array());
+
+        return $data;
+    }
+
+    /**
+     * Get the type of picture being returned (https://id3.org/id3v2.3.0#Attached_picture)
+     * Flac also uses the id3.org specs.
+     * @param int $picture_type
+     * @return string
+     */
+    public static function getPictureType(int $picture_type)
+    {
+        switch ($picture_type) {
+            case 1:
+                return '32x32 PNG Icon';
+            case 2:
+                return 'Other Icon';
+            case 3:
+                return 'Front Cover';
+            case 4:
+                return 'Back Cover';
+            case 5:
+                return 'Leaflet';
+            case 6:
+                return 'Media';
+            case 7:
+                return 'Lead Artist';
+            case 8:
+                return 'Artist';
+            case 9:
+                return 'Conductor';
+            case 10:
+                return 'Band';
+            case 11:
+                return 'Composer';
+            case 12:
+                return 'Lyricist';
+            case 13:
+                return 'Recording Studio or Location';
+            case 14:
+                return 'Recording Session';
+            case 15:
+                return 'Performance';
+            case 16:
+                return 'Capture from Movie or Video';
+            case 17:
+                return 'Bright(ly) Colored Fish';
+            case 18:
+                return 'Illustration';
+            case 19:
+                return 'Band Logo';
+            case 20:
+                return 'Publisher Logo';
+            case 0:
+            default:
+                return 'Other';
+        }
     }
 }

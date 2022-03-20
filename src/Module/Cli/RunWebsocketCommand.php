@@ -40,14 +40,14 @@ final class RunWebsocketCommand extends Command
         ConfigContainerInterface $configContainer,
         WebSocketFactoryInterface $webSocketFactory
     ) {
-        parent::__construct('run:websocket', 'Runs a Websocket');
+        parent::__construct('run:websocket', T_('Run a Websocket'));
 
         $this->configContainer  = $configContainer;
         $this->webSocketFactory = $webSocketFactory;
 
         $this
-            ->option('-p|--port', 'The port for the socket', 'intval', static::DEFAULT_PORT)
-            ->usage('<bold>  run:websocket</end> <comment>-p 8888</end> ## Runs the websocket on port 8888<eol/>');
+            ->option('-p|--port', T_('Listening port, default 8100'), 'intval', static::DEFAULT_PORT)
+            ->usage('<bold>  run:websocket</end> <comment>-p 8888</end> ## ' . T_('Run the websocket on port 8888') . '<eol/>');
     }
 
     public function execute(): void

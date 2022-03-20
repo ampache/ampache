@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
@@ -209,8 +210,9 @@ class AmpacheRss
      * into an xml document if we so wished
      * @return array
      */
-    public static function load_now_playing()
+    public static function load_now_playing($rsstoken = "")
     {
+        unset($rsstoken);
         $data = Stream::get_now_playing();
 
         $results    = array();
@@ -233,7 +235,7 @@ class AmpacheRss
             }
             $xml_array = array(
                 'title' => $title,
-                'link' => $song->link,
+                'link' => $song->get_link(),
                 'description' => $description,
                 'comments' => $client->f_name . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
@@ -282,11 +284,12 @@ class AmpacheRss
             $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
                 $song->format();
+                $description =  '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->f_name . '</p><p>' . T_('Artist') . ': ' . $song->f_artist_full . '</p><p>' . T_('Album') . ': ' . $song->f_album_full . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
                 $xml_array = array(
-                    'title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                    'link' => str_replace('&amp;', '&', $song->link),
-                    'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
+                    'title' => $song->f_name . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                    'link' => str_replace('&amp;', '&', $song->get_link()),
+                    'description' => $description,
                     'comments' => $client->username,
                     'pubDate' => date("r", (int)$item['date'])
                 );
@@ -302,28 +305,23 @@ class AmpacheRss
      * This loads in the latest added albums
      * @return array
      */
-    public static function load_latest_album()
+    public static function load_latest_album($rsstoken = "")
     {
-        $ids = Stats::get_newest('album', 10);
+        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $ids  = Stats::get_newest('album', 10, 0, 0, $user->id);
 
         $results = array();
 
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
-            $album->format();
 
             $xml_array = array(
-                'title' => $album->f_name,
-                'link' => $album->link,
-                'description' => $album->f_artist_name . ' - ' . $album->f_name,
+                'title' => $album->get_fullname(),
+                'link' => $album->get_link(),
+                'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
-                'pubDate' => date(
-                    'c',
-                    static::getAlbumRepository()->getFirstSongAddTime(
-                        $album->id
-                    )
-                )
+                'pubDate' => date('c', $album->addition_time)
             );
             $results[] = $xml_array;
         } // end foreach
@@ -336,9 +334,10 @@ class AmpacheRss
      * This loads in the latest added artists
      * @return array
      */
-    public static function load_latest_artist()
+    public static function load_latest_artist($rsstoken = "")
     {
-        $ids = Stats::get_newest('artist', 10);
+        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $ids  = Stats::get_newest('artist', 10, 0, 0, $user->id);
 
         $results = array();
 
@@ -347,8 +346,8 @@ class AmpacheRss
             $artist->format();
 
             $xml_array = array(
-                'title' => $artist->f_name,
-                'link' => $artist->link,
+                'title' => $artist->get_fullname(),
+                'link' => $artist->get_link(),
                 'description' => $artist->summary,
                 'image' => Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
@@ -365,9 +364,10 @@ class AmpacheRss
      * This loads in the latest added shouts
      * @return array
      */
-    public static function load_latest_shout()
+    public static function load_latest_shout($rsstoken = "")
     {
-        $ids = Shoutbox::get_top(10);
+        unset($rsstoken);
+        $ids  = Shoutbox::get_top(10);
 
         $results = array();
 
@@ -381,7 +381,7 @@ class AmpacheRss
 
                 $xml_array = array(
                     'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
-                    'link' => $object->link,
+                    'link' => $object->get_link(),
                     'description' => $shout->text,
                     'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
                     'comments' => '',
@@ -407,16 +407,6 @@ class AmpacheRss
 
         return $element['date'];
     } // pubdate_recently_played
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
 
     /**
      * @deprecated Inject by constructor

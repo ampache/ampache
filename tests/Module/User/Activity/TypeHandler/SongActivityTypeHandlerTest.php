@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -36,66 +33,32 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
     /** @var UserActivityRepositoryInterface|MockInterface|null */
     private MockInterface $useractivityRepository;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?SongActivityTypeHandler $subject;
 
     public function setUp(): void
     {
         $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new SongActivityTypeHandler(
-            $this->useractivityRepository,
-            $this->modelFactory
+            $this->useractivityRepository
         );
     }
 
     public function testRegisterActivityRegisterAlbumActivity(): void
     {
-        $song = $this->mock(Song::class);
-
         $objectId             = 666;
         $objectType           = 'some-object-type';
         $action               = 'some-action';
         $userId               = 42;
         $date                 = 123;
-        $albumName            = 'some-album-name';
-        $artistName           = 'some-artist-name';
-        $songName             = 'some-song-name';
-        $songMusicBrainzId    = 'some-song-mbid';
-        $albumMusicBrainzId   = 'some-album-mbid';
-        $artistMusicBrainzId  = 'some-artist-mbid';
 
-        $this->modelFactory->shouldReceive('createSong')
-            ->with($objectId)
-            ->once()
-            ->andReturn($song);
-
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->f_title     = $songName;
-        $song->f_artist    = $artistName;
-        $song->f_album     = $albumName;
-        $song->mbid        = $songMusicBrainzId;
-        $song->artist_mbid = $artistMusicBrainzId;
-        $song->album_mbid  = $albumMusicBrainzId;
-
-        $this->useractivityRepository->shouldReceive('registerSongEntry')
+        $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
                 $objectType,
                 $objectId,
-                $date,
-                $songName,
-                $artistName,
-                $albumName,
-                $songMusicBrainzId,
-                $artistMusicBrainzId,
-                $albumMusicBrainzId
+                $date
             )
             ->once();
 
@@ -110,23 +73,11 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
 
     public function testRegisterActivityRegisterGenericActivity(): void
     {
-        $song = $this->mock(Song::class);
-
         $objectId   = 666;
         $objectType = 'some-object-type';
         $action     = 'some-action';
         $userId     = 42;
         $date       = 123;
-
-        $this->modelFactory->shouldReceive('createSong')
-            ->with($objectId)
-            ->once()
-            ->andReturn($song);
-
-        $song->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $song->f_title             = '';
 
         $this->useractivityRepository->shouldReceive('registerGenericEntry')
             ->with(

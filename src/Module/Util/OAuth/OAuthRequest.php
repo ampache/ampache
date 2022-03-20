@@ -65,7 +65,7 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme      = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
+        $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
         $http_url    = ($http_url) ? $http_url : $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = ($http_method) ? $http_method : $_SERVER['REQUEST_METHOD'];
 
@@ -154,7 +154,7 @@ class OAuthRequest
      */
     public function get_parameter($name)
     {
-        return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+        return $this->parameters[$name] ?? null;
     }
 
     /**
@@ -196,7 +196,7 @@ class OAuthRequest
      *
      * The base string defined as the method, the url
      * and the parameters (normalized), each urlencoded
-     * and the concated with &.
+     * and the concatenated with &.
      */
     public function get_signature_base_string()
     {
@@ -212,7 +212,7 @@ class OAuthRequest
     }
 
     /**
-     * just uppercases the http method
+     * just uppercase the http method
      */
     public function get_normalized_http_method()
     {
@@ -337,7 +337,7 @@ class OAuthRequest
     private static function generate_nonce()
     {
         $mtime = microtime();
-        $rand  = mt_rand();
+        $rand  = bin2hex(random_bytes(20));
 
         return md5($mtime . $rand); // md5s look nicer than numbers
     }

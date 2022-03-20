@@ -62,7 +62,7 @@ final class CreateAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
-            !Core::form_verify('add_podcast', 'post')
+            !Core::form_verify('add_podcast')
         ) {
             throw new AccessDeniedException();
         }

@@ -24,25 +24,26 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 
+/** @var array $artists */
+/** @var array $songs */
 ?>
 
 <?php if ($artists) { ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Artists'); ?></label>
-        <?php foreach ($artists as $a) { ?>
+        <?php foreach ($artists as $artistArray) { ?>
             <div class="np_cell cel_similar_artist">
             <?php
-                if ($a['id'] === null) {
-                    if (AmpConfig::get('wanted') && $a['mbid']) {
-                        echo "<a class=\"missing_album\" href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $a['mbid'] . "\" title=\"" . scrub_out($a['name']) . "\">" . scrub_out($a['name']) . "</a>";
+                if ($artistArray['id'] === null) {
+                    if (AmpConfig::get('wanted') && $artistArray['mbid']) {
+                        echo "<a class=\"missing_album\" href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $artistArray['mbid'] . "\" title=\"" . scrub_out($artistArray['name']) . "\">" . scrub_out($artistArray['name']) . "</a>";
                     } else {
-                        echo scrub_out($a['name']);
+                        echo scrub_out($artistArray['name']);
                     }
                 } else {
-                    $artist = new Artist($a['id']);
-                    $artist->format();
-                    echo $artist->f_link;
+                    $artist = new Artist($artistArray['id']);
+                    echo $artist->get_f_link();
                 } ?>
             </div>
         <?php
@@ -56,12 +57,10 @@ use Ampache\Repository\Model\Song;
 <div class="np_group similars">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Songs'); ?></label>
-        <?php foreach ($songs as $s) { ?>
+        <?php foreach ($songs as $songArray) { ?>
             <div class="np_cell cel_similar_song">
-            <?php
-                $song = new Song($s['id']);
-            $song->format();
-            echo $song->f_link; ?>
+            <?php $song = new Song($songArray['id']);
+            echo $song->get_f_link(); ?>
             </div>
         <?php
         } ?>

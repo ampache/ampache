@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class SystemPreferenceMethod
 {
-    private const ACTION = 'system_preference';
+    public const ACTION = 'system_preference';
 
     /**
      * system_preference
@@ -48,7 +48,7 @@ final class SystemPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference(array $input)
+    public static function system_preference(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -57,7 +57,7 @@ final class SystemPreferenceMethod
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name  = (string) $input['filter'];
+        $pref_name  = (string)($input['filter'] ?? '');
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -72,7 +72,6 @@ final class SystemPreferenceMethod
             default:
                 echo Xml_Data::object_array($preference, 'preference');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

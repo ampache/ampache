@@ -22,11 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -41,19 +40,19 @@ $web_path = AmpConfig::get('web_path'); ?>
         foreach ($plugins as $plugin_name) {
             $plugin            = new Plugin($plugin_name);
             $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-            if (!$installed_version) {
+            if ($installed_version == 0) {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
-                    $action .= '&nbsp;&nbsp;<a href="' . $web_path .
+                    $action .= '</br><a href="' . $web_path .
                     '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td class="cel_name"><?php echo scrub_out($plugin->_plugin->name); ?></td>
             <td class="cel_description"><?php echo scrub_out($plugin->_plugin->description); ?></td>
             <td class="cel_version"><?php echo scrub_out($plugin->_plugin->version); ?></td>
@@ -62,7 +61,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </tr>
         <?php
         } if (!count($plugins)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="5"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php

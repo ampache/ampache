@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 /**
- * The ConfigContainer is a containment for all of ampaches configuration data
+ * The ConfigContainer is a containment for all of Ampache's configuration data
  */
 interface ConfigContainerInterface
 {
@@ -37,8 +37,7 @@ interface ConfigContainerInterface
 
     /**
      * Compatibility accessor for direct access to the config array
-     *
-     * @deprecated Use a single method for each config key
+     * Please use single methods for common keys
      */
     public function get(string $configKey);
 

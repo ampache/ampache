@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceCreateMethod
 {
-    private const ACTION = 'preference_create';
+    public const ACTION = 'preference_create';
 
     /**
      * preference_create
@@ -56,7 +56,7 @@ final class PreferenceCreateMethod
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return boolean
      */
-    public static function preference_create(array $input)
+    public static function preference_create(array $input): bool
     {
         $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
@@ -65,7 +65,7 @@ final class PreferenceCreateMethod
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string) $input['filter'];
+        $pref_name = (string)($input['filter'] ?? '');
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
@@ -75,7 +75,7 @@ final class PreferenceCreateMethod
             return false;
         }
         $type = (string) $input['type'];
-        if (!in_array($type, array('boolean', 'integer', 'string', 'special'))) {
+        if (!in_array(strtolower($type), array('boolean', 'integer', 'string', 'special'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -109,7 +109,6 @@ final class PreferenceCreateMethod
         }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -27,7 +27,12 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$thcount = 6; ?>
+/** @var Ampache\Repository\Model\Browse $browse */
+
+$thcount  = 7;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
@@ -44,17 +49,15 @@ $thcount = 6; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
-            <?php if (Art::is_enabled()) {
-    ++$thcount; ?>
-                <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
-            <?php
-} ?>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
+            <th class="cel_country optional"><?php echo T_('Country');  ?></th>
+            <th class="cel_status optional"><?php echo T_('Status');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -64,13 +67,13 @@ $thcount = 6; ?>
         foreach ($object_ids as $label_id) {
             $libitem = new Label($label_id);
             $libitem->format(); ?>
-        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <tr id="label_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
         <?php
@@ -78,13 +81,12 @@ $thcount = 6; ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <?php if (Art::is_enabled()) { ?>
-                <th class="cel_cover"><?php echo T_('Art'); ?></th>
-            <?php
-        } ?>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists');  ?></th>
+            <th class="cel_country optional"><?php echo T_('Country');  ?></th>
+            <th class="cel_status optional"><?php echo T_('Status');  ?></th>
             <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

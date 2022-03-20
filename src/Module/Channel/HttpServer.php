@@ -129,7 +129,6 @@ final class HttpServer implements HttpServerInterface
                         $key                  = array_search($sock, $read_socks);
                         $stream_clients[$key] = $options;
                         break;
-
                     case '/':
                     case '/status.xsl':
                         // Stream request
@@ -139,15 +138,13 @@ final class HttpServer implements HttpServerInterface
                         fwrite($sock, "\r\n");
 
                         // Create xsl structure
-
                         // Header
-                        $xsl = "";
-                        $xsl .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n";
+                        $xsl = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . "\n";
                         $xsl .= "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" . "\n";
                         $xsl .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">" . "\n";
                         $xsl .= "<head>" . "\n";
                         $xsl .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" . "\n";
-                        $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_("Ampache") . "</title>" . "\n";
+                        $xsl .= "<title>" . T_("Icecast Streaming Media Server") . " - " . T_('Ampache') . "</title>" . "\n";
                         $xsl .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />" . "\n";
                         $xsl .= "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
                         $xsl .= "</head>" . "\n";
@@ -212,7 +209,7 @@ final class HttpServer implements HttpServerInterface
                         $xsl .= "</tr>" . "\n";
                         $currentsong = "";
                         if ($channel->media) {
-                            $currentsong = $channel->media->f_artist . " - " . $channel->media->f_title;
+                            $currentsong = $channel->media->f_artist . " - " . $channel->media->get_fullname();
                         }
                         $xsl .= "<tr>" . "\n";
                         $xsl .= "<td>Current Song:</td>" . "\n";
@@ -239,7 +236,6 @@ final class HttpServer implements HttpServerInterface
                         fclose($sock);
                         unset($client_socks[array_search($sock, $client_socks)]);
                         break;
-
                     case '/style.css':
                     case '/favicon.ico':
                     case '/images/corner_bottomleft.jpg':

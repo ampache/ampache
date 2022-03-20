@@ -53,7 +53,7 @@ final class ClearArtAction extends AbstractArtAction
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
         $burl = '';
-        if (filter_has_var(INPUT_GET, 'burl')) {
+        if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
         }
 
@@ -68,7 +68,7 @@ final class ClearArtAction extends AbstractArtAction
 
         $this->ui->showHeader();
 
-        $this->ui->showConfirmation(
+        $this->ui->showContinue(
             T_('No Problem'),
             T_('Art information has been removed from the database'),
             $burl

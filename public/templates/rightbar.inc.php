@@ -30,6 +30,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
+$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
 ?>
 <script>
     function ToggleRightbarVisibility()
@@ -43,7 +44,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 </script>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
     </li>
     <?php if (Access::check('interface', 25)) { ?>
         <li id="pl_add">
@@ -55,12 +56,12 @@ use Ampache\Module\Util\ZipHandlerInterface;
             <?php
             global $dic;
             $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
-                Core::get_global('user')->id
+                $user_id
             );
             foreach ($playlists as $playlist) {
                 ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->name, 'rb_append_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->get_fullname(), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php
             } ?>
@@ -81,7 +82,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 <?php
     } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
       <?php echo Ui::get_icon('add', T_('Add dynamic items')); ?>
@@ -105,13 +106,13 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
     if (AmpConfig::get('play_type') == 'localplay') {
         require_once Ui::find_template('show_localplay_control.inc.php');
     } ?>
-<ul id="rb_current_playlist">
+<ul id="rb_current_playlist" class="striped-rows">
 
 <?php
     $objects = array();
 
     // FIXME :: this is kludgy
-    if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
+    if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
     } ?>
     <script>
@@ -135,7 +136,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         $objects   = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
+    $normal_array = array('broadcast', 'channel', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
 
     foreach ($objects as $object_data) {
         $uid  = $object_data['track_id'];
@@ -143,19 +144,19 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         if (in_array($type, $normal_array)) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
             $object     = new $class_name(array_shift($object_data));
-            $object->format();
-        } ?>
-    <li class="<?php echo Ui::flip_class(); ?>" >
+            $object->format(); ?>
+    <li>
       <?php echo $object->f_link; ?>
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
+        }
     } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php
     } ?>
 <?php if (isset($truncated)) { ?>
-    <li class="<?php echo Ui::flip_class(); ?>">
+    <li>
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
 <?php

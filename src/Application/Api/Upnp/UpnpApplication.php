@@ -53,7 +53,7 @@ final class UpnpApplication implements ApplicationInterface
             if (Core::get_get('btnSendAuto') !== '') {
                 echo '<meta http-equiv="refresh" content="1">';
             } ?>
-            <title><?php echo T_("Ampache") . " " . T_("UPnP"); ?></title>
+            <title><?php echo T_('Ampache') . " " . T_('UPnP'); ?></title>
             <style media="screen">
                 body {
                     color:black;

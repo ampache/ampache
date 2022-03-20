@@ -29,6 +29,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Config\AmpConfig;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -56,7 +57,7 @@ final class AddSongAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $playlist->add_songs(array($_REQUEST['song_id']), (bool) AmpConfig::get('unique_playlist'));
+        $playlist->add_songs(array($_REQUEST['song_id']));
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

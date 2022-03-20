@@ -71,12 +71,9 @@ class AmpachePersonalFavorites
             return false;
         }
 
-        Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean',
-            'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer',
-            'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer',
-            'plugins', $this->name);
+        Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
+        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -125,7 +122,7 @@ class AmpachePersonalFavorites
             if (!empty($list_array)) {
                 echo '<div class="home_plugin">';
                 UI::show_box_top(T_('Favorite Lists'));
-                echo '<table class="tabledata';
+                echo '<table class="tabledata striped-rows';
                 echo " disablegv";
                 echo '">';
                 $count = 0;
@@ -134,8 +131,8 @@ class AmpachePersonalFavorites
                     $this->user->format();
 
                     if ($item[0]->id) {
-                        echo '<tr id="playlist_' . $item[0]->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
-                        echo '<td>' . $item[0]->f_link . '</td>';
+                        echo '<tr id="playlist_' . $item[0]->id . '" class="libitem_menu">';
+                        echo '<td style="height: 50px;">' . $item[0]->get_f_link() . '</td>';
                         echo '<td style="height: auto;">';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
@@ -151,11 +148,9 @@ class AmpachePersonalFavorites
                             }
                         }
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'add',
-                            T_('Add to temporary playlist'), 'play_full_' . $item[0]->id);
+                            T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
-                        echo '<div style="white-space: normal;">' . $item[0]->description . '</div>';
-                        echo '</div>';
                         echo '</td></tr>';
 
                         $count++;

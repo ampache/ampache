@@ -24,10 +24,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Random;
 
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,16 +38,44 @@ final class GetAdvancedAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'get_advanced';
 
+    private UiInterface $ui;
+
+    private VideoRepositoryInterface $videoRepository;
+
+    public function __construct(
+        UiInterface $ui,
+        SongRepositoryInterface $songRepository,
+        VideoRepositoryInterface $videoRepository
+    ) {
+        $this->ui              = $ui;
+        $this->songRepository  = $songRepository;
+        $this->videoRepository = $videoRepository;
+    }
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds = Random::advanced($_REQUEST['type'], $_POST);
+        $objectIds   = Random::advanced($_REQUEST['type'], $_POST);
+        $objectType  = ($_REQUEST['type'] == 'video')
+            ? 'video'
+            : 'song';
 
         // We need to add them to the active playlist
         if (!empty($objectIds)) {
             foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                Core::get_global('user')->playlist->add_object($object_id, $objectType);
             }
         }
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_random.inc.php',
+            [
+                'videoRepository' => $this->videoRepository,
+                'object_ids' => $objectIds
+            ]
+        );
+        $this->ui->showQueryStats();
+        $this->ui->showFooter();
 
         return null;
     }

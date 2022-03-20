@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
@@ -98,21 +99,23 @@ class Catalog_subsonic extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`username` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_subsonic` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['uri']      = array('description' => T_('URI'), 'type' => 'url');
         $fields['username'] = array('description' => T_('Username'), 'type' => 'text');
         $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
@@ -306,7 +309,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function verify_catalog_proc()
     {
@@ -333,7 +336,7 @@ class Catalog_subsonic extends Catalog
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
 
-        return $art->insert($image, '');
+        return $art->insert($image);
     }
 
     /**
@@ -360,13 +363,13 @@ class Catalog_subsonic extends Catalog
                     $remove = true;
                 }
             } catch (Exception $error) {
-                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'Clean error: ' . $error->getMessage(), 5);
             }
 
             if (!$remove) {
-                debug_event('subsonic.catalog', 'keeping song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'keeping song', 5);
             } else {
-                debug_event('subsonic.catalog', 'removing song', 5, 'ampache-catalog');
+                debug_event('subsonic.catalog', 'removing song', 5);
                 $dead++;
                 Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
@@ -384,6 +387,71 @@ class Catalog_subsonic extends Catalog
     public function move_catalog_proc($new_path)
     {
         return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        $remote = AmpConfig::get('cache_remote');
+        $path   = (string)AmpConfig::get('cache_path', '');
+        $target = AmpConfig::get('cache_target');
+        // need a destination, source and target format
+        if (!is_dir($path) || !$remote || !$target) {
+            debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+
+            return false;
+        }
+        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+
+        // If the user's crazy, that's no skin off our back
+        if ($user_bit_rate > $max_bitrate) {
+            $max_bitrate = $user_bit_rate;
+        }
+        $options    = array(
+            'format' => $target,
+            'maxBitRate' => $max_bitrate
+        );
+        $subsonic   = $this->createClient();
+        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $target_file = Catalog::get_cache_path($row['id'], $this->id);
+            $file_exists = ($target_file !== false && is_file($target_file));
+            $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
+            if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
+                $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
+                $old_file_exists = is_file($old_target_file);
+                if ($old_file_exists) {
+                    // check for the old path first
+                    rename($old_target_file, $target_file);
+                    debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
+                } else {
+                    try {
+                        $filehandle = fopen($target_file, 'w');
+                        $options    = array(
+                            CURLOPT_RETURNTRANSFER => 1,
+                            CURLOPT_FILE => $filehandle,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_PIPEWAIT => 1,
+                            CURLOPT_URL => $remote_url,
+                        );
+                        $curl = curl_init();
+                        curl_setopt_array($curl, $options);
+                        curl_exec($curl);
+                        curl_close($curl);
+                        fclose($filehandle);
+                        debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
+                    } catch (Exception $error) {
+                        debug_event('subsonic.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

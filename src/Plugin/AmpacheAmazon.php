@@ -65,16 +65,11 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string',
-            'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins',
-            $this->name);
-        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins',
-            $this->name);
-        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string',
-            'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins',
-            $this->name);
+        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -212,10 +207,9 @@ class AmpacheAmazon
             $search_results  = array_merge($search_results, $raw_results);
             $pages_to_search = min($max_pages_to_search, $amazon->_maxPage);
             debug_event('amazon.plugin',
-                "Searched results page " . ($amazon->_currentPage + 1) . "/" . $pages_to_search, 5);
+                "Searched results page " . ($amazon->_currentPage + 1) . '/' . $pages_to_search, 5);
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
-
 
         // Only do the second search if the first actually returns something
         if (count($search_results)) {

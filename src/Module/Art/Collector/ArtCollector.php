@@ -27,6 +27,7 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -58,6 +59,7 @@ final class ArtCollector implements ArtCollectorInterface
 
     /**
      * This tries to get the art in question
+     * @param Art $art
      * @param array $options
      * @param integer $limit
      * @return array
@@ -105,13 +107,23 @@ final class ArtCollector implements ArtCollectorInterface
             $limit        = is_null($search_limit) ? static::ART_SEARCH_LIMIT : $search_limit;
         }
 
+        if ($type == 'playlist') {
+            $this->logger->notice(
+                "Method used: playlist",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            $playlist = new Playlist($art->uid);
+
+            return $playlist->gather_art($limit);
+        }
+
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($artOrder as $method) {
             $data = [];
-            if (in_array($method, $plugin_names)) {
+            if (in_array(strtolower($method), $plugin_names)) {
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version) {
+                if ($installed_version > 0) {
                     if ($plugin->load(Core::get_global('user'))) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }

@@ -28,8 +28,13 @@ interface LastFmQueryInterface
 {
     /**
      * Runs a last.fm query and returns the parsed results
+     *
+     * @throws Exception\LastFmQueryFailedException
      */
     public function getLastFmResults(string $method, string $query): SimpleXMLElement;
 
+    /**
+     * @throws Exception\LastFmQueryFailedException
+     */
     public function queryLastFm(string $url): SimpleXMLElement;
 }

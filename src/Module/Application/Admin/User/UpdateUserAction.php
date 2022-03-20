@@ -68,7 +68,7 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('edit_user', 'post')) {
+        if (!Core::form_verify('edit_user')) {
             throw new AccessDeniedException();
         }
 
@@ -85,7 +85,7 @@ final class UpdateUserAction extends AbstractUserAction
         $pass2           = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $state           = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $city            = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $fullname_public = filter_has_var(INPUT_POST, 'fullname_public');
+        $fullname_public = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
         $client = new User($user_id);
@@ -95,7 +95,7 @@ final class UpdateUserAction extends AbstractUserAction
             AmpError::add('username', T_("A Username is required"));
         } else {
             if ($username != $client->username) {
-                if ($this->userRepository->findByUsername($username) !== null) {
+                if ($this->userRepository->idByUsername($username) > 0) {
                     AmpError::add('username', T_("That Username already exists"));
                 }
             }

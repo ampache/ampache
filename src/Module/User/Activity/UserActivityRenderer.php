@@ -51,7 +51,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
         Useractivity $useractivity
     ): string {
         // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('userflags') || !$useractivity->id) {
+        if (!AmpConfig::get('ratings') || !$useractivity->id) {
             return '';
         }
 

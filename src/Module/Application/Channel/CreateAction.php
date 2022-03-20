@@ -61,7 +61,7 @@ final class CreateAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !Core::form_verify('add_channel', 'post')
+            !Core::form_verify('add_channel')
         ) {
             throw new AccessDeniedException();
         }
@@ -79,8 +79,8 @@ final class CreateAction implements ApplicationActionInterface
             $_REQUEST['admin_password'],
             isset($_REQUEST['private']) ? 1 : 0,
             $_REQUEST['max_listeners'],
-            $_REQUEST['random'] ?: 0,
-            $_REQUEST['loop'] ?: 0,
+            $_REQUEST['random'] ?? 0,
+            $_REQUEST['loop'] ?? 0,
             $_REQUEST['stream_type'],
             $_REQUEST['bitrate']
         );

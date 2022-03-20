@@ -19,9 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
 declare(strict_types=0);
-
 
 namespace Ampache\Plugin;
 
@@ -44,8 +42,7 @@ class AmpacheFriendsTimeline
     public $min_ampache = '370040';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
 
     /**
@@ -104,7 +101,8 @@ class AmpacheFriendsTimeline
     public function display_home()
     {
         if (AmpConfig::get('sociable')) {
-            $user_id = Core::get_global('user')->id;
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? false;
             if ($user_id) {
                 echo '<div class="home_plugin">';
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(

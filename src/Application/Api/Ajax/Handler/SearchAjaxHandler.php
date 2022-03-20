@@ -39,15 +39,11 @@ use Ampache\Repository\AlbumRepositoryInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
-    private AlbumRepositoryInterface $albumRepository;
-
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
-        AlbumRepositoryInterface $albumRepository,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
-        $this->albumRepository     = $albumRepository;
         $this->missingArtistFinder = $missingArtistFinder;
     }
 
@@ -56,11 +52,11 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'search':
-                $search = $_REQUEST['search'];
-                $target = $_REQUEST['target'];
-                $limit  = $_REQUEST['limit'] ?: 5;
-
-                $results = array();
+                $web_path = AmpConfig::get('web_path');
+                $search   = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
+                $target   = $_REQUEST['target'] ?? '';
+                $limit    = $_REQUEST['limit'] ?? 5;
+                $results  = array();
 
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = array(
@@ -78,13 +74,12 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $artistid) {
-                        $artist = new Artist($artistid);
-                        $artist->format(false);
+                        $artist    = new Artist($artistid);
                         $results[] = array(
                             'type' => T_('Artists'),
-                            'link' => $artist->link,
-                            'label' => $artist->name,
-                            'value' => $artist->name,
+                            'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
+                            'label' => scrub_out($artist->get_fullname()),
+                            'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
                             'image' => Art::url($artist->id, 'artist', null, 10),
                         );
@@ -107,18 +102,13 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $albumid) {
-                        $album = new Album($albumid);
-                        $album->format(true);
-                        $a_title = $album->f_title;
-                        if ($album->disk && !$album->allow_group_disks && count($this->albumRepository->getAlbumSuite($album)) > 1) {
-                            $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
-                        }
+                        $album     = new Album($albumid);
                         $results[] = array(
                             'type' => T_('Albums'),
-                            'link' => $album->link,
-                            'label' => $a_title,
-                            'value' => $album->f_title,
-                            'rels' => $album->f_artist,
+                            'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
+                            'label' => scrub_out($album->get_fullname()),
+                            'value' => scrub_out($album->get_fullname()),
+                            'rels' => scrub_out($album->get_album_artist_fullname()),
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
                     }
@@ -141,16 +131,16 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($sres as $songid) {
-                        $song = new Song($songid);
-                        $song->format(false);
-                        $art_object = ($show_song_art) ? $song->id : $song->album;
-                        $art_type   = ($show_song_art) ? 'song' : 'album';
+                        $song       = new Song($songid);
+                        $has_art    = Art::has_db($song->id, 'song');
+                        $art_object = ($show_song_art && $has_art) ? $song->id : $song->album;
+                        $art_type   = ($show_song_art && $has_art) ? 'song' : 'album';
                         $results[]  = array(
                             'type' => T_('Songs'),
-                            'link' => $song->link,
-                            'label' => $song->f_title_full,
-                            'value' => $song->f_title_full,
-                            'rels' => $song->f_artist_full,
+                            'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
+                            'label' => scrub_out($song->title),
+                            'value' => scrub_out($song->title),
+                            'rels' => scrub_out($song->get_artist_fullname()),
                             'image' => Art::url($art_object, $art_type, null, 10),
                         );
                     }
@@ -172,13 +162,12 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $playlistid) {
-                        $playlist = new Playlist($playlistid);
-                        $playlist->format(false);
+                        $playlist  = new Playlist($playlistid);
                         $results[] = array(
                             'type' => T_('Playlists'),
-                            'link' => $playlist->link,
+                            'link' => $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
-                            'value' => $playlist->name,
+                            'value' => $playlist->get_fullname(),
                             'rels' => '',
                             'image' => '',
                         );
@@ -202,11 +191,10 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $labelid) {
-                        $label = new Label($labelid);
-                        $label->format(false);
+                        $label     = new Label($labelid);
                         $results[] = array(
                             'type' => T_('Labels'),
-                            'link' => $label->link,
+                            'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
                             'label' => $label->name,
                             'value' => $label->name,
                             'rels' => '',
@@ -222,8 +210,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $results[] = array(
                             'type' => T_('Missing Artists'),
                             'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
-                            'label' => $artist['name'],
-                            'value' => $artist['name'],
+                            'label' => scrub_out($artist['name']),
+                            'value' => scrub_out($artist['name']),
                             'rels' => '',
                             'image' => '',
                         );
@@ -252,8 +240,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
                     foreach ($sres as $user_id) {
-                        $user = new User($user_id);
-                        $user->format();
+                        $user      = new User($user_id);
                         $avatar    = $user->get_avatar();
                         $results[] = array(
                             'type' => T_('Users'),
@@ -261,7 +248,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
-                            'image' => $avatar['url'] ?: '',
+                            'image' => $avatar['url'] ?? '',
                         );
                     }
                 }

@@ -45,12 +45,12 @@ class easy_captcha_text_math_formula extends easy_captcha
     #-- simple IS-EQUAL check
 
     /**
-     * @param $result
+     * @param $input
      * @return boolean
      */
-    public function solved($result = null)
+    public function solved($input = null)
     {
-        return (int)$this->solution == (int)$result;
+        return (int)$this->solution == (int)$input;
     }
 
     #-- make new captcha formula string
@@ -97,7 +97,7 @@ class easy_captcha_text_math_formula extends easy_captcha
         list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
         if ($Y) {
             $calc = array(
-                "/" => $X / $Y,
+                '/' => $X / $Y,
                 // PHP+ZendVM catches division by zero already, and CAPTCHA "attacker" would get no advantage herefrom anyhow
                 "*" => $X * $Y,
                 "+" => $X + $Y,

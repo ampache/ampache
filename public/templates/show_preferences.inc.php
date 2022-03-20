@@ -29,6 +29,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
+
+/** @var UiInterface $ui */
+/** @var array<string, mixed> $preferences */
+/** @var string $fullname */
 
 ?>
 <?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
@@ -36,7 +41,7 @@ use Ampache\Module\Util\Ui;
     debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
-<?php show_preference_box($preferences[$_REQUEST['tab']]); ?>
+<?php $ui->showPreferenceBox(($preferences[$_REQUEST['tab']] ?? [])); ?>
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />
     <?php echo Core::form_register('update_preference'); ?>

@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PodcastEditMethod
 {
-    private const ACTION = 'podcast_edit';
+    public const ACTION = 'podcast_edit';
 
     /**
      * podcast_edit
@@ -56,7 +56,7 @@ final class PodcastEditMethod
      * copyright   = (string) //optional
      * @return boolean
      */
-    public static function podcast_edit(array $input)
+    public static function podcast_edit(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -80,13 +80,13 @@ final class PodcastEditMethod
             return false;
         }
 
-        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
-        $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
-        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
-        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
-        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
-        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
-        $data           = array(
+        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->feed;
+        $title       = (array_key_exists('title', $input)) ? scrub_in($input['title']) : $podcast->title;
+        $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->website;
+        $description = (array_key_exists('description', $input)) ? scrub_in($input['description']) : $podcast->description;
+        $generator   = (array_key_exists('generator', $input)) ? scrub_in($input['generator']) : $podcast->generator;
+        $copyright   = (array_key_exists('copyright', $input)) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $data        = array(
             'feed' => $feed,
             'title' => $title,
             'website' => $website,
@@ -100,7 +100,6 @@ final class PodcastEditMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

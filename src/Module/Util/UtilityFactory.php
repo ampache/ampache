@@ -24,13 +24,56 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * Factory to create utility classes like Mailer
  */
 final class UtilityFactory implements UtilityFactoryInterface
 {
+    private UserRepositoryInterface $userRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    private LoggerInterface $logger;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger
+    ) {
+        $this->userRepository  = $userRepository;
+        $this->configContainer = $configContainer;
+        $this->logger          = $logger;
+    }
+
     public function createMailer(): MailerInterface
     {
         return new Mailer();
+    }
+
+    public function createVaInfo(
+        string $file,
+        array $gatherTypes = [],
+        ?string $encoding = null,
+        ?string $encodingId3v1 = null,
+        string $dirPattern = '',
+        string $filePattern = '',
+        bool $isLocal = true
+    ): VaInfoInterface {
+        return new VaInfo(
+            $this->userRepository,
+            $this->configContainer,
+            $this->logger,
+            $file,
+            $gatherTypes,
+            $encoding,
+            $encodingId3v1,
+            $dirPattern,
+            $filePattern,
+            $isLocal
+        );
     }
 }

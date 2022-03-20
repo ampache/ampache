@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -41,7 +42,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
         $action  = Core::get_request('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'delete_track':
                 // Create the object and remove the track
                 $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -99,7 +100,9 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     foreach ($item_ids as $iid) {
                         $class_name = ObjectTypeToClassNameMapper::map($item_type);
                         $libitem    = new $class_name($iid);
-                        $medias     = array_merge($medias, $libitem->get_medias());
+                        if ($libitem->id) {
+                            $medias = array_merge($medias, $libitem->get_medias());
+                        }
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
@@ -108,7 +111,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                 if (count($medias) > 0) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias, (bool) AmpConfig::get('unique_playlist'));
+                    $playlist->add_medias($medias);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();

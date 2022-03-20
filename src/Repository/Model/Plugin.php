@@ -88,7 +88,6 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($name);
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event(__CLASS__, 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (!$plugin->is_valid()) {
@@ -96,7 +95,6 @@ class Plugin
                     continue;
                 }
                 if (!method_exists($plugin->_plugin, $type)) {
-                    debug_event(__CLASS__, 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
@@ -164,7 +162,7 @@ class Plugin
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
      * @param $plugin_name
-     * @return boolean|mixed
+     * @return int
      */
     public static function is_installed($plugin_name)
     {
@@ -229,20 +227,19 @@ class Plugin
      * get_plugin_version
      * This returns the version of the specified plugin
      * @param $plugin_name
-     * @return boolean|mixed
+     * @return int
      */
     public static function get_plugin_version($plugin_name)
     {
-        $name = Dba::escape('Plugin_' . $plugin_name);
-
-        $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+        $name       = Dba::escape('Plugin_' . $plugin_name);
+        $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
         $db_results = Dba::read($sql, array($name));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['value'];
+            return (int)$results['value'];
         }
 
-        return false;
+        return 0;
     } // get_plugin_version
 
     /**
@@ -251,10 +248,9 @@ class Plugin
      */
     public function get_ampache_db_version()
     {
-        $sql        = "SELECT * FROM `update_info` WHERE `key`='db_version'";
+        $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
+        $results    = Dba::fetch_assoc($db_results);
 
         return $results['value'];
     } // get_ampache_db_version
@@ -268,10 +264,10 @@ class Plugin
     public function set_plugin_version($version)
     {
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version = Dba::escape($version);
+        $version = (int)Dba::escape($version);
 
-        $sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
-        Dba::write($sql);
+        $sql = "REPLACE INTO `update_info` SET `key` = ?, `value`= ?";
+        Dba::write($sql, array($name, $version));
 
         return true;
     } // set_plugin_version
@@ -283,8 +279,7 @@ class Plugin
     public function remove_plugin_version()
     {
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
-
-        $sql = "DELETE FROM `update_info` WHERE `key`='$name'";
+        $sql  = "DELETE FROM `update_info` WHERE `key`='$name'";
         Dba::write($sql);
 
         return true;

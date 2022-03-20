@@ -36,6 +36,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,6 +54,8 @@ final class DefaultAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
@@ -60,12 +63,14 @@ final class DefaultAction implements ApplicationActionInterface
         LoggerInterface $logger,
         ZipHandlerInterface $zipHandler,
         FunctionCheckerInterface $functionChecker,
+        AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->zipHandler      = $zipHandler;
         $this->functionChecker = $functionChecker;
+        $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
     }
 
@@ -83,13 +88,13 @@ final class DefaultAction implements ApplicationActionInterface
         set_time_limit(0);
 
         $media_ids    = [];
-        $default_name = 'Unknown.zip';
-        $object_type  = (string) scrub_in(Core::get_request('action'));
+        $default_name = 'Unknown';
         $name         = $default_name;
-
-        if ($object_type == 'browse') {
-            $object_type = Core::get_request('type');
-        }
+        $action       = (string) scrub_in(Core::get_request('action'));
+        $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
+        $object_type  = ($action == 'browse')
+            ? (string) scrub_in(Core::get_request('type'))
+            : $action;
 
         if (!$this->zipHandler->isZipable($object_type)) {
             $this->logger->error(
@@ -99,7 +104,7 @@ final class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+        if (InterfaceImplementationChecker::is_playable_item($object_type) && $object_type !== 'album') {
             $object_id = $_REQUEST['id'];
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
@@ -120,13 +125,23 @@ final class DefaultAction implements ApplicationActionInterface
             }
         } else {
             // Switch on the actions
-            switch ($object_type) {
+            switch ($action) {
                 case 'tmp_playlist':
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
+                case 'album':
+                    $albumList  = explode(',', $_REQUEST['id']);
+                    $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
+                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $libitem    = new $class_name((int)$albumList[0]);
+                    if ($libitem->id) {
+                        $libitem->format();
+                        $name = $libitem->get_fullname();
+                    }
+                    break;
                 case 'browse':
-                    $object_id        = (int) scrub_in(Core::get_post('browse_id'));
+                    $object_id        = (int)Core::get_request('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media_id) {
@@ -167,7 +182,7 @@ final class DefaultAction implements ApplicationActionInterface
         $song_files = $this->getMediaFiles($media_ids);
         if (is_array($song_files['0'])) {
             set_memory_limit($song_files['1'] + 32);
-            $this->zipHandler->zip($name, $song_files['0']);
+            $this->zipHandler->zip($name, $song_files['0'], $flat_path);
         }
 
         return null;
@@ -189,8 +204,8 @@ final class DefaultAction implements ApplicationActionInterface
                     $type    = $element['object_type'];
                     $mediaid = $element['object_id'];
                 } else {
-                    $type      = array_shift($element);
-                    $mediaid   = array_shift($element);
+                    $type    = array_shift($element);
+                    $mediaid = array_shift($element);
                 }
                 $class_name = ObjectTypeToClassNameMapper::map($type);
                 $media      = new $class_name($mediaid);
@@ -198,10 +213,9 @@ final class DefaultAction implements ApplicationActionInterface
                 $media = $this->modelFactory->createSong((int) $element);
             }
             if ($media->enabled) {
-                $media->format();
-                $total_size .= sprintf("%.2f", ($media->size / 1048576));
-                $dirname = '';
-                $parent  = $media->get_parent();
+                $total_size = $total_size + (int)$media->size;
+                $dirname    = '';
+                $parent     = $media->get_parent();
                 if ($parent != null) {
                     $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
                     $pobj       = new $class_name($parent['object_id']);

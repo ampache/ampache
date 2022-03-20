@@ -40,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class BookmarkEditMethod
 {
-    private const ACTION = 'bookmark_edit';
+    public const ACTION = 'bookmark_edit';
 
     /**
      * bookmark_edit
@@ -56,7 +56,7 @@ final class BookmarkEditMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_edit(array $input)
+    public static function bookmark_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
@@ -64,8 +64,8 @@ final class BookmarkEditMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
+        $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
+        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -73,9 +73,9 @@ final class BookmarkEditMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -83,7 +83,7 @@ final class BookmarkEditMethod
 
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -120,7 +120,6 @@ final class BookmarkEditMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

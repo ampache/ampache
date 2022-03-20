@@ -72,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
                 );
         } else {
             // Make sure the config file is set up and parsable
-            $results = @parse_ini_file($configfile);
+            $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
 
             if (empty($results)) {
                 $link = __DIR__ . '/../../public/test.php?action=config';
@@ -87,7 +87,7 @@ final class ShowAction implements ApplicationActionInterface
         // Try to load localization from cookie
         $session_name = $this->configContainer->getSessionName();
 
-        if (filter_has_var(INPUT_COOKIE, $session_name . '_lang')) {
+        if (isset($_COOKIE[$session_name . '_lang'])) {
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
         if (!class_exists('Gettext\Translations')) {

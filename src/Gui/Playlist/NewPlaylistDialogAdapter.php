@@ -38,20 +38,20 @@ final class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapterInterfac
 
     private string $object_type;
 
-    private int $object_id;
+    private string $object_ids;
 
     public function __construct(
         PlaylistLoaderInterface $playlistLoader,
         AjaxUriRetrieverInterface $ajaxUriRetriever,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        int $object_id
+        string $object_id
     ) {
         $this->playlistLoader   = $playlistLoader;
         $this->ajaxUriRetriever = $ajaxUriRetriever;
         $this->gatekeeper       = $gatekeeper;
         $this->object_type      = $object_type;
-        $this->object_id        = $object_id;
+        $this->object_ids       = $object_id;
     }
 
     /**
@@ -79,9 +79,9 @@ final class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapterInterfac
         return $this->object_type;
     }
 
-    public function getObjectId(): int
+    public function getObjectIds(): string
     {
-        return $this->object_id;
+        return $this->object_ids;
     }
 
     public function getNewPlaylistTitle(): string

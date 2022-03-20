@@ -25,17 +25,27 @@ use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\library_item $item */
+/** @var string $object_type */
+/** @var int $object_id */
+/** @var string $burl */
 ?>
 <?php
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', array());
-$art_type  = ($object_type == 'album') ? T_('Cover Art Search') : T_('Artist Art Search');
+$art_type  = ($object_type == 'artist') ? T_('Artist Art Search') : T_('Cover Art Search');
 UI::show_box_top($art_type, 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
+            if ($key == 'year') {
+                $year_str = ((int)$word['value'] > 999)
+                    ? (string)$word['value']
+                    : '';
+                continue;
+            }
             if (($key != 'mb_albumid_group' && $key != 'mb_artistid') && ($key != 'keyword' && $word['label'])) { ?>
                 <tr>
                     <td>
@@ -92,7 +102,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <tr>
            <td>
                 <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
-                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" value="<?php echo $year_str; ?>">
                 <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
            </td>
           </tr>

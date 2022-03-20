@@ -25,39 +25,43 @@ use Ampache\Repository\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Live_Stream;
 
+/** @var Live_Stream $radio */
 ?>
 
-<?php Ui::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
+<?php Ui::show_box_top($radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php
         $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
-        Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
+        Art::display('live_stream', $radio->id, $radio->get_fullname(), $thumb); ?>
 </div>
 <dl class="media_details">
-<?php $rowparity = Ui::flip_class(); ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id, 'play', T_('Play'), 'play_live_stream_' . $radio->id); ?>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $radio->id); ?>
+                <?php
+            } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
             <?php
         } ?>
         <?php
     } ?>
-        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to temporary playlist'), 'add_live_stream_' . $radio->id); ?>
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
 <?php
-    $itemprops[T_('Name')]     = $radio->f_name;
+    $itemprops[T_('Name')]     = $radio->get_fullname();
     $itemprops[T_('Website')]  = scrub_out($radio->site_url);
     $itemprops[T_('Stream')]   = $radio->f_url_link;
-    $itemprops[T_('Codec')]    = scrub_out($video->codec);
+    $itemprops[T_('Codec')]    = scrub_out($radio->codec);
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = Ui::flip_class();
-            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
         }
     } ?>
 </dl>

@@ -38,7 +38,7 @@ use Ampache\Module\System\Session;
  */
 final class PlaylistDeleteMethod
 {
-    private const ACTION = 'playlist_delete';
+    public const ACTION = 'playlist_delete';
 
     /**
      * playlist_delete
@@ -50,7 +50,7 @@ final class PlaylistDeleteMethod
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist_delete(array $input)
+    public static function playlist_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -65,7 +65,6 @@ final class PlaylistDeleteMethod
             Api::message('playlist deleted', $input['api_format']);
             Catalog::count_table('playlist');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

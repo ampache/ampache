@@ -39,24 +39,22 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 
-$web_path = AmpConfig::get('web_path');
-
 /** @var Album $album */
-/** @var AlbumRepositoryInterface $albumRepository */
+/** @var bool $isAlbumEditable */
 
 // Title for this album
-$title = scrub_out($album->name);
-if ($album->year > 0) {
-    $title .= '&nbsp;(' . $album->year . ')';
-}
-if ($album->disk && !AmpConfig::get('album_group') && count($albumRepository->getAlbumSuite($album)) > 1) {
-    $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
-}
-$title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
+$web_path = AmpConfig::get('web_path');
+$f_name   = $album->get_fullname(false, true);
+$title    = ($album->album_artist > 0)
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_album_artist_link()) ?: '')
+    : scrub_out($f_name);
 
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
+$hide_array        = (AmpConfig::get('hide_single_artist') && $album->get_artist_count() == 1)
+    ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
+    : array('cel_album', 'cel_year', 'cel_drag');
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -68,49 +66,39 @@ if ($directplay_limit > 0) {
 
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->get_album_artist_fullname()); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($album->f_album_artist_name); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_album_artist_name); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     <?php if ($album->mbid) { ?>
-        <a href="https://musicbrainz.org/release/<?php echo $album->mbid; ?>" target="_blank"><?php echo UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
+        <a href="https://musicbrainz.org/release/<?php echo $album->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
-        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($album->f_name); ?>%22&type=release" target="_blank"><?php echo UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
+        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=release" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-        $thumb = Ui::is_grid_view('album') ? 2 : 11;
+        $name  = '[' . scrub_out($album->f_album_artist_name) . '] ' . scrub_out($f_name);
+        $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) {
-            $rating = new Rating($album->id, 'album'); ?>
-    <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php echo Rating::show($album->id, 'album');
-            $average = $rating->get_average_rating();
-            if ($average > 0) {
-                /* HINT: Average rating. e.g. (average 3.7) */
-                echo '(' . T_('average') . ' ' . $average . ')';
-            } ?>
-    </div></p>
-    <?php
-        } ?>
-    <?php if (AmpConfig::get('userflags')) { ?>
-    <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
+    <?php if (AmpConfig::get('ratings')) { ?>
+        <span id="rating_<?php echo $album->id; ?>_album">
+            <?php echo Rating::show($album->id, 'album', true); ?>
+        </span>
+        <span id="userflag_<?php echo $album->id; ?>_album">
             <?php echo Userflag::show($album->id, 'album'); ?>
-    </div>
-    <?php
-        } ?>
-<?php
+        </span>
+        <?php
     } ?>
+    <?php } ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .
         /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $album->object_cnt), $album->object_cnt); ?>
+        sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
 </div>
 <?php
     } ?>
@@ -131,10 +119,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <ul>
         <?php if ($show_direct_play) {
         $play       = T_('Play');
-        $playlast   = T_('Play Last'); ?>
+        $playnext   = T_('Play next');
+        $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
+        </li>
+            <?php
+        } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
@@ -149,7 +144,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $randtotemp = T_('Random to Temporary Playlist');
         $addtoexist = T_('Add to playlist'); ?>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=album&' . $album->get_http_album_query_ids('id'), 'add', $addtotemp, 'play_full_' . $album->id); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', $randtotemp, 'play_random_' . $album->id); ?>
@@ -172,8 +167,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
-                    <?php echo UI::get_icon('comment', $postshout); ?>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
+                    <?php echo Ui::get_icon('comment', $postshout); ?>
                     <?php echo $postshout; ?>
                 </a>
             </li>
@@ -190,11 +185,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
+        <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
         $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
                     <?php echo T_('Graphs'); ?>
                 </a>
@@ -203,7 +198,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
+                                            '<?php echo $web_path; ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', $saveorder); ?>
                 <?php echo $saveorder; ?>
             </a>
@@ -217,19 +212,17 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php
     } ?>
         <?php if ($isAlbumEditable) {
-        $albumedit  = T_('Album Edit'); ?>
-        <?php if (AmpConfig::get('allow_upload')) {
-            $t_upload = T_('Upload'); ?>
+        $t_upload = T_('Upload');
+        if (AmpConfig::get('allow_upload')) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ? $album->album_artist : $album->artist_id); ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->album_artist); ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>
                 </li>
-            <?php
-        } ?>
+            <?php } ?>
         <li>
-            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo $albumedit ?>', '')">
+            <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Album'); ?>
             </a>
@@ -253,7 +246,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Catalog::can_remove($album)) {
             $delete = T_('Delete'); ?>
         <li>
-            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
+            <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>
@@ -274,6 +267,6 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $browse->set_filter('album', $album->id);
     $browse->set_sort('track', 'ASC');
     $browse->get_objects();
-    $browse->show_objects(null, true); // true argument is set to show the reorder column
+    $browse->show_objects(null, array('hide' => $hide_array));
     $browse->store(); ?>
 </div>

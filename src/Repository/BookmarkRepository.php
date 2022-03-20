@@ -56,9 +56,8 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
     public function collectGarbage(): void
     {
         $types = ['song', 'video', 'podcast_episode'];
-
         foreach ($types as $type) {
-            Dba::write("DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `$type` ON `$type`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '$type' AND `$type`.`id` IS NULL");
+            Dba::write("DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `$type` ON `$type`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '$type' AND `$type`.`id` IS NULL;");
         }
     }
 

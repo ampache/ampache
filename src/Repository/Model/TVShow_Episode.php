@@ -128,7 +128,7 @@ class TVShow_Episode extends Video
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array(
             $data['id'],
             $data['original_name'],
@@ -168,7 +168,7 @@ class TVShow_Episode extends Video
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
@@ -179,8 +179,8 @@ class TVShow_Episode extends Video
         $season = new TVShow_Season($this->season);
         $season->format($details);
 
-        $this->f_title       = ($this->original_name ?: $this->f_title);
-        $this->f_link        = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_name        = ($this->original_name ?: $this->f_name);
+        $this->f_link        = '<a href="' . $this->get_link() . '">' . scrub_out($this->f_name) . '</a>';
         $this->f_season      = $season->f_name;
         $this->f_season_link = $season->f_link;
         $this->f_tvshow      = $season->f_tvshow;
@@ -191,7 +191,7 @@ class TVShow_Episode extends Video
             $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
                     $this->episode_number);
         }
-        $this->f_file .= ' - ' . $this->f_title;
+        $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;
 
         return true;
@@ -292,7 +292,7 @@ class TVShow_Episode extends Video
         }
 
         if ($episode_id !== null && $type !== null) {
-            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 

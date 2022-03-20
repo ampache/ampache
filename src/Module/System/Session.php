@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Query;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -66,23 +67,27 @@ final class Session implements SessionInterface
 
         // If we want a session
         if (!defined('NO_SESSION') && $useAuth) {
+            $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
-            if (!static::exists('interface', $_COOKIE[$sessionName])) {
-                if (!static::auth_remember()) {
-                    $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '');
+            if (!self::exists('interface', $sessionData)) {
+                if (!self::auth_remember()) {
+                    $this->authenticationManager->logout($sessionData);
 
                     return false;
                 }
             }
 
             // This actually is starting the session
-            static::check();
+            self::check();
 
             // Create the new user
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+                ? User::get_from_username($_SESSION['userdata']['username'])
+                : '';
 
             // If the user ID doesn't exist deny them
-            if (!Core::get_global('user')->id && !$isDemoMode) {
+            $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+            if (!$user_id && !$isDemoMode) {
                 $this->authenticationManager->logout(session_id());
 
                 return false;
@@ -96,17 +101,17 @@ final class Session implements SessionInterface
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
             $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
-            if (!static::exists('interface', $_COOKIE[$sessionName])) {
-                static::create_cookie();
-                static::create($auth);
-                static::check();
+            if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
+                self::create_cookie();
+                self::create($auth);
+                self::check();
                 $GLOBALS['user']           = new User('-1');
                 $GLOBALS['user']->username = $auth['username'];
                 $GLOBALS['user']->fullname = $auth['fullname'];
                 $GLOBALS['user']->access   = (int) ($auth['access']);
             } else {
-                static::check();
-                if ($_SESSION['userdata']['username']) {
+                self::check();
+                if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
                 } else {
                     $GLOBALS['user']           = new User('-1');
@@ -115,7 +120,8 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->fullname = $auth['fullname'];
                     $GLOBALS['user']->access   = (int) ($auth['access']);
                 }
-                if (!Core::get_global('user')->id && !$isDemoMode) {
+                $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+                if (!$user_id && !$isDemoMode) {
                     $this->authenticationManager->logout(session_id());
 
                     return false;
@@ -124,7 +130,7 @@ final class Session implements SessionInterface
             }
         } else {
             // If Auth, but no session is set
-            if (isset($_REQUEST['sid'])) {
+            if (array_key_exists('sid', $_REQUEST)) {
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
@@ -151,7 +157,7 @@ final class Session implements SessionInterface
             return true;
         }
 
-        $expire = time() + AmpConfig::get('session_length');
+        $expire = time() + AmpConfig::get('session_length', 3600);
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
@@ -178,15 +184,19 @@ final class Session implements SessionInterface
 
         debug_event(self::class, 'Deleting Session with key:' . $key, 6);
 
-        $session_name  = AmpConfig::get('session_name');
-        $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = '';
-        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
+        $session_name   = AmpConfig::get('session_name');
+        $cookie_options = [
+            'expires' => -1,
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
 
         // Destroy our cookie!
-        setcookie($session_name, '', -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_user', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', '', -1, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name, '', $cookie_options);
+        setcookie($session_name . '_user', '', $cookie_options);
+        setcookie($session_name . '_lang', '', $cookie_options);
 
         return true;
     }
@@ -237,11 +247,12 @@ final class Session implements SessionInterface
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            // debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            //debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
+
             return $results[$column];
         }
 
-        debug_event(self::class, 'Unable to read session from key ' . $key . ' no data found', 3);
+        debug_event(self::class, 'Unable to read ' . $column . ' from key ' . $key . ' no data found', 3);
 
         return '';
     }
@@ -280,8 +291,9 @@ final class Session implements SessionInterface
      */
     public static function create($data)
     {
+        $type = $data['type'] ?? '';
         // Regenerate the session ID to prevent fixation
-        switch ($data['type']) {
+        switch ($type) {
             case 'api':
                 $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
@@ -302,16 +314,14 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'),
-            FILTER_VALIDATE_IP) : '0';
-        $type  = $data['type'];
+        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
         }
         $agent = (!empty($data['agent'])) ? $data['agent'] : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
 
-        $expire = time() + AmpConfig::get('session_length');
+        $expire = time() + AmpConfig::get('session_length', 3600);
         if ($type == 'stream') {
             $expire = time() + AmpConfig::get('stream_length');
         }
@@ -334,8 +344,7 @@ final class Session implements SessionInterface
 
         /* Insert the row */
         $sql        = 'INSERT INTO `session` (`id`, `username`, `ip`, `type`, `agent`, `value`, `expire`, `geo_latitude`, `geo_longitude`, `geo_name`) ' . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql,
-            array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
+        $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
             debug_event(self::class, 'Session creation failed', 1);
@@ -360,16 +369,26 @@ final class Session implements SessionInterface
         $session_name = AmpConfig::get('session_name');
 
         // No cookie no go!
-        if (!filter_has_var(INPUT_COOKIE, $session_name)) {
-            debug_event(self::class, 'Existing session NOT found', 5);
+        if (!isset($_COOKIE[$session_name])) {
+            if (!self::auth_remember()) {
+                debug_event(self::class, 'Existing session NOT found', 5);
 
-            return false;
+                return false;
+            }
+            debug_event(self::class, 'auth_remember session found', 5);
         }
+
+        $cookie_options = [
+            'lifetime' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Lax'
+        ];
 
         // Set up the cookie params before we start the session.
         // This is vital
-        session_set_cookie_params((int)AmpConfig::get('cookie_life'), (string)AmpConfig::get('cookie_path'),
-            (string)AmpConfig::get('cookie_domain'), make_bool(AmpConfig::get('cookie_secure')));
+        session_set_cookie_params($cookie_options);
         session_write_close();
 
         // Set name
@@ -445,7 +464,7 @@ final class Session implements SessionInterface
         if ($type == 'stream') {
             $expire = $time + AmpConfig::get('stream_length');
         } else {
-            $expire = $time + AmpConfig::get('session_length');
+            $expire = $time + AmpConfig::get('session_length', 3600);
         }
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
@@ -454,6 +473,23 @@ final class Session implements SessionInterface
         }
 
         return $db_results;
+    }
+
+    /**
+     * get
+     *
+     * This checks for an existing session cookie and returns the value.
+     * @return string
+     */
+    public static function get()
+    {
+        $session_name = AmpConfig::get('session_name');
+
+        if (array_key_exists($session_name, $_COOKIE)) {
+            return $_COOKIE[$session_name];
+        }
+
+        return '';
     }
 
     /**
@@ -510,8 +546,33 @@ final class Session implements SessionInterface
         return $location;
     }
 
+    /**
+     * get_api_version
+     * Get session geolocation.
+     * @param string $sid
+     * @return int
+     */
+    public static function get_api_version($sid)
+    {
+        $api_version = 5;
+
+        if ($sid) {
+            $sql        = "SELECT `value` FROM `session` WHERE `type` = 'api' AND `id` = ?;";
+            $db_results = Dba::read($sql, array($sid));
+            $row        = Dba::fetch_assoc($db_results);
+            if (!empty($row)) {
+                $api_version =  (int)$row['value'];
+            }
+        }
+
+        return $api_version;
+    }
+
     public function setup(): void
     {
+        // enforce strict cookies. you don't need these elsewhere
+        ini_set('session.cookie_samesite', 'Lax');
+
         session_set_save_handler(
             static function (): bool {
                 return true;
@@ -548,16 +609,24 @@ final class Session implements SessionInterface
      */
     public static function create_cookie()
     {
-        // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life   = (int)AmpConfig::get('cookie_life');
-        $cookie_path   = (string)AmpConfig::get('cookie_path');
-        $cookie_domain = '';
-        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
-
         if (isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+            $cookie_options = [
+                'expires' => (int)AmpConfig::get('cookie_life'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Lax'
+            ];
+            setcookie(session_name(), session_id(), $cookie_options);
         } else {
-            session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+            $cookie_options = [
+                'lifetime' => (int)AmpConfig::get('cookie_life'),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Lax'
+            ];
+            session_set_cookie_params($cookie_options);
         }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
@@ -578,15 +647,17 @@ final class Session implements SessionInterface
      */
     public static function create_user_cookie($username)
     {
-        $cookie_life   = AmpConfig::get('cookie_life');
-        $session_name  = AmpConfig::get('session_name');
-        $cookie_path   = AmpConfig::get('cookie_path');
-        $cookie_domain = '';
-        $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
+        $session_name   = AmpConfig::get('session_name');
+        $cookie_options = [
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
 
-        setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain,
-            $cookie_secure);
+        setcookie($session_name . '_user', $username, $cookie_options);
+        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_options);
     }
 
     /**
@@ -597,11 +668,15 @@ final class Session implements SessionInterface
      */
     public static function create_remember_cookie($username)
     {
-        $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
-        $cookie_path     = AmpConfig::get('cookie_path');
-        $cookie_domain   = '';
-        $cookie_secure   = make_bool(AmpConfig::get('cookie_secure'));
+        $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
+        $cookie_options  = [
+            'expires' => $remember_length,
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict'
+        ];
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -609,7 +684,7 @@ final class Session implements SessionInterface
         $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
-        setcookie($session_name . '_remember', $cookie, time() + $remember_length, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_remember', $cookie, $cookie_options);
     }
 
     /**
@@ -619,7 +694,7 @@ final class Session implements SessionInterface
      */
     public static function generateRandomToken()
     {
-        return md5(uniqid((string)mt_rand(), true));
+        return md5(uniqid((string)bin2hex(random_bytes(20)), true));
     }
 
     /**
@@ -633,7 +708,7 @@ final class Session implements SessionInterface
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        return Dba::write($sql, array($username, $token, time() + $remember_length));
+        return Dba::write($sql, array($username, $token, $remember_length));
     }
 
     /**
@@ -644,7 +719,7 @@ final class Session implements SessionInterface
     {
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
-        if (filter_has_var(INPUT_COOKIE, $cname)) {
+        if (isset($_COOKIE[$cname])) {
             [$username, $token, $mac] = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
@@ -659,6 +734,10 @@ final class Session implements SessionInterface
                     $auth                             = true;
                 }
             }
+            // make sure the global is set too
+            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            // make sure the prefs are set too
+            Preference::init();
         }
 
         return $auth;
@@ -675,7 +754,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
+        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
                 FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }

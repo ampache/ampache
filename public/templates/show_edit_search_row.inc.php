@@ -37,8 +37,8 @@ use Ampache\Repository\Model\Search;
                     <?php $name    = 'select_' . $libitem->type; ?>
                     <?php ${$name} = ' selected="selected"'; ?>
                     <select name="pl_type">
-                        <option value="public"<?php echo $select_public; ?>><?php echo T_('Public'); ?></option>
-                        <option value="private"<?php echo $select_private; ?>><?php echo T_('Private'); ?></option>
+                        <option value="public"<?php echo $select_public ?? ''; ?>><?php echo T_('Public'); ?></option>
+                        <option value="private"<?php echo $select_private ?? ''; ?>><?php echo T_('Private'); ?></option>
                     </select>
                 </td>
             </tr>
@@ -51,6 +51,22 @@ use Ampache\Repository\Model\Search;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
                 <td><input type="text" name="limit" value="<?php echo scrub_out($libitem->limit); ?>" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo T_('Owner'); ?>:<br />
+                </td>
+                <td>
+                    <?php
+                    $options   = array();
+                    if (!empty($users)) {
+                        foreach ($users as $user_id => $username) {
+                            $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
+                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+                        }
+                        echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
+                    } ?>
+                </td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

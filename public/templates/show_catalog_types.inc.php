@@ -22,11 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_type"><?php echo T_('Type'); ?></th>
@@ -50,7 +49,7 @@ $web_path = AmpConfig::get('web_path'); ?>
                 $action        = 'install_catalog_type';
                 $action_txt    = T_('Activate');
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td class="cel_type"><?php echo scrub_out($catalog->get_type()); ?></td>
             <td class="cel_description"><?php echo scrub_out($catalog->get_description()); ?></td>
             <td class="cel_version"><?php echo scrub_out($catalog->get_version()); ?></td>
@@ -58,7 +57,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </tr>
         <?php
         } if (!count($catalogs)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        <tr>
             <td colspan="4"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php

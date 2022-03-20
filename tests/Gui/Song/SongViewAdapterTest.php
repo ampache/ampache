@@ -236,8 +236,8 @@ class SongViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             sprintf(
                 '%s/song.php?action=%s&song_id=%d',
-                DeleteAction::REQUEST_KEY,
                 $webPath,
+                DeleteAction::REQUEST_KEY,
                 $songId
             ),
             $this->subject->getDeletionUrl()
@@ -262,17 +262,27 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->song->link = $value;
 
+        $this->song->shouldReceive('get_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
         $this->assertSame(
             $value,
             $this->subject->getSongUrl()
         );
     }
 
-    public function testGetSongLinkReturnsValus(): void
+    public function testGetSongLinkReturnsValues(): void
     {
         $value = 'some-link';
 
         $this->song->f_link = $value;
+
+        $this->song->shouldReceive('get_f_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,
@@ -285,6 +295,11 @@ class SongViewAdapterTest extends MockeryTestCase
         $value = 'some-artist-link';
 
         $this->song->f_artist_link = $value;
+
+        $this->song->shouldReceive('get_f_artist_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,
@@ -304,7 +319,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetYearReturnsValus(): void
+    public function testGetYearReturnsValues(): void
     {
         $value = 666;
 
@@ -316,7 +331,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGenreReturnsValus(): void
+    public function testGenreReturnsValues(): void
     {
         $value = 'some-tags';
 
@@ -350,11 +365,11 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetNumberPlayedReturnsValus(): void
+    public function testGetNumberPlayedReturnsValues(): void
     {
         $value = 42;
 
-        $this->song->object_cnt = $value;
+        $this->song->total_count = $value;
 
         $this->assertSame(
             $value,
@@ -366,7 +381,7 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $value = 33;
 
-        $this->song->skip_cnt = $value;
+        $this->song->total_skip = $value;
 
         $this->assertSame(
             $value,
@@ -498,7 +513,7 @@ class SongViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testCanBeReorderedReturnsValus(): void
+    public function testCanBeReorderedReturnsValues(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)

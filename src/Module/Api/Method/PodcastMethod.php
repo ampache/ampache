@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastMethod
 {
-    private const ACTION = 'podcast';
+    public const ACTION = 'podcast';
 
     /**
      * podcast
@@ -52,7 +52,7 @@ final class PodcastMethod
      * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
-    public static function podcast(array $input)
+    public static function podcast(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,6 +63,7 @@ final class PodcastMethod
             return false;
         }
         $object_id = (int) $input['filter'];
+        $include   = $input['include'] ?? '';
         $podcast   = new Podcast($object_id);
 
         if (!$podcast->id) {
@@ -74,15 +75,14 @@ final class PodcastMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $episodes = ($input['include'] == 'episodes' || (int) $input['include'] == 1);
+        $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($object_id), $user->id, $episodes, false);
+                echo Json_Data::podcasts(array($object_id), $user->id, $episodes, false);
                 break;
             default:
                 echo XML_Data::podcasts(array($object_id), $user->id, $episodes);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

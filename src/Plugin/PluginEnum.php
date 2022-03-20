@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Plugin;
 
 /**
- * This class contains informations about plugins
+ * This class contains information about plugins
  */
 final class PluginEnum
 {
@@ -49,13 +49,13 @@ final class PluginEnum
         'librefm' => Ampachelibrefm::class,
         'listenbrainz' => Ampachelistenbrainz::class,
         'matomo' => AmpacheMatomo::class,
-        'musicbrains' => AmpacheMusicBrainz::class,
+        'musicbrainz' => AmpacheMusicBrainz::class,
         'omdb' => AmpacheOmdb::class,
         'paypal' => AmpachePaypal::class,
         'piwik' => AmpachePiwik::class,
         'rssview' => AmpacheRSSView::class,
         'shouthome' => AmpacheShoutHome::class,
-        'streambandwith' => AmpacheStreamBandwidth::class,
+        'streambandwidth' => AmpacheStreamBandwidth::class,
         'streamhits' => AmpacheStreamHits::class,
         'streamtime' => AmpacheStreamTime::class,
         'theaudiodb' => AmpacheTheaudiodb::class,

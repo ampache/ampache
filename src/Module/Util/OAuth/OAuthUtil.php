@@ -63,12 +63,11 @@ class OAuthUtil
         return urldecode($string);
     }
 
-    // Utility function for turning the Authorization: header into
-    // parameters, has to do some unescaping
-    // Can filter out any non-oauth parameters if needed (default behaviour)
-    // May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
-    //                  see http://code.google.com/p/oauth/issues/detail?id=163
     /**
+     * Utility function for turning the Authorization: header into parameters.
+     * Has to do some unescaping and can filter out any non-oauth parameters if needed (default behaviour)
+     * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
+     * see http://code.google.com/p/oauth/issues/detail?id=163
      * @param $header
      * @param boolean $oauth_parameters
      * @return array
@@ -114,10 +113,10 @@ class OAuthUtil
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
             $out = array();
-            if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
+            if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
-            if (filter_has_var(INPUT_ENV, 'CONTENT_TYPE')) {
+            if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
 
@@ -152,23 +151,25 @@ class OAuthUtil
 
         $parsed_parameters = array();
         foreach ($pairs as $pair) {
-            $split     = explode('=', $pair, 2);
-            $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
-            $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
+            if (strpos((string)$pair, '=')) {
+                $split     = explode('=', $pair, 2);
+                $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
+                $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
 
-            if (isset($parsed_parameters[$parameter])) {
-                // We have already recieved parameter(s) with this name, so add to the list
-                // of parameters with this name
+                if (isset($parsed_parameters[$parameter])) {
+                    // We have already received parameter(s) with this name, so add to the list
+                    // of parameters with this name
 
-                if (is_scalar($parsed_parameters[$parameter])) {
-                    // This is the first duplicate, so transform scalar (string) into an array
-                    // so we can add the duplicates
-                    $parsed_parameters[$parameter] = array($parsed_parameters[$parameter]);
+                    if (is_scalar($parsed_parameters[$parameter])) {
+                        // This is the first duplicate, so transform scalar (string) into an array
+                        // so we can add the duplicates
+                        $parsed_parameters[$parameter] = array($parsed_parameters[$parameter]);
+                    }
+
+                    $parsed_parameters[$parameter][] = $value;
+                } else {
+                    $parsed_parameters[$parameter] = $value;
                 }
-
-                $parsed_parameters[$parameter][] = $value;
-            } else {
-                $parsed_parameters[$parameter] = $value;
             }
         }
 

@@ -67,7 +67,16 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist
+        int $artistId
+    ): array;
+
+    /**
+     * gets the songs (including songs where they are the album artist) for this artist
+     *
+     * @return int[]
+     */
+    public function getAllByArtist(
+        int $artistId
     ): array;
 
     /**

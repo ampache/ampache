@@ -25,31 +25,26 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Channel\ChannelRunnerInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Repository\Model\Catalog;
 use Exception;
 
 final class PrintTagsCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ChannelRunnerInterface $channelRunner;
+    private UtilityFactoryInterface $utilityFactory;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ChannelRunnerInterface $channelRunner
+        UtilityFactoryInterface $utilityFactory
     ) {
-        parent::__construct('print:tags', 'Print the tags of a file');
+        parent::__construct('print:tags', T_('Print file tags'));
 
-        $this->configContainer = $configContainer;
-        $this->channelRunner   = $channelRunner;
+        $this->utilityFactory = $utilityFactory;
 
         $this
-            ->argument('<filename>', 'Filename to load')
-            ->usage('<bold>  print:tags</end> <comment><filename></end> ## Print tags<eol/>');
+            ->argument('<filename>', T_('File Path'))
+            ->usage('<bold>  print:tags</end> <comment><filename></end> ## ' . T_('Print tags') . '<eol/>');
     }
 
     public function execute(
@@ -58,21 +53,27 @@ final class PrintTagsCommand extends Command
         $io = $this->app()->io();
 
         $io->info(
-            sprintf(T_('Reading: %s'), $filename),
+            sprintf(T_('Reading File: "%s"'), $filename),
             true
         );
 
         /* Attempt to figure out what catalog it comes from */
         $sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
         $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-
-        $catalog = Catalog::create_from_id($results['id']);
+        $row        = Dba::fetch_assoc($db_results);
+        $catalog    = Catalog::create_from_id($row['id']);
 
         $dir_pattern  = $catalog->sort_pattern;
         $file_pattern = $catalog->rename_pattern;
 
-        $info = new VaInfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
+        $vainfo = $this->utilityFactory->createVaInfo(
+            $filename,
+            ['music'],
+            '',
+            '',
+            $dir_pattern,
+            $file_pattern
+        );
         if (isset($dir_pattern) || isset($file_pattern)) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $io->info(
@@ -81,8 +82,8 @@ final class PrintTagsCommand extends Command
             );
         }
         try {
-            $info->get_info();
-            $results         = $info->tags;
+            $vainfo->get_info();
+            $results         = $vainfo->tags;
             $keys            = VaInfo::get_tag_type($results);
             $ampache_results = VaInfo::clean_tag_info($results, $keys, $filename);
 
@@ -92,7 +93,7 @@ final class PrintTagsCommand extends Command
             );
             $io->eol(2);
 
-            print_r($info);
+            print_r($vainfo);
 
             $io->eol();
             $io->info('------------------------------------------------------------------', true);

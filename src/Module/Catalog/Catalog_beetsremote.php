@@ -42,8 +42,8 @@ class Catalog_beetsremote extends Catalog
     protected $listCommand = 'item/query';
 
     /**
-     *
-     * @var string Beets Database File
+     * Beets Database File
+     * @var string
      */
     protected $uri;
 
@@ -53,7 +53,7 @@ class Catalog_beetsremote extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul>" . "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" . "<li>Start Beets web server</li>" . "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
+        return "<ul><li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li><li>Start Beets web server</li><li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
     }
 
     /**
@@ -74,11 +74,11 @@ class Catalog_beetsremote extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -89,6 +89,8 @@ class Catalog_beetsremote extends Catalog
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
 
         return $fields;

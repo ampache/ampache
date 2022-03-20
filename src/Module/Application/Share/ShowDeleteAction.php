@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,6 +40,8 @@ final class ShowDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_delete';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -46,10 +49,12 @@ final class ShowDeleteAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->logger          = $logger;
@@ -63,7 +68,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $share_id = Core::get_request('id');
+        $share_id = $this->requestParser->getFromRequest('id');
 
         $next_url = sprintf(
             '%s/share.php?action=delete&id=%s',

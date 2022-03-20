@@ -23,6 +23,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -98,21 +99,23 @@ class Catalog_remote extends Catalog
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`username` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
     } // install
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function catalog_fields()
     {
+        $fields = array();
+
         $fields['uri']      = array('description' => T_('URI'), 'type' => 'url');
         $fields['username'] = array('description' => T_('Username'), 'type' => 'text');
         $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
@@ -313,7 +316,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function verify_catalog_proc()
     {
@@ -331,7 +334,7 @@ class Catalog_remote extends Catalog
         if (!$remote_handle) {
             debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
 
-            return false;
+            return 0;
         }
 
         $dead = 0;
@@ -369,6 +372,70 @@ class Catalog_remote extends Catalog
     public function move_catalog_proc($new_path)
     {
         return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
+    {
+        $remote_handle = $this->connect();
+
+        // If we don't get anything back we failed and should bail now
+        if (!$remote_handle) {
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
+
+            return false;
+        }
+
+        $remote = AmpConfig::get('cache_remote');
+        $path   = (string)AmpConfig::get('cache_path', '');
+        $target = AmpConfig::get('cache_target');
+        // need a destination, source and target format
+        if (!is_dir($path) || !$remote || !$target) {
+            debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+
+            return false;
+        }
+        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+
+        // If the user's crazy, that's no skin off our back
+        if ($user_bit_rate > $max_bitrate) {
+            $max_bitrate = $user_bit_rate;
+        }
+        $handshake  = $remote_handle->info();
+        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
+            $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
+            if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
+                debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
+                try {
+                    $filehandle = fopen($target_file, 'w');
+                    $options    = array(
+                        CURLOPT_RETURNTRANSFER => 1,
+                        CURLOPT_FILE => $filehandle,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_PIPEWAIT => 1,
+                        CURLOPT_URL => $remote_url,
+                    );
+                    $curl = curl_init();
+                    curl_setopt_array($curl, $options);
+                    curl_exec($curl);
+                    curl_close($curl);
+                    fclose($filehandle);
+                    debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $target_file . '}', 5);
+                } catch (Exception $error) {
+                    debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
+                }
+                // keep alive just in case
+                $remote_handle->send_command('ping');
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -418,7 +485,7 @@ class Catalog_remote extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return boolean|Media|null
+     * @return boolean|null
      * @throws Exception
      */
     public function prepare_media($media)

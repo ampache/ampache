@@ -229,7 +229,7 @@ class LocalPlay
     /**
      * stop
      * This functions passes NULl and calls the stop function of the player
-     * object, it should recieve a true/false boolean value
+     * object, it should receive a true/false boolean value
      */
     public function stop()
     {
@@ -256,7 +256,7 @@ class LocalPlay
 
     /**
      * add_url
-     * This directly adds an URL to the Localplay module.  Is more betterer.
+     * Add a URL to the Localplay module
      * @param Stream_Url $url
      * @return boolean
      */
@@ -349,7 +349,7 @@ class LocalPlay
      * volume_set
      * This isn't a required function, it sets the volume to a specified value
      * as passed in the variable it is a 0 - 100 scale the controller is
-     * responsible for adjusting the scale if nessecary
+     * responsible for adjusting the scale if necessary
      * @param $value
      * @return boolean
      */
@@ -390,7 +390,7 @@ class LocalPlay
 
     /**
      * volume_down
-     * This function isn't required. It tells the daemon to decrese the volume
+     * This function isn't required. It tells the daemon to decrease the volume
      * by a pre-defined amount controlled by the controller.
      */
     public function volume_down()
@@ -501,8 +501,11 @@ class LocalPlay
     public function current_instance()
     {
         $data = $this->_player->get_instance();
+        if (array_key_exists('id', $data)) {
+            return $data['id'];
+        }
 
-        return $data['id'];
+        return false;
     } // current_instance
 
     /**
@@ -553,11 +556,11 @@ class LocalPlay
     /**
      * set_active_instance
      * This sets the active instance of the Localplay controller
-     * @param $instance
+     * @param $instance_id
      */
-    public function set_active_instance($instance)
+    public function set_active_instance($instance_id)
     {
-        $this->_player->set_active_instance($instance);
+        $this->_player->set_active_instance($instance_id);
     } // set_active_instance
 
     /**
@@ -637,9 +640,7 @@ class LocalPlay
         /* Format the track name */
         $track_name = $status['track_artist'] . ' - ' . $status['track_album'] . ' - ' . $status['track_title'];
 
-        /* This is a cheezball fix for when we were unable to find a
-         * artist/album (or one wasn't provided)
-         */
+        // Hacky fix for when we were unable to find an artist/album (or one wasn't provided)
         $track_name = ltrim(ltrim((string)$track_name, ' - '), ' - ');
 
         $track_name = "[" . $status['track'] . "] - " . $track_name;

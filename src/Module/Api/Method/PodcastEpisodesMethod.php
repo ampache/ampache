@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastEpisodesMethod
 {
-    private const ACTION = 'podcast_episodes';
+    public const ACTION = 'podcast_episodes';
 
     /**
      * podcast_episodes
@@ -53,7 +53,7 @@ final class PodcastEpisodesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function podcast_episodes(array $input)
+    public static function podcast_episodes(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -82,16 +82,15 @@ final class PodcastEpisodesMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcast_episodes($items, $user->id);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::podcast_episodes($items, $user->id);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                XML_Data::set_offset($input['offset'] ?? 0);
+                XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::podcast_episodes($items, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -49,10 +49,25 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $user;
     /**
+     * @var string $user
+     */
+    public $username;
+    /**
      * @var string $type
      */
     public $type;
-
+    /**
+     * @var string $link
+     */
+    public $link;
+    /**
+     * @var bool $has_art
+     */
+    public $has_art;
+    /**
+     * @var string $f_link
+     */
+    public $f_link;
     /**
      * @var string $f_type
      */
@@ -61,33 +76,41 @@ abstract class playlist_object extends database_object implements library_item
      * @var string $f_name
      */
     public $f_name;
-    /**
-     * @var string $f_user
-     */
-    public $f_user;
 
     /**
-     * @return mixed
+     * @return array
      */
     abstract public function get_items();
 
     /**
      * format
-     * This takes the current playlist object and gussies it up a little
-     * bit so it is presentable to the users
+     * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
      * @param boolean $details
      */
     public function format($details = true)
     {
-        $this->f_name = $this->name;
+        // format shared lists using the username
+        $this->f_name = (($this->user == Core::get_global('user')->id))
+            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
-
-        if ($details) {
-            $client = new User($this->user);
-            $client->format();
-            $this->f_user = $client->f_name;
-        }
+        $this->get_f_link();
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = ($this instanceof Search)
+                ? Art::has_db($this->id, 'search')
+                : Art::has_db($this->id, 'playlist');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * has_access
@@ -114,7 +137,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -145,7 +168,45 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function get_fullname()
     {
+        $show_fullname = AmpConfig::get('show_playlist_username');
+        $my_playlist   = $this->user == Core::get_global('user')->id;
+        $this->f_name  = ($my_playlist || !$show_fullname)
+            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = ($this instanceof Search)
+                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . scrub_out($this->id)
+                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . scrub_out($this->id);
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $link_text    = scrub_out($this->get_fullname());
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -212,41 +273,53 @@ abstract class playlist_object extends database_object implements library_item
      * display_art
      * @param integer $thumb
      * @param boolean $force
+     * @param boolean $link
      */
-    public function display_art($thumb = 2, $force = false)
+    public function display_art($thumb = 2, $force = false, $link = true)
     {
-        if (AmpConfig::get('playlist_art')) {
-            $medias     = $this->get_medias();
-            $media_arts = array();
-            shuffle($medias);
-            foreach ($medias as $media) {
-                if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
-                    if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                        $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
-                        $libitem    = new $class_name($media['object_id']);
-                        $parent     = $libitem->get_parent();
-                        if ($parent !== null) {
-                            $media = $parent;
-                        } elseif (!$force) {
-                            $media = null;
-                        }
-                    }
+        if (AmpConfig::get('playlist_art') || $force) {
+            $add_link  = ($link) ? $this->get_link() : null;
+            $list_type = ($this instanceof Search)
+                ? 'search'
+                : 'playlist';
+            Art::display($list_type, $this->id, $this->get_fullname(), $thumb, $add_link);
+        }
+    }
 
-                    if ($media !== null) {
-                        if (!in_array($media, $media_arts)) {
-                            $media_arts[] = $media;
-                            if (count($media_arts) >= 1) {
-                                break;
-                            }
-                        }
+    /**
+     * gather_art
+     */
+    public function gather_art($limit): array
+    {
+        $medias   = $this->get_medias();
+        $count    = 0;
+        $images   = array();
+        $title    = T_('Playlist Items');
+        $web_path = AmpConfig::get('web_path');
+        shuffle($medias);
+        foreach ($medias as $media) {
+            if ($count >= $limit) {
+                return $images;
+            }
+            if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
+                if (!Art::has_db($media['object_id'], $media['object_type'])) {
+                    $class_name = ObjectTypeToClassNameMapper::map($media['object_type']);
+                    $libitem    = new $class_name($media['object_id']);
+                    $parent     = $libitem->get_parent();
+                    if ($parent !== null) {
+                        $media = $parent;
                     }
                 }
+                $art = new Art($media['object_id'], $media['object_type']);
+                if ($art->has_db_info()) {
+                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type'];
+                    $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
+                }
             }
-
-            foreach ($media_arts as $media) {
-                Art::display($media['object_type'], $media['object_id'], $this->get_fullname(), $thumb, $this->link);
-            }
+            $count++;
         }
+
+        return $images;
     }
 
     /**

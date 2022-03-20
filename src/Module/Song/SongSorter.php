@@ -74,7 +74,7 @@ final class SongSorter implements SongSorterInterface
                 if ($directory === false || $filename === false) {
                     $fullpath = $song->file;
                 } else {
-                    $fullpath = rtrim($directory, "\/") . "/" . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
                 }
 
                 /* We need to actually do the moving (fake it if we are testing)
@@ -131,7 +131,7 @@ final class SongSorter implements SongSorterInterface
         /* Do the various check */
         $album_object = new Album($song->album);
         $album_object->format();
-        if ($album_object->f_album_artist_name) {
+        if ($album_object->get_album_artist_fullname() != "") {
             $artist = $album_object->f_album_artist_name;
         } elseif ($album_object->artist_count != 1) {
             $artist = $various_artist;
@@ -142,18 +142,19 @@ final class SongSorter implements SongSorterInterface
         $original_year  = $album_object->original_year ?: '%Y';
         $genre          = implode("; ", $album_object->tags) ?: '%b';
         $release_type   = $album_object->release_type ?: '%r';
+        $release_status = $album_object->release_status ?: '%R';
 
         /* Replace everything we can find */
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $disk, $genre, $barcode);
+        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%d', '%g', '%b');
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $disk, $genre, $barcode);
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         /* Remove non A-Z0-9 chars */
         $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
 
         // Replace non-critical search patterns
-        $post_replace_array = array('%Y', '%c', '%C', '%r', '%g', '%b', ' []', ' ()');
-        $post_content_array = array('', '', '', '', '', '', '', '', '');
+        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
+        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
         $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
 
         $home .= "/$sort_pattern";
@@ -219,7 +220,7 @@ final class SongSorter implements SongSorterInterface
 
         foreach ($data as $dir) {
             $dir = $this->sort_clean_name($dir);
-            $path .= "/" . $dir;
+            $path .= '/' . $dir;
 
             /* We need to check for the existence of this directory */
             if (!is_dir($path)) {
@@ -257,7 +258,7 @@ final class SongSorter implements SongSorterInterface
             if (file_exists($fullname)) {
                 debug_event('sort_files', 'Error: $fullname already exists', 1);
                 /* HINT: filename (File path) */
-                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: %s'), $fullname));
+                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname));
 
                 return false;
             }
@@ -293,10 +294,10 @@ final class SongSorter implements SongSorterInterface
             $new_sum = Core::get_filesize($fullname);
             $old_sum = Core::get_filesize($song->file);
 
-            if ($new_sum != $old_sum || !$new_sum) {
+            if ($new_sum != $old_sum || $new_sum == 0) {
                 /* HINT: filename (File path) */
                 $interactor->info(
-                    sprintf(T_('Size comparison failed. Not deleting: %s'), $song->file),
+                    sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),
                     true
                 );
 

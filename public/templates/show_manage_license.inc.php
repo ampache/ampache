@@ -28,11 +28,11 @@ $web_path = AmpConfig::get('web_path'); ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
         </li>
     </ul>
 </div>
-<table class="tabledata">
+<table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
@@ -47,12 +47,12 @@ $web_path = AmpConfig::get('web_path'); ?>
 
             require Ui::find_template('show_license_row.inc.php'); ?>
         <?php
-        } if (!count($object_ids)) { ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
+        } ?>
+        <?php if (!count($object_ids)) { ?>
+        <tr>
             <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

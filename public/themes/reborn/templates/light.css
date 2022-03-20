@@ -50,11 +50,6 @@ input[type=password],
 input[type=text],
 textarea {
     background-color: #f5f5f5;
-    background-image: -moz-linear-gradient(top, #eee, #fff);
-    background-image: -ms-linear-gradient(top, #eee, #fff);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#eee), to(#fff));
-    background-image: -webkit-linear-gradient(top, #eee, #fff);
-    background-image: -o-linear-gradient(top, #eee, #fff);
     background-image: linear-gradient(to top, #eee, #fff);
     border-color: #d8d8d8;
 }
@@ -62,14 +57,7 @@ textarea {
 input[type=button],
 input[type=submit],
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {
-    background-image: -moz-linear-gradient(top, #1990db, #1473af);
-    background-image: -ms-linear-gradient(top, #1990db, #1473af);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#1990db), to(#1473af));
-    background-image: -webkit-linear-gradient(top, #1990db, #1473af);
-    background-image: -o-linear-gradient(top, #1990db, #1473af);
     background-image: linear-gradient(to top, #1990db, #1473af);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
@@ -84,8 +72,6 @@ input[type=submit]:focus,
 
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
-    -webkit-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
-    -moz-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -126,7 +112,7 @@ input[type=submit]:focus:active {
    ------------------------ */
 #ajax-loading {
     color: #1990db;
-    background-image: url(../images/ajax-loader-light.gif);
+    background-image: url('../images/ajax-loader-light.gif');
 }
 
 /* ------------------------
@@ -135,8 +121,6 @@ input[type=submit]:focus:active {
 #header {
     background-color: #eee;
     border-bottom: 2px solid #d8d8d8;
-    -webkit-box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
-    -moz-box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
     box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
 }
 
@@ -164,8 +148,6 @@ input[type=submit]:focus:active {
 #loginPage #maincontainer,
 #registerPage #maincontainer {
     border: 2px solid rgba(0, 0, 0, 0.15);
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
@@ -227,8 +209,6 @@ input[type=submit]:focus:active {
 #sidebar-header {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #000;
 }
@@ -241,8 +221,6 @@ input[type=submit]:focus:active {
 #sidebar-content-light,
 #sidebar-light {
     border-color: #d8d8d8;
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     background-color: #fcfcfc;
 }
@@ -251,8 +229,6 @@ input[type=submit]:focus:active {
 #sidebar-page {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
@@ -260,8 +236,6 @@ input[type=submit]:focus:active {
     color: #111;
     background-color: #e3e3e3;
     border-bottom-color: #0f0f0f;
-    -webkit-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
-    -moz-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
     box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
 }
 
@@ -270,7 +244,7 @@ input[type=submit]:focus:active {
 }
 
 #sidebar-tabs .sb2 li ul li a:hover {
-    color: #000;
+    color: #52aae4;
 }
 
 #sidebar-tabs .sb2 #browse_filters #multi_alpha_filter {
@@ -288,8 +262,6 @@ input[type=submit]:focus:active {
 #rightbar {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #000;
 }
@@ -306,16 +278,7 @@ input[type=submit]:focus:active {
 #rightbar #rb_current_playlist li a:focus {
     color: #000;
     background-color: #bfe1f6;
-    background-image: -moz-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -ms-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#bfe1f6), to(#82caf8));
-    background-image: -webkit-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -o-linear-gradient(top, #bfe1f6, #82caf8);
     background-image: linear-gradient(to top, #bfe1f6, #82caf8);
-}
-
-#rightbar #rb_current_playlist li.odd {
-    background-color: rgba(0, 0, 0, 0.1);
 }
 
 #rightbar .submenu {
@@ -338,8 +301,6 @@ input[type=submit]:focus:active {
 #content {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
-    -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #000;
 }
@@ -358,6 +319,7 @@ span.page-nb {
     color: #1990db;
 }
 
+span.page-text,
 table.tabledata {
     color: #000;
 }
@@ -378,8 +340,6 @@ table.tabledata a:focus {
 table.tabledata thead .th-top,
 table.tabledata tfoot .th-bottom {
     background-color: #e3e3e3;
-    -webkit-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
-    -moz-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
     box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
 }
 
@@ -391,6 +351,10 @@ table.tabledata tfoot .th-bottom {
     border-top-color: #0f0f0f;
 }
 
+table.tabledata .followbtn a {
+    color: #fff;
+}
+
 table.tabledata th a {
     color: #000;
 }
@@ -398,11 +362,6 @@ table.tabledata th a {
 table.tabledata tr:hover,
 table.tabledata tr:focus {
     background-color: #bfe1f6;
-    background-image: -moz-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -ms-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#bfe1f6), to(#82caf8));
-    background-image: -webkit-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: -o-linear-gradient(top, #bfe1f6, #82caf8);
     background-image: linear-gradient(to top, #bfe1f6, #82caf8);
 }
 
@@ -414,13 +373,12 @@ table.tabledata .th-bottom:focus {
     background-color: #e9e9e9;
 }
 
-table.tabledata tbody .odd {
+table.striped-rows tbody tr:nth-child(odd),
+ul.striped-rows > li:nth-child(odd) {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
 table.tabledata tbody .cel_cover img {
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -436,14 +394,10 @@ input:invalid {
      Content (info-box)
    ------------------------ */
 .random_selection .random_album .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
 .random_selection .random_video .art_album img {
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -459,8 +413,6 @@ input:invalid {
     Content (now playing)
    ------------------------ */
 #now_playing .cel_albumart img {
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -481,11 +433,6 @@ span.fatalerror {
 
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top, #1473af, #027ecc);
-    background-image: -ms-linear-gradient(top, #1473af, #027ecc);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#1473af), to(#027ecc));
-    background-image: -webkit-linear-gradient(top, #1473af, #027ecc);
-    background-image: -o-linear-gradient(top, #1473af, #027ecc);
     background-image: linear-gradient(to top, #1473af, #027ecc);
 }
 
@@ -505,8 +452,6 @@ span.fatalerror {
 }
 
 .item_art img {
-    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -524,22 +469,20 @@ span.fatalerror {
 }
 
 /* ------------------------
-    Styles for user flags
+    Styles for ratings / user flags
    ------------------------ */
-.userflag a.userflag_true {
-    background: url(../../../images/icon_flag.png) left top;
+.star-rating .global-rating {
+    color: #777;
 }
 
-.userflag a:hover.userflag_true {
-    background: url(../../../images/icon_flag_off.png) left top;
-}
-
-.userflag a.userflag_false {
-    background: url(../../../images/icon_flag_off.png) left top;
-}
-
+.userflag a.userflag_true,
 .userflag a:hover.userflag_false {
-    background: url(../../../images/icon_flag.png) left top;
+    background: url('../../../images/icon_flag.png') left top;
+}
+
+.userflag a:hover.userflag_true,
+.userflag a.userflag_false {
+    background: url('../../../images/icon_flag_off.png') left top;
 }
 
 /* ------------------------
@@ -589,11 +532,9 @@ div.jp-playlist {
     background-color: #f8f8f8 !important;
 }
 
-div.playing_title a {
-    color: #000;
-}
-
-div.playing_artist a {
+div.playing_title a,
+div.playing_artist a,
+div.playing_lyrics a {
     color: #000;
 }
 
@@ -648,8 +589,10 @@ div.jp-playlist li {
     background: #ccc;
 }
 
+.followbtn a,
 .list-header-navmenu-border {
     border-color: #fff;
+    color: #fff;
 }
 
 span.item-count,
@@ -663,7 +606,7 @@ a.option-list:hover {
 }
 
 .editdialogstyle.ui-dialog {
-    background-image: url("../../../images/background.light.png") !important;
+    background-image: url('../../../images/background.light.png') !important;
 }
 
 #tabs li a {

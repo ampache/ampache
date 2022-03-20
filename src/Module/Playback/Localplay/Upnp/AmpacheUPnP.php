@@ -84,11 +84,11 @@ class AmpacheUPnP extends localplay_controller
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`url` VARCHAR( 255 ) COLLATE $collation NOT NULL  " . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_upnp` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `url` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -120,9 +120,12 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " . "VALUES (?, ?, ?)";
+        $sql     = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
+        $user_id = !empty(Core::get_global('user'))
+            ? Core::get_global('user')->id
+            : -1;
 
-        return Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
+        return Dba::query($sql, array($data['name'] ?? null, $data['url'] ?? null, $user_id));
     }
 
     /**
@@ -166,7 +169,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function update_instance($uid, $data)
     {
-        $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ?  WHERE `id` = ?";
+        $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ? WHERE `id` = ?";
         Dba::query($sql, array($data['url'], $data['name'], $uid));
 
         return true;
@@ -193,9 +196,9 @@ class AmpacheUPnP extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
-        $sql        = ($instance < 1) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -204,23 +207,20 @@ class AmpacheUPnP extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @param string $user_id
      * @return boolean
      */
-    public function set_active_instance($uid, $user_id = '')
+    public function set_active_instance($uid)
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
-        debug_event('upnp.controller', 'set_active_instance userid: ' . $user_id, 5);
-
-        Preference::update('upnp_active', $user_id, $uid);
+        Preference::update('upnp_active', $user->id, $uid);
         AmpConfig::set('upnp_active', $uid, true);
+        debug_event('upnp.controller', 'set_active_instance userid: ' . $user->id, 5);
 
         return true;
-    }
+    } // set_active_instance
 
     /**
      * get_active_instance
@@ -233,7 +233,7 @@ class AmpacheUPnP extends localplay_controller
 
     /**
      * @param Stream_Url $url
-     * @return boolean|mixed
+     * @return boolean
      */
     public function add_url(Stream_Url $url)
     {
@@ -251,16 +251,16 @@ class AmpacheUPnP extends localplay_controller
     /**
      * delete_track
      * Delete a track from the UPnP playlist
-     * @param $track
+     * @param $object_id
      * @return boolean
      */
-    public function delete_track($track)
+    public function delete_track($object_id)
     {
         if (!$this->_upnp) {
             return false;
         }
 
-        $this->_upnp->PlaylistRemove($track);
+        $this->_upnp->PlaylistRemove($object_id);
 
         return true;
     }
@@ -469,15 +469,15 @@ class AmpacheUPnP extends localplay_controller
         $idx     = 1;
         foreach ($playlist as $key => $item) {
             $data          = array();
-            $data['link']  = $item['link'];
+            $data['link']  = $item['link'] ?? '';
             $data['id']    = $idx;
             $data['track'] = $idx;
 
-            $url_data = Stream_Url::parse($item['link']);
-            if ($url_data != null) {
+            $url_data = Stream_Url::parse($data['link']);
+            if (array_key_exists('id', $url_data)) {
                 $song = new Song($url_data['id']);
                 if ($song != null) {
-                    $data['name'] = $song->get_artist_name() . ' - ' . $song->title;
+                    $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }
             if (!$data['name']) {
@@ -513,15 +513,15 @@ class AmpacheUPnP extends localplay_controller
         $status['volume']      = $this->_upnp->GetVolume();
         $status['repeat']      = false;
         $status['random']      = false;
-        $status['track']       = $item['link'];
-        $status['track_title'] = $item['name'];
+        $status['track']       = $item['link'] ?? '';
+        $status['track_title'] = $item['name'] ?? '';
 
-        $url_data = Stream_Url::parse($item['link']);
-        if ($url_data != null) {
+        $url_data = Stream_Url::parse($status['track']);
+        if (array_key_exists('id', $url_data)) {
             $song = new Song($url_data['id']);
-            if ($song != null) {
-                $status['track_artist'] = $song->get_artist_name();
-                $status['track_album']  = $song->get_album_name();
+            if ($song->id) {
+                $status['track_artist'] = $song->get_artist_fullname();
+                $status['track_album']  = $song->get_album_fullname();
             }
         }
 
@@ -537,8 +537,7 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp.controller',
-            'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp.controller', 'Connected.', 5);
 

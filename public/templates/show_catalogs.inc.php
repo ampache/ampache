@@ -23,11 +23,13 @@
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
+<table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
     <thead>
         <tr class="th-top">
             <th class="cel_catalog essential persist"><?php echo T_('Name'); ?></th>
@@ -43,19 +45,16 @@ use Ampache\Module\Util\Ui;
             foreach ($object_ids as $catalog_id) {
                 $libitem = Catalog::create_from_id($catalog_id);
                 $libitem->format(); ?>
-        <tr class="<?php echo Ui::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
+        <tr id="catalog_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_catalog_row.inc.php'); ?>
         </tr>
         <?php
             } ?>
-        <tr class="<?php echo Ui::flip_class(); ?>">
-            <td colspan="6">
-            <?php if (!count($object_ids)) { ?>
-                <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
-            <?php
-            } ?>
-            </td>
+        <?php if (!count($object_ids)) { ?>
+        <tr>
+            <td colspan="6"><span class="nodata"><?php echo T_('No Catalog found'); ?></span></td>
         </tr>
+            <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

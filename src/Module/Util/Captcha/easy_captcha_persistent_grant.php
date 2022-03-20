@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\Captcha;
 
+use Ampache\Config\AmpConfig;
+
 /**
  * Class easy_captcha_persistent_grant
  * shortcut, allow access for an user if captcha was previously solved
@@ -36,12 +38,12 @@ class easy_captcha_persistent_grant extends easy_captcha
     }
 
     /**
-     * @param integer $ignore
+     * @param integer $input
      * @return boolean
      */
-    public function solved($ignore = 0)
+    public function solved($input = 0)
     {
-        if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
+        if (CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
 
@@ -52,9 +54,14 @@ class easy_captcha_persistent_grant extends easy_captcha
     public function grant()
     {
         if (!headers_sent()) {
-            setcookie($this->cookie(), $this->validity_token(), time() + 175 * CAPTCHA_TIMEOUT);
-            //} else {
-            //    // $this->log("::grant", "COOKIES", "too late for cookies");
+            $cookie_options = [
+                'expires' => (int)(time() + 175 * CAPTCHA_TIMEOUT),
+                'path' => (string)AmpConfig::get('cookie_path'),
+                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'secure' => make_bool(AmpConfig::get('cookie_secure')),
+                'samesite' => 'Strict'
+            ];
+            setcookie($this->cookie(), $this->validity_token(), $cookie_options);
         }
     }
 

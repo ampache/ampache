@@ -37,19 +37,39 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * Get the add date of first added song
-     */
-    public function getFirstSongAddTime(
-        int $albumId
-    ): int;
-
-    /**
-     * gets a random number, and a random assortment of songs from this album
+     * gets songs from this album
      *
      * @return int[] Album ids
      */
+    public function getSongs(
+        int $albumId
+    ): array;
+
+    /**
+     * gets songs from this album group
+     *
+     * @return int[] Song ids
+     */
+    public function getSongsGrouped(
+        array $albumIdList
+    ): array;
+
+    /**
+     * gets a random order of songs from this album
+     *
+     * @return int[] Song ids
+     */
     public function getRandomSongs(
         int $albumId
+    ): array;
+
+    /**
+     * gets a random order of songs from this album group
+     *
+     * @return int[] Song ids
+     */
+    public function getRandomSongsGrouped(
+        array $albumIdList
     ): array;
 
     /**
@@ -75,16 +95,29 @@ interface AlbumRepositoryInterface
     public function collectGarbage(): void;
 
     /**
-     * Get time for an album disk.
+     * Get time for an album disk by album.
      */
-    public function getDuration(int $albumId): int;
+    public function getAlbumDuration(int $albumId): int;
 
     /**
-     * Get time for an album disk and set it.
+     * Get play count for an album disk by album id.
      */
-    public function updateTime(
-        Album $album
-    ): int;
+    public function getAlbumPlayCount(int $albumId): int;
+
+    /**
+     * Get song count for an album disk by album id.
+     */
+    public function getSongCount(int $albumId): int;
+
+    /**
+     * Get distinct artist count for an album disk by album id.
+     */
+    public function getArtistCount(int $albumId): int;
+
+    /**
+     * Get distinct artist count for an album array.
+     */
+    public function getArtistCountGroup(array $albumArray): int;
 
     /**
      * gets the album ids that this artist is a part of
@@ -92,8 +125,27 @@ interface AlbumRepositoryInterface
      * @return int[]
      */
     public function getByArtist(
-        Artist $artist,
+        int $artistId,
         ?int $catalog = null,
         bool $group_release_type = false
+    ): array;
+
+    /**
+     * gets the album id has the same artist and title
+     *
+     * @return int[]
+     */
+    public function getByName(
+        string $name,
+        int $artistId
+    ): array;
+
+    /**
+     * gets the album id that is part of this mbid_group
+     *
+     * @return int[]
+     */
+    public function getByMbidGroup(
+        string $mbid
     ): array;
 }

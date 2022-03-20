@@ -211,10 +211,9 @@ class mpd
      */
     public function __construct($server, $port, $password = null, $debug_callback = null)
     {
-        $this->host     = $server;
-        $this->port     = $port;
+        $this->host     = trim($server);
+        $this->port     = trim($port);
         $this->password = $password;
-        debug_event(self::class, "Connecting to: " . $server . ":" . $port, 5);
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -240,21 +239,17 @@ class mpd
 
         if ($password) {
             if (!$this->SendCommand(self::COMMAND_PASSWORD, $password, false)) {
+                // bad password or command
                 $this->connected = false;
                 $this->_error('construct', 'Password supplied is incorrect or Invalid Command');
 
-                return false;  // bad password or command
+                return false;
             }
-        } // if password
-        else {
+        } else {
             if (!$this->RefreshInfo()) {
                 // no read access, might as well be disconnected
                 $this->connected = false;
-                if ($password) {
-                    $this->_error('construct', 'Password supplied does not have read access');
-                } else {
-                    $this->_error('construct', 'Password required to access server');
-                }
+                $this->_error('construct', 'Password required to access server');
 
                 return false;
             }
@@ -272,7 +267,7 @@ class mpd
      * should not need to call this directly.
      * @return false|string
      */
-    public function Connect()
+    public function connect()
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
@@ -325,7 +320,7 @@ class mpd
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
         if (!$this->connected) {
-            $this->_error('SendCommand', 'Not connected', 1);
+            $this->_error('SendCommand', 'Not connected');
 
             return false;
         } else {
@@ -426,7 +421,7 @@ class mpd
     {
         $this->_debug('SendCommandQueue', 'start', 5);
         if (!$this->connected) {
-            _error('SendCommandQueue', 'Not connected');
+            $this->_error('SendCommandQueue', 'Not connected');
 
             return false;
         }
@@ -1072,13 +1067,13 @@ class mpd
      * Computes numeric value from a version string
      *
      * @param string $string
-     * @return float|integer|mixed
+     * @return float|integer
      */
     private static function _computeVersionValue($string)
     {
         $parts = explode('.', $string);
 
-        return (100 * $parts[0]) + (10 * $parts[1]) + $parts[2];
+        return (100 * (int)$parts[0]) + (10 * (int)$parts[1]) + (int)$parts[2];
     }
 
     /**

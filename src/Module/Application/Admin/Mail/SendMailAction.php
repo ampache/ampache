@@ -91,7 +91,7 @@ final class SendMailAction implements ApplicationActionInterface
                 $title = T_('No Problem');
                 $body  = T_('Your e-mail has been sent');
             } else {
-                $title = T_("There Was a Problem");
+                $title = T_('There Was a Problem');
                 $body  = T_('Your e-mail has not been sent');
             }
 

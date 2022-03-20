@@ -126,7 +126,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_listeners($listeners)
     {
-        $sql = "UPDATE `broadcast` SET `listeners` = ? " . "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
         $this->listeners = $listeners;
     }
@@ -137,7 +137,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_song($song_id)
     {
-        $sql = "UPDATE `broadcast` SET `song` = ? " . "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
         $this->song          = $song_id;
         $this->song_position = 0;
@@ -184,7 +184,7 @@ class Broadcast extends database_object implements library_item
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " . "WHERE `id` = ?";
+        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
         Dba::write($sql, $params);
 
@@ -196,8 +196,7 @@ class Broadcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name = $this->name;
-        $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '">' . $this->get_fullname() . '</a>';
         if ($details) {
             $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
@@ -219,7 +218,26 @@ class Broadcast extends database_object implements library_item
      */
     public function get_fullname()
     {
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * get_link
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/broadcast.php?id=' . scrub_out($this->id);
+        }
+
+        return $this->link;
     }
 
     /**
@@ -404,7 +422,7 @@ class Broadcast extends database_object implements library_item
 
         $broadcasts = array();
         while ($results = Dba::fetch_assoc($db_results)) {
-            $broadcasts[] = $results['id'];
+            $broadcasts[] = (int)$results['id'];
         }
 
         return $broadcasts;

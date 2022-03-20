@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Song\Tag\SongTagWriterInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -37,20 +39,21 @@ class AmpacheRatingMatch
     public $name        = 'RatingMatch';
     public $categories  = 'scrobbling';
     public $description = 'Raise the album and artist rating to match the highest song rating';
-    public $version     = '000003';
+    public $version     = '000004';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $min_stars;
     private $match_flags;
-    private $user_id;
+    private $user;
     private $star1_rule;
     private $star2_rule;
     private $star3_rule;
     private $star4_rule;
     private $star5_rule;
     private $flag_rule;
+    private $write_tags;
 
     /**
      * Constructor
@@ -58,7 +61,7 @@ class AmpacheRatingMatch
      */
     public function __construct()
     {
-        $this->description = T_('Raise the album and artist rating to match the highest song rating');
+        $this->description   = T_('Raise the album and artist rating to match the highest song rating');
 
         return true;
     } // constructor
@@ -87,6 +90,8 @@ class AmpacheRatingMatch
         Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', 25, 'string', 'plugins', $this->name);
         Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', 25, 'string', 'plugins', $this->name);
         Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name);
+        // version 4
+        Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name);
 
         return true;
     } // install
@@ -115,6 +120,9 @@ class AmpacheRatingMatch
     public function upgrade()
     {
         $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
         if ($from_version < 2) {
             Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
         }
@@ -126,10 +134,12 @@ class AmpacheRatingMatch
             Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', 25, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name);
         }
+        if ($from_version < 4) {
+            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name);
+        }
 
         return true;
     } // upgrade
-
 
     /**
      * save_rating
@@ -139,19 +149,43 @@ class AmpacheRatingMatch
      */
     public function save_rating($rating, $new_rating)
     {
-        if ($rating->type == 'song' && $new_rating >= $this->min_stars && $this->min_stars > 0) {
-            $song   = new Song($rating->id);
-            $artist = new Rating($song->artist, 'artist');
-            $album  = new Rating($song->album, 'album');
+        if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
+            if ($rating->type == 'song') {
+                $song = new Song($rating->id);
+                // rate all the song artists (If there are more than one)
+                foreach (Song::get_parent_array($song->id) as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist < $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
+                }
+                // album is a single object
+                $album         = new Rating($song->album, 'album');
+                $rating_album  = $album->get_user_rating($this->user->id);
+                if ($rating_album < $new_rating) {
+                    $album->set_rating($new_rating, $this->user->id);
+                }
+            }
+            if ($rating->type == 'album') {
+                $album = new Album($rating->id);
+                // rate all the album artists (If there are more than one)
+                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist <= $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
+                }
+            }
+        }
+        // write to tags
+        if ($this->write_tags) {
+            global $dic;
 
-            $rating_artist = (int) $artist->get_user_rating($this->user_id);
-            $rating_album  = (int) $album->get_user_rating($this->user_id);
-            if ($rating_artist < $new_rating) {
-                $artist->set_rating($new_rating, $this->user_id);
-            }
-            if ($rating_album < $new_rating) {
-                $album->set_rating($new_rating, $this->user_id);
-            }
+            $song          = new Song($rating->id);
+            $songTagWriter = $dic->get(SongTagWriterInterface::class);
+            $songTagWriter->writeRating($song, $this->user, $rating);
         }
     }
 
@@ -166,11 +200,11 @@ class AmpacheRatingMatch
         if ($this->match_flags > 0 && $flagged) {
             $album  = new Userflag($song->album, 'album');
             $artist = new Userflag($song->artist, 'artist');
-            if (!$album->get_flag($this->user_id, false)) {
-                $album->set_flag($flagged, $this->user_id);
+            if (!$album->get_flag($this->user->id, false)) {
+                $album->set_flag($flagged, $this->user->id);
             }
-            if (!$artist->get_flag($this->user_id, false)) {
-                $artist->set_flag($flagged, $this->user_id);
+            if (!$artist->get_flag($this->user->id, false)) {
+                $artist->set_flag($flagged, $this->user->id);
             }
         }
     } // set_flag
@@ -184,7 +218,7 @@ class AmpacheRatingMatch
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (get_class($song) != 'Song') {
+        if (get_class($song) != Song::class) {
             return false;
         }
         // Don't double rate something after it's already been rated before
@@ -193,17 +227,15 @@ class AmpacheRatingMatch
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS `counting` " .
-            "FROM object_count WHERE object_type = 'song' AND " .
-            "`count_type` = ? AND object_id = ? AND user = ?;";
+        $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
 
         // get the plays for your user
-        $db_results  = Dba::read($sql, array('stream', $song->id, $this->user_id));
+        $db_results  = Dba::read($sql, array('stream', $song->id, $this->user->id));
         $play_result = Dba::fetch_assoc($db_results);
         $play_count  = (int) $play_result['counting'];
 
         // get the skips for your user
-        $db_results  = Dba::read($sql, array('skip', $song->id, $this->user_id));
+        $db_results  = Dba::read($sql, array('skip', $song->id, $this->user->id));
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 
@@ -212,34 +244,34 @@ class AmpacheRatingMatch
         }
         if (!empty($this->star1_rule)) {
             if ($this->rule_process($this->star1_rule, $play_count, $skip_count)) {
-                $rating->set_rating(1, $this->user_id);
+                $rating->set_rating(1, $this->user->id);
             }
         }
         if (!empty($this->star2_rule)) {
             if ($this->rule_process($this->star2_rule, $play_count, $skip_count)) {
-                $rating->set_rating(2, $this->user_id);
+                $rating->set_rating(2, $this->user->id);
             }
         }
         if (!empty($this->star3_rule)) {
             if ($this->rule_process($this->star3_rule, $play_count, $skip_count)) {
-                $rating->set_rating(3, $this->user_id);
+                $rating->set_rating(3, $this->user->id);
             }
         }
         if (!empty($this->star4_rule)) {
             if ($this->rule_process($this->star4_rule, $play_count, $skip_count)) {
-                $rating->set_rating(4, $this->user_id);
+                $rating->set_rating(4, $this->user->id);
             }
         }
         if (!empty($this->star5_rule)) {
             if ($this->rule_process($this->star5_rule, $play_count, $skip_count)) {
-                $rating->set_rating(5, $this->user_id);
+                $rating->set_rating(5, $this->user->id);
             }
         }
         if (!empty($this->flag_rule)) {
             if ($this->rule_process($this->flag_rule, $play_count, $skip_count)) {
                 $flag = new Userflag($song->id, 'song');
-                if (!$flag->get_flag($this->user_id, false)) {
-                    $flag->set_flag(true, $this->user_id);
+                if (!$flag->get_flag($this->user->id, false)) {
+                    $flag->set_flag(true, $this->user->id);
                 }
             }
         }
@@ -297,7 +329,7 @@ class AmpacheRatingMatch
     {
         $user->set_preferences();
         $data              = $user->prefs;
-        $this->user_id     = $user->id;
+        $this->user        = $user;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
         $this->match_flags = (int) $data['ratingmatch_flags'];
         $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : array();
@@ -306,6 +338,7 @@ class AmpacheRatingMatch
         $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : array();
         $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : array();
         $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : array();
+        $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
 
         return true;
     } // load

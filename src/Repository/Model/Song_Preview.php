@@ -52,8 +52,8 @@ class Song_Preview extends database_object implements Media, playable_item
     public $f_artist;
     public $f_artist_full;
     public $f_artist_link;
-    public $f_title;
-    public $f_title_full;
+    public $f_name;
+    public $f_name_full;
     public $link;
     public $f_link;
     public $f_album_link;
@@ -76,7 +76,7 @@ class Song_Preview extends database_object implements Media, playable_item
             }
             if ($this->file) {
                 $data       = pathinfo($this->file);
-                $this->type = strtolower((string)$data['extension']) ?: 'mp3';
+                $this->type = strtolower((string)$data['extension']) ?? 'mp3';
                 $this->mime = Song::type_to_mime($this->type);
             }
         } else {
@@ -109,7 +109,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $results['disk']  = Album::sanitize_disk($results['track'][0]);
             $results['track'] = substr($results['track'], 1);
         }
-        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $results['file'],
@@ -152,7 +152,7 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` ' . "WHERE `id` IN $idlist";
+        $sql        = "SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $artists = array();
@@ -180,7 +180,7 @@ class Song_Preview extends database_object implements Media, playable_item
             return parent::get_from_cache('song_preview', $preview_id);
         }
 
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($preview_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -206,17 +206,14 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param integer $artist_id
      * @return string
      */
-    public function get_artist_name($artist_id = 0)
+    public function get_artist_fullname($artist_id = 0)
     {
         if (!$artist_id) {
             $artist_id = $this->artist;
         }
         $artist = new Artist($artist_id);
-        if ($artist->prefix) {
-            return $artist->prefix . " " . $artist->name;
-        } else {
-            return $artist->name;
-        }
+
+        return $artist->get_fullname();
     } // get_album_name
 
     /**
@@ -232,7 +229,7 @@ class Song_Preview extends database_object implements Media, playable_item
         unset($details); // dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
-            $this->f_artist_full = $this->get_artist_name();
+            $this->f_artist_full = $this->get_artist_fullname();
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
             $wartist             = Wanted::get_missing_artist($this->artist_mbid);
@@ -242,11 +239,9 @@ class Song_Preview extends database_object implements Media, playable_item
         $this->f_artist = $this->f_artist_full;
 
         // Format the title
-        $this->f_title_full = $this->title;
-        $this->f_title      = $this->title;
-
-        $this->link         = "#";
-        $this->f_link       = "<a href=\"" . scrub_out($this->link) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_title) . "</a>";
+        $this->f_name_full  = $this->title;
+        $this->f_name       = $this->title;
+        $this->f_link       = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
 
         // Format the track (there isn't really anything to do here)
@@ -256,11 +251,30 @@ class Song_Preview extends database_object implements Media, playable_item
     } // format
 
     /**
+     * Get item fullname.
      * @return string
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $this->link = "#";
+        }
+
+        return $this->link;
     }
 
     /**
@@ -293,7 +307,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -333,7 +347,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type      = $this->type;
-        $song_name = rawurlencode($this->get_artist_name() . " - " . $this->title . "." . $type);
+        $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_Url::format($url . $additional_params);
@@ -424,7 +438,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $songs = array();
 
-        $sql        = "SELECT `id` FROM `song_preview` " . "WHERE `session` = ? AND `album_mbid` = ?";
+        $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ?";
         $db_results = Dba::read($sql, array(session_id(), $album_mbid));
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -439,7 +453,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `song_preview` USING `song_preview` ' . 'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' . 'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `song_preview` USING `song_preview` LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` WHERE `session`.`id` IS NULL';
 
         return Dba::write($sql);
     }

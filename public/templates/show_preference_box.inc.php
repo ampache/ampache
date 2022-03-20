@@ -25,13 +25,14 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 
-if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
-    $is_admin = true;
-} ?>
+/** @var UiInterface $ui */
+/** @var array<string, mixed> $preferences */
+
+$is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
@@ -60,20 +61,41 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
             $lastsubcat = $pref['subcategory'];
             $fsubcat    = $lastsubcat;
             if (!empty($fsubcat)) { ?>
-                <tr class="<?php echo Ui::flip_class() ?>"><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
+                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
                 <?php
             }
         } ?>
-        <tr class="<?php echo Ui::flip_class() ?>">
+        <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php create_preference_input($pref['name'], $pref['value']); ?>
+                <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name         = 'on_' . $pref['level'];
-            ${$name}                    = 'selected="selected"'; ?>
+                    <?php $name         = 'on_' . (string)$pref['level'];
+                    $on_5               = '';
+                    $on_25              = '';
+                    $on_50              = '';
+                    $on_75              = '';
+                    $on_100             = '';
+                    switch ($name) {
+                        case 'on_5':
+                            $on_5 = 'selected="selected"';
+                            break;
+                        case 'on_25':
+                            $on_25 = 'selected="selected"';
+                            break;
+                        case 'on_50':
+                            $on_50 = 'selected="selected"';
+                            break;
+                        case 'on_75':
+                            $on_75 = 'selected="selected"';
+                            break;
+                        case 'on_100':
+                            $on_100 = 'selected="selected"';
+                            break;
+                    } ?>
                     <select name="level_<?php echo $pref['name']; ?>">
                         <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                         <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>

@@ -74,13 +74,13 @@ class easy_captcha
 
         #-- captcha processing info
         $this->sent       = 0;
-        $this->tries      = CAPTCHA_TRIES;  // 5
-        $this->ajax_tries = CAPTCHA_AJAX_TRIES;  // 25
+        $this->tries      = CAPTCHA_TRIES; // 5
+        $this->ajax_tries = CAPTCHA_AJAX_TRIES; // 25
         $this->passed     = 0;
-        $this->maxpasses  = CAPTCHA_MAXPASSES;   // 2
+        $this->maxpasses  = CAPTCHA_MAXPASSES; // 2
         $this->failures   = 0;
         $this->shortcut   = array();
-        $this->grant      = 0;  // unchecked access
+        $this->grant      = 0; // unchecked access
 
         #-- mk IMAGE/GRAPHIC
         $this->image = (CAPTCHA_IMAGE_TYPE <= 1) ? new easy_captcha_graphic_image_waved() : new easy_captcha_graphic_image_disturbed();
@@ -111,8 +111,7 @@ class easy_captcha
      */
     public function is_valid()
     {
-        return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid",
-                "EXPIRED", "and deleted") && false;
+        return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
     }
 
 
@@ -133,7 +132,7 @@ class easy_captcha
      * @param $input
      * @return boolean
      */
-    public function solved($input = null/*parameter only used in subclasses*/)
+    public function solved($input = null)
     {
         $okay = false;
 
@@ -142,14 +141,14 @@ class easy_captcha
             // log, this is either a frustrated user or a bot knocking
             $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
         } elseif ($this->sent) {
-            $input = $_REQUEST[CAPTCHA_PARAM_INPUT];  // might be empty string
+            $input = $_REQUEST[CAPTCHA_PARAM_INPUT]; // might be empty string
 
             #-- check individual modules
             $okay = $this->grant;
             foreach ($this->shortcut as $test) {
-                $okay = $okay || $test->solved($input);    // cookie & nourls
+                $okay = $okay || $test->solved($input); // cookie & nourls
             }
-            $okay = $okay  // either letters or math formula submitted
+            $okay = $okay // either letters or math formula submitted
                 || isset($this->image) && $this->image->solved($input) || isset($this->text) && $this->text->solved($input);
 
             #-- update state
@@ -170,11 +169,11 @@ class easy_captcha
             }
         }
 
-        #-- remove if done
         if (!$this->is_valid() /*&& !$this->delete()*/) {
+            #-- remove if done
             $this->generate(); // ensure object instance can be reused - for quirky form processing logic
-        } #-- store state/result
-        else {
+        } else {
+            #-- store state/result
             $this->save();
         }
 
@@ -322,7 +321,7 @@ class easy_captcha
      */
     public function data_file($object_id = null)
     {
-        return CAPTCHA_TEMP_DIR . "/" . preg_replace("/[^-,.\w]/", "", ($object_id ? $object_id : $this->id)) . ".a()";
+        return CAPTCHA_TEMP_DIR . '/' . preg_replace("/[^-,.\w]/", "", ($object_id ? $object_id : $this->id)) . ".a()";
     }
 
 

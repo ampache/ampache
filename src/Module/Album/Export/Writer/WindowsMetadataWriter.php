@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Album;
 final class WindowsMetadataWriter implements MetadataWriterInterface
 {
     public function write(
-        Album $album,
+        string $fileName,
         string $dirName,
         string $iconFileName
     ): void {
@@ -36,7 +36,7 @@ final class WindowsMetadataWriter implements MetadataWriterInterface
         $string    = sprintf(
             "[.ShellClassInfo]\nIconFile=%s\nIconIndex=0\nInfoTip=%s",
             $iconFileName,
-            $album->full_name
+            $fileName
         );
 
         $meta_handle = fopen($meta_file, 'w');

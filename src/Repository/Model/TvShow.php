@@ -52,7 +52,6 @@ class TvShow extends database_object implements library_item
     public $link;
     public $f_link;
 
-
     // Constructed vars
     private static $_mapcache = array();
 
@@ -85,14 +84,13 @@ class TvShow extends database_object implements library_item
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` " . "WHERE `tvshow_season`.`id` IS NULL";
+        $sql = "DELETE FROM `tvshow` USING `tvshow` LEFT JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` WHERE `tvshow_season`.`id` IS NULL";
         Dba::write($sql);
     }
 
     /**
      * get_seasons
      * gets the tv show seasons
-     * of
      */
     public function get_seasons()
     {
@@ -112,20 +110,13 @@ class TvShow extends database_object implements library_item
      */
     public function get_episodes()
     {
-        $sql = "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-        }
-        $sql .= "LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` ";
-        $sql .= "WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+        $sql = (AmpConfig::get('catalog_disable'))
+            ? "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' AND `catalog`.`enabled` = '1' "
+            : "SELECT `tvshow_episode`.`id` FROM `tvshow_episode` LEFT JOIN `tvshow_season` ON `tvshow_season`.`id` = `tvshow_episode`.`season` WHERE `tvshow_season`.`tvshow`='" . Dba::escape($this->id) . "' ";
         $sql .= "ORDER BY `tvshow_season`.`season_number`, `tvshow_episode`.`episode_number`";
-        $db_results = Dba::read($sql);
 
-        $results = array();
+        $db_results = Dba::read($sql);
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
@@ -144,11 +135,11 @@ class TvShow extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
+            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` AS `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
-            $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` " . "WHERE `tvshow_season`.`tvshow` = ?";
+            $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` WHERE `tvshow_season`.`tvshow` = ?";
             $db_results          = Dba::read($sql, array($this->id));
             $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
@@ -166,15 +157,13 @@ class TvShow extends database_object implements library_item
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
     {
-        $this->f_name = trim((string)$this->prefix . " " . $this->name);
-        $this->link   = AmpConfig::get('web_path') . '/tvshows.php?action=show&tvshow=' . $this->id;
-        $this->f_link = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
 
         if ($details) {
             $this->_get_extra_info();
@@ -187,7 +176,7 @@ class TvShow extends database_object implements library_item
 
     /**
      * get_keywords
-     * @return array|mixed
+     * @return array
      */
     public function get_keywords()
     {
@@ -195,7 +184,7 @@ class TvShow extends database_object implements library_item
         $keywords['tvshow'] = array(
             'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_name
+            'value' => $this->get_fullname()
         );
         $keywords['type'] = array(
             'important' => false,
@@ -211,7 +200,27 @@ class TvShow extends database_object implements library_item
      */
     public function get_fullname()
     {
+        // don't do anything if it's formatted
+        if (!isset($this->f_name)) {
+            $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
         return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/tvshows.php?action=show&tvshow=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -243,7 +252,7 @@ class TvShow extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -304,7 +313,7 @@ class TvShow extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tvshow') || $force) {
-            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('tvshow', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -392,13 +401,13 @@ class TvShow extends database_object implements library_item
                 $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Recommendation::migrate('tvshow', $this->id, (int)$tvshow_id);
+                //Recommendation::migrate('tvshow', $this->id);
                 Share::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Shoutbox::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Tag::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Userflag::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Rating::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Art::migrate('tvshow', $this->id, (int)$tvshow_id);
+                Art::duplicate('tvshow', $this->id, (int)$tvshow_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }
@@ -418,12 +427,12 @@ class TvShow extends database_object implements library_item
         $this->summary = $summary;
 
         $override_childs = false;
-        if ($data['overwrite_childs'] == 'checked') {
+        if (array_key_exists('overwrite_childs', $data) && $data['overwrite_childs'] == 'checked') {
             $override_childs = true;
         }
 
         $add_to_childs = false;
-        if ($data['add_to_childs'] == 'checked') {
+        if (array_key_exists('add_to_childs', $data) && $data['add_to_childs'] == 'checked') {
             $add_to_childs = true;
         }
 

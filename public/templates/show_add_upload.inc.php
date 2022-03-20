@@ -29,9 +29,11 @@ use Ampache\Module\Util\Ui;
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
-$ajaxfs = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
-$artist = (int) (Core::get_request('artist'));
-$album  = (int) (Core::get_request('album')); ?>
+$ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
+$artist   = (int) (Core::get_request('artist'));
+$album    = (int) (Core::get_request('album'));
+$web_path = AmpConfig::get('web_path');
+$user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">
     <div id="tree"></div>
     <div id="data">
@@ -41,7 +43,7 @@ $album  = (int) (Core::get_request('album')); ?>
         <div class="treecontent default" style="text-align:center;"><?php echo T_('Target folder'); ?></div>
     </div>
 </div>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jstree/dist/jstree.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/components/jstree/dist/jstree.min.js"></script>
 <script>
 $(window).resize(function () {
     var h = Math.max($(window).height() - 0, 420);
@@ -162,7 +164,7 @@ $(function () {
 });
 </script>
 
-<form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/upload.php">
+<form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/upload.php">
 <input type="hidden" name="upload_action" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
 <?php
@@ -182,7 +184,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td class="upload_select">
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="artist_select_album_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
@@ -191,7 +193,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td class="upload_select">
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : Core::get_global('user')->id); ?>
+        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="album_select_upload_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>
@@ -203,8 +205,8 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td class="upload_select">
-        <?php show_license_select('license', 0, 0); ?>
-        <div id="album_select_license_<?php echo $song->license ?>">
+        <?php show_license_select('license'); ?>
+        <div id="album_select_license">
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>
     </td>
@@ -330,7 +332,6 @@ $(function(){
         }
 
     });
-
 
     // Prevent the default action when a file is dropped on the window
     $(document).on('drop dragover', function (e) {

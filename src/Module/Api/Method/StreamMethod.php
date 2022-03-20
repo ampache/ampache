@@ -36,7 +36,7 @@ use Ampache\Repository\Model\Podcast_Episode;
  */
 final class StreamMethod
 {
-    private const ACTION = 'stream';
+    public const ACTION = 'stream';
 
     /**
      * stream
@@ -47,14 +47,14 @@ final class StreamMethod
      *
      * @param array $input
      * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song', 'podcast'
+     * type    = (string) 'song', 'podcast_episode', 'podcast'
      * bitrate = (integer) max bitrate for transcoding // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input)
+    public static function stream(array $input): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -90,7 +90,7 @@ final class StreamMethod
             $media = new Song($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
-        if ($type == 'podcast') {
+        if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }

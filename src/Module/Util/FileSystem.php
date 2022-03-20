@@ -32,7 +32,7 @@ class FileSystem
 
     /**
      * @param $path
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     protected function real($path)
@@ -52,7 +52,7 @@ class FileSystem
 
     /**
      * @param string $fs_id
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     protected function path($fs_id)

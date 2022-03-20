@@ -32,9 +32,12 @@ use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 final class ExportAlbumArtCommand extends Command
 {
+    private LoggerInterface $logger;
+
     private ConfigContainerInterface $configContainer;
 
     private AlbumArtExporterInterface $albumArtExporter;
@@ -42,19 +45,21 @@ final class ExportAlbumArtCommand extends Command
     private ContainerInterface $dic;
 
     public function __construct(
+        LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         AlbumArtExporterInterface $albumArtExporter,
         ContainerInterface $dic
     ) {
-        parent::__construct('export:albumArt', 'Exports the album art');
+        parent::__construct('export:albumArt', T_('Export album art'));
 
+        $this->logger           = $logger;
         $this->configContainer  = $configContainer;
         $this->albumArtExporter = $albumArtExporter;
         $this->dic              = $dic;
 
         $this
-            ->argument('[type]', 'Metadata write mode (`linux` or `windows`)', 'linux')
-            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## Exports album art for linux<eol/>');
+            ->argument('[type]', T_('Metadata write mode (`linux` or `windows`)'), 'linux')
+            ->usage('<bold>  export:albumArt</end> <comment>linux</end> ## ' . T_('Export album art for Linux') . '<eol/>');
     }
 
     public function execute(

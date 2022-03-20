@@ -61,8 +61,7 @@ final class AlbumRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $album    = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
-        $mediaIds = $this->albumRepository->getRandomSongs($album->id);
+        $mediaIds = $this->albumRepository->getRandomSongs((int)$_REQUEST['album_id']);
 
         return $this->stream(
             $mediaIds,

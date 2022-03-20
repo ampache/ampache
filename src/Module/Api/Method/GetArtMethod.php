@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class GetArtMethod
 {
-    private const ACTION = 'get_art';
+    public const ACTION = 'get_art';
 
     /**
      * get_art
@@ -48,11 +48,12 @@ final class GetArtMethod
      * Get an art image.
      *
      * @param array $input
-     * id   = (string) $object_id
-     * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * id       = (string) $object_id
+     * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
      * @return boolean
      */
-    public static function get_art(array $input)
+    public static function get_art(array $input): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -61,54 +62,47 @@ final class GetArtMethod
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = $input['size'];
+        $size      = $input['size'] ?? false;
         $user      = User::get_from_username(Session::username($input['auth']));
+        $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $art = null;
-        if ($type == 'artist') {
-            $art = new Art($object_id, 'artist');
-        } elseif ($type == 'album') {
-            $art = new Art($object_id, 'album');
-        } elseif ($type == 'song') {
-            $art = new Art($object_id, 'song');
-            if ($art != null && $art->id == null) {
+        $art = new Art($object_id, $type);
+        if ($type == 'song') {
+            if (!Art::has_db($object_id, $type)) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = new Song($object_id);
                 $art  = new Art($song->album, 'album');
             }
-        } elseif ($type == 'podcast') {
-            $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
+            if (!Art::has_db($object_id, 'song')) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'playlist') {
-            $playlist  = new Playlist($object_id);
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
-            if ($art != null && $art->id == null) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, 'album');
+            if (!Art::has_db($object_id, $type)) {
+                $playlist  = new Playlist($object_id);
+                $listitems = $playlist->get_items();
+                $item      = $listitems[array_rand($listitems)];
+                $song      = new Song($item['object_id']);
+                $art       = new Art($song->album, 'album');
             }
         }
 
-        if ($art != null) {
+        if ($art->has_db_info($fallback)) {
             header('Access-Control-Allow-Origin: *');
-            if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
+            if ($size && AmpConfig::get('resize_images')) {
                 $dim           = array();
                 $dim['width']  = $size;
                 $dim['height'] = $size;

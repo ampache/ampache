@@ -35,23 +35,23 @@ use Ampache\Module\Util\Ui;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->f_link; ?></td>
+    <td><?php echo $object->f_link ?? '' ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Max Counter'); ?></td>
-    <td><input type="text" name="max_counter" value="<?php echo scrub_out($_REQUEST['max_counter'] ?: '0'); ?>" />
+    <td><input type="text" name="max_counter" value="<?php echo scrub_out($_REQUEST['max_counter'] ?? '0'); ?>" />
         <?php echo AmpError::display('max_counter'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Expiry Days'); ?></td>
-    <td><input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?: AmpConfig::get('share_expire')); ?>" /></td>
+    <td><input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?? AmpConfig::get('share_expire', 7)); ?>" /></td>
 </tr>
 <tr>
     <td><?php echo T_('Allow Stream'); ?></td>

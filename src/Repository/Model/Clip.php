@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 class Clip extends Video
 {
@@ -48,6 +49,7 @@ class Clip extends Video
         parent::__construct($clip_id);
 
         $info = $this->get_info($clip_id);
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -67,7 +69,7 @@ class Clip extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " . "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -85,7 +87,7 @@ class Clip extends Video
         if (!isset($data['artist']) || empty($data['artist'])) {
             return null;
         }
-        $artist_mbid = isset($data['mbid_artistid']) ? $data['mbid_artistid'] : null;
+        $artist_mbid = $data['mbid_artistid'] ?? null;
         if ($artist_mbid) {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
         }
@@ -103,7 +105,7 @@ class Clip extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        debug_event(self::class, 'insert ' . print_r($data,true) , 5);
+        debug_event(self::class, 'insert ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
         if (empty($song_id)) {
@@ -111,7 +113,7 @@ class Clip extends Video
         }
         if ($artist_id || $song_id) {
             debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
-            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " . "VALUES (?, ?, ?)";
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
 
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
@@ -127,10 +129,10 @@ class Clip extends Video
      */
     public function update(array $data)
     {
-        debug_event(self::class, 'update ' . print_r($data,true) , 5);
+        debug_event(self::class, 'update ' . print_r($data,true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
+        debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));
@@ -140,7 +142,7 @@ class Clip extends Video
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
@@ -153,14 +155,13 @@ class Clip extends Video
             if ($this->artist) {
                 $artist = new Artist($this->artist);
                 $artist->format();
-                $this->f_artist     = $artist->f_link;
-                $this->f_full_title = '[' . scrub_out($artist->f_name) . '] ' . $this->f_full_title;
+                $this->f_artist     = $artist->get_f_link();
+                $this->f_full_title = '[' . scrub_out($artist->get_fullname()) . '] ' . $this->f_full_title;
             }
 
             if ($this->song) {
-                $song = new Song($this->song);
-                $song->format();
-                $this->f_song = $song->f_link;
+                $song         = new Song($this->song);
+                $this->f_song = $song->get_f_link();
             }
         }
 
@@ -195,5 +196,24 @@ class Clip extends Video
         }
 
         return null;
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql    = "UPDATE `clip` SET `artist` = ? WHERE `artist` = ?";
+            $params = array($new_object_id, $old_object_id);
+
+            return Dba::write($sql, $params);
+        }
+
+        return false;
     }
 }

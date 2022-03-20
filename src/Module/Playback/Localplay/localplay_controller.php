@@ -41,10 +41,11 @@ abstract class localplay_controller
     abstract public function add_url(Stream_Url $url); // Takes an array of song_ids
 
     /**
+     * Takes a single object_id and removes it from the playlist
      * @param integer $object_id
      * @return mixed
      */
-    abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
+    abstract public function delete_track($object_id);
 
     abstract public function play();
 
@@ -85,10 +86,10 @@ abstract class localplay_controller
 
     /**
      * @param $uid
-     * @param $post
+     * @param array $data
      * @return mixed
      */
-    abstract public function update_instance($uid, $post);
+    abstract public function update_instance($uid, $data);
 
     abstract public function get_instances();
 
@@ -96,10 +97,9 @@ abstract class localplay_controller
 
     /**
      * @param $uid
-     * @param $user_id
      * @return mixed
      */
-    abstract public function set_active_instance($uid, $user_id);
+    abstract public function set_active_instance($uid);
 
     abstract public function get_active_instance();
 
@@ -113,7 +113,7 @@ abstract class localplay_controller
     {
         // This might not be an object!
         if (!is_object($object)) {
-            // Stupiidly we'll just blindly add it for now
+            // Stupidly we'll just blindly add it for now
             return $object;
         }
 
@@ -150,21 +150,21 @@ abstract class localplay_controller
         //beautiful urls need their own parsing as parse_url will find nothing.
         if (AmpConfig::get('stream_beautiful_url')) {
             preg_match('/oid\/(.*?)\//', $url, $match);
-            if ($match[1]) {
+            if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'oid',
                     'oid' => $match[1]
                 );
             }
             preg_match('/demo_id\/(.*?)\//', $url, $match);
-            if ($match[1]) {
+            if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'demo_id',
                     'oid' => $match[1]
                 );
             }
             preg_match('/random\/(.*?)\//', $url, $match);
-            if ($match[1]) {
+            if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'random',
                     'type' => $match[1]
@@ -176,7 +176,7 @@ abstract class localplay_controller
             parse_str($variables, $data);
 
             foreach ($primary_array as $pkey) {
-                if ($data[$pkey]) {
+                if (array_key_exists($pkey, $data)) {
                     $data['primary_key'] = $pkey;
 
                     return $data;

@@ -62,7 +62,7 @@ use Ampache\Module\Util\Ui;
         </tr>
     </table>
     <div class="formValidation">
-        <input class="button" type="submit" value="<?php echo T_('Send e-mail'); ?>" />
+        <input class="button" type="submit" value="<?php echo T_('Send E-mail'); ?>" />
     </div>
 </form>
 <?php Ui::show_box_bottom(); ?>

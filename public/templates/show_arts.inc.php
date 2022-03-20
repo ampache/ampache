@@ -26,6 +26,9 @@ use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var array $images */
+/** @var string $object_type */
+
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0; ?>
@@ -37,7 +40,7 @@ while ($count <= $rows) {
     $j=0;
     while ($j < 5) {
         $key        = $count * 5 + $j;
-        $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
+        $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20));
         $dimensions = array('width' => 0, 'height' => 0);
         if (!empty($_SESSION['form']['images'][$key])) {
             $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
@@ -49,7 +52,7 @@ while ($count <= $rows) {
             echo "<td>&nbsp;</td>\n";
         } else { ?>
             <td>
-                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="175" width="175" /></a>
+                <a href="<?php echo $image_url; ?>" title="<?php echo $_SESSION['form']['images'][$key]['title']; ?>" rel="prettyPhoto" target="_blank"><img src="<?php echo $image_url; ?>" alt="<?php echo T_('Art'); ?>" height="" width="175" /></a>
                 <br />
                 <p>
                 <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
@@ -75,4 +78,3 @@ while ($count <= $rows) {
 } // end while?>
 </table>
 <?php Ui::show_box_bottom(); ?>
-

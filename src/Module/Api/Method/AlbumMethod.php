@@ -92,7 +92,6 @@ final class AlbumMethod implements MethodInterface
         }
 
         $include = [];
-
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         }
@@ -100,7 +99,9 @@ final class AlbumMethod implements MethodInterface
         $result = $output->albums(
             [$album->getId()],
             $include,
-            $gatekeeper->getUser()->getId()
+            $gatekeeper->getUser()->getId(),
+            true,
+            false
         );
 
         return $response->withBody(

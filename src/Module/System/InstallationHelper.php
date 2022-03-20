@@ -41,7 +41,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = array();
         $ret       = array();
         $in_string = false;
@@ -215,7 +215,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $collation
      * @return boolean
      */
-    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8', $collation = 'utf8_unicode_ci')
+    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci')
     {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
@@ -236,7 +236,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         $db_exists = Dba::read('SHOW TABLES');
 
-        if ($db_exists && $create_db) {
+        if (is_object($db_exists) && $create_db) {
             if ($overwrite) {
                 Dba::write('DROP DATABASE `' . $database . '`');
             } else {
@@ -269,7 +269,7 @@ final class InstallationHelper implements InstallationHelperInterface
             if (!Dba::write($sql_user)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
+                T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
 
                 return false;
             }
@@ -278,12 +278,12 @@ final class InstallationHelper implements InstallationHelperInterface
             if ($db_host == 'localhost' || strpos($db_host, '/') === 0) {
                 $sql_grant .= "@'localhost'";
             }
-            $sql_grant .= "  WITH GRANT OPTION";
+            $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
+                T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
 
                 return false;
             }
@@ -432,7 +432,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        // Fix the system users preferences
+        // Fix the system user preferences
         User::fix_preferences('-1');
 
         return true;
@@ -525,7 +525,6 @@ final class InstallationHelper implements InstallationHelperInterface
         $trconfig = array(
             'use_auth' => 'true',
             'ratings' => 'true',
-            'userflags' => 'true',
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
@@ -547,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
         switch ($case) {
             case 'minimalist':
                 $trconfig['ratings']                   = 'false';
-                $trconfig['userflags']                 = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
                 $trconfig['channel']                   = 'false';
@@ -556,10 +554,16 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['download']    = '0';
                 $dbconfig['allow_video'] = '0';
 
+                $cookie_options = [
+                    'expires' => time() + (30 * 24 * 60 * 60),
+                    'path' => '/',
+                    'samesite' => 'Strict'
+                ];
+
                 // Default local UI preferences to have a better 'minimalist first look'.
-                setcookie('sidebar_state', 'collapsed', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_album_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
-                setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
+                setcookie('sidebar_state', 'collapsed', $cookie_options);
+                setcookie('browse_album_grid_view', 'false', $cookie_options);
+                setcookie('browse_artist_grid_view', 'false', $cookie_options);
                 break;
             case 'community':
                 $trconfig['use_auth']                                = 'false';
@@ -623,17 +627,20 @@ final class InstallationHelper implements InstallationHelperInterface
 
     /**
      * Write new configuration into the current configuration file by keeping old values.
-     * @param $current_file_path
-     * @throws Exception
      */
-    public function write_config(string $current_file_path): void
+    public function write_config(string $current_file_path): bool
     {
+        if (!is_writeable($current_file_path)) {
+            return false;
+        }
         $new_data = $this->generate_config(parse_ini_file($current_file_path));
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
         fwrite($handle, $new_data, strlen((string) $new_data));
         fclose($handle);
+
+        return true;
     }
 
     /**
@@ -651,13 +658,13 @@ final class InstallationHelper implements InstallationHelperInterface
         $dist     = fread($handle, filesize($distfile));
         fclose($handle);
 
-        $data = explode("\n", (string) $dist);
-
+        $data  = explode("\n", (string) $dist);
         $final = "";
         foreach ($data as $line) {
             if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
                 || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)) {
                 $key   = $matches[1];
                 $value = $matches[2];
 

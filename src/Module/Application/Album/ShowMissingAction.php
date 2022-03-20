@@ -64,11 +64,11 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;
-            if (isset($_REQUEST['artist'])) {
+            if (array_key_exists('artist', $_REQUEST)) {
                 $artist              = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
                 $walbum->artist      = $artist->id;
                 $walbum->artist_mbid = $artist->mbid;
-            } elseif (isset($_REQUEST['artist_mbid'])) {
+            } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
                 $walbum->artist_mbid = $_REQUEST['artist_mbid'];
             }
         }
@@ -86,23 +86,25 @@ final class ShowMissingAction implements ApplicationActionInterface
             'info-box missing'
         );
 
-        // Attempt to find the art.
-        $art = $this->modelFactory->createArt((int) $walbum->mbid, 'album');
+        // you might not send an artist name
+        $options = (isset($artist))
+            ? array('artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name)
+            : array('album_name' => $walbum->name, 'keyword' => $walbum->name);
 
+        // Attempt to find the art.
+        $art    = $this->modelFactory->createArt((int) $walbum->mbid);
         $images = $this->artCollector->collect(
             $art,
-            [
-                'artist' => $artist->name,
-                'album_name' => $walbum->name,
-                'keyword' => $artist->name . " " . $walbum->name,
-            ],
+            $options,
             1
         );
 
         $imageList = '';
 
         if (count($images) > 0 && !empty($images[0]['url'])) {
-            $name = '[' . $artist->name . '] ' . scrub_out($walbum->name);
+            $name = (isset($artist))
+                ? '[' . $artist->get_fullname() . '] ' . scrub_out($walbum->name)
+                : scrub_out($walbum->name);
 
             $image = $images[0]['url'];
 

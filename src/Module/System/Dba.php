@@ -52,9 +52,8 @@ class Dba
      */
     public static function query($sql, $params = array())
     {
-        // json_encode throws errors about UTF-8 cleanliness, which we don't
-        // care about here.
-        debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
+        // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
+        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -80,12 +79,21 @@ class Dba
             return false;
         }
 
-        // Run the query
-        if (!empty($params)) {
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute($params);
-        } else {
-            $stmt = $dbh->query($sql);
+        try {
+            // Run the query
+            if (!empty($params) && strpos((string)$sql, '?')) {
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($params);
+            } else {
+                $stmt = $dbh->query($sql);
+            }
+        } catch (PDOException $error) {
+            // are you trying to write to something that doesn't exist?
+            self::$_error = $error->getMessage();
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
+
+            return false;
         }
 
         // Save the query, to make debug easier
@@ -150,7 +158,7 @@ class Dba
 
             return '';
         }
-        $out_var = $dbh->quote(filter_var($var, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $out_var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
         return substr($out_var, 1, -1);
     }
@@ -306,18 +314,22 @@ class Dba
         $password = AmpConfig::get('database_password');
         $port     = AmpConfig::get('database_port');
 
+        if ($hostname === '') {
+            return null;
+        }
+
         // Build the data source name
         if (strpos($hostname, '/') === 0) {
             $dsn = 'mysql:unix_socket=' . $hostname;
         } else {
-            $dsn = 'mysql:host=' . $hostname ?: 'localhost';
+            $dsn = 'mysql:host=' . $hostname;
         }
         if ($port) {
             $dsn .= ';port=' . (int)($port);
         }
 
         try {
-            debug_event(__CLASS__, 'Database connection...', 6);
+            debug_event(__CLASS__, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $error) {
             self::$_error = $error->getMessage();
@@ -347,10 +359,11 @@ class Dba
             debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
         }
 
-        if ($dbh->exec('USE `' . $database . '`') === false) {
+        try {
+            $dbh->exec('USE `' . $database . '`');
+        } catch (PDOException $error) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()),
-                1);
+            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
@@ -430,26 +443,26 @@ class Dba
      *
      * This is called by the class to return the database handle
      * for the specified database, if none is found it connects
-     * @param string $database
      * @return mixed|PDO|null
      */
-    public static function dbh($database = '')
+    public static function dbh()
     {
-        if (!$database) {
-            $database = AmpConfig::get('database_name');
+        $database = AmpConfig::get('database_name');
+        if ($database == '') {
+            return null;
         }
 
         // Assign the Handle name that we are going to store
         $handle = 'dbh_' . $database;
 
-        if (!is_object(AmpConfig::get($handle))) {
+        if (is_object(AmpConfig::get($handle))) {
+            return AmpConfig::get($handle);
+        } else {
             $dbh = self::_connect();
             self::_setup_dbh($dbh, $database);
             AmpConfig::set($handle, $dbh, true);
 
             return $dbh;
-        } else {
-            return AmpConfig::get($handle);
         }
     }
 
@@ -543,8 +556,8 @@ class Dba
                 break;
             case 'UTF-8':
             default:
-                $target_charset   = AmpConfig::get('database_charset', 'utf8');
-                $target_collation = AmpConfig::get('database_collation', 'utf8_unicode_ci');
+                $target_charset   = AmpConfig::get('database_charset', 'utf8mb4');
+                $target_collation = AmpConfig::get('database_collation', 'utf8mb4_unicode_ci');
                 break;
         }
 

@@ -48,7 +48,7 @@ class AmazonSearch
     public $public_key;    // AWSAccessKeyId
     public $private_key;   // AWSSecretKey
     public $associate_tag; // Amazon Affiliate Associate Tag
-    public $results = array();  // Array of results
+    public $results = array(); // Array of results
     public $_parser;   // The XML parser
     public $_grabtags; // Tags to grab the contents of
     public $_sourceTag; // source tag don't ask
@@ -278,8 +278,8 @@ class AmazonSearch
             foreach ($asin as $key => $value) {
                 $this->runSearchAsin($key);
             }
-        } // if array of asin's
-        else {
+        } else {
+            // if array of asin's
             $this->runSearchAsin($asin);
         } // else
 

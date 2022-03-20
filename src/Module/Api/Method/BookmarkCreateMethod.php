@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
@@ -41,7 +40,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class BookmarkCreateMethod
 {
-    private const ACTION = 'bookmark_create';
+    public const ACTION = 'bookmark_create';
 
     /**
      * bookmark_create
@@ -57,7 +56,7 @@ final class BookmarkCreateMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_create(array $input)
+    public static function bookmark_create(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
@@ -66,7 +65,7 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -74,9 +73,9 @@ final class BookmarkCreateMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -85,7 +84,7 @@ final class BookmarkCreateMethod
 
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -101,7 +100,8 @@ final class BookmarkCreateMethod
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position
+            'position' => $position,
+            'user' => $user->getId()
         );
 
         // create it then retrieve it
@@ -121,7 +121,6 @@ final class BookmarkCreateMethod
             default:
                 echo Xml_Data::bookmarks($bookmark);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

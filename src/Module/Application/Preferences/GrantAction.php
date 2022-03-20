@@ -31,7 +31,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,44 +53,53 @@ final class GrantAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $user = $gatekeeper->getUser();
+
         // Make sure we're a user and they came from the form
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
-            Core::get_global('user')->id > 0
+            !isset($user->id)
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        if (Core::get_request('token') && in_array(Core::get_request('plugin'), Plugin::get_plugins('save_mediaplay'))) {
-            // we receive a token for a valid plugin, have to call getSession and obtain a session key
-            if ($plugin = new Plugin(Core::get_request('plugin'))) {
-                $plugin->load(Core::get_global('user'));
-                if ($plugin->_plugin->get_session(Core::get_global('user')->id, Core::get_request('token'))) {
-                    $title    = T_('No Problem');
-                    $text     = T_('Your account has been updated') . ' : ' . Core::get_request('plugin');
-                    $next_url = sprintf(
-                        '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
-                    );
-                } else {
-                    $title    = T_("There Was a Problem");
-                    $text     = T_('Your account has not been updated') . ' : ' . Core::get_request('plugin');
-                    $next_url = sprintf(
-                        '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
-                    );
-                }
+        $pluginName = mb_strtolower(Core::get_request('plugin'));
 
-                $this->ui->showConfirmation($title, $text, $next_url, 0);
+        if (
+            Core::get_request('token') &&
+            in_array($pluginName, Plugin::get_plugins('save_mediaplay'))
+        ) {
+            // we receive a token for a valid plugin, have to call getSession and obtain a session key
+            if ($plugin = new Plugin($pluginName)) {
+                $plugin->load($user);
+                if ($plugin->_plugin->get_session($user->id, Core::get_request('token'))) {
+                    $title    = T_('No Problem');
+                    $text     = T_('Your account has been updated') . ' : ' . $pluginName;
+                } else {
+                    $title    = T_('There Was a Problem');
+                    $text     = T_('Your account has not been updated') . ' : ' . $pluginName;
+                }
+                $next_url = sprintf(
+                    '%s/preferences.php?tab=plugins',
+                    $this->configContainer->getWebPath()
+                );
+
+                $this->ui->showConfirmation($title, $text, $next_url);
+
+                return null;
             }
         }
-        $fullname    = Core::get_global('user')->fullname;
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
 
-        // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $user->fullname,
+                'preferences' => $user->get_preferences($_REQUEST['tab']),
+                'ui' => $this->ui,
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

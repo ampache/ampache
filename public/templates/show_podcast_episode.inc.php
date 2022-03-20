@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -32,43 +31,45 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Podcast_Episode $episode */
+/** @var Ampache\Repository\Model\Podcast_Episode $episode */
+
+$web_path = AmpConfig::get('web_path');
 ?>
-<?php Ui::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+<?php Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
-            <div id="rating_<?php echo $episode->id; ?>_podcast_episode"><?php echo Rating::show($episode->id,
-                    'podcast_episode'); ?>
+        <dt><?php echo T_('Rating'); ?></dt>
+        <dd>
+            <div id="rating_<?php echo $episode->id; ?>_podcast_episode">
+                <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php
-    } ?>
-
-    <?php if (AmpConfig::get('userflags')) { ?>
-        <?php $rowparity = Ui::flip_class(); ?>
-        <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
-        <dd class="<?php echo $rowparity; ?>">
-            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode"><?php echo Userflag::show($episode->id,
-                    'podcast_episode'); ?>
+        <dt><?php echo T_('Fav.'); ?></dt>
+        <dd>
+            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">
+                <?php echo Userflag::show($episode->id, 'podcast_episode'); ?>
             </div>
         </dd>
-    <?php
+    <?php } ?>
+<?php } ?>
+    <?php if (AmpConfig::get('waveform')) { ?>
+        <dt><?php echo T_('Waveform'); ?></dt>
+        <dd>
+            <div id="waveform_<?php echo $episode->id; ?>">
+                <img src="<?php echo $web_path; ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
+            </div>
+        </dd>
+        <?php
     } ?>
-<?php
-} ?>
-<?php $rowparity = Ui::flip_class(); ?>
-<dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
-    <dd class="<?php echo $rowparity; ?>">
+<dt><?php echo T_('Action'); ?></dt>
+    <dd>
         <?php if (!empty($episode->file)) { ?>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $episode->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'addnext_podcast_episode_' . $episode->id); ?>
             <?php
             } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
@@ -77,12 +78,12 @@ use Ampache\Module\Util\Ui;
             } ?>
         <?php
         } ?>
-        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to temporary playlist'), 'add_podcast_episode_' . $episode->id); ?>
+        <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
         <?php
     } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php
@@ -97,29 +98,29 @@ use Ampache\Module\Util\Ui;
         <?php
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
-            <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
-            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', '')">
+            <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
     } ?>
         <?php if (Catalog::can_remove($episode)) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
+            <a href="<?php echo $web_path; ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
     } ?>
     </dd>
 <?php
-    $songprops[T_('Title')]                  = $episode->f_title;
+    $songprops[T_('Title')]                  = $episode->get_fullname();
     $songprops[T_('Description')]            = $episode->f_description;
     $songprops[T_('Category')]               = $episode->f_category;
     $songprops[T_('Author')]                 = $episode->f_author;
@@ -137,8 +138,7 @@ use Ampache\Module\Util\Ui;
 
     foreach ($songprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = Ui::flip_class();
-            echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
+            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
         }
     } ?>
 </dl>

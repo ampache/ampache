@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GenresMethod
@@ -51,15 +50,15 @@ final class GenresMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genres(array $input)
+    public static function genres(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
         $tags = $browse->get_objects();
         if (empty($tags)) {
             Api::empty('genre', $input['api_format']);
@@ -70,16 +69,15 @@ final class GenresMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::genres($tags);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::genres($tags);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -138,8 +138,8 @@ class ShowSongActionTest extends MockeryTestCase
         $title   = 'some-song-title';
         $content = 'some-content';
 
-        $song->id    = $song_id;
-        $song->title = $title;
+        $song->id      = $song_id;
+        $song->f_name  = $title;
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -156,7 +156,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('showBoxTop')
             ->with(
-                sprintf('%s Details', $title),
+                $title,
                 'box box_song_details'
             )
             ->once();
@@ -176,6 +176,11 @@ class ShowSongActionTest extends MockeryTestCase
         $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
+
+        $song->shouldReceive('get_fullname')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($title);
 
         $this->guiFactory->shouldReceive('createSongViewAdapter')
             ->with($gatekeeper, $song)

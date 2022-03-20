@@ -295,7 +295,7 @@ class VlcPlayer
 
     /**
      * volume_up
-     * This increases the volume of VLC , set to +20 can be changed to your preference
+     * This increases the volume of VLC, set to +20 can be changed to your preference
      */
     public function volume_up()
     {
@@ -360,8 +360,8 @@ class VlcPlayer
 
     /**
      * get_tracks
-     * This returns a delimiated string of all of the filenames
-     * current in your playlist, only url's at the moment,normal files put in the playlist with VLC wil not show'
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only urls at the moment,normal files put in the playlist with VLC wil not show'
      */
     public function get_tracks()
     {
@@ -544,7 +544,8 @@ class VlcPlayer
             } elseif ($type == "complete") {
                 // Tags that ends in 1 line '<tag />'
                 // See if the key is already taken.
-                if (!isset($current[$tag])) { //New Key
+                if (!isset($current[$tag])) {
+                    //New Key
                     $current[$tag]                           = $result;
                     $repeated_tag_index[$tag . '_' . $level] = 1;
                     if ($priority == 'tag' && $attributes_data) {
@@ -581,7 +582,8 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                     }
                 }
-            } elseif ($type == 'close') { // End of tag '</tag>'
+            } elseif ($type == 'close') {
+                // End of tag '</tag>'
                 $current = &$parent[$level - 1];
             }
         }

@@ -2,9 +2,9 @@ name: unittest
 
 on:
   push:
-    branches: [ source-changes, edge ]
+    branches: [ develop, master ]
   pull_request:
-    branches: [ source-changes, edge ]
+    branches: [ develop, master ]
 
 jobs:
   build:
@@ -13,26 +13,17 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        php: [7.4]
+        php: [8.0]
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
 
       - name: Validate composer.json and composer.lock
         run: composer validate
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'

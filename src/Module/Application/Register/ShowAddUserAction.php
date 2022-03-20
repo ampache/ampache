@@ -55,7 +55,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
      * @param ServerRequestInterface $request
      * @param GuiGatekeeperInterface $gatekeeper
      * @return ResponseInterface|null
-     * @todo drop copy/paste code from register action after fixing the captcha problam
+     * @todo drop copy/paste code from register action after fixing the captcha problem
      */
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -71,7 +71,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
             define('CAPTCHA_INVERSE', 1);
             /**
-             * @todo broken, the path does not exist anylonger
+             * @todo broken, the path does not exist any longer
              */
             define(
                 'CAPTCHA_BASE_URL',

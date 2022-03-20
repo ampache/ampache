@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class UserCreateMethod
 {
-    private const ACTION = 'user_create';
+    public const ACTION = 'user_create';
 
     /**
      * user_create
@@ -53,7 +53,7 @@ final class UserCreateMethod
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input)
+    public static function user_create(array $input): bool
     {
         if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -62,10 +62,10 @@ final class UserCreateMethod
             return false;
         }
         $username = $input['username'];
-        $fullname = $input['fullname'] ?: $username;
-        $email    = $input['email'];
+        $fullname = $input['fullname'] ?? $username;
+        $email    = urldecode($input['email']);
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
+        $disable  = (bool)($input['disable'] ?? false);
         $access   = 25;
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
@@ -75,9 +75,20 @@ final class UserCreateMethod
 
             return true;
         }
+        if (User::id_from_username($username) > 0) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
+        if (User::id_from_email($email) > 0) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
+
+            return false;
+        }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
+        Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

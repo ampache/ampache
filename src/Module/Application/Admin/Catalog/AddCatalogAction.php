@@ -32,6 +32,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -74,13 +75,14 @@ final class AddCatalogAction extends AbstractCatalogAction
             AmpError::add('general', T_('Please enter a Catalog name'));
         }
 
-        if (!Core::form_verify('add_catalog', 'post')) {
+        if (!Core::form_verify('add_catalog')) {
             throw new AccessDeniedException();
         }
 
         // If an error hasn't occurred
         if (!AmpError::occurred()) {
             $catalog_id = Catalog::create($_POST);
+            $users      = static::getUserRepository()->getValidArray();
 
             if (!$catalog_id) {
                 require Ui::find_template('show_add_catalog.inc.php');
@@ -103,5 +105,15 @@ final class AddCatalogAction extends AbstractCatalogAction
         }
 
         return null;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

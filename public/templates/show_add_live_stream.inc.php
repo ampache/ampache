@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Homepage'); ?></td>
+    <td><?php echo T_('Website'); ?></td>
     <td><input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
         <?php echo AmpError::display('site_url'); ?>
     </td>

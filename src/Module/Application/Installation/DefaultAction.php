@@ -76,12 +76,12 @@ final class DefaultAction implements ApplicationActionInterface
         $htaccess_channel_file = __DIR__ . '/../../../../public/channel/.htaccess';
 
         // Clean up incoming variables
-        $web_path   = scrub_in($_REQUEST['web_path']);
-        $username   = (string) scrub_in($_REQUEST['local_username']);
-        $password   = $_REQUEST['local_pass'];
-        $hostname   = scrub_in($_REQUEST['local_host']);
-        $database   = scrub_in($_REQUEST['local_db']);
-        $port       = scrub_in($_REQUEST['local_port']);
+        $web_path   = scrub_in($_REQUEST['web_path'] ?? '');
+        $username   = (string) scrub_in($_REQUEST['local_username'] ?? '');
+        $password   = $_REQUEST['local_pass'] ?? null;
+        $hostname   = scrub_in($_REQUEST['local_host'] ?? '');
+        $database   = scrub_in($_REQUEST['local_db'] ?? '');
+        $port       = scrub_in($_REQUEST['local_port'] ?? '');
         $skip_admin = isset($_REQUEST['skip_admin']);
 
         AmpConfig::set_by_array(array(
@@ -97,19 +97,19 @@ final class DefaultAction implements ApplicationActionInterface
             ), true);
         }
 
-        if (isset($_REQUEST['transcode_template'])) {
+        if (array_key_exists('transcode_template', $_REQUEST)) {
             $mode = $_REQUEST['transcode_template'];
             $this->installationHelper->install_config_transcode_mode($mode);
         }
 
-        if (isset($_REQUEST['usecase'])) {
+        if (array_key_exists('usecase', $_REQUEST)) {
             $case = $_REQUEST['usecase'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_use_case($case);
             }
         }
 
-        if (isset($_REQUEST['backends'])) {
+        if (array_key_exists('backends', $_REQUEST)) {
             $backends = $_REQUEST['backends'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_backends($backends);
@@ -117,8 +117,8 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         // Charset and gettext setup
-        $htmllang = $_REQUEST['htmllang'];
-        $charset  = $_REQUEST['charset'];
+        $htmllang = $_REQUEST['htmllang'] ?? 'en_US';
+        $charset  = $_REQUEST['charset'] ?? 'UTF-8';
 
         if (!$htmllang) {
             if ($_ENV['LANG']) {
@@ -159,7 +159,8 @@ final class DefaultAction implements ApplicationActionInterface
         unset($safe_dirname);
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        $action = $_REQUEST['action'] ?? '';
+        switch ($action) {
             case 'create_db':
                 $new_user = '';
                 $new_pass = '';
@@ -175,29 +176,30 @@ final class DefaultAction implements ApplicationActionInterface
                 }
 
                 if (!$skip_admin) {
-                    if (!$this->installationHelper->install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
+                    if (!$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
                         require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
 
                 // Now that it's inserted save the lang preference
-                Preference::update('lang', -1, AmpConfig::get('lang'));
+                Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
+                // Intentional break fall-through
             case 'show_create_config':
                 require_once __DIR__ . '/../../../../public/templates/show_install_config.inc.php';
                 break;
             case 'create_config':
-                $all  = (filter_has_var(INPUT_POST, 'create_all'));
-                $skip = (filter_has_var(INPUT_POST, 'skip_config'));
+                $all  = (isset($_POST['create_all']));
+                $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
-                    $write                     = (filter_has_var(INPUT_POST, 'write'));
-                    $download                  = (filter_has_var(INPUT_POST, 'download'));
-                    $download_htaccess_channel = (filter_has_var(INPUT_POST, 'download_htaccess_channel'));
-                    $download_htaccess_rest    = (filter_has_var(INPUT_POST, 'download_htaccess_rest'));
-                    $download_htaccess_play    = (filter_has_var(INPUT_POST, 'download_htaccess_play'));
-                    $write_htaccess_channel    = (filter_has_var(INPUT_POST, 'write_htaccess_channel'));
-                    $write_htaccess_rest       = (filter_has_var(INPUT_POST, 'write_htaccess_rest'));
-                    $write_htaccess_play       = (filter_has_var(INPUT_POST, 'write_htaccess_play'));
+                    $write                     = (isset($_POST['write']));
+                    $download                  = (isset($_POST['download']));
+                    $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
+                    $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
+                    $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
+                    $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
+                    $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
+                    $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
                     $created_config = true;
                     if ($write_htaccess_channel || $download_htaccess_channel || $all) {
@@ -211,9 +213,12 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                     if ($write || $download || $all) {
                         $created_config = $created_config && $this->installationHelper->install_create_config($download);
+                        if ($download && !$created_config) {
+                            return null;
+                        }
                     }
                 }
-            // No break on purpose
+                // Intentional break fall-through
             case 'show_create_account':
                 $results = parse_ini_file($configfile);
                 if (!isset($created_config)) {

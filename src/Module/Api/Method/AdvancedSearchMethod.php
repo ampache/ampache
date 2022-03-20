@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class AdvancedSearchMethod
 {
-    private const ACTION = 'advanced_search';
+    public const ACTION = 'advanced_search';
 
     /**
      * advanced_search
@@ -57,8 +57,8 @@ final class AdvancedSearchMethod
      *   * rule input (e.g. rule_1_input, rule_2_input)
      *
      * Refer to the wiki for further information on rule_* types and data
-     * http://ampache.org/api/api-xml-methods
-     * http://ampache.org/api/api-json-methods
+     * https://ampache.org/api/api-xml-methods
+     * https://ampache.org/api/api-json-methods
      *
      * @param array $input
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
@@ -71,7 +71,7 @@ final class AdvancedSearchMethod
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input)
+    public static function advanced_search(array $input): bool
     {
         if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -84,7 +84,7 @@ final class AdvancedSearchMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -100,8 +100,6 @@ final class AdvancedSearchMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
                         echo Json_Data::artists($results, array(), $user->id);
@@ -127,8 +125,6 @@ final class AdvancedSearchMethod
                 }
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
                         echo Xml_Data::artists($results, array(), $user->id);
@@ -153,7 +149,6 @@ final class AdvancedSearchMethod
                         break;
                 }
         }
-        Session::extend($input['auth']);
 
         return true;
     }

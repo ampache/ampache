@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogMethod
@@ -36,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class CatalogMethod
 {
-    private const ACTION = 'catalog';
+    public const ACTION = 'catalog';
 
     /**
      * catalog
@@ -48,14 +47,14 @@ final class CatalogMethod
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input)
+    public static function catalog(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $catalog   = Catalog::create_from_id($object_id);
-        if (!$catalog->id) {
+        if (!$catalog) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
@@ -70,7 +69,6 @@ final class CatalogMethod
             default:
                 echo Xml_Data::catalogs(array($catalog->id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

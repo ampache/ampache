@@ -20,11 +20,10 @@
  *
  */
 
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
 
-/** @var Channel $libitem */
+/** @var Ampache\Repository\Model\Channel $libitem */
 ?>
 <div>
     <form method="post" id="edit_channel_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -33,15 +32,13 @@ use Ampache\Repository\Model\Tag;
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
                 <td><select name="object_id" autofocus>
 <?php
-                        $playlists = Playlist::get_playlists();
-                        foreach ($playlists as $playlist_id) {
-                            $playlist = new Playlist($playlist_id);
-                            $playlist->format();
-                            echo "<option value='" . $playlist->id . "'";
-                            if ($playlist->id == $libitem->object_id) {
+                        $playlists = Playlist::get_playlist_array();
+                        foreach ($playlists as $key => $value) {
+                            echo "<option value='" . $key . "'";
+                            if ($key == $libitem->object_id) {
                                 echo " selected";
                             }
-                            echo ">" . $playlist->f_name . "</option>";
+                            echo ">" . $value . "</option>";
                         } ?>
                 </select></td>
             </tr>

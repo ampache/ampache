@@ -162,7 +162,7 @@ class Share extends database_object
             } elseif ($object_type == 'album') {
                 $album = new Album($object_id);
                 $album->format();
-                $description = $album->f_name . ' (' . $album->f_album_artist_name . ')';
+                $description = $album->get_fullname() . ' (' . $album->get_album_artist_fullname() . ')';
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -223,14 +223,19 @@ class Share extends database_object
 
     /**
      * get_share_list_sql
+     * @param User $user
      * @return string
      */
-    public static function get_share_list_sql()
+    public static function get_share_list_sql($user)
     {
-        $sql = "SELECT `id` FROM `share` ";
-
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . (string)Core::get_global('user')->id . "'";
+        $sql   = "SELECT `id` FROM `share` ";
+        $multi = 'WHERE ';
+        if (!$user->has_access('75')) {
+            $sql .= "WHERE `user` = '" . $user->id . "'";
+            $multi = ' AND ';
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= $multi . Catalog::get_user_filter('share', $user->id);
         }
 
         return $sql;
@@ -238,11 +243,12 @@ class Share extends database_object
 
     /**
      * get_share_list
+     * @param User $user
      * @return array
      */
-    public static function get_share_list()
+    public static function get_share_list($user)
     {
-        $sql        = self::get_share_list_sql();
+        $sql        = self::get_share_list_sql($user);
         $db_results = Dba::read($sql);
         $results    = array();
 
@@ -258,7 +264,7 @@ class Share extends database_object
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download',
+                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download&cache=1\">" . Ui::get_icon('download',
                             T_('Download')) . "</a>";
                 }
                 echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit',
@@ -292,10 +298,7 @@ class Share extends database_object
 
     public function getUserName(): string
     {
-        $user = new User($this->user);
-        $user->format();
-
-        return $user->f_name;
+        return User::get_username($this->user);
     }
 
     public function getLastVisitDateFormatted(): string
@@ -320,9 +323,9 @@ class Share extends database_object
         $this->expire_days    = (int)($data['expire']);
         $this->allow_stream   = ($data['allow_stream'] == '1');
         $this->allow_download = ($data['allow_download'] == '1');
-        $this->description    = isset($data['description']) ? $data['description'] : $this->description;
+        $this->description    = $data['description'] ?? $this->description;
 
-        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? " . "WHERE `id` = ?";
+        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
         $params = array(
             $this->max_counter,
             $this->expire_days,
@@ -463,7 +466,7 @@ class Share extends database_object
             }
         } else {
             // fall back to config defaults
-            $expire_days = AmpConfig::get('share_expire');
+            $expire_days = AmpConfig::get('share_expire', 7);
         }
 
         return (int)$expire_days;

@@ -132,7 +132,7 @@ class UPnPPlayer
     /**
      * GetPlayListItems
      * This returns a delimited string of all of the filenames
-     * current in your playlist, only url's at the moment
+     * current in your playlist, only urls at the moment
      */
     public function GetPlaylistItems()
     {
@@ -160,8 +160,7 @@ class UPnPPlayer
             return '';
         }
         list($state) = $responseXML->xpath('//CurrentTransportState');
-
-        //!!debug_event(self::class, 'GetState = ' . $state, 5);
+        debug_event(self::class, 'GetState = ' . $state, 5);
 
         return $state;
     }
@@ -449,7 +448,7 @@ class UPnPPlayer
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = Session::read($sid);
 
-        $this->_intState = json_decode($data, true);
+        $this->_intState = json_decode($data, true) ?? 0;
         debug_event(self::class, 'ReadIndState:' . $this->_intState, 5);
     }
 }

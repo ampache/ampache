@@ -52,7 +52,7 @@ final class GenreArtistsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists(array $input)
+    public static function genre_artists(array $input): bool
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (empty($artists)) {
@@ -65,17 +65,15 @@ final class GenreArtistsMethod
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::artists($artists, array(), $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::artists($artists, array(), $user->id);
         }
-
-        Session::extend($input['auth']);
 
         return true;
     }

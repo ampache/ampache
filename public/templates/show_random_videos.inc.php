@@ -23,6 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -39,23 +40,22 @@ if ($videos) {
         $video->format(); ?>
     <div class="random_video">
         <div id="video_<?php echo $video_id ?>" class="art_album libitem_menu">
-            <?php if (Art::is_enabled()) {
-            $art_showed = false;
-            if ($video->get_default_art_kind() == 'preview') {
-                $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
-            }
-            if (!$art_showed) {
-                $thumb = Ui::is_grid_view('video') ? 7 : 6;
-                Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
-            }
-        } else { ?>
-                <?php echo $video->get_fullname(); ?>
-            <?php
+            <?php $art_showed = false;
+        if ($video->get_default_art_kind() == 'preview') {
+            $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->get_link(), false, 'preview');
+        }
+        if (!$art_showed) {
+            $thumb = Ui::is_grid_view('video') ? 7 : 6;
+            Art::display('video', $video->id, $video->f_full_title, $thumb, $video->get_link());
         } ?>
         </div>
         <div class="play_video">
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
+            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
+                <?php
+            } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php
@@ -64,11 +64,12 @@ if ($videos) {
         } ?>
         </div>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
-            echo "<div id=\"rating_" . $video->id . "_video\">";
-            echo Rating::show($video->id, 'video');
-            echo "</div>";
-        } ?>
+        if (Access::check('interface', 25)) { ?>
+            <?php if (AmpConfig::get('ratings')) { ?>
+                <span class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
+                <span class="cel_rating" id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>
+            <?php } ?>
+        <?php } ?>
     </div>
     <?php
     } ?>

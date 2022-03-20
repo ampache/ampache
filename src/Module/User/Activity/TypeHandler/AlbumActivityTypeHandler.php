@@ -24,23 +24,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Activity\TypeHandler;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
 {
     private UserActivityRepositoryInterface $userActivityRepository;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UserActivityRepositoryInterface $userActivityRepository,
-        ModelFactoryInterface $modelFactory
+        UserActivityRepositoryInterface $userActivityRepository
     ) {
         parent::__construct($userActivityRepository);
 
         $this->userActivityRepository = $userActivityRepository;
-        $this->modelFactory           = $modelFactory;
     }
 
     public function registerActivity(
@@ -50,33 +45,11 @@ final class AlbumActivityTypeHandler extends GenericActivityTypeHandler
         int $userId,
         int $date
     ): void {
-        $album = $this->modelFactory->createAlbum($objectId);
-        $album->format();
-
-        $artistName = $album->f_album_artist_name;
-        $albumName  = $album->f_title;
-
-        if ($artistName && $albumName) {
-            $this->userActivityRepository->registerAlbumEntry(
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date,
-                $artistName,
-                $albumName,
-                $album->mbid_group,
-                $album->mbid
-            );
-
-            return;
-        }
-
-        parent::registerActivity(
-            $objectId,
-            $objectType,
-            $action,
+        $this->userActivityRepository->registerGenericEntry(
             $userId,
+            $action,
+            $objectType,
+            $objectId,
             $date
         );
     }

@@ -32,7 +32,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata">
+<table class="tabledata striped-rows">
 <colgroup>
   <col id="col_action" />
   <col id="col_votes" />
@@ -42,19 +42,15 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_time" />
   <?php if (Access::check('interface', 100)) { ?>
   <col id="col_admin" />
-  <?php
-} ?>
+  <?php } ?>
 </colgroup>
-<?php
-if (!count($object_ids)) {
+<?php if (!count($object_ids)) {
     $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
-<td><?php echo T_('Playing from base playlist'); ?>.</a></td>
+    <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
 </tr>
 <?php
-} // if no songs
-/* Else we have songs */
-else { ?>
+} else { ?>
 <thead>
     <tr class="th-top">
         <th class="cel_action"><?php echo T_('Action'); ?></th>
@@ -80,27 +76,24 @@ $democratic = Democratic::get_current_playlist();
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         $media      = new $class_name($item['object_id']);
         $media->format(); ?>
-<tr class="<?php echo Ui::flip_class(); ?>">
+<tr>
     <td class="cel_action">
-    <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
-    <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']); ?>
-    <?php
-        } else { ?>
-    <?php echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']); ?>
-    <?php
+    <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
+            echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']);
+        } else {
+            echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']);
         } ?>
     </td>
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
-    <td class="cel_title"><?php echo $media->f_link; ?></td>
+    <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
-    <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
+    <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if (Access::check('interface', 100)) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
-    <?php
-        } ?>
+    <?php } ?>
 </tr>
 <?php
     } // end foreach?>
@@ -115,14 +108,11 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </tfoot>
-<?php
-} // end else?>
+<?php } // end else?>
 </table>
-
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
         require Ui::find_template('list_header.inc.php');

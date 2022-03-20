@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 
 /**
@@ -51,28 +50,30 @@ final class PlaylistsMethod
      * @param array $input
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = self::set_filter(date) //optional
-     * update      = self::set_filter(date) //optional
+     * add         = Api::set_filter(date) //optional
+     * update      = Api::set_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * @return boolean
      */
-    public static function playlists(array $input)
+    public static function playlists(array $input): bool
     {
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $like    = ((int) $input['exact'] == 1) ? false : true;
-        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $user_id = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
-        $public  = !Access::check('interface', 100, $user->id);
+        $user       = User::get_from_username(Session::username($input['auth']));
+        $like       = !((array_key_exists('', $input) && (int)$input['exact'] == 1));
+        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $filter     = (string)($input['filter'] ?? '');
+        $show_dupes = (bool)($input['show_dupes'] ?? false);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $user_id, (string) $input['filter'], $like);
+        $playlists = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $user_id, (string) $input['filter'], $like));
+            $searches  = Playlist::get_smartlists($user->id, $filter, true, $show_dupes);
+            $playlists = array_merge($playlists, $searches);
         }
-        if (empty($playlist_ids)) {
+        if (empty($playlists)) {
             Api::empty('playlist', $input['api_format']);
 
             return false;
@@ -81,16 +82,15 @@ final class PlaylistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::playlists($playlist_ids, $user_id);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::playlists($playlists, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::playlists($playlist_ids, $user_id);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::playlists($playlists, $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

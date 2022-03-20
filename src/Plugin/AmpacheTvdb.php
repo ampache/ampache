@@ -39,8 +39,7 @@ class AmpacheTvdb
     public $min_ampache = '370009';
     public $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to
-    // fill them out
+    // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
 
     /**
@@ -129,7 +128,7 @@ class AmpacheTvdb
         try {
             $tvdburl = 'http://thetvdb.com';
             $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);
-            $title   = $media_info['original_name'] ?: $media_info['title'];
+            $title   = $media_info['original_name'] ?? $media_info['title'];
 
             if ($media_info['tvshow']) {
                 $releases = $client->getSeries($media_info['tvshow']);

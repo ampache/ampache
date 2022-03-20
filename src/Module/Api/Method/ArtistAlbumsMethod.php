@@ -35,7 +35,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 
 final class ArtistAlbumsMethod
 {
-    private const ACTION = 'artist_albums';
+    public const ACTION = 'artist_albums';
 
     /**
      * artist_albums
@@ -49,7 +49,7 @@ final class ArtistAlbumsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums(array $input)
+    public static function artist_albums(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -62,7 +62,7 @@ final class ArtistAlbumsMethod
 
             return false;
         }
-        $albums = static::getAlbumRepository()->getByArtist($artist);
+        $albums = static::getAlbumRepository()->getByArtist($object_id);
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($albums)) {
             Api::empty('album', $input['api_format']);
@@ -73,16 +73,15 @@ final class ArtistAlbumsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::albums($albums, array(), $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::albums($albums, array(), $user->id);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

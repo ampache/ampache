@@ -7,26 +7,30 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
 global $dic;
+
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
+$web_path         = AmpConfig::get('web_path');
+$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
+    ? "path: '/', secure: true, samesite: 'Strict'"
+    : "path: '/', samesite: 'Strict'";
+$iframed  = $iframed ?? false;
+$is_share = $is_share ?? false;
 
 if ($iframed || $is_share) { ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
-<?php
-} else { ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
-<?php
-    }
-
-if (!$iframed) {
+<link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
+<?php } else { ?>
+<link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
+<?php } ?>
+<?php if (!$iframed) {
     require_once Ui::find_template('stylesheets.inc.php'); ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/base.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js"></script>
+<link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
+<script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
 <script>
 var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
 var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
@@ -38,15 +42,12 @@ function update_action()
 </script>
 <?php
 } ?>
-<link href="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/UberViz/style.css" rel="stylesheet" type="text/css">
+<link href="<?php echo $web_path; ?>/lib/modules/UberViz/style.css" rel="stylesheet" type="text/css">
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
-    <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/aurora.js/aurora.js"></script>
-<?php
-} ?>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/happyworm-jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/happyworm-jplayer/dist/add-on/jplayer.playlist.min.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.ext.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js"></script>
+    <script src="<?php echo $web_path; ?>/lib/modules/aurora.js/aurora.js"></script>
+<?php } ?>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.js"></script>
 
 <script>
 var jplaylist = new Array();
@@ -153,7 +154,8 @@ function NotifyBrowser(title, artist, icon)
     var notyTimeout = <?php echo AmpConfig::get('browser_notify_timeout'); ?>;
     var notification = new Notification(title, {
         body: artist,
-        icon: icon
+        icon: icon,
+        silent: true
     });
 
     if (notyTimeout > 0) {
@@ -224,7 +226,7 @@ function ShowVisualizer()
             $('.jp-interface').css('background-color', '#000');
             $('.jp-playlist').css('background-color', '#000');
         } else {
-            alert("<?php echo T_("Your browser doesn't support this feature."); ?>");
+            alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
         }
     }
 }
@@ -243,7 +245,7 @@ function ShowVisualizerFullScreen()
     } else if (element.mozRequestFullScreen) {
         element.mozRequestFullScreen();
     } else {
-        alert('Full-Screen not supported by your browser');
+        alert("<?php echo addslashes(T_('Full-Screen not supported by your browser')); ?>");
     }
 }
 
@@ -261,7 +263,7 @@ function ShowEqualizer()
 function SavePlaylist()
 {
     if (jplaylist['playlist'].length > 0) {
-        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
+        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]['media_type'] + "&item_id=";
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             url += "," + jplaylist['playlist'][i]["media_id"];
         }
@@ -276,7 +278,7 @@ function SaveToExistingPlaylist(event)
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             item_ids += "," + jplaylist['playlist'][i]["media_id"];
         }
-        showPlaylistDialog(event, jplaylist['playlist'][0]["media_type"], item_ids);
+        showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
     }
 }
 
@@ -303,7 +305,7 @@ function ToggleReplayGain()
 
     if (replaygainNode != null) {
         replaygainEnabled = !replaygainEnabled;
-        document.cookie = 'replaygain=' + replaygainEnabled + ';samesite=lax';
+        Cookies.set('replaygain', replaygainEnabled, {<?php echo $cookie_string ?>});
         ApplyReplayGain();
 
         if (replaygainEnabled) {
@@ -324,7 +326,8 @@ function ApplyReplayGain()
             var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
             var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
 
-            if (r128_track_gain !== 'null') { // R128 PREFERRED
+            if (r128_track_gain !== 'null') {
+                // R128 PREFERRED
                 replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
                 var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
                 var targetLevel = parseInt(-18); // LUFS/dB;
@@ -332,7 +335,8 @@ function ApplyReplayGain()
                 var difference = targetLevel - masteredVolume;
 
                 gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
-            } else if (replaygain_track_gain !== 'null') { // REPLAYGAIN FALLBACK
+            } else if (replaygain_track_gain !== 'null') {
+                // REPLAYGAIN FALLBACK
                 replaygain = parseFloat(replaygain_track_gain);
 
                 if (replaygain != null) {
@@ -349,8 +353,7 @@ function ApplyReplayGain()
     }
 }
 </script>
-<?php
-} ?>
+<?php } ?>
 <script>
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
 var wavclicktimer = null;
@@ -361,7 +364,7 @@ function WaveformClick(songid, time)
     if (wavclicktimer != null) {
         clearTimeout(wavclicktimer);
         wavclicktimer = null;
-        NavigateTo('<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
+        NavigateTo('<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=song&id=' + songid + '&offset=' + time);
     } else {
         // Single click
         if (brconn === null) {
@@ -392,8 +395,7 @@ function HideWaveform()
 {
     $('.waveform').css('visibility', 'hidden');
 }
-<?php
-    } ?>
+<?php } ?>
 
 var brkey = '';
 var brconn = null;
@@ -522,9 +524,9 @@ function stopBroadcast()
 
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
 window.parent.onbeforeunload = function (evt) {
-    if ($("#jquery_jplayer_1") !== undefined && $("#jquery_jplayer_1").data("jPlayer") !== undefined && !$("#jquery_jplayer_1").data("jPlayer").status.paused &&
-            (document.activeElement === undefined || (document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
-        var message = '<?php echo T_('Media is currently playing, are you sure you want to close?') . ' ' . AmpConfig::get('site_title') . '?'; ?>';
+    if (typeof $("#jquery_jplayer_1") !== 'undefined' && typeof $("#jquery_jplayer_1").data("jPlayer") !== 'undefined' && !$("#jquery_jplayer_1").data("jPlayer").status.paused &&
+            (typeof document.activeElement === 'undefined' || (typeof document.activeElement.href !== 'undefined' && document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
+        var message = '<?php echo addslashes(T_('Media is currently playing, are you sure you want to close?')) . ' ' . AmpConfig::get('site_title') . '?'; ?>';
         if (typeof evt == "undefined") {
             evt = window.event;
         }
@@ -536,8 +538,7 @@ window.parent.onbeforeunload = function (evt) {
 
     return null;
 }
-<?php
-    } ?>
+<?php } ?>
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
 window.addEventListener('storage', function (event) {
   if (event.key == 'ampache-current-webplayer') {
@@ -549,6 +550,5 @@ window.addEventListener('storage', function (event) {
     }
   }
 });
-<?php
-    } ?>
+<?php } ?>
 </script>

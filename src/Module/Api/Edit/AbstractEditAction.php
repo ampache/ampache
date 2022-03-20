@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -55,14 +56,14 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        debug_event(__CLASS__, 'Called for action: {' . Core::get_request('action') . '}', 5);
+        $this->logger->debug(
+            'Called for action: {' . Core::get_request('action') . '}',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         // Post first
-        $object_type = $_POST['type'];
-        if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        $object_id = (int) Core::get_get('id');
+        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_id   = (int) Core::get_get('id');
 
         if (empty($object_type)) {
             $object_type = $source_object_type = filter_input(
@@ -73,20 +74,28 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             );
         } else {
             $source_object_type = $object_type;
-
-            $object_type = implode('_', explode('_', $object_type, -1));
+            $object_type        = implode('_', explode('_', $object_type, -1));
         }
 
-        if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share') {
-            debug_event(__CLASS__, 'Type `' . $object_type . '` is not based on an item library.', 3);
+        if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share' && $object_type != 'channel' && $object_type != 'tag') {
+            $this->logger->warning(
+                sprintf('Type `%d` is not based on an item library.', $object_type),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return null;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        debug_event(__CLASS__, $class_name, 3);
-        debug_event(__CLASS__, $object_id, 3);
-        $libitem    = new $class_name($object_id);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        $this->logger->warning(
+            $className,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+        $this->logger->warning(
+            $object_id,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+        $libitem = new $className($object_id);
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }

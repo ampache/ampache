@@ -59,7 +59,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
                 Core::get_post('method') == 'admin' &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false
             ) ||
-            !Core::form_verify('update_preference', 'post')
+            !Core::form_verify('update_preference')
         ) {
             throw new AccessDeniedException();
         }
@@ -84,13 +84,13 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         // FIXME: do we need to do any header fiddling?
         load_gettext();
 
-        $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], $system);
-
         if (Core::get_post('method') == 'admin') {
             $notification_text = T_('Server preferences updated successfully');
         } else {
             $notification_text = T_('User preferences updated successfully');
         }
+
+        $user = $gatekeeper->getUser();
 
         $this->ui->showHeader();
 
@@ -99,8 +99,14 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         }
 
         // Show the default preferences page
-        require Ui::find_template('show_preferences.inc.php');
-
+        $this->ui->show(
+            'show_preferences.inc.php',
+            [
+                'fullname' => $fullname,
+                'preferences' => $user->get_preferences($_REQUEST['tab'], $system),
+                'ui' => $this->ui
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

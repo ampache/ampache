@@ -35,11 +35,6 @@ final class ConfigViewAdapter implements ConfigViewAdapterInterface
         $this->configContainer = $configContainer;
     }
 
-    public function isUserFlagsEnabled(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS);
-    }
-
     public function isWaveformEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM);
@@ -53,6 +48,11 @@ final class ConfigViewAdapter implements ConfigViewAdapterInterface
     public function isLicensingEnabled(): bool
     {
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING);
+    }
+
+    public function isShowLicenseEnabled(): bool
+    {
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LICENSE);
     }
 
     public function isShowSkippedTimesEnabled(): bool

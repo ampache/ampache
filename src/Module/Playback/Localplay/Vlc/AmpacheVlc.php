@@ -84,11 +84,11 @@ class AmpacheVlc extends localplay_controller
      */
     public function install()
     {
-        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`port` INT( 11 ) UNSIGNED NOT NULL , " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_vlc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -120,10 +120,12 @@ class AmpacheVlc extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
+        $sql     = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
+        $user_id = !empty(Core::get_global('user'))
+            ? Core::get_global('user')->id
+            : -1;
 
-        return Dba::query($sql,
-            array($data['name'], $data['host'], $data['port'], $data['password'], Core::get_global('user')->id));
+        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
     } // add_instance
 
     /**
@@ -196,9 +198,9 @@ class AmpacheVlc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance   = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
-        $sql        = ($instance < 1) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
-        $db_results = Dba::query($sql, array($instance));
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
+        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     } // get_instance
@@ -207,20 +209,17 @@ class AmpacheVlc extends localplay_controller
      * set_active_instance
      * This sets the specified instance as the 'active' one
      * @param $uid
-     * @param string $user_id
      * @return boolean
      */
-    public function set_active_instance($uid, $user_id = '')
+    public function set_active_instance($uid)
     {
-        // Not an admin? bubkiss!
-        if (!Core::get_global('user')->has_access('100')) {
-            $user_id = Core::get_global('user')->id;
+        $user = Core::get_global('user');
+        if ($user == '') {
+            return false;
         }
-
-        $user_id = $user_id ? $user_id : Core::get_global('user')->id;
-
-        Preference::update('vlc_active', $user_id, $uid);
+        Preference::update('vlc_active', $user->id, $uid);
         AmpConfig::set('vlc_active', $uid, true);
+        debug_event('vlc.controller', 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
 
         return true;
     } // set_active_instance
@@ -236,7 +235,7 @@ class AmpacheVlc extends localplay_controller
 
     /**
      * @param Stream_Url $url
-     * @return boolean|mixed
+     * @return boolean
      */
     public function add_url(Stream_Url $url)
     {
@@ -352,7 +351,7 @@ class AmpacheVlc extends localplay_controller
     /**
      * next
      * This just tells VLC to skip to the next song, if you play a song by direct
-     * clicking and hit next VLC will start with the first song , needs work.
+     * clicking and hit next VLC will start with the first song, needs work.
      */
     public function next()
     {
@@ -493,8 +492,8 @@ class AmpacheVlc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     $song->format();
-                    $data['name'] = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                    $data['link'] = $song->f_link;
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                    $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
                     $democratic   = new Democratic($url_data['demo_id']);
@@ -519,7 +518,7 @@ class AmpacheVlc extends localplay_controller
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
                         // it's a file get the last output after  and show that, hard to take every output possible in account
-                        $getlast      = explode("/", $entry);
+                        $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     } // end if loop
@@ -566,16 +565,14 @@ class AmpacheVlc extends localplay_controller
 
         $url_data = $this->parse_url($array['track']);
         $song     = new Song($url_data['oid']);
-        if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
+        if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
             $array['track_title']  = $song->title;
-            $array['track_artist'] = $song->get_artist_name();
-            $array['track_album']  = $song->get_album_name();
-        } // if not a known format
-        else {
-            $array['track_title'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'],
-                0, 25));
-            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'],
-                0, 20));
+            $array['track_artist'] = $song->get_artist_fullname();
+            $array['track_album']  = $song->get_album_fullname();
+        } else {
+            // if not a known format
+            $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
+            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
 
         return $array;

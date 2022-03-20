@@ -68,7 +68,7 @@ final class AddUserAction extends AbstractUserAction
             return null;
         }
 
-        if (!Core::form_verify('add_user', 'post')) {
+        if (!Core::form_verify('add_user')) {
             throw new AccessDeniedException();
         }
 
@@ -93,7 +93,7 @@ final class AddUserAction extends AbstractUserAction
         }
 
         /* make sure the username doesn't already exist */
-        if ($this->userRepository->findByUsername($username) !== null) {
+        if ($this->userRepository->idByUsername($username) > 0) {
             AmpError::add('username', T_('That Username already exists'));
         }
 

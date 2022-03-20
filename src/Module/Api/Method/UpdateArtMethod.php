@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class UpdateArtMethod
 {
-    private const ACTION = 'update_art';
+    public const ACTION = 'update_art';
 
     /**
      * update_art
@@ -52,7 +52,7 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art(array $input)
+    public static function update_art(array $input): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
@@ -61,13 +61,13 @@ final class UpdateArtMethod
         if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $overwrite = (int) $input['overwrite'] == 0;
+        $type      = (string)$input['type'];
+        $object_id = (int)$input['id'];
+        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
         $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album'))) {
+        if (!in_array(strtolower($type), array('artist', 'album'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return true;
@@ -91,7 +91,6 @@ final class UpdateArtMethod
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

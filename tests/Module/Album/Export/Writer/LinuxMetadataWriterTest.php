@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Album\Export\Writer;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\Album;
 use org\bovigo\vfs\vfsStream;
 
 class LinuxMetadataWriterTest extends MockeryTestCase
@@ -38,21 +37,17 @@ class LinuxMetadataWriterTest extends MockeryTestCase
 
     public function testWriteWritesData(): void
     {
-        $album = $this->mock(Album::class);
-
         $dir  = vfsStream::setup();
         $file = vfsStream::newFile('.directory');
 
         $dir->addChild($file);
 
-        $dirName      = $dir->url();
-        $iconFileName = 'some-file-name';
-        $full_name    = 'some-full-name';
-
-        $album->full_name = $full_name;
+        $fileName      = 'some-full-name';
+        $dirName       = $dir->url();
+        $iconFileName  = 'some-file-name';
 
         $this->subject->write(
-            $album,
+            $fileName,
             $dirName,
             $iconFileName
         );
@@ -60,7 +55,7 @@ class LinuxMetadataWriterTest extends MockeryTestCase
         $this->assertSame(
             sprintf(
                 "Name=%s\nIcon=%s",
-                $full_name,
+                $fileName,
                 $iconFileName
             ),
             $file->getContent()

@@ -63,7 +63,11 @@ class Bookmark extends database_object
             $info = $this->get_info($object_id);
         } else {
             if ($user_id === null) {
-                $user_id = Core::get_global('user')->id;
+                $user    = Core::get_global('user');
+                $user_id = $user->id ?? 0;
+            }
+            if ($user_id === 0) {
+                return false;
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -110,8 +114,8 @@ class Bookmark extends database_object
     /**
      * create
      * @param array $data
-     * @param int $userId
-     * @param int $updateDate
+     * @param integer $userId
+     * @param integer $updateDate
      * @return PDOStatement|boolean
      */
     public static function create(array $data, int $userId, int $updateDate)
@@ -124,22 +128,33 @@ class Bookmark extends database_object
     /**
      * edit
      * @param array $data
-     * @param int $userId
-     * @param int $updateDate
+     * @param integer $userId
+     * @param integer $updateDate
      * @return PDOStatement|boolean
      */
     public static function edit($data, int $userId, int $updateDate)
     {
-        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? " .
-               "WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($data['position'], $updateDate, $userId, scrub_in($data['comment']),  $data['object_type'], $data['object_id']));
     }
 
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        $sql = "UPDATE IGNORE `bookmark` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
+
+        return Dba::write($sql, array($new_object_id, $old_object_id, ucfirst($object_type)));
+    }
+
     public function getUserName(): string
     {
-        $user = new User($this->user);
-
-        return $user->username;
+        return User::get_username($this->user);
     }
 }

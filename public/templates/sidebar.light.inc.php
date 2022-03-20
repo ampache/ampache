@@ -22,27 +22,29 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+?>
 
 <ul id="sidebar-light">
-    <li><a href="<?php echo $web_path ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
-    <li><a href="<?php echo $web_path ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
-    <li><a href="<?php echo $web_path ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
-    <li><a href="<?php echo $web_path ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', T_('Smartlists')); ?><br /><?php echo T_('Smartlists') ?></a></li>
-    <li><a href="<?php echo $web_path ?>/browse.php?action=tag"><?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?><br /><?php echo $t_tagcloud ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-playlist', $t_smartlists); ?><br /><?php echo $t_smartlists ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres ?></a></li>
     <?php if (AmpConfig::get('live_stream')) { ?>
-    <li><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', T_('Radio Stations')); ?><br /><?php echo T_('Radio') ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
     <?php
 } ?>
-    <?php if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
-    <li><a href="<?php echo $web_path ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
+    <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
+    <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php
     } ?>
     <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
-    <li><a href="<?php echo $web_path ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
-    <?php
-    } ?>
-    <li><a target="_top" href="<?php echo $web_path; ?>/logout.php" class="nohtml"><img src="<?php echo $web_path ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
+    <?php } ?>
+    <?php if ($is_session) { ?>
+        <li><a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" class="nohtml"><img src="<?php echo $web_path; ?>/images/topmenu-logout.png" title="<?php echo $t_logout ?>" /><br /><?php echo $t_logout ?></a></li>
+    <?php } ?>
 </ul>

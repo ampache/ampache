@@ -65,7 +65,7 @@ final class JsonApiApplication implements ApiApplicationInterface
     {
         $response = $this->responseFactory->createResponse();
 
-        // @todo add headers to reponse after all api methods have been modernized
+        // @todo add headers to response after all api methods have been modernized
         /* Set the correct headers */
         header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 

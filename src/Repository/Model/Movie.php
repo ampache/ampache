@@ -49,6 +49,10 @@ class Movie extends Video
         parent::__construct($movie_id);
 
         $info = $this->get_info($movie_id);
+        if (empty($info)) {
+            return false;
+        }
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -68,7 +72,7 @@ class Movie extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " . "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -86,7 +90,7 @@ class Movie extends Video
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
-        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " . "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];
@@ -126,7 +130,7 @@ class Movie extends Video
 
     /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
@@ -135,10 +139,10 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim((string)$this->prefix . " " . $this->f_title);
-        $this->f_title         = ($this->f_original_name ?: $this->f_title);
-        $this->f_full_title    = $this->f_title;
-        $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
+        $this->f_original_name = trim((string)$this->prefix . " " . $this->get_fullname());
+        $this->f_name          = ($this->f_original_name ?: $this->get_fullname());
+        $this->f_full_title    = $this->f_name;
+        $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
 
         return true;
     } // format

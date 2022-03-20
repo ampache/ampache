@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
@@ -38,9 +39,11 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\Wanted;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)
@@ -58,6 +61,7 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
+        'channel' => Channel::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
         'user' => User::class,
@@ -67,6 +71,8 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'label' => Label::class,
         'podcast' => Podcast::class,
+        'tag' => Tag::class,
+        'wanted' => Wanted::class,
     ];
 
     public const VIDEO_TYPES = [

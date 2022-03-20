@@ -26,6 +26,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
 if (!Core::is_session_started()) {
     session_start();
 } ?>
@@ -34,7 +37,7 @@ if (!Core::is_session_started()) {
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
-    <?php if (in_array('starts_with', $allowed_filters)) { ?>
+    <?php if (in_array('starts_with', $allowed_filters) && array_key_exists('catalog', $_SESSION)) { ?>
         <form id="multi_alpha_filter_form" action="javascript:void(0);">
             <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Starts With'); ?></label>
             <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php $browse->set_catalog($_SESSION['catalog']);
@@ -66,8 +69,8 @@ if (!Core::is_session_started()) {
     <?php
     } // if playlist_type?>
     <?php if (in_array('object_type', $allowed_filters)) { ?>
-        <?php $string     = 'otype_' . $browse->get_filter('object_type');
-        ${$string}        = 'selected="selected"'; ?>
+        <?php $string = 'otype_' . $browse->get_filter('object_type');
+        ${$string}    = 'selected="selected"'; ?>
         <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
         <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
         <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
@@ -85,16 +88,15 @@ if (!Core::is_session_started()) {
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php
-                    $sql     = 'SELECT `id`, `name` FROM `catalog`';
-        $db_results          = Dba::read($sql);
+                <?php $sql = 'SELECT `id`, `name` FROM `catalog`';
+        $db_results        = Dba::read($sql);
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
         }
 
         foreach ($results as $entries) {
             echo '<option value="' . $entries['id'] . '" ';
-            if ($_SESSION['catalog'] == $entries['id']) {
+            if (array_key_exists('catalog', $_SESSION) && $_SESSION['catalog'] == $entries['id']) {
                 echo ' selected="selected" ';
             }
             echo '>' . $entries['name'] . '</options>';
@@ -106,7 +108,7 @@ if (!Core::is_session_started()) {
     <?php
     } ?>
     <?php if (in_array('show_art', $allowed_filters)) { ?>
-        <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" <?php echo Art::is_enabled() ? 'checked="checked"' : ''; ?>/>
+        <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" checked="checked"/>
         <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>
     <?php
     } // if show_art?>

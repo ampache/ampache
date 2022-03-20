@@ -37,7 +37,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  */
 final class RateMethod
 {
-    private const ACTION = 'rate';
+    public const ACTION = 'rate';
 
     /**
      * rate
@@ -49,9 +49,9 @@ final class RateMethod
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
-     * @return boolean|void
+     * @return bool
      */
-    public static function rate(array $input)
+    public static function rate(array $input): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,12 +63,11 @@ final class RateMethod
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -81,7 +80,6 @@ final class RateMethod
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
-
         if (!$className || !$object_id) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
@@ -96,7 +94,6 @@ final class RateMethod
             $rate->set_rating($rating, $user->id);
             Api::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

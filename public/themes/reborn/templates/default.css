@@ -191,11 +191,7 @@ textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
     border: 2px solid;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -208,8 +204,6 @@ input[type=submit] {
     font-size: 18px;
     line-height: normal;
     border: 0;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     cursor: pointer;
 }
@@ -219,9 +213,6 @@ input[type=button]:focus,
 input[type=submit]:hover,
 input[type=submit]:focus {
     background-position: 0 -10px;
-    -webkit-transition: background-position 0.1s linear;
-    -moz-transition: background-position 0.1s linear;
-    -o-transition: background-position 0.1s linear;
     transition: background-position 0.1s linear;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
     text-decoration: none;
@@ -229,9 +220,6 @@ input[type=submit]:focus {
 
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
-    -webkit-transition: background-position 0.1s linear;
-    -moz-transition: background-position 0.1s linear;
-    -o-transition: background-position 0.1s linear;
     transition: background-position 0.1s linear;
 }
 
@@ -363,15 +351,11 @@ div#autoupdate > span {
     padding: 0 25px;
     margin: 0;
     font-size: 15px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
     border-radius: 15px;
 }
 
 #headerbox select {
     min-width: 150px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 16px;
     font-weight: normal;
@@ -398,11 +382,7 @@ div#autoupdate > span {
 
 #loginPage #maincontainer,
 #registerPage #maincontainer {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
     margin: 0 auto;
@@ -485,8 +465,6 @@ div#autoupdate > span {
     margin-left: 0;
     width: 100%;
     min-height: 28px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     border-radius: 7px;
     height: 32px;
@@ -597,11 +575,7 @@ div#autoupdate > span {
     height: 20px;
     width: 148px;
     border: 2px solid;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     text-align: center;
     font-size: 10px;
@@ -624,11 +598,7 @@ div#autoupdate > span {
 #sidebar-content-light,
 #sidebar-light {
     border: 2px solid;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 10px;
 }
@@ -708,12 +678,8 @@ div#autoupdate > span {
 #sidebar-page {
     width: 148px;
     margin: 3px auto 5px 5px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     border: 2px solid;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -737,12 +703,7 @@ div#autoupdate > span {
     width: 100%;
     margin: 0 0 0 5px;
     background-color: transparent;
-    -webkit-transition: color 0.1s;
-    -moz-transition: color 0.1s;
-    -o-transition: color 0.1s;
     transition: color 0.1s;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     display: inline-block;
 }
@@ -753,7 +714,7 @@ div#autoupdate > span {
 }
 
 #sidebar-tabs .sb2 #browse_filters li {
-    margin: 3px auto 5px 5px;
+    margin: 3px auto 5px 0;
 }
 
 #sidebar-tabs .sb2 #browse_filters #multi_alpha_filterLabel {
@@ -779,6 +740,10 @@ div#autoupdate > span {
 
 .sb2_music {
     order: 10;
+}
+
+.sb2_dashboard {
+    order: 15;
 }
 
 .sb2_video {
@@ -835,12 +800,8 @@ span#sidebar-header-content::after {
     margin: 5px 15px auto auto;
     max-height: 85%;
     padding: 4px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     border: 2px solid #161616;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     z-index: 10000;
 }
@@ -949,18 +910,11 @@ span#sidebar-header-content::after {
    -------------------------- */
 #content {
     z-index: 3000000;
-    -webkit-transition: top 0.5s;
-    -moz-transition: top 0.5s;
-    -o-transition: top 0.5s;
     transition: top 0.5s;
     width: auto;
     max-height: 85%;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     border: 2px solid;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 20px 20px 40px;
 }
@@ -1025,8 +979,13 @@ table.tabledata thead .th-top {
     border-bottom: 1px solid;
 }
 
-table.tabledata thead th.cel_rating {
-    padding-left: 7px;
+table.tabledata thead th.cel_play {
+    text-align: right;
+    padding-right: 10px;
+}
+
+table.tabledata thead th.cel_ratings {
+    padding-left: 8px;
 }
 
 table.tabledata tfoot .th-bottom {
@@ -1119,14 +1078,9 @@ table.tabledata tbody td.cel_counter {
     text-align: center;
 }
 
-table.tabledata tbody td.cel_rating {
-    width: 100px !important;
-    max-width: 100px;
-}
-
-table.tabledata tbody td.cel_userflag {
-    width: 40px !important;
-    max-width: 40px;
+table.tabledata tbody td.cel_ratings {
+    width: 140px !important;
+    min-width: 140px;
 }
 
 table.tabledata tbody .cel_cover {
@@ -1141,21 +1095,16 @@ table.tabledata tbody .cel_license {
     max-width: 150px;
 }
 
-table.tabledata tbody td.mash_cover {
+table.tabledata tbody td.grid_cover {
     height: auto;
     overflow: visible;
 }
 
-table.tabledata tbody td.mash_userflag {
-    margin-left: 41%;
-}
-
-table.tabledata tbody .mash_cover img,
+table.tabledata tbody .grid_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
+    -o-object-fit: cover;
     object-fit: cover;
 }
 
@@ -1169,7 +1118,7 @@ table.tabledata .cel_drag img:hover {
 }
 
 table.tabledata .cel_agent {
-    text-align: right;
+    text-align: center;
     width: 45px;
 }
 
@@ -1202,7 +1151,7 @@ table.gatherart thead .th-top {
     border-bottom: 1px solid;
 }
 
-table.gatherart thead th.cel_rating {
+table.gatherart thead th.cel_ratings {
     padding-left: 7px;
 }
 
@@ -1236,7 +1185,7 @@ table.gatherart .th-bottom:focus {
 }
 
 #searchLimit {
-    width: 3em;
+    width: 4em;
 }
 
 #gatherYear {
@@ -1273,8 +1222,8 @@ table.disablegv tr {
     width: 15%;
 }
 
-table.disablegv tr.odd {
-    background-color: rgba(255, 255, 255, 0) !important;
+table.disablegv tr {
+    background-color: transparent !important;
 }
 
 table.disablegv td {
@@ -1301,7 +1250,7 @@ table.disablegv td.cel_drag {
     display: none !important;
 }
 
-table.disablegv td.cel_rating {
+table.disablegv td.cel_ratings {
     display: inline-block !important;
 }
 
@@ -1354,15 +1303,11 @@ table.disablegv td.cel_rating {
 
 .random_selection .random_album .art_album img {
     vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
 }
 
 .random_selection .random_video .art_album img {
     vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     width: 100px;
     height: 150px;
@@ -1413,15 +1358,27 @@ div.box.box_rules {
 .cel_album,
 .cel_artist {
     width: 15%;
-    white-space: normal !important;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    text-align: left;
 }
 
+.cel_left {
+    text-align: left;
+}
 .cel_counter,
 .cel_songs,
+.cel_albums,
 .cel_year {
     width: 60px;
+    text-align: center;
+}
+
+.cel_song,
+.cel_album,
+.cel_artist,
+.cel_counter,
+.cel_songs,
+.cel_albums,
+.cel_year {
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1437,6 +1394,7 @@ div.box.box_rules {
 
 #now_playing .np_group {
     float: left;
+    padding-right: 8px;
 }
 
 #now_playing .np_row {
@@ -1449,7 +1407,7 @@ div.box.box_rules {
     font-size: 13px;
 }
 
-#now_playing .cel_rating label {
+#now_playing .cel_ratings label {
     display: none;
 }
 
@@ -1482,8 +1440,6 @@ div.box.box_rules {
 
 #now_playing .cel_albumart img {
     vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     float: left;
     margin: 2px;
@@ -1495,9 +1451,6 @@ div.box.box_rules {
 
 #now_playing .similars {
     margin-right: 10px;
-    padding-right: 5px;
-    margin-left: 10px;
-    padding-left: 5px;
 }
 
 #recent_more {
@@ -1561,15 +1514,8 @@ span.fatalerror {
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     border-radius: 2px 4px 4px 2px;
     background-color: #5f5f5f;
-    background-image: -moz-linear-gradient(top, #6d6d6d, #4a4a4a);
-    background-image: -ms-linear-gradient(top, #6d6d6d, #4a4a4a);
-    background-image: -webkit-gradient(linear, 0, 0 100%, from(#6d6d6d), to(#4a4a4a));
-    background-image: -webkit-linear-gradient(top, #6d6d6d, #4a4a4a);
-    background-image: -o-linear-gradient(top, #6d6d6d, #4a4a4a);
     background-image: linear-gradient(to top, #6d6d6d, #4a4a4a);
     border-bottom-color: #b3b3b3;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -1662,8 +1608,6 @@ span.fatalerror {
 
 .item_art img {
     vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     float: left;
 }
@@ -1692,9 +1636,6 @@ span.fatalerror {
 
 #information_actions ul li {
     border-radius: 4px;
-    -webkit-transition: color 0.1s;
-    -moz-transition: color 0.1s;
-    -o-transition: color 0.1s;
     transition: color 0.1s;
 }
 
@@ -1749,7 +1690,10 @@ span.fatalerror {
 }
 
 #item_summary {
-    margin-right: 260px;
+    margin-right: 33%;
+    padding-bottom: 20px;
+    max-height: 340px;
+    overflow-y: auto;
 }
 
 /* -------------------------
@@ -1759,14 +1703,10 @@ span.fatalerror {
     position: relative;
 }
 
-.dynamic-star-rating {
-    width: 95px;
-}
-
 .star-rating ul,
 .star-rating a:hover,
 .star-rating .current-rating {
-    background: url(../images/ratings/star_rating.png) left -1000px repeat-x;
+    background: url('../images/ratings/star_rating.png') left -1000px repeat-x;
 }
 
 .star-rating ul {
@@ -1778,14 +1718,21 @@ span.fatalerror {
     margin: 0;
     padding: 0;
     background-position: left top;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 .star-rating li {
     display: inline;
 }
 
+.star-rating .global-rating {
+    font-size: 0.8em;
+    position: relative;
+    bottom: 2px;
+}
+
 .star-rating a,
-.star-rating span,
 .star-rating .current-rating {
     position: absolute;
     top: 0;
@@ -1808,7 +1755,7 @@ span.fatalerror {
 .star-rating a.star0 {
     left: 0;
     width: 16px;
-    background: url(../../../images/ratings/x_off.gif) left top;
+    background: url('../../../images/ratings/x_off.gif') left top;
 }
 
 .dynamic-star-rating a:hover {
@@ -1816,11 +1763,15 @@ span.fatalerror {
 }
 
 .dynamic-star-rating a:hover.star0 {
-    background: url(../../../images/ratings/x.gif) left top;
+    background: url('../../../images/ratings/x.gif') left top;
 }
 
 .dynamic-star-rating ul {
-    left: 16px;
+    margin-left: 16px;
+}
+
+[id^=rating_] + [id^=userflag_] {
+    margin-left: 5px;
 }
 
 /* ------------------------
@@ -1830,11 +1781,12 @@ span.fatalerror {
     position: relative;
     width: 16px;
     height: 16px;
+    display: inline-block;
 }
 
 .userflag a {
-    position: absolute;
-    display: inline;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 .userflag a.userflag_true {
@@ -1919,8 +1871,6 @@ ul,
     width: 50%;
     display: block;
     border: 1px solid;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
     border-radius: 10px;
     font-weight: bold;
     text-align: center;

@@ -36,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class DownloadMethod
 {
-    private const ACTION = 'download';
+    public const ACTION = 'download';
 
     /**
      * download
@@ -50,7 +50,7 @@ final class DownloadMethod
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
-    public static function download(array $input)
+    public static function download(array $input): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -63,7 +63,7 @@ final class DownloadMethod
         $original  = $format && $format != 'raw';
         $user_id   = User::get_from_username(Session::username($input['auth']))->id;
 
-        $params = '&action=download' . '&client=api' . '&cache=1';
+        $params = '&client=api&action=download&cache=1';
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }

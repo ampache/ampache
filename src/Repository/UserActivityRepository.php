@@ -115,47 +115,13 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_activity` USING `user_activity` LEFT JOIN `$type` ON `$type`.`id` = `user_activity`.`object_id` WHERE `object_type` = '$type' AND `$type`.`id` IS NULL");
+                Dba::write("DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);", array($type));
             }
+            // accidental plays
+            Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';");
+            // deleted users
+            Dba::write("DELETE FROM `user_activity` WHERE `user` NOT IN (SELECT `id` FROM `user`);");
         }
-    }
-
-    /**
-     * Inserts the necessary data to register the playback of a song
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerSongEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $songName,
-        string $artistName,
-        string $albumName,
-        string $songMbId,
-        string $artistMbId,
-        string $albumMbId
-    ): void {
-        Dba::write(
-            'INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_track`, `name_artist`, `name_album`, `mbid_track`, `mbid_artist`, `mbid_album`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date,
-                $songName,
-                $artistName,
-                $albumName,
-                $songMbId,
-                $artistMbId,
-                $albumMbId
-            ]
-        );
     }
 
     /**
@@ -173,70 +139,6 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         Dba::write(
             "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)",
             [$userId, $action, $object_type, $objectId, $date]
-        );
-    }
-
-    /**
-     * Inserts the necessary data to register an artist related action
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerArtistEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $artistName,
-        string $artistMbId
-    ): void {
-        Dba::write(
-            "INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)
-                VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date,
-                $artistName,
-                $artistMbId,
-            ]
-        );
-    }
-
-    /**
-     * Inserts the necessary data to register the playback of a song
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerAlbumEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $artistName,
-        string $albumName,
-        string $artistMbId,
-        string $albumMbId
-    ): void {
-        Dba::write(
-            'INSERT INTO `user_activity`
-                (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [
-                $userId,
-                $action,
-                $objectType,
-                $objectId,
-                $date,
-                $artistName,
-                $albumName,
-                $artistMbId,
-                $albumMbId
-            ]
         );
     }
 }

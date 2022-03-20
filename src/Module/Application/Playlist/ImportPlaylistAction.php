@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -54,11 +55,13 @@ final class ImportPlaylistAction implements ApplicationActionInterface
 
         /* first we rename the file to it's original name before importing.
         Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right... */
-        $dir      = dirname($_FILES['filename']['tmp_name']) . "/";
-        $filename = $dir . basename($_FILES['filename']['name']);
+        $dir       = dirname($_FILES['filename']['tmp_name']) . "/";
+        $filename  = $dir . basename($_FILES['filename']['name']);
         move_uploaded_file($_FILES['filename']['tmp_name'], $filename);
+        // allow setting public or private for your imports
+        $playlist_type = filter_input(INPUT_POST, 'default_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $result = Catalog::import_playlist($filename);
+        $result = Catalog::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
 
         if ($result['success']) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
@@ -66,10 +69,22 @@ final class ImportPlaylistAction implements ApplicationActionInterface
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .
                 /* HINT: Number of songs */
-                sprintf(nT_('Successfully imported playlist with %d song.', 'Successfully imported playlist with %d songs.', $result['count']), $result['count']);
+                sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);
+            if (!empty($result['results'])) {
+                $body .= "<table class=\"tabledata striped-rows\">\n<thead><tr class=\"th-top\">\n<th>" . T_('Track') . "</th><th>" . T_('File') . "</th><th>" . T_('Status') . "</th>\n<tbody>\n";
+                foreach ($result['results'] as $file) {
+                    if ($file['found']) {
+                        $body .= "<tr>\n<td>" . scrub_out($file['track']) . "</td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Success') . "</td>\n</tr>\n";
+                    } else {
+                        $body .= "<tr><td></td><td>" . scrub_out($file['file']) . "</td><td>" . T_('Failure') . "</td></tr>\n";
+                    }
+                    flush();
+                } // foreach songs
+                $body .= "</tbody></table>\n";
+            }
         } else {
             $url   = 'show_import_playlist';
-            $title = T_("There Was a Problem");
+            $title = T_('There Was a Problem');
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         $this->ui->showConfirmation(

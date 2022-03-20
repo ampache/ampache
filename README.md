@@ -1,96 +1,138 @@
-# Ampache - React Client/Interface
+# Ampache
 
-![Logo](http://ampache.org/img/logo/ampache-logo_x64.png) Ampache
+![Logo](https://ampache.org/img/logo/ampache-logo_x64.png)
 
-A fork of https://github.com/ampache/ampache/tree/develop
+[www.ampache.org](https://ampache.org/)
 
-## Point Of This
-This client is mean to replace the Reborn interface. Using modern technologies and easier to maintain code.
+[Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
 
+## News
+
+This cycle we have added support for multiple Album and Song artists.
+This allows multiple artists to be part of a single song/album object and is created from file tags.
+
+We rely on 3 tags right now [picard-docs](https://picard-docs.musicbrainz.org/downloads/MusicBrainz_Picard_Tag_Map.html)
+
+* Artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as MusicBrainz Artist ID)
+* MusicBrainz Artist ID: Array of MBID values that denote Song Artist
+* MusicBrainz Release Artist ID: Array of MBID values that denote Album Artist
+
+If these are not arrays, we try to split and create arrays to do the lookups
+The reason the regular artist and albumartist tags are ignored (for now) is due to how awful these fields can be.
+If you don't use these tags nothing will change and will function as normal.
+
+To do a full catalog verify, disable catalog_verify_by_time in your config file.
+
+## Basics
+
+Ampache is a web based audio/video streaming application and file
+manager allowing you to access your music & videos from anywhere,
+using almost any internet enabled device.
+
+Ampache's usefulness is heavily dependent on being able to extract
+correct metadata from embedded tags in your files and/or the file name.
+Ampache is not a media organiser; it is meant to be a tool which
+presents an already organised collection in a useful way. It assumes
+that you know best how to manage your files and are capable of
+choosing a suitable method for doing so.
+
+* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
+
+## Recommended Version
+
+The recommended and most stable version is the current stable [release5 branch](https://github.com/ampache/ampache/archive/release5.tar.gz).
+
+You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
+[![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=source-changes)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=source-changes)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
+[![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
+
+If you want to run the last stable version [release4](https://github.com/ampache/ampache/archive/release4.tar.gz) is still available
+
+## Installation
+
+Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and don't forget to check out the [basic config](https://github.com/ampache/ampache/wiki/Basic) guide after that.
 
 ## Requirements
 
-To build this project you will need [Yarn](https://yarnpkg.com/lang/en/docs/install/). In addition to the requirements of Ampache itself.
+* A web server. All of the following have been used, though Ampache receives the most testing with Apache:
+  * Apache
+  * lighttpd
+  * nginx
+  * IIS
 
-### Build
-Clone the repo: `git clone https://github.com/ampache/ampache/ -b react-client`
+* PHP 7.1-7.4 (Ampache 4.x.x)
+* PHP 7.4 (Ampache 5.0.x)
+* PHP 8.0 (Ampache 5.1.x)
 
-Use yarn to download all needed packages: `yarn`
+* PHP modules:
+  * PDO
+  * PDO_MYSQL
+  * hash
+  * session
+  * json
+  * intl
+  * simplexml (optional)
+  * curl (optional)
 
-Run Parcel to build: `yarn build`
+* For FreeBSD The following php modules must be loaded:
+  * php-xml
+  * php-dom
+  * php-intl
 
-Run a PHP server locally on port 8080: `/bin/php -S localhost:8080 -t {PATH TO BASE FOLDER}`
+* MySQL 5.x / MySQL 8.x / MariaDB 10.x
 
+## Upgrading
 
-### Existing Ampache drop-in
-If you wish to run the client on an existing copy of Ampache. 
+If you are upgrading from an older version of Ampache we recommend
+moving the old directory out of the way, extracting the new copy in
+its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
+/channel/.htaccess, and /play/.htaccess files if any.
+All database updates will be handled by Ampache.
 
-Put the `client` folder into your base directory. 
+## License
 
-Put the `newclient` folder into your base directory. 
+Ampache is free software; you can redistribute it and/or
+modify it under the terms of the GNU Affero General Public License v3 (AGPL-3.0-or-later)
+as published by the Free Software Foundation.
 
-Access via `/newclient`
+Ampache includes some [external modules](https://github.com/ampache/ampache/blob/develop/composer.lock) that carry their own licensing.
 
+## Translations
 
-#### Since version 4.1.0 JSON support is now built in Ampache!
+Ampache is currently translated (at least partially) into the
+following languages. If you are interested in updating an existing
+translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
+If you prefer it old school or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
+for more instructions.
 
-## FAQ(not really)
+Translation progress so far:
 
+[![Transifex](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
 
-**Can I run this on an external server?** 
+## Credits
 
-If you enable CORS and change the .env file and build.
+Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS.md)
 
-**Can you prioritize X feature!** 
+## Contact Us
 
-Open an issue about it please!
+Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!
 
-**Will these instructions work?** 
+* For Live discussions, visit us on our IRC Channel at chat.freenode.net #ampache or alternative via a [web based chat client](https://webchat.freenode.net)
+* For harder cases or general discussion about Ampache take a look at our [Google Groups Forum](https://groups.google.com/forum/#!forum/ampache)
+* Found a bug or Ampache isn't working as expected? Please refer to the [Issues Template](https://github.com/ampache/ampache/wiki/Issues) and head over to our [Issue Tracker](https://github.com/ampache/ampache/issues)
+* [r/Ampache](https://www.reddit.com/r/ampache/)
+* [Our Telegram Group](https://t.me/ampache)
+* [Official Twitter](https://twitter.com/ampache)
+* [Official Mastodon](https://fosstodon.org/@ampache)
 
-Hopefully 
+## Further Information and basic Help
 
-## Progress
-### What we have
+* Everything related to the Ampache Project can be found on our [Public Repository](https://github.com/ampache)
+* Want to know, how to get Apache to work or learn more about the functions? See our [Documentation](https://github.com/ampache/ampache/wiki)
 
-#### Basics
-- [x] Previous/Next/Pause/Resume
-- [x] Seeking
-- [x] Volume control
-- [ ] Minimum API version
-- [ ] Nice login page
+We hope to see you soon and that you have fun with this Project!
 
-#### Songs
-- [ ] Tags
-- [x] Favorite
-
-#### Playlists
-- [x] Create
-- [x] Delete
-- [x] Rename
-- [ ] Handle duplicate song
-- [ ] Public/Private
-- [ ] Duplicate Playlist? (Do we want this?)
-- [ ] Smart Playlists
-- [ ] Forgotten/Recent/Random
-
-#### Queue
-- [x] Exists
-- [ ] Refined
-- [ ] Shuffle
-- [ ] Repeat
-
-#### Search
-- [x] Basic Search
-- [ ] Advanced Search
-- [ ] Random
-- [ ] Filters
-
-#### Management
-- [ ] Create User
-- [ ] Delete User
-- [ ] Edit User
-- [ ] Catalog Clean/Update
-- [ ] Multi-Catalog [#223](https://github.com/ampache/ampache/issues/223)
-
-#### Social
-- [ ] Following
+[Team Ampache](docs/ACKNOWLEDGEMENTS.md)

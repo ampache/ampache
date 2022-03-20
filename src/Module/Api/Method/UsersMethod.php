@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -48,7 +47,7 @@ final class UsersMethod
      * @param array $input
      * @return boolean
      */
-    public static function users(array $input)
+    public static function users(array $input): bool
     {
         $users = static::getUserRepository()->getValid();
         if (empty($users)) {
@@ -65,7 +64,6 @@ final class UsersMethod
             default:
                 echo Xml_Data::users($users);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

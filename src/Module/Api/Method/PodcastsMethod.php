@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class PodcastsMethod
 {
-    private const ACTION = 'podcasts';
+    public const ACTION = 'podcasts';
 
     /**
      * podcasts
@@ -53,7 +53,7 @@ final class PodcastsMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts(array $input)
+    public static function podcasts(array $input): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -65,10 +65,10 @@ final class PodcastsMethod
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $podcasts = $browse->get_objects();
         if (empty($podcasts)) {
@@ -79,19 +79,19 @@ final class PodcastsMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $episodes = ($input['include'] == 'episodes' || (int) $input['include'] == 1);
+        $include  = $input['include'] ?? '';
+        $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcasts($podcasts, $user->id, $episodes);
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::podcasts($podcasts, $user->id, $episodes);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                XML_Data::set_offset($input['offset'] ?? 0);
+                XML_Data::set_limit($input['limit'] ?? 0);
                 echo XML_Data::podcasts($podcasts, $user->id, $episodes);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

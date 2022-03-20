@@ -46,9 +46,11 @@ class Podcast extends database_object implements library_item
     public $generator;
     public $lastbuilddate;
     public $lastsync;
-
+    public $total_count;
     public $episodes;
-    public $f_title;
+    public $has_art;
+
+    public $f_name;
     public $f_website;
     public $f_description;
     public $f_language;
@@ -58,6 +60,7 @@ class Podcast extends database_object implements library_item
     public $f_lastsync;
     public $link;
     public $f_link;
+    public $f_website_link;
 
     /**
      * Podcast
@@ -105,18 +108,18 @@ class Podcast extends database_object implements library_item
      */
     public function get_episodes($state_filter = '')
     {
-        $params = array();
-        $sql    = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ";
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast`.`catalog` ";
+        $params          = array();
+        $sql             = "SELECT `podcast_episode`.`id` FROM `podcast_episode` ";
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        if ($catalog_disable) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` ";
         }
         $sql .= "WHERE `podcast_episode`.`podcast`='" . Dba::escape($this->id) . "' ";
         if (!empty($state_filter)) {
             $sql .= "AND `podcast_episode`.`state` = ? ";
             $params[] = $state_filter;
         }
-        if (AmpConfig::get('catalog_disable')) {
+        if ($catalog_disable) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `podcast_episode`.`pubdate` DESC";
@@ -131,53 +134,38 @@ class Podcast extends database_object implements library_item
     } // get_episodes
 
     /**
-     * _get_extra info
-     * This returns the extra information for the podcast, this means totals etc
-     * @return array
-     */
-    private function _get_extra_info()
-    {
-        // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('podcast_extra', $this->id)) {
-            $row = parent::get_from_cache('podcast_extra', $this->id);
-        } else {
-            $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` " . "WHERE `podcast_episode`.`podcast` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $row        = Dba::fetch_assoc($db_results);
-
-            parent::add_to_cache('podcast_extra', $this->id, $row);
-        }
-
-        /* Set Object Vars */
-        $this->episodes = $row['episode_count'];
-
-        return $row;
-    } // _get_extra_info
-
-    /**
      * format
-     * this function takes the object and reformats some values
+     * this function takes the object and formats some values
      * @param boolean $details
      * @return boolean
      */
     public function format($details = true)
     {
-        $this->f_title         = scrub_out($this->title);
+        $this->get_fullname();
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $this->f_lastbuilddate = get_datetime((int)$this->lastbuilddate);
-        $this->f_lastsync      = get_datetime((int)$this->lastsync);
-        $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
-        $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
-
-        if ($details) {
-            $this->_get_extra_info();
-        }
+        $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
+        $this->f_lastsync      = date("c", (int)$this->lastsync);
+        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
+    }
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'podcast');
+        }
+
+        return $this->has_art;
     }
 
     /**
@@ -190,7 +178,7 @@ class Podcast extends database_object implements library_item
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_title
+            'value' => $this->get_fullname()
         );
 
         return $keywords;
@@ -203,7 +191,26 @@ class Podcast extends database_object implements library_item
      */
     public function get_fullname()
     {
-        return $this->f_title;
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->title;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
+        }
+
+        return $this->link;
     }
 
     /**
@@ -235,7 +242,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * @param string $filter_type
-     * @return array|mixed
+     * @return array
      */
     public function get_medias($filter_type = null)
     {
@@ -286,7 +293,7 @@ class Podcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('podcast', $this->id, $this->get_fullname(), $thumb, $this->get_link());
         }
     }
 
@@ -299,7 +306,7 @@ class Podcast extends database_object implements library_item
     public function update(array $data)
     {
         $feed        = isset($data['feed']) ? $data['feed'] : $this->feed;
-        $title       = isset($data['title']) ? scrub_in($data['title']) : $this->title;
+        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : $this->title;
         $website     = isset($data['website']) ? scrub_in($data['website']) : $this->website;
         $description = isset($data['description']) ? scrub_in($data['description']) : $this->description;
         $generator   = isset($data['generator']) ? scrub_in($data['generator']) : $this->generator;
@@ -343,7 +350,10 @@ class Podcast extends database_object implements library_item
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog->gather_types !== "podcast") {
+            if (!$catalog) {
+                AmpError::add('catalog', T_('Catalog not found'));
+            }
+            if ($catalog && $catalog->gather_types !== "podcast") {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
             }
         }
@@ -427,6 +437,8 @@ class Podcast extends database_object implements library_item
                 $art = new Art((int)$podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
+            Catalog::update_map($catalog_id, 'podcast', (int)$podcast_id);
+            Catalog::count_table('user');
             if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
@@ -451,15 +463,17 @@ class Podcast extends database_object implements library_item
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $afterdate);
         }
+        $time   = time();
+        $params = array($this->id);
 
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
         if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` " . "WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` " . "ORDER BY `podcast_episode`.`pubdate` DESC";
+            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` ORDER BY `podcast_episode`.`pubdate` DESC";
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->change_state('pending');
@@ -471,14 +485,19 @@ class Podcast extends database_object implements library_item
         // Remove items outside limit
         $keepnb = AmpConfig::get('podcast_keep');
         if ($keepnb > 0) {
-            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? " . "ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-            $db_results = Dba::read($sql, array($this->id));
+            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
+            $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_row($db_results)) {
                 $episode = new Podcast_Episode($row[0]);
                 $episode->remove();
             }
         }
-        $this->update_lastsync(time());
+        // update the episode count after adding / removing episodes
+        $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
+        Dba::write($sql, $params);
+        Catalog::update_mapping('podcast_episode');
+        Catalog::count_table('podcast_episode');
+        $this->update_lastsync($time);
     }
 
     /**
@@ -489,8 +508,6 @@ class Podcast extends database_object implements library_item
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
     {
-        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '...', 4);
-
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
@@ -504,11 +521,18 @@ class Podcast extends database_object implements library_item
         }
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
+        // time is missing hour e.g. "15:23"
         if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
             $duration = '00:' . $duration;
         }
-        $ptime = date_parse((string) $duration);
-        $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
+        // process a time string "03:23:01"
+        $ptime = (preg_grep("/[0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
+            ? date_parse((string)$duration)
+            : $duration;
+        // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
+        $time = (is_array($ptime))
+            ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
+            : (int) $ptime;
 
         $pubdate    = 0;
         $pubdatestr = (string)$episode->pubDate;
@@ -520,9 +544,20 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        if (!$source) {
+            debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        if (self::get_id_from_source($source) > 0) {
+            debug_event(self::class, 'Episode source URL already exists, skipped', 3);
+
+            return false;
+        }
 
         if ($pubdate > $afterdate) {
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`) " . "VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?)";
+            debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
+            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(
                 $title,
@@ -535,7 +570,8 @@ class Podcast extends database_object implements library_item
                 $category,
                 $time,
                 $pubdate,
-                time()
+                time(),
+                $this->catalog
             ));
         } else {
             debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
@@ -559,7 +595,7 @@ class Podcast extends database_object implements library_item
     /**
      * sync_episodes
      * @param boolean $gather
-     * @return PDOStatement|boolean
+     * @return boolean
      */
     public function sync_episodes($gather = false)
     {
@@ -585,7 +621,7 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
-     * @return PDOStatement|boolean
+     * @return string|null
      */
     public function remove()
     {
@@ -596,8 +632,33 @@ class Podcast extends database_object implements library_item
         }
 
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
+        Dba::write($sql, array($this->id));
+        $insert_id = Dba::insert_id();
 
-        return Dba::write($sql, array($this->id));
+        Catalog::count_table('podcast');
+        Catalog::count_table('podcast_episode');
+
+        return $insert_id;
+    }
+
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_source($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
     }
 
     /**

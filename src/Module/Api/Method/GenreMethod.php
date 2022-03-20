@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GenreMethod
@@ -37,7 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class GenreMethod
 {
-    private const ACTION = 'genre';
+    public const ACTION = 'genre';
 
     /**
      * genre
@@ -49,7 +48,7 @@ final class GenreMethod
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre(array $input)
+    public static function genre(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -71,7 +70,6 @@ final class GenreMethod
             default:
                 echo Xml_Data::genres(array($object_id));
         }
-        Session::extend($input['auth']);
 
         return true;
     }

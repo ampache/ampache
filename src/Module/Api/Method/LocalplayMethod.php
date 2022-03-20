@@ -38,7 +38,7 @@ use Ampache\Repository\Model\User;
  */
 final class LocalplayMethod
 {
-    private const ACTION = 'localplay';
+    public const ACTION = 'localplay';
 
     /**
      * localplay
@@ -52,9 +52,11 @@ final class LocalplayMethod
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
+     * id
      * @return boolean
      */
-    public static function localplay(array $input)
+    public static function localplay(array $input): bool
     {
         if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;
@@ -94,13 +96,16 @@ final class LocalplayMethod
                     'object_id' => $object_id,
                 );
                 $playlist = new Stream_Playlist();
-                $playlist->add(array($media));
+                $playlist->add(array($media), '&client=' . $localplay->type);
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }
                 break;
-            case 'next':
             case 'skip':
+                // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
+                $result = $localplay->skip((int)$input['track'] - 1);
+                break;
+            case 'next':
                 $result = $localplay->next();
                 break;
             case 'prev':
@@ -146,7 +151,6 @@ final class LocalplayMethod
             default:
                 echo Xml_Data::keyed_array($output_array);
         }
-        Session::extend($input['auth']);
 
         return true;
     }

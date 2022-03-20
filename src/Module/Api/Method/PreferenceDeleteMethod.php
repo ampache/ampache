@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceDeleteMethod
 {
-    private const ACTION = 'preference_delete';
+    public const ACTION = 'preference_delete';
 
     /**
      * preference_delete
@@ -47,7 +47,7 @@ final class PreferenceDeleteMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function preference_delete(array $input)
+    public static function preference_delete(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -56,7 +56,7 @@ final class PreferenceDeleteMethod
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name  = (string) $input['filter'];
+        $pref_name  = (string)($input['filter'] ?? '');
         $preference = Preference::get($pref_name,-1);
         if (empty($preference)) {
             Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
@@ -72,7 +72,6 @@ final class PreferenceDeleteMethod
         }
         Preference::delete($pref_name);
         Api::message("Deleted: $pref_name", $input['api_format']);
-        Session::extend($input['auth']);
 
         return true;
     }

@@ -59,10 +59,15 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected $songs = array();
 
     /**
-     *
-     * @var string command which provides the list of all songs
+     * command which provides the list of all songs
+     * @var string $listCommand
      */
     protected $listCommand;
+
+    /**
+     * Counter used for cleaning actions
+     */
+    private int $cleanCounter = 0;
 
     /**
      * Constructor
@@ -153,7 +158,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -188,7 +193,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $tags = array_diff($metadata, get_object_vars($libraryItem));
         $keys = array_merge(
-            isset($libraryItem::$aliases) ? $libraryItem::$aliases : array(),
+            $libraryItem::$aliases ?? array(),
             array_keys(get_object_vars($libraryItem))
         );
         foreach ($keys as $key) {
@@ -279,7 +284,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
-        return $count;
+        return (int)$count;
     }
 
     /**
@@ -289,6 +294,14 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @return boolean
      */
     public function move_catalog_proc($new_path)
+    {
+        return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function cache_catalog_proc()
     {
         return false;
     }
@@ -313,8 +326,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected function deleteSongs($songs)
     {
         $ids = implode(',', array_keys($songs));
-        $sql = "DELETE FROM `song` WHERE `id` IN " .
-                '(' . $ids . ')';
+        $sql = "DELETE FROM `song` WHERE `id` IN ($ids)";
         Dba::write($sql);
     }
 
@@ -327,10 +339,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
+        $row        = Dba::fetch_row($db_results);
+        if (empty($row)) {
+            return false;
+        }
 
-        $row = Dba::fetch_row($db_results);
-
-        return isset($row) ? $row[0] : false;
+        return $row[0];
     }
 
     /**
@@ -343,8 +357,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $db_results = Dba::read($sql, array($this->id));
 
         $files = array();
-        while ($row = Dba::fetch_row($db_results)) {
-            $files[$row[0]] = $row[1];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $files[$row['id']] = $row['file'];
         }
 
         return $files;

@@ -37,7 +37,7 @@ use Ampache\Module\System\Session;
  */
 final class PreferenceEditMethod
 {
-    private const ACTION = 'preference_edit';
+    public const ACTION = 'preference_edit';
 
     /**
      * preference_edit
@@ -51,13 +51,13 @@ final class PreferenceEditMethod
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input)
+    public static function preference_edit(array $input): bool
     {
         if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $all  = (int) $input['all'] == 1;
+        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -65,7 +65,7 @@ final class PreferenceEditMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string) $input['filter'];
+        $pref_name  = (string)($input['filter'] ?? '');
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -80,7 +80,7 @@ final class PreferenceEditMethod
             return false;
         }
         $preference   = Preference::get($pref_name, $user->id);
-        $output_array =  array('preference' => $preference);
+        $output_array = array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
@@ -88,7 +88,6 @@ final class PreferenceEditMethod
             default:
                 echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
-        Session::extend($input['auth']);
 
         return true;
     }

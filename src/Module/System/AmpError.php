@@ -66,8 +66,8 @@ class AmpError
             AmpError::$state           = true;
             AmpError::$errors[$name]   = $message;
             $_SESSION['errors'][$name] = $message;
-        } // They want us to append the error, add a BR\n and then the message
-        else {
+        } else {
+            // They want us to append the error, add a BR\n and then the message
             AmpError::$state = true;
             AmpError::$errors[$name] .= "<br />\n" . $message;
             $_SESSION['errors'][$name] .= "<br />\n" . $message;
@@ -115,6 +115,7 @@ class AmpError
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
      * @param string $name
+     * @return string
      */
     public static function display($name)
     {
@@ -122,6 +123,8 @@ class AmpError
         if (isset(AmpError::$errors[$name])) {
             return self::getErrorsFormatted($name);
         }
+
+        return '';
     } // display
 
     public static function getErrorsFormatted(string $name): string

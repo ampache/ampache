@@ -26,7 +26,9 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -45,25 +47,18 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $cleanupMode,
         bool $searchArtMode
     ): void {
-        $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $catname));
-
-        // -------- Options before the File actions loop
-        if ($searchArtMode === true) {
-            $options['gather_art'] = true;
-        } else {
-            $options['gather_art'] = false;
-        }
-
-        $sql        = "SELECT `id` FROM `catalog` WHERE `name` = '$catname' AND `catalog_type`='local'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
+        $db_results = Dba::read($sql, array($catname));
 
         ob_end_clean();
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog = Catalog::create_from_id($row['id']);
+            $catalog   = Catalog::create_from_id($row['id']);
+            $artist_id = 0;
+            $album_id  = 0;
             ob_flush();
-            if (!$catalog->id) {
+            if (!$catalog) {
                 $interactor->error(sprintf(T_('Catalog `%s` not found'), $catname), true);
 
                 return;
@@ -85,23 +80,29 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
                 case 'music':
                 default:
-                    $type    = 'song';
-                    $file_id = Catalog::get_id_from_file($filePath, $type);
-                    $media   = new Song($file_id);
+                    $type      = 'song';
+                    $file_id   = Catalog::get_id_from_file($filePath, $type);
+                    $media     = new Song($file_id);
+                    $artist_id = $media->artist;
+                    $album_id  = $media->album;
                     break;
             }
+            $file_test = is_file($filePath);
             // deleted file
-            if (!is_file($filePath) && $cleanupMode == 1) {
+            if (!$file_test && $cleanupMode == 1) {
                 $catalog->clean_file($filePath, $type);
                 $interactor->info(
                     sprintf(T_('Removing File: "%s"'), $filePath),
                     true
                 );
+                // update counts after cleaning a missing file
+                Album::update_album_counts();
+                Artist::update_artist_counts();
 
                 return;
             }
             // existing files
-            if (is_file($filePath) && Core::is_readable($filePath)) {
+            if ($file_test && Core::is_readable($filePath)) {
                 $interactor->info(
                     sprintf(T_('Reading File: "%s"'), $filePath),
                     true
@@ -142,6 +143,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         }
                     }
                 }
+                // update counts after adding/verifying
+                Album::update_album_counts();
+                Artist::update_artist_counts();
             }
         }
 
