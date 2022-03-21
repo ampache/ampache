@@ -318,8 +318,8 @@ class Rating extends database_object
         // albums may be a group of id's
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
             $album       = new Album($this->id);
-            $album_array = $album->get_group_disks_ids();
-            self::set_rating_for_group($rating, $album_array, $user_id);
+            self::set_rating_for_group($rating, $album->album_suite, $user_id);
+            self::save_rating($this->id, 'album', (int)$rating, (int)$user_id);
 
             return true;
         }
@@ -366,7 +366,6 @@ class Rating extends database_object
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
             }
-            self::save_rating($album_id, 'album', (int)$rating, (int)$user_id);
         }
 
         return true;
