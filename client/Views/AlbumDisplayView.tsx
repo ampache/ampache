@@ -1,8 +1,7 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { AuthKey } from '~logic/Auth';
-import { toast } from 'react-toastify';
 import ReactLoading from 'react-loading';
-import { Album, flagAlbum } from '~logic/Album';
+import { Album } from '~logic/Album';
 import style from '~Pages/Search/index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
@@ -13,16 +12,12 @@ interface AlbumDisplayViewProps {
     authKey: AuthKey;
 }
 
-const AlbumDisplayView: React.FC<AlbumDisplayViewProps> = (props) => {
+const AlbumDisplayView = (props: AlbumDisplayViewProps) => {
     const musicContext = useContext(MusicContext);
 
-    const [albumsState, setAlbumsState] = useState(null);
+    const albums = props.albums;
 
-    useEffect(() => {
-        setAlbumsState(props.albums);
-    }, [props.albums]);
-
-    if (albumsState === null) {
+    if (albums === null) {
         return (
             <>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
@@ -36,15 +31,14 @@ const AlbumDisplayView: React.FC<AlbumDisplayViewProps> = (props) => {
 
     return (
         <>
-            {albumsState.length === 0 && 'No results :('}
+            {albums.length === 0 && 'No results :('}
 
-            {albumsState.map((album) => {
+            {albums.map((album) => {
                 return (
                     <AlbumDisplay
                         album={album}
                         className={style.album}
                         playSongFromAlbum={handlePlaySong}
-                        authKey={props.authKey}
                         key={album.id}
                     />
                 );

@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Album, flagAlbum, getAlbum } from '~logic/Album';
+import React, { useContext } from 'react';
+import { useGetAlbum } from '~logic/Album';
 import { User } from '~logic/User';
-import AmpacheError from '~logic/AmpacheError';
 import { Link } from 'react-router-dom';
 import SongList from '~components/SongList';
 import ReactLoading from 'react-loading';
-import { toast } from 'react-toastify';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import { MusicContext } from '~Contexts/MusicContext';
 import SimpleRating from '~components/SimpleRating';
@@ -23,46 +21,10 @@ interface AlbumPageProps {
 
 const AlbumPage: React.FC<AlbumPageProps> = (props: AlbumPageProps) => {
     const musicContext = useContext(MusicContext);
+    const albumID = props.match.params.albumID;
 
-    const [album, setAlbum] = useState<Album>(null);
-    const [error, setError] = useState<Error | AmpacheError>(null);
+    const { data: album, error } = useGetAlbum({ albumID, includeSongs: true });
 
-    useEffect(() => {
-        if (props.match.params.albumID != null) {
-            getAlbum(props.match.params.albumID, props.user.authKey, true)
-                .then((data) => {
-                    setAlbum(data);
-                })
-                .catch((error) => {
-                    toast.error('😞 Something went wrong getting the album.');
-                    setError(error);
-                });
-        }
-    }, [props.match.params.albumID, props.user.authKey]);
-
-    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
-        flagAlbum(albumID, favorite, props.user.authKey)
-            .then(() => {
-                const newAlbum = { ...album, flag: favorite };
-                setAlbum(newAlbum);
-                if (favorite) {
-                    return toast.success('Album added to favorites');
-                }
-                toast.success('Album removed from favorites');
-            })
-            .catch((err) => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding the album to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing the album from favorites.'
-                    );
-                }
-                setError(err);
-            });
-    };
     if (error) {
         return (
             <div>
@@ -99,7 +61,7 @@ const AlbumPage: React.FC<AlbumPageProps> = (props: AlbumPageProps) => {
                             value={album.rating}
                             fav={album.flag}
                             itemID={album.id}
-                            setFlag={handleFlagAlbum}
+                            type='album'
                         />
                     </div>
                     <div className={`card-title ${style.albumName}`}>

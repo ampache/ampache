@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
-import { flagSong, Song } from '~logic/Song';
+import { Song } from '~logic/Song';
 import SongRow from '~components/SongRow';
 import {
     addToPlaylist,
@@ -18,6 +18,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 import style from './index.styl';
+import { useStore } from '~store';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -33,9 +34,12 @@ const contextMenuDefaultState = {
     mouseY: null,
     song: null
 };
+const setSong = useStore.getState().startPlayingSong;
 
 const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
+    const currentPlayingSong = useStore().currentPlayingSong;
+
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
@@ -109,55 +113,10 @@ const SongList: React.FC<SongListProps> = (props) => {
         })();
     };
 
-    const doContextUpdate = (songID, favorite) => {
-        if (musicContext.currentPlayingSong?.id === songID) {
-            musicContext.flagCurrentSong(favorite);
-        }
-    };
-
-    const handleFlagSong = useCallback(
-        (songID: string, favorite: boolean) => {
-            flagSong(songID, favorite, props.authKey)
-                .then(() => {
-                    const newSongs = songs.map((song) => {
-                        if (song.id === songID) {
-                            doContextUpdate(songID, favorite);
-
-                            return {
-                                ...song,
-                                flag: favorite
-                            };
-                        }
-                        return song;
-                    });
-                    setSongs(newSongs);
-                    // if (musicContext.currentPlayingSong?.id === songID) {
-                    //     musicContext.flagCurrentSong(favorite);
-                    // }
-                    if (favorite) {
-                        return toast.success('Song added to favorites');
-                    }
-                    toast.success('Song removed from favorites');
-                })
-                .catch((err) => {
-                    if (favorite) {
-                        toast.error(
-                            '😞 Something went wrong adding song to favorites.'
-                        );
-                    } else {
-                        toast.error(
-                            '😞 Something went wrong removing song from favorites.'
-                        );
-                    }
-                    setError(err);
-                });
-        },
-        [props.authKey, songs]
-    );
-
     const handleStartPlaying = (song: Song) => {
         const queueIndex = songs.findIndex((o) => o.id === song.id);
         musicContext.startPlayingWithNewQueue(songs, queueIndex);
+        setSong(song);
     };
 
     const handleContext = (event: React.MouseEvent, song: Song) => {
@@ -197,11 +156,10 @@ const SongList: React.FC<SongListProps> = (props) => {
                             showArtist={props.showArtist}
                             showAlbum={props.showAlbum}
                             isCurrentlyPlaying={
-                                musicContext.currentPlayingSong?.id === song.id
+                                currentPlayingSong?.id === song.id
                             }
                             startPlaying={handleStartPlaying}
                             showContext={handleContext}
-                            flagSong={handleFlagSong}
                             key={song.playlisttrack}
                             className={style.songRow}
                         />

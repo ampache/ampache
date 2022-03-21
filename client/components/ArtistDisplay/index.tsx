@@ -8,7 +8,6 @@ import style from './index.styl';
 interface ArtistDisplayProps {
     artist: Artist;
     className?: string;
-    flagArtist: (artistID: string, favorite: boolean) => void;
 }
 
 const ArtistDisplay: React.FC<ArtistDisplayProps> = (
@@ -32,7 +31,7 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (
                             value={props.artist.rating}
                             fav={props.artist.flag}
                             itemID={props.artist.id}
-                            setFlag={props.flagArtist}
+                            type='artist'
                         />
                     </div>
                     <span className={`card-title ${style.artistName}`}>

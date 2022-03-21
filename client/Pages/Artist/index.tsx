@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Artist,
-    flagArtist,
     getArtist,
     updateArtistInfo,
     updateArtistArt
@@ -87,31 +86,6 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                 );
             });
     };
-
-    const handleFlagArtist = (artistID: string, favorite: boolean) => {
-        flagArtist(artistID, favorite, props.user.authKey)
-            .then(() => {
-                const newArtist = { ...artist, flag: favorite };
-                setArtist(newArtist);
-                if (favorite) {
-                    return toast.success('Artist added to favorites');
-                }
-                toast.success('Artist removed from favorites');
-            })
-            .catch((err) => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding the artist to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing the artist from favorites.'
-                    );
-                }
-                setError(err);
-            });
-    };
-
     if (error) {
         return (
             <div className={style.artistPage}>
@@ -137,7 +111,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                                 value={artist.rating}
                                 fav={artist.flag}
                                 itemID={artist.id}
-                                setFlag={handleFlagArtist}
+                                type='artist'
                             />
                         </div>
                         <div className={`card-title ${style.name}`}>

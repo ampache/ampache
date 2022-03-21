@@ -76,7 +76,7 @@ class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
                         setQueueBarVisibility={this.setQueueBarVisibility}
                     />
                 </div>
-                <MusicControl authKey={this.props.user.authKey} />
+                <MusicControl />
             </>
         );
     }

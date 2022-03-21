@@ -1,6 +1,3 @@
-import { AuthKey } from './Auth';
-import flagItem from '~logic/Methods/Flag';
-
 type Song = {
     id: string;
     title: string;
@@ -54,8 +51,4 @@ type Song = {
     r128_track_gain: string;
 };
 
-const flagSong = (songID: string, favorite: boolean, authKey: AuthKey) => {
-    return flagItem('song', songID, favorite, authKey);
-};
-
-export { Song, flagSong };
+export { Song };

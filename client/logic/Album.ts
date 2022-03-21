@@ -2,10 +2,10 @@ import axios from 'axios';
 import { Song } from './Song';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
-import flagItem from '~logic/Methods/Flag';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { useQuery } from 'react-query';
 import { ampacheClient } from '~main';
+import { OptionType } from '~types';
 
 type Album = {
     id: string;
@@ -68,9 +68,14 @@ const getAlbumSongs = (albumID: string, authKey: AuthKey) => {
 };
 
 const getAlbums = (includeSongs = false) => {
-    const getUrl = `/server/json.server.php?action=albums&version=400001`;
     return ampacheClient
-        .get(getUrl, { params: { include: [includeSongs ? 'songs' : ''] } })
+        .get('', {
+            params: {
+                action: 'albums',
+                version: 400001,
+                include: [includeSongs ? 'songs' : '']
+            }
+        })
         .then((response) => response.data.album as Album[]);
 };
 
@@ -79,49 +84,50 @@ export const useGetAlbums = ({
     options
 }: {
     includeSongs?: boolean;
-    options?: Omit<
-        UseQueryOptions<Album[], Error, Album[], 'albums'>,
-        'queryKey' | 'queryFn'
-    >;
+    options?: OptionType<Album[]>;
 } = {}) => {
     return useQuery<Album[], Error | AmpacheError>(
-        'albums',
+        ['albums'],
         () => getAlbums(includeSongs),
         options
     );
 };
 
-const getAlbum = (albumID: string, authKey: AuthKey, includeSongs = false) => {
-    let includeString = '';
-    if (includeSongs) {
-        includeString += '&include[]=songs';
-    }
-    const getURL = `${process.env.ServerURL}/server/json.server.php?action=album&filter=${albumID}${includeString}&auth=${authKey}&version=400001`;
-    return axios.get(getURL).then((response) => {
-        const JSONData = response.data;
-        if (!JSONData) {
-            throw new Error('Server Error');
-        }
-        if (JSONData.error) {
-            throw new AmpacheError(JSONData.error);
-        }
-        return JSONData as Album;
-    });
+const getAlbum = (albumID: string, includeSongs = false) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'album',
+                version: 400001,
+                filter: albumID,
+                include: [includeSongs ? 'songs' : '']
+            }
+        })
+        .then((response) => response.data as Album);
+};
+
+export const useGetAlbum = ({
+    albumID,
+    includeSongs = false,
+    options
+}: {
+    albumID: string;
+    includeSongs?: boolean;
+    options?: OptionType<Album>;
+}) => {
+    return useQuery<Album, Error | AmpacheError>(
+        ['album', albumID, includeSongs],
+        () => getAlbum(albumID, includeSongs),
+        options
+    );
 };
 
 const flagAlbum = (albumID: string, favorite: boolean, authKey: AuthKey) => {
-    return flagItem('album', albumID, favorite, authKey);
+    // return flagItem('album', albumID, favorite, authKey);
 };
 
 const updateAlbumArt = (ID: string, overwrite: boolean, authKey: AuthKey) => {
     return updateArt('album', ID, overwrite, authKey);
 };
 
-export {
-    getRandomAlbums,
-    Album,
-    getAlbum,
-    getAlbumSongs,
-    flagAlbum,
-    updateAlbumArt
-};
+export { getRandomAlbums, Album, getAlbumSongs, flagAlbum, updateAlbumArt };

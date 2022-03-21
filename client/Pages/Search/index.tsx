@@ -94,10 +94,6 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                         return (
                             <SongBlock
                                 song={song}
-                                currentlyPlaying={
-                                    musicContext.currentPlayingSong?.id ===
-                                    song.id
-                                }
                                 playSong={playSong}
                                 key={song.id}
                                 className={style.song}

@@ -1,31 +1,26 @@
-import React, { useContext } from 'react';
-import { MusicContext } from '~Contexts/MusicContext';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import style from './index.styl';
+import { useStore } from '~store';
 
-const CurrentPlaying: React.FC = () => {
-    const musicContext = useContext(MusicContext);
-
+const CurrentPlaying = () => {
+    const currentPlayingSong = useStore().currentPlayingSong;
     return (
         <div className={style.currentPlaying}>
-            {musicContext.currentPlayingSong != undefined && (
+            {currentPlayingSong && (
                 <div className={style.info}>
                     <div className={style.songName}>
-                        {musicContext.currentPlayingSong?.title}
+                        {currentPlayingSong.title}
                     </div>
                     <div className={style.albumName}>
-                        <Link
-                            to={`/album/${musicContext.currentPlayingSong.album.id}`}
-                        >
-                            {musicContext.currentPlayingSong?.album.name}
+                        <Link to={`/album/${currentPlayingSong.album.id}`}>
+                            {currentPlayingSong.album.name}
                         </Link>
                     </div>
                     <div className={style.artistName}>
-                        <Link
-                            to={`/artist/${musicContext.currentPlayingSong.artist.id}`}
-                        >
-                            {musicContext.currentPlayingSong?.artist.name}
+                        <Link to={`/artist/${currentPlayingSong.artist.id}`}>
+                            {currentPlayingSong.artist.name}
                         </Link>
                     </div>
                 </div>

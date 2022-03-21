@@ -1,40 +1,53 @@
-import { AuthKey } from '~logic/Auth';
-import axios from '~node_modules/axios';
-import AmpacheError from '~logic/AmpacheError';
+import { ampacheClient } from '~main';
+import { useMutation, useQueryClient } from '~node_modules/react-query';
+import { toast } from 'react-toastify';
+import { useStore } from '~store';
+import { ItemType } from '~types';
 
-const flagItem = (
-    type:
-        | 'song'
-        | 'album'
-        | 'artist'
-        | 'playlist'
-        | 'podcast'
-        | 'podcast_episode'
-        | 'video'
-        | 'tvshow'
-        | 'tvshow_season',
-    objectID: string,
-    favorite: boolean,
-    authKey: AuthKey
-) => {
-    return axios
-        .get(
-            `${
-                process.env.ServerURL
-            }/server/json.server.php?action=flag&type=${type}&id=${objectID}&flag=${Number(
-                favorite
-            )}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+type FlagInput = {
+    type: ItemType;
+    objectID: string;
+    favorite: boolean;
 };
 
-export default flagItem;
+const query = ({ type, favorite, objectID }: FlagInput) => {
+    console.log(objectID);
+    return ampacheClient.get(`/server/json.server.php`, {
+        params: {
+            action: 'flag',
+            type,
+            id: objectID,
+            flag: Number(favorite),
+            version: 400001
+        }
+    });
+};
+
+export const useFlagItem = () => {
+    const queryClient = useQueryClient();
+    const { flagCurrentSong, currentPlayingSong } = useStore();
+
+    return useMutation(
+        (input: FlagInput) => {
+            return query(input);
+        },
+        {
+            onSuccess: (data, variables) => {
+                queryClient.invalidateQueries('album');
+                if (currentPlayingSong?.id === variables.objectID) {
+                    flagCurrentSong(variables.favorite);
+                }
+                if (variables.favorite) {
+                    toast.success(`${variables.type} added to favorites`);
+                    return;
+                }
+                toast.success(`${variables.type} removed from favorites`);
+            },
+            onError: (_, variables) => {
+                toast.error(
+                    `Something went wrong favouring the ${variables.type}`
+                );
+            }
+        }
+    );
+};

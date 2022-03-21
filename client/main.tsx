@@ -13,7 +13,7 @@ export const ampacheClient = axios.create({
 
 ampacheClient.interceptors.request.use((config) => {
     // eslint-disable-next-line immutable/no-mutation
-    config.params['auth'] = Cookies.get('authKey');
+    config.params = { ...config.params, auth: Cookies.get('authKey') };
     return config;
 });
 

@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import SVG from 'react-inlinesvg';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
-import { MusicContext } from '~Contexts/MusicContext';
 
 import style from './index.styl';
+import { useStore } from '~store';
 
 interface SongRowProps {
     song: Song;
@@ -14,12 +14,11 @@ interface SongRowProps {
     showAlbum?: boolean;
     startPlaying: (song: Song) => void;
     showContext: (event: React.MouseEvent, song: Song) => void;
-    flagSong: (songID: string, favorite: boolean) => void;
     className?: string;
 }
 
 const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
-    const musicContext = useContext(MusicContext);
+    const currentPlayingSong = useStore().currentPlayingSong;
 
     const formatLabel = (s) => [
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
@@ -99,11 +98,11 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                             value={props.song.rating}
                             fav={
                                 props.isCurrentlyPlaying
-                                    ? musicContext.currentPlayingSong?.flag
+                                    ? currentPlayingSong?.flag
                                     : props.song.flag
                             }
                             itemID={props.song.id}
-                            setFlag={props.flagSong}
+                            type='song'
                         />
                     </div>
 

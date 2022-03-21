@@ -6,7 +6,6 @@ import ReactAudioPlayer from 'react-audio-player';
 
 export interface MusicContextInterface {
     playerStatus: PLAYERSTATUS;
-    currentPlayingSong: Song;
     // songPosition: number;
     volume: number;
     songQueueIndex: number;
@@ -202,7 +201,6 @@ export const MusicContextProvider: React.FC = (props) => {
         <MusicContext.Provider //TODO: Should this provider be split into multiple providers?
             value={{
                 playerStatus,
-                currentPlayingSong,
                 songQueueIndex,
                 songQueue,
                 volume,

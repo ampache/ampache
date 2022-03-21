@@ -3,7 +3,6 @@ import SVG from 'react-inlinesvg';
 import {
     createPlaylist,
     deletePlaylist,
-    flagPlaylist,
     getPlaylists,
     getPlaylistSongs,
     Playlist,
@@ -156,38 +155,6 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         musicContext.startPlayingWithNewQueue(songs);
     };
 
-    const handleFlagPlaylist = (playlistID: string, favorite: boolean) => {
-        flagPlaylist(playlistID, favorite, props.authKey)
-            .then(() => {
-                const newPlaylists = playlists.map((playlist) => {
-                    if (playlist.id === playlistID) {
-                        return {
-                            ...playlist,
-                            flag: favorite
-                        };
-                    }
-                    return playlist;
-                });
-                setPlaylists(newPlaylists);
-                if (favorite) {
-                    return toast.success('Playlist added to favorites');
-                }
-                toast.success('Playlist removed from favorites');
-            })
-            .catch((err) => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding playlist to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing playlist from favorites.'
-                    );
-                }
-                setError(err);
-            });
-    };
-
     if (error) {
         return (
             <div className='playlistList'>
@@ -222,7 +189,6 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                             playlist={playlist}
                             startPlaying={startPlayingPlaylist}
                             showContext={handleContext}
-                            flagPlaylist={handleFlagPlaylist}
                             key={playlist.id}
                         />
                     );

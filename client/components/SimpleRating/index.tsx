@@ -1,27 +1,21 @@
 import React from 'react';
-import Rating from '@material-ui/lab/Rating';
-import { withStyles } from '@material-ui/core/styles';
 import SVG from 'react-inlinesvg';
 
 import style from './index.styl';
-import useTraceUpdate from '~Debug/useTraceUpdate';
+import { useFlagItem } from '~logic/Methods/Flag';
+import { ItemType } from '~types';
+import { Rating } from '@material-ui/lab';
 
 interface SimpleRatingProps {
     value: number;
     fav: boolean;
     itemID: string;
-    setFlag: (id: string, newValue: boolean) => void;
+    type: ItemType;
 }
 
 const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
     const [value, setValue] = React.useState(props.value);
-
-    const StyledRating = withStyles({
-        icon: {
-            color: 'currentColor'
-        }
-    })(Rating); //TODO: Put this into index.styl for consistency
-    useTraceUpdate(props, `Simple Rating ${props.itemID}`);
+    const flagItem = useFlagItem();
 
     return (
         <div className={style.ratings}>
@@ -33,7 +27,7 @@ const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
                 }}
                 className={`icon ${style.cancelIcon}`}
             />
-            <StyledRating
+            <Rating
                 className={style.simpleRating}
                 name='simple-controlled'
                 value={value}
@@ -47,6 +41,7 @@ const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
                     <SVG
                         className={`icon ${style.starIcon}`}
                         src={require('~images/icons/svg/star-empty.svg')}
+                        color='#A1A1AA'
                     />
                 }
                 onChange={(event, newValue) => {
@@ -64,7 +59,11 @@ const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    props.setFlag(props.itemID, !props.fav);
+                    flagItem.mutate({
+                        type: props.type,
+                        objectID: props.itemID,
+                        favorite: !props.fav
+                    });
                 }}
                 className={`icon ${style.heartIcon} ${
                     props.fav ? style.active : null

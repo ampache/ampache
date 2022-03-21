@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState
-} from 'react';
+import React, { useContext, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -12,26 +6,20 @@ import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying';
 import CurrentPlayingArt from '~components/CurrentPlayingArt';
 import SimpleRating from '~components/SimpleRating';
-import { AuthKey } from '~logic/Auth';
-import { flagSong } from '~logic/Song';
-import { toast } from 'react-toastify';
 import SliderControl from '~components/MusicControl/components/SliderControl';
 
 import style from './index.styl';
+import { useStore } from '~store';
 
-interface MusicControlProps {
-    authKey: AuthKey;
-}
-
-const MusicControl: React.FC<MusicControlProps> = (props) => {
+const MusicControl = () => {
     const musicContext = useContext(MusicContext);
-
+    const { currentPlayingSong } = useStore();
     const [ratingToggle, setRatingToggle] = useState(false);
 
     const [currentTime, setCurrentTime] = useState('');
 
     const handleRatingToggle = () => {
-        if (musicContext.currentPlayingSong) {
+        if (currentPlayingSong) {
             setRatingToggle(!ratingToggle);
         }
     };
@@ -40,28 +28,6 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
         //https://stackoverflow.com/a/37770048
     ];
-
-    const handleFlagSong = (songID: string, favorite: boolean) => {
-        flagSong(songID, favorite, props.authKey)
-            .then(() => {
-                musicContext.flagCurrentSong(favorite);
-                if (favorite) {
-                    return toast.success('Song added to favorites');
-                }
-                toast.success('Song removed from favorites');
-            })
-            .catch(() => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding song to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing song from favorites.'
-                    );
-                }
-            });
-    };
 
     return (
         <div
@@ -75,10 +41,10 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             <div className={style.ratingBarContainer}>
                 <div className={style.ratingBar}>
                     <SimpleRating
-                        value={musicContext.currentPlayingSong?.rating}
-                        fav={musicContext.currentPlayingSong?.flag}
-                        itemID={musicContext.currentPlayingSong?.id}
-                        setFlag={handleFlagSong}
+                        value={currentPlayingSong?.rating}
+                        fav={currentPlayingSong?.flag}
+                        itemID={currentPlayingSong?.id}
+                        type='song'
                     />
                 </div>
             </div>
@@ -87,7 +53,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             <div className={style.seekTimes}>
                 <span className={style.seekStart}>{currentTime}</span>
                 <span className={style.seekEnd}>
-                    {formatLabel(musicContext.currentPlayingSong?.time ?? 0)}
+                    {formatLabel(currentPlayingSong?.time ?? 0)}
                 </span>
             </div>
 
@@ -120,14 +86,12 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                             title='Play'
                             description='Resume music'
                             role='button'
-                            aria-disabled={
-                                musicContext.currentPlayingSong == undefined
-                            }
+                            aria-disabled={currentPlayingSong == undefined}
                             onClick={musicContext.playPause}
                             className={`
                                 icon icon-button 
                                 ${
-                                    musicContext.currentPlayingSong == undefined
+                                    currentPlayingSong == undefined
                                         ? style.disabled
                                         : ''
                                 }
@@ -140,13 +104,11 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                             description='Pause music'
                             role='button'
                             onClick={musicContext.playPause}
-                            aria-disabled={
-                                musicContext.currentPlayingSong == undefined
-                            }
+                            aria-disabled={currentPlayingSong == undefined}
                             className={`
                                 icon icon-button 
                                 ${
-                                    musicContext.currentPlayingSong == undefined
+                                    currentPlayingSong == undefined
                                         ? style.disabled
                                         : ''
                                 }

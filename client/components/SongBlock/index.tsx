@@ -3,20 +3,26 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 
 import style from './index.styl';
+import { useStore } from '~store';
 
 interface SongBlockProps {
     song: Song;
-    currentlyPlaying: boolean;
     playSong: (song: Song) => void;
     className?: string;
 }
 
 const SongBlock = (props: SongBlockProps) => {
+    const { currentPlayingSong } = useStore();
+
+    const currentlyPlaying = props.song.id === currentPlayingSong?.id;
+
     return (
         <div
-            onClick={() => props.playSong(props.song)}
+            onClick={() => {
+                props.playSong(props.song);
+            }}
             className={`card ${props.className} ${style.songBlock} ${
-                props.currentlyPlaying ? 'nowPlaying' : ''
+                currentlyPlaying ? 'nowPlaying' : ''
             }`}
             tabIndex={1}
         >

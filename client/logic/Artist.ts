@@ -3,7 +3,6 @@ import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
-import flagItem from '~logic/Methods/Flag';
 import updateArt from '~logic/Methods/Update_Art';
 
 export type Artist = {
@@ -115,14 +114,6 @@ export const getArtist = (
         }
         return JSONData as Artist;
     });
-};
-
-export const flagArtist = (
-    artistID: string,
-    favorite: boolean,
-    authKey: AuthKey
-) => {
-    return flagItem('artist', artistID, favorite, authKey);
 };
 
 export const updateArtistArt = (

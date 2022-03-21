@@ -10,7 +10,6 @@ interface PlaylistItemProps {
     playlist: Playlist;
     showContext?: (event: React.MouseEvent, playlistID: string) => void;
     startPlaying: (playlistID: string) => void;
-    flagPlaylist: (playlistID: string, favorite: boolean) => void;
 }
 
 const PlaylistItem: React.FC<PlaylistItemProps> = (
@@ -36,7 +35,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                                 value={0}
                                 fav={props.playlist.flag}
                                 itemID={props.playlist.id}
-                                setFlag={props.flagPlaylist}
+                                type='playlist'
                             />
                         </div>
                     )}

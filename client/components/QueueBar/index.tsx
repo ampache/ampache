@@ -5,6 +5,7 @@ import QueueSong from './components/QueueSong';
 
 import style from './index.styl';
 import { useSpring, animated } from 'react-spring';
+import { useStore } from '~store';
 
 interface QueueBarProps {
     visible: boolean;
@@ -13,6 +14,7 @@ interface QueueBarProps {
 
 const QueueBar: React.FC<QueueBarProps> = (props) => {
     const musicContext = useContext(MusicContext);
+    const currentPlayingSong = useStore().currentPlayingSong;
 
     const queueBarStart = '100%';
     const queueBarEnd = '0%';
@@ -59,8 +61,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                                         key={index}
                                         song={song}
                                         currentlyPlaying={
-                                            musicContext.currentPlayingSong
-                                                ?.id === song.id
+                                            currentPlayingSong?.id === song.id
                                         }
                                         queueIndex={index}
                                         playSong={handlePlaySong}

@@ -24,7 +24,8 @@
         "react-router-dom": "^5.2.0",
         "react-spring": "^9.0.0-rc.3",
         "react-toastify": "^7.0.3",
-        "react-use-context-menu": "^0.1.4"
+        "react-use-context-menu": "^0.1.4",
+        "zustand": "^3.7.1"
     },
     "scripts": {
         "start": "yarn run clean && parcel index.html",
@@ -50,9 +51,6 @@
         "@parcel/transformer-stylus": "2.3.2",
         "@parcel/transformer-webmanifest": "2.3.2",
         "@types/node": "^14.14.28",
-        "@types/react": "^17.0.2",
-        "@types/react-dom": "^17.0.1",
-        "@types/react-router-dom": "^5.1.7",
         "@typescript-eslint/eslint-plugin": "^4.15.1",
         "@typescript-eslint/parser": "^4.15.1",
         "autoprefixer": "^9.8.6",

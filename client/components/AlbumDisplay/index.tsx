@@ -1,51 +1,19 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
-import { Album, flagAlbum } from '~logic/Album';
+import { Album } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
-import { toast } from '~node_modules/react-toastify';
-import { AuthKey } from '~logic/Auth';
 
 import style from './index.styl';
 
 interface AlbumDisplayProps {
     album: Album;
     playSongFromAlbum: (albumID: string, random: boolean) => void;
-    authKey: AuthKey;
     className?: string;
 }
 
-const AlbumDisplay: React.FC<AlbumDisplayProps> = (
-    props: AlbumDisplayProps
-) => {
-    const [album, setAlbum] = useState(props.album);
-
-    const handleFlagAlbum = useCallback(
-        (albumID: string, favorite: boolean) => {
-            flagAlbum(albumID, favorite, props.authKey)
-                .then(() => {
-                    const newAlbum = { ...album, flag: favorite };
-                    setAlbum(newAlbum);
-                    if (favorite) {
-                        return toast.success('Album added to favorites');
-                    }
-                    toast.success('Album removed from favorites');
-                })
-                .catch(() => {
-                    if (favorite) {
-                        toast.error(
-                            '😞 Something went wrong adding album to favorites.'
-                        );
-                    } else {
-                        toast.error(
-                            '😞 Something went wrong removing album from favorites.'
-                        );
-                    }
-                });
-        },
-        [album, props.authKey]
-    );
-
+const AlbumDisplay = (props: AlbumDisplayProps) => {
+    const album = props.album;
     return (
         <div className={`card ${style.albumDisplay} ${props.className}`}>
             <div className={style.imageContainer}>
@@ -100,7 +68,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                     value={album.rating}
                     fav={album.flag}
                     itemID={album.id}
-                    setFlag={handleFlagAlbum}
+                    type='album'
                 />
             </div>
             <div className={style.details}>
@@ -125,5 +93,4 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
         </div>
     );
 };
-
 export default AlbumDisplay;
