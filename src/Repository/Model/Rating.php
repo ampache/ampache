@@ -351,7 +351,7 @@ class Rating extends database_object
      * @param string $user_id
      * @return boolean
      */
-    private static function set_rating_for_group($rating, $album_array, $user_id = null)
+    public static function set_rating_for_group($rating, $album_array, $user_id = null)
     {
         foreach ($album_array as $album_id) {
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
