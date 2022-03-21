@@ -4,6 +4,8 @@ import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import flagItem from '~logic/Methods/Flag';
 import updateArt from '~logic/Methods/Update_Art';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { ampacheClient } from '~main';
 
 type Album = {
     id: string;
@@ -65,22 +67,28 @@ const getAlbumSongs = (albumID: string, authKey: AuthKey) => {
         });
 };
 
-const getAlbums = (authKey: AuthKey, includeSongs = false) => {
-    let includeString = '';
-    if (includeSongs) {
-        includeString += '&include[]=songs';
-    }
-    const getUrl = `${process.env.ServerURL}/server/json.server.php?action=albums&auth=${authKey}${includeString}&version=400001`;
-    return axios.get(getUrl).then((response) => {
-        const JSONData = response.data;
-        if (!JSONData) {
-            throw new Error('Server Error');
-        }
-        if (JSONData.error) {
-            throw new AmpacheError(JSONData.error);
-        }
-        return JSONData.album as Album[];
-    });
+const getAlbums = (includeSongs = false) => {
+    const getUrl = `/server/json.server.php?action=albums&version=400001`;
+    return ampacheClient
+        .get(getUrl, { params: { include: [includeSongs ? 'songs' : ''] } })
+        .then((response) => response.data.album as Album[]);
+};
+
+export const useGetAlbums = ({
+    includeSongs = false,
+    options
+}: {
+    includeSongs?: boolean;
+    options?: Omit<
+        UseQueryOptions<Album[], Error, Album[], 'albums'>,
+        'queryKey' | 'queryFn'
+    >;
+} = {}) => {
+    return useQuery<Album[], Error | AmpacheError>(
+        'albums',
+        () => getAlbums(includeSongs),
+        options
+    );
 };
 
 const getAlbum = (albumID: string, authKey: AuthKey, includeSongs = false) => {
@@ -97,7 +105,7 @@ const getAlbum = (albumID: string, authKey: AuthKey, includeSongs = false) => {
         if (JSONData.error) {
             throw new AmpacheError(JSONData.error);
         }
-        return JSONData.album[0] as Album;
+        return JSONData as Album;
     });
 };
 
@@ -112,7 +120,6 @@ const updateAlbumArt = (ID: string, overwrite: boolean, authKey: AuthKey) => {
 export {
     getRandomAlbums,
     Album,
-    getAlbums,
     getAlbum,
     getAlbumSongs,
     flagAlbum,
