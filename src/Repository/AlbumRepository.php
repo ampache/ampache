@@ -187,10 +187,10 @@ final class AlbumRepository implements AlbumRepositoryInterface
             return array();
         }
         $results       = array();
-        $where         = "WHERE `album`.`album_artist` = ? AND `album`.`mbid` = ? AND `album`.`release_type` = ? AND `album`.`release_status` = ? AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) AND `album`.`year` = ? AND `album`.`original_year` = ? ";
+        $where         = "WHERE `album`.`album_artist` = ? AND `album`.`mbid` = ? AND `album`.`release_type` = ? AND `album`.`release_status` = ? AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) AND `album`.`year` = ? AND `album`.`original_year` = ? AND `album`.`mbid_group` = ? ";
         $catalog_where = "";
         $catalog_join  = "";
-        $params        = array($album->album_artist, $album->mbid, $album->release_type, $album->release_status, $f_name, $f_name, $album->year, $album->original_year);
+        $params        = array($album->album_artist, $album->mbid, $album->release_type, $album->release_status, $f_name, $f_name, $album->year, $album->original_year, $album->mbid_group);
 
         if ($catalogId > 0) {
             $catalog_where .= " AND `catalog`.`id` = ?";
