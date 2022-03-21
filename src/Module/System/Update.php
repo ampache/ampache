@@ -4179,8 +4179,6 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user` MODIFY COLUMN `username` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }
