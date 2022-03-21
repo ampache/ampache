@@ -319,7 +319,6 @@ class Rating extends database_object
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
             $album       = new Album($this->id);
             self::set_rating_for_group($rating, $album->album_suite, $user_id);
-            self::save_rating($this->id, 'album', (int)$rating, (int)$user_id);
 
             return true;
         }
