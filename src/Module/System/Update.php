@@ -2231,13 +2231,13 @@ class Update
     {
         $retval = true;
 
-        $sql        = "select `width` FROM `image`";
+        $sql        = "SELECT `width` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `width` int(4) unsigned DEFAULT 0 AFTER `image`";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql        = "select `height` FROM `image`";
+        $sql        = "SELECT `height` FROM `image`";
         $db_results = Dba::read($sql);
         if (!$db_results) {
             $sql    = "ALTER TABLE `image` ADD `height` int(4) unsigned DEFAULT 0 AFTER `width`";
@@ -4120,8 +4120,25 @@ class Update
      */
     public static function update_530009(): bool
     {
-        $retval = true;
-        $sql    = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        $retval   = true;
+        $dupes    = true;
+        $dupe_sql = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1;";
+        $sql      = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        // delete duplicates and make sure they're gone
+        while ($dupes) {
+            $db_results = Dba::read($dupe_sql);
+            if (!$db_results) {
+                $dupes = false;
+            } else {
+                Dba::write($sql);
+            }
+        }
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
         $retval &= (Dba::write($sql) !== false);
