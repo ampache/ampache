@@ -4121,17 +4121,11 @@ class Update
     public static function update_530009(): bool
     {
         $retval   = true;
-        $dupes    = true;
         $dupe_sql = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1;";
         $sql      = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         // delete duplicates and make sure they're gone
-        while ($dupes) {
-            $db_results = Dba::read($dupe_sql);
-            if (empty(Dba::fetch_assoc($db_results))) {
-                $dupes = false;
-            } else {
-                Dba::write($sql);
-            }
+        while (!empty(Dba::fetch_assoc(Dba::read($dupe_sql)))) {
+            Dba::write($sql);
         }
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
