@@ -169,6 +169,15 @@ class AmpacheRatingMatch
             }
             if ($rating->type == 'album') {
                 $album = new Album($rating->id);
+                if ($album->allow_group_disks) {
+                    foreach ($album->album_suite as $album_id) {
+                        $album_disk   = new Rating($album_id, 'album');
+                        $rating_album = $album_disk->get_user_rating($this->user->id);
+                        if ($rating_album <= $new_rating) {
+                            $album_disk->set_rating($new_rating, $this->user->id);
+                        }
+                    }
+                }
                 // rate all the album artists (If there are more than one)
                 foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                     $artist        = new Rating($artist_id, 'artist');
@@ -198,11 +207,16 @@ class AmpacheRatingMatch
     public function set_flag($song, $flagged)
     {
         if ($this->match_flags > 0 && $flagged) {
-            $album  = new Userflag($song->album, 'album');
-            $artist = new Userflag($song->artist, 'artist');
-            if (!$album->get_flag($this->user->id, false)) {
-                $album->set_flag($flagged, $this->user->id);
+            $album = new Album($song->album);
+            if ($album->allow_group_disks) {
+                foreach ($album->album_suite as $album_id) {
+                    $album  = new Userflag($album_id, 'album');
+                    if (!$album->get_flag($this->user->id, false)) {
+                        $album->set_flag($flagged, $this->user->id);
+                    }
+                }
             }
+            $artist = new Userflag($song->artist, 'artist');
             if (!$artist->get_flag($this->user->id, false)) {
                 $artist->set_flag($flagged, $this->user->id);
             }
