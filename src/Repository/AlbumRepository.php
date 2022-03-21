@@ -186,11 +186,45 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($f_name == '') {
             return array();
         }
-        $results       = array();
-        $where         = "WHERE `album`.`album_artist` = ? AND `album`.`mbid` = ? AND `album`.`release_type` = ? AND `album`.`release_status` = ? AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) AND `album`.`year` = ? AND `album`.`original_year` = ? AND `album`.`mbid_group` = ? ";
+        $results = array();
+        $where   = "WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+        $params  = array($f_name, $f_name);
+        if ($album->mbid) {
+            $where .= 'AND `album`.`mbid` = ? ';
+            $params[] = $album->mbid;
+        } else {
+            $where .= 'AND `album`.`mbid` IS NULL ';
+        }
+        if ($album->mbid_group) {
+            $where .= 'AND `album`.`mbid_group` = ? ';
+            $params[] = $album->mbid_group;
+        } else {
+            $where .= 'AND `album`.`mbid_group` IS NULL ';
+        }
+        if ($album->prefix) {
+            $where .= 'AND `album`.`prefix` = ? ';
+            $params[] = $album->prefix;
+        }
+        if ($album->album_artist) {
+            $where .= 'AND `album`.`album_artist` = ? ';
+            $params[] = $album->album_artist;
+        }
+        if ($album->original_year) {
+            $where .= 'AND `album`.`original_year` = ? ';
+            $params[] = $album->original_year;
+        }
+        if ($album->release_type) {
+            $where .= 'AND `album`.`release_type` = ? ';
+            $params[] = $album->release_type;
+        }
+        if ($album->release_status) {
+            $where .= 'AND `album`.`release_status` = ? ';
+            $params[] = $album->release_status;
+        }
+        $where .= 'AND `album`.`catalog` = ? ';
+        $params[]      = $album->catalog;
         $catalog_where = "";
         $catalog_join  = "";
-        $params        = array($album->album_artist, $album->mbid, $album->release_type, $album->release_status, $f_name, $f_name, $album->year, $album->original_year, $album->mbid_group);
 
         if ($catalogId > 0) {
             $catalog_where .= " AND `catalog`.`id` = ?";
