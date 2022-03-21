@@ -4127,7 +4127,7 @@ class Update
         // delete duplicates and make sure they're gone
         while ($dupes) {
             $db_results = Dba::read($dupe_sql);
-            if (!$db_results) {
+            if (empty(Dba::fetch_assoc($db_results))) {
                 $dupes = false;
             } else {
                 Dba::write($sql);
