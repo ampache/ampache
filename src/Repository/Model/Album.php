@@ -1099,6 +1099,7 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
+        //debug_event(self::class, "update: " . print_r($data, true), 4);
         $name           = (isset($data['name'])) ? $data['name'] : null;
         $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
         $year           = (isset($data['year'])) ? $data['year'] : 0;
@@ -1112,7 +1113,7 @@ class Album extends database_object implements library_item
         $original_year  = (isset($data['original_year'])) ? $data['original_year'] : null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
-        if (!empty($data['album_artist_name'])) {
+        if (array_key_exists('album_artist_name', $data) && !empty($data['album_artist_name'])) {
             $album_artist = Artist::check($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
         }
@@ -1163,7 +1164,7 @@ class Album extends database_object implements library_item
                 self::update_field('prefix', $aPrefix, $this->id);
             }
 
-            if (empty($data['album_artist_name']) && $album_artist != $this->album_artist) {
+            if (!array_key_exists('album_artist_name', $data) && $album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
                 self::update_album_map($this->id, 'album', $album_artist);
                 self::remove_album_map($this->id, 'album', $this->album_artist);
