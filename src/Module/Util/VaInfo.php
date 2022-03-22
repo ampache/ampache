@@ -824,13 +824,6 @@ final class VaInfo implements VaInfoInterface
         if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
-                    case 'ape':
-                    case 'avi':
-                    case 'flv':
-                    case 'matroska':
-                        //$this->logger->debug('Cleaning ' . $key, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_generic($tag_array);
-                        break;
                     case 'vorbiscomment':
                         //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
@@ -868,8 +861,12 @@ final class VaInfo implements VaInfoInterface
                         //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
+                    case 'ape':
+                    case 'avi':
+                    case 'flv':
+                    case 'matroska':
                     default:
-                        //$this->logger->debug('Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -990,7 +987,7 @@ final class VaInfo implements VaInfoInterface
         $parsed['mime']          = $tags['mime_type'] ?? null;
         if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
             $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
-        } elseif (array_key_exists('playtime_seconds', $tags)) {
+        } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
             $parsed['time'] = $tags['playtime_seconds'];
         } else {
             $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -1037,25 +1034,29 @@ final class VaInfo implements VaInfoInterface
     private function _clean_type($type)
     {
         switch ($type) {
-            case 'mp3':
             case 'mp2':
+            case 'mp3':
             case 'mpeg3':
                 return 'mp3';
-            case 'vorbis':
+            case 'ogg':
             case 'opus':
+            case 'vorbis':
                 return 'ogg';
             case 'asf':
-            case 'wmv':
             case 'wma':
+            case 'wmv':
                 return 'asf';
             case 'mp4':
+            case 'quicktime':
                 return 'quicktime';
+            case 'mpc':
+                return 'ape';
+            case 'avi':
             case 'flac':
             case 'flv':
             case 'mpg':
             case 'mpeg':
-            case 'avi':
-            case 'quicktime':
+            case 'wav':
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
@@ -1124,8 +1125,13 @@ final class VaInfo implements VaInfoInterface
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
+                case 'originalyear':
                 case 'originalreleaseyear':
                     $parsed['original_year'] = $data[0];
+                    break;
+                case 'label':
+                case 'publisher':
+                    $parsed['publisher'] = $data[0];
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
