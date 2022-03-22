@@ -53,7 +53,7 @@ class Dba
     public static function query($sql, $params = array())
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
-        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
+        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -90,7 +90,7 @@ class Dba
         } catch (PDOException $error) {
             // are you trying to write to something that doesn't exist?
             self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
 
             return false;
@@ -102,13 +102,13 @@ class Dba
 
         if (!$stmt) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
         } else {
             if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
                 self::$_error = json_encode($stmt->errorInfo());
-                debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+                debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
                 debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
                 self::finish($stmt);
                 self::disconnect();
