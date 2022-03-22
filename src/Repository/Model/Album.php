@@ -1116,6 +1116,7 @@ class Album extends database_object implements library_item
         if (array_key_exists('album_artist_name', $data) && !empty($data['album_artist_name'])) {
             $album_artist = Artist::check($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
+            $this->album_artist = $album_artist;
         }
 
         $current_id = $this->id;
@@ -1164,12 +1165,12 @@ class Album extends database_object implements library_item
                 self::update_field('prefix', $aPrefix, $this->id);
             }
 
-            if (!array_key_exists('album_artist_name', $data) && $album_artist != $this->album_artist) {
+            if ($album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
                 self::update_album_map($this->id, 'album', $album_artist);
                 self::remove_album_map($this->id, 'album', $this->album_artist);
             }
-            if (!empty($year) && $year != $this->year) {
+            if ($year != $this->year) {
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
