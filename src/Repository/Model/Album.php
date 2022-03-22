@@ -1099,17 +1099,17 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $name           = (isset($data['name'])) ? $data['name'] : $this->name;
-        $album_artist   = (isset($data['album_artist'])) ? (int) $data['album_artist'] : $this->album_artist;
-        $year           = (isset($data['year'])) ? $data['year'] : $this->year;
-        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
-        $mbid           = (isset($data['mbid'])) ? $data['mbid'] : $this->mbid;
-        $mbid_group     = (isset($data['mbid_group'])) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type   = (isset($data['release_type'])) ? $data['release_type'] : $this->release_type;
-        $release_status = (isset($data['release_status'])) ? $data['release_status'] : $this->release_status;
-        $barcode        = (isset($data['barcode'])) ? $data['barcode'] : $this->barcode;
-        $catalog_number = (isset($data['catalog_number'])) ? $data['catalog_number'] : $this->catalog_number;
-        $original_year  = (isset($data['original_year'])) ? $data['original_year'] : $this->original_year;
+        $name           = (isset($data['name'])) ? $data['name'] : null;
+        $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
+        $year           = (isset($data['year'])) ? $data['year'] : 0;
+        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : null;
+        $mbid           = (isset($data['mbid'])) ? $data['mbid'] : null;
+        $mbid_group     = (isset($data['mbid_group'])) ? $data['mbid_group'] : null;
+        $release_type   = (isset($data['release_type'])) ? $data['release_type'] : null;
+        $release_status = (isset($data['release_status'])) ? $data['release_status'] : null;
+        $barcode        = (isset($data['barcode'])) ? $data['barcode'] : null;
+        $catalog_number = (isset($data['catalog_number'])) ? $data['catalog_number'] : null;
+        $original_year  = (isset($data['original_year'])) ? $data['original_year'] : null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (!empty($data['album_artist_name'])) {
@@ -1132,12 +1132,12 @@ class Album extends database_object implements library_item
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
                 Song::update_utime($song_id);
+                Stats::migrate('album', $this->id, $album_id, $song_id);
 
                 $this->getSongTagWriter()->write(new Song($song_id));
             }
             $current_id = $album_id;
             $updated    = true;
-            Stats::migrate('album', $this->id, $album_id, $song_id);
             Useractivity::migrate('album', $this->id, $album_id);
             //Recommendation::migrate('album', $this->id);
             Share::migrate('album', $this->id, $album_id);
@@ -1252,7 +1252,9 @@ class Album extends database_object implements library_item
      */
     private static function update_field($field, $value, $album_id)
     {
-        $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
+        $sql = ($value == null)
+            ? "UPDATE `album` SET `" . $field . "` = NULL WHERE `id` = ?"
+            : "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
         Dba::write($sql, array($value, $album_id));
     }
 
