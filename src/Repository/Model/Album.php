@@ -382,7 +382,7 @@ class Album extends database_object implements library_item
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
             // overwrite so you can get something
-            $this->album_artist = $results['artist_id'];
+            $this->album_artist = $results['artist_id'] ?? null;
         }
         $this->has_art();
 
