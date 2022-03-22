@@ -493,6 +493,7 @@ class Catalog_Seafile extends Catalog
 
         return null;
     }
+
     /**
      * clean_tmp_file
      *

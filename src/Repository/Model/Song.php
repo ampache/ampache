@@ -1931,6 +1931,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $this->f_link;
     }
+
     /**
      * Get item f_artist_link.
      * @return string
