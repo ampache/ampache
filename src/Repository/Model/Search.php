@@ -755,6 +755,7 @@ class Search extends playlist_object
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
         $this->type_boolean('played', T_('Played'), 'boolean', $t_play_data);
         $this->type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $this->type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
@@ -1539,8 +1540,11 @@ class Search extends playlist_object
                     }
                     break;
                 case 'myplayed':
-                    $column       = 'id';
-                    $my_type      = 'album';
+                case 'myplayedartist':
+                    // combine these as they all do the same thing just different tables
+                    $looking      = str_replace('myplayed', '', $rule[0]);
+                    $column       = ($looking == 'artist') ? 'album_artist' : 'id';
+                    $my_type      = ($looking == 'artist') ? 'artist' : 'album';
                     $operator_sql = ((int)$sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('myplayed', $table)) {

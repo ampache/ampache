@@ -72,7 +72,7 @@ Select the type of search based on the type of data you are searching for. (song
 | played                   | Played                    | boolean           |               song               |
 | myplayed                 | Played by Me              | boolean           |        song,album,artist         |
 | myplayedalbum            | Played by Me (Album)      | boolean           |               song               |
-| myplayedartist           | Played by Me (Artist)     | boolean           |               song               |
+| myplayedartist           | Played by Me (Artist)     | boolean           |            song,album            |
 | album_count              | Album Count               | numeric           |               artist             |
 | song_count               | Song Count                | numeric           |           album,artist           |
 | time                     | Length (in minutes)       | numeric           |        song,album,artist         |
