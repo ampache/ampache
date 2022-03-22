@@ -1153,8 +1153,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
             // update the counts for parent objects
-            $sql  = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (" . implode(',', $artists) . ");";
-            Dba::write($sql);
+            if (!empty($artists)) {
+                $sql = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (" . implode(',', $artists) . ");";
+                Dba::write($sql);
+            }
             $sql  = "UPDATE `album` SET `total_count` = `total_count` + 1 WHERE `id` = ?;";
             Dba::write($sql, array($this->album));
             // running total of the user stream data

@@ -134,7 +134,7 @@ class Stats
             $db_results = Dba::read($sql, array($source_type, $source_id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "DELETE FROM `object_count` WHERE `object_count`.`object_type` = ? AND `object_count`.`object_id` = ? AND `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`geo_latitude` = ? AND `object_count`.`geo_longitude` = ? AND `object_count`.`geo_name` = ? AND `object_count`.`count_type` = ?";
-                Dba::write($sql, array($dest_type, $dest_id, $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
+                Dba::write($sql, array($dest_type, $dest_id, $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name'], $row['count_type']));
             }
         }
     }
@@ -434,8 +434,11 @@ class Stats
             Dba::write($sql, array($song->id));
             $sql  = "UPDATE `album` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0";
             Dba::write($sql, array($song->album));
-            $sql  = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` IN (" . implode(',', array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')))) . ")  AND `total_count` > 0";
-            Dba::write($sql);
+            $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
+            if (!empty($artists)) {
+                $sql = "UPDATE `artist` SET `total_count` = `total_count` - 1 WHERE `id` IN (" . implode(',', $artists) . ")  AND `total_count` > 0";
+                Dba::write($sql);
+            }
             if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
                 $sql  = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
                 Dba::write($sql, array($object_id, $object_id));
