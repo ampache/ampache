@@ -1154,22 +1154,32 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function migrate($old_object_id, $new_object_id)
     {
-        $params = array($new_object_id, $old_object_id);
-        $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?;";
-        Dba::write($sql, $params);
-        $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;";
-        Dba::write($sql, $params);
-        // migrate the maps and delete ones that aren't required
-        $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;";
-        Dba::write($sql, $params);
-        $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';";
-        Dba::write($sql, $params);
+        if ((int)$new_object_id > 0) {
+            // migrating to a new artist
+            $params = array($new_object_id, $old_object_id);
+            $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?;";
+            Dba::write($sql, $params);
+            $sql = "UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;";
+            Dba::write($sql, $params);
+            // migrate the maps and delete ones that aren't required
+            $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;";
+            Dba::write($sql, $params);
+            $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';";
+            Dba::write($sql, $params);
+        } else {
+            // removing the artist
+            $params = array($old_object_id);
+            $sql    = "UPDATE `song` SET `artist` = NULL WHERE `artist` = ?;";
+            Dba::write($sql, $params);
+            $sql = "UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = ?;";
+            Dba::write($sql, $params);
+        }
         // delete the old one if it's a dupe row above
         $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?;";
         Dba::write($sql, array($old_object_id));
         $sql = "DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';";
         Dba::write($sql, array($old_object_id));
-        self::update_artist_counts($new_object_id);
+        self::update_artist_counts();
     }
 
     /**
