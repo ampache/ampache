@@ -1163,7 +1163,7 @@ class Album extends database_object implements library_item
                 self::update_field('prefix', $aPrefix, $this->id);
             }
 
-            if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
+            if (empty($data['album_artist_name']) && $album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
                 self::update_album_map($this->id, 'album', $album_artist);
                 self::remove_album_map($this->id, 'album', $this->album_artist);
@@ -1175,25 +1175,25 @@ class Album extends database_object implements library_item
                     $this->getSongTagWriter()->write(new Song($song_id));
                 }
             }
-            if (!empty($disk) && $disk != $this->disk) {
+            if ($disk != $this->disk) {
                 self::update_field('disk', $disk, $this->id);
             }
-            if (!empty($mbid) && $mbid != $this->mbid) {
+            if ($mbid != $this->mbid) {
                 self::update_field('mbid', $mbid, $this->id);
             }
-            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+            if ($mbid_group != $this->mbid_group) {
                 self::update_field('mbid_group', $mbid_group, $this->id);
             }
-            if (!empty($release_type) && $release_type != $this->release_type) {
+            if ($release_type != $this->release_type) {
                 self::update_field('release_type', $release_type, $this->id);
             }
-            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+            if ($catalog_number != $this->catalog_number) {
                 self::update_field('catalog_number', $catalog_number, $this->id);
             }
-            if (!empty($barcode) && $barcode != $this->barcode) {
+            if ($barcode != $this->barcode) {
                 self::update_field('barcode', $barcode, $this->id);
             }
-            if (!empty($original_year) && $original_year != $this->original_year) {
+            if ($original_year != $this->original_year) {
                 self::update_field('original_year', $original_year, $this->id);
             }
         }
