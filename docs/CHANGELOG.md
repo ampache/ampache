@@ -22,6 +22,8 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Additional xhtml templates added
 * Parse lots more WMA (ASF) file tags
 * Add play next and play last to radio station rows
+* Additional option for artist pages 'Show Artist Songs'
+* Add some missing tag options for mpc files
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
@@ -46,6 +48,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Allow empty/null searches for label searches
   * Add `song_count` to album and artist search
   * Add `album_count` to artist search
+  * Add `myplayedartist` (Played by Me (Artist)) to album search
 
 ### Changed
 
@@ -86,6 +89,11 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Grouping with mbid_group was missing making some albums not possible to view
 * Display and hide of artist columns in some pages based on count
 * Clean and verify would count totals based on all items instead of item type
+* Missing strings from xhtml templates
+* Album grouping for getAlbumSuite with null values
+* Set ratings for all album disks (if grouping enabled) for ratings and flags
+* Issues when you don't have an album artist tag
+* Correctly set null values on album edits
 * Search:
   * played search for album and artist was including your user in the results
   * other_user artist search sql
