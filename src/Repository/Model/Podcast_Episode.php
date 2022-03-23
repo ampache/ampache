@@ -341,11 +341,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function update(array $data)
     {
-        $title       = isset($data['title']) ? $data['title'] : $this->title;
-        $website     = isset($data['website']) ? $data['website'] : $this->website;
-        $description = isset($data['description']) ? $data['description'] : $this->description;
-        $author      = isset($data['author']) ? $data['author'] : $this->author;
-        $category    = isset($data['category']) ? $data['category'] : $this->category;
+        $title       = $data['title'] ?? $this->title;
+        $website     = $data['website'] ?? null;
+        $description = $data['description'] ?? null;
+        $author      = $data['author'] ?? null;
+        $category    = $data['category'] ?? null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));

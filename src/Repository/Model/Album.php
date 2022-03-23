@@ -1100,17 +1100,17 @@ class Album extends database_object implements library_item
     public function update(array $data)
     {
         //debug_event(self::class, "update: " . print_r($data, true), 4);
-        $name           = (isset($data['name'])) ? $data['name'] : null;
+        $name           = $data['name'] ?? $this->name;
         $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
-        $year           = (isset($data['year'])) ? $data['year'] : 0;
+        $year           = (int)$data['year'] ?? 0;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : null;
-        $mbid           = (isset($data['mbid'])) ? $data['mbid'] : null;
-        $mbid_group     = (isset($data['mbid_group'])) ? $data['mbid_group'] : null;
-        $release_type   = (isset($data['release_type'])) ? $data['release_type'] : null;
-        $release_status = (isset($data['release_status'])) ? $data['release_status'] : null;
-        $barcode        = (isset($data['barcode'])) ? $data['barcode'] : null;
-        $catalog_number = (isset($data['catalog_number'])) ? $data['catalog_number'] : null;
-        $original_year  = (isset($data['original_year'])) ? $data['original_year'] : null;
+        $mbid           = $data['mbid'] ?? null;
+        $mbid_group     = $data['mbid_group'] ?? null;
+        $release_type   = $data['release_type'] ?? null;
+        $release_status = $data['release_status'] ?? null;
+        $barcode        = $data['barcode'] ?? null;
+        $catalog_number = $data['catalog_number'] ?? null;
+        $original_year  = $data['original_year'] ?? null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('album_artist_name', $data) && !empty($data['album_artist_name'])) {

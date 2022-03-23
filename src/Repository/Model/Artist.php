@@ -964,12 +964,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
         // Save our current ID
-        $prefix      = Catalog::trim_prefix($data['name'])['prefix'] ?? '';
+        $prefix      = Catalog::trim_prefix($data['name'])['prefix'];
         $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
-        $mbid        = $data['mbid'] ?? $this->mbid;
-        $summary     = $data['summary'] ?? $this->summary;
-        $placeformed = $data['placeformed'] ?? $this->placeformed;
-        $yearformed  = $data['yearformed'] ?? $this->yearformed;
+        $mbid        = $data['mbid'] ?? null;
+        $summary     = $data['summary'] ?? null;
+        $placeformed = $data['placeformed'] ?? null;
+        $yearformed  = $data['yearformed'] ?? null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name

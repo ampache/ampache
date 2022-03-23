@@ -305,12 +305,12 @@ class Podcast extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $feed        = isset($data['feed']) ? $data['feed'] : $this->feed;
-        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : $this->title;
-        $website     = isset($data['website']) ? scrub_in($data['website']) : $this->website;
-        $description = isset($data['description']) ? scrub_in($data['description']) : $this->description;
-        $generator   = isset($data['generator']) ? scrub_in($data['generator']) : $this->generator;
-        $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : $this->copyright;
+        $feed        = $data['feed'] ?? $this->feed;
+        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $website     = isset($data['website']) ? scrub_in($data['website']) : null;
+        $description = isset($data['description']) ? scrub_in($data['description']) : null;
+        $generator   = isset($data['generator']) ? scrub_in($data['generator']) : null;
+        $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : null;
 
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);

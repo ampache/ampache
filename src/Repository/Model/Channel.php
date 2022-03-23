@@ -255,7 +255,7 @@ class Channel extends database_object implements Media, library_item
 
         $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? WHERE `id` = ?";
         $params = array(
-            $data['name'],
+            $data['name'] ?? $this->name,
             $data['description'],
             $data['url'],
             $data['interface'],

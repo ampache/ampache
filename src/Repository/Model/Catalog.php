@@ -2118,8 +2118,7 @@ abstract class Catalog extends database_object
      * Updates the song info based on tags; this is called from a bunch of
      * different places and passes in a full fledged song object, so it's a
      * static function.
-     * FIXME: This is an ugly mess, this really needs to be consolidated and
-     * cleaned up.
+     * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
      * @param array $results
      * @param Song $song
      * @return array

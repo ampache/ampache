@@ -95,7 +95,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Album grouping for getAlbumSuite with null values
 * Set ratings for all album disks (if grouping enabled) for ratings and flags
 * Issues when you don't have an album artist tag
-* Correctly set null values on album edits
+* Correctly set null values on library_item edits
 * Search:
   * played search for album and artist was including your user in the results
   * other_user artist search sql
