@@ -4236,6 +4236,7 @@ class Update
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         Dba::write($sql);
         Dba::write($sql);
+        Dba::write($sql);
         $sql = "CREATE UNIQUE INDEX `object_count_UNIQUE_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         $retval &= (Dba::write($sql) !== false);
 
