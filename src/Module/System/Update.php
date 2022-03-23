@@ -623,7 +623,7 @@ class Update
         $update_string = "* Compact some `user` columns<br />* enum `object_count`.`count_type`";
         $version[]     = array('version' => '530011', 'description' => $update_string);
 
-        $update_string = "* Index data on object_count<br />* Use a smaller unique index on `object_count`";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow! (Give yourself at least a minute for processing)<br />* Delete `object_count` duplicates<br />* Index data on object_count<br />* Use a smaller unique index on `object_count`";
         $version[]     = array('version' => '530012', 'description' => $update_string);
 
         return $version;
