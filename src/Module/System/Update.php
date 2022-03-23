@@ -4192,7 +4192,15 @@ class Update
     public static function update_530012(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
+        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_full_index`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;";
+        Dba::write($sql);
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         $retval &= (Dba::write($sql) !== false);
@@ -4231,7 +4239,7 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;";
-        $retval &= (Dba::write($sql) !== false);
+        Dba::write($sql);
         // delete duplicates and make sure they're gone
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         Dba::write($sql);
