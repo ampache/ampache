@@ -67,7 +67,6 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 
 ### Removed
 
-* stat counts are all counted from song, Album and Artist rows are removed
 * search:
   * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
 
