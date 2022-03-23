@@ -252,9 +252,17 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
         debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
+        $name      = $data['name'] ?? $this->name;
+        $is_hidden = $data['is_hidden'] ?? null;
 
-        $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['name'], $this->id));
+        if ($name != $this->name) {
+            $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
+            Dba::write($sql, array($name, $this->id));
+        }
+        if ($is_hidden != $this->is_hidden) {
+            $sql = 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
+            Dba::write($sql, array($is_hidden, $this->id));
+        }
 
         if (array_key_exists('edit_tags', $data) && $data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
@@ -277,7 +285,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 if (!array_key_exists('merge_persist', $data)) {
                     $this->delete();
                 } else {
-                    $sql = "UPDATE `tag` SET `is_hidden` = true WHERE `tag`.`id` = ? ";
+                    $sql = "UPDATE `tag` SET `is_hidden` = 1 WHERE `tag`.`id` = ? ";
                     Dba::write($sql, array($this->id));
                 }
             }

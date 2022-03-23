@@ -38,6 +38,10 @@ use Ampache\Repository\Model\Tag;
                 <td><input type="text" name="edit_tags" id="edit_tags" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Keep Existing') ?></td>
+                <td><input type="checkbox" name="is_hidden" value="<?php echo scrub_out($libitem->is_hidden); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent') ?></td>
                 <td><input type="checkbox" name="merge_persist" value="1" /></td>
             </tr>
