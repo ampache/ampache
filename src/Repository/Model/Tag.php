@@ -251,17 +251,20 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!strlen((string)$data['name'])) {
             return false;
         }
-        debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
+        debug_event(self::class, 'Updating tag {' . print_r($data) . '} with name {' . $data['name'] . '}...', 5);
         $name      = $data['name'] ?? $this->name;
-        $is_hidden = $data['is_hidden'] ?? null;
+        $is_hidden = (array_key_exists('is_hidden', $data))
+            ? (int)$data['is_hidden']
+            : 0;
 
         if ($name != $this->name) {
             $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
             Dba::write($sql, array($name, $this->id));
         }
-        if ($is_hidden != $this->is_hidden) {
+        if ($is_hidden != (int)$this->is_hidden) {
             $sql = 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
             Dba::write($sql, array($is_hidden, $this->id));
+            $this->is_hidden = $is_hidden;
         }
 
         if (array_key_exists('edit_tags', $data) && $data['edit_tags']) {
