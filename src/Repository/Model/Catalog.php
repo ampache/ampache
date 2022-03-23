@@ -2015,7 +2015,7 @@ abstract class Catalog extends database_object
         }
         // artist
         if ($libitem instanceof Artist) {
-            if ($tags) {
+            if ($artist || $maps) {
                 // make sure albums are updated before the artist
                 foreach ($libitem->get_child_ids() as $album_id) {
                     $album_tags = self::getSongTags('album', $album_id);
@@ -2028,7 +2028,7 @@ abstract class Catalog extends database_object
             if ($album || $artist) {
                 Album::update_album_counts();
             }
-            if ($artist) {
+            if ($artist || $maps) {
                 Artist::update_artist_counts();
             }
         }
@@ -2036,7 +2036,7 @@ abstract class Catalog extends database_object
         if ($album) {
             static::getAlbumRepository()->collectGarbage();
         }
-        if ($artist) {
+        if ($artist || $maps) {
             Artist::garbage_collection();
         }
 
