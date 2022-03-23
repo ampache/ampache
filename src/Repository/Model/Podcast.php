@@ -326,7 +326,7 @@ class Podcast extends database_object implements library_item
         $this->title       = $title;
         $this->website     = $website;
         $this->description = $description;
-        $this->language = $language;
+        $this->language    = $language;
         $this->generator   = $generator;
         $this->copyright   = $copyright;
 
