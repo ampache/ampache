@@ -309,6 +309,7 @@ class Podcast extends database_object implements library_item
         $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
         $website     = isset($data['website']) ? scrub_in($data['website']) : null;
         $description = isset($data['description']) ? scrub_in($data['description']) : null;
+        $language    = isset($data['language']) ? scrub_in($data['language']) : null;
         $generator   = isset($data['generator']) ? scrub_in($data['generator']) : null;
         $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : null;
 
@@ -318,13 +319,14 @@ class Podcast extends database_object implements library_item
             return $this->id;
         }
 
-        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
-        Dba::write($sql, array($feed, $title, $website, $description, $generator, $copyright, $this->id));
+        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
+        Dba::write($sql, array($feed, $title, $website, $description, $language, $generator, $copyright, $this->id));
 
         $this->feed        = $feed;
         $this->title       = $title;
         $this->website     = $website;
         $this->description = $description;
+        $this->language = $language;
         $this->generator   = $generator;
         $this->copyright   = $copyright;
 
