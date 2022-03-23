@@ -4230,6 +4230,8 @@ class Update
     public static function update_530014(): bool
     {
         $retval = true;
+        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;";
+        $retval &= (Dba::write($sql) !== false);
         // delete duplicates and make sure they're gone
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         Dba::write($sql);
