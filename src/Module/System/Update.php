@@ -4214,9 +4214,9 @@ class Update
     public static function update_530013(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
