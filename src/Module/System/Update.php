@@ -626,6 +626,9 @@ class Update
         $update_string = "**IMPORTANT UPDATE NOTES**<br />For large catalogs this will be slow! (Give yourself at least a minute for processing)<br />* Delete `object_count` duplicates<br />* Index data on object_count<br />* Use a smaller unique index on `object_count`";
         $version[]     = array('version' => '530012', 'description' => $update_string);
 
+        $update_string = "* Compact `cache_object_count`, `cache_object_count_run` columns";
+        $version[]     = array('version' => '530013', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4206,4 +4209,21 @@ class Update
 
         return $retval;
     }
+
+    /**
+     * update_530013
+     *
+     * Compact `cache_object_count`, `cache_object_count_run` columns
+     */
+    public static function update_530013(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
 } // end update.class

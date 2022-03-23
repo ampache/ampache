@@ -27,7 +27,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 5.3.0 Build 12:
+* Database 530013:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -43,6 +43,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * enum `object_count`.`count_type`
   * Index data on object_count
   * Use a unique index on `object_count`
+  * Compact `cache_object_count`, `cache_object_count_run` columns
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -217,7 +218,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Config version 59
   * Removed overwrite_tags (It doesn't do anything)
   * playlist_art now true by default
-* Database 5.2.0 Build 5:
+* Database 520005:
   * Make sure preference names are always unique
   * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
   * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
@@ -302,7 +303,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Send the user to an error page when the config wasn't written
 * Config version 58
   * Removed subsonic_stream_scrobble
-* Database 5.1.0 Build 5:
+* Database 510005:
   * Add `subsonic_always_download` to preferences
 
 ### Changed
@@ -382,7 +383,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Config version 57
 * NEW config options
   * allow_upload_scripts: Allow or disallow upload scripts on the server
-* Database 5.1.0 Build 4:
+* Database 510004:
   * Add `podcast` to object_count table
   * Add `podcast` to cache_object_count table
   * Add `live_stream` to the rating table
@@ -550,7 +551,7 @@ If you want to keep utf8 make sure you set it before running updates.
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
   * Add 1, 5 and 10 to the Maximum Results limit
-* Database 5.0.0 Build 15:
+* Database 500015:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
   * Add `mbid`, `country`, `active` to label table
