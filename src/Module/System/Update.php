@@ -623,11 +623,14 @@ class Update
         $update_string = "* Compact some `user` columns<br />* enum `object_count`.`count_type`";
         $version[]     = array('version' => '530011', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br />* For large catalogs this will be slow! (Give yourself at least a minute for processing)<br />* Delete `object_count` duplicates<br />* Index data on object_count<br />* Use a smaller unique index on `object_count`";
+        $update_string = "* Index data on object_count";
         $version[]     = array('version' => '530012', 'description' => $update_string);
 
         $update_string = "* Compact `cache_object_count`, `cache_object_count_run` columns";
         $version[]     = array('version' => '530013', 'description' => $update_string);
+
+        $update_string = "**IMPORTANT UPDATE NOTES**<br />* For large catalogs this will be slow! (Give yourself at least a minute for processing)<br />* Delete `object_count` duplicates<br />* Use a smaller unique index on `object_count`";
+        $version[]     = array('version' => '530014', 'description' => $update_string);
 
         return $version;
     }
@@ -4185,21 +4188,20 @@ class Update
      * update_530012
      *
      * Index data on object_count
-     * Use a smaller unique index on `object_count`
      */
     public static function update_530012(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
-        Dba::write($sql);
+        $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
-        Dba::write($sql);
+        $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);";
-        Dba::write($sql);
+        $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);";
-        Dba::write($sql);
+        $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);";
-        Dba::write($sql);
+        $retval &= (Dba::write($sql) !== false);
         // delete duplicates and make sure they're gone
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
         Dba::write($sql);
@@ -4226,4 +4228,21 @@ class Update
         return $retval;
     }
 
+    /**
+     * update_530014
+     *
+     * Use a smaller unique index on `object_count`
+     */
+    public static function update_530014(): bool
+    {
+        $retval = true;
+        // delete duplicates and make sure they're gone
+        $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        Dba::write($sql);
+        Dba::write($sql);
+        $sql = "CREATE UNIQUE INDEX `object_count_UNIQUE_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
 } // end update.class
