@@ -235,6 +235,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'show_ratings' => $show_ratings,
                         'cel_cover' => 'cel_cover',
                         'cel_counter' => 'cel_counter',
+                        'cel_time' => 'cel_time',
                     ]
                 );
 
