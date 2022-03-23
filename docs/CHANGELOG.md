@@ -27,7 +27,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 530013:
+* Database 530014:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
