@@ -614,7 +614,7 @@ class Update
         $update_string = "* Remove `user_activity` columns that are useless";
         $version[]     = array('version' => '530008', 'description' => $update_string);
 
-        $update_string = "* Delete duplicate rows and require unique data on `object_count`";
+        $update_string = "* Compact `object_count` columns";
         $version[]     = array('version' => '530009', 'description' => $update_string);
 
         $update_string = "* Compact mbid columns back to 36 characters";
@@ -622,6 +622,9 @@ class Update
 
         $update_string = "* Compact some `user` columns<br />* enum `object_count`.`count_type`";
         $version[]     = array('version' => '530011', 'description' => $update_string);
+
+        $update_string = "* Index data on object_count<br />* Use a smaller unique index on `object_count`";
+        $version[]     = array('version' => '530012', 'description' => $update_string);
 
         return $version;
     }
@@ -796,9 +799,9 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Now add in the min_object_count preference and the random_method
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('bandwidth', '50', 'Bandwidth', '5', 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('bandwidth', '50', 'Bandwidth', '5', 'integer', 'interface')";
         Dba::write($sql);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('features', '50', 'Features', '5', 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('features', '50', 'Features', '5', 'integer', 'interface')";
         Dba::write($sql);
 
         return $retval;
@@ -855,7 +858,7 @@ class Update
 
         $sql = "DROP TABLE IF EXISTS `tmp_browse`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET $charset NOT NULL default '', `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`,`id`)) ENGINE=$engine DEFAULT CHARSET=utf8";
+        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET $charset NOT NULL default '', `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`, `id`)) ENGINE=$engine DEFAULT CHARSET=utf8";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -991,7 +994,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('iframes', '1', 'Iframes', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('iframes', '1', 'Iframes', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1009,7 +1012,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1028,7 +1031,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;") !== false);
+        return (Dba::write("CREATE TABLE `user_flag` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `object_id` int(11) unsigned NOT NULL, `object_type` varchar(32) CHARACTER SET $charset DEFAULT NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_userflag` (`user`, `object_type`, `object_id`), KEY `object_id` (`object_id`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1040,7 +1043,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('album_sort', '0', 'Album Default Sort', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_sort', '0', 'Album Default Sort', 25, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1058,7 +1061,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('show_played_times', '0', 'Show # played', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_played_times', '0', 'Show # played', 25, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1121,7 +1124,7 @@ class Update
 
         $sql = "ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1156,12 +1159,12 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('plex_backend', '0', 'Use Plex backend', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1189,12 +1192,12 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_html5', '1', 'Authorize HTML5 Web Player(s)', 25, 'boolean', 'streaming')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1222,7 +1225,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1247,21 +1250,21 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Insert new recently played preference
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_personal_info_recent', '1', 'Personal information visibility - Recently played / actions', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_recent', '1', 'Personal information visibility - Recently played / actions', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         // Insert streaming time preference
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_time', '1', 'Personal information visibility - Recently played - Allow to show streaming date/time', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         // Insert streaming agent preference
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info_agent', '1', 'Personal information visibility - Recently played - Allow to show streaming agent', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1280,7 +1283,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`,`mbid`)) ENGINE=$engine;") !== false);
+        return (Dba::write("CREATE TABLE `wanted` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `artist` int(11) NOT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL, `name` varchar(255) CHARACTER SET $charset NOT NULL, `year` int(4) NULL, `date` int(11) unsigned NOT NULL DEFAULT '0', `accepted` tinyint(1) NOT NULL DEFAULT '0', PRIMARY KEY (`id`), UNIQUE KEY `unique_wanted` (`user`, `artist`, `mbid`)) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -1305,7 +1308,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1323,7 +1326,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1362,12 +1365,12 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_pausetabs', '1', 'Auto-pause betweens tabs', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1390,7 +1393,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1435,12 +1438,12 @@ class Update
 
         $sql = "CREATE TABLE `share` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `allow_stream` tinyint(1) unsigned NOT NULL DEFAULT '0', `allow_download` tinyint(1) unsigned NOT NULL DEFAULT '0', `expire_days` int(4) unsigned NOT NULL DEFAULT '0', `max_counter` int(4) unsigned NOT NULL DEFAULT '0', `secret` varchar(20) CHARACTER SET $charset NULL, `counter` int(4) unsigned NOT NULL DEFAULT '0', `creation_date` int(11) unsigned NOT NULL DEFAULT '0', `lastvisit_date` int(11) unsigned NOT NULL DEFAULT '0', `public_url` varchar(255) CHARACTER SET $charset NULL, `description` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('share', '0', 'Allow Share', 100, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('share', '0', 'Allow Share', 100, 'boolean', 'options')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '7')";
@@ -1526,7 +1529,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1575,7 +1578,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1605,12 +1608,12 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1628,7 +1631,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1646,7 +1649,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('topmenu', '0', 'Top menu', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('topmenu', '0', 'Top menu', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1681,7 +1684,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user_vote` ADD `sid` varchar(256) CHARACTER SET $charset NULL AFTER `date`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_clear_sessions', '0', 'Clear democratic votes of expired user sessions', 25, 'boolean', 'playlist')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1709,7 +1712,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1729,32 +1732,32 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_catalog', '-1', 'Uploads catalog destination', 75, 'integer', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_catalog', '-1', 'Uploads catalog destination', 75, 'integer', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '-1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_upload', '0', 'Allow users to upload media', 75, 'boolean', 'options')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 75, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 75, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 75, 'string', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 75, 'string', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 75, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1830,12 +1833,12 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('daap_pass', '', 'DAAP backend password', 100, 'string', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('daap_pass', '', 'DAAP backend password', 100, 'string', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
@@ -1856,7 +1859,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -1890,7 +1893,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('allow_video', '1', 'Allow video features', 75, 'integer', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_video', '1', 'Allow video features', 75, 'integer', 'options')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1947,7 +1950,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` ENUM('abr', 'vbr', 'cbr') NULL DEFAULT 'cbr'";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1967,7 +1970,7 @@ class Update
 
         $sql = "DELETE FROM `preference` WHERE `name` = 'iframes'";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -2008,7 +2011,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -2026,27 +2029,27 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_videos', '1', 'Show Videos of the moment at home page', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_recently_played', '1', 'Show Recently Played at home page', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_now_playing', '1', 'Show Now Playing at home page', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('custom_logo', '', 'Custom logo url', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_logo', '', 'Custom logo url', 25, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
@@ -2087,7 +2090,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'album,ep,live,single')";
@@ -2105,12 +2108,12 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify_timeout', '10', 'WebPlayer browser notifications timeout (seconds)', 25, 'integer', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '10')";
@@ -2142,7 +2145,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql    = "ALTER TABLE `object_count` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('geolocation', '0', 'Allow geolocation', 25, 'integer', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('geolocation', '0', 'Allow geolocation', 25, 'integer', 'options')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -2160,7 +2163,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -2267,7 +2270,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -2285,17 +2288,17 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
@@ -2313,7 +2316,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -2356,7 +2359,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE `user_follower` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `follow_user` int(11) unsigned NOT NULL, `follow_date` int(11) unsigned  NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -2404,7 +2407,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('theme_color', 'dark', 'Theme color',0, 'special', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('theme_color', 'dark', 'Theme color',0, 'special', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'dark')";
@@ -2450,14 +2453,14 @@ class Update
 
         $sql = "CREATE TABLE `metadata_field` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` varchar(255) NOT NULL, `public` tinyint(1) NOT NULL, UNIQUE KEY `name` (`name`) ) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `metadata` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `object_id` INT(11) UNSIGNED NOT NULL, `field` INT(11) UNSIGNED NOT NULL, `data` text COLLATE $collation NOT NULL, `type` varchar(50) CHARACTER SET $charset DEFAULT NULL, KEY `field` (`field`), KEY `object_id` (`object_id`), KEY `type` (`type`), KEY `objecttype` (`object_id`,`type`), KEY `objectfield` (`object_id`,`field`,`type`) ) ENGINE=$engine";
+        $sql = "CREATE TABLE `metadata` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `object_id` INT(11) UNSIGNED NOT NULL, `field` INT(11) UNSIGNED NOT NULL, `data` text COLLATE $collation NOT NULL, `type` varchar(50) CHARACTER SET $charset DEFAULT NULL, KEY `field` (`field`), KEY `object_id` (`object_id`), KEY `type` (`type`), KEY `objecttype` (`object_id`, `type`), KEY `objectfield` (`object_id`, `field`, `type`) ) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('disabled_custom_metadata_fields', '', 'Disable custom metadata fields (ctrl / shift click to select multiple)', 100, 'string', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('disabled_custom_metadata_fields_input', '', 'Disable custom metadata fields. Insert them in a comma separated list. They will add to the fields selected above.', 100, 'string', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
@@ -2481,12 +2484,12 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE `podcast_episode` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `title` varchar(255) CHARACTER SET $charset NOT NULL, `guid` varchar(255) NOT NULL, `podcast` int(11) NOT NULL, `state` varchar(32) NOT NULL, `file` varchar(4096) CHARACTER SET $charset NULL, `source` varchar(4096) NULL, `size` bigint(20) UNSIGNED DEFAULT '0' NOT NULL, `time` smallint(5) UNSIGNED DEFAULT '0' NOT NULL, `website` varchar(255) NULL, `description` varchar(4096) CHARACTER SET $charset NULL, `author` varchar(64) NULL, `category` varchar(64) NULL, `played` tinyint(1) UNSIGNED DEFAULT '0' NOT NULL, `pubdate` int(11) UNSIGNED NOT NULL, `addition_time` int(11) UNSIGNED NOT NULL) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('podcast_keep', '10', 'Podcast: # latest episodes to keep', 100, 'integer', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '10')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`,`value`,`description`,`level`,`type`,`catagory`) VALUES ('podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('podcast_new_download', '1', 'Podcast: # episodes to download when new episodes are available', 100, 'integer', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -3569,7 +3572,7 @@ class Update
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type` WHERE `$type`.`catalog` > 0;";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`,`key`);";
+        $sql = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`, `key`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4116,25 +4119,16 @@ class Update
     /**
      * update_530009
      *
-     * Delete duplicate rows and require unique data on `object_count`
+     * Compact `object_count` columns
      */
     public static function update_530009(): bool
     {
-        $retval   = true;
-        $dupe_sql = "SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1;";
-        $sql      = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) AS `id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
-        // delete duplicates and make sure they're gone
-        while (!empty(Dba::fetch_assoc(Dba::read($dupe_sql)))) {
-            Dba::write($sql);
-        }
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval = true;
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` MODIFY COLUMN `agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `object_count` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `object_count` ADD CONSTRAINT `object_count_unique` UNIQUE KEY (`object_type`,`object_id`,`date`,`user`,`agent`,`geo_latitude`,`geo_longitude`,`geo_name`,`count_type`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4179,6 +4173,35 @@ class Update
         $sql = "ALTER TABLE `user` MODIFY COLUMN `apikey` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user` MODIFY COLUMN `username` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_530012
+     *
+     * Index data on object_count
+     * Use a smaller unique index on `object_count`
+     */
+    public static function update_530012(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_unique`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        // delete duplicates and make sure they're gone
+        $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        Dba::write($sql);
+        Dba::write($sql);
+        $sql = "CREATE UNIQUE INDEX `object_count_UNIQUE_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

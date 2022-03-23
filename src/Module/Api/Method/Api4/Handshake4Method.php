@@ -151,7 +151,6 @@ final class Handshake4Method
                     $data['geo_name'] = $input['geo_name'];
                 }
                 //Session might not exist or has expired
-                //
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);

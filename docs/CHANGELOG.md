@@ -27,7 +27,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 5.3.0 Build 11:
+* Database 5.3.0 Build 12:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -37,10 +37,12 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Make sure `object_count` table has all the correct primary artist/album rows
   * Convert basic text columns into utf8 to reduce index sizes
   * Remove `user_activity` columns that are useless
-  * Delete duplicate rows and require unique data on `object_count`
+  * Delete duplicate rows on `object_count`
   * Compact mbid columns back to 36 characters
   * Compact some `user` columns
   * enum `object_count`.`count_type`
+  * Index data on object_count
+  * Use a unique index on `object_count`
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search

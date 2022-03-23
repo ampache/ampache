@@ -356,11 +356,11 @@ class Stats
         $params = array($user_id);
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
-            array_push($params, $agent);
+            $params[] = $agent;
         }
         if ($date > 0) {
             $sql .= "AND `object_count`.`date` <= ? ";
-            array_push($params, $date);
+            $params[] = $date;
         }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $params);
