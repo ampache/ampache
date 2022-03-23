@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Tag;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Hide from Users') ?></td>
-                <td><input type="checkbox" name="is_hidden" value="<?php echo scrub_out($libitem->is_hidden); ?>" /></td>
+                <td><input type="checkbox" <?php ((int)$libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent') ?></td>
