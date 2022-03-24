@@ -2026,31 +2026,26 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseArtists($data)
     {
+        //debug_event(__CLASS__, "parseArtists: " . print_r($data, true), 5);
         $result = null;
         if (is_array($data)) {
             $result = array();
             foreach ($data as $row) {
                 if (!empty($row)) {
                     if (is_string($row) && !empty($row)) {
-                        if (strpos(';', str_replace("\x00", ';', $row))) {
-                            foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                                $result[] = $artist;
-                            }
-                        } else {
-                            $result[] = trim($row);
+                        foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                            $result[] = trim($artist);
                         }
                     } else {
                         foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                            $result[] = $artist;
+                            $result[] = trim($artist);
                         }
                     }
                 }
             }
         }
         if (is_string($data) && !empty($data)) {
-            $result = (strpos(';', str_replace("\x00", ';', $data)))
-                ? explode(';', str_replace("\x00", ';', $data))
-                : array(trim($data));
+            $result = explode(';', str_replace("\x00", ';', $data));
         }
 
         return $result;
