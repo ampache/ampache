@@ -2006,12 +2006,6 @@ abstract class Catalog extends database_object
                     }
                 }
             }
-            if ($album) {
-                Album::update_album_counts();
-            }
-            if ($artist || $maps) {
-                Artist::update_artist_counts();
-            }
         }
         // artist
         if ($libitem instanceof Artist) {
@@ -2025,18 +2019,17 @@ abstract class Catalog extends database_object
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
             }
-            if ($album || $artist) {
-                Album::update_album_counts();
-            }
-            if ($artist || $maps) {
-                Artist::update_artist_counts();
-            }
         }
-        // collect the garage too
+        // check counts
         if ($album || $maps) {
-            static::getAlbumRepository()->collectGarbage();
+            Album::update_album_counts();
         }
         if ($artist || $maps) {
+            Artist::update_artist_counts();
+        }
+        // collect the garbage too
+        if ($album || $artist || $maps) {
+            static::getAlbumRepository()->collectGarbage();
             Artist::garbage_collection();
         }
 
