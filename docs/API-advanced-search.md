@@ -50,7 +50,8 @@ Select the type of search based on the type of data you are searching for. (song
 | name                     | (*Alias of title)         |                   |                                  |
 | album                    | Album Title               | text              |            song,artist           |
 | artist                   | Artist                    | text              |         song,album,artist        |
-| album_artist             | Album Artist              | text              |               song               |
+| album_artist             | Album Artist              | text              |            song,album            |
+| song_artist              | Song Artist               | text              |              album               |
 | composer                 | Composer                  | text              |               song               |
 | year                     | Year                      | numeric           |            song,album            |
 | original_year            | Original Year             | numeric           |              album               |

@@ -52,6 +52,8 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Add `song_count` to album and artist search
   * Add `album_count` to artist search
   * Add `myplayedartist` (Played by Me (Artist)) to album search
+  * Add `song_artist` to album search
+  * Add alias `album_artist` to album search for `artist` searches
 
 ### Changed
 
