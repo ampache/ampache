@@ -2033,7 +2033,7 @@ abstract class Catalog extends database_object
             }
         }
         // collect the garage too
-        if ($album) {
+        if ($album || $maps) {
             static::getAlbumRepository()->collectGarbage();
         }
         if ($artist || $maps) {
@@ -2587,6 +2587,21 @@ abstract class Catalog extends database_object
         debug_event(__CLASS__, 'update_counts object_count table missing album row', 5);
         $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
         Dba::write($sql);
+        // also clean up some bad data that might creep in
+        Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
+        Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
+        Dba::write("UPDATE `artist` SET `placeformed` = NULL WHERE `placeformed` = '';");
+        Dba::write("UPDATE `artist` SET `yearformed` = NULL WHERE `yearformed` = 0;");
+        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
+        Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
+        Dba::write("UPDATE `album` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE `mbid_group` = '';");
+        Dba::write("UPDATE `album` SET `release_type` = NULL WHERE `release_type` = '';");
+        Dba::write("UPDATE `album` SET `original_year` = NULL WHERE `original_year` = 0;");
+        Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
+        Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
+        Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
         // song.played might have had issues
         $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         Dba::write($sql);
