@@ -102,6 +102,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 return;
             }
             // existing files
+            $change = array();
             if ($file_test && Core::is_readable($filePath)) {
                 $interactor->info(
                     sprintf(T_('Reading File: "%s"'), $filePath),
@@ -110,7 +111,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 if ($media->id && $verificationMode == 1) {
                     // Verify Existing files
                     $catalog = $media->catalog;
-                    Catalog::update_media_from_tags($media);
+                    $change  = Catalog::update_media_from_tags($media);
                 }
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
@@ -143,9 +144,11 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         }
                     }
                 }
-                // update counts after adding/verifying
-                Album::update_album_counts();
-                Artist::update_artist_counts();
+                if (array_key_exists('element', $change) && is_array($change['element'])) {
+                    // update counts after adding/verifying
+                    Album::update_album_counts();
+                    Artist::update_artist_counts();
+                }
             }
         }
 
