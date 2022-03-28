@@ -1684,7 +1684,7 @@ abstract class Catalog extends database_object
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_songs();
+                $searches['song'] = $this->get_song_ids();
             }
         } else {
             $searches['album']  = array();
