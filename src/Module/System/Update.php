@@ -629,7 +629,7 @@ class Update
         $update_string = "* Compact `cache_object_count`, `cache_object_count_run` columns";
         $version[]     = array('version' => '530013', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br />This update may require multiple attempts to delete these duplicates before completing successfully.<br />* Delete `object_count` duplicates<br />* Use a smaller unique index on `object_count`";
+        $update_string = "* Delete `object_count` duplicates<br />* Use a smaller unique index on `object_count`";
         $version[]     = array('version' => '530014', 'description' => $update_string);
 
         return $version;
