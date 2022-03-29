@@ -73,7 +73,7 @@ if ($directplay_limit > 0) {
     <?php if ($album->mbid) { ?>
         <a href="https://musicbrainz.org/release/<?php echo $album->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
-        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=release" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
+        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($album->get_fullname(true)); ?>%22&type=release" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } ?>
     </div>
     <?php
