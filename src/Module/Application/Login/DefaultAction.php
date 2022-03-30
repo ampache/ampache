@@ -193,10 +193,11 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
 
+        $user = null;
         if (!empty($username) && isset($auth)) {
             $user = User::get_from_username($username);
 
-            if ($user->disabled) {
+            if ($user instanceof User && $user->disabled) {
                 // if user disabled
                 $auth['success'] = false;
                 AmpError::add('general', T_('Account is disabled, please contact the administrator'));
@@ -222,7 +223,7 @@ final class DefaultAction implements ApplicationActionInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 }
-            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && ! $user->username) {
+            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
                 $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
@@ -232,14 +233,27 @@ final class DefaultAction implements ApplicationActionInterface
                 $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
 
                 // Attempt to create the user
-                if (User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $state, $city) > 0) {
-                    $user = User::get_from_username($username);
+                $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $state, $city);
+                if ($user_id > 0) {
+                    // tell me you're creating the user
+                    $this->logger->info(
+                        sprintf(
+                            'Created missing user %s',
+                            scrub_out($username)
+                        ),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    $user = new User($user_id);
 
                     if (array_key_exists('avatar', $auth)) {
                         $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
                     }
                 } else {
                     $auth['success'] = false;
+                    $this->logger->error(
+                        'Unable to create a local account',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                     AmpError::add('general', T_('Unable to create a local account'));
                 }
             } // end if auto_create
@@ -251,7 +265,7 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         /* If the authentication was a success */
-        if (isset($auth) && $auth['success'] && isset($user)) {
+        if (isset($auth) && $auth['success'] && $user instanceof User) {
             // $auth->info are the fields specified in the config file
             //   to retrieve for each user
             Session::create($auth);
