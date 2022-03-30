@@ -1167,7 +1167,7 @@ class Album extends database_object implements library_item
 
             if ($album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
-                self::update_album_map($this->id, 'album', $album_artist);
+                self::add_album_map($this->id, 'album', $album_artist);
                 self::remove_album_map($this->id, 'album', $this->album_artist);
             }
             if ($year != $this->year) {
@@ -1294,19 +1294,19 @@ class Album extends database_object implements library_item
             if ($artist_id > 0) {
                 debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
                 self::update_field('album_artist', $artist_id, $album_id);
-                Artist::update_artist_map($artist_id, 'album', $album_id);
-                self::update_album_map($album_id, 'album', $artist_id);
+                Artist::add_artist_map($artist_id, 'album', $album_id);
+                self::add_album_map($album_id, 'album', $artist_id);
             }
         }
     }
 
     /**
-     * Update the album map for a single item
+     * Add the album map for a single item
      */
-    public static function update_album_map($album_id, $object_type, $object_id)
+    public static function add_album_map($album_id, $object_type, $object_id)
     {
         if ((int)$album_id > 0 && (int)$object_id > 0) {
-            debug_event(__CLASS__, "update_album_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
+            debug_event(__CLASS__, "add_album_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
             $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($album_id, $object_type, $object_id));
         }

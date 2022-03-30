@@ -2276,7 +2276,7 @@ abstract class Catalog extends database_object
         foreach ($artist_song_array as $song_artist_id) {
             if (!in_array($song_artist_id, $artist_song_maps)) {
                 $artist_song_maps[] = (int)$song_artist_id;
-                Artist::update_artist_map($song_artist_id, 'song', $song->id);
+                Artist::add_artist_map($song_artist_id, 'song', $song->id);
                 if ($song->played) {
                     Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
                 }
@@ -2284,7 +2284,7 @@ abstract class Catalog extends database_object
             }
             if (!in_array($song_artist_id, $album_song_artist_maps)) {
                 $album_song_artist_maps[] = $song_artist_id;
-                Album::update_album_map($new_song->album, 'song', $song_artist_id);
+                Album::add_album_map($new_song->album, 'song', $song_artist_id);
                 if ($song->played) {
                     Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
                 }
@@ -2304,12 +2304,12 @@ abstract class Catalog extends database_object
         foreach ($artist_album_array as $album_artist_id) {
             if (!in_array($album_artist_id, $artist_album_maps)) {
                 $artist_album_maps[] = $album_artist_id;
-                Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+                Artist::add_artist_map($album_artist_id, 'album', $new_song->album);
                 $map_change = true;
             }
             if (!in_array($album_artist_id, $album_album_artist_maps)) {
                 $album_album_artist_maps[] = $album_artist_id;
-                Album::update_album_map($new_song->album, 'album', $album_artist_id);
+                Album::add_album_map($new_song->album, 'album', $album_artist_id);
                 $map_change = true;
             }
         }

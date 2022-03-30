@@ -883,12 +883,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * Update the artist map for a single item
+     * Add artist map for a single item
      */
-    public static function update_artist_map($artist_id, $object_type, $object_id)
+    public static function add_artist_map($artist_id, $object_type, $object_id)
     {
         if ((int)$artist_id > 0 && (int)$object_id > 0) {
-            debug_event(__CLASS__, "update_artist_map artist_id {" . $artist_id . "} $object_type {" . $object_id . "}", 5);
+            debug_event(__CLASS__, "add_artist_map artist_id {" . $artist_id . "} $object_type {" . $object_id . "}", 5);
             $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, array($artist_id, $object_type, $object_id));
         }
