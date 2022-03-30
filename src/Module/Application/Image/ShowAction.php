@@ -142,7 +142,9 @@ final class ShowAction implements ApplicationActionInterface
         /* Decide what size this image is */
         $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = Art::get_thumb_size($thumb);
-        $kind  = filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?? 'default';
+        $kind  = ($_GET['kind'] == 'preview')
+            ? 'preview'
+            : 'default';
 
         $image       = '';
         $mime        = '';
@@ -150,7 +152,7 @@ final class ShowAction implements ApplicationActionInterface
         $etag        = '';
         $typeManaged = false;
         if (array_key_exists('type', $_GET)) {
-            switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+            switch ($_GET['type']) {
                 case 'popup':
                     $typeManaged = true;
                     require_once Ui::find_template('show_big_art.inc.php');
