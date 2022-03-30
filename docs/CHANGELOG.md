@@ -54,6 +54,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
   * Add `myplayedartist` (Played by Me (Artist)) to album search
   * Add `song_artist` to album search
   * Add alias `album_artist` to album search for `artist` searches
+  * Add `recent_added` to album search
 
 ### Changed
 
@@ -98,6 +99,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Set ratings for all album disks (if grouping enabled) for ratings and flags
 * Issues when you don't have an album artist tag
 * Correctly set null values on library_item edits
+* Search for song art might have sent a Song object
 * Search:
   * played search for album and artist was including your user in the results
   * other_user artist search sql

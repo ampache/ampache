@@ -776,6 +776,7 @@ class Search extends playlist_object
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
+        $this->type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -1648,6 +1649,11 @@ class Search extends playlist_object
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `played_$key` ON `album`.`id` = `played_$key`.`object_id`";
+                    break;
+                case 'recent_added':
+                    $key                       = md5($input . $sql_match_operator);
+                    $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'catalog':
                     $where[]      = "`album`.`catalog` $sql_match_operator ?";

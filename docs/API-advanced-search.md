@@ -50,7 +50,7 @@ Select the type of search based on the type of data you are searching for. (song
 | name                     | (*Alias of title)         |                   |                                  |
 | album                    | Album Title               | text              |            song,artist           |
 | artist                   | Artist                    | text              |         song,album,artist        |
-| album_artist             | Album Artist              | text              |            song,album            |
+| album_artist             | Album Artist              | text              |               song               |
 | song_artist              | Song Artist               | text              |              album               |
 | composer                 | Composer                  | text              |               song               |
 | year                     | Year                      | numeric           |            song,album            |
@@ -100,7 +100,7 @@ Select the type of search based on the type of data you are searching for. (song
 | added                    | Added                     | date              |               song               |
 | updated                  | Updated                   | date              |               song               |
 | recent_played            | Recently Played           | numeric_limit     |        song,album,artist         |
-| recent_added             | Recently Added            | numeric_limit     |               song               |
+| recent_added             | Recently Added            | numeric_limit     |            song,album            |
 | recent_updated           | Recently Updated          | numeric_limit     |               song               |
 | catalog                  | Catalog                   | boolean_numeric   |        song,album,artist         |
 | mbid                     | MusicBrainz ID            | text              |        song,album,artist         |
