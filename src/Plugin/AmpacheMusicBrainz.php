@@ -74,6 +74,8 @@ class AmpacheMusicBrainz
      */
     public function uninstall()
     {
+        Preference::delete('mb_overwrite_name');
+
         return true;
     } // uninstall
 
