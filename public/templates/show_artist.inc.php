@@ -166,7 +166,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
-            <?php if ($artist->mbid) { ?>
+            <?php if ($artist->mbid && Plugin::get_plugin_version('musicbrainz') > 0) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
