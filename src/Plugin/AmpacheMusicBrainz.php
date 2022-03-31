@@ -240,6 +240,7 @@ class AmpacheMusicBrainz
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
+                        'summary' => $object->summary,
                         'placeformed' => $placeFormed,
                         'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
                     );
