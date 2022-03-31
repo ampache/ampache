@@ -3,19 +3,10 @@
 ## Ampache develop
 
 This cycle we have added support for multiple Album and Song artists.
+
 This allows multiple artists to be part of a single song/album object and is created from file tags.
 
-We rely on 3 tags right now [picard-docs](https://picard-docs.musicbrainz.org/downloads/MusicBrainz_Picard_Tag_Map.html)
-
-* Artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as MusicBrainz Artist ID)
-* MusicBrainz Artist ID: Array of MBID values that denote Song Artist
-* MusicBrainz Release Artist ID: Array of MBID values that denote Album Artist
-
-If these are not arrays, we try to split and create arrays to do the lookups
-The reason the regular artist and albumartist tags are ignored (for now) is due to how awful these fields can be.
-If you don't use these tags nothing will change and will function as normal.
-
-To do a full catalog verify, disable catalog_verify_by_time in your config file.
+Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
 
 ### Added
 
@@ -24,6 +15,7 @@ To do a full catalog verify, disable catalog_verify_by_time in your config file.
 * Add play next and play last to radio station rows
 * Additional option for artist pages 'Show Artist Songs'
 * Add some missing tag options for mpc files
+* Allow manually syncing Artist name, year formed and place formed from musicbrainz (if it has an mbid)
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
