@@ -166,6 +166,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
+            <?php if ($artist->mbid) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
+                <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
+                <?php echo T_('Update details from MusicBrainz'); ?>
+            </a>
+        </li>
+            <?php } ?>
         <?php } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
