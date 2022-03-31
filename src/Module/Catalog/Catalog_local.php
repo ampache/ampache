@@ -552,6 +552,9 @@ class Catalog_local extends Catalog
                 $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
+        // update the counts too
+        Album::update_album_counts();
+        Artist::update_artist_counts();
 
         /* Update the Catalog last_update */
         $this->update_last_add();

@@ -1993,16 +1993,16 @@ abstract class Catalog extends database_object
                 $tags    = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
                 // update the album artists
-                foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
-                    $artists[] = $album_artist_id;
-                    $tags      = self::getSongTags('artist', $album_artist_id);
-                    Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
+                foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
+                    $artists[] = $albumArtist_id;
+                    $tags      = self::getSongTags('artist', $albumArtist_id);
+                    Tag::update_tag_list(implode(',', $tags), 'artist', $albumArtist_id, true);
                 }
                 // update the song artists too
-                foreach (Album::get_artist_map('song', $libitem->id) as $song_artist_id) {
-                    if (!in_array($song_artist_id, $artists)) {
-                        $tags = self::getSongTags('artist', $song_artist_id);
-                        Tag::update_tag_list(implode(',', $tags), 'artist', $song_artist_id, true);
+                foreach (Album::get_artist_map('song', $libitem->id) as $songArtist_id) {
+                    if (!in_array($songArtist_id, $artists)) {
+                        $tags = self::getSongTags('artist', $songArtist_id);
+                        Tag::update_tag_list(implode(',', $tags), 'artist', $songArtist_id, true);
                     }
                 }
             }
@@ -2243,50 +2243,50 @@ abstract class Catalog extends database_object
         }
 
         // get the artists / album_artists for this song
-        $artist_song_array  = array($new_song->artist);
-        $artist_album_array = array($new_song->albumartist);
+        $songArtist_array  = array($new_song->artist);
+        $albumArtist_array = array($new_song->albumartist);
         // artist_map stores song and album against the artist_id
-        $artist_song_maps        = Artist::get_artist_map('song', $song->id);
-        $artist_album_maps       = Artist::get_artist_map('album', $new_song->album);
+        $artist_map_song  = Artist::get_artist_map('song', $song->id);
+        $artist_map_album = Artist::get_artist_map('album', $new_song->album);
         // album_map stores song_artist and album_artist against the album_id
-        $album_song_artist_maps  = Album::get_artist_map('song', $new_song->album);
-        $album_album_artist_maps = Album::get_artist_map('album', $new_song->album);
+        $album_map_songArtist  = Album::get_artist_map('song', $new_song->album);
+        $album_map_albumArtist = Album::get_artist_map('album', $new_song->album);
         // don't update counts unless something changes
         $map_change = false;
 
         // add song artists with a valid mbid to the list
         if (!empty($artist_mbid_array)) {
             foreach ($artist_mbid_array as $song_artist_mbid) {
-                $song_artist_id = Artist::check_mbid($song_artist_mbid);
-                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
-                    $artist_song_array[] = $song_artist_id;
+                $songArtist_id = Artist::check_mbid($song_artist_mbid);
+                if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
+                    $songArtist_array[] = $songArtist_id;
                 }
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = Artist::check($artist_name);
-                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
-                    $artist_song_array[] = $song_artist_id;
+                $songArtist_id = Artist::check($artist_name);
+                if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
+                    $songArtist_array[] = $songArtist_id;
                 }
             }
         }
         // map every song artist we've found
-        foreach ($artist_song_array as $song_artist_id) {
-            if (!in_array($song_artist_id, $artist_song_maps)) {
-                $artist_song_maps[] = (int)$song_artist_id;
-                Artist::add_artist_map($song_artist_id, 'song', $song->id);
+        foreach ($songArtist_array as $songArtist_id) {
+            if (!in_array($songArtist_id, $artist_map_song)) {
+                $artist_map_song[] = (int)$songArtist_id;
+                Artist::add_artist_map($songArtist_id, 'song', $song->id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
                 }
                 $map_change = true;
             }
-            if (!in_array($song_artist_id, $album_song_artist_maps)) {
-                $album_song_artist_maps[] = $song_artist_id;
-                Album::add_album_map($new_song->album, 'song', $song_artist_id);
+            if (!in_array($songArtist_id, $album_map_songArtist)) {
+                $album_map_songArtist[] = $songArtist_id;
+                Album::add_album_map($new_song->album, 'song', $songArtist_id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
                 }
                 $map_change = true;
             }
@@ -2294,28 +2294,28 @@ abstract class Catalog extends database_object
         // add album artists to the list
         if (!empty($albumartist_mbid_array)) {
             foreach ($albumartist_mbid_array as $album_artist_mbid) {
-                $album_artist_id = Artist::check_mbid($album_artist_mbid);
-                if ($album_artist_id > 0 && !in_array($album_artist_id, $artist_album_array)) {
-                    $artist_album_array[] = $album_artist_id;
+                $albumArtist_id = Artist::check_mbid($album_artist_mbid);
+                if ($albumArtist_id > 0 && !in_array($albumArtist_id, $albumArtist_array)) {
+                    $albumArtist_array[] = $albumArtist_id;
                 }
             }
         }
         // map every album artist we've found
-        foreach ($artist_album_array as $album_artist_id) {
-            if (!in_array($album_artist_id, $artist_album_maps)) {
-                $artist_album_maps[] = $album_artist_id;
-                Artist::add_artist_map($album_artist_id, 'album', $new_song->album);
+        foreach ($albumArtist_array as $albumArtist_id) {
+            if (!in_array($albumArtist_id, $artist_map_album)) {
+                $artist_map_album[] = $albumArtist_id;
+                Artist::add_artist_map($albumArtist_id, 'album', $new_song->album);
                 $map_change = true;
             }
-            if (!in_array($album_artist_id, $album_album_artist_maps)) {
-                $album_album_artist_maps[] = $album_artist_id;
-                Album::add_album_map($new_song->album, 'album', $album_artist_id);
+            if (!in_array($albumArtist_id, $album_map_albumArtist)) {
+                $album_map_albumArtist[] = $albumArtist_id;
+                Album::add_album_map($new_song->album, 'album', $albumArtist_id);
                 $map_change = true;
             }
         }
         // clean up the mapped things that are missing after the update
-        foreach ($artist_song_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_song_array)) {
+        foreach ($artist_map_song as $existing_map) {
+            if (!in_array($existing_map, $songArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
@@ -2323,8 +2323,8 @@ abstract class Catalog extends database_object
                 $map_change = true;
             }
         }
-        foreach ($album_song_artist_maps as $existing_map) {
-            if (!in_array($existing_map, $album_song_artist_maps)) {
+        foreach ($album_map_songArtist as $existing_map) {
+            if (!in_array($existing_map, $album_map_songArtist)) {
                 Album::remove_album_map($new_song->album, 'song', $existing_map);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
@@ -2332,14 +2332,14 @@ abstract class Catalog extends database_object
                 $map_change = true;
             }
         }
-        foreach ($artist_album_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_album_array)) {
+        foreach ($artist_map_album as $existing_map) {
+            if (!in_array($existing_map, $albumArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $new_song->album);
                 $map_change = true;
             }
         }
-        foreach ($album_album_artist_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_album_array)) {
+        foreach ($album_map_albumArtist as $existing_map) {
+            if (!in_array($existing_map, $albumArtist_array)) {
                 Album::remove_album_map($new_song->album, 'album', $existing_map);
                 $map_change = true;
             }

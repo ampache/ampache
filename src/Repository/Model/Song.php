@@ -464,8 +464,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $licenseRepository = static::getLicenseRepository();
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
-
-            $license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
+            $license           = ($licenseId === 0)
+                ? $licenseRepository->create($licenseName, '', '')
+                : $licenseId;
         } else {
             $license = null;
         }
@@ -545,8 +546,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // map the catalog and artists
         Catalog::update_map((int)$catalog, 'song', $song_id);
-        foreach ($artist_mbid_array as $song_artist_mbid) {
-            $song_artist_id = Artist::check_mbid($song_artist_mbid);
+        foreach ($artist_mbid_array as $songArtist_mbid) {
+            $song_artist_id = Artist::check_mbid($songArtist_mbid);
             if ($song_artist_id > 0) {
                 $artists[] = $song_artist_id;
                 Artist::add_artist_map($song_artist_id, 'song', $song_id);
@@ -564,17 +565,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 }
             }
         }
-        foreach ($albumartist_mbid_array as $album_artist_mbid) {
-            $album_artist_id = Artist::check_mbid($album_artist_mbid);
+        foreach ($albumartist_mbid_array as $albumArtist_mbid) {
+            $album_artist_id = Artist::check_mbid($albumArtist_mbid);
             if ($album_artist_id > 0) {
                 $artists[] = $album_artist_id;
                 Artist::add_artist_map($album_artist_id, 'album', $album_id);
                 Album::add_album_map($album_id, 'album', $album_artist_id);
             }
         }
-        // update the counts too
-        Album::update_album_counts();
-        Artist::update_artist_counts();
 
         if ($user_upload) {
             static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
