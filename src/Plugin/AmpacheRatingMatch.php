@@ -110,6 +110,7 @@ class AmpacheRatingMatch
         Preference::delete('ratingmatch_star4_rule');
         Preference::delete('ratingmatch_star5_rule');
         Preference::delete('ratingmatch_flag_rule');
+        Preference::delete('ratingmatch_write_tags');
     } // uninstall
 
     /**

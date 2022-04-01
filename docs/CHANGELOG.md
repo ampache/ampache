@@ -16,7 +16,7 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Additional option for artist pages 'Show Artist Songs'
 * Add some missing tag options for mpc files
 * Allow manually syncing Artist name, year formed and place formed from musicbrainz (if it has an mbid)
-* Notify and allow updating Plugins with updates are available
+* Notify and allow updating Plugins when updates are available
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default

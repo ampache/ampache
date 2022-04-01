@@ -90,6 +90,13 @@ class Ampachelibrefm
     {
         Preference::delete('librefm_challenge');
         Preference::delete('librefm_grant_link');
+        // make sure the old ones are deleted just in case
+        Preference::delete('librefm_pass');
+        Preference::delete('librefm_md5_pass');
+        Preference::delete('librefm_user');
+        Preference::delete('librefm_url');
+        Preference::delete('librefm_host');
+        Preference::delete('librefm_port');
     } // uninstall
 
     /**
