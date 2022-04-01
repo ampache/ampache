@@ -328,11 +328,9 @@ class Plugin
     {
         $web_path = AmpConfig::get('web_path');
         echo '<div id="autoupdate">';
-        echo '<span>' . T_('Update available') . '</span>';
-        echo T_('You have Plugins that need an update!');
+        echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
         echo '<br />';
-        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> |';
-        echo '<a class="nohtml" href="' . $web_path . '/admin/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
+        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $web_path . '/admin/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
         echo '<br />';
         echo '</div>';
     }
