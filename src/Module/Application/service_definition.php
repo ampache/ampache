@@ -81,6 +81,7 @@ return [
     Utility\ShowAction::class => autowire(Utility\ShowAction::class),
     Update\ShowAction::class => autowire(Update\ShowAction::class),
     Update\UpdateAction::class => autowire(Update\UpdateAction::class),
+    Update\UpdatePluginsAction::class => autowire(Update\UpdatePluginsAction::class),
     Video\DeleteAction::class => autowire(Video\DeleteAction::class),
     Video\ConfirmDeleteAction::class => autowire(Video\ConfirmDeleteAction::class),
     Video\ShowVideoAction::class => autowire(Video\ShowVideoAction::class),

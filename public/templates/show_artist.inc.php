@@ -21,10 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -56,6 +58,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
+$user   = Core::get_global('user');
 $f_name = $artist->get_fullname();
 $title  = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
@@ -167,7 +170,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
-            <?php if ($artist->mbid && Plugin::get_plugin_version('musicbrainz') > 0) { ?>
+            <?php if ($artist->mbid && Preference::get_by_user($user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
@@ -207,7 +210,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
         } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
+        <?php if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
