@@ -41,7 +41,7 @@ class AmpacheMusicBrainz
     public $categories  = 'metadata';
     public $description = 'MusicBrainz metadata integration';
     public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000002';
+    public $version     = '000003';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
@@ -65,6 +65,8 @@ class AmpacheMusicBrainz
      */
     public function install()
     {
+        Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -89,7 +91,8 @@ class AmpacheMusicBrainz
         if ($from_version == 0) {
             return false;
         }
-        if ($from_version < (int)$this->version) {
+        if (!Preference::exists('mb_overwrite_name')) {
+            // this wasn't installed correctly only upgraded so may be missing
             Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
         }
 

@@ -73,7 +73,6 @@ class AmpacheRatingMatch
      */
     public function install()
     {
-
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('ratingmatch_stars')) {
             return false;

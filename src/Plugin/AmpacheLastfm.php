@@ -71,12 +71,11 @@ class AmpacheLastfm
     {
 
         // Check and see if it's already installed (they've just hit refresh, those dorks)
-        if (Preference::exists('lastfm_user')) {
+        if (Preference::exists('lastfm_challenge')) {
             return false;
         }
 
-        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal',
-            $this->name);
+        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
         Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
@@ -91,6 +90,13 @@ class AmpacheLastfm
     {
         Preference::delete('lastfm_challenge');
         Preference::delete('lastfm_grant_link');
+        // make sure the old ones are deleted just in case
+        Preference::delete('lastfm_pass');
+        Preference::delete('lastfm_md5_pass');
+        Preference::delete('lastfm_user');
+        Preference::delete('lastfm_url');
+        Preference::delete('lastfm_host');
+        Preference::delete('lastfm_port');
     } // uninstall
 
     /**
