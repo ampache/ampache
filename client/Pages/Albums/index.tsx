@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGetAlbums } from '~logic/Album';
 import { User } from '~logic/User';
 import ReactLoading from 'react-loading';
 import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
+import Button, { ButtonColors, ButtonSize } from '~components/Button';
 
 interface AlbumsPageProps {
     user: User;
 }
 
 const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
-    const { data: albums, error, isLoading } = useGetAlbums();
+    const [offset, setOffset] = useState(0);
+    const { data: albums, error, isLoading } = useGetAlbums({
+        limit: 10,
+        offset
+    });
 
     if (error) {
         return (
@@ -44,6 +49,22 @@ const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
                 {/*Name: {this.state.theAlbum.name}*/}
             </div>
             <h1>Albums</h1>
+            <Button
+                size={ButtonSize.medium}
+                color={ButtonColors.green}
+                text='Back'
+                onClick={() => {
+                    setOffset(offset - 10);
+                }}
+            />
+            <Button
+                size={ButtonSize.medium}
+                color={ButtonColors.green}
+                text='Next'
+                onClick={() => {
+                    setOffset(offset + 10);
+                }}
+            />
             <div className='album-grid'>
                 <AlbumDisplayView
                     albums={albums}

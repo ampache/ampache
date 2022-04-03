@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { AuthKey } from '~logic/Auth';
 import ReactLoading from 'react-loading';
 import { Album } from '~logic/Album';
-import style from '~Pages/Search/index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -37,7 +36,6 @@ const AlbumDisplayView = (props: AlbumDisplayViewProps) => {
                 return (
                     <AlbumDisplay
                         album={album}
-                        className={style.album}
                         playSongFromAlbum={handlePlaySong}
                         key={album.id}
                     />

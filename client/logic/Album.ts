@@ -67,28 +67,42 @@ const getAlbumSongs = (albumID: string, authKey: AuthKey) => {
         });
 };
 
-const getAlbums = (includeSongs = false) => {
-    return ampacheClient
-        .get('', {
-            params: {
-                action: 'albums',
-                version: 400001,
-                include: [includeSongs ? 'songs' : '']
-            }
-        })
-        .then((response) => response.data.album as Album[]);
-};
-
-export const useGetAlbums = ({
-    includeSongs = false,
-    options
-}: {
+type AlbumsInput = {
+    filter?: string;
+    exact?: boolean;
+    add?: any;
+    update?: any;
+    offset?: number;
+    limit?: number;
     includeSongs?: boolean;
     options?: OptionType<Album[]>;
-} = {}) => {
+};
+
+export const useGetAlbums = (input: AlbumsInput = {}) => {
+    const {
+        add,
+        exact,
+        limit,
+        offset,
+        update,
+        filter,
+        includeSongs = false,
+        options
+    } = input;
     return useQuery<Album[], Error | AmpacheError>(
-        ['albums'],
-        () => getAlbums(includeSongs),
+        ['albums', input],
+        () =>
+            ampacheClient
+                .get('', {
+                    params: {
+                        action: 'albums',
+                        version: 400001,
+                        include: [includeSongs ? 'songs' : ''],
+                        limit,
+                        offset
+                    }
+                })
+                .then((response) => response.data.album as Album[]),
         options
     );
 };

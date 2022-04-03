@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
@@ -13,54 +13,64 @@ interface AlbumDisplayProps {
 }
 
 const AlbumDisplay = (props: AlbumDisplayProps) => {
+    const [optionsVisible, setOptionsVisible] = useState(false);
     const album = props.album;
+    if (!album) return null;
     return (
-        <div className={`card ${style.albumDisplay} ${props.className}`}>
+        <div
+            className={`card ${style.albumDisplay} ${props.className}`}
+            onMouseOver={() => setOptionsVisible(true)}
+            onMouseLeave={() => setOptionsVisible(false)}
+        >
             <div className={style.imageContainer}>
                 <img src={album.art} alt='Album cover' />
                 <div
                     className={`${style.albumActions}`}
                     onClick={(e) => e.preventDefault()}
                 >
-                    <Link
-                        to={`/album/${album.id}`}
-                        className={`${style.action} ${style.viewAlbum}`}
-                    >
-                        View album
-                    </Link>
-                    <span
-                        onClick={() => {
-                            props.playSongFromAlbum(album.id, false);
-                        }}
-                        className={style.action}
-                    >
-                        <SVG
-                            className='icon icon-inline'
-                            src={require('~images/icons/svg/play.svg')}
-                        />
-                        Play
-                    </span>
-                    <span className={style.action}>
-                        <SVG
-                            className='icon icon-inline'
-                            src={require('~images/icons/svg/play-next.svg')}
-                        />
-                        Play next
-                    </span>
-                    <span className={style.action}>
-                        <SVG
-                            className='icon icon-inline'
-                            src={require('~images/icons/svg/play-last.svg')}
-                        />
-                        Add to queue
-                    </span>
-                    <span className={style.action}>
-                        <SVG
-                            className='icon icon-inline'
-                            src={require('~images/icons/svg/more-options-hori.svg')}
-                        />
-                        More options
-                    </span>
+                    {optionsVisible && (
+                        <>
+                            <Link
+                                to={`/album/${album.id}`}
+                                className={`${style.action} ${style.viewAlbum}`}
+                            >
+                                View album
+                            </Link>
+                            <span
+                                onClick={() => {
+                                    props.playSongFromAlbum(album.id, false);
+                                }}
+                                className={style.action}
+                            >
+                                <SVG
+                                    className='icon icon-inline'
+                                    src={require('~images/icons/svg/play.svg')}
+                                />
+                                Play
+                            </span>
+                            <span className={style.action}>
+                                <SVG
+                                    className='icon icon-inline'
+                                    src={require('~images/icons/svg/play-next.svg')}
+                                />
+                                Play next
+                            </span>
+                            <span className={style.action}>
+                                <SVG
+                                    className='icon icon-inline'
+                                    src={require('~images/icons/svg/play-last.svg')}
+                                />
+                                Add to queue
+                            </span>
+                            <span className={style.action}>
+                                <SVG
+                                    className='icon icon-inline'
+                                    src={require('~images/icons/svg/more-options-hori.svg')}
+                                />
+                                More options
+                            </span>
+                        </>
+                    )}
                 </div>
             </div>
             <div className={style.rating} onClick={(e) => e.preventDefault()}>
