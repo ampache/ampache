@@ -607,7 +607,9 @@ final class VaInfo implements VaInfoInterface
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string)$tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
-            $info['genre'] = self::clean_array_tag('genre', $info, $tags);
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && !empty($tags['genre']))
+                ? $tags['genre']
+                : $info['genre'];
 
             $info['mb_trackid']       = (!$info['mb_trackid'] && array_key_exists('mb_trackid', $tags)) ? trim((string)$tags['mb_trackid']) : $info['mb_trackid'];
             $info['isrc']             = (!$info['isrc'] && array_key_exists('isrc', $tags)) ? trim((string)$tags['isrc']) : $info['isrc'];
@@ -689,33 +691,6 @@ final class VaInfo implements VaInfoInterface
         $info['size'] = $info['size'] ?? $size;
 
         return $info;
-    }
-
-    /**
-     * clean_array_tag
-     * @param string $field
-     * @param $info
-     * @param $tags
-     * @return array
-     */
-    private static function clean_array_tag($field, $info, $tags)
-    {
-        $arr = array();
-        if ((!$info[$field] || count($info[$field]) == 0) && array_key_exists($field, $tags)) {
-            if (!is_array($tags[$field])) {
-                // not all tag formats will return an array, but we need one
-                $arr[] = trim((string)$tags[$field]);
-            } else {
-                // not only used for genre might otherwise be misleading
-                foreach ($tags[$field] as $data) {
-                    $arr[] = trim((string)$data);
-                }
-            }
-        } else {
-            $arr = $info[$field];
-        }
-
-        return $arr;
     }
 
     /**
@@ -1088,7 +1063,7 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'genre':
                     // Pass the array through
-                    $parsed['genre'] = $this->parseGenres($data[0]);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
@@ -1157,7 +1132,7 @@ final class VaInfo implements VaInfoInterface
             if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
                 $tag = 'lyrics';
             }
-            $parsed[$tag] = $data[0];
+            $parsed[strtolower($tag)] = $data[0];
         }
 
         return $parsed;
@@ -1182,8 +1157,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
-                    // Pass the array through
-                    $parsed[$tag] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'tracknumber':
                 case 'track_number':
@@ -1274,7 +1248,7 @@ final class VaInfo implements VaInfoInterface
                             $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                         }
                     }
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
@@ -1311,7 +1285,7 @@ final class VaInfo implements VaInfoInterface
         foreach ($tags as $tag => $data) {
             // This is our baseline for naming so everything's already right,
             // we just need to shuffle off the array.
-            $parsed[$tag] = $data[0];
+            $parsed[strtolower($tag)] = $data[0];
         }
 
         return $parsed;
@@ -1397,7 +1371,7 @@ final class VaInfo implements VaInfoInterface
                     break;
                 default:
                     if (array_key_exists(0, $data)) {
-                        $parsed[$tag] = $data[0];
+                        $parsed[strtolower($tag)] = $data[0];
                     }
                     break;
             }
@@ -1557,8 +1531,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
-                    // Pass the array through
-                    $parsed[$tag] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
@@ -1662,8 +1635,7 @@ final class VaInfo implements VaInfoInterface
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
-                    // Pass the array through
-                    $parsed['genre'] = $this->parseGenres($data[0]);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
@@ -2010,13 +1982,23 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseGenres($data)
     {
-        // get rid of that annoying genre!
-        $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
-        if (isset($data) && is_array($data) && count($data) === 1) {
-            $data = $this->splitSlashedlist((string)(reset($data)), false);
+        //debug_event(__CLASS__, "parseGenres: " . print_r($data, true), 5);
+        $result = null;
+        if (is_array($data)) {
+            $result = array();
+            foreach ($data as $row) {
+                if (!empty($row)) {
+                    foreach (explode(';', str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row))) as $artist) {
+                        $result[] = trim($artist);
+                    }
+                }
+            }
+        }
+        if (is_string($data) && !empty($data)) {
+            $result = explode(';', str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data)));
         }
 
-        return $data;
+        return $result;
     }
 
     /**
@@ -2032,14 +2014,8 @@ final class VaInfo implements VaInfoInterface
             $result = array();
             foreach ($data as $row) {
                 if (!empty($row)) {
-                    if (is_string($row) && !empty($row)) {
-                        foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                            $result[] = trim($artist);
-                        }
-                    } else {
-                        foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                            $result[] = trim($artist);
-                        }
+                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                        $result[] = trim($artist);
                     }
                 }
             }
