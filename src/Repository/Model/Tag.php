@@ -343,6 +343,23 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
+     * get_merged_count
+     * @return int
+     */
+    public static function get_merged_count()
+    {
+
+        $results    = 0;
+        $sql        = "SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;";
+        $db_results = Dba::read($sql);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            $results = (int)$row['tag_count'];
+        }
+
+        return $results;
+    }
+    /**
      * has_merge
      * Get merged tags to this tag.
      * @param string $name

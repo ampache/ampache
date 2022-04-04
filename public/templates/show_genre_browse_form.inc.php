@@ -2,6 +2,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -26,7 +27,7 @@ $filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANI
             <?php echo T_('Videos'); ?>
         </a>
     <?php } ?>
-    <?php if (Access::check('interface', 50)) { ?>
+    <?php if (Access::check('interface', 50) && Tag::get_merged_count() > 0) { ?>
     <a class="category <?php echo ($filter_str == 'tag_hidden') ? 'current'  : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=tag_hidden">
         <?php echo T_('Hidden'); ?>
     </a>
