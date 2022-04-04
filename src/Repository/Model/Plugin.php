@@ -73,7 +73,7 @@ class Plugin
      * get_plugins
      * This returns an array of plugin names
      * @param string $type
-     * @return mixed
+     * @return array
      */
     public static function get_plugins($type = '')
     {

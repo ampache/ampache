@@ -851,12 +851,12 @@ class Catalog_local extends Catalog
             }
         }
 
+        $is_duplicate = false;
         if (count($this->get_gather_types('music')) > 0) {
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {
-                    debug_event('local.catalog', 'skipping_duplicate ' . $file, 5);
-
-                    return false;
+                    debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
+                    $is_duplicate = true;
                 }
             }
 
@@ -912,6 +912,10 @@ class Catalog_local extends Catalog
                 $song    = new Song($song_id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
+            }
+            // disable dupes if catalog_check_duplicate is enabled
+            if ($is_duplicate) {
+                Song::update_enabled(false, $song_id);
             }
             $this->songs_to_gather[] = $song_id;
 

@@ -676,7 +676,7 @@ class Preference extends database_object
             "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
             "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
             "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates', 100, 'boolean', 'system', 'catalog'), " .
+            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'), " .
             "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
             "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
             "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
@@ -796,7 +796,7 @@ class Preference extends database_object
             'podcast_new_download' => T_('# episodes to download when new episodes are available'),
             'libitem_contextmenu' => T_('Library item context menu'),
             'upload_catalog_pattern' => T_('Rename uploaded file according to catalog pattern'),
-            'catalog_check_duplicate' => T_("Check library item at import time and don't import duplicates"),
+            'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
             'browse_filter' => T_('Show filter box on browse'),
             'sidebar_light' => T_('Light sidebar by default'),
             'custom_blankalbum' => T_('Custom blank album default image'),

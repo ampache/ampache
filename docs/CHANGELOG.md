@@ -58,6 +58,7 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Use albums instead of songs for catalog verify actions
 * Expand search sidebar menu and collapse information without cookies
 * Moved all the extended functions into the forked jplayer module
+* Instead of skipping duplicate songs on import, disable them
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
