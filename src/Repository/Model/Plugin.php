@@ -257,6 +257,7 @@ class Plugin
                 return true;
             }
         }
+
         return false;
     }
 

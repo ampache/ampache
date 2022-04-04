@@ -1,6 +1,7 @@
 <?php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -24,5 +25,10 @@ $filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANI
         <a class="category <?php echo ($filter_str == 'video') ? 'current'  : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=video">
             <?php echo T_('Videos'); ?>
         </a>
+    <?php } ?>
+    <?php if (Access::check('interface', 50)) { ?>
+    <a class="category <?php echo ($filter_str == 'tag_hidden') ? 'current'  : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=tag_hidden">
+        <?php echo T_('Hidden'); ?>
+    </a>
     <?php } ?>
 </div>

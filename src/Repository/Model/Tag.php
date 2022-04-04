@@ -265,6 +265,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             debug_event(self::class, 'Hidden tag {' . $this->id . '} with status {' . $is_hidden . '}...', 5);
             $sql = 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
             Dba::write($sql, array($is_hidden, $this->id));
+            // if you had previously hidden this tag then remove the merges too
+            if ($is_hidden == 0 && (int)$this->is_hidden == 1) {
+                debug_event(self::class, 'Unhiding tag {' . $this->id . '} removing all previous merges', 5);
+                $this->remove_merges();
+            }
             $this->is_hidden = $is_hidden;
         }
 
@@ -345,11 +350,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public function has_merge($name)
     {
-        $sql = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
-
+        $sql        = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
         $db_results = Dba::read($sql, array($this->id));
-
-        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($name == $row['name']) {
                 return true;
@@ -357,6 +359,16 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         return false;
+    }
+
+    /**
+     * remove_merges
+     * Remove merged tags from this tag.
+     */
+    public function remove_merges()
+    {
+        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
+        Dba::write($sql, array($this->id));
     }
 
     /**
@@ -671,18 +683,24 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $results  = array();
-        $type_sql = (!empty($type))
-            ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
-            : "";
-        $sql = (AmpConfig::get('catalog_filter'))
-            ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false AND" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " "
-            : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql WHERE `tag`.`is_hidden` = false ";
+        if ($type == 'tag_hidden') {
+            $sql = (AmpConfig::get('catalog_filter'))
+                ? "SELECT `tag`.`id` AS `tag_id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true AND" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " "
+                : "SELECT `tag`.`id` AS `tag_id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true ";
+        } else {
+            $type_sql = (!empty($type))
+                ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
+                : "";
+            $sql = (AmpConfig::get('catalog_filter'))
+                ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false AND" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " "
+                : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql WHERE `tag`.`is_hidden` = false ";
 
+            $sql .= " GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+        }
         $order = "`" . $order . "`";
         if ($order == 'count') {
             $order .= " DESC";
         }
-        $sql .= " GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         $sql .= "ORDER BY " . $order;
 
         if ($limit > 0) {
@@ -696,7 +714,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 'id' => $row['tag_id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
-                'count' => $row['count']
+                'count' => $row['count'] ?? 0
             );
         }
 

@@ -17,6 +17,8 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Add some missing tag options for mpc files
 * Allow manually syncing Artist name, year formed and place formed from musicbrainz (if it has an mbid)
 * Notify and allow updating Plugins when updates are available
+* You can now unhide a tag from the 'Hidden' page for Genres
+  * This will delete previous merges but it will not retag your songs (update from tags to fix that)
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default

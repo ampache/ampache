@@ -72,6 +72,7 @@ final class ObjectTypeToClassNameMapper
         'label' => Label::class,
         'podcast' => Podcast::class,
         'tag' => Tag::class,
+        'tag_hidden' => Tag::class,
         'wanted' => Wanted::class,
     ];
 

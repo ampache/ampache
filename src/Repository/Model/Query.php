@@ -732,6 +732,7 @@ class Query
             case 'album':
             case 'artist':
             case 'tag':
+            case 'tag_hidden':
             case 'playlist_localplay':
             case 'shoutbox':
             case 'live_stream':
@@ -1071,6 +1072,7 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `video` ";
                     break;
                 case 'tag':
+                case 'tag_hidden':
                     $this->set_select("`tag`.`id`");
                     $this->set_join('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";

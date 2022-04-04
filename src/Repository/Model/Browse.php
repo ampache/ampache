@@ -54,6 +54,7 @@ class Browse extends Query
         'catalog',
         'shoutbox',
         'tag',
+        'tag_hidden',
         'video',
         'democratic',
         'wanted',
@@ -343,6 +344,11 @@ class Browse extends Query
                 Tag::build_cache($object_ids);
                 $box_title = T_('Genres');
                 $box_req   = Ui::find_template('show_tagcloud.inc.php');
+                break;
+            case 'tag_hidden':
+                Tag::build_cache($object_ids);
+                $box_title = T_('Genres');
+                $box_req   = Ui::find_template('show_tagcloud_hidden.inc.php');
                 break;
             case 'video':
                 Video::build_cache($object_ids);

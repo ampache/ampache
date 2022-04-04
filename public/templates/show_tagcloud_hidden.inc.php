@@ -48,26 +48,25 @@ $ui = $dic->get(UiInterface::class);
 <?php $ui->show(
         'show_genre_browse_form.inc.php',
     [
-        'type' => $browse_type
+        'type' => 'tag_hidden'
     ]
 ); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">
         <div class="tag_button">
-            <span id="click_tag_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
-            <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
+            <span id="click_tag_hidden_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
         </div>
         <?php if (Access::check('interface', 50)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo addslashes(T_('Edit')) ?>', 'click_tag_')">
+                    <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id'] ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_hidden_' . $data['id'] ?>', '<?php echo addslashes(T_('Edit')) ?>', 'click_tag_')">
                         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>
-                    <a class="tag_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>
@@ -78,18 +77,4 @@ $ui = $dic->get(UiInterface::class);
         } ?>
 
 <br /><br /><br />
-<?php
-if (isset($_GET['show_tag'])) {
-            $show_tag = (int) (Core::get_get('show_tag')); ?>
-<script>
-$(document).ready(function () {
-    <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>
-});
-</script>
-<?php
-        } ?>
-<?php if (!count($object_ids)) { ?>
-<span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
-<?php
-        } ?>
 <?php Ajax::end_container(); ?>
