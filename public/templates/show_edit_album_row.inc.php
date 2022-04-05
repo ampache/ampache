@@ -21,6 +21,7 @@
  */
 
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -49,6 +50,12 @@ use Ampache\Module\Api\Ajax;
                         } ?>
                 </td>
             </tr>
+            <?php if (count($libitem->album_artists) > 1) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists') ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+            </tr>
+            <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>

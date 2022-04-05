@@ -569,6 +569,27 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * get_display
+     * This returns a csv formatted version of the artists that we are given
+     * @param array $artists
+     * @return string
+     */
+    public static function get_display($artists)
+    {
+        $results = '';
+        if (empty($artists)) {
+            return $results;
+        }
+        foreach ($artists as $artists_id) {
+            $results .= self::get_fullname_by_id($artists_id) . ', ';
+        }
+
+        $results = rtrim($results, ', ');
+
+        return $results;
+    } // get_display
+
+    /**
      * Get item link.
      * @return string
      */
