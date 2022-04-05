@@ -1243,7 +1243,7 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'time') {
             // used checking musicbrainz and other plugins
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND() LIMIT 500;";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND();";
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
