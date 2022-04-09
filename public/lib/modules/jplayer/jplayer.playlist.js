@@ -466,17 +466,22 @@
         scan: function() {
             var self = this;
             var isAdjusted = false;
-
+            var playlist_before = [];
+            $.each(self.playlist, function(i) {
+                playlist_before[i] = self.playlist[i];
+            });
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-                if (parseInt($(value).attr("name"), 10) !== index) {
+                var jindex = parseInt($(value).attr("name"),10);
+                if (jindex !== index) {
                     // set the self.current index value if it's going to change.
                     if (!isAdjusted && self.current === parseInt($(value).attr("name"), 10)) {
                         self.current = index;
                         isAdjusted = true;
                     }
+                    // re-index the list
+                    $(value).attr("name", index);
+                    self.playlist[index] = playlist_before[jindex];
                 }
-                // Reset the index order (name in the html) to match your jplayer playlist
-                $(value).attr("name", index);
             });
         },
         select: function(index) {
