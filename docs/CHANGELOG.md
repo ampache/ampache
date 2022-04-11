@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 5.3.0-release
 
 This cycle we have added support for multiple Album and Song artists.
 
@@ -103,7 +103,7 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Subsonic:
   * Artist was missing starred status
 
-## API develop
+## API 5.3.0
 
 ### Added
 
