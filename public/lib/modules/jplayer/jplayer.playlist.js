@@ -236,7 +236,7 @@
                 $(this.cssSelector.playlist + " ul").slideUp(displayTime, function() {
                     var $this = $(this);
                     $(this).empty();
-                    
+
                     $.each(self.playlist, function(i) {
                         $this.append(self._createListItem(self.playlist[i]));
                     });
@@ -252,7 +252,9 @@
                 });
             }
         },
-        _refreshHtml: function() {
+        _refreshHtmlPlaylist: function() {
+            // After addAfter() and remove() functions, new items need their webPlayer indexes reset
+            // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
             var self = this;
             var isAdjusted = false;
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
@@ -267,6 +269,7 @@
                     $(value).attr("name", index);
                 }
             });
+            //console.log(self.playlist);
         },
         _createListItem: function(media) {
             var self = this;
@@ -384,23 +387,41 @@
                 console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
                 return;
             }
+            var self = this;
+            var playlist_before = [];
+            var playlist_after = [];
+            $.each(self.playlist, function(i) {
+                playlist_before[i] = self.playlist[i];
+            });
 
             $(this.cssSelector.playlist + " ul")
                 .find("li[name=" + index + "]").after(this._createListItem(media)).end()
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
 
             this._updateControls();
-            this.original.splice(index + 1, 0, media);
-            this.playlist.splice(index + 1, 0, media);
+
+            $.each(this.playlist, function(i) {
+                playlist_after.push(playlist_before[i]);
+                if (i === index) {
+                    playlist_after.push(media);
+                }
+            });
+            this.playlist = playlist_after;
+            this.original = playlist_after;
 
             if (this.original.length === 1) {
                 this.select(0);
             }
-            this._refreshHtml();
+            this._refreshHtmlPlaylist();
         },
         remove: function(index) {
             //console.log("remove " + index);
             var self = this;
+            var playlist_before = [];
+            var playlist_after = [];
+            $.each(self.playlist, function(i) {
+                playlist_before[i] = self.playlist[i];
+            });
             if (typeof index === "undefined") {
                 this._initPlaylist([]);
                 this._refresh(function() {
@@ -411,7 +432,7 @@
                 if (this.removing) {
                     return false;
                 } else {
-                    index = (index < 0) ? self.original.length + index : index; // Negative index relates to end of array.
+                    index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
                     if (0 <= index && index < this.playlist.length) {
                         this.removing = true;
 
@@ -422,20 +443,6 @@
 
                         $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
                             $(this).remove();
-
-                            if (self.shuffled) {
-                                var item = self.playlist[index];
-                                $.each(self.original, function(i,v) {
-                                    if (self.original[i] === item) {
-                                        self.original.splice(i, 1);
-                                        return false; // Exit $.each
-                                    }
-                                });
-                                self.playlist.splice(index, 1);
-                            } else {
-                                self.original.splice(index, 1);
-                                self.playlist.splice(index, 1);
-                            }
 
                             if (self.original.length) {
                                 if (index === self.current) {
@@ -452,9 +459,17 @@
                             }
 
                             self.removing = false;
-                            self._refreshHtml();
+                            self._refreshHtmlPlaylist();
                         });
+                        $.each(this.playlist, function(i) {
+                            if (i !== index) {
+                                playlist_after.push(playlist_before[i]);
+                            }
+                        });
+                        this.playlist = playlist_after;
+                        this.original = playlist_after;
                     }
+
                     return true;
                 }
             }
@@ -480,6 +495,7 @@
             });
         },
         scan: function() {
+            // scan is used when you rearrange items in the webplayer playlist (show_html5_player.inc.php)
             var self = this;
             var isAdjusted = false;
             var playlist_before = [];
@@ -492,17 +508,17 @@
                 var jindex = parseInt($(value).attr("name"),10);
                 if (jindex !== index) {
                     // set the self.current index value if it's going to change.
-                    if (!isAdjusted && self.current === parseInt($(value).attr("name"), 10)) {
+                    if (!isAdjusted && self.current === jindex) {
                         self.current = index;
                         isAdjusted = true;
                     }
                     // re-index the list
                     $(value).attr("name", index);
                 }
-                playlist_after[index] = playlist_before[jindex];
+                playlist_after.push(playlist_before[jindex]);
             });
-            self.playlist = playlist_after;
-            self.original = playlist_after;
+            this.playlist = playlist_after;
+            this.original = playlist_after;
             //console.log(self.playlist);
         },
         select: function(index) {
@@ -577,15 +593,14 @@
                         self.playlist.sort(function() {
                             return 0.5 - Math.random();
                         });
-                    } else {
-                        self._originalPlaylist();
-                    }
-                    self._refresh(true); // Instant
 
-                    if (playNow || !$(self.cssSelector.jPlayer).data("jPlayer").status.paused) {
-                        self.play(0);
-                    } else {
-                        self.select(0);
+                        self._refresh(true); // Instant
+
+                        if (playNow || !$(self.cssSelector.jPlayer).data("jPlayer").status.paused) {
+                            self.play(0);
+                        } else {
+                            self.select(0);
+                        }
                     }
 
                     $(this).slideDown(self.options.playlistOptions.shuffleTime);
