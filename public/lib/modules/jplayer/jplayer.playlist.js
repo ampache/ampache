@@ -252,6 +252,22 @@
                 });
             }
         },
+        _refreshHtml: function() {
+            var self = this;
+            var isAdjusted = false;
+            $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
+                var jindex = parseInt($(value).attr("name"),10);
+                if (jindex !== index) {
+                    // set the self.current index value if it's going to change.
+                    if (!isAdjusted && self.current === parseInt($(value).attr("name"), 10)) {
+                        self.current = index;
+                        isAdjusted = true;
+                    }
+                    // re-index the list
+                    $(value).attr("name", index);
+                }
+            });
+        },
         _createListItem: function(media) {
             var self = this;
 
@@ -380,7 +396,7 @@
             if (this.original.length === 1) {
                 this.select(0);
             }
-            this.scan();
+            this._refreshHtml();
         },
         remove: function(index) {
             //console.log("remove " + index);
@@ -436,7 +452,7 @@
                             }
 
                             self.removing = false;
-                            self.scan();
+                            self._refreshHtml();
                         });
                     }
                     return true;
@@ -467,9 +483,11 @@
             var self = this;
             var isAdjusted = false;
             var playlist_before = [];
+            var playlist_after = [];
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
+            //console.log(playlist_before);
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
                 var jindex = parseInt($(value).attr("name"),10);
                 if (jindex !== index) {
@@ -480,9 +498,12 @@
                     }
                     // re-index the list
                     $(value).attr("name", index);
-                    self.playlist[index] = playlist_before[jindex];
                 }
+                playlist_after[index] = playlist_before[jindex];
             });
+            self.playlist = playlist_after;
+            self.original = playlist_after;
+            //console.log(self.playlist);
         },
         select: function(index) {
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
