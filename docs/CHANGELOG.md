@@ -26,7 +26,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 530014:
+* Database 530015:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -43,6 +43,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
   * Index data on object_count
   * Use a unique index on `object_count`
   * Compact `cache_object_count`, `cache_object_count_run` columns
+  * Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -104,6 +105,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Correctly set null values on library_item edits
 * Search for song art might have sent a Song object
 * Fix missing preference on musicbrainz plugin
+* Disable/enable catalog
 * jPlayer (Webplayer):
   * Fixed moving items in the playlist
   * Fixed adding after the current playing track
