@@ -47,8 +47,8 @@ $showArtist      = AmpConfig::get('show_artist'); ?>
         </a>
     <?php } ?>
     <?php if ($showArtist || $filter_str == 'artist') { ?>
-        <a class="category <?php echo ($filter_str == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album_artist">
-            <?php echo T_('Album Artists'); ?>
+        <a class="category <?php echo ($filter_str == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=artist">
+            <?php echo T_('Artists'); ?>
         </a>
     <?php } ?>
     <?php if (AmpConfig::get('label')) { ?>
