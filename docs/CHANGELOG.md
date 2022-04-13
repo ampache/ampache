@@ -8,6 +8,10 @@ This allows multiple artists to be part of a single song/album object and is cre
 
 Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
 
+The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
+
+There have been a few fixes and changes to the module to make the webplayer a lot better to use.
+
 ### Added
 
 * Additional xhtml templates added
@@ -61,6 +65,9 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Expand search sidebar menu and collapse information without cookies
 * Moved all the extended functions into the forked jplayer module
 * Instead of skipping duplicate songs on import, disable them
+* jPlayer (Webplayer):
+  * Shuffle now follows the currently playing track (If playing)
+  * Shuffle also does not track the old playlist so you can't undo a shuffle
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
@@ -97,6 +104,10 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Correctly set null values on library_item edits
 * Search for song art might have sent a Song object
 * Fix missing preference on musicbrainz plugin
+* jPlayer (Webplayer):
+  * Fixed moving items in the playlist
+  * Fixed adding after the current playing track
+  * Fixed logic behind the index and order between the HTML and the JS lists
 * Search:
   * played search for album and artist was including your user in the results
   * other_user artist search sql
