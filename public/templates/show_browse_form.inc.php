@@ -28,7 +28,9 @@ global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
-$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?>
+$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$showAlbumArtist = AmpConfig::get('show_album_artist');
+$showArtist      = AmpConfig::get('show_artist'); ?>
 
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 
@@ -39,9 +41,16 @@ $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_ST
     <a class="category <?php echo ($filter_str == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album">
         <?php echo T_('Albums'); ?>
     </a>
-    <a class="category <?php echo ($filter_str == 'artist' || $filter_str == 'album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album_artist">
-        <?php echo T_('Album Artists'); ?>
-    </a>
+    <?php if ($showAlbumArtist || !$showArtist || $filter_str == 'album_artist') { ?>
+        <a class="category <?php echo ($filter_str == 'album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album_artist">
+            <?php echo T_('Album Artists'); ?>
+        </a>
+    <?php } ?>
+    <?php if ($showArtist || $filter_str == 'artist') { ?>
+        <a class="category <?php echo ($filter_str == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album_artist">
+            <?php echo T_('Album Artists'); ?>
+        </a>
+    <?php } ?>
     <?php if (AmpConfig::get('label')) { ?>
         <a class="category <?php echo ($filter_str == 'label') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=label">
             <?php echo T_('Labels'); ?>

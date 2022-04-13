@@ -68,7 +68,7 @@ $web_path        = AmpConfig::get('web_path'); ?>
             <?php if ($showArtist) { ?>
                 <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php } ?>
-            <?php if ($showAlbumArtist || (!$showArtist)) { ?>
+            <?php if ($showAlbumArtist || !$showArtist) { ?>
                 <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
             <?php } ?>
             <?php if ($allowLabel) { ?>
