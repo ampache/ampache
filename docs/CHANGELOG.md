@@ -128,6 +128,9 @@ There have been a few fixes and changes to the module to make the webplayer a lo
   * Add `song_count` to album and artist search
   * Add `album_count` to artist search
   * Add `myplayedartist` (Played by Me (Artist)) to album search
+  * Add `song_artist` to album search
+  * Add alias `album_artist` to album search for `artist` searches
+  * Add `recent_added` to album search
 
 ## Ampache 5.2.1-release
 
