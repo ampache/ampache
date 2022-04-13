@@ -8,6 +8,10 @@ This allows multiple artists to be part of a single song/album object and is cre
 
 Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
 
+The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
+
+There have been a few fixes and changes to the module to make the webplayer a lot better to use.
+
 ### Added
 
 * Additional xhtml templates added
@@ -22,7 +26,7 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 530014:
+* Database 530015:
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -39,6 +43,7 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
   * Index data on object_count
   * Use a unique index on `object_count`
   * Compact `cache_object_count`, `cache_object_count_run` columns
+  * Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links
 * search:
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
@@ -61,6 +66,9 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Expand search sidebar menu and collapse information without cookies
 * Moved all the extended functions into the forked jplayer module
 * Instead of skipping duplicate songs on import, disable them
+* jPlayer (Webplayer):
+  * Shuffle now follows the currently playing track (If playing)
+  * Shuffle also does not track the old playlist so you can't undo a shuffle
 * Subsonic:
   * Check for art instead of always sending an art attribute
 
@@ -97,6 +105,11 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for m
 * Correctly set null values on library_item edits
 * Search for song art might have sent a Song object
 * Fix missing preference on musicbrainz plugin
+* Disable/enable catalog
+* jPlayer (Webplayer):
+  * Fixed moving items in the playlist
+  * Fixed adding after the current playing track
+  * Fixed logic behind the index and order between the HTML and the JS lists
 * Search:
   * played search for album and artist was including your user in the results
   * other_user artist search sql

@@ -46,8 +46,8 @@ function update_action()
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
     <script src="<?php echo $web_path; ?>/lib/modules/aurora.js/aurora.js"></script>
 <?php } ?>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.js"></script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
 
 <script>
 var jplaylist = new Array();

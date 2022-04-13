@@ -54,10 +54,9 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $song        = new Song($_REQUEST['song_id']);
-                $new_enabled = $song->enabled ? false : true;
+                $new_enabled = !$song->enabled;
                 Song::update_enabled($new_enabled, $song->id);
                 $song->enabled = $new_enabled;
-                $song->format();
 
                 // Return the new Ajax::button
                 $id           = 'button_flip_state_' . $song->id;

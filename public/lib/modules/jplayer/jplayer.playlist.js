@@ -211,7 +211,7 @@
             var self = this;
             this.playlist = [];
             // Make both arrays point to the same object elements. Gives us 2 different arrays, each pointing to the same actual object. ie., Not copies of the object.
-            $.each(this.original, function(i) {
+            $.each(self.original, function(i) {
                 self.playlist[i] = self.original[i];
             });
         },
@@ -226,7 +226,7 @@
 
             if (instant && !$.isFunction(instant)) {
                 $(this.cssSelector.playlist + " ul").empty();
-                $.each(this.playlist, function(i) {
+                $.each(self.playlist, function(i) {
                     $(self.cssSelector.playlist + " ul").append(self._createListItem(self.playlist[i]));
                 });
                 this._updateControls();
@@ -400,7 +400,7 @@
 
             this._updateControls();
 
-            $.each(this.playlist, function(i) {
+            $.each(self.playlist, function(i) {
                 playlist_after.push(playlist_before[i]);
                 if (i === index) {
                     playlist_after.push(media);
@@ -461,7 +461,7 @@
                             self.removing = false;
                             self._refreshHtmlPlaylist();
                         });
-                        $.each(this.playlist, function(i) {
+                        $.each(self.playlist, function(i) {
                             if (i !== index) {
                                 playlist_after.push(playlist_before[i]);
                             }
@@ -590,18 +590,27 @@
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
                     self.shuffled = shuffled;
                     if (shuffled) {
+                        var item = self.playlist[self.current];
                         self.playlist.sort(function() {
                             return 0.5 - Math.random();
                         });
+                        $.each(self.playlist, function(i,v) {
+                            if (self.playlist[i] === item) {
+                                self.current = i;
+                                return false; // Exit $.each
+                            }
+                        });
 
+                        self.shuffled = false;
+                        self._refresh(true);
+                        self.play(self.current);
+                    } else {
+                        self.shuffled = false;
                         self._refresh(true); // Instant
-
-                        if (playNow || !$(self.cssSelector.jPlayer).data("jPlayer").status.paused) {
-                            self.play(0);
-                        } else {
-                            self.select(0);
-                        }
+                        self.select(self.current);
                     }
+                    // we only shuffle the list and then unset shuffle immediately
+                    this.original = this.playlist;
 
                     $(this).slideDown(self.options.playlistOptions.shuffleTime);
                 });

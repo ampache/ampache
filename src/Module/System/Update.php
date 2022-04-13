@@ -632,6 +632,9 @@ class Update
         $update_string = "* Delete `object_count` duplicates<br />* Use a smaller unique index on `object_count`";
         $version[]     = array('version' => '530014', 'description' => $update_string);
 
+        $update_string = "* Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links<br />* Fallback to Album Artist if both disabled";
+        $version[]     = array('version' => '530015', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4245,6 +4248,29 @@ class Update
         Dba::write($sql);
         $sql = "CREATE UNIQUE INDEX `object_count_UNIQUE_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+    /**
+     * update_530015
+     *
+     * Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links. (Fallback to Album Artist if both disabled)
+     */
+    public static function update_530015(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

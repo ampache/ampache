@@ -668,12 +668,12 @@ abstract class Catalog extends database_object
     /**
      * update_enabled
      * sets the enabled flag
-     * @param string $new_enabled
+     * @param bool $new_enabled
      * @param integer $catalog_id
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', make_bool($new_enabled), $catalog_id, '75');
+        self::_update_item('enabled', (int)$new_enabled, $catalog_id, '75');
     } // update_enabled
 
     /**
@@ -699,12 +699,9 @@ abstract class Catalog extends database_object
         if (!strlen(trim((string)$value))) {
             return false;
         }
+        $sql = "UPDATE `catalog` SET `$field` = ? WHERE `id` = ?";
 
-        $value = Dba::escape($value);
-
-        $sql = "UPDATE `catalog` SET `$field`='$value' WHERE `id`='$catalog_id'";
-
-        return Dba::write($sql);
+        return Dba::write($sql, array($value, $catalog_id));
     } // _update_item
 
     /**
