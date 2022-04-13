@@ -633,7 +633,7 @@ class Update
         $version[]     = array('version' => '530014', 'description' => $update_string);
 
         $update_string = "* Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links<br />* Fallback to Album Artist if both disabled";
-        $version[]     = array('version' => '530014', 'description' => $update_string);
+        $version[]     = array('version' => '530015', 'description' => $update_string);
 
         return $version;
     }
