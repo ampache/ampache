@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
@@ -93,6 +94,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -131,6 +135,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -233,6 +240,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
         }
         $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
         //debug_event(self::class, 'getAlbumSuite ' . $sql, 5);
@@ -348,13 +358,15 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= "AND `catalog`.`enabled` = '1'";
+            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
         }
         $original_year     = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $allow_group_disks = AmpConfig::get('album_group');
         $sort_type         = AmpConfig::get('album_sort');
         $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
-        //$sql_sort          = (AmpConfig::get('album_release_type')) ? "IFNULL(`album`.`release_type`, 'album'), " : "";
         switch ($sort_type) {
             case 'year_asc':
                 $sql_sort = "$original_year ASC" . $sort_disk;
