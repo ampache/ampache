@@ -46,7 +46,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
                 $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
                 $new_enabled = !$catalog->enabled;
                 Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = (int) $new_enabled;
+                $catalog->enabled = (int)$new_enabled;
 
                 // Return the new Ajax::button
                 $id  = 'button_flip_state_' . $catalog->id;

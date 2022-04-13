@@ -673,7 +673,7 @@ abstract class Catalog extends database_object
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', $new_enabled, $catalog_id, '75');
+        self::_update_item('enabled', (int)$new_enabled, $catalog_id, '75');
     } // update_enabled
 
     /**
