@@ -1072,9 +1072,13 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `video` ";
                     break;
                 case 'tag':
+                    $this->set_select("`tag`.`id`");
+                    $this->set_join_and('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', '`tag`.`hidden`', '0', 1);
+                    $sql = "SELECT %%SELECT%% FROM `tag` ";
+                    break;
                 case 'tag_hidden':
                     $this->set_select("`tag`.`id`");
-                    $this->set_join('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
+                    $this->set_join_and('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', '`tag`.`hidden`', '1', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                     break;
                 case 'wanted':
