@@ -1985,10 +1985,10 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
+            $tags    = self::getSongTags('album', $libitem->id);
+            Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
             if ($artist || $album || $tags || $maps) {
                 $artists = array();
-                $tags    = self::getSongTags('album', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
                 // update the album artists
                 foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
@@ -2012,10 +2012,10 @@ abstract class Catalog extends database_object
                     $album_tags = self::getSongTags('album', $album_id);
                     Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
                 }
-                // refresh the artist tags after everything else
-                $tags = self::getSongTags('artist', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
             }
+            // refresh the artist tags after everything else
+            $tags = self::getSongTags('artist', $libitem->id);
+            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
         }
         // check counts
         if ($album || $maps) {
