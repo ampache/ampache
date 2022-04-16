@@ -1988,14 +1988,14 @@ final class VaInfo implements VaInfoInterface
             $result = array();
             foreach ($data as $row) {
                 if (!empty($row)) {
-                    foreach (explode(';', str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row))) as $artist) {
-                        $result[] = trim($artist);
+                    foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row)), false) as $genre) {
+                        $result[] = $genre;
                     }
                 }
             }
         }
         if (is_string($data) && !empty($data)) {
-            $result = explode(';', str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data)));
+            $result = self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data)), false);
         }
 
         return $result;

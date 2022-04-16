@@ -357,6 +357,7 @@ class Query
             case 'album_artist':
             case 'catalog':
             case 'album':
+            case 'hidden':
                 $this->_state['filter'][$key] = $value;
                 break;
             case 'min_count':
@@ -1072,9 +1073,13 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `video` ";
                     break;
                 case 'tag':
+                    $this->set_select("`tag`.`id`");
+                    $this->set_filter('hidden', 0);
+                    $sql = "SELECT %%SELECT%% FROM `tag` ";
+                    break;
                 case 'tag_hidden':
                     $this->set_select("`tag`.`id`");
-                    $this->set_join('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
+                    $this->set_filter('hidden', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                     break;
                 case 'wanted':
@@ -1698,6 +1703,9 @@ class Query
                         break;
                     case 'tag':
                         $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'hidden':
+                        $filter_sql = " `tag`.`is_hidden` = " . Dba::escape($value) . " AND ";
                         break;
                     default:
                         break;
