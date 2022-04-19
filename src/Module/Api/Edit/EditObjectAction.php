@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
@@ -49,17 +50,20 @@ final class EditObjectAction extends AbstractEditAction
 
     private LabelRepositoryInterface $labelRepository;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
-        LabelRepositoryInterface $labelRepository
+        LabelRepositoryInterface $labelRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->labelRepository = $labelRepository;
+        $this->logger          = $logger;
     }
 
     protected function handle(
@@ -84,6 +88,10 @@ final class EditObjectAction extends AbstractEditAction
         } else {
             $object_type = implode('_', explode('_', $object_type, -1));
         }
+        $this->logger->debug(
+            'edit_object: {' . $object_type . '} {' . $object_id . '}',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         $className  = ObjectTypeToClassNameMapper::map($object_type);
         $libitem    = new $className($_POST['id']);

@@ -21,9 +21,8 @@
  */
 
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\TvShow;
 
-/** @var TvShow $libitem */
+/** @var Ampache\Repository\Model\TvShow $libitem */
 
 ?>
 <div>

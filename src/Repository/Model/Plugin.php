@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Plugin\PluginEnum;
 
@@ -72,7 +73,7 @@ class Plugin
      * get_plugins
      * This returns an array of plugin names
      * @param string $type
-     * @return mixed
+     * @return array
      */
     public static function get_plugins($type = '')
     {
@@ -243,6 +244,42 @@ class Plugin
     } // get_plugin_version
 
     /**
+     * Check if an update is available.
+     * @return boolean
+     */
+    public static function is_update_available()
+    {
+        foreach (PluginEnum::LIST as $name => $className) {
+            $plugin            = new Plugin($name);
+            $installed_version = self::get_plugin_version($plugin->_plugin->name);
+            // if any plugin needs an update then you need to update
+            if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check all plugins for updates and update them if required.
+     */
+    public static function update_all()
+    {
+        foreach (PluginEnum::LIST as $name => $className) {
+            $plugin            = new Plugin($name);
+            $installed_version = self::get_plugin_version($plugin->_plugin->name);
+            if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
+                if (method_exists($plugin->_plugin, 'upgrade')) {
+                    if ($plugin->_plugin->upgrade()) {
+                        $plugin->set_plugin_version($plugin->_plugin->version);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * get_ampache_db_version
      * This function returns the Ampache database version
      */
@@ -284,4 +321,18 @@ class Plugin
 
         return true;
     } // remove_plugin_version
+
+    /**
+     * Display Plugin Update information and update links.
+     */
+    public static function show_update_available()
+    {
+        $web_path = AmpConfig::get('web_path');
+        echo '<div id="autoupdate">';
+        echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
+        echo '<br />';
+        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $web_path . '/admin/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
+        echo '<br />';
+        echo '</div>';
+    }
 }

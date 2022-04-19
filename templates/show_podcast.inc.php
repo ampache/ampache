@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -33,7 +32,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-/** @var Podcast $podcast */
+/** @var Ampache\Repository\Model\Podcast $podcast */
 /** @var string $object_type */
 
 $browse = new Browse();

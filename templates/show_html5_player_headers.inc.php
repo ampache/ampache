@@ -7,6 +7,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
 global $dic;
+
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $web_path         = AmpConfig::get('web_path');
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
@@ -14,15 +15,13 @@ $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     : "path: '/', samesite: 'Strict'";
 $iframed  = $iframed ?? false;
 $is_share = $is_share ?? false;
+
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
-<?php
-} else { ?>
+<?php } else { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
-<?php
-    }
-
-if (!$iframed) {
+<?php } ?>
+<?php if (!$iframed) {
     require_once Ui::find_template('stylesheets.inc.php'); ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
@@ -46,12 +45,9 @@ function update_action()
 <link href="<?php echo $web_path; ?>/lib/modules/UberViz/style.css" rel="stylesheet" type="text/css">
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
     <script src="<?php echo $web_path; ?>/lib/modules/aurora.js/aurora.js"></script>
-<?php
-} ?>
-<script src="<?php echo $web_path; ?>/lib/components/happyworm-jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
-<script src="<?php echo $web_path; ?>/lib/components/happyworm-jplayer/dist/add-on/jplayer.playlist.min.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/jplayer.ext.js"></script>
-<script src="<?php echo $web_path; ?>/lib/javascript/jplayer.playlist.ext.js"></script>
+<?php } ?>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
 
 <script>
 var jplaylist = new Array();
@@ -357,8 +353,7 @@ function ApplyReplayGain()
     }
 }
 </script>
-<?php
-} ?>
+<?php } ?>
 <script>
 <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
 var wavclicktimer = null;
@@ -400,8 +395,7 @@ function HideWaveform()
 {
     $('.waveform').css('visibility', 'hidden');
 }
-<?php
-    } ?>
+<?php } ?>
 
 var brkey = '';
 var brconn = null;
@@ -544,8 +538,7 @@ window.parent.onbeforeunload = function (evt) {
 
     return null;
 }
-<?php
-    } ?>
+<?php } ?>
 <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
 window.addEventListener('storage', function (event) {
   if (event.key == 'ampache-current-webplayer') {
@@ -557,6 +550,5 @@ window.addEventListener('storage', function (event) {
     }
   }
 });
-<?php
-    } ?>
+<?php } ?>
 </script>

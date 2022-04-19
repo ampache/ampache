@@ -29,6 +29,8 @@ use Ampache\Module\Application\Artist\DeleteAction;
 use Ampache\Module\Application\Artist\ShowAction;
 use Ampache\Module\Application\Artist\ShowAllSongsAction;
 use Ampache\Module\Application\Artist\ShowMissingAction;
+use Ampache\Module\Application\Artist\ShowSongsAction;
+use Ampache\Module\Application\Artist\UpdateFromMusicBrainzAction;
 use Ampache\Module\Application\Artist\UpdateFromTagsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -43,6 +45,8 @@ $dic->get(ApplicationRunner::class)->run(
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
         ShowAllSongsAction::REQUEST_KEY => ShowAllSongsAction::class,
+        ShowSongsAction::REQUEST_KEY => ShowSongsAction::class,
+        UpdateFromMusicBrainzAction::REQUEST_KEY => UpdateFromMusicBrainzAction::class,
         UpdateFromTagsAction::REQUEST_KEY => UpdateFromTagsAction::class,
         ShowMissingAction::REQUEST_KEY => ShowMissingAction::class,
     ],

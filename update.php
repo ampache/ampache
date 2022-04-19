@@ -26,6 +26,7 @@ declare(strict_types=1);
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Update\ShowAction;
 use Ampache\Module\Application\Update\UpdateAction;
+use Ampache\Module\Application\Update\UpdatePluginsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -43,6 +44,7 @@ $dic->get(ApplicationRunner::class)->run(
     [
         ShowAction::REQUEST_KEY => ShowAction::class,
         UpdateAction::REQUEST_KEY => UpdateAction::class,
+        UpdatePluginsAction::REQUEST_KEY => UpdatePluginsAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

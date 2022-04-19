@@ -357,6 +357,7 @@ class Query
             case 'album_artist':
             case 'catalog':
             case 'album':
+            case 'hidden':
                 $this->_state['filter'][$key] = $value;
                 break;
             case 'min_count':
@@ -732,6 +733,7 @@ class Query
             case 'album':
             case 'artist':
             case 'tag':
+            case 'tag_hidden':
             case 'playlist_localplay':
             case 'shoutbox':
             case 'live_stream':
@@ -991,6 +993,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
         $sql = $this->get_sql();
+        //debug_event(self::class, 'get_objects query: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1071,7 +1074,12 @@ class Query
                     break;
                 case 'tag':
                     $this->set_select("`tag`.`id`");
-                    $this->set_join('LEFT', 'tag_map', '`tag_map`.`tag_id`', '`tag`.`id`', 1);
+                    $this->set_filter('hidden', 0);
+                    $sql = "SELECT %%SELECT%% FROM `tag` ";
+                    break;
+                case 'tag_hidden':
+                    $this->set_select("`tag`.`id`");
+                    $this->set_filter('hidden', 1);
                     $sql = "SELECT %%SELECT%% FROM `tag` ";
                     break;
                 case 'wanted':
@@ -1320,6 +1328,7 @@ class Query
     public function get_sql($limit = true)
     {
         $sql = $this->get_base_sql();
+        //debug_event(self::class, 'get_sql query: ' . $sql, 5);
 
         $filter_sql = "";
         $join_sql   = "";
@@ -1336,9 +1345,9 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group') && $this->_state['sort']) {
-            $album_artist = (array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
-            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ";
+        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group')) {
+            $album_artist = (array_key_exists('sort', $this->_state) && array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
+            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ";
         } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
@@ -1592,8 +1601,7 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':
-                        $this->set_join('LEFT', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `album`.`album_artist` IS NOT NULL AND ";
+                        $filter_sql = " `id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
                         break;
                     default:
                         break;
@@ -1695,6 +1703,9 @@ class Query
                         break;
                     case 'tag':
                         $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'hidden':
+                        $filter_sql = " `tag`.`is_hidden` = " . Dba::escape($value) . " AND ";
                         break;
                     default:
                         break;

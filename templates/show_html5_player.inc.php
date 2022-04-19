@@ -73,7 +73,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            swfPath: "<?php echo $web_path; ?>/lib/vendor/happyworm/jplayer/dist/jplayer",
+            swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
             audioFullScreen: true,
             smoothPlayBar: true,

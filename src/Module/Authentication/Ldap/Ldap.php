@@ -261,9 +261,7 @@ class Ldap
                 }
             }
 
-            /* Obtain name and email field. Reconstruct name field to allow
-               custom things like "givenName sn" */
-
+            // Obtain name and email field. Reconstruct name field to allow custom things like "givenName sn"
             $name_field = AmpConfig::get('ldap_name_field', 'cn');
             $name       = $user_entry[strtolower((string)$name_field)][0];
 

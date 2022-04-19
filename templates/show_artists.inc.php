@@ -95,7 +95,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id, $_SESSION['catalog']);
+            $libitem = new Artist($artist_id, $_SESSION['catalog'] ?? 0);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);

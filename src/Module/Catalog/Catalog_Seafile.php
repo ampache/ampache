@@ -50,7 +50,8 @@ class Catalog_Seafile extends Catalog
     private static $description = 'Seafile Remote Catalog';
     private static $table_name  = 'catalog_seafile';
 
-    private $seafile;
+    private int $count = 0;
+    private SeafileAdapter $seafile;
 
     /**
      * get_description
@@ -289,8 +290,7 @@ class Catalog_Seafile extends Catalog
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
-                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.",
-                        5);
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, bad media type for this catalog.", 5);
                 }
 
                 return 0;
@@ -343,8 +343,7 @@ class Catalog_Seafile extends Catalog
                 return $added;
             } catch (Exception $error) {
                 /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_catalog',
-                    sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }
@@ -368,10 +367,15 @@ class Catalog_Seafile extends Catalog
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
+        $is_cached = (is_string($file) && is_file($file));
 
-        debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
-
-        $tempfilename = $this->seafile->download($file, true);
+        if ($is_cached) {
+            debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
+            $tempfilename = $file;
+        } else {
+            debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
+            $tempfilename = $this->seafile->download($file, true);
+        }
 
         if ($gather_types === null) {
             $gather_types = $this->get_gather_types('music');
@@ -386,20 +390,28 @@ class Catalog_Seafile extends Catalog
             $rename_pattern,
             true
         );
-        $vainfo->forceSize($file->size);
+        if (!$is_cached) {
+            $vainfo->forceSize($file->size);
+        }
         $vainfo->get_info();
-
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        // maybe fix stat-ing-nonexistent-file bug?
-        $vainfo->tags['general']['size'] = (int)($file->size);
+        if (!$is_cached) {
+            $vainfo->tags['general']['size'] = (int)($file->size);
+        }
 
-        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
+        $results = ($is_cached)
+            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
+            : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
         // Set the remote path
         $results['catalog'] = $this->id;
+        $results['file']    = ($is_cached)
+            ? $file
+            : $this->seafile->to_virtual_path($file);
 
-        $results['file'] = $this->seafile->to_virtual_path($file);
+        // remove the temp file
+        self::clean_tmp_file($tempfilename);
 
         return $results;
     }
@@ -465,6 +477,10 @@ class Catalog_Seafile extends Catalog
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
+        // if you have the file it's all good
+        if (is_file($media->file)) {
+            return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
+        }
         if ($this->seafile->prepare()) {
             $fileinfo = $this->seafile->from_virtual_path($media->file);
 
@@ -477,6 +493,20 @@ class Catalog_Seafile extends Catalog
 
         return null;
     }
+
+    /**
+     * clean_tmp_file
+     *
+     * Clean up temp files after use.
+     *
+     * @param string $tempfilename
+     */
+    public function clean_tmp_file($tempfilename)
+    {
+        if (file_exists($tempfilename)) {
+            unlink($tempfilename);
+        }
+    } // clean_file
 
     /**
      * clean_catalog_proc

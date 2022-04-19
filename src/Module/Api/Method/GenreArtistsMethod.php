@@ -75,7 +75,6 @@ final class GenreArtistsMethod
                 echo Xml_Data::artists($artists, array(), $user->id);
         }
 
-
         return true;
     }
 }

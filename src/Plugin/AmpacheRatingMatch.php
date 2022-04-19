@@ -73,7 +73,6 @@ class AmpacheRatingMatch
      */
     public function install()
     {
-
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('ratingmatch_stars')) {
             return false;
@@ -111,6 +110,7 @@ class AmpacheRatingMatch
         Preference::delete('ratingmatch_star4_rule');
         Preference::delete('ratingmatch_star5_rule');
         Preference::delete('ratingmatch_flag_rule');
+        Preference::delete('ratingmatch_write_tags');
     } // uninstall
 
     /**
@@ -141,7 +141,6 @@ class AmpacheRatingMatch
         return true;
     } // upgrade
 
-
     /**
      * save_rating
      * Rate an artist and album after rating the song
@@ -152,26 +151,28 @@ class AmpacheRatingMatch
     {
         if ($this->min_stars > 0 && $new_rating >= $this->min_stars) {
             if ($rating->type == 'song') {
-                $song   = new Song($rating->id);
-                $artist = new Rating($song->artist, 'artist');
-                $album  = new Rating($song->album, 'album');
-
-                $rating_artist = $artist->get_user_rating($this->user->id);
-                $rating_album  = $album->get_user_rating($this->user->id);
-                if ($rating_artist < $new_rating) {
-                    $artist->set_rating($new_rating, $this->user->id);
+                $song = new Song($rating->id);
+                // rate all the song artists (If there are more than one)
+                foreach (Song::get_parent_array($song->id) as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist < $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
                 }
-                if ($rating_album < $new_rating) {
-                    $album->set_rating($new_rating, $this->user->id);
-                }
+                $album = new Album($song->album);
+                Rating::set_rating_for_group($new_rating, $album->album_suite, $this->user->id);
             }
             if ($rating->type == 'album') {
-                $album  = new Album($rating->id);
-                $artist = new Rating($album->album_artist, 'artist');
-
-                $rating_artist = $artist->get_user_rating($this->user->id);
-                if ($rating_artist <= $new_rating) {
-                    $artist->set_rating($new_rating, $this->user->id);
+                $album = new Album($rating->id);
+                Rating::set_rating_for_group($new_rating, $album->album_suite, $this->user->id);
+                // rate all the album artists (If there are more than one)
+                foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                    $artist        = new Rating($artist_id, 'artist');
+                    $rating_artist = $artist->get_user_rating($this->user->id);
+                    if ($rating_artist <= $new_rating) {
+                        $artist->set_rating($new_rating, $this->user->id);
+                    }
                 }
             }
         }
@@ -194,13 +195,14 @@ class AmpacheRatingMatch
     public function set_flag($song, $flagged)
     {
         if ($this->match_flags > 0 && $flagged) {
-            $album  = new Userflag($song->album, 'album');
-            $artist = new Userflag($song->artist, 'artist');
-            if (!$album->get_flag($this->user->id, false)) {
-                $album->set_flag($flagged, $this->user->id);
-            }
-            if (!$artist->get_flag($this->user->id, false)) {
-                $artist->set_flag($flagged, $this->user->id);
+            $album = new Album($song->album);
+            Userflag::set_flag_for_group($flagged, $album->album_suite, $this->user->id);
+            // rate all the album artists (If there are more than one)
+            foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
+                $artist = new Userflag($song->artist, 'artist');
+                if (!$artist->get_flag($this->user->id, false)) {
+                    $artist->set_flag($flagged, $this->user->id);
+                }
             }
         }
     } // set_flag

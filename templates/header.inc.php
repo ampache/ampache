@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -513,6 +514,10 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                                 AutoUpdate::show_new_version();
                                 echo '<br />';
                             }
+                            if (Plugin::is_update_available()) {
+                                Plugin::show_update_available();
+                                echo '<br />';
+                            }
                             $count_temp_playlist = (!empty($current_user)) ? count($current_user->playlist->get_items()) : 0;
 
                             if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
@@ -521,6 +526,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                                 <br />
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
                                 <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
+                                <br />
                             </div>
                 <?php }
                             echo '</div>';

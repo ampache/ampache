@@ -61,6 +61,10 @@ abstract class playlist_object extends database_object implements library_item
      */
     public $link;
     /**
+     * @var bool $has_art
+     */
+    public $has_art;
+    /**
      * @var string $f_link
      */
     public $f_link;
@@ -92,6 +96,21 @@ abstract class playlist_object extends database_object implements library_item
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
         $this->get_f_link();
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = ($this instanceof Search)
+                ? Art::has_db($this->id, 'search')
+                : Art::has_db($this->id, 'playlist');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * has_access

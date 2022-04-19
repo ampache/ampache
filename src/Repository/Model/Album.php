@@ -61,6 +61,11 @@ class Album extends database_object implements library_item
     public $album_artist;
 
     /**
+     * @var array $album_artists
+     */
+    public array $album_artists;
+
+    /**
      * @var integer $disk
      */
     public $disk;
@@ -161,9 +166,19 @@ class Album extends database_object implements library_item
     public $artist_count;
 
     /**
+     * @var integer $song_artist_count
+     */
+    public $song_artist_count;
+
+    /**
      * @var integer $total_count
      */
     public $total_count;
+
+    /**
+     * @var bool $has_art
+     */
+    public $has_art;
 
     /**
      * @var string $f_artist_name
@@ -279,15 +294,15 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->total_duration = (int)$this->time;
-        $this->total_count    = (int)$this->total_count;
-        $this->addition_time  = (int)$this->addition_time;
-        $this->song_count     = (int)$this->song_count;
-        $this->artist_count   = (int)$this->artist_count;
+        $this->total_duration    = (int)$this->time;
+        $this->total_count       = (int)$this->total_count;
+        $this->addition_time     = (int)$this->addition_time;
+        $this->song_count        = (int)$this->song_count;
+        $this->artist_count      = (int)$this->artist_count;
+        $this->song_artist_count = (int)$this->song_artist_count;
         // suite is used even without grouping
         $albumRepository      = $this->getAlbumRepository();
         $this->album_suite    = $albumRepository->getAlbumSuite($this);
-
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
@@ -367,12 +382,9 @@ class Album extends database_object implements library_item
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
             // overwrite so you can get something
-            $this->album_artist = $results['artist_id'];
+            $this->album_artist = $results['artist_id'] ?? null;
         }
-        $art = new Art($this->id, 'album');
-        $art->has_db_info();
-        $results['has_art']   = make_bool($art->raw);
-        $results['has_thumb'] = make_bool($art->thumb);
+        $this->has_art();
 
         if (AmpConfig::get('show_played_times')) {
             $results['total_count'] = $this->total_count;
@@ -580,6 +592,7 @@ class Album extends database_object implements library_item
         $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
+        $this->album_artists  = self::get_parent_array($this->id, $this->album_artist);
 
         if ($details) {
             /* Pull the advanced information */
@@ -587,17 +600,14 @@ class Album extends database_object implements library_item
             foreach ($data as $key => $value) {
                 $this->$key = $value;
             }
-
-            if ($this->get_album_artist_fullname() != "") {
-                $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->get_album_artist_name()) . "\">" . scrub_out($this->f_album_artist_name) . "</a>";
-            }
-
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
         }
         // set link and f_link
+        $this->get_album_artist_array();
         $this->get_f_link();
         $this->get_artist_fullname();
+        $this->get_f_album_artist_link();
         $this->get_f_artist_link();
 
         if (!$this->year) {
@@ -607,6 +617,19 @@ class Album extends database_object implements library_item
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
     } // format
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'album');
+        }
+
+        return $this->has_art;
+    }
 
     /**
      * Get item keywords for metadata searches.
@@ -628,12 +651,12 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => ($this->f_album_artist_name)
+            'value' => ($this->get_album_artist_fullname())
         );
         $keywords['album'] = array(
             'important' => true,
             'label' => T_('Album'),
-            'value' => $this->get_fullname()
+            'value' => $this->get_fullname(true)
         );
         $keywords['year'] = array(
             'important' => false,
@@ -647,18 +670,22 @@ class Album extends database_object implements library_item
     /**
      * Get item fullname.
      * @param bool $simple
+     * @param bool $force_year
      * @return string
      */
-    public function get_fullname($simple = false)
+    public function get_fullname($simple = false, $force_year = false)
     {
         // return the basic name without all the wild formatting
         if ($simple) {
             return trim(trim($this->prefix . ' ' . trim($this->name)));
         }
+        if ($force_year && $this->year > 0) {
+            return trim(trim($this->prefix . ' ' . trim($this->name))) . " (" . $this->year . ")";
+        }
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
             $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
-            // Looking if we need to display the release year
+            // Album pages should show a year and looking if we need to display the release year
             if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year) {
                 $this->f_name .= " (" . $this->year . ")";
             }
@@ -701,6 +728,29 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Get item f_album_artist_link.
+     * @return string
+     */
+    public function get_f_album_artist_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_album_artist_link)) {
+            $this->f_album_artist_link = '';
+            $web_path                  = AmpConfig::get('web_path');
+            if (empty($this->album_artists)) {
+                $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
+            }
+            foreach ($this->album_artists as $artist_id) {
+                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                $this->f_album_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+            }
+            $this->f_album_artist_link = rtrim($this->f_album_artist_link, ",&nbsp");
+        }
+
+        return $this->f_album_artist_link;
+    }
+
+    /**
      * Get item f_artist_link.
      * @return string
      */
@@ -709,7 +759,8 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
             if ($this->artist_count == '1') {
-                $this->f_artist_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\">" . scrub_out($this->get_artist_fullname()) . "</a>";
+                $artist_fullname     = scrub_out($this->get_artist_fullname());
+                $this->f_artist_link = "<a href=\"" . $this->get_link() . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>";
             } else {
                 $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
             }
@@ -737,6 +788,25 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * get_disk
+     *
+     * Returns the disk id for an album (default to one)
+     * @param int $album_id
+     * @return int|null
+     */
+    public static function get_disk($album_id)
+    {
+        $sql        = "SELECT `disk` FROM `album` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($album_id));
+        $results    = Dba::fetch_assoc($db_results);
+        if (!$results) {
+            return null;
+        }
+
+        return self::sanitize_disk($results['disk']);
+    }
+
+    /**
      * Get item album_artist fullname.
      * @return string
      */
@@ -744,14 +814,47 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_album_artist_name)) {
             if ($this->album_artist) {
-                $album_artist              = new Artist($this->album_artist);
-                $this->f_album_artist_name = $album_artist->get_fullname();
+                $this->f_album_artist_name = Artist::get_fullname_by_id($this->album_artist);
             } else {
                 $this->f_album_artist_name = '';
             }
         }
 
         return $this->f_album_artist_name;
+    }
+
+    /**
+     * Get item album_artist array.
+     * @return string
+     */
+    public function get_album_artist_array()
+    {
+        if (empty($this->album_artists)) {
+            if ($this->album_artist) {
+                $this->f_album_artist_name = Artist::get_fullname_by_id($this->album_artist);
+            } else {
+                $this->f_album_artist_name = '';
+            }
+        }
+
+        return $this->f_album_artist_name;
+    }
+
+    /**
+     * Get the primary album_artist
+     * @param int $album_id
+     * @return int|null
+     */
+    public static function get_album_artist($album_id)
+    {
+        $sql        = "SELECT DISTINCT `album_artist` FROM `album` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($album_id));
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int)$row['album_artist'];
+        }
+
+        return null;
     }
 
     /**
@@ -783,6 +886,27 @@ class Album extends database_object implements library_item
         }
 
         return null;
+    }
+
+    /**
+     * Get parent album artists.
+     * @param int $album_id
+     * @param int $primary_id
+     * @return array
+     */
+    public static function get_parent_array($album_id, $primary_id)
+    {
+        $results    = array();
+        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
+        $db_results = Dba::read($sql, array($album_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['object_id'];
+        }
+        $primary = ((int)$primary_id > 0)
+            ? array((int)$primary_id)
+            : array();
+
+        return array_unique(array_merge($primary, $results));
     }
 
     /**
@@ -975,22 +1099,24 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $name           = (isset($data['name'])) ? $data['name'] : $this->name;
-        $album_artist   = (isset($data['album_artist'])) ? (int) $data['album_artist'] : $this->album_artist;
-        $year           = (isset($data['year'])) ? $data['year'] : $this->year;
-        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
-        $mbid           = (isset($data['mbid'])) ? $data['mbid'] : $this->mbid;
-        $mbid_group     = (isset($data['mbid_group'])) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type   = (isset($data['release_type'])) ? $data['release_type'] : $this->release_type;
-        $release_status = (isset($data['release_status'])) ? $data['release_status'] : $this->release_status;
-        $barcode        = (isset($data['barcode'])) ? $data['barcode'] : $this->barcode;
-        $catalog_number = (isset($data['catalog_number'])) ? $data['catalog_number'] : $this->catalog_number;
-        $original_year  = (isset($data['original_year'])) ? $data['original_year'] : $this->original_year;
+        //debug_event(self::class, "update: " . print_r($data, true), 4);
+        $name           = $data['name'] ?? $this->name;
+        $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
+        $year           = (int)$data['year'] ?? 0;
+        $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : null;
+        $mbid           = $data['mbid'] ?? null;
+        $mbid_group     = $data['mbid_group'] ?? null;
+        $release_type   = $data['release_type'] ?? null;
+        $release_status = $data['release_status'] ?? null;
+        $barcode        = $data['barcode'] ?? null;
+        $catalog_number = $data['catalog_number'] ?? null;
+        $original_year  = $data['original_year'] ?? null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
-        if (!empty($data['album_artist_name'])) {
+        if (array_key_exists('album_artist_name', $data) && !empty($data['album_artist_name'])) {
             $album_artist = Artist::check($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
+            $this->album_artist = $album_artist;
         }
 
         $current_id = $this->id;
@@ -1008,14 +1134,14 @@ class Album extends database_object implements library_item
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
                 Song::update_utime($song_id);
+                Stats::migrate('album', $this->id, $album_id, $song_id);
 
                 $this->getSongTagWriter()->write(new Song($song_id));
             }
             $current_id = $album_id;
             $updated    = true;
-            Stats::migrate('album', $this->id, $album_id);
             Useractivity::migrate('album', $this->id, $album_id);
-            Recommendation::migrate('album', $this->id, $album_id);
+            //Recommendation::migrate('album', $this->id);
             Share::migrate('album', $this->id, $album_id);
             Shoutbox::migrate('album', $this->id, $album_id);
             Tag::migrate('album', $this->id, $album_id);
@@ -1039,36 +1165,37 @@ class Album extends database_object implements library_item
                 self::update_field('prefix', $aPrefix, $this->id);
             }
 
-            if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
+            if ($album_artist != $this->album_artist) {
                 self::update_field('album_artist', $album_artist, $this->id);
+                self::add_album_map($this->id, 'album', $album_artist);
+                self::remove_album_map($this->id, 'album', $this->album_artist);
             }
-            if (!empty($year) && $year != $this->year) {
+            if ($year != $this->year) {
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
-
                     $this->getSongTagWriter()->write(new Song($song_id));
                 }
             }
-            if (!empty($disk) && $disk != $this->disk) {
+            if ($disk != $this->disk) {
                 self::update_field('disk', $disk, $this->id);
             }
-            if (!empty($mbid) && $mbid != $this->mbid) {
+            if ($mbid != $this->mbid) {
                 self::update_field('mbid', $mbid, $this->id);
             }
-            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+            if ($mbid_group != $this->mbid_group) {
                 self::update_field('mbid_group', $mbid_group, $this->id);
             }
-            if (!empty($release_type) && $release_type != $this->release_type) {
+            if ($release_type != $this->release_type) {
                 self::update_field('release_type', $release_type, $this->id);
             }
-            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+            if ($catalog_number != $this->catalog_number) {
                 self::update_field('catalog_number', $catalog_number, $this->id);
             }
-            if (!empty($barcode) && $barcode != $this->barcode) {
+            if ($barcode != $this->barcode) {
                 self::update_field('barcode', $barcode, $this->id);
             }
-            if (!empty($original_year) && $original_year != $this->original_year) {
+            if ($original_year != $this->original_year) {
                 self::update_field('original_year', $original_year, $this->id);
             }
         }
@@ -1127,8 +1254,13 @@ class Album extends database_object implements library_item
      */
     private static function update_field($field, $value, $album_id)
     {
-        $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $album_id));
+        if ($value == null) {
+            $sql = "UPDATE `album` SET `" . $field . "` = NULL WHERE `id` = ?";
+            Dba::write($sql, array($album_id));
+        } else {
+            $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
+            Dba::write($sql, array($value, $album_id));
+        }
     }
 
     /**
@@ -1149,48 +1281,113 @@ class Album extends database_object implements library_item
             }
         }
         foreach ($results as $album_id) {
-            $artist     = 0;
+            $artist_id  = 0;
             $sql        = "SELECT MIN(`artist`) AS `artist` FROM `song` WHERE `album` = ? GROUP BY `album` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
             $db_results = Dba::read($sql, array($album_id));
 
             // these are albums that only have 1 artist
             while ($row = Dba::fetch_assoc($db_results)) {
-                $artist = (int)$row['artist'];
+                $artist_id = (int)$row['artist'];
             }
 
             // Update the album
-            if ($artist > 0) {
-                debug_event(self::class, 'Found album_artist {' . $artist . '} for: ' . $album_id, 5);
-                Album::update_field('album_artist', $artist, $album_id);
+            if ($artist_id > 0) {
+                debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
+                self::update_field('album_artist', $artist_id, $album_id);
+                Artist::add_artist_map($artist_id, 'album', $album_id);
+                self::add_album_map($album_id, 'album', $artist_id);
             }
         }
     }
 
     /**
+     * Add the album map for a single item
+     */
+    public static function add_album_map($album_id, $object_type, $object_id)
+    {
+        if ((int)$album_id > 0 && (int)$object_id > 0) {
+            debug_event(__CLASS__, "add_album_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
+            $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($album_id, $object_type, $object_id));
+        }
+    }
+
+    /**
+     * Delete the album map for a single item
+     */
+    public static function remove_album_map($album_id, $object_type, $object_id)
+    {
+        if ((int)$album_id > 0 && (int)$object_id > 0) {
+            debug_event(__CLASS__, "remove_album_map album_id {" . $album_id . "} $object_type {" . $object_id . "}", 5);
+            $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_type` = ? AND `object_id` = ?;";
+            Dba::write($sql, array($album_id, $object_type, $object_id));
+        }
+    }
+
+    /**
+     * get_album_map
+     *
+     * This returns an ids of artists that have songs/albums mapped
+     * @param string $object_type
+     * @param int $album_id
+     * @return integer[]
+     */
+    public static function get_artist_map($object_type, $album_id)
+    {
+        $results    = array();
+        $sql        = "SELECT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?";
+        $db_results = Dba::read($sql, array($object_type, $album_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['object_id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * update_album_counts
      *
-     * @param integer $album_id
      */
-    public static function update_album_counts($album_id)
+    public static function update_album_counts()
     {
-        if ($album_id > 0) {
-            $params = array($album_id);
-            // album.time
-            $sql = "UPDATE `album`, (SELECT sum(`song`.`time`) as `time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`id` = `song`.`album`;";
-            Dba::write($sql, $params);
-            // album.total_count
-            $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`id` = `object_count`.`object_id`;";
-            Dba::write($sql, $params);
-            // album.addition_time
-            $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` WHERE `song`.`album` = ? GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `song`.`album` = `album`.`id`;";
-            Dba::write($sql, $params);
-            // album.song_count
-            $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`id` = `song`.`album`;";
-            Dba::write($sql, $params);
-            // album.artist_count
-            $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`artist_count` = `song`.`artist_count` WHERE `album`.`id` = `song`.`album`;";
-            Dba::write($sql, $params);
+        debug_event(__CLASS__, 'update_album_counts', 5);
+        // album.time
+        $sql = "UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`time` != `song`.`time` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        // album.addition_time
+        $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
+        Dba::write($sql);
+        // album.total_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `album`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
+        // album.total_count 0 plays
+        $sql = "UPDATE `album`, (SELECT 0 AS `total_count`, `album`.`id` FROM `album` WHERE `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`)) AS `object_count` SET `album`.`total_count` = `object_count`.`total_count` WHERE `album`.`total_count` != `object_count`.`total_count` AND `object_count`.`id` = `album`.`id`;";
+        Dba::write($sql);
+        // album.song_count
+        $sql = "UPDATE `album`, (SELECT COUNT(`song`.`id`) AS `song_count`, `album` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `album`) AS `song` SET `album`.`song_count` = `song`.`song_count` WHERE `album`.`song_count` != `song`.`song_count` AND `album`.`id` = `song`.`album`;";
+        Dba::write($sql);
+        // album.artist_count
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`artist_count` = `album_map`.`artist_count` WHERE `album`.`artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id`;";
+        Dba::write($sql);
+        // album.song_artist_count
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT(`album_map`.`object_id`)) AS `artist_count`, `album_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `album_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' GROUP BY `album_id`) AS `album_map` SET `album`.`song_artist_count` = `album_map`.`artist_count` WHERE `album`.`song_artist_count` != `album_map`.`artist_count` AND `album`.`id` = `album_map`.`album_id`;";
+        Dba::write($sql);
+    }
+
+    /**
+     * does the item have a single album artist and song artist?
+     * @return int
+     */
+    public function get_artist_count()
+    {
+        $sql        = "SELECT COUNT(DISTINCT(`object_id`)) AS `artist_count` FROM `album_map` WHERE `album_id` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        $row        = Dba::fetch_assoc($db_results);
+        if (!empty($row)) {
+            return (int)$row['artist_count'];
         }
+
+        return 0;
     }
 
     /**
@@ -1201,10 +1398,10 @@ class Album extends database_object implements library_item
      */
     public static function sanitize_disk($disk)
     {
-        $alphabet = range('A', 'Z');
         if ((int)$disk == 0) {
             // A is 0 but we want to start at disk 1
-            $disk = (int)array_search(strtoupper((string)$disk), $alphabet) + 1;
+            $alphabet = range('A', 'Z');
+            $disk     = (int)array_search(strtoupper((string)$disk), $alphabet) + 1;
         }
 
         return (int)$disk;

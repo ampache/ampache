@@ -307,14 +307,14 @@ class Label extends database_object implements library_item
             return false;
         }
 
-        $name     = isset($data['name']) ? $data['name'] : $this->name;
-        $mbid     = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $category = isset($data['category']) ? $data['category'] : $this->category;
-        $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $address  = isset($data['address']) ? $data['address'] : $this->address;
-        $country  = isset($data['country']) ? $data['country'] : $this->country;
-        $email    = isset($data['email']) ? $data['email'] : $this->email;
-        $website  = isset($data['website']) ? $data['website'] : $this->website;
+        $name     = $data['name'] ?? $this->name;
+        $mbid     = $data['mbid'] ?? null;
+        $category = $data['category'] ?? null;
+        $summary  = $data['summary'] ?? null;
+        $address  = $data['address'] ?? null;
+        $country  = $data['country'] ?? null;
+        $email    = $data['email'] ?? null;
+        $website  = $data['website'] ?? null;
         $active   = isset($data['active']) ? (int)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";

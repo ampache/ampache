@@ -88,7 +88,6 @@ class AmpachePersonalFavorites
         Preference::delete('personalfav_display');
         Preference::delete('personalfav_playlist');
         Preference::delete('personalfav_smartlist');
-        Preference::delete('personalfav_gridview');
 
         return true;
     }

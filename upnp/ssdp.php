@@ -17,7 +17,6 @@ $factory = new Factory($loop);
 $socket = $factory->createReceiver($address);
 // $hex = new Hexdump();
 
-
 $socket->on('message', function ($data, $remote) use ($socket) {
     //debug_event('upnp', "Received message", 5);
     $unpacked = explode(PHP_EOL, $data);

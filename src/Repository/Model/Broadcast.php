@@ -183,9 +183,12 @@ class Broadcast extends database_object implements library_item
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
+        $name        = $data['title'] ?? $this->name;
+        $description = $data['description'] ?? null;
+        $private     = !empty($data['private']);
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
-        $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
+        $params = array($name, $description, $private, $this->id);
         Dba::write($sql, $params);
 
         return $this->id;

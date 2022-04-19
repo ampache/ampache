@@ -85,9 +85,9 @@ $democratic = Democratic::get_current_playlist();
         } ?>
     </td>
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
-    <td class="cel_title"><?php echo $media->f_link; ?></td>
+    <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
-    <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
+    <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if (Access::check('interface', 100)) { ?>
     <td class="cel_admin">

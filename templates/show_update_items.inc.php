@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 /** @var array|null $catalog_id */
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
-$return_id = Catalog::update_single_item($type, $object_id);
+$return_id = Catalog::update_single_item($type, $object_id)['object_id'];
 //The target URL has changed so it needs to be updated
 if ($object_id != $return_id) {
     $object_id  = $return_id;

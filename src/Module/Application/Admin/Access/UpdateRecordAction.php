@@ -73,7 +73,6 @@ final class UpdateRecordAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-
         $this->ui->showHeader();
 
         $data     = $request->getParsedBody();

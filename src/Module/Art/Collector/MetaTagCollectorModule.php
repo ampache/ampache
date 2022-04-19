@@ -284,8 +284,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $data;
     }
 
-
-
     /**
      * Get the type of picture being returned (https://id3.org/id3v2.3.0#Attached_picture)
      * Flac also uses the id3.org specs.

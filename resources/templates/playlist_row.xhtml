@@ -1,0 +1,59 @@
+<html>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+            <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+                <tal:block tal:replace="structure PLAYLIST/getDirectplayButton">DIRECTPLAY</tal:block>
+                <tal:block tal:condition="PLAYLIST/canAutoplayNext" tal:replace="structure PLAYLIST/getAutoplayNextButton">PLAY NEXT</tal:block>
+                <tal:block tal:condition="PLAYLIST/canAppendNext" tal:replace="structure PLAYLIST/getAppendNextButton">APPEND NEXT</tal:block>
+            </tal:block>
+        </div>
+    </td>
+    <td class="${CLASS_COVER}" tal:condition="IS_SHOW_ART" tal:content="structure PLAYLIST/getArt">COVER</td>
+    <td class="cel_playlist" tal:content="structure PLAYLIST/getPlaylistLink">PLAYLIST</td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+            <tal:block tal:condition="IS_SHOW_PLAYLIST_ADD">
+                <tal:block tal:replace="structure PLAYLIST/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
+                <tal:block tal:replace="structure PLAYLIST/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
+                <a
+                        id="add_playlist_${PLAYLIST/getId}"
+                        onclick="showPlaylistDialog(event, 'playlist', '${PLAYLIST/getId}')"
+                        tal:content="structure PLAYLIST/getAddToPlaylistIcon"
+                >ADD TO PLAYLIST</a>
+            </tal:block>
+        </span>
+    </td>
+    <td class="cel_last_update" tal:content="structure PLAYLIST/getLastUpdate">LAST UPDATE</td>
+    <td class="cel_type" tal:content="structure PLAYLIST/getType">TYPE</td>
+    <td class="cel_medias" tal:content="structure PLAYLIST/getMediaCount">COUNT</td>
+    <td class="cel_ratings" tal:condition="USING_RATINGS">
+        <span class="cel_rating" id="rating_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getRating">RATING</span>
+        <span class="cel_userflag" id="userflag_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getUserFlags">USERFLAGS</span>
+    </td>
+    <td class="cel_action">
+        <tal:block tal:condition="PLAYLIST/canShare" tal:replace="structure PLAYLIST/getShareUi">SHARE</tal:block>
+
+        <a
+                class="nohtml"
+                tal:condition="PLAYLIST/canBatchDownload"
+                tal:attributes="href PLAYLIST/getBatchDownloadUrl"
+                tal:content="structure PLAYLIST/getBatchDownloadIcon"
+        >BATCH DOWNLOAD</a>
+
+        <a
+                tal:condition="PLAYLIST/canBeRefreshed"
+                tal:attributes="href PLAYLIST/getRefreshUrl"
+                tal:content="structure PLAYLIST/getRefreshIcon"
+        >REFRESH FROM SMARTLIST</a>
+
+        <a
+                tal:condition="PLAYLIST/isEditable"
+                id="edit_playlist_${PLAYLIST/getId}"
+                onclick="showEditDialog('playlist_row', '${PLAYLIST/getId}', 'edit_playlist_${PLAYLIST/getId}', '${PLAYLIST/getEditButtonTitle}', 'playlist_row_')"
+                tal:content="structure PLAYLIST/getEditIcon"
+        >EDIT</a>
+
+        <tal:block tal:condition="PLAYLIST/canBeDeleted" tal:replace="structure PLAYLIST/getDeletionButton">DELETION</tal:block>
+    </td>
+</html>

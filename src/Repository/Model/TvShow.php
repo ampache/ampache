@@ -52,7 +52,6 @@ class TvShow extends database_object implements library_item
     public $link;
     public $f_link;
 
-
     // Constructed vars
     private static $_mapcache = array();
 
@@ -136,7 +135,7 @@ class TvShow extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
+            $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` AS `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -385,9 +384,9 @@ class TvShow extends database_object implements library_item
     {
         // Save our current ID
         $current_id = $this->id;
-        $name       = isset($data['name']) ? $data['name'] : $this->name;
-        $year       = isset($data['year']) ? $data['year'] : $this->year;
-        $summary    = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $name       = $data['name'] ?? $this->name;
+        $year       = $data['year'] ?? $this->year;
+        $summary    = $data['summary'] ?? $this->summary;
 
         // Check if name is different than current name
         if ($this->name != $name || $this->year != $year) {
@@ -402,7 +401,7 @@ class TvShow extends database_object implements library_item
                 $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
-                Recommendation::migrate('tvshow', $this->id, (int)$tvshow_id);
+                //Recommendation::migrate('tvshow', $this->id);
                 Share::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Shoutbox::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Tag::migrate('tvshow', $this->id, (int)$tvshow_id);

@@ -296,6 +296,11 @@ class SongViewAdapterTest extends MockeryTestCase
 
         $this->song->f_artist_link = $value;
 
+        $this->song->shouldReceive('get_f_artist_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
         $this->assertSame(
             $value,
             $this->subject->getArtistLink()

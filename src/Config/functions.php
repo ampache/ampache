@@ -932,7 +932,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
         $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
-    $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
+    $sql    = "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` ";
     $params = array();
     if ($user_id !== null) {
         $sql .= "WHERE `user` = ? ";
@@ -949,13 +949,11 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     }
 
     while ($row = Dba::fetch_assoc($db_results)) {
-        $selected    = '';
-        $artist_name = trim((string) $row['prefix'] . " " . $row['name']);
-        if ($row['id'] == $artist_id) {
-            $selected = "selected=\"selected\"";
-        }
+        $selected = ($row['id'] == $artist_id)
+            ? "selected=\"selected\""
+            : '';
 
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -1188,7 +1186,6 @@ function show_user_select($name, $selected = '', $style = '')
 
     echo "</select>\n";
 } // show_user_select
-
 
 function xoutput_headers()
 {

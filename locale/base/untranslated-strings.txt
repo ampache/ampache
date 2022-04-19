@@ -1,0 +1,20 @@
+
+#: ../../resources/untranslated-strings.txt:3
+msgid "Connected Users"
+msgstr ""
+
+#: ../../resources/untranslated-strings.txt:7
+msgid "Catalog Size"
+msgstr ""
+
+#: ../../resources/untranslated-strings.txt:11
+msgid "Catalog Time"
+msgstr ""
+
+#: ../../resources/untranslated-strings.txt:15
+msgid "Total Users"
+msgstr ""
+
+#: ../../resources/untranslated-strings.txt:19
+msgid "Update Now!"
+msgstr ""

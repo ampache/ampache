@@ -552,6 +552,9 @@ class Catalog_local extends Catalog
                 $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
+        // update the counts too
+        Album::update_album_counts();
+        Artist::update_artist_counts();
 
         /* Update the Catalog last_update */
         $this->update_last_add();
@@ -582,24 +585,27 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $stats         = self::get_stats($this->id);
-        $number        = $stats['items'];
+        $stats         = self::get_server_counts(0);
+        $number        = 0;
         $total_updated = 0;
         $this->count   = 0;
 
-        /** @var Song|Video $media_type */
-        foreach (array(Video::class, Song::class) as $media_type) {
-            $total = $stats['items'];
+        /** @var Album|Video $media_type */
+        foreach (array(Video::class, Album::class) as $media_type) {
+            $type  = ObjectTypeToClassNameMapper::reverseMap($media_type);
+            $total = $stats[$type];
             if ($total == 0) {
                 continue;
             }
-            $chunks = (int)floor($total / 10000);
+            $number = $number + $total;
+            $chunks = (int)floor($total / 1000);
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
                     $media_type::clear_cache();
                 }
-                $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
+                debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $type . " on chunk $chunk", 5);
+                $total_updated += $this->_verify_chunk($type, $chunk, 1000);
             }
         }
 
@@ -620,13 +626,12 @@ class Catalog_local extends Catalog
      */
     private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "catalog " . $this->id . " starting verify on chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql = ($tableName == 'song')
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . " AND (`song`.`update_time` < `catalog`.`last_update` OR `song`.`addition_time` > `catalog`.`last_update`)) ORDER BY `song`.`album`, `song`.`file` LIMIT $count, $chunk_size"
-            : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `$tableName`.`update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+        $sql = ($tableName == 'album')
+            ? "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size"
+            : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `min_update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
@@ -636,6 +641,7 @@ class Catalog_local extends Catalog
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
+            /** @var Album|Video $class_name */
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
@@ -656,16 +662,13 @@ class Catalog_local extends Catalog
             }
             $file_time = filemtime($row['file']);
             // check the modification time on the file to see if it's worth checking the tags.
-            if ($verify_by_time && ($this->last_update > $file_time || $row['update_time'] > $file_time)) {
+            if ($verify_by_time && ($this->last_update > $file_time || $row['`min_update_time`'] > $file_time)) {
                 continue;
             }
 
-            $media = new $class_name($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
-            if ($info['change']) {
+            if (self::update_single_item($tableName, $row['id'], true)['change'] == true) {
                 $changed++;
             }
-            unset($info);
         }
 
         Ui::update_text('verify_count_' . $this->id, $count);
@@ -690,16 +693,17 @@ class Catalog_local extends Catalog
         }
 
         $dead_total  = 0;
-        $stats       = self::get_stats($this->id);
+        $stats       = self::get_server_counts(0);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats['items'];
+            $total = $stats[$media_type];
             if ($total == 0) {
                 continue;
             }
             $chunks = floor($total / 10000);
             $dead   = array();
             foreach (range(0, $chunks) as $chunk) {
+                debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk", 5);
                 $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             }
 
@@ -735,7 +739,6 @@ class Catalog_local extends Catalog
      */
     private function _clean_chunk($media_type, $chunk, $chunk_size)
     {
-        debug_event('local.catalog', "catalog " . $this->id . " Starting clean on chunk $chunk", 5);
         $dead  = array();
         $count = $chunk * $chunk_size;
 
@@ -752,20 +755,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_count_' . $this->id, $count);
                 Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
-            $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
-            if ($file_info < 1) {
-                debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
-                /* HINT: filename (file path) */
-                AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $results['file']));
-
-                // Store it in an array we'll delete it later...
-                $dead[] = $results['id'];
-            } else {
-                // if error
-                if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
-                    debug_event('local.catalog', $results['file'] . ' is not readable, but does exist', 1);
-                }
-            }
+            self::clean_file($results['file'], $media_type);
         }
 
         return $dead;
@@ -787,7 +777,7 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $params    = array($object_id);
+            $params = array($object_id);
             switch ($media_type) {
                 case 'song':
                     $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` = ?;";
@@ -861,12 +851,12 @@ class Catalog_local extends Catalog
             }
         }
 
+        $is_duplicate = false;
         if (count($this->get_gather_types('music')) > 0) {
             if (AmpConfig::get('catalog_check_duplicate')) {
                 if (Song::find($results)) {
-                    debug_event('local.catalog', 'skipping_duplicate ' . $file, 5);
-
-                    return false;
+                    debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
+                    $is_duplicate = true;
                 }
             }
 
@@ -922,6 +912,10 @@ class Catalog_local extends Catalog
                 $song    = new Song($song_id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
+            }
+            // disable dupes if catalog_check_duplicate is enabled
+            if ($is_duplicate) {
+                Song::update_enabled(false, $song_id);
             }
             $this->songs_to_gather[] = $song_id;
 

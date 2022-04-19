@@ -21,11 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Ajax;
 
 $web_path = AmpConfig::get('web_path');
-/** @var Catalog $libitem */
+/** @var Ampache\Repository\Model\Catalog $libitem */
 
 if ($libitem->enabled) {
     $icon     = 'disable';

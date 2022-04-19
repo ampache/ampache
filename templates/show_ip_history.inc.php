@@ -23,6 +23,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
+/** @var \Ampache\Repository\Model\User $working_user */
+/** @var array $history */
 ?>
 <?php /* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
@@ -33,14 +35,12 @@ use Ampache\Module\Util\Ui;
         <?php echo Ui::get_icon('disable', T_('Disable')); ?>
         <?php echo T_('Show Unique'); ?>
     </a>
-<?php
-} else { ?>
+<?php } else { ?>
     <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all">
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
-<?php
-    }?>
+<?php }?>
 </li>
 </ul>
 </div>

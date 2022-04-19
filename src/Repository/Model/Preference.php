@@ -177,7 +177,7 @@ class Preference extends database_object
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
-        if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
+        if (parent::is_cached('get_by_user-' . $pref_name, $user_id) && is_array((parent::get_from_cache('get_by_user-' . $pref_name, $user_id)))) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
@@ -191,7 +191,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
 
-        return $data['value'];
+        return $data['value'] ?? '';
     } // get_by_user
 
     /**
@@ -676,7 +676,7 @@ class Preference extends database_object
             "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
             "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
             "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates', 100, 'boolean', 'system', 'catalog'), " .
+            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'), " .
             "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
             "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
             "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
@@ -796,7 +796,7 @@ class Preference extends database_object
             'podcast_new_download' => T_('# episodes to download when new episodes are available'),
             'libitem_contextmenu' => T_('Library item context menu'),
             'upload_catalog_pattern' => T_('Rename uploaded file according to catalog pattern'),
-            'catalog_check_duplicate' => T_("Check library item at import time and don't import duplicates"),
+            'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
             'browse_filter' => T_('Show filter box on browse'),
             'sidebar_light' => T_('Light sidebar by default'),
             'custom_blankalbum' => T_('Custom blank album default image'),
@@ -880,7 +880,9 @@ class Preference extends database_object
             'api_force_version' => T_('Force a specific API response no matter what version you send'),
             'show_playlist_username' => T_('Show playlist owner username in titles'),
             'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string'),
-            'api_hide_dupe_searches' => T_('Hide smartlists that match playlist names in Subsonic and API clients')
+            'api_hide_dupe_searches' => T_('Hide smartlists that match playlist names in Subsonic and API clients'),
+            'show_album_artist' => T_("Show 'Album Artists' link in the main sidebar"),
+            'show_artist' => T_("Show 'Artists' link in the main sidebar")
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));
