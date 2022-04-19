@@ -1092,10 +1092,14 @@ final class VaInfo implements VaInfoInterface
                     $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
@@ -1202,11 +1206,15 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'releasetype':
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'releasestatus':
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1558,10 +1566,14 @@ final class VaInfo implements VaInfoInterface
                     $parsed['mb_artistid_array'] = self::parse_mbid_array($data);
                     break;
                 case 'musicbrainz album type':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz album status':
-                    $parsed['release_status'] = $data[0];
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'track_number':
                     //$parsed['track'] = $data[0];
@@ -1664,10 +1676,14 @@ final class VaInfo implements VaInfoInterface
                     $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
