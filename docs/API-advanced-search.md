@@ -61,7 +61,8 @@ Select the type of search based on the type of data you are searching for. (song
 | release_status           | Release Status            | text              |              album               |
 | myrating                 | My Rating                 | numeric           |        song,album,artist         |
 | rating                   | Rating (Average)          | numeric           |        song,album,artist         |
-| albumrating              | My Rating (Album)         | numeric           |               song               |
+| songrating               | My Rating (Song)          | numeric           |           album,artist           |
+| albumrating              | My Rating (Album)         | numeric           |            song,artist           |
 | artistrating             | My Rating (Artist)        | numeric           |            song,album            |
 | favorite                 | Favorites                 | text              |        song,album,artist         |
 | favorite_album           | Favorites (Album)         | text              |               song               |
