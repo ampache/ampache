@@ -591,7 +591,7 @@
                     self.shuffled = shuffled;
                     if (shuffled) {
                         var item = self.playlist[self.current];
-                        self.playlist.sort(function() {
+                        self.playlist.sort(function(a, b){
                             return 0.5 - Math.random();
                         });
                         $.each(self.playlist, function(i,v) {
