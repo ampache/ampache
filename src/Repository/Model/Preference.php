@@ -116,6 +116,8 @@ class Preference extends database_object
         'rate_limit',
         'share',
         'share_expire',
+        'show_album_artist',
+        'show_artist',
         'show_donate',
         'show_license',
         'show_lyrics',
@@ -144,6 +146,7 @@ class Preference extends database_object
         'upload_script',
         'upload_subdir',
         'upload_user_artist',
+        'upnp_active',
         'upnp_backend',
         'use_original_year',
         'webdav_backend',
@@ -698,7 +701,10 @@ class Preference extends database_object
             "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
             "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
             "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
-            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null);";
+            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null), " .
+            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
+            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
+            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme');";
         Dba::write($sql);
     } // set_defaults
 

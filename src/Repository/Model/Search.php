@@ -1011,8 +1011,8 @@ class Search extends playlist_object
         $limit_sql = "";
         if ($limit > 0) {
             $limit_sql = ' LIMIT ';
-            if ($offset) {
-                $limit_sql .= $offset . ",";
+            if ($offset > 0) {
+                $limit_sql .= $offset . ", ";
             }
             $limit_sql .= $limit;
         }
