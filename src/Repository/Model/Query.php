@@ -1601,7 +1601,7 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'album_artist':
-                        $filter_sql = " `id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
+                        $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
                         break;
                     default:
                         break;
