@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -146,6 +148,9 @@ final class CatalogFileMethod
                         break;
                 }
             }
+            // update the counts too
+            Album::update_album_counts();
+            Artist::update_artist_counts();
             Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);

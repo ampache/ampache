@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
@@ -93,6 +94,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -131,6 +135,9 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -186,47 +193,60 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($f_name == '') {
             return array();
         }
-        $album_artist   = "is null";
-        $release_type   = "is null";
-        $release_status = "is null";
-        $mbid           = "is null";
-        $original_year  = "is null";
-        $year           = (string)$album->year;
-
-        if ($album->album_artist) {
-            $album_artist = "= '" . ucwords((string) $album->album_artist) . "'";
-        }
-        if ($album->release_type) {
-            $release_type = "= '" . ucwords((string) $album->release_type) . "'";
-        }
-        if ($album->release_status) {
-            $release_status = "= '" . ucwords((string) $album->release_status) . "'";
-        }
+        $results = array();
+        $where   = "WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+        $params  = array($f_name, $f_name);
         if ($album->mbid) {
-            $mbid = "= '$album->mbid'";
+            $where .= 'AND `album`.`mbid` = ? ';
+            $params[] = $album->mbid;
+        } else {
+            $where .= 'AND `album`.`mbid` IS NULL ';
+        }
+        if ($album->mbid_group) {
+            $where .= 'AND `album`.`mbid_group` = ? ';
+            $params[] = $album->mbid_group;
+        } else {
+            $where .= 'AND `album`.`mbid_group` IS NULL ';
+        }
+        if ($album->prefix) {
+            $where .= 'AND `album`.`prefix` = ? ';
+            $params[] = $album->prefix;
+        }
+        if ($album->album_artist) {
+            $where .= 'AND `album`.`album_artist` = ? ';
+            $params[] = $album->album_artist;
         }
         if ($album->original_year) {
-            $original_year = "= '$album->original_year'";
+            $where .= 'AND `album`.`original_year` = ? ';
+            $params[] = $album->original_year;
         }
-        $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND `album`.`release_status` $release_status AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = $year AND `album`.`original_year` $original_year ";
+        if ($album->release_type) {
+            $where .= 'AND `album`.`release_type` = ? ';
+            $params[] = $album->release_type;
+        }
+        if ($album->release_status) {
+            $where .= 'AND `album`.`release_status` = ? ';
+            $params[] = $album->release_status;
+        }
+        $where .= 'AND `album`.`catalog` = ? ';
+        $params[]      = $album->catalog;
         $catalog_where = "";
         $catalog_join  = "";
 
-        if ($catalogId) {
-            $catalog_where .= " AND `catalog`.`id` = '$catalogId'";
+        if ($catalogId > 0) {
+            $catalog_where .= " AND `catalog`.`id` = ?";
+            $params[] = $catalogId;
         }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
-        $sql = sprintf(
-            'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `disk` ASC',
-            $catalog_join,
-            $where,
-            $catalog_where
-        );
-        $db_results = Dba::read($sql, array($f_name, $f_name));
+        if (AmpConfig::get('catalog_filter')) {
+            $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
+        }
+        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
+        //debug_event(self::class, 'getAlbumSuite ' . $sql, 5);
+        $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['disk']] = (int) $row['id'];
@@ -240,17 +260,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT `song`.`album` FROM `song`);");
-        // also clean up some bad data that might creep in
-        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
-        Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
-        Dba::write("UPDATE `album` SET `mbid` = NULL WHERE `mbid` = '';");
-        Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE `mbid_group` = '';");
-        Dba::write("UPDATE `album` SET `release_type` = NULL WHERE `release_type` = '';");
-        Dba::write("UPDATE `album` SET `original_year` = NULL WHERE `original_year` = 0;");
-        Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
-        Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
-        Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
+        debug_event(self::class, 'collectGarbage', 5);
+        // delete old mappings or bad ones
+        Dba::write("DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
+        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
+        Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` IN (SELECT `album_id` FROM (SELECT DISTINCT `album_map`.`album_id` FROM `album_map` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = `album_map`.`object_type` AND `artist_map`.`artist_id` = `album_map`.`object_id` AND `artist_map`.`object_id` = `album_map`.`album_id` WHERE `artist_map`.`artist_id` IS NULL AND `album_map`.`object_type` = 'album') AS `null_album`);");
+        // delete the albums that don't have any songs left
+        Dba::write("DELETE FROM `album` WHERE `album`.`id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`) AND `album`.`id` NOT IN (SELECT DISTINCT `album_id` FROM `album_map`);");
     }
 
     /**
@@ -259,7 +275,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getAlbumDuration(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `time` from `album` WHERE `album`.`id` = ?',
+            'SELECT `time` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -274,7 +290,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getAlbumPlayCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `total_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `total_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -289,7 +305,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getSongCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `song_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `song_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -304,7 +320,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getArtistCount(int $albumId): int
     {
         $db_results = Dba::read(
-            'SELECT `artist_count` from `album` WHERE `album`.`id` = ?',
+            'SELECT `artist_count` FROM `album` WHERE `album`.`id` = ?',
             [$albumId]
         );
 
@@ -337,18 +353,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog`";
         if ($catalog !== null) {
             $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
         }
         if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= "AND `catalog`.`enabled` = '1'";
+            $catalog_where .= " AND `catalog`.`enabled` = '1'";
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
         }
         $original_year     = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $allow_group_disks = AmpConfig::get('album_group');
         $sort_type         = AmpConfig::get('album_sort');
         $sort_disk         = ($allow_group_disks) ? "" : ", `album`.`disk`";
-        //$sql_sort          = (AmpConfig::get('album_release_type')) ? "IFNULL(`album`.`release_type`, 'album'), " : "";
         switch ($sort_type) {
             case 'year_asc':
                 $sql_sort = "$original_year ASC" . $sort_disk;
@@ -366,13 +384,13 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $sql_sort = "`album`.`name`" . $sort_disk . ", $original_year";
         }
 
-        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` " . $catalog_join . " WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
+        $sql = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
         if ($allow_group_disks) {
-            $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY $sql_sort";
+            $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY $sql_sort";
         }
         //debug_event(self::class, 'getByArtist ' . $sql, 5);
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($artistId));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {

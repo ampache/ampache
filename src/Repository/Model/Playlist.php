@@ -822,7 +822,6 @@ class Playlist extends playlist_object
         /* First get all of the songs in order of their tracks */
         $sql = "SELECT `list`.`id` FROM `playlist_data` AS `list` LEFT JOIN `song` ON `list`.`object_id` = `song`.`id` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` WHERE `list`.`playlist` = ? ORDER BY `artist`.`name` ASC, `album`.`name` ASC, `album`.`year` ASC, `album`.`disk` ASC, `song`.`track` ASC, `song`.`title` ASC, `song`.`track` ASC";
 
-
         $count      = 1;
         $db_results = Dba::query($sql, array($this->id));
         $results    = array();

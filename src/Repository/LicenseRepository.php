@@ -34,7 +34,7 @@ final class LicenseRepository implements LicenseRepositoryInterface
      */
     public function getAll(): array
     {
-        $sql = 'SELECT `id` from `license` ORDER BY `name`';
+        $sql = 'SELECT `id` FROM `license` ORDER BY `name`';
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -96,14 +96,14 @@ final class LicenseRepository implements LicenseRepositoryInterface
     public function find(string $searchValue): ?int
     {
         // lookup the license by name
-        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
+        $sql        = 'SELECT `id` FROM `license` WHERE `name` = ?';
         $db_results = Dba::read($sql, array($searchValue));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             return (int) $row['id'];
         }
         // lookup the license by external_link
-        $sql        = 'SELECT `id` from `license` WHERE `external_link` = ?';
+        $sql        = 'SELECT `id` FROM `license` WHERE `external_link` = ?';
         $db_results = Dba::read($sql, array($searchValue));
 
         while ($row = Dba::fetch_assoc($db_results)) {

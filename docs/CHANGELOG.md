@@ -1,5 +1,137 @@
 # CHANGELOG
 
+## Ampache 5.3.0-release
+
+This cycle we have added support for multiple Album and Song artists.
+
+This allows multiple artists to be part of a single song/album object and is created from file tags.
+
+Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
+
+The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
+
+There have been a few fixes and changes to the module to make the webplayer a lot better to use.
+
+### Added
+
+* Additional xhtml templates added
+* Parse lots more WMA (ASF) file tags
+* Add play next and play last to radio station rows
+* Additional option for artist pages 'Show Artist Songs'
+* Add some missing tag options for mpc files
+* Allow manually syncing Artist name, year formed and place formed from musicbrainz (if it has an mbid)
+* Notify and allow updating Plugins when updates are available
+* You can now unhide a tag from the 'Hidden' page for Genres
+  * This will delete previous merges but it will not retag your songs (update from tags to fix that)
+* Config version 61
+  * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
+  * Disable catalog_verify_by_time by default
+* Database 530016:
+  * Create `artist_map` table and fill it with data
+  * Create `album_map` table and fill it with data
+  * Use `song_count` & `artist_count` using `album_map`
+  * Drop id column from `catalog_map` table and alter object_type charset and collation
+  * Alter `album_map` table charset and engine to MyISAM if engine set
+  * Alter `artist_map` table charset and engine to MyISAM if engine set
+  * Make sure `object_count` table has all the correct primary artist/album rows
+  * Convert basic text columns into utf8 to reduce index sizes
+  * Remove `user_activity` columns that are useless
+  * Delete duplicate rows on `object_count`
+  * Compact mbid columns back to 36 characters
+  * Compact some `user` columns
+  * enum `object_count`.`count_type`
+  * Index data on object_count
+  * Use a unique index on `object_count`
+  * Compact `cache_object_count`, `cache_object_count_run` columns
+  * Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links
+* search:
+  * Add `songrating` to album search (My Rating (Song))
+  * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
+  * Allow empty/null searches for all mbid searches
+  * Allow empty/null searches for label searches
+  * Add `song_count` to album and artist search
+  * Add `album_count` to artist search
+  * Add `myplayedartist` (Played by Me (Artist)) to album search
+  * Add `song_artist` to album search
+  * Add alias `album_artist` to album search for `artist` searches
+  * Add `recent_added` to album search
+
+### Changed
+
+* Clean up artists with a duplicate MBID (Use the lowest artist id)
+* Delete cached recommendations instead of trying to update (Really slow)
+* Artist::check uses MBID on lookups as well as name
+* update_from_tags: Only update counts, tags and garbage collect after changes found
+* Use albums instead of songs for catalog verify actions
+* Expand search sidebar menu and collapse information without cookies
+* Moved all the extended functions into the forked jplayer module
+* Instead of skipping duplicate songs on import, disable them
+* jPlayer (Webplayer):
+  * Shuffle now follows the currently playing track (If playing)
+  * Shuffle also does not track the old playlist so you can't undo a shuffle
+* Subsonic:
+  * Check for art instead of always sending an art attribute
+
+### Removed
+
+* search:
+  * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
+
+### Fixed
+
+* VaInfo time for size/playtime_seconds
+* Tag arrays for Mbid and Artists lookup
+* Deleted item tables would not record some deletions
+* Updating the artist name would always migrate data when not required
+* Artist::check would always create and artist object with readonly set
+* Genres would not update the parent (Song->Album->Artist) whan using update from tags
+* Random sql that uses search rules
+* Use configured Ampache temp directory in Seafile catalog
+* Prepare media before update from tags (Seafile needs to download the file first)
+* Seafile catalog checks for a local file before downloading it again
+* Delete custom_metadata when removed from the object
+* Artist Garbage Collection was way too slow
+* Album and Artist count value sql
+* Don't remove Genre tags when they have been merged (hidden) into a different tag
+* Don't delete merged (hidden) Genres from the tag table
+* Album song_artist_count not calculated correctly
+* Grouping with mbid_group was missing making some albums not possible to view
+* Display and hide of artist columns in some pages based on count
+* Clean and verify would count totals based on all items instead of item type
+* Missing strings from xhtml templates
+* Album grouping for getAlbumSuite with null values
+* Set ratings for all album disks (if grouping enabled) for ratings and flags
+* Issues when you don't have an album artist tag
+* Correctly set null values on library_item edits
+* Search for song art might have sent a Song object
+* Fix missing preference on musicbrainz plugin
+* Disable/enable catalog
+* jPlayer (Webplayer):
+  * Fixed moving items in the playlist
+  * Fixed adding after the current playing track
+  * Fixed logic behind the index and order between the HTML and the JS lists
+* Search:
+  * played search for album and artist was including your user in the results
+  * other_user artist search sql
+* Subsonic:
+  * Artist was missing starred status
+
+## API 5.3.0
+
+### Added
+
+* advanced_search:
+  * Add `songrating` to album search (My Rating (Song))
+  * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
+  * Allow empty/null searches for all mbid searches
+  * Allow empty/null searches for label searches
+  * Add `song_count` to album and artist search
+  * Add `album_count` to artist search
+  * Add `myplayedartist` (Played by Me (Artist)) to album search
+  * Add `song_artist` to album search
+  * Add alias `album_artist` to album search for `artist` searches
+  * Add `recent_added` to album search
+
 ## Ampache 5.2.1-release
 
 ### Added
@@ -102,7 +234,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Config version 59
   * Removed overwrite_tags (It doesn't do anything)
   * playlist_art now true by default
-* Database 5.2.0 Build 5:
+* Database 520005:
   * Make sure preference names are always unique
   * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
   * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
@@ -158,10 +290,10 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 
 * Support for API3, API4 and API5 responses including PHP8 support (keeps original tag calls)
 * API5
-  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_dupes` if true ignore 'api_hide_dupe_searches' setting
   * get_art: add parameter `fallback` if true return default art ('blankalbum.png') instead of an error
 * API4
-  * playlists: add parameter `show_all` if true ignore 'api_hide_dupe_searches' setting
+  * playlists: add parameter `show_dupes` if true ignore 'api_hide_dupe_searches' setting
 * API3
   * Added genre calls as an alias to tag functions to match API4 and API5
 
@@ -187,7 +319,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Send the user to an error page when the config wasn't written
 * Config version 58
   * Removed subsonic_stream_scrobble
-* Database 5.1.0 Build 5:
+* Database 510005:
   * Add `subsonic_always_download` to preferences
 
 ### Changed
@@ -267,7 +399,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Config version 57
 * NEW config options
   * allow_upload_scripts: Allow or disallow upload scripts on the server
-* Database 5.1.0 Build 4:
+* Database 510004:
   * Add `podcast` to object_count table
   * Add `podcast` to cache_object_count table
   * Add `live_stream` to the rating table
@@ -435,7 +567,7 @@ If you want to keep utf8 make sure you set it before running updates.
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
   * Add 1, 5 and 10 to the Maximum Results limit
-* Database 5.0.0 Build 15:
+* Database 500015:
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
   * Add `mbid`, `country`, `active` to label table
@@ -688,7 +820,7 @@ This version of the API is the first semantic version. "5.0.0"
   * don't return null Genre counts
   * fix getting artist indexes for large libraries
 * Don't get null playlist objects from the DB
-* Using 'Save Track Order' would not apply the offset 
+* Using 'Save Track Order' would not apply the offset
 * Vorbis/Ogg comments use 'organization' for publisher and 'track_number' for track
 * Automated Label creation when updating from tags
 * Grouped album downloads and rightbar actions

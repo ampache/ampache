@@ -21,12 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-/** @var User $client */
+/** @var Ampache\Repository\Model\User $client */
 
 $max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>

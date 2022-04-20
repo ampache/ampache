@@ -45,7 +45,9 @@ $user_agent     = Core::get_server('HTTP_USER_AGENT');
 $mobile_session = strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPhone') || strpos($user_agent, 'iPad'));
 
 define('TABLE_RENDERED', 1);
-header("X-Frame-Options: SAMEORIGIN");
+if (!AmpConfig::get('disable_xframe_sameorigin', false)) {
+    header("X-Frame-Options: SAMEORIGIN");
+}
 $_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir; ?>">
@@ -70,7 +72,7 @@ $_SESSION['login'] = true; ?>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                 <div class="loginfield" id="usernamefield">
                     <label for="username"><?php echo T_('Username'); ?>:</label>
-                    <input type="text" id="username" name="username" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
+                    <input type="text" id="username" name="username" maxlength="128" value="<?php echo scrub_out(Core::get_request('username')); ?>" autofocus />
                 </div>
                 <div class="loginfield" id="passwordfield">
                     <label for="password"><?php echo T_('Password'); ?>:</label>

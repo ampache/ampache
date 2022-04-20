@@ -24,10 +24,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\library_item;
 
-/** @var library_item $item */
+/** @var Ampache\Repository\Model\library_item $item */
 /** @var string $object_type */
+/** @var int $object_id */
+/** @var string $burl */
 ?>
 <?php
 $keywords  = $item->get_keywords();
@@ -40,7 +41,9 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <?php
         foreach ($keywords as $key => $word) {
             if ($key == 'year') {
-                $year_str = (string)$word['value'];
+                $year_str = ((int)$word['value'] > 999)
+                    ? (string)$word['value']
+                    : '';
                 continue;
             }
             if (($key != 'mb_albumid_group' && $key != 'mb_artistid') && ($key != 'keyword' && $word['label'])) { ?>

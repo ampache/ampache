@@ -211,7 +211,6 @@ class AmpacheAmazon
             $amazon->_currentPage++;
         } while ($amazon->_currentPage < $pages_to_search);
 
-
         // Only do the second search if the first actually returns something
         if (count($search_results)) {
             $final_results = $amazon->lookup($search_results);

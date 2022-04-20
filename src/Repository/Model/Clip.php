@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 class Clip extends Video
 {
@@ -195,5 +196,24 @@ class Clip extends Video
         }
 
         return null;
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     * @param string $object_type
+     * @param integer $old_object_id
+     * @param integer $new_object_id
+     * @return PDOStatement|boolean
+     */
+    public static function migrate($object_type, $old_object_id, $new_object_id)
+    {
+        if ($object_type == 'artist') {
+            $sql    = "UPDATE `clip` SET `artist` = ? WHERE `artist` = ?";
+            $params = array($new_object_id, $old_object_id);
+
+            return Dba::write($sql, $params);
+        }
+
+        return false;
     }
 }

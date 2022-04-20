@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -47,6 +48,12 @@ use Ampache\Module\Api\Ajax;
                         </div>
                     </td>
                 </tr>
+                    <?php if (count($libitem->artists) > 1) { ?>
+                        <tr>
+                            <td class="edit_dialog_content_header"><?php echo T_('Additional Artists') ?></td>
+                            <td><?php echo Artist::get_display(array_diff($libitem->artists, array($libitem->artist))); ?></td>
+                        </tr>
+                    <?php } ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
                     <td>

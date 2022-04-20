@@ -48,6 +48,7 @@ class Podcast extends database_object implements library_item
     public $lastsync;
     public $total_count;
     public $episodes;
+    public $has_art;
 
     public $f_name;
     public $f_website;
@@ -152,6 +153,19 @@ class Podcast extends database_object implements library_item
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
 
         return true;
+    }
+
+    /**
+     * does the item have art?
+     * @return bool
+     */
+    public function has_art()
+    {
+        if (!isset($this->has_art)) {
+            $this->has_art = Art::has_db($this->id, 'podcast');
+        }
+
+        return $this->has_art;
     }
 
     /**
@@ -291,12 +305,13 @@ class Podcast extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $feed        = isset($data['feed']) ? $data['feed'] : $this->feed;
-        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : $this->title;
-        $website     = isset($data['website']) ? scrub_in($data['website']) : $this->website;
-        $description = isset($data['description']) ? scrub_in($data['description']) : $this->description;
-        $generator   = isset($data['generator']) ? scrub_in($data['generator']) : $this->generator;
-        $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : $this->copyright;
+        $feed        = $data['feed'] ?? $this->feed;
+        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $website     = isset($data['website']) ? scrub_in($data['website']) : null;
+        $description = isset($data['description']) ? scrub_in($data['description']) : null;
+        $language    = isset($data['language']) ? scrub_in($data['language']) : null;
+        $generator   = isset($data['generator']) ? scrub_in($data['generator']) : null;
+        $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : null;
 
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
@@ -304,13 +319,14 @@ class Podcast extends database_object implements library_item
             return $this->id;
         }
 
-        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
-        Dba::write($sql, array($feed, $title, $website, $description, $generator, $copyright, $this->id));
+        $sql = 'UPDATE `podcast` SET `feed` = ?, `title` = ?, `website` = ?, `description` = ?, `language` = ?, `generator` = ?, `copyright` = ? WHERE `id` = ?';
+        Dba::write($sql, array($feed, $title, $website, $description, $language, $generator, $copyright, $this->id));
 
         $this->feed        = $feed;
         $this->title       = $title;
         $this->website     = $website;
         $this->description = $description;
+        $this->language    = $language;
         $this->generator   = $generator;
         $this->copyright   = $copyright;
 
@@ -494,8 +510,6 @@ class Podcast extends database_object implements library_item
      */
     private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
     {
-        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '...', 4);
-
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
@@ -522,7 +536,6 @@ class Podcast extends database_object implements library_item
             ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
             : (int) $ptime;
 
-
         $pubdate    = 0;
         $pubdatestr = (string)$episode->pubDate;
         if ($pubdatestr) {
@@ -545,6 +558,7 @@ class Podcast extends database_object implements library_item
         }
 
         if ($pubdate > $afterdate) {
+            debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
             $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             return Dba::write($sql, array(

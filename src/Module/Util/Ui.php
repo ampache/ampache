@@ -794,6 +794,8 @@ class Ui implements UiInterface
             case 'api_enable_3':
             case 'api_enable_4':
             case 'api_enable_5':
+            case 'show_album_artist':
+            case 'show_artist':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {

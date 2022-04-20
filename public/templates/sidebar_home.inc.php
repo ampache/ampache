@@ -34,15 +34,21 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
+/** @var string $t_browse */
+/** @var string $t_expander */
+
 global $dic;
 $server_allow    = AmpConfig::get('allow_localplay_playback');
 $controller      = AmpConfig::get('localplay_controller');
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class);
 $allowDemocratic = AmpConfig::get('allow_democratic_playback');
+$showAlbumArtist = AmpConfig::get('show_album_artist');
+$showArtist      = AmpConfig::get('show_artist');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
-$access50        = Access::check('interface', 50); ?>
+$access50        = Access::check('interface', 50);
+$web_path        = AmpConfig::get('web_path'); ?>
 <ul class="sb2" id="sb_home">
     <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";
@@ -59,7 +65,12 @@ $access50        = Access::check('interface', 50); ?>
         <ul class="sb3" id="sb_browse_music">
             <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo $t_albums; ?></a></li>
-            <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
+            <?php if ($showArtist) { ?>
+                <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
+            <?php } ?>
+            <?php if ($showAlbumArtist || !$showArtist) { ?>
+                <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
+            <?php } ?>
             <?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_music_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php } ?>
@@ -123,10 +134,8 @@ $access50        = Access::check('interface', 50); ?>
         </li>
     <?php } ?>
     <li class="sb2_search">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_search']) && $_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-        <ul class="sb3" id="sb_home_search" style="<?php if (!(isset($_COOKIE['sb_search']))) {
-            echo 'display: none;';
-        } ?>">
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_search']) && $_COOKIE['sb_search'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+        <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
@@ -166,8 +175,10 @@ $access50        = Access::check('interface', 50); ?>
     <?php
     } ?>
     <li class="sb2_information">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . ((isset($_COOKIE['sb_info']) && $_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
-        <ul class="sb3" id="sb_home_info">
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . ((isset($_COOKIE['sb_info']) && $_COOKIE['sb_info'] == 'expanded') ? 'expanded' : 'collapsed')); ?></h4>
+        <ul class="sb3" id="sb_home_info" style="<?php if (!(isset($_COOKIE['sb_info']))) {
+        echo 'display: none;';
+    } ?>">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>

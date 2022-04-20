@@ -60,25 +60,6 @@ interface UserActivityRepositoryInterface
     ): void;
 
     /**
-     * Inserts the necessary data to register the playback of a song
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerSongEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $songName,
-        string $artistName,
-        string $albumName,
-        string $songMbId,
-        string $artistMbId,
-        string $albumMbId
-    ): void;
-
-    /**
      * Inserts the necessary data to register a generic action on an object
      *
      * @todo Replace when active record models are available
@@ -89,37 +70,5 @@ interface UserActivityRepositoryInterface
         string $object_type,
         int $objectId,
         int $date
-    ): void;
-
-    /**
-     * Inserts the necessary data to register an artist related action
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerArtistEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $artistName,
-        string $artistMbId
-    ): void;
-
-    /**
-     * Inserts the necessary data to register the playback of a song
-     *
-     * @todo Replace when active record models are available
-     */
-    public function registerAlbumEntry(
-        int $userId,
-        string $action,
-        string $objectType,
-        int $objectId,
-        int $date,
-        string $artistName,
-        string $albumName,
-        string $artistMbId,
-        string $albumMbId
     ): void;
 }

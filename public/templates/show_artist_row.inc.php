@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -32,7 +31,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Artist $libitem */
+/** @var Ampache\Repository\Model\Artist $libitem */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */

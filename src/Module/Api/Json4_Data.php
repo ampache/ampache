@@ -151,8 +151,10 @@ class Json4_Data
                 if (array_key_exists($data['id'], $atags)) {
                     $atags[$data['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = array('name' => $data['name'],
-                        'count' => 1);
+                    $atags[$data['id']] = array(
+                        'name' => $data['name'],
+                        'count' => 1
+                    );
                 }
             }
 
@@ -306,7 +308,6 @@ class Json4_Data
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             $artist->format();
-
 
             $rating     = new Rating($artist_id, 'artist');
             $flag       = new Userflag($artist_id, 'artist');

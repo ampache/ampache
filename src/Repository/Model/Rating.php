@@ -154,7 +154,7 @@ class Rating extends database_object
             $user_ratings[$row['object_id']] = $row['rating'];
         }
 
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating`, `object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type` = ? GROUP BY `object_id`";
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating`, `object_id` FROM `rating` WHERE `object_id` IN $idlist AND `object_type` = ? GROUP BY `object_id`";
         $db_results = Dba::read($sql, array($type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -227,7 +227,7 @@ class Rating extends database_object
             return (double)parent::get_from_cache($key, $this->id)[0];
         }
 
-        $sql        = "SELECT ROUND(AVG(`rating`), 2) as `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
+        $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
         $db_results = Dba::read($sql, array($this->id, $this->type));
         $row        = Dba::fetch_assoc($db_results);
         if (empty($row)) {
@@ -249,7 +249,7 @@ class Rating extends database_object
     public static function get_highest_sql($type, $user_id = null)
     {
         $type              = Stats::validate_type($type);
-        $sql               = "SELECT MIN(`rating`.`object_id`) as `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
+        $sql               = "SELECT MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
         $allow_group_disks = (AmpConfig::get('album_group') && $type === 'album');
         if ($allow_group_disks) {
             $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
@@ -262,7 +262,7 @@ class Rating extends database_object
             $sql .= " AND" . Catalog::get_user_filter("rating_$type", $user_id);
         }
         $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year` ORDER BY `rating` DESC, `count` DESC, `id` DESC "
+            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY `rating` DESC, `count` DESC, `id` DESC "
             : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
@@ -318,8 +318,7 @@ class Rating extends database_object
         // albums may be a group of id's
         if ($this->type == 'album' && AmpConfig::get('album_group')) {
             $album       = new Album($this->id);
-            $album_array = $album->get_group_disks_ids();
-            self::set_rating_for_group($rating, $album_array, $user_id);
+            self::set_rating_for_group($rating, $album->album_suite, $user_id);
 
             return true;
         }
@@ -351,7 +350,7 @@ class Rating extends database_object
      * @param string $user_id
      * @return boolean
      */
-    private static function set_rating_for_group($rating, $album_array, $user_id = null)
+    public static function set_rating_for_group($rating, $album_array, $user_id = null)
     {
         foreach ($album_array as $album_id) {
             debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
@@ -366,7 +365,6 @@ class Rating extends database_object
 
                 parent::add_to_cache('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
             }
-            self::save_rating($album_id, 'album', (int)$rating, (int)$user_id);
         }
 
         return true;

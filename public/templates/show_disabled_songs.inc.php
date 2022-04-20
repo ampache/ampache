@@ -21,9 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Song;
 
-/** @var Song[] $songs */
+/** @var Ampache\Repository\Model\Song[] $songs */
 
 ?>
 <br />

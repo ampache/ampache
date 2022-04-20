@@ -33,6 +33,7 @@ $tag_types = array(
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
+    'tag_hidden' => T_('Hidden'),
 );
 
 /** @var UiInterface $ui */

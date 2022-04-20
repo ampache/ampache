@@ -68,9 +68,11 @@ final class VaInfo implements VaInfoInterface
         'language' => null,
         'lyrics' => null,
         'mb_albumartistid' => null,
+        'mb_albumartistid_array' => null,
         'mb_albumid_group' => null,
         'mb_albumid' => null,
         'mb_artistid' => null,
+        'mb_artistid_array' => null,
         'mb_trackid' => null,
         'mime' => null,
         'mode' => null,
@@ -604,7 +606,10 @@ final class VaInfo implements VaInfoInterface
             $info['composer']  = (!$info['composer'] && array_key_exists('composer', $tags)) ? trim((string)$tags['composer']) : $info['composer'];
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string)$tags['publisher']) : $info['publisher'];
 
-            $info['genre'] = self::clean_array_tag('genre', $info, $tags);
+            // genre is an array treat it as one
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && !empty($tags['genre']))
+                ? $tags['genre']
+                : $info['genre'];
 
             $info['mb_trackid']       = (!$info['mb_trackid'] && array_key_exists('mb_trackid', $tags)) ? trim((string)$tags['mb_trackid']) : $info['mb_trackid'];
             $info['isrc']             = (!$info['isrc'] && array_key_exists('isrc', $tags)) ? trim((string)$tags['isrc']) : $info['isrc'];
@@ -612,12 +617,24 @@ final class VaInfo implements VaInfoInterface
             $info['mb_albumid_group'] = (!$info['mb_albumid_group'] && array_key_exists('mb_albumid_group', $tags)) ? trim((string)$tags['mb_albumid_group']) : $info['mb_albumid_group'];
             $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string)$tags['mb_artistid']) : $info['mb_artistid'];
             $info['mb_albumartistid'] = (!$info['mb_albumartistid'] && array_key_exists('mb_albumartistid', $tags)) ? trim((string)$tags['mb_albumartistid']) : $info['mb_albumartistid'];
+            // groups of artists can be ID'd using their mbid easily
+            $info['mb_artistid_array']      = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
+                ? $tags['mb_artistid_array']
+                : $info['mb_artistid_array'];
+            $info['mb_albumartistid_array'] = (!$info['mb_albumartistid_array'] && array_key_exists('mb_albumartistid_array', $tags) && !empty($tags['mb_albumartistid_array']))
+                ? $tags['mb_albumartistid_array']
+                : $info['mb_albumartistid_array'];
 
             $info['release_type']   = (!$info['release_type'] && array_key_exists('release_type', $tags)) ? trim((string)$tags['release_type']) : $info['release_type'];
             $info['release_status'] = (!$info['release_status'] && array_key_exists('release_status', $tags)) ? trim((string)$tags['release_status']) : $info['release_status'];
 
             // artists is an array treat it as one
-            $info['artists'] = self::clean_array_tag('artists', $info, $tags);
+            if (!empty($tags['artists']) && !is_array($tags['artists'])) {
+                $tags['artists'] = array($tags['artists']);
+            }
+            $info['artists'] = (!$info['artists'] && array_key_exists('artists', $tags) && !empty($tags['artists']))
+                ? $tags['artists']
+                : $info['artists'];
 
             $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string)$tags['original_year']) : $info['original_year'];
             $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string)$tags['barcode']) : $info['barcode'];
@@ -677,33 +694,6 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * clean_array_tag
-     * @param string $field
-     * @param $info
-     * @param $tags
-     * @return array
-     */
-    private static function clean_array_tag($field, $info, $tags)
-    {
-        $arr = array();
-        if ((!$info[$field] || count($info[$field]) == 0) && array_key_exists($field, $tags)) {
-            if (!is_array($tags[$field])) {
-                // not all tag formats will return an array, but we need one
-                $arr[] = trim((string)$tags[$field]);
-            } else {
-                // not only used for genre might otherwise be misleading
-                foreach ($tags[$field] as $data) {
-                    $arr[] = trim((string)$data);
-                }
-            }
-        } else {
-            $arr = $info[$field];
-        }
-
-        return $arr;
-    }
-
-    /**
      * get_mbid_array
      * @param string $mbid
      * @return array
@@ -715,6 +705,42 @@ final class VaInfo implements VaInfoInterface
         }
 
         return array($mbid);
+    }
+
+    /**
+     * parse_mbid
+     * Get the first valid mbid. (if it's valid)
+     * @param string|array $mbid
+     * @return string|null
+     */
+    public static function parse_mbid($mbid)
+    {
+        if (is_array($mbid)) {
+            $mbid = implode(";", $mbid);
+        }
+        if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
+            return (string)$matches[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * parse_mbid_array
+     * Return only valid mbid data
+     * @param string|array $mbid
+     * @return array
+     */
+    public static function parse_mbid_array($mbid)
+    {
+        if (is_array($mbid)) {
+            $mbid = implode(";", $mbid);
+        }
+        if (preg_match_all(self::MBID_REGEX, $mbid, $matches)) {
+            return $matches[0];
+        }
+
+        return array();
     }
 
     /**
@@ -768,18 +794,11 @@ final class VaInfo implements VaInfoInterface
     private function _get_tags()
     {
         $results = array();
-
+        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         // The tags can come in many different shapes and colors depending on the encoding.
         if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
-                    case 'ape':
-                    case 'avi':
-                    case 'flv':
-                    case 'matroska':
-                        //$this->logger->debug('Cleaning ' . $key, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_generic($tag_array);
-                        break;
                     case 'vorbiscomment':
                         //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
@@ -811,14 +830,18 @@ final class VaInfo implements VaInfoInterface
                     case 'wma':
                         $key = 'asf';
                         //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-                        $parsed = $this->_cleanup_generic($tag_array);
+                        $parsed = $this->_cleanup_asf($tag_array);
                         break;
                     case 'lyrics3':
                         //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
+                    case 'ape':
+                    case 'avi':
+                    case 'flv':
+                    case 'matroska':
                     default:
-                        //$this->logger->debug('Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -908,8 +931,8 @@ final class VaInfo implements VaInfoInterface
      */
     private function _parse_general($tags)
     {
+        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         $parsed = array();
-
         if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
         } else {
@@ -937,7 +960,14 @@ final class VaInfo implements VaInfoInterface
         $parsed['size']          = $this->_forcedSize ?? $tags['filesize'] ?? null;
         $parsed['encoding']      = $tags['encoding'] ?? null;
         $parsed['mime']          = $tags['mime_type'] ?? null;
-        $parsed['time']          = ($this->_forcedSize || !array_key_exists('playtime_seconds', $tags)) ? ((($this->_forcedSize - $tags['avdataoffset']) * 8) / $tags['bitrate']) : $tags['playtime_seconds'];
+        if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
+            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
+        } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
+            $parsed['time'] = $tags['playtime_seconds'];
+        } else {
+            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            $parsed['time'] = 0;
+        }
 
         if (isset($tags['ape'])) {
             if (isset($tags['ape']['items'])) {
@@ -979,25 +1009,29 @@ final class VaInfo implements VaInfoInterface
     private function _clean_type($type)
     {
         switch ($type) {
-            case 'mp3':
             case 'mp2':
+            case 'mp3':
             case 'mpeg3':
                 return 'mp3';
-            case 'vorbis':
+            case 'ogg':
             case 'opus':
+            case 'vorbis':
                 return 'ogg';
             case 'asf':
-            case 'wmv':
             case 'wma':
+            case 'wmv':
                 return 'asf';
             case 'mp4':
+            case 'quicktime':
                 return 'quicktime';
+            case 'mpc':
+                return 'ape';
+            case 'avi':
             case 'flac':
             case 'flv':
             case 'mpg':
             case 'mpeg':
-            case 'avi':
-            case 'quicktime':
+            case 'wav':
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
@@ -1022,11 +1056,11 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
-            //$this->logger->debug(
-            //    'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0] ?? '',
-            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            //);
+            //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1041,28 +1075,42 @@ final class VaInfo implements VaInfoInterface
                     $parsed['track'] = $data[0];
                     break;
                 case 'musicbrainz_artistid':
-                    $parsed['mb_artistid'] = $data[0];
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_albumid':
-                    $parsed['mb_albumid'] = $data[0];
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumartistid':
-                    $parsed['mb_albumartistid'] = $data[0];
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_releasegroupid':
-                    $parsed['mb_albumid_group'] = $data[0];
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_trackid':
-                    $parsed['mb_trackid'] = $data[0];
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
+                case 'originalyear':
+                case 'originalreleaseyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'label':
+                case 'publisher':
+                    $parsed['publisher'] = $data[0];
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
@@ -1088,7 +1136,7 @@ final class VaInfo implements VaInfoInterface
             if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
                 $tag = 'lyrics';
             }
-            $parsed[$tag] = $data[0];
+            $parsed[strtolower($tag)] = $data[0];
         }
 
         return $parsed;
@@ -1107,14 +1155,13 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug(
-            //    'Vorbis tag: ' . $tag . ' value: ' . $data[0] ?? '',
-            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            //);
+            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
-                    // Pass the array through
-                    $parsed[$tag] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'tracknumber':
                 case 'track_number':
@@ -1141,27 +1188,33 @@ final class VaInfo implements VaInfoInterface
                     $parsed['year'] = $data[0];
                     break;
                 case 'musicbrainz_artistid':
-                    $parsed['mb_artistid'] = $data[0];
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_albumid':
-                    $parsed['mb_albumid'] = $data[0];
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_albumartistid':
-                    $parsed['mb_albumartistid'] = $data[0];
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
                     break;
                 case 'musicbrainz_releasegroupid':
-                    $parsed['mb_albumid_group'] = $data[0];
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz_trackid':
-                    $parsed['mb_trackid'] = $data[0];
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
                 case 'releasetype':
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'releasestatus':
                 case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1203,7 +1256,7 @@ final class VaInfo implements VaInfoInterface
                             $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                         }
                     }
-                    $parsed[$tag] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
             }
         }
@@ -1240,7 +1293,7 @@ final class VaInfo implements VaInfoInterface
         foreach ($tags as $tag => $data) {
             // This is our baseline for naming so everything's already right,
             // we just need to shuffle off the array.
-            $parsed[$tag] = $data[0];
+            $parsed[strtolower($tag)] = $data[0];
         }
 
         return $parsed;
@@ -1259,11 +1312,11 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug(
-            //    'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0] ?? '',
-            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            //);
+            //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
@@ -1326,7 +1379,7 @@ final class VaInfo implements VaInfoInterface
                     break;
                 default:
                     if (array_key_exists(0, $data)) {
-                        $parsed[$tag] = $data[0];
+                        $parsed[strtolower($tag)] = $data[0];
                     }
                     break;
             }
@@ -1351,29 +1404,27 @@ final class VaInfo implements VaInfoInterface
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
-                //$this->logger->debug(
-                //    'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . $id3v2['comments']['text'][$txxx['description']] ?? '',
-                //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                //);
+                //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
-                        // return artists as array not as string of artists with delimiter, don't process metadata in catalog
-                        $parsed['artists'] = $this->splitSlashedlist($id3v2['comments']['text'][$txxx['description']], false);
-                        break;
-                    case 'musicbrainz album id':
-                        $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
+                        $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'album artist':
                         $parsed['albumartist'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                    case 'musicbrainz release group id':
-                        $parsed['mb_albumid_group'] = $id3v2['comments']['text'][$txxx['description']];
-                        break;
                     case 'musicbrainz artist id':
-                        $parsed['mb_artistid'] = $id3v2['comments']['text'][$txxx['description']];
+                        $parsed['mb_artistid']       = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
+                        $parsed['mb_artistid_array'] = self::parse_mbid_array($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album artist id':
-                        $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
+                        $parsed['mb_albumartistid']       = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
+                        $parsed['mb_albumartistid_array'] = self::parse_mbid_array($id3v2['comments']['text'][$txxx['description']]);
+                        break;
+                    case 'musicbrainz album id':
+                        $parsed['mb_albumid'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
+                        break;
+                    case 'musicbrainz release group id':
+                        $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);;
                         break;
                     case 'musicbrainz album type':
                         $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
@@ -1482,14 +1533,13 @@ final class VaInfo implements VaInfoInterface
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug(
-            //    'Quicktime tag: ' . $tag . ' value: ' . $data[0] ?? '',
-            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            //);
+            //$this->logger->debug('Quicktime tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tag)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
                 case 'genre':
-                    // Pass the array through
-                    $parsed[$tag] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'creation_date':
                     $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
@@ -1499,25 +1549,31 @@ final class VaInfo implements VaInfoInterface
                     $parsed['year'] = $data[0];
                     break;
                 case 'musicbrainz track id':
-                    $parsed['mb_trackid'] = $data[0];
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz album id':
-                    $parsed['mb_albumid'] = $data[0];
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz album artist id':
-                    $parsed['mb_albumartistid'] = $data[0];
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = self::parse_mbid_array($data);
                     break;
                 case 'musicbrainz release group id':
-                    $parsed['mb_albumid_group'] = $data[0];
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
                     break;
                 case 'musicbrainz artist id':
-                    $parsed['mb_artistid'] = $data[0];
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = self::parse_mbid_array($data);
                     break;
                 case 'musicbrainz album type':
-                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'musicbrainz album status':
-                    $parsed['release_status'] = $data[0];
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'track_number':
                     //$parsed['track'] = $data[0];
@@ -1567,6 +1623,132 @@ final class VaInfo implements VaInfoInterface
                 default:
                     $parsed[strtolower($tag)] = $data[0];
                     break;
+            }
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * _cleanup_asf
+     *
+     * This does WMA cleanup.
+     * @param $tags
+     * @return array
+     * @throws Exception
+     */
+    private function _cleanup_asf($tags)
+    {
+        $parsed = array();
+        foreach ($tags as $tagname => $data) {
+            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            switch (strtolower($tagname)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
+                case 'genre':
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'partofset':
+                    $elements             = explode('/', $data[0]);
+                    $parsed['disk']       = $elements[0];
+                    $parsed['totaldisks'] = $elements[1] ?? null;
+                    break;
+                case 'track_number':
+                case 'track':
+                    $parsed['track'] = $data[0];
+                    break;
+                case 'musicbrainz_artistid':
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_albumid':
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumartistid':
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_releasegroupid':
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_trackid':
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumtype':
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
+                case 'originalreleaseyear':
+                    $parsed['original_year'] = str_replace("\x00", '', $data[0]);
+                    break;
+                default:
+                    $parsed[$tagname] = $data[0];
+                    break;
+            }
+        }
+
+        // WMA isn't read very well so dig into the raw data
+        if (array_key_exists('asf', $this->_raw) && is_array($this->_raw['asf'])) {
+            $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
+            foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
+                $value = str_replace("\x00", '', $wmaTag['value']);
+                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                switch (strtolower($this->trimAscii($wmaTag['name']))) {
+                    case 'wm/artists':
+                        $parsed['artists'] = $this->parseArtists($value);
+                        break;
+                    case 'wm/albumartist':
+                        $parsed['albumartist'] = $value;
+                        break;
+                    case 'musicbrainz/artist id':
+                        $parsed['mb_artistid']       = self::parse_mbid($value);
+                        $parsed['mb_artistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album artist id':
+                        $parsed['mb_albumartistid']       = self::parse_mbid($value);
+                        $parsed['mb_albumartistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album id':
+                        $parsed['mb_albumid'] = self::parse_mbid($value);
+                        break;
+                    case 'musicbrainz/release group id':
+                        $parsed['mb_albumid_group'] = self::parse_mbid($value);;
+                        break;
+                    case 'musicbrainz/album type':
+                        $parsed['release_type'] = $value;
+                        break;
+                    case 'musicbrainz/album status':
+                        $parsed['release_status'] = $value;
+                        break;
+                    case 'wm/originalreleaseyear':
+                        $parsed['original_year'] = (int)$value;
+                        break;
+                    case 'wm/barcode':
+                        $parsed['barcode'] = $value;
+                        break;
+                    case 'wm/catalogno':
+                        $parsed['catalog_number'] = $value;
+                        break;
+                    case 'wm/publisher':
+                        $parsed['publisher'] = $value;
+                        break;
+                    default:
+                        $frame = strtolower($this->trimAscii($wmaTag['name']));
+                        if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
+                            $parsed[strtolower($this->trimAscii($wmaTag['name']))] = $value;
+                        }
+                        break;
+                }
             }
         }
 
@@ -1816,13 +1998,49 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseGenres($data)
     {
-        // get rid of that annoying genre!
-        $data = str_replace('Folk, World, & Country', 'Folk World & Country', $data);
-        if (isset($data) && is_array($data) && count($data) === 1) {
-            $data = $this->splitSlashedlist((string)(reset($data)), false);
+        //debug_event(__CLASS__, "parseGenres: " . print_r($data, true), 5);
+        $result = null;
+        if (is_array($data)) {
+            $result = array();
+            foreach ($data as $row) {
+                if (!empty($row)) {
+                    foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row)), false) as $genre) {
+                        $result[] = $genre;
+                    }
+                }
+            }
+        }
+        if (is_string($data) && !empty($data)) {
+            $result = self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data)), false);
         }
 
-        return $data;
+        return $result;
+    }
+
+    /**
+     *
+     * @param array|string $data
+     * @return array
+     */
+    private function parseArtists($data)
+    {
+        //debug_event(__CLASS__, "parseArtists: " . print_r($data, true), 5);
+        $result = null;
+        if (is_array($data)) {
+            $result = array();
+            foreach ($data as $row) {
+                if (!empty($row)) {
+                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                        $result[] = trim($artist);
+                    }
+                }
+            }
+        }
+        if (is_string($data) && !empty($data)) {
+            $result = explode(';', str_replace("\x00", ';', $data));
+        }
+
+        return $result;
     }
 
     /**

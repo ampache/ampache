@@ -125,17 +125,12 @@ class AmpacheXbmc extends localplay_controller
      */
     public function add_instance($data)
     {
-        $name     = Dba::escape($data['name'] ?? null);
-        $host     = Dba::escape($data['host'] ?? null);
-        $port     = Dba::escape($data['port'] ?? null);
-        $user     = Dba::escape($data['user'] ?? null);
-        $password = Dba::escape($data['password'] ?? null);
-        $user_id  = Dba::escape(Core::get_global('user')->id);
+        $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
+        $user_id = !empty(Core::get_global('user'))
+            ? Core::get_global('user')->id
+            : -1;
 
-        $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
-
-        return Dba::query($sql, array($name, $host, $port, $user, $password, $user_id
-        ));
+        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['password'] ?? null, $user_id));
     } // add_instance
 
     /**

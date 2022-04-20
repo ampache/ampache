@@ -8,17 +8,16 @@
 
 ## News
 
-Still want to use Power Ampache but don't have an Ampache3 server? Multi-API support has landed!
+This cycle we have added support for multiple Album and Song artists.
 
-* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
-* The bin folder has had a major [rework](https://github.com/ampache/ampache/wiki/cli-faq)
-* You can pre cache files using [Transcode Caching](https://github.com/ampache/ampache/wiki/Transcode-Caching)
-* Have a read about the new code structure and about [contributing to Ampache](https://github.com/ampache/ampache/blob/develop/.github/CONTRIBUTING.md)
+This allows multiple artists to be part of a single song/album object and is created from file tags.
 
-* Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
-  * Then put your client ID and secret in your ampache config
-  * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
+Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
+
+
+The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
+
+There have been a few fixes and changes to the module to make the webplayer a lot better to use.
 
 ## Basics
 
@@ -32,6 +31,9 @@ Ampache is not a media organiser; it is meant to be a tool which
 presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
+
+* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
 
 ## Recommended Version
 
@@ -59,7 +61,8 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 * PHP 7.1-7.4 (Ampache 4.x.x)
 * PHP 7.4 (Ampache 5.0.x)
-* PHP 8.0 (Ampache 5.1.x)
+* PHP 8.0 (Ampache 5.1.x and higher)
+* PHP 8.1 (TBC)
 
 * PHP modules:
   * PDO

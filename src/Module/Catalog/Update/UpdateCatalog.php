@@ -69,6 +69,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ];
 
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
+        $external   = false;
 
         ob_end_clean();
 
@@ -160,13 +161,18 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $interactor->info('------------------', true);
             }
-            if ($updateInfo === true) {
+            if ($updateInfo === true && !$external) {
                 ob_start();
+
+                // only update from external metadata once.
+                $external = true;
 
                 $interactor->info(
                     T_('Update artist information and fetch similar artists from last.fm'),
                     true
                 );
+                // clean out the bad artists first
+                Catalog::clean_duplicate_artists();
 
                 // Look for updated artist information. (1 month since last update MBID IS NOT NULL) LIMIT 500
                 $artists = $catalog->get_artist_ids('time');

@@ -20,11 +20,10 @@
  *
  */
 
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
 
-/** @var Channel $libitem */
+/** @var Ampache\Repository\Model\Channel $libitem */
 ?>
 <div>
     <form method="post" id="edit_channel_<?php echo $libitem->id; ?>" class="edit_dialog_content">

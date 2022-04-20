@@ -21,9 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -55,6 +58,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
+$user   = Core::get_global('user');
 $f_name = $artist->get_fullname();
 $title  = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
@@ -115,19 +119,27 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
+        <?php if ($object_type == 'album') { ?>
         <li>
-            <?php if ($object_type == 'album') { ?>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_("Show All")); ?>
-                <?php echo T_("Show All"); ?>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
+                <?php echo T_('Show Artist Songs'); ?>
             </a>
-            <?php } else { ?>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_("Show Albums")); ?>
-                <?php echo T_("Show Albums"); ?>
-            </a>
-            <?php } ?>
         </li>
+        <li>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show All')); ?>
+                <?php echo T_('Show All'); ?>
+            </a>
+        </li>
+        <?php } else { ?>
+        <li>
+            <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
+                <?php echo Ui::get_icon('view', T_('Show Albums')); ?>
+                <?php echo T_('Show Albums'); ?>
+            </a>
+        </li>
+        <?php } ?>
         <?php if ($show_direct_play) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
@@ -158,6 +170,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
+            <?php if ($artist->mbid && Preference::get_by_user($user->id, 'mb_overwrite_name')) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
+                <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
+                <?php echo T_('Update details from MusicBrainz'); ?>
+            </a>
+        </li>
+            <?php } ?>
         <?php } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
@@ -190,7 +210,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
         } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
+        <?php if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">

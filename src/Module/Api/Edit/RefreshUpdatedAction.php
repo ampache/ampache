@@ -30,6 +30,7 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\database_object;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\User;
@@ -51,6 +52,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
     private GuiFactoryInterface $guiFactory;
 
+    private Browse $browse;
+
     private UiInterface $ui;
 
     public function __construct(
@@ -60,6 +63,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         LoggerInterface $logger,
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
+        Browse $browse,
         UiInterface $ui
     ) {
         parent::__construct($configContainer, $logger);
@@ -67,6 +71,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;
         $this->guiFactory      = $guiFactory;
+        $this->browse          = $browse;
         $this->ui              = $ui;
     }
 
@@ -111,7 +116,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $this->talFactory->createTalView()
                     ->setContext('BROWSE_ARGUMENT', '')
                     ->setContext('USER_IS_REGISTERED', true)
-                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                    ->setContext('USING_RATINGS', $show_ratings)
                     ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                     ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
                     ->setContext('ARGUMENT_PARAM', $argument_param)
@@ -129,53 +134,43 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 break;
             case 'playlist_row':
                 $show_art = AmpConfig::get('playlist_art');
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'show_art' => $show_art,
-                        'show_ratings' => $show_ratings,
-                    ]
+                $results  = preg_replace(
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                        ->setContext('PLAYLIST', $this->guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_SHOW_ART', $show_art)
+                        ->setContext('IS_SHOW_PLAYLIST_ADD', true)
+                        ->setContext('CLASS_COVER', 'cel_cover')
+                        ->setTemplate('playlist_row.xhtml')
+                        ->render()
                 );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
                 break;
             case 'album_row':
-                $original_year    = AmpConfig::get('use_original_year');
-                $hide_genres      = AmpConfig::get('hide_genres');
-                $show_direct_play = AmpConfig::get('directplay');
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'original_year' => $original_year,
-                        'show_ratings' => $show_ratings,
-                        'hide_genres' => $hide_genres,
-                        'show_direct_play' => $show_direct_play,
-                        'show_playlist_add' => true,
-                        'cel_cover' => 'cel_cover',
-                        'cel_album' => 'cel_album',
-                        'cel_artist' => 'cel_artist',
-                        'cel_counter' => 'cel_counter',
-                        'cel_tags' => 'cel_tags',
-                    ]
+                $hide_genres       = AmpConfig::get('hide_genres');
+                $show_played_times = AmpConfig::get('show_played_times');
+                $results           = preg_replace(
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('USER_IS_REGISTERED', User::is_registered())
+                        ->setContext('USING_RATINGS', $show_ratings)
+                        ->setContext('ALBUM', $this->guiFactory->createAlbumViewAdapter($gatekeeper, $this->browse, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
+                        ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+                        ->setContext('IS_SHOW_PLAYLIST_ADD', true)
+                        ->setContext('CLASS_COVER', 'cel_cover')
+                        ->setContext('CLASS_ALBUM', 'cel_album')
+                        ->setContext('CLASS_ARTIST', 'cel_artist')
+                        ->setContext('CLASS_TAGS', 'cel_tags')
+                        ->setContext('CLASS_COUNTER', 'cel_counter')
+                        ->setTemplate('album_row.xhtml')
+                        ->render()
                 );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
                 break;
             case 'artist_row':
                 $hide_genres      = AmpConfig::get('hide_genres');
@@ -240,6 +235,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'show_ratings' => $show_ratings,
                         'cel_cover' => 'cel_cover',
                         'cel_counter' => 'cel_counter',
+                        'cel_time' => 'cel_time',
                     ]
                 );
 
@@ -292,6 +288,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
+            case 'live_stream_row':
             case 'tvshow_season_row':
                 ob_start();
 

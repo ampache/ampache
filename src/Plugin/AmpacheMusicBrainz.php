@@ -41,12 +41,12 @@ class AmpacheMusicBrainz
     public $categories  = 'metadata';
     public $description = 'MusicBrainz metadata integration';
     public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000002';
+    public $version     = '000003';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $overwrite_name;
+    public $overwrite_name;
 
     /**
      * Constructor
@@ -65,6 +65,8 @@ class AmpacheMusicBrainz
      */
     public function install()
     {
+        Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -74,6 +76,8 @@ class AmpacheMusicBrainz
      */
     public function uninstall()
     {
+        Preference::delete('mb_overwrite_name');
+
         return true;
     } // uninstall
 
@@ -87,7 +91,8 @@ class AmpacheMusicBrainz
         if ($from_version == 0) {
             return false;
         }
-        if ($from_version < (int)$this->version) {
+        if (!Preference::exists('mb_overwrite_name')) {
+            // this wasn't installed correctly only upgraded so may be missing
             Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
         }
 
@@ -98,7 +103,6 @@ class AmpacheMusicBrainz
 
         return false;
     }
-
 
     /**
      * load
@@ -241,6 +245,7 @@ class AmpacheMusicBrainz
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
+                        'summary' => $object->summary,
                         'placeformed' => $placeFormed,
                         'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
                     );
@@ -263,4 +268,38 @@ class AmpacheMusicBrainz
 
         return false;
     } // get_external_metadata
+
+    /**
+     * get_artist
+     * Get an artist from musicbrainz
+     * @param string $mbid
+     * @return array
+     */
+    public function get_artist(string $mbid)
+    {
+        //debug_event(self::class, "get_artist: {{$mbid}}", 4);
+        $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
+        $results = array();
+        $data    = array();
+        if (Vainfo::is_mbid($mbid)) {
+            try {
+                $results = $mbrainz->lookup('artist', $mbid);
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+
+                return $data;
+            }
+        }
+        if (is_array($results) && !empty($results)) {
+            $results = $results[0];
+        }
+        if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
+            $data = array(
+                'name' => $results->{'name'},
+                'mbid' => $results->{'id'}
+            );
+        }
+
+        return $data;
+    } // get_artist
 }

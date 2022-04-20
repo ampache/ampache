@@ -59,7 +59,7 @@ use Ampache\Module\Api\Ajax;
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
-        <?php echo $media->f_artist_link; ?>
+        <?php echo $media->get_f_artist_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Year'); ?></label>

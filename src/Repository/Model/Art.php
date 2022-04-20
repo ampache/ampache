@@ -1057,7 +1057,7 @@ class Art extends database_object
                     if (!isset($image['picturetype']) && !isset($image['description'])) {
                         break;
                     }
-                    if ($data['title'] == 'ID3 ' . $image['picturetype'] || $data['title'] == 'ID3 ' . $image['description']) {
+                    if ((isset($image['picturetype']) && $data['title'] == 'ID3 ' . $image['picturetype']) || (isset($image['description']) && $data['title'] == 'ID3 ' . $image['description'])) {
                         return $image['data'];
                     }
                 }
@@ -1234,7 +1234,7 @@ class Art extends database_object
             }
         }
 
-        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? as `object_type`, ? as `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+        $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($write_type, $new_object_id, $object_type, $old_object_id));
     }
@@ -1504,6 +1504,40 @@ class Art extends database_object
         echo "</div>";
 
         return true;
+    }
+
+    /**
+     * Display an item art, bypassing the return value.
+     * @deprecated Temporary as legacy Art::display outputs boolean when used with return
+     * @param string $object_type
+     * @param integer $object_id
+     * @param string $name
+     * @param integer $thumb
+     * @param string $link
+     * @param boolean $show_default
+     * @param string $kind
+     * @return string
+     */
+    public static function display_without_return(
+        $object_type,
+        $object_id,
+        $name,
+        $thumb,
+        $link = null,
+        $show_default = true,
+        $kind = 'default'
+    ) {
+        self::display(
+            $object_type,
+            $object_id,
+            $name,
+            $thumb,
+            $link,
+            $show_default,
+            $kind
+        );
+
+        return '';
     }
 
     /**
