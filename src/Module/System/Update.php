@@ -635,6 +635,9 @@ class Update
         $update_string = "* Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links<br />* Fallback to Album Artist if both disabled";
         $version[]     = array('version' => '530015', 'description' => $update_string);
 
+        $update_string = "* Add missing rating item back in the type enum";
+        $version[]     = array('version' => '530016', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4095,9 +4098,11 @@ class Update
     public static function update_530007(): bool
     {
         $retval = true;
+        Dba::write("UPDATE `album` SET `mbid` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
+        Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
+
         $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
         $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
@@ -4151,6 +4156,8 @@ class Update
     public static function update_530010(): bool
     {
         $retval = true;
+        Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
+        Dba::write("UPDATE `recommendation_item` SET `mbid` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
         $sql    = "ALTER TABLE `artist` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `recommendation_item` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
@@ -4273,5 +4280,15 @@ class Update
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
+    }
+
+    /**
+     * update_530016
+     *
+     * Missing type compared to previous version
+     */
+    public static function update_530016(): bool
+    {
+        return (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
     }
 } // end update.class
