@@ -511,7 +511,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getindexes');
         if (count($fcatalogs) > 0) {
             $artists = Catalog::get_artist_arrays($fcatalogs);
-            Subsonic_Xml_Data::addArtistsIndexes($response, $artists, $lastmodified);
+            Subsonic_Xml_Data::addIndexes($response, $artists, $lastmodified);
         }
         self::apiOutput($input, $response);
     }
@@ -529,11 +529,11 @@ class Subsonic_Api
         if ((int)$object_id === 0) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Directory not found", 'getmusicdirectory');
         } elseif (Subsonic_Xml_Data::isArtist($object_id)) {
-            Subsonic_Xml_Data::addArtistDirectory($response, $object_id);
+            Subsonic_Xml_Data::addDirectory($response, $object_id, 'artist');
         } elseif (Subsonic_Xml_Data::isAlbum($object_id)) {
-            Subsonic_Xml_Data::addAlbumDirectory($response, $object_id);
+            Subsonic_Xml_Data::addDirectory($response, $object_id, 'album');
         } elseif (Catalog::create_from_id($object_id)) {
-            Subsonic_Xml_Data::addCatalogDirectory($response, $object_id);
+            Subsonic_Xml_Data::addDirectory($response, $object_id, 'catalog');
         } else {
             debug_event(self::class, 'getmusicdirectory: Directory not found ' . $object_id, 4);
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Directory not found", 'getmusicdirectory');
@@ -568,7 +568,7 @@ class Subsonic_Api
         }
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
         $artists  = Artist::get_id_arrays($catalogs);
-        Subsonic_Xml_Data::addArtistsRoot($response, $artists);
+        Subsonic_Xml_Data::addArtists($response, $artists);
         self::apiOutput($input, $response);
     }
 
@@ -710,7 +710,7 @@ class Subsonic_Api
     public static function getalbumlist($input, $elementName = "albumList")
     {
         $type     = self::check_parameter($input, 'type');
-        $response = Subsonic_Xml_Data::createSuccessResponse('getalbumlist');
+        $response = Subsonic_Xml_Data::createSuccessResponse($elementName);
         if ($type) {
             $errorOccured = false;
             $albums       = self::_albumList($input, (string)$type);
@@ -719,7 +719,14 @@ class Subsonic_Api
                 $errorOccured = true;
             }
             if (!$errorOccured) {
-                Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
+                switch ($elementName) {
+                    case 'albumList':
+                        Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
+                        break;
+                    case 'albumList2':
+                        Subsonic_Xml_Data::addAlbumList2($response, $albums, $elementName);
+                        break;
+                }
             }
         }
         self::apiOutput($input, $response);
@@ -732,7 +739,7 @@ class Subsonic_Api
      */
     public static function getalbumlist2($input)
     {
-        self::getAlbumList($input, "albumList2");
+        self::getAlbumList2($input, "albumList2");
     }
 
     /**
@@ -958,8 +965,15 @@ class Subsonic_Api
             $songs = Search::run($ssong);
         }
 
-        $response = Subsonic_Xml_Data::createSuccessResponse('search2');
-        Subsonic_Xml_Data::addSearchResult($response, $artists, $albums, $songs, $elementName);
+        $response = Subsonic_Xml_Data::createSuccessResponse($elementName);
+        switch ($elementName) {
+            case 'searchResult2':
+                Subsonic_Xml_Data::addSearchResult2($response, $artists, $albums, $songs, $elementName);
+                break;
+            case 'searchResult3':
+                Subsonic_Xml_Data::addSearchResult3($response, $artists, $albums, $songs, $elementName);
+                break;
+        }
         self::apiOutput($input, $response);
     }
 
@@ -1008,7 +1022,7 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse('getplaylist');
         if (Subsonic_Xml_Data::isSmartPlaylist($playlistid)) {
             $playlist = new Search(Subsonic_Xml_Data::getAmpacheId($playlistid), 'song');
-            Subsonic_Xml_Data::addSmartPlaylist($response, $playlist, true);
+            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::getAmpacheId($playlistid));
             Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
@@ -1388,8 +1402,7 @@ class Subsonic_Api
 
             $response = Subsonic_Xml_Data::createSuccessResponse('setrating');
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.",
-                'setrating');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'setrating');
         }
 
         self::apiOutput($input, $response);
@@ -1404,12 +1417,20 @@ class Subsonic_Api
      */
     public static function getstarred($input, $elementName = "starred")
     {
-        $user_id = User::get_from_username($input['u'])->id;
-
-        $response = Subsonic_Xml_Data::createSuccessResponse('getstarred');
-        Subsonic_Xml_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000),
-            Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000),
-            $elementName);
+        $user_id  = User::get_from_username($input['u'])->id;
+        $response = Subsonic_Xml_Data::createSuccessResponse($elementName);
+        switch ($elementName) {
+            case 'starred':
+                Subsonic_Xml_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000),
+                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000),
+                    $elementName);
+                break;
+            case 'starred2':
+                Subsonic_Xml_Data::addStarred2($response, Userflag::get_latest('artist', $user_id, 10000),
+                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000),
+                    $elementName);
+                break;
+        }
         self::apiOutput($input, $response);
     }
 
@@ -1606,7 +1627,7 @@ class Subsonic_Api
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getinternetradiostations');
         $radios   = static::getLiveStreamRepository()->getAll();
-        Subsonic_Xml_Data::addRadios($response, $radios);
+        Subsonic_Xml_Data::addInternetRadioStations($response, $radios);
         self::apiOutput($input, $response);
     }
 
@@ -2029,7 +2050,7 @@ class Subsonic_Api
                 if ($action == 'get') {
                     Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
                 } else {
-                    Subsonic_Xml_Data::createJukeboxStatus($response, $localplay);
+                    Subsonic_Xml_Data::addJukeboxStatus($response, $localplay);
                 }
             }
         }
@@ -2134,9 +2155,9 @@ class Subsonic_Api
      * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
      * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
      * @param array $input
-     * @param string $child
+     * @param string $elementName
      */
-    public static function getartistinfo($input, $child = "artistInfo")
+    public static function getartistinfo($input, $elementName = "artistInfo")
     {
         $id                = self::check_parameter($input, 'id');
         $count             = $input['count'] ?? 20;
@@ -2146,8 +2167,15 @@ class Subsonic_Api
             $artist_id = Subsonic_Xml_Data::getAmpacheId($id);
             $info      = Recommendation::get_artist_info($artist_id);
             $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
-            $response  = Subsonic_Xml_Data::createSuccessResponse('getartistinfo');
-            Subsonic_Xml_Data::addArtistInfo($response, $info, $similars, $child);
+            $response  = Subsonic_Xml_Data::createSuccessResponse($elementName);
+            switch ($elementName) {
+                case 'artistInfo':
+                    Subsonic_Xml_Data::addArtistInfo($response, $info, $similars, $elementName);
+                    break;
+                case 'artistInfo2':
+                    Subsonic_Xml_Data::addArtistInfo2($response, $info, $similars, $elementName);
+                    break;
+            }
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getartistinfo');
         }
@@ -2170,9 +2198,9 @@ class Subsonic_Api
      * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
      * Takes song/album/artist id in parameter with optional similar songs count.
      * @param array $input
-     * @param string $child
+     * @param string $elementName
      */
-    public static function getsimilarsongs($input, $child = "similarSongs")
+    public static function getsimilarsongs($input, $elementName = "similarSongs")
     {
         if (!AmpConfig::get('show_similar')) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND,
@@ -2211,10 +2239,17 @@ class Subsonic_Api
         }
 
         if (count($songs) == 0) {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getsimilarsongs');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', $elementName);
         } else {
-            $response = Subsonic_Xml_Data::createSuccessResponse('getsimilarsongs');
-            Subsonic_Xml_Data::addSimilarSongs($response, $songs, $child);
+            $response = Subsonic_Xml_Data::createSuccessResponse($elementName);
+            switch ($elementName) {
+                case 'similarSongs':
+                    Subsonic_Xml_Data::addSimilarSongs($response, $songs, $elementName);
+                    break;
+                case 'similarSongs2':
+                    Subsonic_Xml_Data::addSimilarSongs2($response, $songs, $elementName);
+                    break;
+            }
         }
 
         self::apiOutput($input, $response);
@@ -2275,7 +2310,7 @@ class Subsonic_Api
         if (AmpConfig::get('podcast')) {
             $response = Subsonic_Xml_Data::createSuccessResponse('getnewestpodcasts');
             $episodes = Catalog::get_newest_podcasts($count);
-            Subsonic_Xml_Data::addNewestPodcastEpisodes($response, $episodes);
+            Subsonic_Xml_Data::addNewestPodcasts($response, $episodes);
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getnewestpodcasts');
         }
@@ -2512,7 +2547,7 @@ class Subsonic_Api
         $messages = $privateMessageRepository->getChatMessages($since);
 
         $response = Subsonic_Xml_Data::createSuccessResponse('getchatmessages');
-        Subsonic_Xml_Data::addMessages($response, $messages);
+        Subsonic_Xml_Data::addChatMessages($response, $messages);
         self::apiOutput($input, $response);
     }
 
