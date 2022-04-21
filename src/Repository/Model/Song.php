@@ -546,6 +546,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // map the catalog and artists
         Catalog::update_map((int)$catalog, 'song', $song_id);
+        if ((int)$artist_id > 0) {
+            Artist::add_artist_map($artist_id, 'song', $song_id);
+            Album::add_album_map($album_id, 'song', $artist_id);
+        }
+        if ((int)$albumartist_id > 0) {
+            Artist::add_artist_map($albumartist_id, 'album', $album_id);
+            Album::add_album_map($album_id, 'album', $albumartist_id);
+        }
         foreach ($artist_mbid_array as $songArtist_mbid) {
             $song_artist_id = Artist::check_mbid($songArtist_mbid);
             if ($song_artist_id > 0) {
