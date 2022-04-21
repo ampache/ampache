@@ -94,7 +94,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
@@ -135,7 +135,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
         $sql .= 'ORDER BY RAND()';
@@ -186,8 +186,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * @return int[]
      */
     public function getAlbumSuite(
-        Album $album,
-        int $catalogId = 0
+        Album $album
     ): array {
         $f_name = $album->get_fullname(true);
         if ($f_name == '') {
@@ -233,10 +232,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $catalog_where = "";
         $catalog_join  = "";
 
-        if ($catalogId > 0) {
-            $catalog_where .= " AND `catalog`.`id` = ?";
-            $params[] = $catalogId;
-        }
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
@@ -360,7 +355,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
         }
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
             $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
         }
         $original_year     = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";

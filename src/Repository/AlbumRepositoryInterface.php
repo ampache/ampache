@@ -85,8 +85,7 @@ interface AlbumRepositoryInterface
      * @return int[]
      */
     public function getAlbumSuite(
-        Album $album,
-        int $catalogId = 0
+        Album $album
     ): array;
 
     /**
