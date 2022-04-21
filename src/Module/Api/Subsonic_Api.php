@@ -968,10 +968,10 @@ class Subsonic_Api
         $response = Subsonic_Xml_Data::createSuccessResponse($elementName);
         switch ($elementName) {
             case 'searchResult2':
-                Subsonic_Xml_Data::addSearchResult2($response, $artists, $albums, $songs, $elementName);
+                Subsonic_Xml_Data::addSearchResult2($response, $artists, $albums, $songs);
                 break;
             case 'searchResult3':
-                Subsonic_Xml_Data::addSearchResult3($response, $artists, $albums, $songs, $elementName);
+                Subsonic_Xml_Data::addSearchResult3($response, $artists, $albums, $songs);
                 break;
         }
         self::apiOutput($input, $response);
@@ -1422,13 +1422,11 @@ class Subsonic_Api
         switch ($elementName) {
             case 'starred':
                 Subsonic_Xml_Data::addStarred($response, Userflag::get_latest('artist', $user_id, 10000),
-                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000),
-                    $elementName);
+                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000));
                 break;
             case 'starred2':
                 Subsonic_Xml_Data::addStarred2($response, Userflag::get_latest('artist', $user_id, 10000),
-                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000),
-                    $elementName);
+                    Userflag::get_latest('album', $user_id, 10000), Userflag::get_latest('song', $user_id, 10000));
                 break;
         }
         self::apiOutput($input, $response);
@@ -2170,10 +2168,10 @@ class Subsonic_Api
             $response  = Subsonic_Xml_Data::createSuccessResponse($elementName);
             switch ($elementName) {
                 case 'artistInfo':
-                    Subsonic_Xml_Data::addArtistInfo($response, $info, $similars, $elementName);
+                    Subsonic_Xml_Data::addArtistInfo($response, $info, $similars);
                     break;
                 case 'artistInfo2':
-                    Subsonic_Xml_Data::addArtistInfo2($response, $info, $similars, $elementName);
+                    Subsonic_Xml_Data::addArtistInfo2($response, $info, $similars);
                     break;
             }
         } else {

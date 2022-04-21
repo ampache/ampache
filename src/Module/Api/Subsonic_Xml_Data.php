@@ -621,11 +621,10 @@ class Subsonic_Xml_Data
      * addAlbumList
      * @param SimpleXMLElement $xml
      * @param $albums
-     * @param string $elementName
      */
-    public static function addAlbumList($xml, $albums, $elementName = "albumList")
+    public static function addAlbumList($xml, $albums)
     {
-        $xlist = $xml->addChild(htmlspecialchars($elementName));
+        $xlist = $xml->addChild(htmlspecialchars('albumList'));
         foreach ($albums as $albumid) {
             $album = new Album($albumid);
             self::addAlbum($xlist, $album);
@@ -636,11 +635,10 @@ class Subsonic_Xml_Data
      * addAlbumList2
      * @param SimpleXMLElement $xml
      * @param $albums
-     * @param string $elementName
      */
-    public static function addAlbumList2($xml, $albums, $elementName = "albumList2")
+    public static function addAlbumList2($xml, $albums)
     {
-        $xlist = $xml->addChild(htmlspecialchars($elementName));
+        $xlist = $xml->addChild(htmlspecialchars('albumList2'));
         foreach ($albums as $albumid) {
             $album = new Album($albumid);
             self::addAlbum($xlist, $album);
@@ -1310,11 +1308,10 @@ class Subsonic_Xml_Data
      * @param array $artists
      * @param array $albums
      * @param array $songs
-     * @param string $elementName
      */
-    public static function addSearchResult2($xml, $artists, $albums, $songs, $elementName = "searchResult2")
+    public static function addSearchResult2($xml, $artists, $albums, $songs)
     {
-        $xresult = $xml->addChild(htmlspecialchars($elementName));
+        $xresult = $xml->addChild(htmlspecialchars('searchResult2'));
         foreach ($artists as $artistid) {
             $artist = new Artist((int) $artistid);
             self::addArtist($xresult, $artist);
@@ -1334,11 +1331,10 @@ class Subsonic_Xml_Data
      * @param array $artists
      * @param array $albums
      * @param array $songs
-     * @param string $elementName
      */
-    public static function addSearchResult3($xml, $artists, $albums, $songs, $elementName = "searchResult3")
+    public static function addSearchResult3($xml, $artists, $albums, $songs)
     {
-        $xresult = $xml->addChild(htmlspecialchars($elementName));
+        $xresult = $xml->addChild(htmlspecialchars('searchResult3'));
         foreach ($artists as $artistid) {
             $artist = new Artist((int) $artistid);
             self::addArtist($xresult, $artist);
@@ -1376,11 +1372,10 @@ class Subsonic_Xml_Data
      * @param array $artists
      * @param array $albums
      * @param array $songs
-     * @param string $elementName
      */
-    public static function addStarred($xml, $artists, $albums, $songs, $elementName = "starred")
+    public static function addStarred($xml, $artists, $albums, $songs)
     {
-        $xstarred = $xml->addChild(htmlspecialchars($elementName));
+        $xstarred = $xml->addChild(htmlspecialchars('starred'));
 
         foreach ($artists as $artistid) {
             $artist = new Artist((int) $artistid);
@@ -1403,11 +1398,10 @@ class Subsonic_Xml_Data
      * @param array $artists
      * @param array $albums
      * @param array $songs
-     * @param string $elementName
      */
-    public static function addStarred2($xml, $artists, $albums, $songs, $elementName = "starred2")
+    public static function addStarred2($xml, $artists, $albums, $songs)
     {
-        $xstarred = $xml->addChild(htmlspecialchars($elementName));
+        $xstarred = $xml->addChild(htmlspecialchars('starred2'));
 
         foreach ($artists as $artistid) {
             $artist = new Artist((int) $artistid);
@@ -1615,13 +1609,12 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $info
      * @param array $similars
-     * @param string $child
      */
-    public static function addArtistInfo($xml, $info, $similars, $child)
+    public static function addArtistInfo($xml, $info, $similars)
     {
         $artist = new Artist((int) $info['id']);
 
-        $xartist = $xml->addChild(htmlspecialchars($child));
+        $xartist = $xml->addChild(htmlspecialchars('artistInfo'));
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
@@ -1641,13 +1634,12 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $info
      * @param array $similars
-     * @param string $child
      */
-    public static function addArtistInfo2($xml, $info, $similars, $child)
+    public static function addArtistInfo2($xml, $info, $similars)
     {
         $artist = new Artist((int) $info['id']);
 
-        $xartist = $xml->addChild(htmlspecialchars($child));
+        $xartist = $xml->addChild(htmlspecialchars('artistInfo2'));
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
