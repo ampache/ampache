@@ -4177,10 +4177,22 @@ class Update
      */
     public static function update_530011(): bool
     {
-        $retval    = true;
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $sql       = "ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $retval     = true;
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $rsstoken   = false;
+        $sql        = "DESCRIBE `user`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['Field'] == 'rsstoken') {
+                $rsstoken = true;
+            }
+        }
+        if (!$rsstoken) {
+            $sql = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+            $retval &= (Dba::write($sql) !== false);
+        }
+        $sql = "ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user` MODIFY COLUMN `validation` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         $retval &= (Dba::write($sql) !== false);
