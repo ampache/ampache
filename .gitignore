@@ -12,6 +12,7 @@ build
 config/ampache-doped.cfg.php
 config/ampache.cfg.php
 config/registration_agreement.php
+docker/media/*
 log/
 logs/
 nbproject/
