@@ -20,7 +20,7 @@ node_modules/
 channel/.htaccess
 play/.htaccess
 rest/.htaccess
-lib/components
+lib/components/
 client
 newclient
 core

@@ -1,0 +1,112 @@
+ #######################################################################
+
+ # This file lists all description strings from your Ampache-database -> preference-table.
+ # Please do not delete or modify the content by yourself. It will be automatically (re)generated
+ # if you run './gather-messages.sh [-gu|--getutds].
+ # Last Update: 20.04.2022 15:41:10 AEST 
+
+ #######################################################################
+
+#: Database preference table id 71
+msgid "httpQ Active Instance"
+msgstr ""
+
+#: Database preference table id 85
+msgid "Show current song in Web Player page title"
+msgstr ""
+
+#: Database preference table id 164
+msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
+msgstr ""
+
+#: Database preference subcategory table id 1
+msgid "feature"
+msgstr ""
+
+#: Database preference subcategory table id 4
+msgid "query"
+msgstr ""
+
+#: Database preference subcategory table id 19
+msgid "transcoding"
+msgstr ""
+
+#: Database preference subcategory table id 22
+msgid "custom"
+msgstr ""
+
+#: Database preference subcategory table id 33
+msgid "theme"
+msgstr ""
+
+#: Database preference subcategory table id 40
+msgid "localplay"
+msgstr ""
+
+#: Database preference subcategory table id 69
+msgid "player"
+msgstr ""
+
+#: Database preference subcategory table id 70
+msgid "mpd"
+msgstr ""
+
+#: Database preference subcategory table id 71
+msgid "httpq"
+msgstr ""
+
+#: Database preference subcategory table id 77
+msgid "lastfm"
+msgstr ""
+
+#: Database preference subcategory table id 82
+msgid "home"
+msgstr ""
+
+#: Database preference subcategory table id 83
+msgid "library"
+msgstr ""
+
+#: Database preference subcategory table id 84
+msgid "browse"
+msgstr ""
+
+#: Database preference subcategory table id 86
+msgid "backend"
+msgstr ""
+
+#: Database preference subcategory table id 90
+msgid "privacy"
+msgstr ""
+
+#: Database preference subcategory table id 95
+msgid "update"
+msgstr ""
+
+#: Database preference subcategory table id 103
+msgid "share"
+msgstr ""
+
+#: Database preference subcategory table id 112
+msgid "upload"
+msgstr ""
+
+#: Database preference subcategory table id 131
+msgid "notification"
+msgstr ""
+
+#: Database preference subcategory table id 142
+msgid "metadata"
+msgstr ""
+
+#: Database preference subcategory table id 144
+msgid "podcast"
+msgstr ""
+
+#: Database preference subcategory table id 148
+msgid "catalog"
+msgstr ""
+
+#: Database preference subcategory table id 164
+msgid "subsonic"
+msgstr ""
