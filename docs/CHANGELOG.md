@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## Ampache 5.3.1-release
+
+There were a few reports of some databases missing an important column. This release makes sure it's there.
+
+### Added
+
+* Docker compose files to help create a local dev environment (read docker/README.md for more info)
+* Added php8.1 to composer (**still considered unstable**)
+
+### Changed
+
+* Began rework of Subsonic modules
+
+### Fixed
+
+* Database missing rsstoken column in the user table
+* gather-messages.sh was finding lots more strings than it needed
+* Query sql with ambiguous ID
+* New song import might not map all the artists
+* Catalog query missing a comma
+
+## API 5.3.1
+
+**NO CHANGE**
+
 ## Ampache 5.3.0-release
 
 This cycle we have added support for multiple Album and Song artists.
@@ -83,7 +108,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Tag arrays for Mbid and Artists lookup
 * Deleted item tables would not record some deletions
 * Updating the artist name would always migrate data when not required
-* Artist::check would always create and artist object with readonly set
+* Artist::check would always create an artist object with readonly set
 * Genres would not update the parent (Song->Album->Artist) whan using update from tags
 * Random sql that uses search rules
 * Use configured Ampache temp directory in Seafile catalog
