@@ -739,7 +739,7 @@ class Subsonic_Api
      */
     public static function getalbumlist2($input)
     {
-        self::getAlbumList2($input, "albumList2");
+        self::getAlbumList($input, "albumList2");
     }
 
     /**
