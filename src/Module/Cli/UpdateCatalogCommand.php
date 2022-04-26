@@ -34,7 +34,7 @@ final class UpdateCatalogCommand extends Command
     public function __construct(
         UpdateCatalogInterface $updateCatalog
     ) {
-        parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog'));
+        parent::__construct('run:updateCatalog', T_('Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceag are assumed'));
 
         $this->updateCatalog   = $updateCatalog;
 
