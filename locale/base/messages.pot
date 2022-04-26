@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2022-04-20 15:41+1000\n"
+"POT-Creation-Date: 2022-04-27 08:11+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 #: ../../src/Repository/Model/Album.php:653
 #: ../../src/Repository/Model/Artist.php:535
 #: ../../src/Repository/Model/Clip.php:181
-#: ../../src/Repository/Model/Song.php:1870
+#: ../../src/Repository/Model/Song.php:1878
 msgid "Artist"
 msgstr ""
 
@@ -1339,7 +1339,7 @@ msgstr ""
 #: ../../src/Repository/Model/Podcast_Episode.php:209
 #: ../../src/Repository/Model/Search.php:525
 #: ../../src/Repository/Model/Search.php:730
-#: ../../src/Repository/Model/Song.php:1875
+#: ../../src/Repository/Model/Song.php:1883
 #: ../../src/Repository/Model/Video.php:376
 msgid "Title"
 msgstr ""
@@ -3323,7 +3323,7 @@ msgid "Repeat Off"
 msgstr ""
 
 #: ../../public/templates/show_html5_player.inc.php:201
-#: ../../src/Repository/Model/Song.php:1822
+#: ../../src/Repository/Model/Song.php:1830
 msgid "Show Lyrics"
 msgstr ""
 
@@ -7833,7 +7833,9 @@ msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:37
-msgid "Perform catalog actions for all files of a catalog"
+msgid ""
+"Perform catalog actions for all files of a catalog. If no options are given, "
+"the defaults actions -ceag are assumed"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:42
@@ -9911,7 +9913,7 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: ../../src/Repository/Model/Song.php:1865
+#: ../../src/Repository/Model/Song.php:1873
 msgid "Track MusicBrainzID"
 msgstr ""
 
@@ -10695,7 +10697,7 @@ msgstr ""
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 20.04.2022 15:41:10 AEST 
+ # Last Update: 27.04.2022 08:11:58 AEST 
 
  #######################################################################
 
