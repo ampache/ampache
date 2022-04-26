@@ -10709,10 +10709,6 @@ msgstr ""
 msgid "Show current song in Web Player page title"
 msgstr ""
 
-#: Database preference table id 164
-msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
-msgstr ""
-
 #: Database preference subcategory table id 1
 msgid "feature"
 msgstr ""
