@@ -2321,7 +2321,7 @@ abstract class Catalog extends database_object
             }
         }
         foreach ($album_map_songArtist as $existing_map) {
-            if (!in_array($existing_map, $album_map_songArtist)) {
+            if (!in_array($existing_map, $songArtist_array)) {
                 Album::remove_album_map($new_song->album, 'song', $existing_map);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
