@@ -1325,7 +1325,7 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_album_map
+     * get_artist_map
      *
      * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
