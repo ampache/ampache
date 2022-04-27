@@ -2553,6 +2553,13 @@ abstract class Catalog extends database_object
         Dba::write($sql);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
+            // delete old maps in album_map table
+            $sql        = "SELECT `album_map`.`album_id`, `album_map`.`object_id`, `album_map`.`object_type` FROM (SELECT * FROM `album_map` WHERE `object_type` = 'song') AS `album_map` LEFT JOIN (SELECT DISTINCT `artist_id`, `album` FROM (SELECT `artist_id`, `object_id` AS `song_id` FROM `artist_map` WHERE `object_type` = 'song') AS `artist_songs`, `song` WHERE `song_id` = `id`) AS `artist_map` ON `album_map`.`object_id` = `artist_map`.`artist_id` AND `album_map`.`album_id` = `artist_map`.`album` WHERE `artist_map`.`album` IS NULL;";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = ?;";
+                Dba::write($sql, array($row['album_id'], $row['object_id'], $row['object_type']));
+            }
             // this isn't really needed often and is slow
             Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
             // Fill in null Agents with a value
