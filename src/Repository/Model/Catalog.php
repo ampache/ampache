@@ -2006,12 +2006,10 @@ abstract class Catalog extends database_object
         }
         // artist
         if ($libitem instanceof Artist) {
-            if ($artist || $album || $tags || $maps) {
-                // make sure albums are updated before the artist
-                foreach ($libitem->get_child_ids() as $album_id) {
-                    $album_tags = self::getSongTags('album', $album_id);
-                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-                }
+            // make sure albums are updated before the artist
+            foreach ($libitem->get_child_ids() as $album_id) {
+                $album_tags = self::getSongTags('album', $album_id);
+                Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
             // refresh the artist tags after everything else
             $tags = self::getSongTags('artist', $libitem->id);
