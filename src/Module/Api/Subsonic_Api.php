@@ -905,17 +905,25 @@ class Subsonic_Api
      */
     public static function search2($input, $elementName = "searchResult2")
     {
-        $query    = urldecode((string)self::check_parameter($input, 'query'));
-        $operator = (substr($query, -1) == '"' && substr($query, 0) == '"') ? 4 : 0;
-        $query    = trim($query, '"');
+        $operator = 0; // contains
+        $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
+        $query    = $original;
+        if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
+            $query    = substr($original, 1, -1);
+            $operator = 4; // equals
+        }
+        if (substr($original, 0, 1) == '"' && substr($original, -2, 2) == '"*') {
+            $query    = substr($original, 1, -2);
+            $operator = 4; // equals
+        }
         $artists  = array();
         $albums   = array();
         $songs    = array();
 
         if (strlen($query) > 1) {
-            if (substr($query, -1) == "*") {
+            if (substr($original, -1) == "*" && !substr($query, -2, 2) == '"*') {
                 $query    = substr($query, 0, -1);
-                $operator = 2; // Start with
+                $operator = 2; // Starts with
             }
         }
 
