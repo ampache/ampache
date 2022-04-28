@@ -978,6 +978,7 @@ class Subsonic_Xml_Data
             $xdir->addAttribute('parent', (string)$data['catalog_id']);
         }
         $xdir->addAttribute('name', (string)$data['f_name']);
+        self::setIfStarred($xdir, 'artist', $artist_id);
         $allalbums = static::getAlbumRepository()->getByArtist($artist_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
@@ -1002,6 +1003,7 @@ class Subsonic_Xml_Data
             $xdir->addAttribute('parent', (string)$album->catalog);
         }
         $xdir->addAttribute('name', (string)self::checkName($album->get_fullname()));
+        self::setIfStarred($xdir, 'album', $album->id);
 
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
