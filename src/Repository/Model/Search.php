@@ -1725,7 +1725,7 @@ class Search extends playlist_object
             } // switch on ruletype album
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join) || $catalog_disable || $catalog_filter;
+        $join['song']        = array_key_exists('song', $join);
         $join['catalog']     = $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
@@ -1739,15 +1739,15 @@ class Search extends playlist_object
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";
         }
         if ($join['catalog']) {
-            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`object_id` = `album`.`id`";
+            $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_album`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
-            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
                 $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
             } else {
@@ -2039,9 +2039,9 @@ class Search extends playlist_object
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]                = "`artist_catalog`.`catalog_id` $sql_match_operator ?";
-                    $parameters[]           = $input;
-                    $join['artist_catalog'] = true;
+                    $where[]         = "`catalog_se`.`catalog_id` $sql_match_operator ?";
+                    $parameters[]    = $input;
+                    $join['catalog'] = true;
                     break;
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
@@ -2072,8 +2072,8 @@ class Search extends playlist_object
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join) || $catalog_disable || $catalog_filter;
-        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['song']        = array_key_exists('song', $join);
+        $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
@@ -2083,15 +2083,15 @@ class Search extends playlist_object
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
         }
         if ($join['catalog']) {
-            $table['2_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
+            $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
+            $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql .= " `catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
-            $table['3_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
                 $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
             } else {
@@ -2106,9 +2106,6 @@ class Search extends playlist_object
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
             $where_sql .= " AND `image`.`object_type`='artist'";
             $where_sql .= " AND `image`.`size`='original'";
-        }
-        if (array_key_exists('artist_catalog', $join)) {
-            $table['catalog_map'] = "LEFT JOIN `catalog_map` AS `artist_catalog` ON `artist_catalog`.`object_type` = 'artist' AND `artist_catalog`.`object_id` = `artist`.`id`";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
