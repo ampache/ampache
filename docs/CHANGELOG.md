@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## Ampache 5.3.2-release
+
+Some QoL fixes here with some initial SubSonic, Search and that database column again!
+
+### Added
+
+* Look for orphaned maps to delete.
+* Get server timezone for get_datetime (date_default_timezone_get())
+* Allow deleting played activity from the ui and count using a function (Require: 100)
+
+### Changed
+
+* Updated the translation gathering process a little
+* Organized the play/skip counting into it's own function
+* Update artist from tags needs to update albums first
+* SubSonic
+  * Only search for song title instead of everything
+  * Add starred to directory elements
+
+### Fixed
+
+* Format on an empty album would complain in the log
+* Update from tags might not remove the old song artist
+* Migrating to a new album would leave old album maps
+* Artist search query with mapping was very slow
+* Database column check not included in 5.3.1 correctly
+* SubSonic
+  * Get recently played
+  * Fixed up search queries using "" (wrapping in quotes means exact search)
+
+## API 5.3.1
+
+**NO CHANGE**
+
 ## Ampache 5.3.1-release
 
 There were a few reports of some databases missing an important column. This release makes sure it's there.

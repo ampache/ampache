@@ -1158,13 +1158,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             foreach ($artists as $artist_id) {
                 Stats::insert('artist', $artist_id, $user_id, $agent, $location, 'stream', $date);
             }
-            // update the counts for parent objects
-            if (!empty($artists)) {
-                $sql = "UPDATE `artist` SET `total_count` = `total_count` + 1 WHERE `id` IN (" . implode(',', $artists) . ");";
-                Dba::write($sql);
-            }
-            $sql  = "UPDATE `album` SET `total_count` = `total_count` + 1 WHERE `id` = ?;";
-            Dba::write($sql, array($this->album));
             // running total of the user stream data
             $user_data = User::get_user_data($user_id, 'play_size');
             $play_size = (isset($user_data['play_size']))
@@ -2271,7 +2264,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $results = array();
         $valid   = ($user_id > 0);
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }

@@ -197,8 +197,7 @@ class Repository
      */
     protected function deleteRecord($object_id)
     {
-        $sql = 'DELETE FROM `' . $this->getTableName()
-                . '` WHERE id = ?';
+        $sql = 'DELETE FROM `' . $this->getTableName() . '` WHERE id = ?';
         Dba::write($sql, array($object_id));
     }
 
