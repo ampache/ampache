@@ -597,8 +597,10 @@ class Album extends database_object implements library_item
         if ($details) {
             /* Pull the advanced information */
             $data = $this->_get_extra_info();
-            foreach ($data as $key => $value) {
-                $this->$key = $value;
+            if (!empty($data)) {
+                foreach ($data as $key => $value) {
+                    $this->$key = $value;
+                }
             }
             $this->tags   = Tag::get_top_tags('album', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'album');
@@ -1325,7 +1327,7 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_album_map
+     * get_artist_map
      *
      * This returns an ids of artists that have songs/albums mapped
      * @param string $object_type
