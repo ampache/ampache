@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2022-04-20 15:41+1000\n"
+"POT-Creation-Date: 2022-04-27 08:23+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 #: ../../src/Repository/Model/Album.php:653
 #: ../../src/Repository/Model/Artist.php:535
 #: ../../src/Repository/Model/Clip.php:181
-#: ../../src/Repository/Model/Song.php:1870
+#: ../../src/Repository/Model/Song.php:1878
 msgid "Artist"
 msgstr ""
 
@@ -1339,7 +1339,7 @@ msgstr ""
 #: ../../src/Repository/Model/Podcast_Episode.php:209
 #: ../../src/Repository/Model/Search.php:525
 #: ../../src/Repository/Model/Search.php:730
-#: ../../src/Repository/Model/Song.php:1875
+#: ../../src/Repository/Model/Song.php:1883
 #: ../../src/Repository/Model/Video.php:376
 msgid "Title"
 msgstr ""
@@ -3323,7 +3323,7 @@ msgid "Repeat Off"
 msgstr ""
 
 #: ../../public/templates/show_html5_player.inc.php:201
-#: ../../src/Repository/Model/Song.php:1822
+#: ../../src/Repository/Model/Song.php:1830
 msgid "Show Lyrics"
 msgstr ""
 
@@ -7833,7 +7833,9 @@ msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:37
-msgid "Perform catalog actions for all files of a catalog"
+msgid ""
+"Perform catalog actions for all files of a catalog. If no options are given, "
+"the defaults actions -ceag are assumed"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:42
@@ -9911,7 +9913,7 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: ../../src/Repository/Model/Song.php:1865
+#: ../../src/Repository/Model/Song.php:1873
 msgid "Track MusicBrainzID"
 msgstr ""
 
@@ -10671,134 +10673,122 @@ msgstr ""
 msgid "Add to wanted list"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:3
+#: ./untranslated-strings.txt:3
 msgid "Connected Users"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:7
+#: ./untranslated-strings.txt:7
 msgid "Catalog Size"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:11
+#: ./untranslated-strings.txt:11
 msgid "Catalog Time"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:15
+#: ./untranslated-strings.txt:15
 msgid "Total Users"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:19
+#: ./untranslated-strings.txt:19
 msgid "Update Now!"
 msgstr ""
- #######################################################################
 
- # This file lists all description strings from your Ampache-database -> preference-table.
- # Please do not delete or modify the content by yourself. It will be automatically (re)generated
- # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 20.04.2022 15:41:10 AEST 
-
- #######################################################################
-
-#: Database preference table id 71
+#: ./untranslated-strings.txt:22
 msgid "httpQ Active Instance"
 msgstr ""
 
-#: Database preference table id 85
+#: ./untranslated-strings.txt:26
 msgid "Show current song in Web Player page title"
 msgstr ""
 
-#: Database preference table id 164
-msgid "Force Subsonic streams to download. (Enable scrobble in your client to record stats)"
-msgstr ""
-
-#: Database preference subcategory table id 1
+#: ./untranslated-strings.txt:30
 msgid "feature"
 msgstr ""
 
-#: Database preference subcategory table id 4
+#: ./untranslated-strings.txt:34
 msgid "query"
 msgstr ""
 
-#: Database preference subcategory table id 19
+#: ./untranslated-strings.txt:38
 msgid "transcoding"
 msgstr ""
 
-#: Database preference subcategory table id 22
+#: ./untranslated-strings.txt:42
 msgid "custom"
 msgstr ""
 
-#: Database preference subcategory table id 33
+#: ./untranslated-strings.txt:46
 msgid "theme"
 msgstr ""
 
-#: Database preference subcategory table id 40
+#: ./untranslated-strings.txt:50
 msgid "localplay"
 msgstr ""
 
-#: Database preference subcategory table id 69
+#: ./untranslated-strings.txt:54
 msgid "player"
 msgstr ""
 
-#: Database preference subcategory table id 70
+#: ./untranslated-strings.txt:58
 msgid "mpd"
 msgstr ""
 
-#: Database preference subcategory table id 71
+#: ./untranslated-strings.txt:62
 msgid "httpq"
 msgstr ""
 
-#: Database preference subcategory table id 77
+#: ./untranslated-strings.txt:66
 msgid "lastfm"
 msgstr ""
 
-#: Database preference subcategory table id 82
+#: ./untranslated-strings.txt:70
 msgid "home"
 msgstr ""
 
-#: Database preference subcategory table id 83
+#: ./untranslated-strings.txt:74
 msgid "library"
 msgstr ""
 
-#: Database preference subcategory table id 84
+#: ./untranslated-strings.txt:78
 msgid "browse"
 msgstr ""
 
-#: Database preference subcategory table id 86
+#: ./untranslated-strings.txt:82
 msgid "backend"
 msgstr ""
 
-#: Database preference subcategory table id 90
+#: ./untranslated-strings.txt:86
 msgid "privacy"
 msgstr ""
 
-#: Database preference subcategory table id 95
+#: ./untranslated-strings.txt:90
 msgid "update"
 msgstr ""
 
-#: Database preference subcategory table id 103
+#: ./untranslated-strings.txt:94
 msgid "share"
 msgstr ""
 
-#: Database preference subcategory table id 112
+#: ./untranslated-strings.txt:98
 msgid "upload"
 msgstr ""
 
-#: Database preference subcategory table id 131
+#: ./untranslated-strings.txt:102
 msgid "notification"
 msgstr ""
 
-#: Database preference subcategory table id 142
+#: ./untranslated-strings.txt:106
 msgid "metadata"
 msgstr ""
 
-#: Database preference subcategory table id 144
+#: ./untranslated-strings.txt:110
 msgid "podcast"
 msgstr ""
 
-#: Database preference subcategory table id 148
+#: ./untranslated-strings.txt:114
 msgid "catalog"
 msgstr ""
 
-#: Database preference subcategory table id 164
+#: ./untranslated-strings.txt:118
 msgid "subsonic"
 msgstr ""

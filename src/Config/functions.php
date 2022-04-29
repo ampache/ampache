@@ -450,7 +450,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
 
     // get your locale and set the date based on that, unless you have 'custom_datetime set'
     $locale = AmpConfig::get('lang', 'en_US');
-    $format = new IntlDateFormatter($locale, $date_type, $time_type, null, null, $pattern);
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, date_default_timezone_get(), null, $pattern);
 
     return $format->format($time);
 }
@@ -736,7 +736,7 @@ function sse_worker($url)
  */
 function return_referer()
 {
-    $referer = $_SERVER['HTTP_REFERER'];
+    $referer = Core::get_server('HTTP_REFERER');
     if (substr($referer, -1) == '/') {
         $file = 'index.php';
     } else {

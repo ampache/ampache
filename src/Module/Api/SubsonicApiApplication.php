@@ -63,14 +63,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $callback = $_REQUEST['callback'] ?? $f;
         /* Set the correct default headers */
         if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
-            Subsonic_Api::setHeader($f);
+            Subsonic_Api::_setHeader($f);
         }
 
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
             debug_event('rest/index', 'Error Attempted to use Subsonic API with Access Control turned off', 3);
             ob_end_clean();
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
+            Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, T_('Access Control not Enabled')), $callback);
 
             return;
         }
@@ -97,12 +97,12 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (empty($userName) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
             ob_end_clean();
             debug_event('rest/index', 'Missing Subsonic base parameters', 3);
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'Missing Subsonic base parameters', $version), $callback);
+            Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'Missing Subsonic base parameters', $version), $callback);
 
             return;
         }
 
-        $password = Subsonic_Api::decrypt_password($password);
+        $password = Subsonic_Api::_decryptPassword($password);
 
         // Check user authentication
         $auth = $this->authenticationManager->tokenLogin($userName, $token, $salt);
@@ -112,7 +112,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!$auth['success']) {
             debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', 3);
             ob_end_clean();
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', $version), $callback);
+            Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', $version), $callback);
 
             return;
         }
@@ -123,7 +123,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
             debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
+            Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
 
             return;
         }
@@ -135,7 +135,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         ) {
             ob_end_clean();
             debug_event('rest/index', 'Requested client version is not supported', 3);
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, 'Requested client version is not supported', $version), $callback);
+            Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, 'Requested client version is not supported', $version), $callback);
 
             return;
         }
@@ -145,7 +145,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $methods = get_class_methods(Subsonic_Api::class);
 
         // Define list of internal functions that should be skipped
-        $internal_functions = array('check_version', 'check_parameter', 'decrypt_password', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
+        $internal_functions = array('_check_parameter', '_decrypt_password', '_follow_stream', '_updatePlaylist', '_setStar', '_setHeader', '_apiOutput', '_apiOutput2', '_xml2json');
 
         // We do not use $_GET because of multiple parameters with the same name
         $query_string = Core::get_server('QUERY_STRING');
@@ -213,7 +213,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // If we manage to get here, we still need to hand out an XML document
         ob_end_clean();
-        Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND,
-            'Subsonic_Api', $version), $callback);
+        Subsonic_Api::_apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'Subsonic_Api', $version), $callback);
     }
 }
