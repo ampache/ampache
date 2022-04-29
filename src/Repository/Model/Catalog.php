@@ -2319,15 +2319,15 @@ abstract class Catalog extends database_object
             }
         }
         foreach ($artist_map_song as $existing_map) {
-            #remove album song map if
-            #a. album is changed
-            #or
-            #b. song artist is changed
-            if (!in_array($existing_map, $songArtist_array) or ($song->album != $new_song->album)) {
+            $not_found = !in_array($existing_map, $songArtist_array);
+            if ($not_found || ($song->album != $new_song->album)) {
+                // remove album song map if song artist is changed OR album changes
                 Album::remove_album_map($song->album, 'song', $existing_map);
-                if ($song->played) {
-                    Stats::delete_map('song', $song->id, 'artist', $existing_map);
-                }
+                $map_change = true;
+            }
+            if ($not_found && $song->played) {
+                // only delete play count on song artist change
+                Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 $map_change = true;
             }
         }
