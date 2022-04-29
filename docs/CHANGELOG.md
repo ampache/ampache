@@ -30,7 +30,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
   * Get recently played
   * Fixed up search queries using "" (wrapping in quotes means exact search)
 
-## API 5.3.1
+## API 5.3.2
 
 **NO CHANGE**
 
