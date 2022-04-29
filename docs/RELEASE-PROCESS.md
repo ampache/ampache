@@ -201,7 +201,7 @@ After fixing up the paths you can commit then follow the regular release process
 * find `$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';`
 * replace `$dic = require_once __DIR__ . '/src/Config/Bootstrap.php';`
 
-composer.json
+composer.json, locale/base/gather-messages.sh
 * find `public/lib`
 * replace `lib`
 
