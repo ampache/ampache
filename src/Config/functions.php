@@ -736,7 +736,7 @@ function sse_worker($url)
  */
 function return_referer()
 {
-    $referer = $_SERVER['HTTP_REFERER'];
+    $referer = Core::get_server('HTTP_REFERER');
     if (substr($referer, -1) == '/') {
         $file = 'index.php';
     } else {
