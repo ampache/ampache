@@ -39,7 +39,7 @@ final class ArtCollector implements ArtCollectorInterface
     /**
      * @const ART_SEARCH_LIMIT
      */
-    public const ART_SEARCH_LIMIT = 5;
+    public const ART_SEARCH_LIMIT = 15;
 
     private ContainerInterface $dic;
 
