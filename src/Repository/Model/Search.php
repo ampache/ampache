@@ -1696,7 +1696,7 @@ class Search extends playlist_object
                     break;
                 case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
-                    $parameters   = array_merge($parameters, array($input, $input));
+                    $parameters   = array_merge($parameters, array($input));
                     $join['song'] = true;
                     break;
                 case 'song_artist':
