@@ -730,7 +730,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
         $this->type_text('song_artist', T_('Song Artist'), $t_album_data);
-        $this->type_text('song_title', T_('Song Title'), $t_song_data);
+        $this->type_text('song_title', T_('Song Title'), $t_album_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_album_data);
         $this->type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
