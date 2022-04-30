@@ -526,6 +526,7 @@ class Search extends playlist_object
         $this->type_text('album', T_('Album'), $t_song_data);
         $this->type_text('artist', T_('Song Artist'), $t_song_data);
         $this->type_text('album_artist', T_('Album Artist'), $t_song_data);
+        $this->type_text('song_title', T_('Song Title'), $t_song_data);
         $this->type_text('composer', T_('Composer'), $t_song_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_song_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_song_data);
@@ -1692,6 +1693,11 @@ class Search extends playlist_object
                     $where[]           = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `album_map`.`object_type` = 'album')";
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
+                    break;
+                case 'song_title':
+                    $where[]      = "`song`.`title` $sql_match_operator ?";
+                    $parameters   = array_merge($parameters, array($input, $input));
+                    $join['song'] = true;
                     break;
                 case 'song_artist':
                     $where[]           = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `album_map`.`object_type` = 'song')";
