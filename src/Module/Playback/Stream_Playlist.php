@@ -93,12 +93,12 @@ class Stream_Playlist
         debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $values    = array();
-        $values[]  = $this->id;
-        $holders   = array();
-        $holders[] = '?';
+        $fields       = array();
+        $fields[]     = '`sid`';
+        $values       = array();
+        $values[]     = $this->id;
+        $holders      = array();
+        $holders[]    = '?';
 
         foreach ($url->properties as $field) {
             if ($url->$field) {
@@ -125,11 +125,11 @@ class Stream_Playlist
 
         foreach ($urls as $url) {
             $this->urls[] = $url;
-            $fields    = array();
-            $fields[]  = '`sid`';
-            $values[]  = $this->id;
-            $holders   = array();
-            $holders[] = '?';
+            $fields       = array();
+            $fields[]     = '`sid`';
+            $values[]     = $this->id;
+            $holders      = array();
+            $holders[]    = '?';
 
             foreach ($url->properties as $field) {
                 if ($url->$field !== null) {
@@ -139,12 +139,12 @@ class Stream_Playlist
                 }
             }
             $holders_arr[] = $holders;
-	}
+        }
 
-	$holders_chunks = array_chunk($holders_arr, 500);
+        $holders_chunks = array_chunk($holders_arr, 500);
         foreach ($holders_chunks as $holders_arr_temp) {
             $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
-            
+
             foreach ($holders_arr_temp as $placeholder) {
                 $sql .= '(' . implode(',', $placeholder) . '),';
             }
