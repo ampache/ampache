@@ -273,7 +273,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return Ui::get_icon('statistics', T_('Graphs'));
     }
-    public function getFileRefreshIcon(): string
+    public function getRefreshIcon(): string
     {
         return Ui::get_icon('file_refresh', T_('Update from tags'));
     }
