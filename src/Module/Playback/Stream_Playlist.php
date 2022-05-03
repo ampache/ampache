@@ -141,9 +141,8 @@ class Stream_Playlist
             $holders_arr[] = $holders;
 	}
 
-	$holders_chunks = array_chunk( $holders_arr, 500 );
-        
-        foreach( $holders_chunks as $holders_arr_temp) {
+	$holders_chunks = array_chunk($holders_arr, 500);
+        foreach ($holders_chunks as $holders_arr_temp) {
             $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
             
             foreach ($holders_arr_temp as $placeholder) {
