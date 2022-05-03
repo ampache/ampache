@@ -265,6 +265,40 @@ CREATE TABLE IF NOT EXISTS `catalog` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `catalog_access`
+--
+DROP TABLE IF NOT EXISTS `catalog_access`;
+CREATE TABLE IF NOT EXISTS `catalog_access` (
+  `access_group_id` int(11) UNSIGNED NOT NULL,
+  `catalog_id` int(11) UNSIGNED NOT NULL,
+  `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`access_group_id`, `catalog_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catalog_access_group`
+--
+
+DROP TABLE IF EXISTS `catalog_access_group`;
+CREATE TABLE IF NOT EXISTS `catalog_access_group` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Create the default access group 
+--
+
+INSERT INTO `catalog_access_group` (`id`, `name`) VALUES
+(1, 'DEFAULT');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `catalog_local`
 --
 
@@ -1425,7 +1459,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '530016'),
+('db_version', '530017'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1452,11 +1486,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   `city` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `catalog_access` tinyint(2) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `user_activity`

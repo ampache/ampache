@@ -638,6 +638,12 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
+        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature";
+        $version[]     = array('version' => '530017', 'description' => $update_string);
+
+//        $update_string = "* Add all catalogs to the DEFAULT catalog access group";
+//        $version[]     = array('version' => '530018', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4303,4 +4309,58 @@ class Update
     {
         return (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
     }
+
+    /** update_530017
+     *
+     * Add new tables and modify others to support catalog access feature
+     *
+     */
+    public static function update_530017(): bool
+    {
+        $retval     = true;
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        // Add the new catalog_access table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_access` (`access_group_id` int(11) UNSIGNED NOT NULL,`catalog_id` int(11) UNSIGNED NOT NULL,`enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,PRIMARY KEY (`access_group_id`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the new catalog_access_group table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_access_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,`name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY (`id`),UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default group
+        $sql = "INSERT INTO `catalog_access_group` (`id`, `name`) VALUES (1, 'DEFAULT');";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default access group to the user table 
+        $sql = "ALTER TABLE user ADD catalog_access TINYINT(2) NOT NULL DEFAULT 1;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_530018
+     *
+     * Code to add all catalogs to the DEFAULT access group to start
+     *
+
+    public static function update_530018(): bool
+        $retval     = true;
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        // Enable all catalogs in the default profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
+        $sql = "SELECT id FROM catalog;";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $sql = "INSERT INTO `user_catalog_access (`access_group_id`, `catalog_id`, `enabled`) VALUES (0, ?, 1);";
+            $retval &= (Dba::write($sql, array($row['id'])) !== false);
+        }
+        return $retval;
+    }
+    */
+
 } // end update.class
