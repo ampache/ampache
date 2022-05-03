@@ -263,7 +263,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function getUpdateFromTagsUrl(): string
     {
         return sprintf(
-            '%s/song.php?action=update_from_tags&amp;song_id=%d',
+            '%s/song.php?action=update_from_tags&song_id=%d',
             $this->configContainer->getWebPath(),
             $this->song->getId()
         );
