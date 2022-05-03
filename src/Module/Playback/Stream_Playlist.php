@@ -139,16 +139,19 @@ class Stream_Playlist
                 }
             }
             $holders_arr[] = $holders;
-        }
+	}
 
-        $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
-
-        foreach ($holders_arr as $placeholder) {
-            $sql .= '(' . implode(',', $placeholder) . '),';
+	$holders_chunks = array_chunk($holders_arr, 500);
+        foreach ($holders_chunks as $holders_arr_temp) {
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
+            
+            foreach ($holders_arr_temp as $placeholder) {
+                $sql .= '(' . implode(',', $placeholder) . '),';
+            }
+            // remove last comma
+            $sql = substr($sql, 0, -1);
+            $sql .= ';';
         }
-        // remove last comma
-        $sql = substr($sql, 0, -1);
-        $sql .= ';';
 
         return Dba::write($sql, $values);
     }
