@@ -617,6 +617,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $this->type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -2560,6 +2561,9 @@ class Search extends playlist_object
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
                     $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `song`.`id` = `dupe_search1`.`dupe_id1` ";
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`id` = `dupe_search2`.`dupe_id2`";
+                    break;
+                case 'orphaned_album':
+                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
                     break;
                 case 'metadata':
                     $field = (int)$rule[3];
