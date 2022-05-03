@@ -2820,7 +2820,7 @@ abstract class Catalog extends database_object
         $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`));";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            self::update_single_item('song', $row['id']);
+            self::update_single_item('song', $row['id'], true);
         }
     }
 
