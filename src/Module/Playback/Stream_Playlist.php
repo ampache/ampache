@@ -144,7 +144,7 @@ class Stream_Playlist
         $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
 
         foreach ($holders_arr as $placeholder) {
-            $sql .= ' (' . implode(',', $placeholder) . ' ) ,';
+            $sql .= '(' . implode(',', $placeholder) . '),';
         }
         // remove last comma
         $sql = substr($sql, 0, -1);
