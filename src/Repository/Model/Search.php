@@ -660,6 +660,8 @@ class Search extends playlist_object
         $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
+        $this->type_text('album_title', T_('Album Title'), $t_artist_data);
+        $this->type_text('song_title', T_('Song Title'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
@@ -2006,6 +2008,16 @@ class Search extends playlist_object
                     $where[]      = "(`artist`.`total_count` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
+                case 'album_title':
+                    $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
+                    $parameters    = array_merge($parameters, array($input, $input));
+                    $join['album'] = true;
+                    break;
+                case 'song_title':
+                    $where[]      = "`song`.`title` $sql_match_operator ?";
+                    $parameters   = array_merge($parameters, array($input));
+                    $join['song'] = true;
+                    break;
                 case 'album_count':
                     $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
                     $where[]      = "($group_column $sql_match_operator ?)";
@@ -2078,15 +2090,19 @@ class Search extends playlist_object
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join);
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['song']) {
+        if (array_key_exists('song', $join)) {
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
-            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
+            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song'";
+        }
+        if (array_key_exists('album', $join)) {
+            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
+            $table['4_album_map']  = "LEFT JOIN `album_map` ON `album_map`.`object_id` = `artist`.`id` AND `artist_map`.`object_type` = `album_map`.`object_type`";
+            $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
         }
         if ($join['catalog']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
