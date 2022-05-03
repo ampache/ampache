@@ -64,6 +64,11 @@
             tal:content="structure SONG/getDisplayStatsIcon"
             >STATISTICAL GRAPH</a>
         <a
+                tal:condition="SONG/isEditable"
+                tal:attributes="href SONG/getUpdateFromTagsUrl"
+                tal:content="structure SONG/getFileRefreshIcon"
+        >DELETE BUTTON</a>
+        <a
             tal:condition="SONG/isEditable"
             onclick="showEditDialog('song_row', '${song_id}', 'edit_song_${song_id}', '${SONG/getEditButtonTitle}', '')"
             tal:content="structure SONG/getEditIcon"

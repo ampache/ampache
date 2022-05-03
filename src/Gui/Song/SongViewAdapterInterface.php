@@ -72,7 +72,11 @@ interface SongViewAdapterInterface
 
     public function getDisplayStatsUrl(): string;
 
+    public function getUpdateFromTagsUrl(): string;
+
     public function getDisplayStatsIcon(): string;
+
+    public function getFileRefreshIcon(): string;
 
     public function isEditable(): bool;
 

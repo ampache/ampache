@@ -617,6 +617,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
         $this->type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $this->type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -660,6 +661,8 @@ class Search extends playlist_object
         $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
+        $this->type_text('album_title', T_('Album Title'), $t_artist_data);
+        $this->type_text('song_title', T_('Song Title'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
@@ -730,6 +733,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
         $this->type_text('song_artist', T_('Song Artist'), $t_album_data);
+        $this->type_text('song_title', T_('Song Title'), $t_album_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_album_data);
         $this->type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
@@ -1693,6 +1697,11 @@ class Search extends playlist_object
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;
+                case 'song_title':
+                    $where[]      = "`song`.`title` $sql_match_operator ?";
+                    $parameters   = array_merge($parameters, array($input));
+                    $join['song'] = true;
+                    break;
                 case 'song_artist':
                     $where[]           = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `album_map`.`object_type` = 'song')";
                     $parameters        = array_merge($parameters, array($input, $input));
@@ -2000,6 +2009,16 @@ class Search extends playlist_object
                     $where[]      = "(`artist`.`total_count` $sql_match_operator ?)";
                     $parameters[] = $input;
                     break;
+                case 'album_title':
+                    $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
+                    $parameters    = array_merge($parameters, array($input, $input));
+                    $join['album'] = true;
+                    break;
+                case 'song_title':
+                    $where[]      = "`song`.`title` $sql_match_operator ?";
+                    $parameters   = array_merge($parameters, array($input));
+                    $join['song'] = true;
+                    break;
                 case 'album_count':
                     $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
                     $where[]      = "($group_column $sql_match_operator ?)";
@@ -2072,15 +2091,19 @@ class Search extends playlist_object
             } // switch on ruletype artist
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join);
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['song']) {
+        if (array_key_exists('song', $join)) {
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
-            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
+            $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song'";
+        }
+        if (array_key_exists('album', $join)) {
+            $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
+            $table['4_album_map']  = "LEFT JOIN `album_map` ON `album_map`.`object_id` = `artist`.`id` AND `artist_map`.`object_type` = `album_map`.`object_type`";
+            $table['album']        = "LEFT JOIN `album` ON `album_map`.`album_id` = `album`.`id`";
         }
         if ($join['catalog']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
@@ -2538,6 +2561,9 @@ class Search extends playlist_object
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
                     $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`song`.`id`) AS `dupe_id1`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search1` ON `song`.`id` = `dupe_search1`.`dupe_id1` ";
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`song`.`id`) AS `dupe_id2`, CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`) AS `fullname`, COUNT(CONCAT(LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)), LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`disk`, `song`.`title`)) AS `counting` FROM `song` LEFT JOIN `album`  ON `song`.`album` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` GROUP BY `fullname` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`id` = `dupe_search2`.`dupe_id2`";
+                    break;
+                case 'orphaned_album':
+                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
                     break;
                 case 'metadata':
                     $field = (int)$rule[3];
