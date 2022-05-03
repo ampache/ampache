@@ -596,14 +596,18 @@
                         });
                         $.each(self.playlist, function(i,v) {
                             if (self.playlist[i] === item) {
-                                self.current = i;
+                                self.playlist[i] = self.playlist[0];
+                                self.playlist[0] = item;
+                                self.current = 0;
                                 return false; // Exit $.each
                             }
                         });
 
                         self.shuffled = false;
                         self._refresh(true);
-                        self.play(self.current);
+                        // Disable self play. If a song is playing, it continues.  If not playing it doesn't start playing.
+                        // self.play(self.current);
+                        self._highlight(0);
                     } else {
                         self.shuffled = false;
                         self._refresh(true); // Instant
