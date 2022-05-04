@@ -2339,6 +2339,12 @@ abstract class Catalog extends database_object
                 $map_change = true;
             }
         }
+        foreach ($album_map_songArtist as $existing_map) {
+            // check song maps in the album_map table (because this is per song we need to check the whole album)
+            if (Album::check_album_map($song->album, 'song', $existing_map)) {
+                $map_change = true;
+            }
+        }
         foreach ($album_map_albumArtist as $existing_map) {
             if (!in_array($existing_map, $albumArtist_array)) {
                 Album::remove_album_map($song->album, 'album', $existing_map);

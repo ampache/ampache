@@ -1329,7 +1329,7 @@ class Album extends database_object implements library_item
     /**
      * Delete the album map for a single item if this was the last track
      */
-    public static function check_album_map($album_id, $object_type, $object_id)
+    public static function check_album_map($album_id, $object_type, $object_id): bool
     {
         if ((int)$album_id > 0 && (int)$object_id > 0) {
             // Remove the album_map if this was the last track
@@ -1340,8 +1340,12 @@ class Album extends database_object implements library_item
             $row        = Dba::fetch_assoc($db_results);
             if (empty($row)) {
                 Album::remove_album_map($album_id, $object_type, $object_id);
+
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
