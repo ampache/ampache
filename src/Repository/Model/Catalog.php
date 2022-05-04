@@ -2312,6 +2312,7 @@ abstract class Catalog extends database_object
         foreach ($artist_map_song as $existing_map) {
             if (!in_array($existing_map, $songArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+                Album::check_album_map($song->album, 'song', $existing_map);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 }
@@ -2334,6 +2335,7 @@ abstract class Catalog extends database_object
         foreach ($artist_map_album as $existing_map) {
             if (!in_array($existing_map, $albumArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $song->album);
+                Album::check_album_map($song->album, 'album', $existing_map);
                 $map_change = true;
             }
         }

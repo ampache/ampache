@@ -209,6 +209,7 @@ final class SongRepository implements SongRepositoryInterface
     {
         foreach (Song::get_parent_array($song->id) as $song_artist_id) {
             Artist::remove_artist_map($song_artist_id, 'song', $song->id);
+            Album::check_album_map($song->album, 'song', $song_artist_id);
         }
         $sql = "DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` NOT IN (SELECT `album` FROM `song`);";
         Dba::write($sql);
