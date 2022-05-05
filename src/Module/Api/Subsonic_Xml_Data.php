@@ -833,7 +833,7 @@ class Subsonic_Xml_Data
             return null;
         }
         $sub_id    = (string)self::getSongId($song->id);
-        $subParent = (string)self::getAlbumId($song->id);
+        $subParent = (string)self::getAlbumId($song->album);
         $xsong     = $xml->addChild(htmlspecialchars($elementName));
         $xsong->addAttribute('id', $sub_id);
         $xsong->addAttribute('parent', $subParent);
