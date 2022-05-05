@@ -665,7 +665,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('title', $f_name);
         $xalbum->addAttribute('name', $f_name);
         $xalbum->addAttribute('isDir', 'true');
-        $xalbum->addAttribute('discNumber', (string)$album->disk);
+        //$xalbum->addAttribute('discNumber', (string)$album->disk);
         if ($album->has_art()) {
             $xalbum->addAttribute('coverArt', 'al-' . $sub_id);
         }
@@ -880,7 +880,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('genre', (string)$tags[0]['name']);
         }
         $xsong->addAttribute('size', (string)$song->size);
-        $disk = Album::sanitize_disk($album->disk);
+        $disk = $song->get_album_disk();
         if ($disk > 0) {
             $xsong->addAttribute('discNumber', (string)$disk);
         }
