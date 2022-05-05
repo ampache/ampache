@@ -703,7 +703,7 @@ class Subsonic_Xml_Data
             $disc_ids  = $album->get_group_disks_ids();
             $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
             foreach ($media_ids as $song_id) {
-                self::addSong($xalbum, $song_id, 'song', $album);
+                self::addSong($xalbum, $song_id);
             }
         }
     }
@@ -716,15 +716,12 @@ class Subsonic_Xml_Data
      * @param Album $album
      * @return SimpleXMLElement
      */
-    public static function addSong($xml, $songId, $elementName = 'song', $album = false)
+    public static function addSong($xml, $songId, $elementName = 'song')
     {
-        $song  = new Song($songId);
-        $album = (!$album)
-            ? new Album($song->album)
-            : $album;
+        $song        = new Song($songId);
         $catalogData = self::getCatalogData($song->catalog, $song->file);
 
-        return self::createSong($xml, $song, $album, $catalogData, $elementName);
+        return self::createSong($xml, $song, $catalogData, $elementName);
     }
 
     /**
@@ -821,7 +818,6 @@ class Subsonic_Xml_Data
      * createSong
      * @param SimpleXMLElement $xml
      * @param Song $song
-     * @param Album $album
      * @param array $catalogData
      * @param string $elementName
      * @return SimpleXMLElement
@@ -829,7 +825,6 @@ class Subsonic_Xml_Data
     public static function createSong(
         $xml,
         $song,
-        $album,
         $catalogData,
         $elementName = 'song'
     ) {
@@ -838,7 +833,7 @@ class Subsonic_Xml_Data
             return null;
         }
         $sub_id    = (string)self::getSongId($song->id);
-        $subParent = (string)self::getAlbumId($album->id);
+        $subParent = (string)self::getAlbumId($song->id);
         $xsong     = $xml->addChild(htmlspecialchars($elementName));
         $xsong->addAttribute('id', $sub_id);
         $xsong->addAttribute('parent', $subParent);
@@ -847,9 +842,8 @@ class Subsonic_Xml_Data
         $xsong->addAttribute('isDir', 'false');
         $xsong->addAttribute('isVideo', 'false');
         $xsong->addAttribute('type', 'music');
-        // $album = new Album(songData->album);
         $xsong->addAttribute('albumId', $subParent);
-        $xsong->addAttribute('album', (string)self::checkName($album->get_fullname()));
+        $xsong->addAttribute('album', (string)self::checkName($song->get_album_fullname()));
         // $artist = new Artist($song->artist);
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($song->artist));
@@ -1008,7 +1002,7 @@ class Subsonic_Xml_Data
         $disc_ids  = $album->get_group_disks_ids();
         $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
         foreach ($media_ids as $song_id) {
-            self::addSong($xdir, $song_id, "child", $album);
+            self::addSong($xdir, $song_id, "child");
         }
     }
 
