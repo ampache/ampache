@@ -2323,7 +2323,7 @@ abstract class Catalog extends database_object
             $not_found = !in_array($existing_map, $songArtist_array);
             // remove album song map if song artist is changed OR album changes
             if ($not_found || ($song->album != $new_song->album)) {
-                Album::remove_album_map($song->album, 'song', $existing_map);
+                Album::check_album_map($song->album, 'song', $existing_map);
                 $map_change = true;
             }
             // only delete play count on song artist change
