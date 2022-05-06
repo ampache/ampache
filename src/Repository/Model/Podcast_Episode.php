@@ -343,7 +343,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     {
         $title       = $data['title'] ?? $this->title;
         $website     = $data['website'] ?? null;
-        $description = $data['description'] ?? null;
+        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
         $author      = $data['author'] ?? null;
         $category    = $data['category'] ?? null;
 

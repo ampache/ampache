@@ -164,6 +164,23 @@ class Dba
     }
 
     /**
+     * check_length
+     * Truncate strings for the database that are longer than the limits
+     * @param string $value
+     * @param int $length
+     * @return string
+     */
+    public static function check_length($value, $length)
+    {
+        $result = substr($value, 0, $length);
+        if (!$result) {
+            return $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * fetch_assoc
      *
      * This emulates the mysql_fetch_assoc.
