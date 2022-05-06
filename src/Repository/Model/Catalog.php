@@ -2024,8 +2024,8 @@ abstract class Catalog extends database_object
         }
         // collect the garbage too
         if ($album || $artist || $maps) {
-            static::getAlbumRepository()->collectGarbage();
             Artist::garbage_collection();
+            static::getAlbumRepository()->collectGarbage();
         }
 
         return array(
@@ -2861,8 +2861,9 @@ abstract class Catalog extends database_object
             // replace all songs and albums with the original artist
             Artist::migrate($row['maxid'], $row['minid']);
         }
-        // remove the duplicate after moving everything
+        // remove the duplicates after moving everything
         Artist::garbage_collection();
+        static::getAlbumRepository()->collectGarbage();
     }
 
     /**
