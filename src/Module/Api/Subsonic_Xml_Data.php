@@ -1228,7 +1228,7 @@ class Subsonic_Xml_Data
             $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_client'] ?? '';
             $xplayqueue = $xml->addChild('playQueue');
             $xplayqueue->addAttribute('current', self::getSongId($current['object_id']));
-            $xplayqueue->addAttribute('position', (string)$current['current_time']);
+            $xplayqueue->addAttribute('position', (string)$current['current_time'] * 1000);
             $xplayqueue->addAttribute('username', (string)$username);
             $xplayqueue->addAttribute('changed', date("c", (int)$changed));
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);

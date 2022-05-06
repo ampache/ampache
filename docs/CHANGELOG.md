@@ -23,9 +23,12 @@
 * Speed up stream_playlist generation by chunking into blocks
 * Make sure there is an object_id to fill in update_530006
 * Remove song mapping on delete
+* Make sure podcast descriptions don't overfill the column
+* Clean dead total wasn't returned on completion
 * SubSonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
+  * getPlayQueue doesn't change back to miliseconds from seconds
 
 ## API develop
 
