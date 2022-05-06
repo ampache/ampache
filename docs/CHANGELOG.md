@@ -25,6 +25,7 @@
 * Remove song mapping on delete
 * Make sure podcast descriptions don't overfill the column
 * Clean dead total wasn't returned on completion
+* Searching for the of albums with '# Played' with grouping enabled with album_map
 * SubSonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
