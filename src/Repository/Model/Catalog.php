@@ -2026,8 +2026,8 @@ abstract class Catalog extends database_object
         }
         // collect the garbage too
         if ($album || $artist || $maps) {
-            static::getAlbumRepository()->collectGarbage();
             Artist::garbage_collection();
+            static::getAlbumRepository()->collectGarbage();
         }
 
         return array(
@@ -2314,6 +2314,7 @@ abstract class Catalog extends database_object
         foreach ($artist_map_song as $existing_map) {
             if (!in_array($existing_map, $songArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+                Album::check_album_map($song->album, 'song', $existing_map);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 }
@@ -2324,7 +2325,7 @@ abstract class Catalog extends database_object
             $not_found = !in_array($existing_map, $songArtist_array);
             // remove album song map if song artist is changed OR album changes
             if ($not_found || ($song->album != $new_song->album)) {
-                Album::remove_album_map($song->album, 'song', $existing_map);
+                Album::check_album_map($song->album, 'song', $existing_map);
                 $map_change = true;
             }
             // only delete play count on song artist change
@@ -2336,6 +2337,13 @@ abstract class Catalog extends database_object
         foreach ($artist_map_album as $existing_map) {
             if (!in_array($existing_map, $albumArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'album', $song->album);
+                Album::check_album_map($song->album, 'album', $existing_map);
+                $map_change = true;
+            }
+        }
+        foreach ($album_map_songArtist as $existing_map) {
+            // check song maps in the album_map table (because this is per song we need to check the whole album)
+            if (Album::check_album_map($song->album, 'song', $existing_map)) {
                 $map_change = true;
             }
         }
@@ -2553,7 +2561,7 @@ abstract class Catalog extends database_object
         // missing map tables are pretty important
         $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0;";
         Dba::write($sql);
-        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         Dba::write($sql);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
@@ -2855,8 +2863,9 @@ abstract class Catalog extends database_object
             // replace all songs and albums with the original artist
             Artist::migrate($row['maxid'], $row['minid']);
         }
-        // remove the duplicate after moving everything
+        // remove the duplicates after moving everything
         Artist::garbage_collection();
+        static::getAlbumRepository()->collectGarbage();
     }
 
     /**

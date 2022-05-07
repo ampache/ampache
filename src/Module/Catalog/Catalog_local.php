@@ -755,7 +755,9 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_count_' . $this->id, $count);
                 Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
-            self::clean_file($results['file'], $media_type);
+            if (self::clean_file($results['file'], $media_type)) {
+                $dead[] = $results['id'];
+            }
         }
 
         return $dead;
@@ -765,11 +767,12 @@ class Catalog_local extends Catalog
      * clean_file
      *
      * Clean up a single file checking that it's missing or just unreadable.
+     * Return true on delete. false on failures
      *
      * @param string $file
      * @param string $media_type
      */
-    public function clean_file($file, $media_type = 'song')
+    public function clean_file($file, $media_type = 'song'): bool
     {
         $file_info = Core::get_filesize(Core::conv_lc_file($file));
         if ($file_info < 1) {
@@ -794,9 +797,13 @@ class Catalog_local extends Catalog
             }
             $sql = "DELETE FROM `$media_type` WHERE `id` = ?";
             Dba::write($sql, $params);
+
+            return true;
         } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
+
+        return false;
     } // clean_file
 
     /**

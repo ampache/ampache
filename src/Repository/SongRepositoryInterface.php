@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 
 interface SongRepositoryInterface
 {
@@ -87,4 +88,6 @@ interface SongRepositoryInterface
     public function getByLicense(int $licenseId): array;
 
     public function delete(int $songId): bool;
+
+    public function collectGarbage(Song $song): bool;
 }

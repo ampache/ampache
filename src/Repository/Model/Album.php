@@ -1328,6 +1328,28 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Delete the album map for a single item if this was the last track
+     */
+    public static function check_album_map($album_id, $object_type, $object_id): bool
+    {
+        if ((int)$album_id > 0 && (int)$object_id > 0) {
+            // Remove the album_map if this was the last track
+            $sql        = ($object_type == 'album')
+                ? "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` = ? AND object_type = ?;"
+                : "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` from `song` WHERE `album` = ?) AND object_type = ?;";
+            $db_results = Dba::read($sql, array($object_id, $album_id, $object_type));
+            $row        = Dba::fetch_assoc($db_results);
+            if (empty($row)) {
+                Album::remove_album_map($album_id, $object_type, $object_id);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * get_artist_map
      *
      * This returns an ids of artists that have songs/albums mapped

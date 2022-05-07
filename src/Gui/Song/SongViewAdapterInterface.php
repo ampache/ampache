@@ -76,7 +76,7 @@ interface SongViewAdapterInterface
 
     public function getDisplayStatsIcon(): string;
 
-    public function getFileRefreshIcon(): string;
+    public function getRefreshIcon(): string;
 
     public function isEditable(): bool;
 

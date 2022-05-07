@@ -1523,7 +1523,9 @@ class Search extends playlist_object
                     $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id` = $column"
                         : "";
-                    $join['album_map'] = true;
+                    if ($my_type == 'artist') {
+                        $join['album_map'] = true;
+                    }
                     break;
                 case 'songrating':
                     if ($input == 0 && $sql_match_operator == '>=') {
@@ -1612,8 +1614,13 @@ class Search extends playlist_object
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[]      = "(`album`.`total_count` $sql_match_operator ?)";
-                    $parameters[] = $input;
+                    if ($groupdisks) {
+                        $table['play_count'] = "LEFT JOIN (SELECT MIN(`album`.`id`) AS `id`, SUM(`total_count`) AS `total_count` FROM `album` GROUP BY `album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`,`album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`) AS `album_total_count` ON `album`.`id` = `album_total_count`.`id`";
+                        $where[]             = "(`album_total_count`.`total_count` $sql_match_operator ?)";
+                    } else {
+                        $where[] = "(`album`.`total_count` $sql_match_operator ?)";
+                    }
+                    $parameters[]        = $input;
                     break;
                 case 'song_count':
                     $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
@@ -1744,7 +1751,7 @@ class Search extends playlist_object
 
         if (array_key_exists('album_map', $join)) {
             $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
-            $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
+            $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
         }
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";

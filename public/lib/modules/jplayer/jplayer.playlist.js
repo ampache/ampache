@@ -591,22 +591,29 @@
                     self.shuffled = shuffled;
                     if (shuffled) {
                         var item = self.playlist[self.current];
-                        self.playlist.sort(function(a, b){
-                            return 0.5 - Math.random();
-                        });
+                        var final_list = [];
+                        var playlist_items = [];
+                        // push the current track first
+                        final_list.push(item);
+                        // remove the current track form the list
                         $.each(self.playlist, function(i,v) {
-                            if (self.playlist[i] === item) {
-                                self.playlist[i] = self.playlist[0];
-                                self.playlist[0] = item;
-                                self.current = 0;
-                                return false; // Exit $.each
+                            if (v !== item) {
+                                playlist_items.push(v);
                             }
                         });
-
+                        // shuffle remaining tracks
+                        playlist_items.sort(function(a, b){
+                            return 0.5 - Math.random();
+                        });
+                        $.each(playlist_items, function(i,v) {
+                            final_list.push(v);
+                        });
+                        // sorted!
+                        self.playlist = final_list
+                        self.current = 0;
                         self.shuffled = false;
                         self._refresh(true);
-                        // Disable self play. If a song is playing, it continues.  If not playing it doesn't start playing.
-                        // self.play(self.current);
+                        // If a song is playing, it continues. If not playing it doesn't start playing.
                         self._highlight(0);
                     } else {
                         self.shuffled = false;

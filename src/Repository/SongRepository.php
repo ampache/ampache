@@ -25,10 +25,12 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Song;
 
 final class SongRepository implements SongRepositoryInterface
 {
@@ -238,5 +240,17 @@ final class SongRepository implements SongRepositoryInterface
         );
 
         return $deleted !== false;
+    }
+
+    public function collectGarbage(Song $song): bool
+    {
+        foreach (Song::get_parent_array($song->id) as $song_artist_id) {
+            Artist::remove_artist_map($song_artist_id, 'song', $song->id);
+            Album::check_album_map($song->album, 'song', $song_artist_id);
+        }
+        $sql = "DELETE FROM `artist_map` WHERE `object_type` = 'album' AND `object_id` NOT IN (SELECT `album` FROM `song`);";
+        Dba::write($sql);
+        $sql = "DELETE FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` NOT IN (SELECT `id` FROM `song`);";
+        Dba::write($sql);
     }
 }
