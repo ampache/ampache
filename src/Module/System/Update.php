@@ -638,11 +638,8 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
-        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature";
+        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table";
         $version[]     = array('version' => '530017', 'description' => $update_string);
-
-        $update_string = "* Add all catalogs to the DEFAULT catalog access group";
-        $version[]     = array('version' => '530018', 'description' => $update_string);
 
         return $version;
     }
@@ -4348,20 +4345,9 @@ class Update
         $sql = "CREATE TRIGGER default_user_catalog_access AFTER DELETE ON catalog_access_group FOR EACH ROW UPDATE user SET catalog_access_group=1 WHERE catalog_access_group = OLD.id;";
         $retval &= (Dba::write($sql) !== false);
 
-        return $retval;
-    }
-
-    /** update_530018
-     *
-     * Code to add all catalogs to the DEFAULT access group to start
-     *
-     */
-    public static function update_530018(): bool
-    {
-        $retval     = true;
-        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        // Drop user_catalog table
+        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
+        $retval &= (Dba::write($sql) !== false);
 
         // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
         $sql = "SELECT id FROM catalog;";
@@ -4371,8 +4357,7 @@ class Update
             $sql = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (1, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
+
         return $retval;
     }
-
-
 } // end update.class

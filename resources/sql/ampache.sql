@@ -282,7 +282,7 @@ CREATE TABLE IF NOT EXISTS `catalog_access_group` (
 
 DROP TABLE IF EXISTS `default_catalog_access_group`;
 CREATE TABLE `default_catalog_access_group` (
-  `default_catalog_access_group_id` int(11) UNSIGNED PRIMARY KEY, 
+  `default_catalog_access_group_id` int(11) UNSIGNED PRIMARY KEY,
    FOREIGN KEY (default_catalog_access_group_id) references catalog_access_group (id));
 
 -- --------------------------------------------------------
@@ -1525,21 +1525,6 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_catalog`
---
-
-DROP TABLE IF EXISTS `user_catalog`;
-CREATE TABLE IF NOT EXISTS `user_catalog` (
-  `user` int(11) UNSIGNED NOT NULL,
-  `catalog` int(11) UNSIGNED NOT NULL,
-  `level` smallint(4) UNSIGNED NOT NULL DEFAULT 5,
-  KEY `user` (`user`),
-  KEY `catalog` (`catalog`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

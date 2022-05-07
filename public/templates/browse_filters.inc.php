@@ -25,6 +25,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\User;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
@@ -88,7 +89,10 @@ if (!Core::is_session_started()) {
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $sql = 'SELECT `id`, `name` FROM `catalog`';
+                <?php
+        // Only show the catalogs this user is allowed to access
+        $catalogs = implode (',',User::get_user_catalogs($_SESSION['userdata']['uid']));
+        $sql = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
         $db_results        = Dba::read($sql);
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
