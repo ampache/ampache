@@ -567,6 +567,7 @@ abstract class Catalog extends database_object
             case "object_count_album":
             case "object_count_song":
             case "object_count_podcast_episode":
+            case "object_count_playlist":
             case "object_count_video":
                 $type = str_replace('object_count_', '', (string) $type);
                 $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
