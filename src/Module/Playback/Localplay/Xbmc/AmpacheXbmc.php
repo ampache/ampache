@@ -333,7 +333,7 @@ class AmpacheXbmc extends localplay_controller
                 ));
             } else {
                 $this->_xbmc->Player->PlayPause(array(
-                    'playerid' => $this->_playlistId,
+                    'playerid' => $this->_playerId,
                     'play' => true
                 ));
             }
