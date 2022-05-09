@@ -658,7 +658,7 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 
 ; Art search limit
 ;  Limit the total images returned
-;  DEFAULT: 5
+;  DEFAULT: 15
 ;art_search_limit = 15
 
 ; Recommendations

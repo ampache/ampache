@@ -306,12 +306,12 @@ class Podcast extends database_object implements library_item
     public function update(array $data)
     {
         $feed        = $data['feed'] ?? $this->feed;
-        $title       = isset($data['title']) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
-        $website     = isset($data['website']) ? scrub_in($data['website']) : null;
-        $description = isset($data['description']) ? scrub_in($data['description']) : null;
-        $language    = isset($data['language']) ? scrub_in($data['language']) : null;
-        $generator   = isset($data['generator']) ? scrub_in($data['generator']) : null;
-        $copyright   = isset($data['copyright']) ? scrub_in($data['copyright']) : null;
+        $title       = (isset($data['title'])) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $website     = (isset($data['website'])) ? scrub_in($data['website']) : null;
+        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
+        $language    = (isset($data['language'])) ? scrub_in($data['language']) : null;
+        $generator   = (isset($data['generator'])) ? scrub_in($data['generator']) : null;
+        $copyright   = (isset($data['copyright'])) ? scrub_in($data['copyright']) : null;
 
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             debug_event(self::class, 'Podcast update canceled, bad feed url.', 1);
@@ -393,7 +393,7 @@ class Podcast extends database_object implements library_item
             } else {
                 $title            = html_entity_decode((string)$xml->channel->title);
                 $website          = (string)$xml->channel->link;
-                $description      = html_entity_decode((string)$xml->channel->description);
+                $description      = html_entity_decode(Dba::check_length((string)$xml->channel->description, 4096));
                 $language         = (string)$xml->channel->language;
                 $copyright        = html_entity_decode((string)$xml->channel->copyright);
                 $generator        = html_entity_decode((string)$xml->channel->generator);
@@ -513,7 +513,7 @@ class Podcast extends database_object implements library_item
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
-        $description = html_entity_decode((string)$episode->description);
+        $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
         $author      = html_entity_decode((string)$episode->author);
         $category    = html_entity_decode((string)$episode->category);
         $source      = null;

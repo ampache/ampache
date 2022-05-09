@@ -177,7 +177,7 @@ After fixing up the paths you can commit then follow the regular release process
 
 * Clone the repo `git clone -b squashed https://github.com/ampache/ampache.git ampache_squashed/`
 * Clone master `git clone -b master https://github.com/ampache/ampache.git ampache_master/`
-* Copy everything except the public folder into ampache_squashed
+* Copy everything except the `/public` and `/docker` folder into ampache_squashed
 * Copy everything from /public into the root on the ampache_squashed folder
 * find and replace for the following folders
 
@@ -194,12 +194,8 @@ After fixing up the paths you can commit then follow the regular release process
 * replace `/`
 
 /
-* find `$dic = require __DIR__ . '/../src/Config/Init.php';`
-* replace `$dic = require __DIR__ . '/src/Config/Init.php';`
-* find `$dic = require_once __DIR__ . '/../src/Config/Init.php';`
-* replace `$dic = require_once __DIR__ . '/src/Config/Init.php';`
-* find `$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';`
-* replace `$dic = require_once __DIR__ . '/src/Config/Bootstrap.php';`
+* find `__DIR__ . '/../`
+* replace `__DIR__ . '/`
 
 composer.json, locale/base/gather-messages.sh
 * find `public/lib`

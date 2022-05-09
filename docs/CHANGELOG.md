@@ -1,5 +1,52 @@
 # CHANGELOG
 
+## Ampache 5.3.3-release
+
+### Added
+
+* Remove duplicates and order largest to smallest for art search
+* Allow update_from_tags for a single Song from it's page
+* Search
+  * Add `song_title` to album search
+  * Add `album_title` and `song_title` to artist search
+  * Add `orphaned_album` to song search
+
+### Changed
+
+* Default art_search_limit raised to 15
+* web_player shuffle improvements
+ * Current selected track will become the first track and everything else shuffled below it
+ * Playlist isn't automatically played so if a song was playing, it will continue to play
+
+### Fixed
+
+* Speed up stream_playlist generation by chunking into blocks
+* Make sure there is an object_id to fill in update_530006
+* Remove song mapping on delete
+* Make sure podcast descriptions don't overfill the column
+* Clean dead total wasn't returned on completion
+* Searching for the of albums with '# Played' with grouping enabled with album_map
+* Adding a new xbmc localplay
+* Catalog type filter in get_top_sql
+* SubSonic
+  * Fixed the query searches (Again) based on the wildcards different clients may send
+  * Song discNumber was sending the MAX disk instead of the actual disk
+  * getPlayQueue doesn't change back to miliseconds from seconds
+
+## API 5.3.3
+
+### Added
+
+* advanced_search
+  * Add `song_title` to album search
+  * Add `album_title` and `song_title` to artist search
+  * Add `orphaned_album` to song search
+
+### Fixed
+
+* Api4::record_play had the `user` as mandatory again
+* After catalog actions; verify songs with an orphaned album which you won't be able to find in the ui
+
 ## Ampache 5.3.2-release
 
 Some QoL fixes here with some initial SubSonic, Search and that database column again!
@@ -30,7 +77,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
   * Get recently played
   * Fixed up search queries using "" (wrapping in quotes means exact search)
 
-## API 5.3.1
+## API 5.3.2
 
 **NO CHANGE**
 

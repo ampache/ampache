@@ -21,7 +21,9 @@
 
 namespace Ampache\Module\Song\Deletion;
 
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Userflag;
@@ -63,6 +65,7 @@ final class SongDeleter implements SongDeleterInterface
                 Rating::garbage_collection('song', $songId);
                 $this->shoutRepository->collectGarbage('song', $songId);
                 $this->useractivityRepository->collectGarbage('song', $songId);
+                $this->songRepository->collectGarbage($song);
             }
         } else {
             debug_event(__CLASS__, 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);

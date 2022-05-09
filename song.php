@@ -28,6 +28,7 @@ use Ampache\Module\Application\Song\ConfirmDeleteAction;
 use Ampache\Module\Application\Song\DeleteAction;
 use Ampache\Module\Application\Song\ShowLyricsAction;
 use Ampache\Module\Application\Song\ShowSongAction;
+use Ampache\Module\Application\Song\UpdateFromTagsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -39,6 +40,7 @@ $dic->get(ApplicationRunner::class)->run(
     [
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        UpdateFromTagsAction::REQUEST_KEY => UpdateFromTagsAction::class,
         ShowLyricsAction::REQUEST_KEY => ShowLyricsAction::class,
         ShowSongAction::REQUEST_KEY => ShowSongAction::class,
     ],

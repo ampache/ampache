@@ -621,7 +621,7 @@ class Stats
                 $sql .= " AND `date` >= '" . $date . "' ";
             }
             if ($catalog_filter) {
-                $sql .= " AND" . Catalog::get_user_filter($type, $user_id);
+                $sql .= " AND" . Catalog::get_user_filter("object_count_" . $type, $user_id);
             }
             //debug_event(self::class, 'get_top_sql ' . $sql, 5);
 
