@@ -52,7 +52,8 @@ Select the type of search based on the type of data you are searching for. (song
 | artist                   | Artist                    | text              |         song,album,artist        |
 | album_artist             | Album Artist              | text              |               song               |
 | song_artist              | Song Artist               | text              |              album               |
-| song_title               | Song Title                | text              |              album               |
+| song_title               | Song Title                | text              |           album,artist           |
+| album_title              | Album Title               | text              |              artist              |
 | composer                 | Composer                  | text              |               song               |
 | year                     | Year                      | numeric           |            song,album            |
 | original_year            | Original Year             | numeric           |              album               |

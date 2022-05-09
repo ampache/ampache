@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 5.3.3-release
 
 ### Added
 
@@ -15,8 +15,8 @@
 
 * Default art_search_limit raised to 15
 * web_player shuffle improvements
- * Current selected track will become the first track and everything else shuffled below it
- * Playlist isn't automatically played so if a song was playing, it will continue to play
+  * Current selected track will become the first track and everything else shuffled below it
+  * Playlist isn't automatically played so if a song was playing, it will continue to play
 
 ### Fixed
 
@@ -25,13 +25,15 @@
 * Remove song mapping on delete
 * Make sure podcast descriptions don't overfill the column
 * Clean dead total wasn't returned on completion
-* Searching for the of albums with '# Played' with grouping enabled with album_map
+* Searching for albums with '# Played' with grouping enabled with album_map
+* Adding a new xbmc localplay
+* Catalog type filter in get_top_sql
 * SubSonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
   * getPlayQueue doesn't change back to miliseconds from seconds
 
-## API develop
+## API 5.3.3
 
 ### Added
 
