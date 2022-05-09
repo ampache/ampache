@@ -25,7 +25,7 @@
 * Remove song mapping on delete
 * Make sure podcast descriptions don't overfill the column
 * Clean dead total wasn't returned on completion
-* Searching for the of albums with '# Played' with grouping enabled with album_map
+* Searching for albums with '# Played' with grouping enabled with album_map
 * Adding a new xbmc localplay
 * Catalog type filter in get_top_sql
 * SubSonic
