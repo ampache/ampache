@@ -81,9 +81,7 @@ final class Session implements SessionInterface
             self::check();
 
             // Create the new user
-            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
-                ? User::get_from_username($_SESSION['userdata']['username'])
-                : '';
+            self::createGlobalUser();
 
             // If the user ID doesn't exist deny them
             $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
@@ -112,7 +110,7 @@ final class Session implements SessionInterface
             } else {
                 self::check();
                 if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                    $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+                    self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
                 } else {
                     $GLOBALS['user']           = new User('-1');
                     $GLOBALS['user']->id       = -1;
@@ -134,9 +132,9 @@ final class Session implements SessionInterface
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
-                $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
+                self::createGlobalUser(new User($_SESSION['userdata']['uid']));
             } else {
-                $GLOBALS['user'] = new User();
+                self::createGlobalUser(new User());
             }
         } // If NO_SESSION passed
 
@@ -439,6 +437,12 @@ final class Session implements SessionInterface
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
+                    $results = Dba::fetch_assoc($db_results);
+                    if ($results && empty(Core::get_global('user'))) {
+                        debug_event(self::class, "Empty GLOBALS['user'] for user: " . $results['username'], 5);
+                        self::createGlobalUser(User::get_from_username($results['username']));
+                    }
+
                     return true;
                 }
                 break;
@@ -470,6 +474,11 @@ final class Session implements SessionInterface
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
             debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            $results = Dba::fetch_assoc($db_results);
+            if ($results && empty(Core::get_global('user'))) {
+                debug_event(self::class, "Empty GLOBALS['user'] for user: " . $results['username'], 5);
+                self::createGlobalUser(User::get_from_username($results['username']));
+            }
         }
 
         return $db_results;
@@ -698,6 +707,21 @@ final class Session implements SessionInterface
     }
 
     /**
+     * createGlobalUser
+     * Set up the global user
+     */
+    public static function createGlobalUser(?User $user)
+    {
+        if ($user instanceof User) {
+            $GLOBALS['user'] = $user;
+        } else {
+            $GLOBALS['user'] = (array_key_exists('username', $_SESSION['userdata']))
+                ? User::get_from_username($_SESSION['userdata']['username'])
+                : '';
+        }
+    }
+
+    /**
      * storeTokenForUser
      * @param string $username
      * @param string $token
@@ -735,7 +759,7 @@ final class Session implements SessionInterface
                 }
             }
             // make sure the global is set too
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
             // make sure the prefs are set too
             Preference::init();
         }
