@@ -867,7 +867,7 @@ class Search extends playlist_object
                 $request[$key] = Dba::escape($value);
             }
         }
-	// Figure out if they want an AND based search or an OR based search
+        // Figure out if they want an AND based search or an OR based search
         $operator = $data['operator'] ?? '';
         switch ($operator) {
             case 'or':
@@ -1751,7 +1751,7 @@ class Search extends playlist_object
 
         if (array_key_exists('album_map', $join)) {
             $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
-            $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
+            $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
         }
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";

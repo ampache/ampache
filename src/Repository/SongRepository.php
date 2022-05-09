@@ -106,7 +106,7 @@ final class SongRepository implements SongRepositoryInterface
             ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
 
-	if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
 
@@ -118,6 +118,7 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
+
         return $results;
     }
 
@@ -160,8 +161,8 @@ final class SongRepository implements SongRepositoryInterface
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
- 
-       if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
 

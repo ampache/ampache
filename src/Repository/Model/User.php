@@ -341,7 +341,7 @@ class User extends database_object
             return parent::get_from_cache('user_catalog', $userid);
         }
 
-        $sql = "SELECT catalog_id from catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=? AND catalog_access.enabled=1 ORDER BY catalog_access.catalog_id";
+        $sql        = "SELECT catalog_id from catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=? AND catalog_access.enabled=1 ORDER BY catalog_access.catalog_id";
         $db_results = Dba::read($sql, array($userid));
 
         $catalogs = array();

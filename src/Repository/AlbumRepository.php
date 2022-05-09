@@ -52,8 +52,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         // Only selected albums user can access
         if (AmpConfig::get('catalog_filter')) {
-          $sql .= $join . Catalog::get_user_filter('album', $userId); 
-          $join = 'AND';
+            $sql .= $join . Catalog::get_user_filter('album', $userId);
+            $join = 'AND';
         }
 
         if (AmpConfig::get('catalog_disable')) {
@@ -197,7 +197,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      *
      * @return int[]
      */
-    public function getAlbumSuite(Album $album): array 
+    public function getAlbumSuite(Album $album): array
     {
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
@@ -254,7 +254,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
-        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
+        $sql        = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -450,6 +450,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $results[] = (int)$row['id'];
         }
         debug_event(self::class, 'getByName ' . $sql, 5);
+
         return $results;
     }
 
