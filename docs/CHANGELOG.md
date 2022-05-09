@@ -26,7 +26,7 @@
 * Make sure podcast descriptions don't overfill the column
 * Clean dead total wasn't returned on completion
 * Searching for the of albums with '# Played' with grouping enabled with album_map
-* Add xbmx localplay
+* Adding a new xbmc localplay
 * Catalog type filter in get_top_sql
 * SubSonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
