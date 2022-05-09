@@ -239,17 +239,17 @@ final class PlayAction implements ApplicationActionInterface
         if (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user != null) {
-                Session::createGlobalUser($user);
-                $uid = $user->id;
+                $GLOBALS['user'] = $user;
+                $uid             = $user->id;
                 Preference::init();
                 $user_authenticated = true;
             }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
-                $user = User::get_from_username($auth['username']);
-                $uid  = $user->id;
-                Session::createGlobalUser($user);
+                $user            = User::get_from_username($auth['username']);
+                $GLOBALS['user'] = $user;
+                $uid             = $user->id;
                 Preference::init();
                 $user_authenticated = true;
             }
@@ -276,8 +276,7 @@ final class PlayAction implements ApplicationActionInterface
         if (!$share_id) {
             // No explicit authentication, use session
             if (!$user_authenticated) {
-                $user = new User($uid);
-                Session::createGlobalUser($user);
+                $user = $GLOBALS['user'] = new User($uid);
                 Preference::init();
 
                 /* If the user has been disabled (true value) */
@@ -325,8 +324,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $user = new User($share->user);
-            Session::createGlobalUser($user);
+            $user = $GLOBALS['user'] = new User($share->user);
             Preference::init();
         }
 

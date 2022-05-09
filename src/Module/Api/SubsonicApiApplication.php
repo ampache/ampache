@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -118,8 +117,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $user = User::get_from_username($userName);
-        Session::createGlobalUser($user);
+        $user            = User::get_from_username($userName);
+        $GLOBALS['user'] = $user;
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
             debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
