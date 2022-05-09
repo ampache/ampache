@@ -15,8 +15,8 @@
 
 * Default art_search_limit raised to 15
 * web_player shuffle improvements
- * Current selected track will become the first track and everything else shuffled below it
- * Playlist isn't automatically played so if a song was playing, it will continue to play
+  * Current selected track will become the first track and everything else shuffled below it
+  * Playlist isn't automatically played so if a song was playing, it will continue to play
 
 ### Fixed
 
