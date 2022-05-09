@@ -74,11 +74,11 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
     public function collect(): void
     {
         Song::garbage_collection();
+        Artist::garbage_collection();
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
         Podcast_Episode::garbage_collection();
         Wanted::garbage_collection();
-        Artist::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
         Rating::garbage_collection();

@@ -1052,7 +1052,8 @@ class Subsonic_Api
         $songs    = array();
 
         if (strlen($query) > 1) {
-            if (substr($original, -1) == "*" && !substr($query, -2, 2) == '"*') {
+            // if we didn't catch a "wrapped" query it might just be a starts with
+            if (substr($original, -1) == "*" && $operator == 0) {
                 $query    = substr($query, 0, -1);
                 $operator = 2; // Starts with
             }

@@ -129,6 +129,10 @@ final class LastFmCollectorModule implements CollectorModuleInterface
             );
         }
 
-        return $images;
+        // Drop any duplicates
+        $images = array_map("unserialize", array_unique(array_map("serialize", $images)));
+
+        // Order is smallest to largest so reverse it
+        return array_reverse($images);
     }
 }

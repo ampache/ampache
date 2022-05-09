@@ -119,8 +119,10 @@ class Stream_Playlist
     private function _add_urls($urls)
     {
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
-        $sql    = '';
-        $values = array();
+        $sql         = '';
+        $values      = array();
+        $holders_arr = array();
+
         foreach ($urls as $url) {
             $this->urls[] = $url;
             $fields       = array();
@@ -136,7 +138,19 @@ class Stream_Playlist
                     $holders[] = '?';
                 }
             }
-            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
+            $holders_arr[] = $holders;
+        }
+
+        $holders_chunks = array_chunk($holders_arr, 500);
+        foreach ($holders_chunks as $holders_arr_temp) {
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
+
+            foreach ($holders_arr_temp as $placeholder) {
+                $sql .= '(' . implode(',', $placeholder) . '),';
+            }
+            // remove last comma
+            $sql = substr($sql, 0, -1);
+            $sql .= ';';
         }
 
         return Dba::write($sql, $values);

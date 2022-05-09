@@ -260,9 +260,22 @@ final class SongViewAdapter implements SongViewAdapterInterface
         );
     }
 
+    public function getUpdateFromTagsUrl(): string
+    {
+        return sprintf(
+            '%s/song.php?action=update_from_tags&song_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
     public function getDisplayStatsIcon(): string
     {
         return Ui::get_icon('statistics', T_('Graphs'));
+    }
+    public function getRefreshIcon(): string
+    {
+        return Ui::get_icon('file_refresh', T_('Update from tags'));
     }
 
     public function isEditable(): bool
