@@ -564,19 +564,30 @@ abstract class Catalog extends database_object
             case 'clip':
                 $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `video`.`id`) ";
                 break;
+            // enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode')
             case "object_count_artist":
             case "object_count_album":
             case "object_count_song":
-            case "object_count_podcast_episode":
             case "object_count_playlist":
+            case "object_count_genre":
+            case "object_count_catalog":
+            case "object_count_live_stream":
             case "object_count_video":
+            case "object_count_podcast":
+            case "object_count_podcast_episode":
                 $type = str_replace('object_count_', '', (string) $type);
                 $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
+            // enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode')
             case "rating_artist":
             case "rating_album":
             case "rating_song":
+            case "rating_stream":
+            case "rating_live_stream":
             case "rating_video":
+            case "rating_tvshow":
+            case "rating_tvshow_season":
+            case "rating_podcast":
             case "rating_podcast_episode":
                 $type = str_replace('rating_', '', (string) $type);
                 $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";

@@ -662,7 +662,7 @@ class Playlist extends playlist_object
          */
         debug_event(self::class, "add_medias to: " . $this->id, 5);
         $unique     = (bool) AmpConfig::get('unique_playlist');
-        $track_data = $this->get_songs();
+        $track_data = $this->get_items();
         $base_track = count($track_data);
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
