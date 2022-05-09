@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 /** @var Ampache\Repository\Model\User $client */
 
@@ -77,6 +78,23 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
                         <option value="100"><?php echo T_('Admin'); ?></option>
                     </select>
                 </td>
+        </tr>
+        <tr>
+
+
+<?php if (AmpConfig::get('catalog_filter')) {
+    echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
+
+    $filters =Catalog::get_catalog_filter_names();
+    $options = array();
+    $i       = 1;
+    foreach ($filters as $filter) {
+        $options[] = '<option value="' . $i . '" >' . $filter . '</option>';
+        $i++;
+    }
+    echo '<select name="catalog_access_group">' . implode("\n", $options) . '</select>';
+} ?>
+          </td>
         </tr>
         <tr>
             <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes($max_upload_size); ?>)</td>

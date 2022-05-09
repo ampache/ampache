@@ -616,6 +616,7 @@ class User extends database_object
                 case 'website':
                 case 'state':
                 case 'city':
+                case 'catalog_access_group':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -631,6 +632,21 @@ class User extends database_object
 
         return $this->id;
     }
+
+    /**
+     * update_catalog_access_group
+     * updates their catalog filter
+     * @param $new_filter
+     */
+    public function update_catalog_access_group($new_filter)
+    {
+        $sql            = "UPDATE `user` SET `catalog_access_group` = ? WHERE `id` = ?";
+        $this->username = $new_username;
+
+        debug_event(self::class, 'Updating catalog access group', 4);
+
+        Dba::write($sql, array($new_filter, $this->id));
+    } // update_catalog_access_group
 
     /**
      * update_username
@@ -954,6 +970,7 @@ class User extends database_object
         $website,
         $password,
         $access,
+        $catalog_access_group = 1,
         $state = '',
         $city = '',
         $disabled = false,
@@ -969,9 +986,12 @@ class User extends database_object
         }
         $disabled = $disabled ? 1 : 0;
 
+        // Just in case a zero value slipped in from upper layers...
+        $catalog_access_group = $catalog_access_group ? $catalog_access_group : 1;
+
         /* Now Insert this new user */
-        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, time());
+        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_access_group`, `create_date`";
+        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_access_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";
@@ -986,7 +1006,7 @@ class User extends database_object
             $params[] = $city;
         }
 
-        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
         if (!empty($website)) {
             $sql .= ", ?";

@@ -424,6 +424,47 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_catalog_filter_names
+     * This returns the names of the catalog filters that are available with the default filter listed first.
+     * @return string[]
+     */
+    public static function get_catalog_filter_names()
+    {
+        $results = array();
+
+        // Get the default filter and name
+        // Default filter is always the first one.
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = 1";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $results[]  = $row['name'];
+
+        // Now fetch the rest;
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` != 1 ORDER BY `name`";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_catalog_filter_name
+     * This returns the catalog filter name with the given ID.
+     * @return string
+     */
+    public static function get_catalog_filter_name($id = 1)
+    {
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'];
+    }
+
+    /**
      * Check if a file is an audio.
      * @param string $file
      * @return boolean
@@ -521,7 +562,6 @@ abstract class Catalog extends database_object
      */
     public static function get_user_filter($type, $user_id)
     {
-//        debug_event(__CLASS__, "get_user_filter for type $type", 5);
         switch ($type) {
             case "album":
             case "song":
@@ -612,8 +652,6 @@ abstract class Catalog extends database_object
             default:
                 $sql = "";
         }
-
-//        debug_event(__CLASS__, "get_user_filter: $type: sql:" . $sql, 5);
         return $sql;
     }
 
@@ -759,8 +797,6 @@ abstract class Catalog extends database_object
             $sql .= $join . self::get_user_filter('catalog', $user_id);
         }
         $sql .= "ORDER BY `name`";
-//        debug_event(__CLASS__, "get_catalogs sql:" . $sql, 5);
-
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1225,11 +1261,8 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            //debug_event(self::class, 'get_artist_arrays ' . print_r($row, true), 5);
             $results[] = $row;
         }
-        //debug_event(self::class, 'get_artist_arrays ' . $sql, 5);
-
         return $results;
     }
 

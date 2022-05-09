@@ -4317,7 +4317,7 @@ class Update
         $retval     = true;
         $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         // Add the new catalog_access_group table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_access_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,`name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY (`id`),UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
@@ -4350,11 +4350,11 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
-        $sql = "SELECT id FROM catalog;";
+        $sql        = "SELECT id FROM catalog;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = $row['id'];
-            $sql = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (1, $catalog, 1);";
+            $sql     = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (1, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
 
