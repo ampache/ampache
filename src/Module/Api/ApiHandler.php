@@ -277,7 +277,7 @@ final class ApiHandler implements ApiHandlerInterface
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
              */
-            $GLOBALS['user'] = $user;
+            Session::createGlobalUser($user);
         }
 
         // Make sure beautiful url is disabled as it is not supported by most Ampache clients

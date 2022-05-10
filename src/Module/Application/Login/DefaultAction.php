@@ -311,7 +311,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
             }
 
-            $GLOBALS['user'] = $user;
+            Session::createGlobalUser($user);
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
