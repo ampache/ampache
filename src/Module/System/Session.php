@@ -136,7 +136,7 @@ final class Session implements SessionInterface
                 session_start();
                 self::createGlobalUser(new User($_SESSION['userdata']['uid']));
             } else {
-                self::createGlobalUser(new User());
+                $GLOBALS['user'] = '';
             }
         } // If NO_SESSION passed
 
