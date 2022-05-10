@@ -425,7 +425,6 @@ class Subsonic_Api
     public static function ping($input)
     {
         // Don't check client API version here. Some client give version 0.0.0 for ping command
-
         self::_apiOutput($input, Subsonic_Xml_Data::createSuccessResponse('ping'));
     }
 
@@ -661,6 +660,8 @@ class Subsonic_Api
     public static function getvideoinfo($input)
     {
         //Since 1.14.0
+        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, "Incompatible Subsonic REST protocol version. Server must upgrade.", 'getvideoinfo');
+        self::_apiOutput($input, $response);
     }
 
     /**
@@ -716,6 +717,8 @@ class Subsonic_Api
     public static function getalbuminfo($input)
     {
         //Since 1.14.0
+        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, "Incompatible Subsonic REST protocol version. Server must upgrade.", 'getalbuminfo');
+        self::_apiOutput($input, $response);
     }
 
     /**
@@ -725,6 +728,8 @@ class Subsonic_Api
     public static function getalbuminfo2($input)
     {
         //Since 1.14.0
+        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, "Incompatible Subsonic REST protocol version. Server must upgrade.", 'getalbuminfo2');
+        self::_apiOutput($input, $response);
     }
 
     /**
@@ -1177,7 +1182,8 @@ class Subsonic_Api
     /**
      * createPlaylist
      * Creates (or updates) a playlist.
-     * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty <subsonic-response> element is returned.
+     * Since 1.14.0 the newly created/updated playlist is returned.
+     * In earlier versions an empty <subsonic-response> element is returned.
      * http://www.subsonic.org/pages/api.jsp#createPlaylist
      * @param array $input
      */
@@ -1397,6 +1403,8 @@ class Subsonic_Api
     public static function getcaptions($input)
     {
         //Since 1.14.0
+        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, "Incompatible Subsonic REST protocol version. Server must upgrade.", 'getcaptions');
+        self::_apiOutput($input, $response);
     }
 
     /**
@@ -1491,7 +1499,8 @@ class Subsonic_Api
     /**
      * getLyrics
      * Searches for and returns lyrics for a given song.
-     * Returns a <subsonic-response> element with a nested <lyrics> element on success. The <lyrics> element is empty if no matching lyrics was found.
+     * Returns a <subsonic-response> element with a nested <lyrics> element on success.
+     * The <lyrics> element is empty if no matching lyrics was found.
      * http://www.subsonic.org/pages/api.jsp#getLyrics
      * @param array $input
      */
@@ -1794,8 +1803,7 @@ class Subsonic_Api
                 if ($share->update($data, $user)) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('updateshare');
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                        'updateshare');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'updateshare');
                 }
             } else {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'updateshare');
@@ -1849,8 +1857,7 @@ class Subsonic_Api
                     $response = Subsonic_Xml_Data::createSuccessResponse('getpodcasts');
                     Subsonic_Xml_Data::addPodcasts($response, array($podcast), $includeEpisodes);
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                        'getpodcasts');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getpodcasts');
                 }
             } else {
                 $podcasts = Catalog::get_podcasts();
@@ -1925,16 +1932,13 @@ class Subsonic_Api
                 if (Podcast::create($data)) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('createpodcastchannel');
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'createpodcastchannel');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '', 'createpodcastchannel');
                 }
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                    'createpodcastchannel');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'createpodcastchannel');
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'createpodcastchannel');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'createpodcastchannel');
         }
         self::_apiOutput($input, $response);
     }
@@ -1955,16 +1959,13 @@ class Subsonic_Api
                 if ($podcast->remove()) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('deletepodcastchannel');
                 } else {
-                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
-                        'deletepodcastchannel');
+                    $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '', 'deletepodcastchannel');
                 }
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'deletepodcastchannel');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletepodcastchannel');
             }
         } else {
-            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '',
-                'deletepodcastchannel');
+            $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'deletepodcastchannel');
         }
         self::_apiOutput($input, $response);
     }
@@ -2058,8 +2059,7 @@ class Subsonic_Api
                     } elseif (isset($input['offset'])) {
                         debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
                     } else {
-                        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '',
-                            'jukeboxcontrol');
+                        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
                     }
                     break;
                 case 'set':
@@ -2098,8 +2098,7 @@ class Subsonic_Api
                     if (isset($input['index'])) {
                         $ret = $localplay->delete_track($input['index']);
                     } else {
-                        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '',
-                            'jukeboxcontrol');
+                        $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
                     }
                     break;
                 case 'shuffle':
@@ -2126,6 +2125,7 @@ class Subsonic_Api
     /**
      * getInternetRadioStations
      * Returns all internet radio stations.
+     * Returns a <subsonic-response> element with a nested <internetRadioStations> element on success.
      * http://www.subsonic.org/pages/api.jsp#getInternetRadioStations
      * @param array $input
      */
@@ -2403,8 +2403,7 @@ class Subsonic_Api
                 $user->update_password($password);
                 $response = Subsonic_Xml_Data::createSuccessResponse('changepassword');
             } else {
-                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '',
-                    'changepassword');
+                $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'changepassword');
             }
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'changepassword');

@@ -757,11 +757,9 @@ class Stats
             $sql = "SELECT `id`, `last_update` AS `date` FROM `playlist`";
             if (!empty($user_id)) {
                 $sql .= " WHERE `user` = '" . $user_id . "'";
-            }
-            if ($catalog_filter) {
-                $sql .= (!empty($user_id))
-                    ? " AND" . Catalog::get_user_filter($type, $user_id)
-                    : " WHERE" . Catalog::get_user_filter($type, $user_id);
+                if ($catalog_filter) {
+                    $sql .= " AND" . Catalog::get_user_filter($type, $user_id);
+                }
             }
             $sql .= " ORDER BY `last_update` " . $ordersql;
         }

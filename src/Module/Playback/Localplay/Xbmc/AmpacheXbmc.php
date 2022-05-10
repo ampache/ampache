@@ -325,15 +325,15 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
-            // So we get current status
-            $status = $this->status();
-            if ($status['state'] == 'stop') {
+            // So we get active players
+            $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+            if (empty($xbmc_players)) {
                 $this->_xbmc->Player->Open(array(
                     'item' => array('playlistid' => $this->_playlistId)
                 ));
             } else {
                 $this->_xbmc->Player->PlayPause(array(
-                    'playerid' => $this->_playlistId,
+                    'playerid' => $this->_playerId,
                     'play' => true
                 ));
             }

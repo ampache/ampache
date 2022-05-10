@@ -60,7 +60,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $sql .= $join . "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
             $join = 'AND';
         }
-
         if (AmpConfig::get('catalog_filter') && $userId > 0) {
             $sql .= $join . Catalog::get_user_filter('album', $userId);
             $join = 'AND';

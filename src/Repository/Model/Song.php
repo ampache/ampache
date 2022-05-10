@@ -2268,7 +2268,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
-        if ($catalog_filter && $valid) {
+        if ($catalog_filter && $valid && $user_id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
         }
         if ($valid && !$catalog_filter) {
