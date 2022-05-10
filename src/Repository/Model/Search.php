@@ -1623,7 +1623,12 @@ class Search extends playlist_object
                     $parameters[]        = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
+                    if ($groupdisks) {
+                        $table['play_count'] = "LEFT JOIN (SELECT MIN(`album`.`id`) AS `id`, SUM(`song_count`) AS `song_count` FROM `album` GROUP BY `album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`,`album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`) AS `album_song_count` ON `album`.`id` = `album_song_count`.`id`";
+                        $where[]             = "(`album_song_count`.`song_count` $sql_match_operator ?)";
+                    } else {
+                        $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'release_type':

@@ -51,7 +51,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $join = 'WHERE';
 
         // Only selected albums user can access
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && $userID > 0) {
             $sql .= $join . Catalog::get_user_filter('album', $userId);
             $join = 'AND';
         }
