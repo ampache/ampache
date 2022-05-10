@@ -87,7 +87,7 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an Album that does not exist.');
         // allow single disks to not be shown as multi's
-        } elseif (($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false)) {
+        } elseif (($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false) || (int)count($album->album_suite) == 1) {
             $this->ui->show(
                 'show_album.inc.php',
                 [
