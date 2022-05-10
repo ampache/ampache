@@ -758,7 +758,7 @@ class Stats
             if (!empty($user_id)) {
                 $sql .= " WHERE `user` = '" . $user_id . "'";
                 if ($catalog_filter) {
-                    $sql .=  " AND" . Catalog::get_user_filter($type, $user_id);
+                    $sql .= " AND" . Catalog::get_user_filter($type, $user_id);
                 }
             }
             $sql .= " ORDER BY `last_update` " . $ordersql;
