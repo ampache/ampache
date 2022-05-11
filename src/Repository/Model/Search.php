@@ -702,6 +702,7 @@ class Search extends playlist_object
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
@@ -775,6 +776,7 @@ class Search extends playlist_object
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
@@ -1692,6 +1694,11 @@ class Search extends playlist_object
                     $where[]      = "`album`.`id` $sql_match_operator IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
+                case 'file':
+                    $where[]      = "`song`.`file` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') AS `has_image` ON `album`.`id` = `has_image`.`object_id`";
@@ -1888,6 +1895,11 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$user_id"))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_artist_$user_id` ON `artist`.`id` = `favorite_artist_$user_id`.`object_id` AND `favorite_artist_$user_id`.`object_type` = 'artist'"
                         : "";
+                    break;
+                case 'file':
+                    $where[]      = "`song`.`file` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
