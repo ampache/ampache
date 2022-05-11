@@ -30,7 +30,12 @@ $default_rename = "%T - %t";
 $default_sort   = "%a/%A";
 $allow_video    = AmpConfig::get('allow_video'); ?>
 <?php Ui::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
-<p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
+<p><?php
+$catalog_filter="";
+if (AmpConfig::get('catalog_filter')) {
+    $catalog_filter = "<br>Remember to add this catalog to the catalog filters as appropriate";
+}
+echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)$catalog_filter;"); ?></p>
 &nbsp;
 <?php echo AmpError::display('general'); ?>
 
@@ -75,21 +80,6 @@ $allow_video    = AmpConfig::get('allow_video'); ?>
         <tr>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
             <td><input type="text" name="sort_pattern" value="<?php echo $default_sort; ?>" /></td>
-        </tr>
-        <tr>
-<?php if (AmpConfig::get('catalog_filter')) {
-    echo "<td>" . T_('Catalog User') . ":<br /></td>\n<td>";
-    $options = array();
-    if (!empty($users)) {
-        foreach ($users as $user_id => $username) {
-            $options[] = '<option value="' . $user_id . '">' . $username . '</option>';
-        }
-        echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
-    }
-} else {
-    echo "<td style=\"display: none;\">" . T_('Catalog User') . ":<br /></td>\n<td style=\"display: none;\">\n<select name=\"filter_user\"><option value=\"0\" selected=\"selected\">" . T_('Public Catalog') . "</option></select>";
-} ?>
-            </td>
         </tr>
         <tr>
             <td><?php echo T_('Gather Art'); ?>:</td>

@@ -450,11 +450,6 @@ abstract class Catalog extends database_object
         return $results;
     }
 
-    /**
-     * get_catalog_filter_name
-     * This returns the catalog filter name with the given ID.
-     * @return string
-     */
     public static function get_catalog_filter_name($id = 1)
     {
         $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = ?";
@@ -462,6 +457,232 @@ abstract class Catalog extends database_object
         $row        = Dba::fetch_assoc($db_results);
 
         return $row['name'];
+    }
+
+    public static function get_catalog_filter_by_name($filter_name)
+    {
+        $sql        = "SELECT `id` FROM `catalog_access_group` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($filter_name));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['id'];
+    }
+
+    /**
+     * get_catalog_filter_name
+     * This returns the catalog filter name with the given ID.
+     * @return string
+     */
+    public static function get_catalog_name($filter_id = 1)
+    {
+        $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'];
+    }
+
+    /**
+     * filter_user_count
+     * Returns the number of users assigned to a particular filter.
+     * @return int
+     */
+    public static function filter_user_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) FROM `user` WHERE `catalog_access_group` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_catalog_count
+     * This returns the number of catalogs assigned to a filter.
+     * @return string
+     */
+    public static function filter_catalog_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) FROM `catalog_access` WHERE `access_group_id` = ? AND `enabled`=1";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_count
+     * This returns the number of filters.
+     * @return string
+     */
+    public static function filter_count()
+    {
+        $sql        = "SELECT COUNT(1) FROM `catalog_access_group`";
+        $db_results = Dba::read($sql, array($name));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_name_exists
+     * This returns 1 if filter exists, .
+     * can specifiy and ID to ignore in this check, useful for filter rnames.
+     * @return integer
+     */
+    public static function filter_name_exists($filter_name, $exclude_id=0)
+    {
+        $params[]   = array($filter_name);
+        $sql        = "SELECT COUNT(1) FROM `catalog_access_group` WHERE `name` = '$filter_name' ";
+        if ($exclude_id) {
+            $sql .= "AND `id` != $exclude_id";
+            $params[] = array($exclude_id);
+        }
+
+        debug_event(__CLASS__, 'filter_name_exists: ' . $sql . "[$filter_name, $exclude_id]", 5);
+
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['COUNT(1)'];
+    }
+
+    /**
+     * check_filter_catalog_enabled
+     * Returns the `enabled` status of the filter/catalog combination
+     * @return string
+     */
+    public static function check_filter_catalog_enabled($filter_id, $catalog_id)
+    {
+        $sql        = "SELECT `enabled` FROM `catalog_access` WHERE `access_group_id` = ? AND `catalog_id` = ?";
+        $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['enabled'];
+    }
+
+    /**
+     * set_filter_catalog_enabled
+     * Sets the value of enabled based on the inputs
+     * @return string
+     */
+    public static function set_filter_catalog_enabled($filter_id, $catalog_id, $enabled)
+    {
+        $sql        = "UPDATE `catalog_access` SET `enabled` = ? WHERE `access_group_id` = ? AND `catalog_id` = ?";
+        $db_results = Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
+    }
+
+    /**
+     * add_catalog_to_filter_table
+     * Adds appropriate rows when a catalog is added.
+     * @return string
+     */
+    public static function add_catalog_to_filter_table($catalog_id)
+    {
+        $sql        = "SELECT `id` FROM `catalog_access_group` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        $sql        = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
+        foreach ($results as $filter_id) {
+            $sql .= "($filter_id, $catalog_id, 0),";
+        }
+        // Remove last comma to avoid SQL error
+        $sql        = substr($sql, 0, -1);
+        $db_results = Dba::write($sql);
+
+        return 1;
+
+
+
+
+        $db_results = Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
+    }
+
+    /**
+     * modify_filter
+     * This returns 1 if successful
+     * @return string
+     */
+    public static function modify_filter($filter_id, $filter_name, $catalogs)
+    {
+        // Modify the filter name
+        $sql        = "UPDATE `catalog_access_group` SET `name`='$filter_name' WHERE `id`=$filter_id";
+        $db_results = Dba::write($sql);
+
+        // Fill in catalog_access table for the filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        foreach ($results as $catalog_id) {
+            $cn         = Catalog::get_catalog_name($catalog_id);
+            $enabled    = $catalogs[$cn];
+            $sql        = "UPDATE `catalog_access` SET `enabled` = $enabled WHERE `access_group_id` = $filter_id AND `catalog_id` = $catalog_id";
+            $db_results = Dba::write($sql);
+        }
+
+        return 1;
+    }
+
+    /**
+     * create_filter
+     * This returns 1 if successful
+     * @return string
+     */
+    public static function create_filter($filter_name, $catalogs)
+    {
+        // Create the filter
+        $sql        = "INSERT INTO `catalog_access_group` (`name`) VALUES ('$filter_name')";
+        $db_results = Dba::write($sql);
+
+        $sql        = "SELECT `id` FROM `catalog_access_group` WHERE `name` = '$filter_name' ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $filter_id  = $row['id'];
+
+        // Fill in catalog_access table for the new filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        $sql = "INSERT INTO catalog_access (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
+        foreach ($results as $catalog_id) {
+            $cn      = Catalog::get_catalog_name($catalog_id);
+            $enabled = $catalogs[$cn];
+            $sql .= "($filter_id, $catalog_id, $enabled),";
+        }
+        // Remove last comma to avoid SQL error
+        $sql        = substr($sql, 0, -1);
+        $db_results = Dba::write($sql);
+
+        return 1;
+    }
+
+    /**
+     * delete_filter
+     * Deletes a filter then returns
+     * @return string
+     */
+    public static function delete_filter($filter_id)
+    {
+        $sql        = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
     }
 
     /**
@@ -652,6 +873,7 @@ abstract class Catalog extends database_object
             default:
                 $sql = "";
         }
+
         return $sql;
     }
 
@@ -1263,6 +1485,7 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results, false)) {
             $results[] = $row;
         }
+
         return $results;
     }
 

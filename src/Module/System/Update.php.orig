@@ -638,9 +638,6 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
-        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table<br><br>NOTE: If you have private catalogs configured, you will need to create a special catalog filter for that user.";
-        $version[]     = array('version' => '530017', 'description' => $update_string);
-
         return $version;
     }
 
@@ -4004,7 +4001,7 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `album_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`), INDEX `object_id_index` (`object_id`), INDEX `album_id_type_index` (`album_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         // fill the data
-        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4085,9 +4082,9 @@ class Update
     public static function update_530006(): bool
     {
         $retval = true;
-        $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL AND `song`.`album` IS NOT NULL;";
+        $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `artist_count`.`id` IS NULL AND `song`.`artist` IS NOT NULL;";
+        $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `artist_count`.`id` IS NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4305,59 +4302,5 @@ class Update
     public static function update_530016(): bool
     {
         return (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-    }
-
-    /** update_530017
-     *
-     * Add new tables and modify others to support catalog access feature
-     *
-     */
-    public static function update_530017(): bool
-    {
-        $retval     = true;
-        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        // Add the new catalog_access_group table
-        $sql = "CREATE TABLE IF NOT EXISTS `catalog_access_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,`name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,PRIMARY KEY (`id`),UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the new default_catalog_access_group table to prevent deletion of the default group
-        $sql = "CREATE TABLE `default_catalog_access_group` (`default_catalog_access_group_id` int(11) UNSIGNED PRIMARY KEY,FOREIGN KEY (default_catalog_access_group_id) references catalog_access_group (id));";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the new catalog_access table
-        $sql = "CREATE TABLE IF NOT EXISTS `catalog_access` (`access_group_id` int(11) UNSIGNED NOT NULL,`catalog_id` int(11) UNSIGNED NOT NULL,`enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,FOREIGN KEY (`access_group_id`) REFERENCES catalog_access_group(`id`) ON DELETE CASCADE, FOREIGN KEY (`catalog_id`) REFERENCES catalog(`id`) ON DELETE CASCADE) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the default group
-        $sql = "INSERT INTO `catalog_access_group` (`id`, `name`) VALUES (1, 'DEFAULT');";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the default group into the protecdtion table
-        $sql = "INSERT INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES (1);";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the default access group to the user table and add TRIGGER to reset access to DEFAULT if current access group is deleted
-        $sql = "ALTER TABLE user ADD catalog_access_group INT(11) UNSIGNED NOT NULL DEFAULT 1;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TRIGGER default_user_catalog_access AFTER DELETE ON catalog_access_group FOR EACH ROW UPDATE user SET catalog_access_group=1 WHERE catalog_access_group = OLD.id;";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Drop user_catalog table
-        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
-        $sql        = "SELECT id FROM catalog;";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog = $row['id'];
-            $sql     = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (1, $catalog, 1);";
-            $retval &= (Dba::write($sql) !== false);
-        }
-
-        return $retval;
     }
 } // end update.class
