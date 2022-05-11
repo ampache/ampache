@@ -157,6 +157,10 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
+            ->once()
+            ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -303,6 +307,10 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $album->shouldReceive('isNew')
             ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
             ->once()
             ->andReturnFalse();
 

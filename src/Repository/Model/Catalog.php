@@ -2529,7 +2529,7 @@ abstract class Catalog extends database_object
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
-        if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
+        if (!empty($artists_array) && count($artists_array) > count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
                 $songArtist_id = Artist::check($artist_name);
                 if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
