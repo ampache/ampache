@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## Ampache developo
+
+### Added
+
+* Search
+  * Add `file` to album and artist search
+
+### Changed
+
+
+### Fixed
+
+* SQL for random artist with mapping
+* Respect grouping for song_count searches
+* Autoplay in xbmc localplay and conform to localplay api
+* Ungrouped albums were forced into groups
+* Artists array should overwrite artist_mbid arrays that are smaller
+
+## API develop
+
+### Added
+
+* advanced_search
+  * Add `file` to album and artist search
+
+
 ## Ampache 5.3.3-release
 
 ### Added
