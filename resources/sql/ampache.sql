@@ -265,53 +265,6 @@ CREATE TABLE IF NOT EXISTS `catalog` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `catalog_access_group` and `default_catalog_access_group`
---
-
-DROP TABLE IF EXISTS `catalog_access_group`;
-CREATE TABLE IF NOT EXISTS `catalog_access_group` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- This table prevents the deletion of the necessary DEFAULT access group
---
-
-DROP TABLE IF EXISTS `default_catalog_access_group`;
-CREATE TABLE `default_catalog_access_group` (
-  `default_catalog_access_group_id` int(11) UNSIGNED PRIMARY KEY,
-   FOREIGN KEY (default_catalog_access_group_id) references catalog_access_group (id));
-
--- --------------------------------------------------------
-
---
--- Create the default access group 
---
-
-INSERT INTO `catalog_access_group` (`id`, `name`) VALUES
-(1, 'DEFAULT');
-
-INSERT INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES
-(1);
-
---
--- Table structure for table `catalog_access`
---
-DROP TABLE IF NOT EXISTS `catalog_access`;
-CREATE TABLE IF NOT EXISTS `catalog_access` (
-  `access_group_id` int(11) UNSIGNED NOT NULL,
-  `catalog_id` int(11) UNSIGNED NOT NULL,
-  `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  FOREIGN KEY (`access_group_id`) REFERENCES catalog_access_group(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`catalog_id`) REFERENCES catalog(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `catalog_local`
 --
 
@@ -1472,7 +1425,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '530017'),
+('db_version', '530016'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1499,18 +1452,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   `city` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `catalog_access_group` int(11) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- TRIGGER to reset user.catalog_access_group to default on access group deletion
--- This is because InnoDB doesn't support DELETE SET DEFAULT.
---
-
-DROP TRIGGER IF EXISTS default_user_catalog_access;
-CREATE TRIGGER default_user_catalog_access AFTER DELETE ON catalog_access_group FOR EACH ROW UPDATE user SET catalog_access_group=1 WHERE catalog_access_group = OLD.id;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `user_activity`
@@ -1525,6 +1471,21 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_catalog`
+--
+
+DROP TABLE IF EXISTS `user_catalog`;
+CREATE TABLE IF NOT EXISTS `user_catalog` (
+  `user` int(11) UNSIGNED NOT NULL,
+  `catalog` int(11) UNSIGNED NOT NULL,
+  `level` smallint(4) UNSIGNED NOT NULL DEFAULT 5,
+  KEY `user` (`user`),
+  KEY `catalog` (`catalog`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
