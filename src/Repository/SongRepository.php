@@ -58,7 +58,6 @@ final class SongRepository implements SongRepositoryInterface
         }
 
         $db_results = Dba::read($sql, array($albumId));
-//        debug_event(self::class, 'getByAlbum ' . $sql, 5);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
@@ -90,7 +89,6 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
-//        debug_event(self::class, 'getByLabel ' . $sql, 5);
         return $results;
     }
 
@@ -113,7 +111,6 @@ final class SongRepository implements SongRepositoryInterface
         $sql .= "ORDER BY RAND()";
 
         $db_results = Dba::read($sql, array($artist->getId()));
-//        debug_event(self::class, 'getRandomByArtist ' . $sql, 5);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
@@ -146,7 +143,6 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
-//        debug_event(self::class, 'getTopSongsByArtist ' . $sql, 5);
         return $results;
     }
 
@@ -169,7 +165,6 @@ final class SongRepository implements SongRepositoryInterface
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
-//        debug_event(self::class, 'getByArtist ' . $sql, 5);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
@@ -197,7 +192,6 @@ final class SongRepository implements SongRepositoryInterface
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
-//        debug_event(self::class, 'getByAllArtist ' . $sql, 5);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
