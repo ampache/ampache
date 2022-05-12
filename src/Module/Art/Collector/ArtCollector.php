@@ -124,7 +124,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load(Core::get_global('user'))) {
+                    if (!empty(Core::get_global('user')) && $plugin->load(Core::get_global('user'))) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }
