@@ -23,6 +23,7 @@
 
 /* global jPlayerPlaylist:true */
 
+// Before you minify this file comment out ALL the debug, it's loud
 (function($, undefined) {
 
     jPlayerPlaylist = function(cssSelector, playlist, options) {
@@ -231,7 +232,9 @@
                 });
                 this._updateControls();
             } else {
-                var displayTime = $(this.cssSelector.playlist + " ul").children().length ? this.options.playlistOptions.displayTime : 0;
+                var displayTime = $(this.cssSelector.playlist + " ul").children().length
+                    ? this.options.playlistOptions.displayTime
+                    : 0;
 
                 $(this.cssSelector.playlist + " ul").slideUp(displayTime, function() {
                     var $this = $(this);
@@ -269,7 +272,6 @@
                     $(value).attr("name", index);
                 }
             });
-            //console.log(self.playlist);
         },
         _createListItem: function(media) {
             var self = this;
@@ -356,6 +358,7 @@
             }
         },
         _highlight: function(index) {
+            console.log("_highlight " + index);
             $(this.cssSelector.title + " li:first").html("Playlist: " + this.name);
             $(this.cssSelector.title + " li:last").html(" ");
             if (this.playlist.length && typeof index !== "undefined") {
@@ -369,10 +372,28 @@
             this._init();
         },
         add: function(media, playNow) {
-            $(this.cssSelector.playlist + " ul").append(this._createListItem(media)).find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
+            console.log("add");
+            var self = this;
+            var playlist_before = [];
+            var playlist_after = [];
+            $.each(self.playlist, function(i) {
+                playlist_before[i] = self.playlist[i];
+            });
+            console.log(self.playlist_before);
+            $(this.cssSelector.playlist + " ul")
+                .append(this._createListItem(media))
+                .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
+
             this._updateControls();
-            this.original.push(media);
-            this.playlist.push(media); // Both array elements share the same object pointer. Comforms with _initPlaylist(p) system.
+
+            $.each(self.playlist, function(i) {
+                playlist_after.push(playlist_before[i]);
+            });
+            playlist_after.push(media);
+            this.playlist = playlist_after;
+            this.original = playlist_after;
+            console.log(self.playlist);
+
 
             if (playNow) {
                 this.play(this.playlist.length - 1);
@@ -383,6 +404,7 @@
             }
         },
         addAfter: function(media, index) {
+            console.log("addAfter " + index);
             if (index >= this.original.length || index < 0) {
                 console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
                 return;
@@ -393,7 +415,7 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-
+            console.log(playlist_before);
             $(this.cssSelector.playlist + " ul")
                 .find("li[name=" + index + "]").after(this._createListItem(media)).end()
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
@@ -408,6 +430,7 @@
             });
             this.playlist = playlist_after;
             this.original = playlist_after;
+            console.log(self.playlist);
 
             if (this.original.length === 1) {
                 this.select(0);
@@ -415,13 +438,8 @@
             this._refreshHtmlPlaylist();
         },
         remove: function(index) {
-            //console.log("remove " + index);
+            console.log("remove " + index);
             var self = this;
-            var playlist_before = [];
-            var playlist_after = [];
-            $.each(self.playlist, function(i) {
-                playlist_before[i] = self.playlist[i];
-            });
             if (typeof index === "undefined") {
                 this._initPlaylist([]);
                 this._refresh(function() {
@@ -429,6 +447,12 @@
                 });
                 return true;
             } else {
+                var playlist_before = [];
+                var playlist_after = [];
+                $.each(self.playlist, function(i) {
+                    playlist_before[i] = self.playlist[i];
+                });
+                console.log(playlist_before);
                 if (this.removing) {
                     return false;
                 } else {
@@ -469,6 +493,7 @@
                         this.playlist = playlist_after;
                         this.original = playlist_after;
                     }
+                    console.log(self.playlist);
 
                     return true;
                 }
@@ -503,7 +528,7 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-            //console.log(playlist_before);
+            console.log(playlist_before);
             $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
                 var jindex = parseInt($(value).attr("name"),10);
                 if (jindex !== index) {
@@ -519,9 +544,10 @@
             });
             this.playlist = playlist_after;
             this.original = playlist_after;
-            //console.log(self.playlist);
+            console.log(self.playlist);
         },
         select: function(index) {
+            console.log("select " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
                 this.current = index;
@@ -531,11 +557,13 @@
                 this.current = 0;
             }
         },
-        setCurrent: function(current) {
-            this.current = current;
+        setCurrent: function(index) {
+            console.log("setCurrent " + index);
+            this.current = index;
             this.select(this.current);
         },
         play: function(index) {
+            console.log("play " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
 
             if ("function" === typeof this.options.callbackPlay) {
