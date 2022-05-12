@@ -553,6 +553,7 @@
                 this.current = index;
                 this._highlight(index);
                 $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
+                console.log(this.playlist[this.current])
             } else {
                 this.current = 0;
             }
