@@ -283,7 +283,9 @@ class Wanted extends database_object
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
+                $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access('75'))
+                    ? null
+                    : Core::get_global('user')->id;
                 static::getWantedRepository()->deleteByMusicbrainzId(
                     print_r($malbum->{'release-group'}, true),
                     $userId
@@ -297,7 +299,7 @@ class Wanted extends database_object
      */
     public function accept()
     {
-        if (Core::get_global('user')->has_access('75')) {
+        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array($this->mbid));
             $this->accepted = true;

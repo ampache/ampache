@@ -7,9 +7,6 @@
 * Search
   * Add `file` to album and artist search
 
-### Changed
-
-
 ### Fixed
 
 * SQL for random artist with mapping
@@ -17,6 +14,7 @@
 * Autoplay in xbmc localplay and conform to localplay api
 * Ungrouped albums were forced into groups
 * Artists array should overwrite artist_mbid arrays that are smaller
+* Some empty globals relating to user
 
 ## API develop
 
