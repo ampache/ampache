@@ -379,7 +379,7 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-            console.log(self.playlist_before);
+            console.log(playlist_before);
             $(this.cssSelector.playlist + " ul")
                 .append(this._createListItem(media))
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
