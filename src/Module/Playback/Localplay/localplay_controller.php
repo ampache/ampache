@@ -149,7 +149,7 @@ abstract class localplay_controller
 
         //beautiful urls need their own parsing as parse_url will find nothing.
         if (AmpConfig::get('stream_beautiful_url')) {
-            preg_match('/oid\/(.*?)\//', $url, $match);
+            preg_match('/oid[\=|\/](.*?)[\&|\/]/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'oid',
