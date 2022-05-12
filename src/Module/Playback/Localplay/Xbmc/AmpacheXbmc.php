@@ -617,7 +617,7 @@ class AmpacheXbmc extends localplay_controller
                 $data['id']    = $i;
                 $data['track'] = $i + 1;
 
-                $url_data = $this->parse_url($data['link']);
+                $url_data = $this->parse_url(rawurldecode($data['link']));
                 if ($url_data != null) {
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
@@ -678,7 +678,7 @@ class AmpacheXbmc extends localplay_controller
                 ));
                 $array['repeat'] = ($playprop['repeat'] != "off");
                 $array['random'] = (strtolower($playprop['shuffled']) == 1);
-                $array['track']  = $currentplay['file'];
+                $array['track']  = rawurldecode($currentplay['file']);
 
                 $url_data = $this->parse_url($array['track']);
                 $song     = new Song($url_data['oid']);
