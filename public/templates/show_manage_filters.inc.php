@@ -23,9 +23,10 @@
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-debug_event(self::class, 'manage filters template', 5);
+//debug_event(self::class, 'manage filters template', 5);
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
+Ui::show_box_top(T_('Manage Catalog Filters'), 'box box_manage_filter');
 ?>
 
 <?php //require Ui::find_template('list_header.inc.php');?>
