@@ -2320,11 +2320,13 @@ abstract class Catalog extends database_object
         $sort_pattern = '',
         $rename_pattern = ''
     ) {
+        $array  = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
         //retrieve the file if needed
@@ -2332,8 +2334,9 @@ abstract class Catalog extends database_object
 
         if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
         $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));

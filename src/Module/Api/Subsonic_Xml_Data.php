@@ -419,8 +419,12 @@ class Subsonic_Xml_Data
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
-            $disc_ids  = $album->get_group_disks_ids();
-            $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
+            if (AmpConfig::get('album_group')) {
+                $disc_ids = $album->get_group_disks_ids();
+                $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
+            } else {
+                $media_ids = static::getAlbumRepository()->getSongs($album->id);
+            }
             foreach ($media_ids as $song_id) {
                 self::addSong($xalbum, $song_id);
             }
@@ -572,8 +576,12 @@ class Subsonic_Xml_Data
         $xdir->addAttribute('name', (string)self::_checkName($album->get_fullname()));
         self::_setIfStarred($xdir, 'album', $album->id);
 
-        $disc_ids  = $album->get_group_disks_ids();
-        $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
+        if (AmpConfig::get('album_group')) {
+            $disc_ids = $album->get_group_disks_ids();
+            $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
+        } else {
+            $media_ids = static::getAlbumRepository()->getSongs($album->id);
+        }
         foreach ($media_ids as $song_id) {
             self::addSong($xdir, $song_id, "child");
         }
