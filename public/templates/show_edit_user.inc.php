@@ -124,24 +124,22 @@ $web_path = AmpConfig::get('web_path');
             </td>
         </tr>
 
+<?php if (AmpConfig::get('catalog_filter')) { ?>
         <tr>
             <td><?php echo T_('Catalog Filter'); ?>:</td>
             <td><?php
-    $myfilter = Catalog::get_catalog_filter_name($client->catalog_access_group);
-    $filters  = Catalog::get_catalog_filter_names();
 
-    $options = array();
-    $i       = 1;
+    $filters  = Catalog::get_catalog_filters();
+    $options  = array();
     foreach ($filters as $filter) {
         $selected = "";
-        if ($filter == $myfilter) {
+        if ($filter['id'] == $client->catalog_access_group) {
             $selected = ' selected = "selected" ';
         }
-        $options[] = '<option value="' . $i . '" ' . $selected . '>' . $filter . '</option>';
-        $i++;
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
     }
     echo '<select name="catalog_access_group">' . implode("\n", $options) . '</select>';
-?>
+}?>
             </td>
         </tr>
         <tr>

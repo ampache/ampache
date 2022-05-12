@@ -85,12 +85,14 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php if (AmpConfig::get('catalog_filter')) {
     echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
 
-    $filters =Catalog::get_catalog_filter_names();
+    $filters = Catalog::get_catalog_filters();
     $options = array();
-    $i       = 1;
     foreach ($filters as $filter) {
-        $options[] = '<option value="' . $i . '" >' . $filter . '</option>';
-        $i++;
+        $selected = "";
+        if ($filter['id'] == 1) {
+            $selected = ' selected = "selected" ';
+        }
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
     }
     echo '<select name="catalog_access_group">' . implode("\n", $options) . '</select>';
 } ?>

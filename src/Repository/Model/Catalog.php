@@ -424,6 +424,25 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_catalog_filters
+     * This returns the filters, sorting by name or by id as indicated by $sort
+     * $sort = field to sort on (id or name)
+     * @return string[]
+     */
+    public static function get_catalog_filters($sort='name')
+    {
+        $results = array();
+        // Now fetch the rest;
+        $sql        = "SELECT `id`,`name` FROM `catalog_access_group` ORDER BY `$sort` ";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
      * get_catalog_filter_names
      * This returns the names of the catalog filters that are available with the default filter listed first.
      * @return string[]
@@ -2320,7 +2339,7 @@ abstract class Catalog extends database_object
         $sort_pattern = '',
         $rename_pattern = ''
     ) {
-        $array  = array();
+        $array   = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
