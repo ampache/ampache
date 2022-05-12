@@ -73,6 +73,7 @@ final class ApplicationRunner
         if (array_key_exists($action_name, $action_list) === false) {
             $action_name = $default_action;
         }
+
         $handler_name = $action_list[$action_name] ?? '';
 
         try {
