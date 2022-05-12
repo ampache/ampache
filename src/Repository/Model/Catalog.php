@@ -2053,7 +2053,7 @@ abstract class Catalog extends database_object
         $overwrites   = true;
         $meta_order   = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list  = Plugin::get_plugins('get_external_metadata');
-        $user         = (Core::get_global('user')->id)
+        $user         = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         foreach ($meta_order as $plugin_name) {

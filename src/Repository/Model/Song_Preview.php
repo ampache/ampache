@@ -345,7 +345,9 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function play_url($additional_params = '', $player = '', $local = false)
     {
-        $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        $user_id = (!empty(Core::get_global('user')))
+            ? scrub_out(Core::get_global('user')->id)
+            : '-1';
         $type      = $this->type;
         $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
