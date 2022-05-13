@@ -82,11 +82,19 @@ final class SongSorter implements SongSorterInterface
                  * Don't try to move it, if it's already the same friggin thing!
                  */
                 if ($song->file != $fullpath && strlen($fullpath)) {
-                    $interactor->info(T_("Examine File..."), true);
+                    $interactor->info(
+                        T_("Examine File..."),
+                        true
+                    );
                     /* HINT: filename (File path) */
-                    $interactor->info(sprintf(T_('Source: %s'), $song->file), true);
+                    $interactor->info(
+                        sprintf(T_('Source: %s'), $song->file),
+                        true
+                    );
                     /* HINT: filename (File path) */
-                    $interactor->info(sprintf(T_('Destin: %s'), $fullpath));
+                    $interactor->info(sprintf(T_('Destin: %s'), $fullpath),
+                        true
+                    );
                     flush();
                     $this->sort_move_file($interactor, $song, $fullpath, $dryRun);
                 }
@@ -162,7 +170,10 @@ final class SongSorter implements SongSorterInterface
         // dont send a mismatched file!
         if (strpos($sort_pattern, '%') !== false) {
             /* HINT: $sort_pattern after replacing %x values */
-            $interactor->info(sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern), true);
+            $interactor->info(
+                sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
+                true
+            );
 
             return false;
         }
@@ -227,7 +238,10 @@ final class SongSorter implements SongSorterInterface
             if (!is_dir($path)) {
                 if ($test_mode) {
                     /* HINT: Directory (File path) */
-                    $interactor->info(sprintf(T_('Create directory "%s"'), $path), true);
+                    $interactor->info(
+                        sprintf(T_('Create directory "%s"'), $path),
+                        true
+                    );
                 } else {
                     debug_event('sort_files', "Creating $path directory", 4);
                     $results = mkdir($path);
@@ -252,14 +266,19 @@ final class SongSorter implements SongSorterInterface
                 true
             );
             $sql = "UPDATE `song` SET `file` = " . Dba::escape($fullname) . " WHERE `id` = " . Dba::escape($song->id) . ";";
-            $interactor->info(sprintf('SQL: %s', $sql), true);
+            $interactor->info(
+                sprintf('SQL: %s', $sql),
+                true
+            );
             flush();
         } else {
             /* Check for file existence */
             if (file_exists($fullname)) {
                 debug_event('sort_files', 'Error: $fullname already exists', 1);
                 /* HINT: filename (File path) */
-                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname));
+                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname),
+                    true
+                );
 
                 return false;
             }
