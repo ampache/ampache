@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
@@ -132,16 +133,16 @@ final class SongSorter implements SongSorterInterface
         }
 
         // Create the filename that this file should have
-        $album  = $this->sort_clean_name($song->f_album_full) ?: '%A';
-        $artist = $this->sort_clean_name($song->f_artist_full) ?: '%a';
-        $track  = $this->sort_clean_name($song->track) ?: '%T';
+        $album  = $this->sort_clean_name($song->f_album_full) ?? '%A';
+        $artist = $this->sort_clean_name($song->f_artist_full) ?? '%a';
+        $track  = $this->sort_clean_name($song->track) ?? '%T';
         if ((int) $track < 10 && (int) $track > 0) {
             $track = '0' . (string) $track;
         }
 
-        $title   = $this->sort_clean_name($song->title) ?: '%t';
-        $year    = $this->sort_clean_name($song->year) ?: '%y';
-        $comment = $this->sort_clean_name($song->comment) ?: '%c';
+        $title   = $this->sort_clean_name($song->title) ?? '%t';
+        $year    = $this->sort_clean_name($song->year) ?? '%y';
+        $comment = $this->sort_clean_name($song->comment) ?? '%c';
 
         // Do the various check
         $album_object = new Album($song->album);
@@ -151,13 +152,13 @@ final class SongSorter implements SongSorterInterface
         } elseif ($album_object->artist_count != 1) {
             $artist = $various_artist;
         }
-        $disk           = $album_object->disk ?: '%d';
-        $catalog_number = $album_object->catalog_number ?: '%C';
-        $barcode        = $album_object->barcode ?: '%b';
-        $original_year  = $album_object->original_year ?: '%Y';
-        $genre          = implode("; ", $album_object->tags) ?: '%b';
-        $release_type   = $album_object->release_type ?: '%r';
-        $release_status = $album_object->release_status ?: '%R';
+        $disk           = $album_object->disk ?? '%d';
+        $catalog_number = $album_object->catalog_number ?? '%C';
+        $barcode        = $album_object->barcode ?? '%b';
+        $original_year  = $album_object->original_year ?? '%Y';
+        $genre          = (!empty($album_object->tags)) ? Tag::get_display($album_object->tags) : '%b';
+        $release_type   = $album_object->release_type ?? '%r';
+        $release_status = $album_object->release_status ?? '%R';
 
         // Replace everything we can find
         $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%d', '%g', '%b');
