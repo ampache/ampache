@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
