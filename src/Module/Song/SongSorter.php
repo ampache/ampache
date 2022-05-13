@@ -50,6 +50,7 @@ final class SongSorter implements SongSorterInterface
 
             $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override));
         }
+        $move_count = 0;
 
         // First Clean the catalog to we don't try to write anything we shouldn't
         $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
@@ -96,8 +97,14 @@ final class SongSorter implements SongSorterInterface
                     );
                     flush();
                     $this->sort_move_file($interactor, $song, $fullpath, $dryRun);
+                    $move_count++;
                 }
             }
+            /* HINT: filename (File path) */
+            $interactor->info(
+                sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
+                true
+            );
         }
     }
 
@@ -285,8 +292,8 @@ final class SongSorter implements SongSorterInterface
 
             $results = copy($song->file, $fullname);
             if (!$results) {
+                /* HINT: filename (File path) */
                 $interactor->info(
-                    /* HINT: filename (File path) */
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
                     true
                 );
