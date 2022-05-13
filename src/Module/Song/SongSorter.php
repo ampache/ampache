@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Song;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
@@ -204,7 +205,7 @@ final class SongSorter implements SongSorterInterface
      */
     private function sort_move_file(
         Interactor $interactor,
-        $song,
+        Song $song,
         $fullname,
         $test_mode
     ) {
@@ -250,7 +251,7 @@ final class SongSorter implements SongSorterInterface
                 sprintf(T_('Copying "%1$s" to "%2$s"'), $file, $directory),
                 true
             );
-            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song) . "'";
+            $sql = "UPDATE `song` SET `file` = " . Dba::escape($fullname) . " WHERE `id` = " . Dba::escape($song->id) . ";";
             $interactor->info(sprintf('SQL: %s', $sql), true);
             flush();
         } else {
@@ -267,7 +268,7 @@ final class SongSorter implements SongSorterInterface
             debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
 
             /* Look for the folder art and copy that as well */
-            if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
+            if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), ";")) {
                 $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
                 $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
             } else {
@@ -315,8 +316,8 @@ final class SongSorter implements SongSorterInterface
             }
 
             /* Update the catalog */
-            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
-            Dba::write($sql);
+            $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
+            Dba::write($sql, array($fullname, $song->id));
         } // end else
 
         return true;
