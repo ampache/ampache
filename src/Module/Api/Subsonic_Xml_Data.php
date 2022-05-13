@@ -420,7 +420,7 @@ class Subsonic_Xml_Data
 
         if ($songs) {
             if (AmpConfig::get('album_group')) {
-                $disc_ids = $album->get_group_disks_ids();
+                $disc_ids  = $album->get_group_disks_ids();
                 $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
             } else {
                 $media_ids = static::getAlbumRepository()->getSongs($album->id);
@@ -577,7 +577,7 @@ class Subsonic_Xml_Data
         self::_setIfStarred($xdir, 'album', $album->id);
 
         if (AmpConfig::get('album_group')) {
-            $disc_ids = $album->get_group_disks_ids();
+            $disc_ids  = $album->get_group_disks_ids();
             $media_ids = static::getAlbumRepository()->getSongsGrouped($disc_ids);
         } else {
             $media_ids = static::getAlbumRepository()->getSongs($album->id);
