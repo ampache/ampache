@@ -303,6 +303,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Playlist->Clear(array(
                 'playlistid' => $this->_playlistId
             ));
+            $this->stop();
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
