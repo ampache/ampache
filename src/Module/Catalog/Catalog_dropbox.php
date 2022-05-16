@@ -139,7 +139,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isReady()
     {
@@ -622,6 +622,14 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        return false;
+    }
+
+    /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
@@ -633,7 +641,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {

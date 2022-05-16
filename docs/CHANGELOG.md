@@ -4,8 +4,18 @@
 
 ### Added
 
+* Translation Updates May 2022
 * Search
   * Add `file` to album and artist search
+* CLI
+  * New argument for run:updateCatalog `-f` or `--find`
+  * This will cancel out any Clean, Add or Verify and simply list files that are missing in the database
+  * Ever delete stats for something you've been listening to since 2005? It sucks.
+
+### Changed
+
+* Moved to php-cs-fixer 3
+* Update from tags now shows an 'Error' status if there was an issues reading the file
 
 ### Fixed
 
@@ -15,6 +25,8 @@
 * Ungrouped albums were forced into groups
 * Artists array should overwrite artist_mbid arrays that are smaller
 * Some empty globals relating to user
+* Sorting songs from the cli was broken
+* More work on the forked Jplayer playlist code when using `play last`
 
 ## API develop
 

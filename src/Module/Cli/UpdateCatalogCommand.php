@@ -40,9 +40,10 @@ final class UpdateCatalogCommand extends Command
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
-            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
+            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
+            ->option('-f|--find', T_('Find missing files and print a list of filenames'), 'boolval', false)
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
             ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
@@ -58,7 +59,7 @@ final class UpdateCatalogCommand extends Command
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set
-        if (empty($values['cleanup']) && empty($values['verify']) && empty($values['add']) && empty($values['art']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local') {
+        if (empty($values['cleanup']) && empty($values['verify']) && empty($values['add']) && empty($values['art']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local' && !empty($values['safe'])) {
             $values['cleanup'] = true;
             $values['add']     = true;
             $values['art']     = true;
@@ -72,6 +73,7 @@ final class UpdateCatalogCommand extends Command
             $values['art'],
             $values['import'],
             $values['cleanup'],
+            $values['find'],
             $values['verify'],
             $values['update'],
             $values['optimize'],
