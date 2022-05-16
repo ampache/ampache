@@ -179,17 +179,17 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     <div class="album_group_disks_actions">
         <?php
             if ($show_direct_play) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id, 'play', T_('Play'), 'directplay_full_' . $c_album->id);
                 if (Stream_Playlist::check_autoplay_next()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $c_album->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $c_album->id);
                 }
                 if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
                 }
             }
         if ($show_playlist_add) {
-            echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_id('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_' . $c_album->id);
-            echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_id('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album&id=' . $c_album->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album_random&id=' . $c_album->id, 'random', T_('Random to Temporary Playlist'), 'play_random_' . $c_album->id);
         } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
@@ -203,7 +203,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <?php
         } ?>
         <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_id('id'); ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $c_album->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
         <?php if (Access::check('interface', 50)) { ?>
