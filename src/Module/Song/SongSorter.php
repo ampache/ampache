@@ -315,6 +315,8 @@ final class SongSorter implements SongSorterInterface
             // don't move things into the same dir
             if ($old_dir != $directory) {
                 if (copy($old_art, $folder_art) === false) {
+                    unlink($fullname); // delete the copied file on failure
+
                     throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
                 }
                 debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
@@ -329,6 +331,7 @@ final class SongSorter implements SongSorterInterface
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),
                     true
                 );
+                unlink($fullname); // delete the copied file on failure
 
                 return false;
             } // end if sum's don't match
