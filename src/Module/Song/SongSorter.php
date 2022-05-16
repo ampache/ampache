@@ -68,6 +68,17 @@ final class SongSorter implements SongSorterInterface
 
             // Foreach through each file and find it a home!
             foreach ($songs as $song) {
+                // Check for file existence
+                if (!file_exists($song->file)) {
+                    debug_event('sort_files', 'Missing: ' . $song->file, 1);
+                    /* HINT: filename (File path) */
+                    $interactor->info(
+                        sprintf(T_('Missing: %s'), $song->file),
+                        true
+                    );
+
+                    continue;
+                }
                 $song->format();
                 // sort_find_home will replace the % with the correct values.
                 $directory = $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
@@ -274,12 +285,6 @@ final class SongSorter implements SongSorterInterface
             );
             flush();
         } else {
-            // Check for file existence
-            if (!file_exists($song->file)) {
-                debug_event('sort_files', 'Error: file missing ' . $song->file, 1);
-
-                return false;
-            }
             if (file_exists($fullname)) {
                 debug_event('sort_files', 'Error: $fullname already exists', 1);
                 /* HINT: filename (File path) */
