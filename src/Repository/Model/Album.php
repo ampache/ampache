@@ -690,6 +690,7 @@ class Album extends database_object implements library_item
             if ($this->disk && !$this->allow_group_disks && count($this->album_suite) > 1) {
                 $f_name .= " [" . T_('Disk') . " " . $this->disk . "]";
             }
+
             return $f_name;
         }
         // don't do anything if it's formatted
