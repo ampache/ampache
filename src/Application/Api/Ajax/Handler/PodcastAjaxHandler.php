@@ -34,7 +34,6 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
-
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'sync':

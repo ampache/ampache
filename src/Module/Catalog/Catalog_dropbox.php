@@ -744,7 +744,6 @@ class Catalog_dropbox extends Catalog
      */
     public function gather_art($songs = null, $videos = null)
     {
-
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {
