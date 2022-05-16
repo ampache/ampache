@@ -164,56 +164,57 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     define('TABLE_RENDERED', 1);
     $album_suite = $album->get_group_disks_ids();
     foreach ($album_suite as $album_id) {
-        $c_album           = new Album($album_id);
-        $c_title           = scrub_out($f_name) . "<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
+        $sub_disk          = Album::get_disk($album_id);
+        $sub_song_count    = Album::get_song_count($album_id);
+        $sub_title         = scrub_out($f_name) . "<span class=\"discnb disc" . $sub_disk . "\">, " . T_('Disk') . " " . $sub_disk . "</span>";
         $show_direct_play  = $show_direct_play_cfg;
         $show_playlist_add = Access::check('interface', 25);
         if ($directplay_limit > 0) {
-            $show_playlist_add = ($c_album->song_count <= $directplay_limit);
+            $show_playlist_add = ($sub_song_count <= $directplay_limit);
             if ($show_direct_play) {
                 $show_direct_play = $show_playlist_add;
             }
         } ?>
-    <div class="album_group_disks_title"><span> <?php echo $c_title; ?></span></div>
+    <div class="album_group_disks_title"><span> <?php echo $sub_title; ?></span></div>
     <div class="album_group_disks_actions">
         <?php
             if ($show_direct_play) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id, 'play', T_('Play'), 'directplay_full_' . $c_album->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album_id, 'play', T_('Play'), 'directplay_full_' . $album_id);
                 if (Stream_Playlist::check_autoplay_next()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $c_album->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album_id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $album_id);
                 }
                 if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $c_album->id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album_id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album_id);
                 }
             }
         if ($show_playlist_add) {
-            echo Ajax::button('?action=basket&type=album&id=' . $c_album->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $c_album->id);
-            echo Ajax::button('?action=basket&type=album_random&id=' . $c_album->id, 'random', T_('Random to Temporary Playlist'), 'play_random_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album&id=' . $album_id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album_id);
+            echo Ajax::button('?action=basket&type=album_random&id=' . $album_id, 'random', T_('Random to Temporary Playlist'), 'play_random_' . $album_id);
         } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo $web_path ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
+                <a href="<?php echo $web_path ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album_id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <?php echo Share::display_ui('album', $c_album->id, false); ?>
+                <?php echo Share::display_ui('album', $album_id, false); ?>
             <?php
             } ?>
         <?php
         } ?>
         <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $c_album->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album_id; ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
         <?php if (Access::check('interface', 50)) { ?>
-            <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
+            <a onclick="submitNewItemsOrder('<?php echo $album_id ?>', 'reorder_songs_table_<?php echo $album_id ?>', 'song_',
                                             '<?php echo $web_path ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
             </a>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album_id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
-            <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
+            <a id="<?php echo 'edit_album_' . $album_id ?>" onclick="showEditDialog('album_row', '<?php echo $album_id ?>', '<?php echo 'edit_album_' . $album_id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
