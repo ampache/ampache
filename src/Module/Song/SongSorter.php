@@ -312,9 +312,12 @@ final class SongSorter implements SongSorterInterface
                 $old_art     = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
             }
 
-            debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
-            if (copy($old_art, $folder_art) === false) {
-                throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+            // don't move things into the same dir
+            if ($old_dir != $directory) {
+                if (copy($old_art, $folder_art) === false) {
+                    throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+                }
+                debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
             }
             // Check the filesize
             $new_sum = Core::get_filesize($fullname);
