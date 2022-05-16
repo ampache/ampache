@@ -275,6 +275,11 @@ final class SongSorter implements SongSorterInterface
             flush();
         } else {
             // Check for file existence
+            if (!file_exists($song->file)) {
+                debug_event('sort_files', 'Error: file missing ' . $song->file, 1);
+
+                return false;
+            }
             if (file_exists($fullname)) {
                 debug_event('sort_files', 'Error: $fullname already exists', 1);
                 /* HINT: filename (File path) */
