@@ -146,6 +146,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
             } ?>
                     <td class="cel_delete">
                         <a class="activity_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=stats&action=delete&activity_id=<?php echo $row['activity_id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Activity?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                        <?php echo Ajax::button('?page=index&action=delete_activity&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
