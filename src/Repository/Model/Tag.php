@@ -358,6 +358,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         return $results;
     }
+
     /**
      * has_merge
      * Get merged tags to this tag.

@@ -11,6 +11,8 @@
   * New argument for run:updateCatalog `-f|--find` Find missing files and print a list of filenames
   * New argument for cleanup:sortSongs `-l|--limit` Limit how many moves to allow before stopping
   * New argument for cleanup:sortSongs `[catalogName]` Name of Catalog (optional)
+* Database 540001:
+  * Index `title` with `enabled` on `song` table to speed up searching
 
 ### Changed
 

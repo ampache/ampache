@@ -638,6 +638,9 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
+        $update_string = "Index `title` with `enabled` on `song` table to speed up searching";
+        $version[]     = array('version' => '540000', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4264,6 +4267,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_530015
      *
@@ -4296,5 +4300,21 @@ class Update
     public static function update_530016(): bool
     {
         return (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+    }
+
+    /**
+     * update_54000
+     *
+     * Index `title` with `enabled` on `song` table to speed up searching
+     */
+    public static function update_540000(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE UNIQUE INDEX `title_enabled_IDX` USING BTREE ON `object_count` (`title`, `enabled`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
     }
 } // end update.class
