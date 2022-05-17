@@ -45,12 +45,15 @@ final class SortFilesCommand extends Command
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
+            ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }
 
-    public function execute(): void
-    {
+    public function execute(
+        ?string $catalogName
+    ): void {
         $io     = $this->app()->io();
         $values = $this->values();
         $dryRun = $values['execute'] === false;
@@ -70,7 +73,9 @@ final class SortFilesCommand extends Command
         $this->songSorter->sort(
             $io,
             $dryRun,
-            $values['name']
+            $values['limit'],
+            $values['name'],
+            $catalogName
         );
     }
 }

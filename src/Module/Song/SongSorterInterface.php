@@ -26,5 +26,11 @@ use Ahc\Cli\IO\Interactor;
 
 interface SongSorterInterface
 {
-    public function sort(Interactor $interactor, bool $dryRun = true, ?string $various_artist_override = null): void;
+    public function sort(
+        Interactor $interactor,
+        bool $dryRun = true,
+        int $limit = 0,
+        ?string $various_artist_override = null,
+        ?string $catalogName = null
+    ): void;
 }

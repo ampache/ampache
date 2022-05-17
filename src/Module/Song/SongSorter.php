@@ -39,7 +39,9 @@ final class SongSorter implements SongSorterInterface
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
-        ?string $various_artist_override = null
+        int $limit = 0,
+        ?string $various_artist_override = null,
+        ?string $catalogName = null
     ): void {
         $various_artist = 'Various Artists';
 
@@ -53,9 +55,13 @@ final class SongSorter implements SongSorterInterface
         }
         $move_count = 0;
 
-        // First Clean the catalog to we don't try to write anything we shouldn't
-        $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
-        $db_results = Dba::read($sql);
+        if (!empty($catalogName)) {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
+            $db_results = Dba::read($sql, array($catalogName));
+        } else {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local';";
+            $db_results = Dba::read($sql);
+        }
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
@@ -68,6 +74,15 @@ final class SongSorter implements SongSorterInterface
 
             // Foreach through each file and find it a home!
             foreach ($songs as $song) {
+                if ($limit > 0 && $move_count == $limit) {
+                    /* HINT: filename (File path) */
+                    $interactor->info(
+                        sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
+                        true
+                    );
+
+                    return;
+                }
                 // Check for file existence
                 if (!file_exists($song->file)) {
                     debug_event('sort_files', 'Missing: ' . $song->file, 1);
