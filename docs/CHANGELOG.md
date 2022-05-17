@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 5.4.0-develop
 
 ### Added
 
@@ -33,7 +33,7 @@
   * cleanup:sortSongs was broken (It actually works again)
   * cleanup:sortSongs removes incomplete copied files after failure
 
-## API develop
+## API 5.4.0
 
 ### Added
 
