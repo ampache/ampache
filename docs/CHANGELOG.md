@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache developo
+## Ampache develop
 
 ### Added
 
@@ -8,9 +8,9 @@
 * Search
   * Add `file` to album and artist search
 * CLI
-  * New argument for run:updateCatalog `-f` or `--find`
-  * This will cancel out any Clean, Add or Verify and simply list files that are missing in the database
-  * Ever delete stats for something you've been listening to since 2005? It sucks.
+  * New argument for run:updateCatalog `-f|--find` Find missing files and print a list of filenames
+  * New argument for cleanup:sortSongs `-l|--limit` Limit how many moves to allow before stopping
+  * New argument for cleanup:sortSongs `[catalogName]` Name of Catalog (optional)
 
 ### Changed
 
@@ -20,13 +20,18 @@
 ### Fixed
 
 * SQL for random artist with mapping
+* SQL for servers < 5.0.0 might try to insert into a missing table
 * Respect grouping for song_count searches
 * Autoplay in xbmc localplay and conform to localplay api
 * Ungrouped albums were forced into groups
 * Artists array should overwrite artist_mbid arrays that are smaller
 * Some empty globals relating to user
-* Sorting songs from the cli was broken
 * More work on the forked Jplayer playlist code when using `play last`
+* DAAP play urls
+* Single disk download links on group pages
+* CLI
+  * cleanup:sortSongs was broken (It actually works again)
+  * cleanup:sortSongs removes incomplete copied files after failure
 
 ## API develop
 
