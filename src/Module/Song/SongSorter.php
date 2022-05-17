@@ -323,7 +323,7 @@ final class SongSorter implements SongSorterInterface
             }
 
             // don't move things into the same dir
-            if ($old_dir != $directory) {
+            if ($old_dir != $directory && file_exists($old_art)) {
                 if (copy($old_art, $folder_art) === false) {
                     unlink($fullname); // delete the copied file on failure
 
