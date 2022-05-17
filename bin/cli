@@ -25,11 +25,15 @@ declare(strict_types=1);
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Cli;
+use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 define('CLI', 1);
 define('OUTDATED_DATABASE_OK', 1);
+
+// set a global in case it's needed
+$GLOBALS['user'] = new User(-1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
