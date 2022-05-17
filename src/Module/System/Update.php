@@ -4312,7 +4312,7 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
         Dba::write($sql);
-        $sql = "CREATE UNIQUE INDEX `title_enabled_IDX` USING BTREE ON `object_count` (`title`, `enabled`);";
+        $sql = "CREATE UNIQUE INDEX `title_enabled_IDX` USING BTREE ON `song` (`title`, `enabled`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
