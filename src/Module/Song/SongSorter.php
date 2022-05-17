@@ -123,8 +123,9 @@ final class SongSorter implements SongSorterInterface
                         true
                     );
                     flush();
-                    $this->sort_move_file($interactor, $song, $fullpath, $dryRun);
-                    $move_count++;
+                    if ($this->sort_move_file($interactor, $song, $fullpath, $dryRun)) {
+                        $move_count++;
+                    }
                 }
             }
             /* HINT: filename (File path) */
