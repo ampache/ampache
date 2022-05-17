@@ -638,8 +638,11 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
-        $update_string = "Index `title` with `enabled` on `song` table to speed up searching";
+        $update_string = "* Index `title` with `enabled` on `song` table to speed up searching";
         $version[]     = array('version' => '540000', 'description' => $update_string);
+
+        $update_string = "* Index `album` table columns.<br />* `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`";
+        $version[]     = array('version' => '540001', 'description' => $update_string);
 
         return $version;
     }
@@ -4303,7 +4306,7 @@ class Update
     }
 
     /**
-     * update_54000
+     * update_540000
      *
      * Index `title` with `enabled` on `song` table to speed up searching
      */
@@ -4313,6 +4316,46 @@ class Update
         $sql    = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `title_enabled_IDX` USING BTREE ON `song` (`title`, `enabled`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_540001
+     *
+     * Index album tables. `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`
+     */
+    public static function update_540001(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` DROP KEY `catalog_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `catalog_IDX` USING BTREE ON `album` (`catalog`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `album_artist_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `album_artist_IDX` USING BTREE ON `album` (`album_artist`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `original_year_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `original_year_IDX` USING BTREE ON `album` (`original_year`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `release_type_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `release_type_IDX` USING BTREE ON `album` (`release_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `release_status_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `release_status_IDX` USING BTREE ON `album` (`release_status`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `mbid_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `mbid_IDX` USING BTREE ON `album` (`mbid`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `mbid_group_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
