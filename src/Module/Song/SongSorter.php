@@ -97,14 +97,14 @@ final class SongSorter implements SongSorterInterface
                 }
                 $song->format();
                 // sort_find_home will replace the % with the correct values.
-                $directory = $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
+                $directory = ($filesOnly)
+                    ? dirname($song->file)
+                    : $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
                 $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist);
                 if ($directory === false || $filename === false) {
                     $fullpath = $song->file;
                 } else {
-                    $fullpath = ($filesOnly)
-                        ? rtrim(dirname($song->file), "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION)
-                        : rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
                 }
 
                 /* We need to actually do the moving (fake it if we are testing)
