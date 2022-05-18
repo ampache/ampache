@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.4.0-develop
+## Ampache 5.4.0-release
 
 ### Added
 
