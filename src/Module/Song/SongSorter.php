@@ -39,6 +39,7 @@ final class SongSorter implements SongSorterInterface
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
+        bool $filesOnly = false,
         int $limit = 0,
         ?string $various_artist_override = null,
         ?string $catalogName = null
@@ -96,7 +97,9 @@ final class SongSorter implements SongSorterInterface
                 }
                 $song->format();
                 // sort_find_home will replace the % with the correct values.
-                $directory = $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
+                $directory = ($filesOnly)
+                    ? dirname($song->file)
+                    : $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
                 $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist);
                 if ($directory === false || $filename === false) {
                     $fullpath = $song->file;
@@ -329,23 +332,26 @@ final class SongSorter implements SongSorterInterface
             }
             debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
 
+
             // Look for the folder art and copy that as well
-            if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), ";")) {
-                $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
-                $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
-            } else {
-                $folder_art  = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
-                $old_art     = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
-            }
-
-            // don't move things into the same dir
-            if ($old_dir != $directory && file_exists($old_art)) {
-                if (copy($old_art, $folder_art) === false) {
-                    unlink($fullname); // delete the copied file on failure
-
-                    throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+            if ($old_dir != $directory) {
+                // don't move things into the same dir
+                if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), ";")) {
+                    $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
+                    $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
+                } else {
+                    $folder_art  = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
+                    $old_art     = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
                 }
-                debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
+                // copy art that exists
+                if (file_exists($old_art)) {
+                    if (copy($old_art, $folder_art) === false) {
+                        unlink($fullname); // delete the copied file on failure
+
+                        throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+                    }
+                    debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
+                }
             }
             // Check the filesize
             $new_sum = Core::get_filesize($fullname);
