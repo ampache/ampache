@@ -29,6 +29,7 @@ interface SongSorterInterface
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
+        bool $filesOnly = false,
         int $limit = 0,
         ?string $various_artist_override = null,
         ?string $catalogName = null

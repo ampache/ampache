@@ -45,6 +45,7 @@ final class SortFilesCommand extends Command
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
+            ->option('-f|--files', T_('Rename files and keep them in the current folder'), 'boolval', false)
             ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
@@ -73,6 +74,7 @@ final class SortFilesCommand extends Command
         $this->songSorter->sort(
             $io,
             $dryRun,
+            $values['files'],
             $values['limit'],
             $values['name'],
             $catalogName
