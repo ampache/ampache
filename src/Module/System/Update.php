@@ -644,6 +644,9 @@ class Update
         $update_string = "* Index `album` table columns.<br />* `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`";
         $version[]     = array('version' => '540001', 'description' => $update_string);
 
+        $update_string = "* Index `object_type` with `date` in `object_count` table";
+        $version[]     = array('version' => '540002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4356,6 +4359,22 @@ class Update
         $sql    = "ALTER TABLE `album` DROP KEY `mbid_group_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_540002
+     *
+     * Index `object_type` with `date` in `object_count` table
+     */
+    public static function update_540002(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `song` DROP KEY `object_type_date_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

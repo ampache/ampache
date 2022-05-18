@@ -11,8 +11,10 @@
   * New argument for run:updateCatalog `-f|--find` Find missing files and print a list of filenames
   * New argument for cleanup:sortSongs `-l|--limit` Limit how many moves to allow before stopping
   * New argument for cleanup:sortSongs `[catalogName]` Name of Catalog (optional)
-* Database 540001:
+* Database 540002:
   * Index `title` with `enabled` on `song` table to speed up searching
+  * Index `album` table columns; `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`
+  * Index `object_type` with `date` in `object_count` table
 
 ### Changed
 
