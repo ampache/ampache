@@ -822,9 +822,9 @@
         },
         _init: function() {
             var self = this;
-            
+
             this.element.empty();
-            
+
             this.status = $.extend({}, this.status); // Copy static to unique instance.
             this.internal = $.extend({}, this.internal); // Copy static to unique instance.
 
@@ -855,7 +855,7 @@
             this.formats = []; // Array based on supplied string option. Order defines priority.
             this.solutions = []; // Array based on solution string option. Order defines priority.
             this.require = {}; // Which media types are required: video, audio.
-            
+
             this.htmlElement = {}; // DOM elements created by jPlayer
             this.html = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
             this.html.audio = {};
@@ -864,7 +864,7 @@
             this.aurora.formats = [];
             this.aurora.properties = [];
             this.flash = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
-            
+
             this.css = {};
             this.css.cs = {}; // Holds the css selector strings
             this.css.jq = {}; // Holds jQuery selectors. ie., $(css.cs.method)
@@ -906,7 +906,7 @@
                     }
                 }
             });
-                
+
             // Create Aurora.js formats array
             $.each(this.options.auroraFormats.toLowerCase().split(","), function(index1, value1) {
                 var format = value1.replace(/^\s+|\s+$/g, ""); //trim
@@ -1011,7 +1011,7 @@
             this.internal.poster.jq.bind("click.jPlayer", function() {
                 self._trigger($.jPlayer.event.click);
             });
-            
+
             // Generate the required media elements
             this.html.audio.available = false;
             if(this.require.audio) { // If a supplied format is audio
@@ -1085,7 +1085,7 @@
 
             // Set up the css selectors for the control and feedback entities.
             this._cssSelectorAncestor(this.options.cssSelectorAncestor);
-            
+
             // If neither html nor aurora nor flash are being used by this browser, then media playback is not possible. Trigger an error event.
             if(!(this.html.used || this.aurora.used || this.flash.used)) {
                 this._error( {
@@ -1187,7 +1187,7 @@
                     });
                 }
             }
-            
+
             // Add the Aurora.js solution if being used.
             if(this.aurora.used) {
                 // Aurora.js player need to be created for each media, see setMedia function.
@@ -1256,7 +1256,7 @@
             this.element.removeData("jPlayer"); // Remove jPlayer data
             this.element.unbind(".jPlayer"); // Remove all event handlers created by the jPlayer constructor
             this.element.empty(); // Remove the inserted child elements
-            
+
             delete this.instances[this.internal.instance]; // Clear the instance on the static instance object
         },
         destroyRemoved: function() { // Destroy any instances that have gone away.
@@ -1355,7 +1355,7 @@
             // Create the event listeners
             // Only want the active entity to affect jPlayer and bubble events.
             // Using entity.gate so that object is referenced and gate property always current
-            
+
             mediaElement.addEventListener("progress", function() {
                 if(entity.gate) {
                     if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
@@ -1515,7 +1515,7 @@
             // Create the event listeners
             // Only want the active entity to affect jPlayer and bubble events.
             // Using entity.gate so that object is referenced and gate property always current
-            
+
             player.on("progress", function() {
                 if(entity.gate) {
                     if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
@@ -1595,7 +1595,7 @@
                 sp = 100;
                 cpr = cpa;
             }
-            
+
             if(override) {
                 ct = 0;
                 cpr = 0;
@@ -1631,7 +1631,7 @@
                 sp = 100;
                 cpr = cpa;
             }
-            
+
             if(override) {
                 ct = 0;
                 cpr = 0;
@@ -1951,7 +1951,7 @@
             }
         },
         setMedia: function(media) {
-        
+            console.log("setMedia");
             /**
              * media[format] = String: URL of format. Must contain all of the supplied option's video or audio formats.
              * media.poster = String: Video poster URL.
@@ -1974,10 +1974,13 @@
 
             // Convert all media URLs to absolute URLs.
             media = this._absoluteMediaUrls(media);
+            console.log(media);
 
             $.each(this.formats, function(formatPriority, format) {
+                console.log("setMedia: self.formats " + format);
                 var isVideo = self.format[format].media === 'video';
                 $.each(self.solutions, function(solutionPriority, solution) {
+                    console.log("setMedia: self.solutions " + solution);
                     if(self[solution].support[format] && self._validString(media[format])) { // Format supported in solution and url given for format.
                         var isHtml = solution === 'html';
                         var isAurora = solution === 'aurora';
@@ -2020,7 +2023,7 @@
                             }
                             self.status.video = false;
                         }
-                        
+
                         supported = true;
                         return false; // Exit $.each
                     }
@@ -2060,6 +2063,7 @@
                 this._updateInterface();
                 this._trigger($.jPlayer.event.setmedia);
             } else { // jPlayer cannot support any formats provided in this browser
+                console.log("setMedia: NO_SUPPORT");
                 // Send an error event
                 this._error( {
                     type: $.jPlayer.error.NO_SUPPORT,
@@ -3105,18 +3109,18 @@
         },
         _aurora_setAudio: function(media) {
             var self = this;            
-            
+
             // Always finds a format due to checks in setMedia()
             $.each(this.formats, function(priority, format) {
                 if(self.aurora.support[format] && media[format]) {
                     self.status.src = media[format];
                     self.status.format[format] = true;
                     self.status.formatType = format;
-            
+
                     return false;
                 }
             });
-            
+
             this.aurora.player = new AV.Player.fromURL(this.status.src);
             this._addAuroraEventListeners(this.aurora.player, this.aurora);
 
@@ -3150,7 +3154,7 @@
             }
             this.status.waitForLoad = false;
             this._aurora_checkWaitForPlay();
-            
+
             // No event from the player, update UI now.
             this._updateButtons(true);
             this._trigger($.jPlayer.event.play);
@@ -3160,11 +3164,11 @@
                 this.aurora.player.seek(time * 1000);
             }
             this.aurora.player.pause();
-            
+
             if(time > 0) { // Avoids a setMedia() followed by stop() or pause(0) hiding the video play button.
                 this._aurora_checkWaitForPlay();
             }
-            
+
             // No event from the player, update UI now.
             this._updateButtons(false);
             this._trigger($.jPlayer.event.pause);
@@ -3174,7 +3178,7 @@
                 // The seek() sould be in milliseconds, but the only codec that works with seek (aac.js) uses seconds.
                 this.aurora.player.seek(percent * this.aurora.player.duration / 100); // Using seconds
             }
-                
+
             if(!this.status.waitForLoad) {
                 this._aurora_checkWaitForPlay();
             }
