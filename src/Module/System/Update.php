@@ -4372,7 +4372,7 @@ class Update
     public static function update_540002(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `song` DROP KEY `object_type_date_IDX`;";
+        $sql    = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
         $retval &= (Dba::write($sql) !== false);
