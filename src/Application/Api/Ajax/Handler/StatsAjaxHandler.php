@@ -74,20 +74,6 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
                 break;
-            case 'delete':
-                if (!Access::check('interface', 100)) {
-                    debug_event('stats.ajax', Core::get_global('user')->username . ' attempted to delete activity', 1);
-
-                    return;
-                }
-                debug_event('stats.ajax', 'Deleting activity...', 5);
-                Stats::delete((int)$_REQUEST['activity_id']);
-                header('Location: ' . AmpConfig::get('web_path'));
-
-                return;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         } // switch on action;
 
         // We always do this
