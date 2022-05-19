@@ -896,7 +896,7 @@ final class VaInfo implements VaInfoInterface
     {
         $tag_order    = $this->get_metadata_order();
         $plugin_names = Plugin::get_plugins('get_metadata');
-        $user         = (Core::get_global('user')->id)
+        $user         = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         // don't loop over getid3 and filename

@@ -18,7 +18,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Apr 20, 2022 at 10:45 AM
+-- Generation Time: May 19, 2022 at 10:24 AM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
 -- PHP Version: 8.0.17
 
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache-master`
+-- Database: `ampache540`
 --
 
 -- --------------------------------------------------------
@@ -103,7 +103,14 @@ CREATE TABLE IF NOT EXISTS `album` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `year` (`year`),
-  KEY `disk` (`disk`)
+  KEY `disk` (`disk`),
+  KEY `catalog_IDX` (`catalog`) USING BTREE,
+  KEY `album_artist_IDX` (`album_artist`) USING BTREE,
+  KEY `original_year_IDX` (`original_year`) USING BTREE,
+  KEY `release_type_IDX` (`release_type`) USING BTREE,
+  KEY `release_status_IDX` (`release_status`) USING BTREE,
+  KEY `mbid_IDX` (`mbid`) USING BTREE,
+  KEY `mbid_group_IDX` (`mbid_group`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -714,7 +721,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_count_full_index` (`object_type`,`object_id`,`date`,`user`,`agent`,`count_type`) USING BTREE,
   KEY `object_count_type_IDX` (`object_type`,`object_id`) USING BTREE,
   KEY `object_count_date_IDX` (`date`,`count_type`) USING BTREE,
-  KEY `object_count_user_IDX` (`object_type`,`object_id`,`user`,`count_type`) USING BTREE
+  KEY `object_count_user_IDX` (`object_type`,`object_id`,`user`,`count_type`) USING BTREE,
+  KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1195,7 +1203,8 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `addition_time` (`addition_time`),
   KEY `catalog` (`catalog`),
   KEY `played` (`played`),
-  KEY `enabled` (`enabled`)
+  KEY `enabled` (`enabled`),
+  KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1425,7 +1434,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '530016'),
+('db_version', '540002'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1682,6 +1691,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 162, '0'),
 (-1, 163, '0'),
 (-1, 164, '0'),
+(-1, 165, '1'),
 (-1, 166, '1'),
 (-1, 167, '1'),
 (-1, 168, '1'),

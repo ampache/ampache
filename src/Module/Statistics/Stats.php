@@ -570,7 +570,7 @@ class Stats
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
             : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
-        $sql .= (AmpConfig::get('catalog_filter'))
+        $sql .= (AmpConfig::get('catalog_filter') && $user_id > 0)
             ? " AND" . Catalog::get_user_filter('song', $user_id) . "ORDER BY `object_count`.`date` " . $order
             : "ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, array($user_id, $time));
@@ -610,7 +610,7 @@ class Stats
             if ($threshold > 0) {
                 $sql .= " WHERE `last_update` >= '" . $date . "' ";
             }
-            if ($catalog_filter) {
+            if ($catalog_filter && $user_id > 0) {
                 $sql .= ($threshold > 0)
                     ? " AND" . Catalog::get_user_filter($type, $user_id)
                     : " WHERE" . Catalog::get_user_filter($type, $user_id);
@@ -620,7 +620,7 @@ class Stats
             if ($threshold > 0) {
                 $sql .= " AND `date` >= '" . $date . "' ";
             }
-            if ($catalog_filter) {
+            if ($catalog_filter && $user_id > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("object_count_" . $type, $user_id);
             }
             //debug_event(self::class, 'get_top_sql ' . $sql, 5);
@@ -662,7 +662,7 @@ class Stats
             if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album', 'video'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
-            if (AmpConfig::get('catalog_filter') && in_array($type, array('song', 'artist', 'album', 'podcast_episode', 'video')) && $user_id !== null) {
+            if (AmpConfig::get('catalog_filter') && in_array($type, array('song', 'artist', 'album', 'podcast_episode', 'video')) && $user_id > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $user_id);
             }
             $rating_filter = AmpConfig::get_rating_filter();
@@ -741,7 +741,7 @@ class Stats
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        if ($catalog_filter && in_array($type, array('video', 'artist', 'album', 'song')) && $user_id !== null) {
+        if ($catalog_filter && in_array($type, array('video', 'artist', 'album', 'song')) && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $user_id);
         }
         $rating_filter = AmpConfig::get_rating_filter();
@@ -757,11 +757,9 @@ class Stats
             $sql = "SELECT `id`, `last_update` AS `date` FROM `playlist`";
             if (!empty($user_id)) {
                 $sql .= " WHERE `user` = '" . $user_id . "'";
-            }
-            if ($catalog_filter) {
-                $sql .= (!empty($user_id))
-                    ? " AND" . Catalog::get_user_filter($type, $user_id)
-                    : " WHERE" . Catalog::get_user_filter($type, $user_id);
+                if ($catalog_filter) {
+                    $sql .= " AND" . Catalog::get_user_filter($type, $user_id);
+                }
             }
             $sql .= " ORDER BY `last_update` " . $ordersql;
         }
@@ -876,7 +874,7 @@ class Stats
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {
-            $sql = ($catalog_filter)
+            $sql = ($catalog_filter && $user_id > 0)
                 ? "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` WHERE" . Catalog::get_user_filter($type, $user_id) . "GROUP BY `playlist`.`id` ORDER BY `real_atime` DESC "
                 : "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` GROUP BY `playlist`.`id` ORDER BY `real_atime` DESC ";
 
@@ -921,7 +919,7 @@ class Stats
             $sql .= $join . " `catalog`.`enabled` = '1' ";
             $join = ' AND';
         }
-        if ($catalog_filter) {
+        if ($catalog_filter && $user_id > 0) {
             $sql .= $join . Catalog::get_user_filter($filter_type, $user_id) . " ";
             $join = ' AND';
         }

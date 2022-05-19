@@ -62,7 +62,6 @@ class AmpacheYourls
      */
     public function install()
     {
-
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('yourls_domain')) {
             return false;

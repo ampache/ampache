@@ -29,6 +29,7 @@ use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
@@ -301,6 +302,18 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $walbum->show_action_buttons();
                     $results['wanted_action_' . $mbid] = ob_get_clean();
                 }
+                break;
+            case 'delete_activity':
+                Stats::delete((int)$_REQUEST['activity_id']);
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $data = Song::get_recently_played();
+                Song::build_cache(array_keys($data));
+                $user_id = $user->id ?? -1;
+                require_once Ui::find_template('show_recently_played.inc.php');
+                $results['recently_played'] = ob_get_clean();
                 break;
             case 'reloadnp':
                 ob_start();

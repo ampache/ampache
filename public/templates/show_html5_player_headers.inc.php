@@ -10,6 +10,9 @@ global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $web_path         = AmpConfig::get('web_path');
+$webplayer_debug  = (AmpConfig::get('webplayer_debug'))
+    ? 'js'
+    : 'min.js';
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
@@ -46,8 +49,8 @@ function update_action()
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
     <script src="<?php echo $web_path; ?>/lib/modules/aurora.js/aurora.js"></script>
 <?php } ?>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.<?php echo $webplayer_debug; ?>"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.<?php echo $webplayer_debug; ?>"></script>
 
 <script>
 var jplaylist = new Array();

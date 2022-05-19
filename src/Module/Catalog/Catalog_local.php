@@ -764,6 +764,37 @@ class Catalog_local extends Catalog
     } //_clean_chunk
 
     /**
+     * _check_chunk
+     * This is the check function and is broken into chunks to try to save a little memory
+     * @param $media_type
+     * @param $chunk
+     * @param $chunk_size
+     * @return array
+     */
+    private function _check_chunk($media_type, $chunk, $chunk_size)
+    {
+        $missing = array();
+        $count   = $chunk * $chunk_size;
+
+        $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
+
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
+        $db_results = Dba::read($sql, array($this->id));
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
+            if ($file_info < 1) {
+                debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
+                $missing[] = $results['file'];
+            } elseif (!Core::is_readable(Core::conv_lc_file($results['file']))) {
+                debug_event('local.catalog', "_clean_chunk: " . $results['file'] . ' is not readable, but does exist', 1);
+            }
+        }
+
+        return $missing;
+    } //_clean_chunk
+
+    /**
      * clean_file
      *
      * Clean up a single file checking that it's missing or just unreadable.
@@ -1085,6 +1116,37 @@ class Catalog_local extends Catalog
 
         return true;
     } // check_path
+
+    /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        if (!Core::is_readable($this->path)) {
+            // First sanity check; no point in proceeding with an unreadable catalog root.
+            AmpError::add('general', T_('Catalog root unreadable, stopping check'));
+            echo AmpError::display('general');
+
+            return false;
+        }
+
+        $missing     = array();
+        $stats       = self::get_server_counts(0);
+        $this->count = 0;
+        foreach (array('video', 'song') as $media_type) {
+            $total = $stats[$media_type];
+            if ($total == 0) {
+                continue;
+            }
+            $chunks = floor($total / 10000);
+            foreach (range(0, $chunks) as $chunk) {
+                debug_event('local.catalog', "catalog " . $this->id . " Starting check " . $media_type . " on chunk $chunk", 5);
+                $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
+            }
+        }
+
+        return $missing;
+    }
 
     /**
      * move_catalog_proc
