@@ -644,6 +644,18 @@
                     fn: function(f) {
                         f._loop(!f.options.loop);
                     }
+                },
+                next: {
+                        key: 78, // n
+                        fn: function() {
+                            self.next();
+                        }
+                    },
+                previous: {
+                    key: 66, // b
+                    fn: function() {
+                        self.previous();
+                    }
                 }
             },
             verticalVolume: false, // Calculate volume from the bottom of the volume bar. Default is from the left. Also volume affects either width or height.
