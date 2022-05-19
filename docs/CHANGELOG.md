@@ -2,6 +2,16 @@
 
 ## Ampache 5.4.0-release
 
+### Fixed
+
+* web_player being unable to play different formats in some cases
+
+## API develop
+
+**NO CHANGE**
+
+## Ampache 5.4.0-release
+
 ### Added
 
 * Translation Updates May 2022
@@ -44,7 +54,6 @@
 
 * advanced_search
   * Add `file` to album and artist search
-
 
 ## Ampache 5.3.3-release
 
