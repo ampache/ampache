@@ -100,7 +100,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8",
             volume: jp_volume,
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
-            auroraFormats: 'wav, mp3, flac, aac, opus, m4a, oga',
+            auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",
             <?php } ?>
             <?php if (!$is_share) { ?>
             size: {
