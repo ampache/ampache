@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -116,6 +117,9 @@ final class ArtCollector implements ArtCollectorInterface
 
             return $playlist->gather_art($limit);
         }
+        $user = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')
+            : new User(-1);
 
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($artOrder as $method) {
@@ -124,7 +128,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load(Core::get_global('user'))) {
+                    if ($plugin->load($user)) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }

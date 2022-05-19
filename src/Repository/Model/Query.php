@@ -1213,7 +1213,7 @@ class Query
                     break;
             }
         }
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && $this->user_id > 0) {
             $type = $this->get_type();
             // Add catalog user filter
             switch ($type) {

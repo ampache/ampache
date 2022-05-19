@@ -303,6 +303,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Playlist->Clear(array(
                 'playlistid' => $this->_playlistId
             ));
+            $this->stop();
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
@@ -333,7 +334,7 @@ class AmpacheXbmc extends localplay_controller
                 ));
             } else {
                 $this->_xbmc->Player->PlayPause(array(
-                    'playerid' => $this->_playlistId,
+                    'playerid' => $this->_playerId,
                     'play' => true
                 ));
             }
@@ -617,7 +618,7 @@ class AmpacheXbmc extends localplay_controller
                 $data['id']    = $i;
                 $data['track'] = $i + 1;
 
-                $url_data = $this->parse_url($data['link']);
+                $url_data = $this->parse_url(rawurldecode($data['link']));
                 if ($url_data != null) {
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
@@ -662,8 +663,15 @@ class AmpacheXbmc extends localplay_controller
                     'playerid' => $this->_playerId,
                     'properties' => array('file')
                 ));
+
                 // We assume it's playing. No pause detection support.
                 $array['state'] = 'play';
+
+                // So we get active players, if no exists active player, set the status to stop
+                $xbmc_players = $this->_xbmc->Player->GetActivePlayers();
+                if (empty($xbmc_players)) {
+                    $array['state'] = 'stop';
+                }
 
                 $playprop = $this->_xbmc->Player->GetProperties(array(
                     'playerid' => $this->_playerId,
@@ -671,9 +679,16 @@ class AmpacheXbmc extends localplay_controller
                 ));
                 $array['repeat'] = ($playprop['repeat'] != "off");
                 $array['random'] = (strtolower($playprop['shuffled']) == 1);
-                $array['track']  = $currentplay['file'];
 
-                $url_data = $this->parse_url($array['track']);
+                $playposition = $this->_xbmc->Player->GetProperties(array(
+                    'playerid' => $this->_playerId,
+                    'properties' => array('position')
+                ));
+
+                $array['track']  = $playposition['position'] + 1;
+                $playlist_item   = rawurldecode($currentplay['item']['file']);
+
+                $url_data = $this->parse_url($playlist_item);
                 $song     = new Song($url_data['oid']);
                 if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
                     $array['track_title']  = $song->title;

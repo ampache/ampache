@@ -702,6 +702,7 @@ class Search extends playlist_object
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
@@ -775,6 +776,7 @@ class Search extends playlist_object
         $this->type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
         $this->type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
         $this->type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
@@ -1621,7 +1623,12 @@ class Search extends playlist_object
                     $parameters[]        = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
+                    if ($groupdisks) {
+                        $table['play_count'] = "LEFT JOIN (SELECT MIN(`album`.`id`) AS `id`, SUM(`song_count`) AS `song_count` FROM `album` GROUP BY `album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`,`album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`) AS `album_song_count` ON `album`.`id` = `album_song_count`.`id`";
+                        $where[]             = "(`album_song_count`.`song_count` $sql_match_operator ?)";
+                    } else {
+                        $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'release_type':
@@ -1687,6 +1694,11 @@ class Search extends playlist_object
                     $where[]      = "`album`.`id` $sql_match_operator IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
+                case 'file':
+                    $where[]      = "`song`.`file` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` FROM `image` WHERE `object_type` = 'album') AS `has_image` ON `album`.`id` = `has_image`.`object_id`";
@@ -1749,7 +1761,7 @@ class Search extends playlist_object
 
         if (array_key_exists('album_map', $join)) {
             $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
-            $table['artist'] = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
+            $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
         }
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id`";
@@ -1883,6 +1895,11 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$user_id"))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_artist_$user_id` ON `artist`.`id` = `favorite_artist_$user_id`.`object_id` AND `favorite_artist_$user_id`.`object_type` = 'artist'"
                         : "";
+                    break;
+                case 'file':
+                    $where[]      = "`song`.`file` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    $join['song'] = true;
                     break;
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";

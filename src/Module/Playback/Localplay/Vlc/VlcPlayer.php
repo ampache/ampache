@@ -331,7 +331,6 @@ class VlcPlayer
      */
     public function set_volume($value)
     {
-
         // Convert it to base 400
         $value   = $value * 4;
         $args    = array('command' => 'volume', '&val' => $value);
@@ -365,7 +364,6 @@ class VlcPlayer
      */
     public function get_tracks()
     {
-
         // Gets complete playlist + medialib in VLC's case, needs to be looked at
         $args = array();
 

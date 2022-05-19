@@ -61,7 +61,6 @@ class AmpacheHeadphones
      */
     public function install()
     {
-
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('headphones_api_url')) {
             return false;

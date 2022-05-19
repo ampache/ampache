@@ -26,6 +26,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
+/** @var Ampache\Repository\Model\Browse $browse */
 ?>
 <?php Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES); ?>

@@ -56,7 +56,7 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
-        $user     = (Core::get_global('user')->id)
+        $user     = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         // load up musicbrainz or cause an error

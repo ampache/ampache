@@ -366,7 +366,6 @@ class HttpQPlayer
      */
     public function set_volume($value)
     {
-
         // Convert it to base 255
         $volume  = $value * 2.55;
         $args    = array('level' => $volume);
@@ -424,7 +423,6 @@ class HttpQPlayer
      */
     public function get_now_playing()
     {
-
         // First get the current POS
         $pos = $this->sendCommand('getlistpos', array());
 
@@ -439,7 +437,6 @@ class HttpQPlayer
      */
     public function get_tracks()
     {
-
         // Pull a delimited list of all tracks
         $results = $this->sendCommand('getplaylistfile', array('delim' => '::'));
 

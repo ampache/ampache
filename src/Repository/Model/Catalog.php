@@ -215,12 +215,12 @@ abstract class Catalog extends database_object
     abstract public function get_create_help();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function is_installed();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function install();
 
@@ -241,13 +241,18 @@ abstract class Catalog extends database_object
     abstract public function clean_catalog_proc();
 
     /**
+     * @return array
+     */
+    abstract public function check_catalog_proc();
+
+    /**
      * @param string $new_path
      * @return boolean
      */
     abstract public function move_catalog_proc($new_path);
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function cache_catalog_proc();
 
@@ -563,19 +568,30 @@ abstract class Catalog extends database_object
             case 'clip':
                 $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `video`.`id`) ";
                 break;
+            // enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode')
             case "object_count_artist":
             case "object_count_album":
             case "object_count_song":
-            case "object_count_podcast_episode":
             case "object_count_playlist":
+            case "object_count_genre":
+            case "object_count_catalog":
+            case "object_count_live_stream":
             case "object_count_video":
+            case "object_count_podcast":
+            case "object_count_podcast_episode":
                 $type = str_replace('object_count_', '', (string) $type);
                 $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
                 break;
+            // enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode')
             case "rating_artist":
             case "rating_album":
             case "rating_song":
+            case "rating_stream":
+            case "rating_live_stream":
             case "rating_video":
+            case "rating_tvshow":
+            case "rating_tvshow_season":
+            case "rating_podcast":
             case "rating_podcast_episode":
                 $type = str_replace('rating_', '', (string) $type);
                 $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
@@ -1784,7 +1800,7 @@ abstract class Catalog extends database_object
         $overwrites   = true;
         $meta_order   = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list  = Plugin::get_plugins('get_external_metadata');
-        $user         = (Core::get_global('user')->id)
+        $user         = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         foreach ($meta_order as $plugin_name) {
@@ -2051,11 +2067,13 @@ abstract class Catalog extends database_object
         $sort_pattern = '',
         $rename_pattern = ''
     ) {
+        $array   = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
         //retrieve the file if needed
@@ -2063,8 +2081,9 @@ abstract class Catalog extends database_object
 
         if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
         $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
@@ -2260,7 +2279,7 @@ abstract class Catalog extends database_object
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
-        if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
+        if (!empty($artists_array) && count($artists_array) > count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
                 $songArtist_id = Artist::check($artist_name);
                 if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {

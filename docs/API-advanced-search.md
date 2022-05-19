@@ -98,7 +98,7 @@ Select the type of search based on the type of data you are searching for. (song
 | playlist_name            | Playlist Name             | text              |        song,album,artist         |
 | comment                  | Comment                   | text              |               song               |
 | lyrics                   | Lyrics                    | text              |               song               |
-| file                     | Filename                  | text              |            song,video            |
+| file                     | Filename                  | text              |      song,album,artist,video     |
 | bitrate                  | Bitrate                   | numeric           |               song               |
 | added                    | Added                     | date              |               song               |
 | updated                  | Updated                   | date              |               song               |
