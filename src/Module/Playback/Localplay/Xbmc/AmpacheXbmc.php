@@ -303,6 +303,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Playlist->Clear(array(
                 'playlistid' => $this->_playlistId
             ));
+            $this->stop();
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
@@ -678,9 +679,16 @@ class AmpacheXbmc extends localplay_controller
                 ));
                 $array['repeat'] = ($playprop['repeat'] != "off");
                 $array['random'] = (strtolower($playprop['shuffled']) == 1);
-                $array['track']  = rawurldecode($currentplay['file']);
 
-                $url_data = $this->parse_url($array['track']);
+                $playposition = $this->_xbmc->Player->GetProperties(array(
+                    'playerid' => $this->_playerId,
+                    'properties' => array('position')
+                ));
+
+                $array['track']  = $playposition['position'] + 1;
+                $playlist_item   = rawurldecode($currentplay['item']['file']);
+
+                $url_data = $this->parse_url($playlist_item);
                 $song     = new Song($url_data['oid']);
                 if ($song->title || $song->get_artist_fullname() || $song->get_album_fullname()) {
                     $array['track_title']  = $song->title;

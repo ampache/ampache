@@ -102,7 +102,6 @@ final class TagAction implements ApplicationActionInterface
             $browse->store();
         }
 
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2022-04-20 15:30+1000\n"
-"PO-Revision-Date: 2022-01-19 23:23+0000\n"
-"Last-Translator: Transifex Bot <>\n"
+"POT-Creation-Date: 2022-05-15 14:44+0200\n"
+"PO-Revision-Date: 2015-05-12 16:07+0000\n"
+"Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://www.transifex.com/ampache/ampache/"
 "language/fa_IR/)\n"
 "Language: fa_IR\n"
@@ -19,46 +19,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ../../public/templates/browse_filters.inc.php:38
+#: ../../public/templates/browse_filters.inc.php:37
 msgid "Filters"
 msgstr "فیلترها"
 
-#: ../../public/templates/browse_filters.inc.php:42
+#: ../../public/templates/browse_filters.inc.php:41
 msgid "Starts With"
 msgstr "شروع شده با"
 
-#: ../../public/templates/browse_filters.inc.php:50
+#: ../../public/templates/browse_filters.inc.php:49
 msgid "Minimum Count"
 msgstr "حداقل تعداد"
 
-#: ../../public/templates/browse_filters.inc.php:56
+#: ../../public/templates/browse_filters.inc.php:55
 msgid "Rated"
 msgstr "ارزیابی شده"
 
-#: ../../public/templates/browse_filters.inc.php:62
+#: ../../public/templates/browse_filters.inc.php:61
 msgid "Unplayed"
 msgstr "پخش نشده"
 
-#: ../../public/templates/browse_filters.inc.php:67
+#: ../../public/templates/browse_filters.inc.php:66
 msgid "All Playlists"
 msgstr "تمام لیست های پخش"
 
-#: ../../public/templates/browse_filters.inc.php:75
+#: ../../public/templates/browse_filters.inc.php:74
 #: ../../public/templates/show_add_catalog.inc.php:51
 #: ../../public/templates/show_edit_catalog.inc.php:44
-#: ../../public/templates/show_similar_songs.inc.php:56
+#: ../../public/templates/show_similar_songs.inc.php:55
 #: ../../public/templates/show_song_previews.inc.php:29
 #: ../../public/templates/show_songs.inc.php:67
 #: ../../public/templates/show_songs.inc.php:166
 #: ../../public/templates/show_top_tracks.inc.php:56
+#: ../../src/Repository/Model/Search.php:665
+#: ../../src/Repository/Model/Search.php:737
 msgid "Song Title"
 msgstr "عنوان آهنگ"
 
-#: ../../public/templates/browse_filters.inc.php:78
+#: ../../public/templates/browse_filters.inc.php:77
 #: ../../public/templates/header.inc.php:53
 #: ../../public/templates/show_artist.inc.php:258
-#: ../../public/templates/show_artists.inc.php:66
-#: ../../public/templates/show_artists.inc.php:127
+#: ../../public/templates/show_artists.inc.php:65
+#: ../../public/templates/show_artists.inc.php:126
 #: ../../public/templates/show_browse_form.inc.php:42
 #: ../../public/templates/show_genre_browse_form.inc.php:20
 #: ../../public/templates/show_mashup_browse_form.inc.php:17
@@ -73,11 +75,11 @@ msgstr "عنوان آهنگ"
 msgid "Albums"
 msgstr "آلبوم ها"
 
-#: ../../public/templates/browse_filters.inc.php:81
+#: ../../public/templates/browse_filters.inc.php:80
 #: ../../public/templates/show_add_catalog.inc.php:45
 #: ../../public/templates/show_add_upload.inc.php:185
-#: ../../public/templates/show_artists.inc.php:47
-#: ../../public/templates/show_artists.inc.php:124
+#: ../../public/templates/show_artists.inc.php:46
+#: ../../public/templates/show_artists.inc.php:123
 #: ../../public/templates/show_democratic_playlist.inc.php:60
 #: ../../public/templates/show_democratic_playlist.inc.php:107
 #: ../../public/templates/show_disabled_songs.inc.php:36
@@ -99,24 +101,24 @@ msgstr "آلبوم ها"
 #: ../../public/templates/show_tagcloud.inc.php:32
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Module/Util/AmpacheRss.php:287
-#: ../../src/Repository/Model/Album.php:653
+#: ../../src/Repository/Model/Album.php:655
 #: ../../src/Repository/Model/Artist.php:535
 #: ../../src/Repository/Model/Clip.php:181
-#: ../../src/Repository/Model/Song.php:1870
+#: ../../src/Repository/Model/Song.php:1871
 msgid "Artist"
 msgstr "هنرمند"
 
-#: ../../public/templates/browse_filters.inc.php:88
+#: ../../public/templates/browse_filters.inc.php:87
 #: ../../public/templates/show_add_live_stream.inc.php:57
 #: ../../public/templates/show_add_podcast.inc.php:39
 #: ../../public/templates/show_export.inc.php:44
-#: ../../src/Repository/Model/Search.php:627
-#: ../../src/Repository/Model/Search.php:714
-#: ../../src/Repository/Model/Search.php:787
+#: ../../src/Repository/Model/Search.php:628
+#: ../../src/Repository/Model/Search.php:718
+#: ../../src/Repository/Model/Search.php:793
 msgid "Catalog"
 msgstr "فهرست"
 
-#: ../../public/templates/browse_filters.inc.php:90
+#: ../../public/templates/browse_filters.inc.php:89
 #: ../../public/templates/list_header.inc.php:133
 #: ../../public/templates/show_add_access.inc.php:35
 #: ../../public/templates/show_edit_access.inc.php:36
@@ -129,7 +131,7 @@ msgstr "فهرست"
 msgid "All"
 msgstr "همه"
 
-#: ../../public/templates/browse_filters.inc.php:111
+#: ../../public/templates/browse_filters.inc.php:110
 msgid "Toggle Artwork"
 msgstr "دکمه آثار هنری روی جلد"
 
@@ -193,9 +195,9 @@ msgstr "کوکی"
 #: ../../public/templates/show_plugins.inc.php:31
 #: ../../public/templates/show_plugins.inc.php:72
 #: ../../src/Module/Cli/AdminAddUserCommand.php:46
-#: ../../src/Repository/Model/Search.php:662
-#: ../../src/Repository/Model/Search.php:811
-#: ../../src/Repository/Model/Search.php:821
+#: ../../src/Repository/Model/Search.php:663
+#: ../../src/Repository/Model/Search.php:817
+#: ../../src/Repository/Model/Search.php:827
 msgid "Name"
 msgstr "نام"
 
@@ -257,7 +259,7 @@ msgstr "گشودن/بستن نوار منو کناری"
 #: ../../public/templates/test_error_page.inc.php:28
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:56
 #: ../../src/Module/Channel/HttpServer.php:147
-#: ../../src/Module/Playback/Stream_Playlist.php:441
+#: ../../src/Module/Playback/Stream_Playlist.php:455
 msgid "Ampache"
 msgstr "آمپاچی"
 
@@ -277,7 +279,7 @@ msgstr "برای عاشقان موسیقی"
 #: ../../public/templates/error_page.inc.php:58
 #: ../../public/templates/test_error_page.inc.php:57
 #: ../../src/Config/functions.php:578
-#: ../../src/Repository/Model/Catalog.php:1977
+#: ../../src/Repository/Model/Catalog.php:1989
 msgid "Error"
 msgstr "اشکال"
 
@@ -325,18 +327,18 @@ msgstr "خانه"
 #: ../../public/templates/show_localplay_control.inc.php:30
 #: ../../public/templates/show_manage_democratic.inc.php:54
 #: ../../public/templates/show_playlist_media_row.inc.php:50
-#: ../../public/templates/show_playlist_medias.inc.php:91
+#: ../../public/templates/show_playlist_medias.inc.php:90
 #: ../../public/templates/show_podcast_episode.inc.php:70
 #: ../../public/templates/show_podcast_episode_row.inc.php:48
 #: ../../public/templates/show_podcast_row.inc.php:43
-#: ../../public/templates/show_random_albums.inc.php:56
-#: ../../public/templates/show_random_videos.inc.php:54
-#: ../../public/templates/show_recently_played.inc.php:105
+#: ../../public/templates/show_random_albums.inc.php:55
+#: ../../public/templates/show_random_videos.inc.php:56
+#: ../../public/templates/show_recently_played.inc.php:110
 #: ../../public/templates/show_search_row.inc.php:39
 #: ../../public/templates/show_tvshow_row.inc.php:46
 #: ../../public/templates/show_tvshow_season_row.inc.php:44
 #: ../../public/templates/show_video.inc.php:94
-#: ../../public/templates/show_video_row.inc.php:54
+#: ../../public/templates/show_video_row.inc.php:53
 #: ../../src/Gui/Album/AlbumViewAdapter.php:139
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:119
 #: ../../src/Gui/Song/SongViewAdapter.php:116
@@ -351,8 +353,8 @@ msgstr "پخش"
 #: ../../public/templates/show_browse_form.inc.php:46
 #: ../../public/templates/show_genre_browse_form.inc.php:23
 #: ../../public/templates/show_label.inc.php:110
-#: ../../public/templates/show_labels.inc.php:58
-#: ../../public/templates/show_labels.inc.php:87
+#: ../../public/templates/show_labels.inc.php:57
+#: ../../public/templates/show_labels.inc.php:86
 #: ../../public/templates/show_mashup_browse_form.inc.php:20
 #: ../../public/templates/show_random.inc.php:60
 #: ../../public/templates/show_search_form.inc.php:57
@@ -360,7 +362,7 @@ msgstr "پخش"
 #: ../../public/templates/sidebar.inc.php:42
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:79
 #: ../../src/Config/functions.php:836 ../../src/Module/Api/Upnp_Api.php:611
-#: ../../src/Repository/Model/Album.php:765
+#: ../../src/Repository/Model/Album.php:767
 #: ../../src/Repository/Model/Browse.php:309
 msgid "Artists"
 msgstr "هنرمندان"
@@ -381,15 +383,15 @@ msgstr "هنرمندان آلبوم"
 #: ../../src/Module/Api/Upnp_Api.php:674
 #: ../../src/Repository/Model/Browse.php:319
 #: ../../src/Repository/Model/Search.php:575
-#: ../../src/Repository/Model/Search.php:694
-#: ../../src/Repository/Model/Search.php:766
+#: ../../src/Repository/Model/Search.php:697
+#: ../../src/Repository/Model/Search.php:771
 msgid "Playlists"
 msgstr "لیست های پخش"
 
 #: ../../public/templates/header.inc.php:55
-#: ../../public/templates/show_albums.inc.php:55
-#: ../../public/templates/show_artists.inc.php:74
-#: ../../public/templates/show_artists.inc.php:134
+#: ../../public/templates/show_albums.inc.php:54
+#: ../../public/templates/show_artists.inc.php:73
+#: ../../public/templates/show_artists.inc.php:133
 #: ../../public/templates/show_edit_album_row.inc.php:110
 #: ../../public/templates/show_edit_artist_row.inc.php:62
 #: ../../public/templates/show_edit_channel_row.inc.php:90
@@ -399,16 +401,16 @@ msgstr "لیست های پخش"
 #: ../../public/templates/show_now_playing_row.inc.php:71
 #: ../../public/templates/show_recommended_artists.inc.php:61
 #: ../../public/templates/show_recommended_artists.inc.php:125
-#: ../../public/templates/show_similar_songs.inc.php:68
+#: ../../public/templates/show_similar_songs.inc.php:67
 #: ../../public/templates/show_songs.inc.php:86
 #: ../../public/templates/show_songs.inc.php:175
 #: ../../public/templates/show_top_tracks.inc.php:68
-#: ../../public/templates/show_tvshows.inc.php:58
-#: ../../public/templates/show_tvshows.inc.php:101
-#: ../../public/templates/show_videos.inc.php:63
-#: ../../public/templates/show_videos.inc.php:108
+#: ../../public/templates/show_tvshows.inc.php:57
+#: ../../public/templates/show_tvshows.inc.php:100
+#: ../../public/templates/show_videos.inc.php:62
+#: ../../public/templates/show_videos.inc.php:107
 #: ../../public/templates/sidebar.inc.php:56
-#: ../../src/Gui/Song/SongViewAdapter.php:343
+#: ../../src/Gui/Song/SongViewAdapter.php:356
 #: ../../src/Module/Application/Browse/TagAction.php:84
 #: ../../src/Repository/Model/Browse.php:345
 #: ../../src/Repository/Model/Browse.php:350
@@ -418,8 +420,8 @@ msgstr "ژانرها"
 #: ../../public/templates/header.inc.php:56
 #: ../../public/templates/sidebar.inc.php:72
 #: ../../src/Repository/Model/Search.php:542
-#: ../../src/Repository/Model/Search.php:675
-#: ../../src/Repository/Model/Search.php:746
+#: ../../src/Repository/Model/Search.php:678
+#: ../../src/Repository/Model/Search.php:751
 msgid "Favorites"
 msgstr "موارد دلخواه"
 
@@ -448,7 +450,7 @@ msgid "Now Playing"
 msgstr "در حال پخش"
 
 #: ../../public/templates/header.inc.php:80
-#: ../../public/templates/show_recently_played.inc.php:35
+#: ../../public/templates/show_recently_played.inc.php:39
 #: ../../public/templates/show_user.inc.php:121
 #: ../../src/Module/Util/AmpacheRss.php:121
 msgid "Recently Played"
@@ -490,14 +492,14 @@ msgstr "لغو"
 #: ../../public/templates/show_podcast_episode.inc.php:72
 #: ../../public/templates/show_podcast_episode_row.inc.php:50
 #: ../../public/templates/show_podcast_row.inc.php:45
-#: ../../public/templates/show_random_albums.inc.php:58
-#: ../../public/templates/show_random_videos.inc.php:56
-#: ../../public/templates/show_recently_played.inc.php:107
+#: ../../public/templates/show_random_albums.inc.php:57
+#: ../../public/templates/show_random_videos.inc.php:58
+#: ../../public/templates/show_recently_played.inc.php:112
 #: ../../public/templates/show_search_row.inc.php:41
 #: ../../public/templates/show_tvshow_row.inc.php:48
 #: ../../public/templates/show_tvshow_season_row.inc.php:46
 #: ../../public/templates/show_video.inc.php:96
-#: ../../public/templates/show_video_row.inc.php:56
+#: ../../public/templates/show_video_row.inc.php:55
 #: ../../src/Application/Api/Upnp/PlayStatusApplication.php:65
 #: ../../src/Gui/Album/AlbumViewAdapter.php:151
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:131
@@ -518,14 +520,14 @@ msgstr "پخش بعدی"
 #: ../../public/templates/show_podcast_episode.inc.php:76
 #: ../../public/templates/show_podcast_episode_row.inc.php:53
 #: ../../public/templates/show_podcast_row.inc.php:48
-#: ../../public/templates/show_random_albums.inc.php:62
-#: ../../public/templates/show_random_videos.inc.php:60
-#: ../../public/templates/show_recently_played.inc.php:110
+#: ../../public/templates/show_random_albums.inc.php:61
+#: ../../public/templates/show_random_videos.inc.php:62
+#: ../../public/templates/show_recently_played.inc.php:115
 #: ../../public/templates/show_search_row.inc.php:44
 #: ../../public/templates/show_tvshow_row.inc.php:51
 #: ../../public/templates/show_tvshow_season_row.inc.php:49
 #: ../../public/templates/show_video.inc.php:100
-#: ../../public/templates/show_video_row.inc.php:59
+#: ../../public/templates/show_video_row.inc.php:58
 #: ../../src/Gui/Album/AlbumViewAdapter.php:163
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:143
 #: ../../src/Gui/Song/SongViewAdapter.php:140
@@ -543,12 +545,12 @@ msgstr "پخش قبلی"
 #: ../../public/templates/show_playlist_media_row.inc.php:69
 #: ../../public/templates/show_podcast_episode.inc.php:81
 #: ../../public/templates/show_podcast_episode_row.inc.php:71
-#: ../../public/templates/show_random_albums.inc.php:67
-#: ../../public/templates/show_recently_played.inc.php:118
-#: ../../public/templates/show_search_options.inc.php:36
+#: ../../public/templates/show_random_albums.inc.php:66
+#: ../../public/templates/show_recently_played.inc.php:123
+#: ../../public/templates/show_search_options.inc.php:37
 #: ../../public/templates/show_search_row.inc.php:52
 #: ../../public/templates/show_video.inc.php:105
-#: ../../public/templates/show_video_row.inc.php:78
+#: ../../public/templates/show_video_row.inc.php:77
 #: ../../src/Gui/Album/AlbumViewAdapter.php:175
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:155
 #: ../../src/Gui/Song/SongViewAdapter.php:169
@@ -563,12 +565,12 @@ msgstr "افزودن به لیست پخش موقّت"
 #: ../../public/templates/show_artist_row.inc.php:74
 #: ../../public/templates/show_playlist_media_row.inc.php:72
 #: ../../public/templates/show_podcast_episode_row.inc.php:74
-#: ../../public/templates/show_recently_played.inc.php:120
+#: ../../public/templates/show_recently_played.inc.php:125
 #: ../../public/templates/show_search_row.inc.php:54
-#: ../../public/templates/show_video_row.inc.php:81
+#: ../../public/templates/show_video_row.inc.php:80
 #: ../../src/Gui/Album/AlbumViewAdapter.php:287
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:275
-#: ../../src/Gui/Song/SongViewAdapter.php:414
+#: ../../src/Gui/Song/SongViewAdapter.php:427
 msgid "Add to playlist"
 msgstr "افزودن به لیست پخش"
 
@@ -689,8 +691,8 @@ msgstr "افزودن به لیست پخش جدید"
 #: ../../public/templates/show_playlist.inc.php:101
 #: ../../public/templates/show_search.inc.php:55
 #: ../../public/templates/show_search.inc.php:56
-#: ../../public/templates/show_search_options.inc.php:49
 #: ../../public/templates/show_search_options.inc.php:50
+#: ../../public/templates/show_search_options.inc.php:51
 #: ../../public/templates/show_search_row.inc.php:68
 #: ../../src/Gui/Album/AlbumViewAdapter.php:246
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:201
@@ -749,6 +751,7 @@ msgstr "لیست پخش تصادفی"
 #: ../../public/templates/show_podcast_row.inc.php:84
 #: ../../public/templates/show_pvmsg_row.inc.php:39
 #: ../../public/templates/show_pvmsgs.inc.php:44
+#: ../../public/templates/show_recently_played.inc.php:148
 #: ../../public/templates/show_search.inc.php:74
 #: ../../public/templates/show_search_row.inc.php:77
 #: ../../public/templates/show_shout_row.inc.php:40
@@ -762,10 +765,10 @@ msgstr "لیست پخش تصادفی"
 #: ../../public/templates/show_tvshow_season_row.inc.php:85
 #: ../../public/templates/show_user_row.inc.php:88
 #: ../../public/templates/show_video.inc.php:137
-#: ../../public/templates/show_video_row.inc.php:140
+#: ../../public/templates/show_video_row.inc.php:139
 #: ../../src/Gui/Album/AlbumViewAdapter.php:277
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:239
-#: ../../src/Gui/Song/SongViewAdapter.php:326
+#: ../../src/Gui/Song/SongViewAdapter.php:339
 #: ../../src/Repository/Model/Broadcast.php:381
 #: ../../src/Repository/Model/Channel.php:314
 #: ../../src/Repository/Model/Share.php:273
@@ -777,7 +780,7 @@ msgid "No items"
 msgstr "موردی نیست"
 
 #: ../../public/templates/rightbar.inc.php:160
-#: ../../public/templates/show_recently_played.inc.php:177
+#: ../../public/templates/show_recently_played.inc.php:187
 #: ../../src/Repository/Model/Browse.php:474
 msgid "More"
 msgstr "بیشتر"
@@ -864,14 +867,14 @@ msgid "Type"
 msgstr "نوع"
 
 #: ../../public/templates/show_access_list.inc.php:63
-#: ../../public/templates/show_artists.inc.php:82
-#: ../../public/templates/show_artists.inc.php:140
+#: ../../public/templates/show_artists.inc.php:81
+#: ../../public/templates/show_artists.inc.php:139
 #: ../../public/templates/show_catalog_types.inc.php:34
 #: ../../public/templates/show_catalog_types.inc.php:71
 #: ../../public/templates/show_democratic_playlist.inc.php:56
 #: ../../public/templates/show_democratic_playlist.inc.php:103
-#: ../../public/templates/show_labels.inc.php:61
-#: ../../public/templates/show_labels.inc.php:90
+#: ../../public/templates/show_labels.inc.php:60
+#: ../../public/templates/show_labels.inc.php:89
 #: ../../public/templates/show_live_stream.inc.php:40
 #: ../../public/templates/show_live_streams.inc.php:61
 #: ../../public/templates/show_live_streams.inc.php:87
@@ -885,8 +888,8 @@ msgstr "نوع"
 #: ../../public/templates/show_manage_license.inc.php:61
 #: ../../public/templates/show_manage_shoutbox.inc.php:37
 #: ../../public/templates/show_manage_shoutbox.inc.php:66
-#: ../../public/templates/show_playlist_medias.inc.php:66
-#: ../../public/templates/show_playlist_medias.inc.php:99
+#: ../../public/templates/show_playlist_medias.inc.php:65
+#: ../../public/templates/show_playlist_medias.inc.php:98
 #: ../../public/templates/show_plugins.inc.php:35
 #: ../../public/templates/show_plugins.inc.php:76
 #: ../../public/templates/show_podcast_episode.inc.php:66
@@ -895,13 +898,13 @@ msgstr "نوع"
 #: ../../public/templates/show_recommended_artists.inc.php:69
 #: ../../public/templates/show_recommended_artists.inc.php:130
 #: ../../public/templates/show_songs.inc.php:114
-#: ../../public/templates/show_tvshows.inc.php:66
-#: ../../public/templates/show_tvshows.inc.php:107
+#: ../../public/templates/show_tvshows.inc.php:65
+#: ../../public/templates/show_tvshows.inc.php:106
 #: ../../public/templates/show_users.inc.php:67
 #: ../../public/templates/show_users.inc.php:105
 #: ../../public/templates/show_video.inc.php:91
-#: ../../public/templates/show_videos.inc.php:68
-#: ../../public/templates/show_videos.inc.php:113
+#: ../../public/templates/show_videos.inc.php:67
+#: ../../public/templates/show_videos.inc.php:112
 msgid "Action"
 msgstr "اجرا"
 
@@ -935,10 +938,10 @@ msgstr "اجرا"
 #: ../../public/templates/show_user.inc.php:87
 #: ../../public/templates/show_user_row.inc.php:75
 #: ../../public/templates/show_video.inc.php:131
-#: ../../public/templates/show_video_row.inc.php:134
+#: ../../public/templates/show_video_row.inc.php:133
 #: ../../src/Gui/Album/AlbumViewAdapter.php:262
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:216
-#: ../../src/Gui/Song/SongViewAdapter.php:283
+#: ../../src/Gui/Song/SongViewAdapter.php:296
 #: ../../src/Repository/Model/Broadcast.php:379
 #: ../../src/Repository/Model/Channel.php:312
 #: ../../src/Repository/Model/Share.php:271
@@ -984,8 +987,8 @@ msgstr "پست الکترونیک "
 #: ../../public/templates/show_podcast_episode.inc.php:129
 #: ../../public/templates/show_podcast.inc.php:102
 #: ../../public/templates/show_podcast.inc.php:103
-#: ../../public/templates/show_podcasts.inc.php:68
-#: ../../public/templates/show_podcasts.inc.php:110
+#: ../../public/templates/show_podcasts.inc.php:67
+#: ../../public/templates/show_podcasts.inc.php:109
 #: ../../public/templates/show_user_registration.inc.php:115
 #: ../../src/Module/Cli/AdminAddUserCommand.php:45
 #: ../../src/Module/User/Registration.php:84
@@ -997,8 +1000,8 @@ msgstr "وب سایت"
 #: ../../public/templates/show_channels.inc.php:47
 #: ../../public/templates/show_edit_user.inc.php:69
 #: ../../public/templates/show_podcast_episode.inc.php:128
-#: ../../public/templates/show_podcast_episodes.inc.php:62
-#: ../../public/templates/show_podcast_episodes.inc.php:107
+#: ../../public/templates/show_podcast_episodes.inc.php:61
+#: ../../public/templates/show_podcast_episodes.inc.php:106
 #: ../../public/templates/show_user_registration.inc.php:125
 msgid "State"
 msgstr "استان"
@@ -1150,7 +1153,7 @@ msgstr "فیلدهای خودکار افزوده شده "
 
 #: ../../public/templates/show_add_catalog.inc.php:44
 #: ../../public/templates/show_add_upload.inc.php:194
-#: ../../public/templates/show_albums.inc.php:50
+#: ../../public/templates/show_albums.inc.php:49
 #: ../../public/templates/show_democratic_playlist.inc.php:59
 #: ../../public/templates/show_democratic_playlist.inc.php:106
 #: ../../public/templates/show_disabled_songs.inc.php:35
@@ -1160,9 +1163,9 @@ msgstr "فیلدهای خودکار افزوده شده "
 #: ../../public/templates/show_lyrics.inc.php:52
 #: ../../public/templates/show_missing_albums.inc.php:30
 #: ../../public/templates/show_now_playing_row.inc.php:57
-#: ../../public/templates/show_recently_played.inc.php:43
-#: ../../public/templates/show_recently_played.inc.php:159
-#: ../../public/templates/show_similar_songs.inc.php:62
+#: ../../public/templates/show_recently_played.inc.php:47
+#: ../../public/templates/show_recently_played.inc.php:168
+#: ../../public/templates/show_similar_songs.inc.php:61
 #: ../../public/templates/show_song_previews.inc.php:31
 #: ../../public/templates/show_songs.inc.php:76
 #: ../../public/templates/show_songs.inc.php:172
@@ -1170,9 +1173,9 @@ msgstr "فیلدهای خودکار افزوده شده "
 #: ../../public/templates/show_tagcloud.inc.php:33
 #: ../../public/templates/show_top_tracks.inc.php:62
 #: ../../public/templates/show_wanted_albums.inc.php:31
-#: ../../src/Gui/Song/SongViewAdapter.php:341
+#: ../../src/Gui/Song/SongViewAdapter.php:354
 #: ../../src/Module/Util/AmpacheRss.php:287
-#: ../../src/Repository/Model/Album.php:658
+#: ../../src/Repository/Model/Album.php:660
 #: ../../src/Repository/Model/Search.php:526
 msgid "Album"
 msgstr "آلبوم"
@@ -1183,7 +1186,7 @@ msgstr "آلبوم"
 #: ../../public/templates/show_edit_song_row.inc.php:89
 #: ../../public/templates/show_manage_shoutbox.inc.php:35
 #: ../../public/templates/show_manage_shoutbox.inc.php:64
-#: ../../src/Gui/Song/SongViewAdapter.php:355
+#: ../../src/Gui/Song/SongViewAdapter.php:368
 #: ../../src/Repository/Model/Search.php:533
 msgid "Comment"
 msgstr "نظرات"
@@ -1191,7 +1194,7 @@ msgstr "نظرات"
 #: ../../public/templates/show_add_catalog.inc.php:47
 #: ../../public/templates/show_edit_album_row.inc.php:98
 #: ../../public/templates/show_edit_catalog.inc.php:40
-#: ../../src/Gui/Song/SongViewAdapter.php:362
+#: ../../src/Gui/Song/SongViewAdapter.php:375
 msgid "Catalog Number"
 msgstr "شماره فهرست"
 
@@ -1205,7 +1208,7 @@ msgstr "آهنگ (0 پر شده)"
 #: ../../public/templates/show_edit_album_row.inc.php:64
 #: ../../public/templates/show_edit_catalog.inc.php:42
 #: ../../public/templates/show_song_previews.inc.php:33
-#: ../../src/Config/functions.php:893 ../../src/Repository/Model/Album.php:694
+#: ../../src/Config/functions.php:893 ../../src/Repository/Model/Album.php:696
 msgid "Disk"
 msgstr "دیسک"
 
@@ -1214,15 +1217,15 @@ msgstr "دیسک"
 #: ../../public/templates/show_edit_broadcast_row.inc.php:44
 #: ../../public/templates/show_edit_catalog.inc.php:43
 #: ../../src/Repository/Model/Search.php:569
-#: ../../src/Repository/Model/Search.php:690
-#: ../../src/Repository/Model/Search.php:762
-#: ../../src/Repository/Model/Search.php:842
+#: ../../src/Repository/Model/Search.php:693
+#: ../../src/Repository/Model/Search.php:767
+#: ../../src/Repository/Model/Search.php:848
 #: ../../src/Repository/Model/Tag.php:966
 msgid "Genre"
 msgstr "ژانر"
 
 #: ../../public/templates/show_add_catalog.inc.php:52
-#: ../../public/templates/show_albums.inc.php:53
+#: ../../public/templates/show_albums.inc.php:52
 #: ../../public/templates/show_edit_album_row.inc.php:60
 #: ../../public/templates/show_edit_catalog.inc.php:45
 #: ../../public/templates/show_edit_song_row.inc.php:97
@@ -1234,45 +1237,45 @@ msgstr "ژانر"
 #: ../../public/templates/show_partial_edit_movie_row.inc.php:31
 #: ../../public/templates/show_partial_movie.inc.php:23
 #: ../../public/templates/show_partial_movies.inc.php:26
-#: ../../public/templates/show_recently_played.inc.php:44
-#: ../../public/templates/show_recently_played.inc.php:160
-#: ../../public/templates/show_similar_songs.inc.php:65
+#: ../../public/templates/show_recently_played.inc.php:48
+#: ../../public/templates/show_recently_played.inc.php:169
+#: ../../public/templates/show_similar_songs.inc.php:64
 #: ../../public/templates/show_songs.inc.php:81
 #: ../../public/templates/show_top_tracks.inc.php:65
 #: ../../public/templates/show_wanted_albums.inc.php:33
-#: ../../src/Gui/Song/SongViewAdapter.php:344
-#: ../../src/Repository/Model/Album.php:663
+#: ../../src/Gui/Song/SongViewAdapter.php:357
+#: ../../src/Repository/Model/Album.php:665
 #: ../../src/Repository/Model/Search.php:530
-#: ../../src/Repository/Model/Search.php:733
+#: ../../src/Repository/Model/Search.php:738
 msgid "Year"
 msgstr "سال"
 
 #: ../../public/templates/show_add_catalog.inc.php:53
 #: ../../public/templates/show_edit_album_row.inc.php:106
 #: ../../public/templates/show_edit_catalog.inc.php:46
-#: ../../src/Gui/Song/SongViewAdapter.php:345
-#: ../../src/Repository/Model/Search.php:734
+#: ../../src/Gui/Song/SongViewAdapter.php:358
+#: ../../src/Repository/Model/Search.php:739
 msgid "Original Year"
 msgstr "سال اصلی"
 
 #: ../../public/templates/show_add_catalog.inc.php:54
 #: ../../public/templates/show_edit_album_row.inc.php:90
 #: ../../public/templates/show_edit_catalog.inc.php:47
-#: ../../src/Repository/Model/Search.php:736
+#: ../../src/Repository/Model/Search.php:741
 msgid "Release Type"
 msgstr "نوع انتشار"
 
 #: ../../public/templates/show_add_catalog.inc.php:55
 #: ../../public/templates/show_edit_album_row.inc.php:94
 #: ../../public/templates/show_edit_catalog.inc.php:48
-#: ../../src/Repository/Model/Search.php:737
+#: ../../src/Repository/Model/Search.php:742
 msgid "Release Status"
 msgstr "وضعیت انتشار"
 
 #: ../../public/templates/show_add_catalog.inc.php:56
 #: ../../public/templates/show_edit_album_row.inc.php:102
 #: ../../public/templates/show_edit_catalog.inc.php:49
-#: ../../src/Gui/Song/SongViewAdapter.php:363
+#: ../../src/Gui/Song/SongViewAdapter.php:376
 msgid "Barcode"
 msgstr "بارکد"
 
@@ -1290,10 +1293,10 @@ msgstr "برنامه های تلویزیونی"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:35
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:23
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:28
-#: ../../public/templates/show_tvshow_seasons.inc.php:50
-#: ../../public/templates/show_tvshow_seasons.inc.php:87
-#: ../../public/templates/show_tvshows.inc.php:53
-#: ../../public/templates/show_tvshows.inc.php:97
+#: ../../public/templates/show_tvshow_seasons.inc.php:49
+#: ../../public/templates/show_tvshow_seasons.inc.php:86
+#: ../../public/templates/show_tvshows.inc.php:52
+#: ../../public/templates/show_tvshows.inc.php:96
 #: ../../src/Repository/Model/TVShow_Episode.php:209
 #: ../../src/Repository/Model/TvShow.php:186
 #: ../../src/Repository/Model/TVShow_Season.php:163
@@ -1305,8 +1308,8 @@ msgstr "نمایش تلویزیونی"
 #: ../../public/templates/show_edit_tvshow_season_row.inc.php:31
 #: ../../public/templates/show_partial_tvshow_episode.inc.php:24
 #: ../../public/templates/show_partial_tvshow_episodes.inc.php:27
-#: ../../public/templates/show_tvshow_seasons.inc.php:49
-#: ../../public/templates/show_tvshow_seasons.inc.php:86
+#: ../../public/templates/show_tvshow_seasons.inc.php:48
+#: ../../public/templates/show_tvshow_seasons.inc.php:85
 #: ../../src/Repository/Model/TVShow_Episode.php:214
 #: ../../src/Repository/Model/TVShow_Season.php:168
 #: ../../src/Repository/Model/TVShow_Season.php:187
@@ -1331,22 +1334,22 @@ msgstr "قسمت"
 #: ../../public/templates/show_edit_podcast_row.inc.php:35
 #: ../../public/templates/show_edit_song_row.inc.php:37
 #: ../../public/templates/show_edit_video_row.inc.php:37
-#: ../../public/templates/show_playlist_medias.inc.php:60
-#: ../../public/templates/show_playlist_medias.inc.php:93
+#: ../../public/templates/show_playlist_medias.inc.php:59
+#: ../../public/templates/show_playlist_medias.inc.php:92
 #: ../../public/templates/show_podcast_episode.inc.php:123
-#: ../../public/templates/show_podcast_episodes.inc.php:50
-#: ../../public/templates/show_podcast_episodes.inc.php:97
-#: ../../public/templates/show_podcasts.inc.php:67
-#: ../../public/templates/show_podcasts.inc.php:109
+#: ../../public/templates/show_podcast_episodes.inc.php:49
+#: ../../public/templates/show_podcast_episodes.inc.php:96
+#: ../../public/templates/show_podcasts.inc.php:66
+#: ../../public/templates/show_podcasts.inc.php:108
 #: ../../public/templates/show_video.inc.php:143
-#: ../../public/templates/show_videos.inc.php:50
-#: ../../public/templates/show_videos.inc.php:95
-#: ../../src/Gui/Song/SongViewAdapter.php:338
+#: ../../public/templates/show_videos.inc.php:49
+#: ../../public/templates/show_videos.inc.php:94
+#: ../../src/Gui/Song/SongViewAdapter.php:351
 #: ../../src/Module/Util/AmpacheRss.php:287
 #: ../../src/Repository/Model/Podcast_Episode.php:209
 #: ../../src/Repository/Model/Search.php:525
-#: ../../src/Repository/Model/Search.php:730
-#: ../../src/Repository/Model/Song.php:1875
+#: ../../src/Repository/Model/Search.php:734
+#: ../../src/Repository/Model/Song.php:1876
 #: ../../src/Repository/Model/Video.php:376
 msgid "Title"
 msgstr "عنوان"
@@ -1386,7 +1389,7 @@ msgstr "کاربر کاتالوگ"
 #: ../../public/templates/show_add_catalog.inc.php:90
 #: ../../public/templates/show_edit_catalog.inc.php:84
 #: ../../src/Module/Application/Admin/Catalog/ShowCustomizeCatalogAction.php:61
-#: ../../src/Repository/Model/Catalog.php:721
+#: ../../src/Repository/Model/Catalog.php:733
 msgid "Public Catalog"
 msgstr "مجموعه و کاتالوگ عمومی"
 
@@ -1421,8 +1424,8 @@ msgid "Personal Video"
 msgstr "ویدئوی شخصی"
 
 #: ../../public/templates/show_add_catalog.inc.php:115
-#: ../../public/templates/show_podcast_episodes.inc.php:54
-#: ../../public/templates/show_podcast_episodes.inc.php:100
+#: ../../public/templates/show_podcast_episodes.inc.php:53
+#: ../../public/templates/show_podcast_episodes.inc.php:99
 #: ../../src/Repository/Model/Podcast_Episode.php:204
 #: ../../src/Repository/Model/Podcast.php:180
 msgid "Podcast"
@@ -1524,7 +1527,7 @@ msgstr "نوع جریان"
 #: ../../public/templates/show_add_channel.inc.php:94
 #: ../../public/templates/show_channels.inc.php:43
 #: ../../public/templates/show_edit_channel_row.inc.php:86
-#: ../../src/Gui/Song/SongViewAdapter.php:364
+#: ../../src/Gui/Song/SongViewAdapter.php:377
 #: ../../src/Repository/Model/Search.php:606
 msgid "Bitrate"
 msgstr "نرخ بیت"
@@ -1545,19 +1548,19 @@ msgstr "افزودن برچسب"
 #: ../../public/templates/show_edit_artist_row.inc.php:39
 #: ../../public/templates/show_edit_label_row.inc.php:36
 #: ../../public/templates/show_edit_song_row.inc.php:73
-#: ../../src/Repository/Model/Search.php:631
-#: ../../src/Repository/Model/Search.php:718
-#: ../../src/Repository/Model/Search.php:791
+#: ../../src/Repository/Model/Search.php:632
+#: ../../src/Repository/Model/Search.php:722
+#: ../../src/Repository/Model/Search.php:797
 msgid "MusicBrainz ID"
 msgstr "شناسه موسیقی برینز"
 
 #: ../../public/templates/show_add_label.inc.php:45
 #: ../../public/templates/show_edit_label_row.inc.php:47
 #: ../../public/templates/show_edit_podcast_episode_row.inc.php:47
-#: ../../public/templates/show_labels.inc.php:57
-#: ../../public/templates/show_labels.inc.php:86
+#: ../../public/templates/show_labels.inc.php:56
+#: ../../public/templates/show_labels.inc.php:85
 #: ../../public/templates/show_podcast_episode.inc.php:125
-#: ../../src/Repository/Model/Search.php:822
+#: ../../src/Repository/Model/Search.php:828
 msgid "Category"
 msgstr "دسته بندی"
 
@@ -1641,20 +1644,20 @@ msgstr "آدرس"
 
 #: ../../public/templates/show_add_label.inc.php:101
 #: ../../public/templates/show_edit_label_row.inc.php:98
-#: ../../public/templates/show_labels.inc.php:59
-#: ../../public/templates/show_labels.inc.php:88
+#: ../../public/templates/show_labels.inc.php:58
+#: ../../public/templates/show_labels.inc.php:87
 msgid "Country"
 msgstr "کشور"
 
 #: ../../public/templates/show_add_label.inc.php:119
 #: ../../public/templates/show_edit_label_row.inc.php:110
 #: ../../public/templates/show_install_check.inc.php:44
-#: ../../public/templates/show_labels.inc.php:60
-#: ../../public/templates/show_labels.inc.php:89
+#: ../../public/templates/show_labels.inc.php:59
+#: ../../public/templates/show_labels.inc.php:88
 #: ../../public/templates/show_test.inc.php:63
 #: ../../public/templates/show_user.inc.php:107
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:1953
+#: ../../src/Repository/Model/Catalog.php:1965
 #: ../../src/Repository/Model/Channel.php:310
 msgid "Status"
 msgstr "وضعیت"
@@ -1675,9 +1678,9 @@ msgstr "غیرفعال"
 #: ../../public/templates/show_add_live_stream.inc.php:63
 #: ../../public/templates/show_catalog_row.inc.php:50
 #: ../../public/templates/show_ip_history.inc.php:40
-#: ../../public/templates/show_labels.inc.php:41
+#: ../../public/templates/show_labels.inc.php:40
 #: ../../public/templates/show_live_streams.inc.php:41
-#: ../../public/templates/show_podcasts.inc.php:51
+#: ../../public/templates/show_podcasts.inc.php:50
 #: ../../public/templates/show_searches.inc.php:35
 #: ../../src/Repository/Model/Shoutbox.php:303
 msgid "Add"
@@ -1700,8 +1703,8 @@ msgstr "آدرس اینترنتی جریان"
 #: ../../public/templates/show_live_streams.inc.php:60
 #: ../../public/templates/show_live_streams.inc.php:86
 #: ../../public/templates/show_video.inc.php:149
-#: ../../public/templates/show_videos.inc.php:56
-#: ../../public/templates/show_videos.inc.php:101
+#: ../../public/templates/show_videos.inc.php:55
+#: ../../public/templates/show_videos.inc.php:100
 msgid "Codec"
 msgstr "کُدِک"
 
@@ -1727,7 +1730,7 @@ msgid "Public"
 msgstr "عمومی"
 
 #: ../../public/templates/show_add_podcast.inc.php:29
-#: ../../public/templates/show_podcasts.inc.php:52
+#: ../../public/templates/show_podcasts.inc.php:51
 msgid "Subscribe to Podcast"
 msgstr "اشتراک در پادکست"
 
@@ -1899,8 +1902,8 @@ msgstr "افزودن کاربر"
 #: ../../public/templates/show_login_form.inc.php:74
 #: ../../public/templates/show_now_playing_row.inc.php:40
 #: ../../public/templates/show_now_playing_video_row.inc.php:38
-#: ../../public/templates/show_recently_played.inc.php:46
-#: ../../public/templates/show_recently_played.inc.php:162
+#: ../../public/templates/show_recently_played.inc.php:50
+#: ../../public/templates/show_recently_played.inc.php:171
 #: ../../public/templates/show_user_registration.inc.php:90
 #: ../../public/templates/show_users.inc.php:52
 #: ../../public/templates/show_users.inc.php:90
@@ -1910,7 +1913,7 @@ msgstr "افزودن کاربر"
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:193
 #: ../../src/Module/User/Registration.php:67
 #: ../../src/Module/User/Registration.php:81
-#: ../../src/Repository/Model/Search.php:832
+#: ../../src/Repository/Model/Search.php:838
 msgid "Username"
 msgstr "نام کاربری"
 
@@ -1984,7 +1987,7 @@ msgstr "مدیر"
 #: ../../public/templates/show_album.inc.php:70
 #: ../../public/templates/show_artist.inc.php:67
 #: ../../public/templates/show_label.inc.php:44
-#: ../../src/Gui/Song/SongViewAdapter.php:347
+#: ../../src/Gui/Song/SongViewAdapter.php:360
 msgid "Search on Google ..."
 msgstr "جستجو در گوگل..."
 
@@ -1992,7 +1995,7 @@ msgstr "جستجو در گوگل..."
 #: ../../public/templates/show_album.inc.php:71
 #: ../../public/templates/show_artist.inc.php:68
 #: ../../public/templates/show_label.inc.php:45
-#: ../../src/Gui/Song/SongViewAdapter.php:348
+#: ../../src/Gui/Song/SongViewAdapter.php:361
 msgid "Search on DuckDuckGo ..."
 msgstr "جستجو در DuckDuckGo..."
 
@@ -2007,7 +2010,7 @@ msgstr "جستجو در ویکی پدیا..."
 #: ../../public/templates/show_album.inc.php:73
 #: ../../public/templates/show_artist.inc.php:70
 #: ../../public/templates/show_label.inc.php:47
-#: ../../src/Gui/Song/SongViewAdapter.php:349
+#: ../../src/Gui/Song/SongViewAdapter.php:362
 msgid "Search on Last.fm ..."
 msgstr "جستجو در Last.fm..."
 
@@ -2017,8 +2020,8 @@ msgstr "جستجو در Last.fm..."
 #: ../../public/templates/show_album.inc.php:77
 #: ../../public/templates/show_artist.inc.php:72
 #: ../../public/templates/show_artist.inc.php:74
-#: ../../src/Gui/Song/SongViewAdapter.php:351
-#: ../../src/Gui/Song/SongViewAdapter.php:353
+#: ../../src/Gui/Song/SongViewAdapter.php:364
+#: ../../src/Gui/Song/SongViewAdapter.php:366
 msgid "Search on Musicbrainz ..."
 msgstr "جستجو در Musicbrainz..."
 
@@ -2034,8 +2037,8 @@ msgstr "ناشناس (یتیم)"
 #: ../../public/templates/show_album.inc.php:100
 #: ../../public/templates/show_artist.inc.php:102
 #: ../../src/Repository/Model/Search.php:563
-#: ../../src/Repository/Model/Search.php:686
-#: ../../src/Repository/Model/Search.php:757
+#: ../../src/Repository/Model/Search.php:689
+#: ../../src/Repository/Model/Search.php:762
 msgid "Played"
 msgstr "پخش شده"
 
@@ -2051,7 +2054,7 @@ msgstr[1] "زمان %d"
 
 #: ../../public/templates/show_album_group_disks.inc.php:110
 #: ../../public/templates/show_album.inc.php:119
-#: ../../public/templates/show_albums.inc.php:57
+#: ../../public/templates/show_albums.inc.php:56
 #: ../../public/templates/show_artist.inc.php:120
 #: ../../public/templates/show_broadcasts.inc.php:39
 #: ../../public/templates/show_catalogs.inc.php:40
@@ -2061,20 +2064,20 @@ msgstr[1] "زمان %d"
 #: ../../public/templates/show_missing_albums.inc.php:34
 #: ../../public/templates/show_playlists.inc.php:63
 #: ../../public/templates/show_playlists.inc.php:117
-#: ../../public/templates/show_podcast_episodes.inc.php:68
-#: ../../public/templates/show_podcast_episodes.inc.php:112
+#: ../../public/templates/show_podcast_episodes.inc.php:67
+#: ../../public/templates/show_podcast_episodes.inc.php:111
 #: ../../public/templates/show_podcast.inc.php:63
-#: ../../public/templates/show_podcasts.inc.php:42
+#: ../../public/templates/show_podcasts.inc.php:41
 #: ../../public/templates/show_pvmsg.inc.php:34
 #: ../../public/templates/show_searches.inc.php:55
 #: ../../public/templates/show_searches.inc.php:82
 #: ../../public/templates/show_shared_objects.inc.php:42
-#: ../../public/templates/show_similar_songs.inc.php:86
+#: ../../public/templates/show_similar_songs.inc.php:85
 #: ../../public/templates/show_top_tracks.inc.php:86
 #: ../../public/templates/show_tvshow.inc.php:65
 #: ../../public/templates/show_tvshow_season.inc.php:58
-#: ../../public/templates/show_tvshow_seasons.inc.php:57
-#: ../../public/templates/show_tvshow_seasons.inc.php:93
+#: ../../public/templates/show_tvshow_seasons.inc.php:56
+#: ../../public/templates/show_tvshow_seasons.inc.php:92
 #: ../../public/templates/show_wanted_albums.inc.php:35
 #: ../../src/Module/Application/Album/ShowMissingAction.php:124
 msgid "Actions"
@@ -2084,7 +2087,7 @@ msgstr "اقدامات"
 #: ../../public/templates/show_album_group_disks.inc.php:192
 #: ../../public/templates/show_album.inc.php:145
 #: ../../public/templates/show_artist_row.inc.php:72
-#: ../../public/templates/show_search_options.inc.php:39
+#: ../../public/templates/show_search_options.inc.php:40
 #: ../../src/Gui/Album/AlbumViewAdapter.php:187
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:167
 msgid "Random to Temporary Playlist"
@@ -2104,6 +2107,7 @@ msgstr "آیا واقعاً می خواهید از برچسب ها به روزر
 #: ../../public/templates/show_album.inc.php:210
 #: ../../public/templates/show_artist.inc.php:169
 #: ../../public/templates/show_artist.inc.php:170
+#: ../../src/Gui/Song/SongViewAdapter.php:278
 msgid "Update from tags"
 msgstr "به روز رسانی از برچسب ها"
 
@@ -2122,7 +2126,7 @@ msgstr "به روز رسانی از برچسب ها"
 #: ../../public/templates/show_share.inc.php:39
 #: ../../public/templates/show_share.inc.php:40
 #: ../../public/templates/show_video.inc.php:122
-#: ../../public/templates/show_video_row.inc.php:129
+#: ../../public/templates/show_video_row.inc.php:128
 #: ../../src/Gui/Song/SongViewAdapter.php:239
 #: ../../src/Module/System/AutoUpdate.php:288
 #: ../../src/Module/System/AutoUpdate.php:290
@@ -2140,7 +2144,7 @@ msgstr "بارگیری"
 #: ../../public/templates/show_label_row.inc.php:49
 #: ../../public/templates/show_podcast_episode.inc.php:87
 #: ../../public/templates/show_video.inc.php:108
-#: ../../public/templates/show_video_row.inc.php:119
+#: ../../public/templates/show_video_row.inc.php:118
 #: ../../src/Gui/Album/AlbumViewAdapter.php:213
 #: ../../src/Gui/Song/SongViewAdapter.php:194
 #: ../../src/Repository/Model/Shoutbox.php:307
@@ -2162,7 +2166,7 @@ msgstr "ویرایش آلبوم"
 
 #: ../../public/templates/show_album.inc.php:113
 #: ../../public/templates/show_artist.inc.php:114
-#: ../../src/Gui/Song/SongViewAdapter.php:401
+#: ../../src/Gui/Song/SongViewAdapter.php:414
 msgid "Uploaded by"
 msgstr "بارگزاری شده توسط"
 
@@ -2182,7 +2186,7 @@ msgstr "RSS خوراک"
 #: ../../public/templates/show_podcast.inc.php:88
 #: ../../public/templates/show_user.inc.php:103
 #: ../../public/templates/show_video.inc.php:127
-#: ../../src/Gui/Song/SongViewAdapter.php:265
+#: ../../src/Gui/Song/SongViewAdapter.php:274
 msgid "Graphs"
 msgstr "نمودارها"
 
@@ -2190,18 +2194,18 @@ msgstr "نمودارها"
 msgid "Edit Album"
 msgstr "ویرایش آلبوم"
 
-#: ../../public/templates/show_albums.inc.php:51
-#: ../../public/templates/show_artists.inc.php:46
+#: ../../public/templates/show_albums.inc.php:50
+#: ../../public/templates/show_artists.inc.php:45
 #: ../../public/templates/show_edit_album_row.inc.php:39
-#: ../../src/Gui/Song/SongViewAdapter.php:340
+#: ../../src/Gui/Song/SongViewAdapter.php:353
 #: ../../src/Repository/Model/Search.php:528
-#: ../../src/Repository/Model/Search.php:731
+#: ../../src/Repository/Model/Search.php:735
 msgid "Album Artist"
 msgstr "هنرمند آلبوم"
 
-#: ../../public/templates/show_albums.inc.php:52
-#: ../../public/templates/show_artists.inc.php:65
-#: ../../public/templates/show_artists.inc.php:126
+#: ../../public/templates/show_albums.inc.php:51
+#: ../../public/templates/show_artists.inc.php:64
+#: ../../public/templates/show_artists.inc.php:125
 #: ../../public/templates/show_browse_form.inc.php:39
 #: ../../public/templates/show_genre_browse_form.inc.php:17
 #: ../../public/templates/show_label.inc.php:111
@@ -2222,82 +2226,82 @@ msgid "Songs"
 msgstr "آهنگ ها"
 
 #. HINT: Number of times object has been played
-#: ../../public/templates/show_albums.inc.php:54
-#: ../../public/templates/show_artists.inc.php:69
-#: ../../public/templates/show_artists.inc.php:130
-#: ../../public/templates/show_podcast_episodes.inc.php:59
-#: ../../public/templates/show_podcast_episodes.inc.php:104
-#: ../../public/templates/show_podcasts.inc.php:40
+#: ../../public/templates/show_albums.inc.php:53
+#: ../../public/templates/show_artists.inc.php:68
+#: ../../public/templates/show_artists.inc.php:129
+#: ../../public/templates/show_podcast_episodes.inc.php:58
+#: ../../public/templates/show_podcast_episodes.inc.php:103
+#: ../../public/templates/show_podcasts.inc.php:39
 #: ../../public/templates/show_recommended_artists.inc.php:57
-#: ../../public/templates/show_similar_songs.inc.php:72
+#: ../../public/templates/show_similar_songs.inc.php:71
 #: ../../public/templates/show_songs.inc.php:97
 #: ../../public/templates/show_songs.inc.php:182
 #: ../../public/templates/show_top_tracks.inc.php:72
 #: ../../public/templates/show_video.inc.php:164
-#: ../../public/templates/show_videos.inc.php:60
-#: ../../public/templates/show_videos.inc.php:105
-#: ../../src/Gui/Song/SongViewAdapter.php:383
+#: ../../public/templates/show_videos.inc.php:59
+#: ../../public/templates/show_videos.inc.php:104
+#: ../../src/Gui/Song/SongViewAdapter.php:396
 #: ../../src/Repository/Model/Search.php:553
-#: ../../src/Repository/Model/Search.php:682
-#: ../../src/Repository/Model/Search.php:753
+#: ../../src/Repository/Model/Search.php:685
+#: ../../src/Repository/Model/Search.php:758
 msgid "# Played"
 msgstr "# پخش شد"
 
-#: ../../public/templates/show_albums.inc.php:56
-#: ../../public/templates/show_artists.inc.php:79
-#: ../../public/templates/show_artists.inc.php:137
-#: ../../public/templates/show_playlist_medias.inc.php:64
-#: ../../public/templates/show_playlist_medias.inc.php:97
+#: ../../public/templates/show_albums.inc.php:55
+#: ../../public/templates/show_artists.inc.php:78
+#: ../../public/templates/show_artists.inc.php:136
+#: ../../public/templates/show_playlist_medias.inc.php:63
+#: ../../public/templates/show_playlist_medias.inc.php:96
 #: ../../public/templates/show_playlists.inc.php:60
 #: ../../public/templates/show_playlists.inc.php:114
 #: ../../public/templates/show_podcast_episode.inc.php:43
-#: ../../public/templates/show_podcast_episodes.inc.php:65
-#: ../../public/templates/show_podcast_episodes.inc.php:109
-#: ../../public/templates/show_podcasts.inc.php:41
+#: ../../public/templates/show_podcast_episodes.inc.php:64
+#: ../../public/templates/show_podcast_episodes.inc.php:108
+#: ../../public/templates/show_podcasts.inc.php:40
 #: ../../public/templates/show_recommended_artists.inc.php:66
 #: ../../public/templates/show_recommended_artists.inc.php:128
-#: ../../public/templates/show_similar_songs.inc.php:80
+#: ../../public/templates/show_similar_songs.inc.php:79
 #: ../../public/templates/show_songs.inc.php:107
 #: ../../public/templates/show_songs.inc.php:188
 #: ../../public/templates/show_top_tracks.inc.php:80
-#: ../../public/templates/show_tvshow_seasons.inc.php:54
-#: ../../public/templates/show_tvshow_seasons.inc.php:90
-#: ../../public/templates/show_tvshows.inc.php:63
-#: ../../public/templates/show_tvshows.inc.php:104
+#: ../../public/templates/show_tvshow_seasons.inc.php:53
+#: ../../public/templates/show_tvshow_seasons.inc.php:89
+#: ../../public/templates/show_tvshows.inc.php:62
+#: ../../public/templates/show_tvshows.inc.php:103
 #: ../../public/templates/show_video.inc.php:75
-#: ../../public/templates/show_videos.inc.php:66
-#: ../../public/templates/show_videos.inc.php:111
+#: ../../public/templates/show_videos.inc.php:65
+#: ../../public/templates/show_videos.inc.php:110
 msgid "Rating"
 msgstr "رتبه بندی"
 
-#: ../../public/templates/show_albums.inc.php:79
-#: ../../public/templates/show_albums.inc.php:159
-#: ../../public/templates/show_artists.inc.php:62
-#: ../../public/templates/show_artists.inc.php:123
+#: ../../public/templates/show_albums.inc.php:78
+#: ../../public/templates/show_albums.inc.php:158
+#: ../../public/templates/show_artists.inc.php:61
+#: ../../public/templates/show_artists.inc.php:122
 #: ../../public/templates/show_arts.inc.php:55
-#: ../../public/templates/show_labels.inc.php:55
-#: ../../public/templates/show_labels.inc.php:84
+#: ../../public/templates/show_labels.inc.php:54
+#: ../../public/templates/show_labels.inc.php:83
 #: ../../public/templates/show_live_streams.inc.php:57
 #: ../../public/templates/show_live_streams.inc.php:83
-#: ../../public/templates/show_playlist_medias.inc.php:59
-#: ../../public/templates/show_playlist_medias.inc.php:92
+#: ../../public/templates/show_playlist_medias.inc.php:58
+#: ../../public/templates/show_playlist_medias.inc.php:91
 #: ../../public/templates/show_playlists.inc.php:52
 #: ../../public/templates/show_playlists.inc.php:105
-#: ../../public/templates/show_podcast_episodes.inc.php:96
-#: ../../public/templates/show_podcasts.inc.php:66
-#: ../../public/templates/show_podcasts.inc.php:108
+#: ../../public/templates/show_podcast_episodes.inc.php:95
+#: ../../public/templates/show_podcasts.inc.php:65
+#: ../../public/templates/show_podcasts.inc.php:107
 #: ../../public/templates/show_recommended_artists.inc.php:50
 #: ../../public/templates/show_recommended_artists.inc.php:118
-#: ../../public/templates/show_tvshow_seasons.inc.php:48
-#: ../../public/templates/show_tvshow_seasons.inc.php:85
-#: ../../public/templates/show_tvshows.inc.php:52
-#: ../../public/templates/show_tvshows.inc.php:96
-#: ../../public/templates/show_videos.inc.php:49
-#: ../../public/templates/show_videos.inc.php:94
+#: ../../public/templates/show_tvshow_seasons.inc.php:47
+#: ../../public/templates/show_tvshow_seasons.inc.php:84
+#: ../../public/templates/show_tvshows.inc.php:51
+#: ../../public/templates/show_tvshows.inc.php:95
+#: ../../public/templates/show_videos.inc.php:48
+#: ../../public/templates/show_videos.inc.php:93
 msgid "Art"
 msgstr "روی جلد"
 
-#: ../../public/templates/show_albums.inc.php:152
+#: ../../public/templates/show_albums.inc.php:151
 msgid "No Album found"
 msgstr "هیچ آلبومی یافت نشد"
 
@@ -2307,8 +2311,8 @@ msgstr "هیچ آلبومی یافت نشد"
 #: ../../public/templates/show_artist.inc.php:312
 #: ../../public/templates/show_artist.inc.php:318
 #: ../../public/templates/show_artist.inc.php:327
-#: ../../public/templates/show_index.inc.php:57
-#: ../../public/templates/show_index.inc.php:66
+#: ../../public/templates/show_index.inc.php:56
+#: ../../public/templates/show_index.inc.php:65
 #: ../../public/templates/show_label.inc.php:124
 #: ../../public/templates/show_missing_artist.inc.php:34
 #: ../../public/templates/show_now_playing_row.inc.php:92
@@ -2318,9 +2322,8 @@ msgstr "در حال بارگیری..."
 
 #: ../../public/templates/show_artist.inc.php:125
 #: ../../public/templates/show_artist.inc.php:126
-#, fuzzy
 msgid "Show Artist Songs"
-msgstr "نمایش آهنگ های غیرفعال"
+msgstr ""
 
 #: ../../public/templates/show_artist.inc.php:131
 #: ../../public/templates/show_artist.inc.php:132
@@ -2373,9 +2376,8 @@ msgstr ""
 
 #: ../../public/templates/show_artist.inc.php:176
 #: ../../public/templates/show_artist.inc.php:177
-#, fuzzy
 msgid "Update details from MusicBrainz"
-msgstr "شناسه گروه انتشار MusicBrainz"
+msgstr ""
 
 #: ../../public/templates/show_artist.inc.php:235
 #: ../../public/templates/show_artist_row.inc.php:109
@@ -2422,26 +2424,26 @@ msgstr "ترانه های مشابه"
 msgid "Labels"
 msgstr "برچسب ها"
 
-#: ../../public/templates/show_artists.inc.php:67
-#: ../../public/templates/show_artists.inc.php:128
+#: ../../public/templates/show_artists.inc.php:66
+#: ../../public/templates/show_artists.inc.php:127
 #: ../../public/templates/show_democratic_playlist.inc.php:61
 #: ../../public/templates/show_democratic_playlist.inc.php:108
-#: ../../public/templates/show_playlist_medias.inc.php:62
-#: ../../public/templates/show_playlist_medias.inc.php:95
-#: ../../public/templates/show_podcast_episodes.inc.php:57
-#: ../../public/templates/show_podcast_episodes.inc.php:102
+#: ../../public/templates/show_playlist_medias.inc.php:61
+#: ../../public/templates/show_playlist_medias.inc.php:94
+#: ../../public/templates/show_podcast_episodes.inc.php:56
+#: ../../public/templates/show_podcast_episodes.inc.php:101
 #: ../../public/templates/show_recommended_artists.inc.php:55
 #: ../../public/templates/show_recommended_artists.inc.php:123
-#: ../../public/templates/show_similar_songs.inc.php:70
+#: ../../public/templates/show_similar_songs.inc.php:69
 #: ../../public/templates/show_songs.inc.php:89
 #: ../../public/templates/show_songs.inc.php:177
 #: ../../public/templates/show_top_tracks.inc.php:70
-#: ../../public/templates/show_videos.inc.php:58
-#: ../../public/templates/show_videos.inc.php:103
+#: ../../public/templates/show_videos.inc.php:57
+#: ../../public/templates/show_videos.inc.php:102
 msgid "Time"
 msgstr "زمان"
 
-#: ../../public/templates/show_artists.inc.php:115
+#: ../../public/templates/show_artists.inc.php:114
 msgid "No Artist found"
 msgstr "هنرمندی یافت نشد"
 
@@ -2509,7 +2511,7 @@ msgstr "مرور آمپاچی..."
 #: ../../public/templates/show_browse_form.inc.php:61
 #: ../../public/templates/show_video.inc.php:155
 #: ../../public/templates/sidebar.inc.php:46
-#: ../../src/Gui/Song/SongViewAdapter.php:365
+#: ../../src/Gui/Song/SongViewAdapter.php:378
 #: ../../src/Repository/Model/Browse.php:376
 msgid "Channels"
 msgstr "کانال ها"
@@ -2551,7 +2553,7 @@ msgstr "ویدیو ها"
 #: ../../public/templates/show_user_row.inc.php:85
 #: ../../src/Application/Api/Ajax/Handler/CatalogAjaxHandler.php:55
 #: ../../src/Application/Api/Ajax/Handler/SongAjaxHandler.php:65
-#: ../../src/Gui/Song/SongViewAdapter.php:300
+#: ../../src/Gui/Song/SongViewAdapter.php:313
 msgid "Disable"
 msgstr "غیرفعال"
 
@@ -2562,7 +2564,7 @@ msgstr "غیرفعال"
 #: ../../public/templates/show_user_row.inc.php:83
 #: ../../src/Application/Api/Ajax/Handler/CatalogAjaxHandler.php:58
 #: ../../src/Application/Api/Ajax/Handler/SongAjaxHandler.php:68
-#: ../../src/Gui/Song/SongViewAdapter.php:303
+#: ../../src/Gui/Song/SongViewAdapter.php:316
 #: ../../src/Module/Application/Artist/UpdateFromMusicBrainzAction.php:68
 msgid "Enable"
 msgstr "فعال‌"
@@ -2936,9 +2938,11 @@ msgstr ""
 #: ../../public/templates/show_disabled_songs.inc.php:64
 #: ../../public/templates/show_import_playlist.inc.php:33
 #: ../../public/templates/show_video.inc.php:157
-#: ../../src/Gui/Song/SongViewAdapter.php:376
+#: ../../src/Gui/Song/SongViewAdapter.php:389
 #: ../../src/Repository/Model/Search.php:587
-#: ../../src/Repository/Model/Search.php:801
+#: ../../src/Repository/Model/Search.php:705
+#: ../../src/Repository/Model/Search.php:779
+#: ../../src/Repository/Model/Search.php:807
 msgid "Filename"
 msgstr "نام فایل"
 
@@ -2953,9 +2957,8 @@ msgstr "ویرایش لیست کنترل دسترسی"
 
 #: ../../public/templates/show_edit_album_row.inc.php:55
 #: ../../public/templates/show_edit_song_row.inc.php:53
-#, fuzzy
 msgid "Additional Artists"
-msgstr "ویرایش هنرمند"
+msgstr ""
 
 #: ../../public/templates/show_edit_album_row.inc.php:79
 msgid "MusicBrainz Release Group ID"
@@ -2970,12 +2973,12 @@ msgid "Add tags to sub songs"
 msgstr "افزودن برچسب های آهنگ های فرعی"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:54
-#: ../../src/Repository/Model/Search.php:664
+#: ../../src/Repository/Model/Search.php:667
 msgid "Place Formed"
 msgstr "مکان ساخته شده"
 
 #: ../../public/templates/show_edit_artist_row.inc.php:58
-#: ../../src/Repository/Model/Search.php:663
+#: ../../src/Repository/Model/Search.php:666
 msgid "Year Formed"
 msgstr "سال ساخت"
 
@@ -3063,15 +3066,15 @@ msgid "Track"
 msgstr "قطعه"
 
 #: ../../public/templates/show_edit_song_row.inc.php:85
-#: ../../src/Gui/Song/SongViewAdapter.php:342
+#: ../../src/Gui/Song/SongViewAdapter.php:355
 #: ../../src/Repository/Model/Search.php:529
 msgid "Composer"
 msgstr "آهنگساز"
 
 #: ../../public/templates/show_edit_song_row.inc.php:93
-#: ../../public/templates/show_labels.inc.php:56
-#: ../../public/templates/show_labels.inc.php:85
-#: ../../src/Gui/Song/SongViewAdapter.php:360
+#: ../../public/templates/show_labels.inc.php:55
+#: ../../public/templates/show_labels.inc.php:84
+#: ../../src/Gui/Song/SongViewAdapter.php:373
 #: ../../src/Repository/Model/Label.php:231
 #: ../../src/Repository/Model/Search.php:532
 msgid "Label"
@@ -3169,8 +3172,8 @@ msgstr "به‌روزرسانی کاربر "
 
 #: ../../public/templates/show_edit_video_row.inc.php:41
 #: ../../public/templates/show_video.inc.php:148
-#: ../../public/templates/show_videos.inc.php:55
-#: ../../public/templates/show_videos.inc.php:100
+#: ../../public/templates/show_videos.inc.php:54
+#: ../../public/templates/show_videos.inc.php:99
 msgid "Release Date"
 msgstr "تاریخ انتشار"
 
@@ -3220,8 +3223,8 @@ msgid "Direct URL to Image"
 msgstr "آدرس اینترنتی تصویر"
 
 #: ../../public/templates/show_get_art.inc.php:82
-#: ../../src/Repository/Model/Search.php:702
-#: ../../src/Repository/Model/Search.php:774
+#: ../../src/Repository/Model/Search.php:706
+#: ../../src/Repository/Model/Search.php:780
 msgid "Local Image"
 msgstr "تصویر محلی"
 
@@ -3269,15 +3272,15 @@ msgstr "روز"
 msgid "Hour"
 msgstr "ساعت"
 
-#: ../../public/templates/show_html5_player_headers.inc.php:229
+#: ../../public/templates/show_html5_player_headers.inc.php:232
 msgid "Your browser doesn't support this feature."
 msgstr "مرورگر شما از این ویژگی پشتیبانی نمی کند."
 
-#: ../../public/templates/show_html5_player_headers.inc.php:248
+#: ../../public/templates/show_html5_player_headers.inc.php:251
 msgid "Full-Screen not supported by your browser"
 msgstr ""
 
-#: ../../public/templates/show_html5_player_headers.inc.php:529
+#: ../../public/templates/show_html5_player_headers.inc.php:532
 msgid "Media is currently playing, are you sure you want to close?"
 msgstr "رسانه در حال پخش است، آیا مطمئن هستید که می خواهید بسته شود؟"
 
@@ -3335,7 +3338,7 @@ msgid "Repeat Off"
 msgstr "تکرار خاموش"
 
 #: ../../public/templates/show_html5_player.inc.php:201
-#: ../../src/Repository/Model/Song.php:1822
+#: ../../src/Repository/Model/Song.php:1823
 msgid "Show Lyrics"
 msgstr " نمایش متن ترانه"
 
@@ -3396,13 +3399,13 @@ msgstr "واردکردن لیست پخش از یک فایل"
 msgid "Import Playlist"
 msgstr "واردکردن لیست پخش"
 
-#: ../../public/templates/show_index.inc.php:56
-#: ../../public/templates/show_random_albums.inc.php:37
+#: ../../public/templates/show_index.inc.php:55
+#: ../../public/templates/show_random_albums.inc.php:36
 msgid "Albums of the Moment"
 msgstr "آلبوم های لحظه"
 
-#: ../../public/templates/show_index.inc.php:65
-#: ../../public/templates/show_random_videos.inc.php:35
+#: ../../public/templates/show_index.inc.php:64
+#: ../../public/templates/show_random_videos.inc.php:37
 msgid "Videos of the Moment"
 msgstr "ویدیوهای لحظه"
 
@@ -3536,8 +3539,8 @@ msgstr ""
 "و بارگیری کرده، و سپس آنرا به صورت دستی در %s قرار دهید."
 
 #: ../../public/templates/show_install_config.inc.php:68
-#: ../../src/Repository/Model/Album.php:765
-#: ../../src/Repository/Model/Album.php:783
+#: ../../src/Repository/Model/Album.php:767
+#: ../../src/Repository/Model/Album.php:785
 msgid "Various"
 msgstr "مختلف"
 
@@ -3753,7 +3756,7 @@ msgstr "اجرای config/ampache.cfg.php"
 #: ../../src/Application/Api/Upnp/MediaServiceDescriptionApplication.php:37
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:38
 #: ../../src/Module/Api/DaapApiApplication.php:35
-#: ../../src/Module/Api/SubsonicApiApplication.php:52
+#: ../../src/Module/Api/SubsonicApiApplication.php:53
 #: ../../src/Module/Util/Ui.php:698 ../../src/Module/Util/Ui.php:949
 #: ../../src/Module/Util/Ui.php:969
 #: ../../src/Module/WebDav/WebDavApplication.php:46
@@ -3883,11 +3886,11 @@ msgstr "ویرایش برچسب"
 msgid "Edit Label"
 msgstr "ویرایش برچسب"
 
-#: ../../public/templates/show_labels.inc.php:42
+#: ../../public/templates/show_labels.inc.php:41
 msgid "Create Label"
 msgstr "ایجاد برچسب"
 
-#: ../../public/templates/show_labels.inc.php:77
+#: ../../public/templates/show_labels.inc.php:76
 msgid "No label found"
 msgstr "برچسبی پیدا نشد"
 
@@ -3982,11 +3985,11 @@ msgstr "ارسال"
 #: ../../public/templates/show_lyrics.inc.php:45
 #: ../../public/templates/show_now_playing_row.inc.php:53
 #: ../../public/templates/show_partial_clip.inc.php:24
-#: ../../public/templates/show_recently_played.inc.php:40
-#: ../../public/templates/show_recently_played.inc.php:156
+#: ../../public/templates/show_recently_played.inc.php:44
+#: ../../public/templates/show_recently_played.inc.php:165
 #: ../../public/templates/show_tagcloud_hidden.inc.php:34
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Repository/Model/Catalog.php:1953
+#: ../../src/Repository/Model/Catalog.php:1965
 msgid "Song"
 msgstr "آهنگ"
 
@@ -4096,8 +4099,8 @@ msgstr "به روز رسانی فایل های موجود در: %s"
 #: ../../public/templates/show_playlist_title.inc.php:23
 #: ../../public/templates/sidebar_preferences.inc.php:58
 #: ../../src/Config/functions.php:794 ../../src/Repository/Model/Search.php:578
-#: ../../src/Repository/Model/Search.php:697
-#: ../../src/Repository/Model/Search.php:769
+#: ../../src/Repository/Model/Search.php:700
+#: ../../src/Repository/Model/Search.php:774
 msgid "Playlist"
 msgstr "لیست پخش"
 
@@ -4227,12 +4230,12 @@ msgid "Do you really want to delete this Playlist?"
 msgstr "آیا واقعاً می خواهید این لیست پخش را حذف کنید؟"
 
 #: ../../public/templates/show_playlist_media_row.inc.php:110
-#: ../../src/Gui/Song/SongViewAdapter.php:424
+#: ../../src/Gui/Song/SongViewAdapter.php:437
 msgid "Reorder"
 msgstr "مرتب سازی مجدد"
 
-#: ../../public/templates/show_playlist_medias.inc.php:52
-#: ../../public/templates/show_playlist_medias.inc.php:108
+#: ../../public/templates/show_playlist_medias.inc.php:51
+#: ../../public/templates/show_playlist_medias.inc.php:107
 msgid "Duration"
 msgstr "مدت زمان"
 
@@ -4242,8 +4245,8 @@ msgstr "مدت زمان"
 #: ../../public/templates/show_searches.inc.php:77
 #: ../../src/Gui/Playlist/NewPlaylistDialogAdapter.php:89
 #: ../../src/Repository/Model/Search.php:584
-#: ../../src/Repository/Model/Search.php:699
-#: ../../src/Repository/Model/Search.php:771
+#: ../../src/Repository/Model/Search.php:702
+#: ../../src/Repository/Model/Search.php:776
 msgid "Playlist Name"
 msgstr "نام لیست پخش"
 
@@ -4301,15 +4304,15 @@ msgid "Podcast Episode Edit"
 msgstr "ویرایش قسمت های پادکست"
 
 #: ../../public/templates/show_podcast_episode.inc.php:127
-#: ../../public/templates/show_podcast_episodes.inc.php:61
-#: ../../public/templates/show_podcast_episodes.inc.php:106
+#: ../../public/templates/show_podcast_episodes.inc.php:60
+#: ../../public/templates/show_podcast_episodes.inc.php:105
 msgid "Publication Date"
 msgstr "تاریخ انتشار"
 
 #: ../../public/templates/show_podcast_episode.inc.php:131
 #: ../../public/templates/show_random.inc.php:87
 #: ../../public/templates/show_video.inc.php:144
-#: ../../src/Gui/Song/SongViewAdapter.php:346
+#: ../../src/Gui/Song/SongViewAdapter.php:359
 msgid "Length"
 msgstr "طول"
 
@@ -4328,7 +4331,7 @@ msgstr "اندازه"
 msgid "Sync"
 msgstr "همگام سازی"
 
-#: ../../public/templates/show_podcast_episodes.inc.php:88
+#: ../../public/templates/show_podcast_episodes.inc.php:87
 msgid "No podcast episode found"
 msgstr "هیچ قسمتی از پادکست پیدا نشد"
 
@@ -4342,18 +4345,18 @@ msgid "Edit Podcast"
 msgstr "ویرایش پادکست"
 
 #: ../../public/templates/show_podcast.inc.php:132
-#: ../../public/templates/show_podcasts.inc.php:69
-#: ../../public/templates/show_podcasts.inc.php:111
+#: ../../public/templates/show_podcasts.inc.php:68
+#: ../../public/templates/show_podcasts.inc.php:110
 #: ../../public/templates/show_tvshow_season.inc.php:102
-#: ../../public/templates/show_tvshow_seasons.inc.php:51
-#: ../../public/templates/show_tvshow_seasons.inc.php:88
-#: ../../public/templates/show_tvshows.inc.php:54
-#: ../../public/templates/show_tvshows.inc.php:98
+#: ../../public/templates/show_tvshow_seasons.inc.php:50
+#: ../../public/templates/show_tvshow_seasons.inc.php:87
+#: ../../public/templates/show_tvshows.inc.php:53
+#: ../../public/templates/show_tvshows.inc.php:97
 #: ../../src/Repository/Model/Browse.php:396
 msgid "Episodes"
 msgstr "قسمت ها"
 
-#: ../../public/templates/show_podcasts.inc.php:100
+#: ../../public/templates/show_podcasts.inc.php:99
 msgid "No podcast found"
 msgstr "پادکستی پیدا نشد"
 
@@ -4435,8 +4438,8 @@ msgstr "بازدیدهای حافظه پنهان:"
 msgid "Load Time: "
 msgstr "زمان بارگیری:"
 
-#: ../../public/templates/show_random_albums.inc.php:36
-#: ../../public/templates/show_random_videos.inc.php:34
+#: ../../public/templates/show_random_albums.inc.php:35
+#: ../../public/templates/show_random_videos.inc.php:36
 msgid "Refresh"
 msgstr "بازسازی"
 
@@ -4472,85 +4475,90 @@ msgstr "محدودیت سایز"
 msgid "Enqueue"
 msgstr "به صف کردن"
 
-#: ../../public/templates/show_recently_played.inc.php:42
-#: ../../public/templates/show_recently_played.inc.php:158
-#: ../../public/templates/show_similar_songs.inc.php:59
+#: ../../public/templates/show_recently_played.inc.php:46
+#: ../../public/templates/show_recently_played.inc.php:167
+#: ../../public/templates/show_similar_songs.inc.php:58
 #: ../../public/templates/show_songs.inc.php:71
 #: ../../public/templates/show_songs.inc.php:169
 #: ../../public/templates/show_top_tracks.inc.php:59
-#: ../../src/Gui/Song/SongViewAdapter.php:339
+#: ../../src/Gui/Song/SongViewAdapter.php:352
 #: ../../src/Repository/Model/Search.php:527
-#: ../../src/Repository/Model/Search.php:732
+#: ../../src/Repository/Model/Search.php:736
 msgid "Song Artist"
 msgstr "هنرمند آهنگ"
 
-#: ../../public/templates/show_recently_played.inc.php:48
-#: ../../public/templates/show_recently_played.inc.php:164
+#: ../../public/templates/show_recently_played.inc.php:52
+#: ../../public/templates/show_recently_played.inc.php:173
 msgid "Last Played"
 msgstr "آخرین پخش شده ها"
 
-#: ../../public/templates/show_recently_played.inc.php:50
-#: ../../public/templates/show_recently_played.inc.php:166
+#: ../../public/templates/show_recently_played.inc.php:54
+#: ../../public/templates/show_recently_played.inc.php:175
 msgid "Agent"
 msgstr "عامل"
 
-#: ../../public/templates/show_recently_played.inc.php:75
+#: ../../public/templates/show_recently_played.inc.php:80
 #, php-format
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] "%d ثانیه پیش"
 msgstr[1] "%d ثانیه پیش"
 
-#: ../../public/templates/show_recently_played.inc.php:78
+#: ../../public/templates/show_recently_played.inc.php:83
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d دقیقه پیش"
 msgstr[1] "%d دقیقه پیش"
 
-#: ../../public/templates/show_recently_played.inc.php:81
+#: ../../public/templates/show_recently_played.inc.php:86
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] "%d ساعت پیش"
 msgstr[1] "%d ساعت پیش"
 
-#: ../../public/templates/show_recently_played.inc.php:84
+#: ../../public/templates/show_recently_played.inc.php:89
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d ساعت پیش"
 msgstr[1] "%d روز گذشته"
 
-#: ../../public/templates/show_recently_played.inc.php:87
+#: ../../public/templates/show_recently_played.inc.php:92
 #, php-format
 msgid "%d week ago"
 msgid_plural "%d weeks ago"
 msgstr[0] "%d"
 msgstr[1] "%d هفته گذشته"
 
-#: ../../public/templates/show_recently_played.inc.php:90
+#: ../../public/templates/show_recently_played.inc.php:95
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
 msgstr[0] "%d ماه گذشته"
 msgstr[1] "%d ماه گذشته"
 
-#: ../../public/templates/show_recently_played.inc.php:93
+#: ../../public/templates/show_recently_played.inc.php:98
 #, php-format
 msgid "%d year ago"
 msgid_plural "%d years ago"
 msgstr[0] "%d سال گذشته"
 msgstr[1] "%d سال گذشته"
 
-#: ../../public/templates/show_recently_played.inc.php:96
+#: ../../public/templates/show_recently_played.inc.php:101
 #, php-format
 msgid "%d decade ago"
 msgid_plural "%d decades ago"
 msgstr[0] "%d دهه گذشته"
 msgstr[1] "%d دهه گذشته "
 
-#: ../../public/templates/show_recently_played.inc.php:149
+#: ../../public/templates/show_recently_played.inc.php:148
+#, fuzzy
+msgid "Do you really want to delete this Activity?"
+msgstr "آیا واقعاً می خواهید این برچسب را حذف کنید؟"
+
+#: ../../public/templates/show_recently_played.inc.php:158
 msgid "No recently played items found"
 msgstr "هیچ مورد پخش شده به تازگی پیدا نشد"
 
@@ -4660,7 +4668,7 @@ msgstr "ویرایش لیست پخش هوشمند"
 msgid "Save Changes"
 msgstr "ذخیره‌ تغییرات"
 
-#: ../../public/templates/show_search_options.inc.php:30
+#: ../../public/templates/show_search_options.inc.php:31
 msgid "Options"
 msgstr "گزینه‌ها"
 
@@ -4695,16 +4703,16 @@ msgid "Shared by"
 msgstr "اشتراک گذاشته شده توسط"
 
 #. HINT: Number of times object has been skipped
-#: ../../public/templates/show_similar_songs.inc.php:76
+#: ../../public/templates/show_similar_songs.inc.php:75
 #: ../../public/templates/show_songs.inc.php:102
 #: ../../public/templates/show_songs.inc.php:185
 #: ../../public/templates/show_top_tracks.inc.php:76
-#: ../../src/Gui/Song/SongViewAdapter.php:386
+#: ../../src/Gui/Song/SongViewAdapter.php:399
 #: ../../src/Repository/Model/Search.php:555
 msgid "# Skipped"
 msgstr "# ردشده"
 
-#: ../../public/templates/show_similar_songs.inc.php:127
+#: ../../public/templates/show_similar_songs.inc.php:126
 #: ../../public/templates/show_songs.inc.php:159
 #: ../../public/templates/show_top_tracks.inc.php:127
 msgid "No song found"
@@ -5079,8 +5087,8 @@ msgid "Edit TV Show"
 msgstr "ویرایش نمایش تلویزیونی"
 
 #: ../../public/templates/show_tvshow.inc.php:109
-#: ../../public/templates/show_tvshows.inc.php:55
-#: ../../public/templates/show_tvshows.inc.php:99
+#: ../../public/templates/show_tvshows.inc.php:54
+#: ../../public/templates/show_tvshows.inc.php:98
 #: ../../src/Repository/Model/Browse.php:392
 msgid "Seasons"
 msgstr "سریال ها"
@@ -5094,11 +5102,11 @@ msgstr "ویرایش سریال"
 msgid "Edit Season"
 msgstr "ویرایش سریال"
 
-#: ../../public/templates/show_tvshow_seasons.inc.php:77
+#: ../../public/templates/show_tvshow_seasons.inc.php:76
 msgid "No season found"
 msgstr "سریالی پیدا نشد"
 
-#: ../../public/templates/show_tvshows.inc.php:88
+#: ../../public/templates/show_tvshows.inc.php:87
 msgid "No TV show found"
 msgstr "هیچ نمایش تلویزیونی پیدا نشد"
 
@@ -5134,9 +5142,9 @@ msgstr "کلید اعتبارسنجی استفاده شده صحیح نیست"
 
 #: ../../public/templates/show_user.inc.php:47
 #: ../../public/templates/show_users.inc.php:80
-#: ../../src/Module/Util/Ui.php:1035 ../../src/Repository/Model/Catalog.php:717
-#: ../../src/Repository/Model/Catalog.php:718
-#: ../../src/Repository/Model/Catalog.php:719
+#: ../../src/Module/Util/Ui.php:1035 ../../src/Repository/Model/Catalog.php:729
+#: ../../src/Repository/Model/Catalog.php:730
+#: ../../src/Repository/Model/Catalog.php:731
 #: ../../src/Repository/Model/User.php:1038
 msgid "Never"
 msgstr "هرگز"
@@ -5252,13 +5260,13 @@ msgid "Subtitle"
 msgstr "زیرنویس"
 
 #: ../../public/templates/show_video.inc.php:130
-#: ../../public/templates/show_video_row.inc.php:133
+#: ../../public/templates/show_video_row.inc.php:132
 msgid "Video Edit"
 msgstr "ویرایش های ویدیو"
 
 #: ../../public/templates/show_video.inc.php:150
-#: ../../public/templates/show_videos.inc.php:57
-#: ../../public/templates/show_videos.inc.php:102
+#: ../../public/templates/show_videos.inc.php:56
+#: ../../public/templates/show_videos.inc.php:101
 msgid "Resolution"
 msgstr "وضوح"
 
@@ -5279,21 +5287,21 @@ msgid "Frame Rate"
 msgstr "الگوی نرخ"
 
 #: ../../public/templates/show_video.inc.php:160
-#: ../../src/Gui/Song/SongViewAdapter.php:379
+#: ../../src/Gui/Song/SongViewAdapter.php:392
 msgid "Last Updated"
 msgstr "آخرین بروزرسانی"
 
 #: ../../public/templates/show_video.inc.php:162
-#: ../../src/Gui/Song/SongViewAdapter.php:381
+#: ../../src/Gui/Song/SongViewAdapter.php:394
 #: ../../src/Repository/Model/Search.php:607
 msgid "Added"
 msgstr "اضافه شد"
 
-#: ../../public/templates/show_video_row.inc.php:116
+#: ../../public/templates/show_video_row.inc.php:115
 msgid "Video Information"
 msgstr "اطلاعات ویدیو"
 
-#: ../../public/templates/show_videos.inc.php:87
+#: ../../public/templates/show_videos.inc.php:86
 msgid "No video found"
 msgstr "ویدیویی پیدا نشد"
 
@@ -5629,52 +5637,52 @@ msgstr "روشن"
 msgid "Off"
 msgstr "خاموش"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:278
+#: ../../src/Gui/Song/SongViewAdapter.php:291
 msgid "Song Edit"
 msgstr "ویرایش های آهنگ"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:347
-#: ../../src/Gui/Song/SongViewAdapter.php:348
-#: ../../src/Gui/Song/SongViewAdapter.php:349
-#: ../../src/Gui/Song/SongViewAdapter.php:351
-#: ../../src/Gui/Song/SongViewAdapter.php:353
+#: ../../src/Gui/Song/SongViewAdapter.php:360
+#: ../../src/Gui/Song/SongViewAdapter.php:361
+#: ../../src/Gui/Song/SongViewAdapter.php:362
+#: ../../src/Gui/Song/SongViewAdapter.php:364
+#: ../../src/Gui/Song/SongViewAdapter.php:366
 msgid "Links"
 msgstr "پیوندها"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:361
+#: ../../src/Gui/Song/SongViewAdapter.php:374
 msgid "Song Language"
 msgstr "زبان ترانه"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:366
+#: ../../src/Gui/Song/SongViewAdapter.php:379
 msgid "Song MBID"
 msgstr "MBID آهنگ و ترانه"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:367
+#: ../../src/Gui/Song/SongViewAdapter.php:380
 msgid "Album MBID"
 msgstr "MBID آلبوم"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:368
+#: ../../src/Gui/Song/SongViewAdapter.php:381
 msgid "Artist MBID"
 msgstr "MBID هنرمند"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:370
+#: ../../src/Gui/Song/SongViewAdapter.php:383
 msgid "ReplayGain Track Gain"
 msgstr "افزایش بازپخش ترک های افزوده"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:373
+#: ../../src/Gui/Song/SongViewAdapter.php:386
 msgid "ReplayGain Album Gain"
 msgstr "افزایش بازپخش آلبوم افزوده"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:390
+#: ../../src/Gui/Song/SongViewAdapter.php:403
 #: ../../src/Repository/Model/Search.php:534
 msgid "Lyrics"
 msgstr "متن ترانه"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:394
+#: ../../src/Gui/Song/SongViewAdapter.php:407
 msgid "Licensing"
 msgstr "صدور مجوز"
 
-#: ../../src/Gui/Song/SongViewAdapter.php:429
+#: ../../src/Gui/Song/SongViewAdapter.php:442
 msgid "Song Information"
 msgstr "اطلاعات آهنگ"
 
@@ -5725,7 +5733,7 @@ msgstr ""
 
 #: ../../src/Module/Api/ApiHandler.php:156
 #: ../../src/Module/Api/ApiHandler.php:165
-#: ../../src/Module/Api/SubsonicApiApplication.php:73
+#: ../../src/Module/Api/SubsonicApiApplication.php:74
 msgid "Access Control not Enabled"
 msgstr "کنترل دسترسی فعال نیست"
 
@@ -6713,11 +6721,8 @@ msgid "Overwrite Artist names that match an mbid"
 msgstr ""
 
 #: ../../src/Module/Application/Artist/UpdateFromMusicBrainzAction.php:77
-#, fuzzy
 msgid "Artist information updated using MusicBrainz"
 msgstr ""
-"با استفاده از افزونه musicbrainz اطلاعات برچسب را به روز کنید و جزئیات را "
-"واکشی نمائید"
 
 #: ../../src/Module/Application/Art/SelectArtAction.php:89
 msgid "Art file failed size check"
@@ -6984,7 +6989,7 @@ msgid "Failed to create user"
 msgstr "ناموفق در ایجاد کاربر"
 
 #: ../../src/Module/Application/SearchData/ShowAction.php:70
-#: ../../src/Repository/Model/Wanted.php:358
+#: ../../src/Repository/Model/Wanted.php:360
 msgid "Remove"
 msgstr "حذف"
 
@@ -6994,7 +6999,7 @@ msgid "Your search has been saved as a Playlist with the name %s"
 msgstr "جستجوی شما به عنوان لیست پخش با نام %s ذخیره شده است "
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:3176
+#: ../../src/Repository/Model/Catalog.php:3213
 msgid "Failed to create playlist"
 msgstr "ناموفق در ایجاد لیست پخش"
 
@@ -7228,7 +7233,7 @@ msgid "API Error: cannot connect to Dropbox."
 msgstr "خطای رابط کاربری برنامه: نمی توان به دروپ باکس متصل شد."
 
 #: ../../src/Module/Catalog/Catalog_local.php:210
-#: ../../src/Module/Catalog/Catalog_local.php:1058
+#: ../../src/Module/Catalog/Catalog_local.php:1065
 msgid "Path was not specified"
 msgstr "مسیر مشخص نشده بود"
 
@@ -7293,17 +7298,17 @@ msgid "All files would be removed. Doing nothing"
 msgstr "هیچ کاری نمی کند، همه فایلها حذف خواهند شد."
 
 #. HINT: filename (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:779
+#: ../../src/Module/Catalog/Catalog_local.php:782
 #, php-format
 msgid "File was not found or is 0 Bytes: %s"
 msgstr "%s : فایل پیدا نشد یا 0 بایت است"
 
-#: ../../src/Module/Catalog/Catalog_local.php:1065
+#: ../../src/Module/Catalog/Catalog_local.php:1072
 msgid "Specified path is inside an existing catalog"
 msgstr "مسیر مشخص شده در داخل مجموعه و کاتالوگ موجود است"
 
 #. HINT: directory (file path)
-#: ../../src/Module/Catalog/Catalog_local.php:1074
+#: ../../src/Module/Catalog/Catalog_local.php:1081
 #, php-format
 msgid "The folder couldn't be read. Does it exist? %s"
 msgstr "پوشه قابل خواندن نیست. آیا %s وجود دارد؟"
@@ -7357,7 +7362,7 @@ msgstr "%s - قادر به درج آهنگ نیست"
 #: ../../src/Module/Catalog/Catalog_remote.php:310
 #: ../../src/Module/Catalog/Catalog_soundcloud.php:340
 #: ../../src/Module/Catalog/Catalog_subsonic.php:299
-#: ../../src/Repository/Model/Catalog.php:1975
+#: ../../src/Repository/Model/Catalog.php:1987
 #: ../../src/Repository/Model/Search.php:608
 msgid "Updated"
 msgstr "به روز شد"
@@ -7992,8 +7997,10 @@ msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr "در حالت نوشتن اجرا می شود. مطمئن شوید ابتدا آزمایش کرده اید!"
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:37
-msgid "Perform catalog actions for all files of a catalog"
-msgstr "انجام اقدامات مجموعه وکاتالوگ برای همه پرونده های یک کاتالوگ"
+msgid ""
+"Perform catalog actions for all files of a catalog. If no options are given, "
+"the defaults actions -ceag are assumed"
+msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:42
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:47
@@ -8134,16 +8141,16 @@ msgstr "نمونه فعال VLC"
 msgid "XBMC Active Instance"
 msgstr "نمونه فعال XBMC"
 
-#: ../../src/Module/Playback/Stream_Playlist.php:519
+#: ../../src/Module/Playback/Stream_Playlist.php:533
 msgid "Ampache ASX Playlist"
 msgstr "لیست پخش ASX آمپاچی"
 
-#: ../../src/Module/Playback/Stream_Playlist.php:728
+#: ../../src/Module/Playback/Stream_Playlist.php:742
 msgid "Vote added"
 msgstr "رأی اضافه شد"
 
 #: ../../src/Module/Playlist/PlaylistExporter.php:46
-#: ../../src/Module/Song/SongSorter.php:236
+#: ../../src/Module/Song/SongSorter.php:258
 #, php-format
 msgid "There was a problem creating this directory: %s"
 msgstr "مشکلی در ایجاد این فهرست : %s وجود داشت"
@@ -8168,62 +8175,65 @@ msgstr "اشتراک گذاری پیشرفته"
 msgid "Temporary direct link"
 msgstr "پیوند مستقیم موقتی"
 
-#: ../../src/Module/Song/SongSorter.php:62
+#: ../../src/Module/Song/SongSorter.php:64
 #, php-format
 msgid "Starting Catalog: %s"
 msgstr "شروع مجموعه وکاتالوگ: %s"
 
-#: ../../src/Module/Song/SongSorter.php:84
+#: ../../src/Module/Song/SongSorter.php:86
 msgid "Examine File..."
 msgstr "بررسی فایل..."
 
-#. HINT: filename (File path)
-#: ../../src/Module/Song/SongSorter.php:86
+#: ../../src/Module/Song/SongSorter.php:91
 #, php-format
 msgid "Source: %s"
 msgstr "منبع : %s"
 
-#. HINT: filename (File path)
-#: ../../src/Module/Song/SongSorter.php:88
+#: ../../src/Module/Song/SongSorter.php:96
 #, php-format
 msgid "Destin: %s"
 msgstr "مقصد : %s"
 
-#. HINT: $sort_pattern after replacing %x values
-#: ../../src/Module/Song/SongSorter.php:164
+#: ../../src/Module/Song/SongSorter.php:106
+#: ../../src/Repository/Model/Catalog.php:2938
+#, php-format
+msgid "%d file updated."
+msgid_plural "%d files updated."
+msgstr[0] "%d فایل ها به روز شدند."
+msgstr[1] "%d فایل ها به روز شدند."
+
+#: ../../src/Module/Song/SongSorter.php:181
 #, php-format
 msgid "The sort_pattern has left over variables. %s"
 msgstr "الگوی مرتب سازی متغیرهایی را باقی گذاشته است. %s"
 
-#. HINT: Directory (File path)
-#: ../../src/Module/Song/SongSorter.php:229
+#: ../../src/Module/Song/SongSorter.php:249
 #, php-format
 msgid "Create directory \"%s\""
 msgstr "ایجاد دایرکتوری \"%s\""
 
-#: ../../src/Module/Song/SongSorter.php:250
-#, php-format
-msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr "درحال کپی کردن \"%1$s\" به \"%2$s\""
-
-#. HINT: filename (File path)
-#: ../../src/Module/Song/SongSorter.php:261
+#: ../../src/Module/Song/SongSorter.php:282
 #, php-format
 msgid "Don't overwrite an existing file: \"%s\""
 msgstr "فایل موجود: \"%s\" را بازنویسی نکنید"
 
-#: ../../src/Module/Song/SongSorter.php:286
+#: ../../src/Module/Song/SongSorter.php:290
+#, php-format
+msgid "Copying \"%1$s\" to \"%2$s\""
+msgstr "درحال کپی کردن \"%1$s\" به \"%2$s\""
+
+#: ../../src/Module/Song/SongSorter.php:298
 #, php-format
 msgid "There was an error trying to copy file to \"%s\""
 msgstr "هنگام تلاش برای کپی کردن فایل: \"%s\" خطایی رخ داد"
 
-#: ../../src/Module/Song/SongSorter.php:300
+#: ../../src/Module/Song/SongSorter.php:326
 #: ../../src/Module/Util/FileSystem/FileNameConverter.php:229
 #, php-format
 msgid "Size comparison failed. Not deleting \"%s\""
 msgstr "مقایسه اندازه ناموفق بود. \"%s\" حذف نمیشود"
 
-#: ../../src/Module/Song/SongSorter.php:312
+#: ../../src/Module/Song/SongSorter.php:338
 #: ../../src/Module/Util/FileSystem/FileNameConverter.php:240
 #, php-format
 msgid "There was an error trying to delete \"%s\""
@@ -8440,9 +8450,8 @@ msgid "You can log in at the following address %s"
 msgstr "می توانید از آدرس زیر وارد شوید : %s"
 
 #: ../../src/Module/Util/AmpacheRss.php:287
-#, fuzzy
 msgid "Play date"
-msgstr "پخش قبلی"
+msgstr ""
 
 #: ../../src/Module/Util/AmpacheRss.php:383
 #: ../../src/Plugin/AmpacheFlattr.php:101
@@ -9082,11 +9091,11 @@ msgstr "YOURLS استفاده از IDN"
 msgid "YOURLS API key"
 msgstr "کلید رابط کاربری برنامه YOURLS"
 
-#: ../../src/Repository/Model/Album.php:643
+#: ../../src/Repository/Model/Album.php:645
 msgid "Album MusicBrainzID"
 msgstr "شناسه آلبوم MusicBrainz"
 
-#: ../../src/Repository/Model/Album.php:648
+#: ../../src/Repository/Model/Album.php:650
 msgid "Release Group MusicBrainzID"
 msgstr "شناسه گروه انتشار MusicBrainz"
 
@@ -9143,53 +9152,46 @@ msgstr "مجوزهای رسانه"
 msgid "Private Messages"
 msgstr "پیام های خصوصی"
 
-#: ../../src/Repository/Model/Catalog.php:838
+#: ../../src/Repository/Model/Catalog.php:850
 msgid "day"
 msgid_plural "days"
 msgstr[0] "روز"
 msgstr[1] "روز"
 
-#: ../../src/Repository/Model/Catalog.php:840
+#: ../../src/Repository/Model/Catalog.php:852
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "ساعت"
 msgstr[1] "ساعت"
 
-#: ../../src/Repository/Model/Catalog.php:888
+#: ../../src/Repository/Model/Catalog.php:900
 msgid "Failed to create the catalog, check the debug logs"
 msgstr "ناموفق در ایجاد مجموعه و کاتالوگ، گزارش اشکال زدایی را بررسی کنید"
 
-#: ../../src/Repository/Model/Catalog.php:1979
+#: ../../src/Repository/Model/Catalog.php:1991
 msgid "No Update Needed"
 msgstr "به ‌روز رسانی نیاز نیست"
 
-#: ../../src/Repository/Model/Catalog.php:2874
+#: ../../src/Repository/Model/Catalog.php:2911
 msgid "Catalog Cleaned"
 msgstr "مجموعه وکاتالوگ پاکسازی شد"
 
-#: ../../src/Repository/Model/Catalog.php:2875
+#: ../../src/Repository/Model/Catalog.php:2912
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d فایل حذف شدند."
 msgstr[1] "%d فایل ها حذف شدند."
 
-#: ../../src/Repository/Model/Catalog.php:2900
+#: ../../src/Repository/Model/Catalog.php:2937
 msgid "Catalog Verified"
 msgstr "مجموعه وکاتالوگ تأیید شد"
 
-#: ../../src/Repository/Model/Catalog.php:2901
-#, php-format
-msgid "%d file updated."
-msgid_plural "%d files updated."
-msgstr[0] "%d فایل ها به روز شدند."
-msgstr[1] "%d فایل ها به روز شدند."
-
-#: ../../src/Repository/Model/Catalog.php:3194
+#: ../../src/Repository/Model/Catalog.php:3231
 msgid "No valid songs found in playlist file"
 msgstr "هیچ آهنگ معتبری در فایل لیست پخش پیدا نشد"
 
-#: ../../src/Repository/Model/Catalog.php:3694
+#: ../../src/Repository/Model/Catalog.php:3731
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -9237,14 +9239,12 @@ msgid "Catalog is invalid"
 msgstr "مجموعه وکاتالوگ معتبر نیست"
 
 #: ../../src/Repository/Model/Plugin.php:332
-#, fuzzy
 msgid "You have Plugins that need an update!"
-msgstr "افزونه ارتقاء یافت"
+msgstr ""
 
 #: ../../src/Repository/Model/Plugin.php:334
-#, fuzzy
 msgid "Update Plugins automatically"
-msgstr "فایل پیکربندی فعلی خود را به طور خودکار به روز کنید"
+msgstr ""
 
 #: ../../src/Repository/Model/Podcast.php:347
 msgid "Feed URL is invalid"
@@ -9597,10 +9597,8 @@ msgid "Rename uploaded file according to catalog pattern"
 msgstr "تغییر نام فایل بارگذاری شده با توجه به الگوی مجموعه وکاتالوگ"
 
 #: ../../src/Repository/Model/Preference.php:805
-#, fuzzy
 msgid "Check library item at import time and disable duplicates"
 msgstr ""
-"در زمان وارد کردن آیتم های کتابخانه را بررسی کنید و آیتم تکراری وارد نکنید"
 
 #: ../../src/Repository/Model/Preference.php:806
 msgid "Show filter box on browse"
@@ -9873,36 +9871,36 @@ msgid "Song Data"
 msgstr ""
 
 #: ../../src/Repository/Model/Search.php:531
-#: ../../src/Repository/Model/Search.php:665
-#: ../../src/Repository/Model/Search.php:735
+#: ../../src/Repository/Model/Search.php:668
+#: ../../src/Repository/Model/Search.php:740
 msgid "Length (in minutes)"
 msgstr "طول (در دقیقه)"
 
 #: ../../src/Repository/Model/Search.php:536
-#: ../../src/Repository/Model/Search.php:669
-#: ../../src/Repository/Model/Search.php:740
+#: ../../src/Repository/Model/Search.php:672
+#: ../../src/Repository/Model/Search.php:745
 msgid "Ratings"
 msgstr ""
 
 #: ../../src/Repository/Model/Search.php:538
-#: ../../src/Repository/Model/Search.php:671
-#: ../../src/Repository/Model/Search.php:742
+#: ../../src/Repository/Model/Search.php:674
+#: ../../src/Repository/Model/Search.php:747
 msgid "My Rating"
 msgstr "رتبه بندی من"
 
 #: ../../src/Repository/Model/Search.php:539
-#: ../../src/Repository/Model/Search.php:672
-#: ../../src/Repository/Model/Search.php:743
+#: ../../src/Repository/Model/Search.php:675
+#: ../../src/Repository/Model/Search.php:748
 msgid "Rating (Average)"
 msgstr "رتبه بندی (میانگین)"
 
 #: ../../src/Repository/Model/Search.php:540
-#: ../../src/Repository/Model/Search.php:674
+#: ../../src/Repository/Model/Search.php:677
 msgid "My Rating (Album)"
 msgstr "رتبه بندی من (آلبوم)"
 
 #: ../../src/Repository/Model/Search.php:541
-#: ../../src/Repository/Model/Search.php:745
+#: ../../src/Repository/Model/Search.php:750
 msgid "My Rating (Artist)"
 msgstr "رتبه بندی من (هنرمند)"
 
@@ -9915,8 +9913,8 @@ msgid "Favorites (Artist)"
 msgstr "موردعلاقه ها (هنرمند)"
 
 #: ../../src/Repository/Model/Search.php:546
-#: ../../src/Repository/Model/Search.php:677
-#: ../../src/Repository/Model/Search.php:748
+#: ../../src/Repository/Model/Search.php:680
+#: ../../src/Repository/Model/Search.php:753
 msgid "Another User"
 msgstr "کاربر دیگر"
 
@@ -9929,8 +9927,8 @@ msgid "Another User (Artist)"
 msgstr "کاربر دیگر (هنرمند)"
 
 #: ../../src/Repository/Model/Search.php:551
-#: ../../src/Repository/Model/Search.php:680
-#: ../../src/Repository/Model/Search.php:751
+#: ../../src/Repository/Model/Search.php:683
+#: ../../src/Repository/Model/Search.php:756
 msgid "Play History"
 msgstr ""
 
@@ -9945,26 +9943,26 @@ msgid "Played/Skipped ratio"
 msgstr "نسبت پخش شده / ردکرده"
 
 #: ../../src/Repository/Model/Search.php:560
-#: ../../src/Repository/Model/Search.php:683
-#: ../../src/Repository/Model/Search.php:754
+#: ../../src/Repository/Model/Search.php:686
+#: ../../src/Repository/Model/Search.php:759
 msgid "My Last Play"
 msgstr "آخرین پخش من"
 
 #: ../../src/Repository/Model/Search.php:561
-#: ../../src/Repository/Model/Search.php:684
-#: ../../src/Repository/Model/Search.php:755
+#: ../../src/Repository/Model/Search.php:687
+#: ../../src/Repository/Model/Search.php:760
 msgid "My Last Skip"
 msgstr "آخرین ردشده من"
 
 #: ../../src/Repository/Model/Search.php:562
-#: ../../src/Repository/Model/Search.php:685
-#: ../../src/Repository/Model/Search.php:756
+#: ../../src/Repository/Model/Search.php:688
+#: ../../src/Repository/Model/Search.php:761
 msgid "My Last Play or Skip"
 msgstr "آخرین پخش یا ردشده من"
 
 #: ../../src/Repository/Model/Search.php:564
-#: ../../src/Repository/Model/Search.php:687
-#: ../../src/Repository/Model/Search.php:758
+#: ../../src/Repository/Model/Search.php:690
+#: ../../src/Repository/Model/Search.php:763
 msgid "Played by Me"
 msgstr "پخش شده توسط من"
 
@@ -9973,13 +9971,13 @@ msgid "Played by Me (Album)"
 msgstr "پخش شده توسط من (آلبوم)"
 
 #: ../../src/Repository/Model/Search.php:566
-#: ../../src/Repository/Model/Search.php:759
+#: ../../src/Repository/Model/Search.php:764
 msgid "Played by Me (Artist)"
 msgstr "پخش شده توسط من (هنرمند)"
 
 #: ../../src/Repository/Model/Search.php:567
-#: ../../src/Repository/Model/Search.php:688
-#: ../../src/Repository/Model/Search.php:760
+#: ../../src/Repository/Model/Search.php:691
+#: ../../src/Repository/Model/Search.php:765
 msgid "Recently played"
 msgstr "آخرین پخش شده"
 
@@ -9992,8 +9990,8 @@ msgid "Artist Genre"
 msgstr "ژانر هنرمند"
 
 #: ../../src/Repository/Model/Search.php:573
-#: ../../src/Repository/Model/Search.php:692
-#: ../../src/Repository/Model/Search.php:764
+#: ../../src/Repository/Model/Search.php:695
+#: ../../src/Repository/Model/Search.php:769
 msgid "No Genre"
 msgstr ""
 
@@ -10002,13 +10000,13 @@ msgid "Smart Playlist"
 msgstr "لیست پخش هوشمند"
 
 #: ../../src/Repository/Model/Search.php:586
-#: ../../src/Repository/Model/Search.php:701
-#: ../../src/Repository/Model/Search.php:773
+#: ../../src/Repository/Model/Search.php:704
+#: ../../src/Repository/Model/Search.php:778
 msgid "File Data"
 msgstr ""
 
 #: ../../src/Repository/Model/Search.php:617
-#: ../../src/Repository/Model/Search.php:779
+#: ../../src/Repository/Model/Search.php:785
 msgid "Recently added"
 msgstr "آخرین افزوده شده"
 
@@ -10017,69 +10015,76 @@ msgid "Recently updated"
 msgstr "آخرین به روز شده"
 
 #: ../../src/Repository/Model/Search.php:619
-#: ../../src/Repository/Model/Search.php:705
-#: ../../src/Repository/Model/Search.php:777
+#: ../../src/Repository/Model/Search.php:709
+#: ../../src/Repository/Model/Search.php:783
 msgid "Possible Duplicate"
 msgstr "امکان تکرار"
 
-#: ../../src/Repository/Model/Search.php:630
-#: ../../src/Repository/Model/Search.php:717
-#: ../../src/Repository/Model/Search.php:790
+#: ../../src/Repository/Model/Search.php:620
+#, fuzzy
+msgid "Orphaned Album"
+msgstr "آلبوم های درخواستی"
+
+#: ../../src/Repository/Model/Search.php:631
+#: ../../src/Repository/Model/Search.php:721
+#: ../../src/Repository/Model/Search.php:796
 msgid "MusicBrainz"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:632
+#: ../../src/Repository/Model/Search.php:633
 msgid "MusicBrainz ID (Album)"
 msgstr "شناسه MusicBrainz (آلبوم)"
 
-#: ../../src/Repository/Model/Search.php:633
+#: ../../src/Repository/Model/Search.php:634
 msgid "MusicBrainz ID (Artist)"
 msgstr "شناسه MusicBrainz (هنرمند)"
 
-#: ../../src/Repository/Model/Search.php:635
+#: ../../src/Repository/Model/Search.php:636
 msgid "Metadata"
 msgstr "متادیتا"
 
-#: ../../src/Repository/Model/Search.php:661
+#: ../../src/Repository/Model/Search.php:662
 msgid "Artist Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:666
+#: ../../src/Repository/Model/Search.php:664
 #, fuzzy
+msgid "Album Title"
+msgstr "ویرایش آلبوم"
+
+#: ../../src/Repository/Model/Search.php:669
 msgid "Album Count"
-msgstr "هیچ آلبومی یافت نشد"
+msgstr ""
 
-#: ../../src/Repository/Model/Search.php:667
-#: ../../src/Repository/Model/Search.php:738
-#, fuzzy
+#: ../../src/Repository/Model/Search.php:670
+#: ../../src/Repository/Model/Search.php:743
 msgid "Song Count"
-msgstr "ویرایش های آهنگ"
+msgstr ""
 
-#: ../../src/Repository/Model/Search.php:673
-#: ../../src/Repository/Model/Search.php:744
-#, fuzzy
+#: ../../src/Repository/Model/Search.php:676
+#: ../../src/Repository/Model/Search.php:749
 msgid "My Rating (Song)"
-msgstr "رتبه بندی من (آلبوم)"
+msgstr ""
 
-#: ../../src/Repository/Model/Search.php:703
-#: ../../src/Repository/Model/Search.php:775
+#: ../../src/Repository/Model/Search.php:707
+#: ../../src/Repository/Model/Search.php:781
 msgid "Image Width"
 msgstr "عرض تصویر"
 
-#: ../../src/Repository/Model/Search.php:704
-#: ../../src/Repository/Model/Search.php:776
+#: ../../src/Repository/Model/Search.php:708
+#: ../../src/Repository/Model/Search.php:782
 msgid "Image Height"
 msgstr "ارتفاع تصویر"
 
-#: ../../src/Repository/Model/Search.php:706
+#: ../../src/Repository/Model/Search.php:710
 msgid "Possible Duplicate Albums"
 msgstr "امکان تکرار آلبوم ها"
 
-#: ../../src/Repository/Model/Search.php:729
+#: ../../src/Repository/Model/Search.php:733
 msgid "Album Data"
 msgstr ""
 
-#: ../../src/Repository/Model/Search.php:778
+#: ../../src/Repository/Model/Search.php:784
 msgid "Duplicate MusicBrainz Release Group"
 msgstr ""
 
@@ -10101,7 +10106,7 @@ msgstr "شما به تازگی پیام جدیدی از %1$s بر محتوای %
 msgid "by"
 msgstr "توسط"
 
-#: ../../src/Repository/Model/Song.php:1865
+#: ../../src/Repository/Model/Song.php:1866
 msgid "Track MusicBrainzID"
 msgstr "شناسه ترک MusicBrainz"
 
@@ -10853,68 +10858,130 @@ msgstr "Zulu"
 msgid "Unknown Artist"
 msgstr "هنرمند ناشناخته"
 
-#: ../../src/Repository/Model/Wanted.php:347
+#: ../../src/Repository/Model/Wanted.php:349
 msgid "Accept"
 msgstr "پذیرفتن"
 
-#: ../../src/Repository/Model/Wanted.php:362
+#: ../../src/Repository/Model/Wanted.php:364
 msgid "Add to wanted list"
 msgstr "افزودن به لیست درخواستی"
 
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:50
-msgid "You do not have permission to contribute idea"
-msgstr "شما اجازه مشارکت ایده را ندارید"
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:55
-msgid "You do not have permission to assign user to idea"
-msgstr "شما اجازه ندارید کاربری را به ایده اختصاص دهید"
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:59
-msgid "Assigned to user does not have access to issue project."
-msgstr "اختصاص داده شده به کاربر دسترسی به موضوع پروژه را ندارد."
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:71
-msgid "Contributed by user does not have access to issue project."
-msgstr "کاربر مشارکت داده شده دسترسی به موضوع پروژه را ندارد."
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:80
-msgid "No defined statuses in project"
-msgstr "بدون حالات تعریف شده در پروژه"
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:86
-#, php-format
-msgid "Invalid status: %s"
-msgstr "وضعیّت نامعتبر : %s"
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:101
-msgid "Title cannot be empty"
-msgstr "عنوان نمیتواند خالی باشد"
-
-#: ../../vendor/squizlabs/php_codesniffer/src/Standards/MySource/Tests/PHP/AjaxNullComparisonUnitTest.inc:107
-msgid "Description cannot be empty"
-msgstr "توضیحات نمیتواند خالی باشد"
-
-#: ../../resources/untranslated-strings.txt:3
-#, fuzzy
+#: untranslated-strings.txt:3
 msgid "Connected Users"
-msgstr "کاربران غیر فعال"
+msgstr ""
 
-#: ../../resources/untranslated-strings.txt:7
-#, fuzzy
+#: untranslated-strings.txt:7
 msgid "Catalog Size"
-msgstr "نام فهرست"
+msgstr ""
 
-#: ../../resources/untranslated-strings.txt:11
-#, fuzzy
+#: untranslated-strings.txt:11
 msgid "Catalog Time"
-msgstr "نوع فهرست"
+msgstr ""
 
-#: ../../resources/untranslated-strings.txt:15
-#, fuzzy
+#: untranslated-strings.txt:15
 msgid "Total Users"
-msgstr "ایمیل به کاربران"
+msgstr ""
 
-#: ../../resources/untranslated-strings.txt:19
-#, fuzzy
+#: untranslated-strings.txt:19
 msgid "Update Now!"
-msgstr "به‌ روز رسانی"
+msgstr ""
+
+#: untranslated-strings.txt:22
+msgid "httpQ Active Instance"
+msgstr ""
+
+#: untranslated-strings.txt:26
+msgid "Show current song in Web Player page title"
+msgstr ""
+
+#: untranslated-strings.txt:30
+msgid "feature"
+msgstr ""
+
+#: untranslated-strings.txt:34
+msgid "query"
+msgstr ""
+
+#: untranslated-strings.txt:38
+msgid "transcoding"
+msgstr ""
+
+#: untranslated-strings.txt:42
+msgid "custom"
+msgstr ""
+
+#: untranslated-strings.txt:46
+msgid "theme"
+msgstr ""
+
+#: untranslated-strings.txt:50
+msgid "localplay"
+msgstr ""
+
+#: untranslated-strings.txt:54
+msgid "player"
+msgstr ""
+
+#: untranslated-strings.txt:58
+msgid "mpd"
+msgstr ""
+
+#: untranslated-strings.txt:62
+msgid "httpq"
+msgstr ""
+
+#: untranslated-strings.txt:66
+msgid "lastfm"
+msgstr ""
+
+#: untranslated-strings.txt:70
+msgid "home"
+msgstr ""
+
+#: untranslated-strings.txt:74
+msgid "library"
+msgstr ""
+
+#: untranslated-strings.txt:78
+msgid "browse"
+msgstr ""
+
+#: untranslated-strings.txt:82
+msgid "backend"
+msgstr ""
+
+#: untranslated-strings.txt:86
+msgid "privacy"
+msgstr ""
+
+#: untranslated-strings.txt:90
+msgid "update"
+msgstr ""
+
+#: untranslated-strings.txt:94
+msgid "share"
+msgstr ""
+
+#: untranslated-strings.txt:98
+msgid "upload"
+msgstr ""
+
+#: untranslated-strings.txt:102
+msgid "notification"
+msgstr ""
+
+#: untranslated-strings.txt:106
+msgid "metadata"
+msgstr ""
+
+#: untranslated-strings.txt:110
+msgid "podcast"
+msgstr ""
+
+#: untranslated-strings.txt:114
+msgid "catalog"
+msgstr ""
+
+#: untranslated-strings.txt:118
+msgid "subsonic"
+msgstr ""

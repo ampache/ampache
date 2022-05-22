@@ -10,6 +10,10 @@ use Ampache\Module\Util\Ui;
 
 // TODO remove me
 global $dic;
+
+/** @var bool $isVideo  */
+/** @var bool $isRadio */
+
 $environment   = $dic->get(EnvironmentInterface::class);
 $web_path      = AmpConfig::get('web_path');
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
@@ -90,15 +94,13 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                 if (AmpConfig::get('webplayer_aurora')) {
                     $solutions[] = 'aurora';
                 }
-                echo implode(',', $solutions);
-
-                $supplied = WebPlayer::get_supplied_types($playlist); ?>",
+                echo implode(',', $solutions); ?>",
             nativeSupport:true,
             oggSupport: false,
-            supplied: "<?php echo implode(", ", $supplied); ?>",
+            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8",
             volume: jp_volume,
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
-            auroraFormats: 'flac, m4a, mp3, oga, wav',
+            auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",
             <?php } ?>
             <?php if (!$is_share) { ?>
             size: {

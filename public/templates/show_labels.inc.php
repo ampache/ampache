@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

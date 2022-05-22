@@ -28,7 +28,7 @@ ST=0 # Global exit status
 for file in $(git diff-index --name-only --diff-filter=AMCRT $against); do
 	echo -n "testing $file..."
 
-	FIXEROUT=$($PHPCSFIXER fix --config-file=.php_cs --dry-run --diff -v "$file" | grep -P '\d\)' | sed -r "s~^.*?${file} ~~"; exit ${PIPESTATUS[0]})
+	FIXEROUT=$($PHPCSFIXER fix --config-file=.php-cs-fixer.php --dry-run --diff -v "$file" | grep -P '\d\)' | sed -r "s~^.*?${file} ~~"; exit ${PIPESTATUS[0]})
 	FIXERST=$?
 
 	PARSEROUT=$(php --syntax-check "$file" 2>&1 | egrep -v 'No syntax errors|Errors parsing'; exit ${PIPESTATUS[0]})
@@ -46,7 +46,7 @@ for file in $(git diff-index --name-only --diff-filter=AMCRT $against); do
 done
 
 if [ $ST != 0 ]; then
-	echo "Use 'php-cs-fixer fix --config-file=.php_cs -v <file>' to correct"
+	echo "Use 'php-cs-fixer fix --config-file=.php-cs-fixer.php -v <file>' to correct"
 fi
 
 exit $ST

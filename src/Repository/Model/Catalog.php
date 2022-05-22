@@ -215,12 +215,12 @@ abstract class Catalog extends database_object
     abstract public function get_create_help();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function is_installed();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function install();
 
@@ -241,13 +241,18 @@ abstract class Catalog extends database_object
     abstract public function clean_catalog_proc();
 
     /**
+     * @return array
+     */
+    abstract public function check_catalog_proc();
+
+    /**
      * @param string $new_path
      * @return boolean
      */
     abstract public function move_catalog_proc($new_path);
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function cache_catalog_proc();
 

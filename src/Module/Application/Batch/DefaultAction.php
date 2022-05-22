@@ -131,7 +131,9 @@ final class DefaultAction implements ApplicationActionInterface
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
                 case 'album':
-                    $albumList  = explode(',', $_REQUEST['id']);
+                    $albumList  = (is_array($_REQUEST['id']))
+                        ? $_REQUEST['id']
+                        : explode(',', $_REQUEST['id']);
                     $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
                     $class_name = ObjectTypeToClassNameMapper::map($object_type);
                     $libitem    = new $class_name((int)$albumList[0]);
