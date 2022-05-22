@@ -434,8 +434,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
         string $name,
         int $artistId
     ): array {
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
-        $params = array($name, $name, $artistId);
+        $sql        = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
+        $params     = array($name, $name, $artistId);
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -453,7 +453,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getByMbidGroup(
         string $mbid
     ): array {
-        $sql = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
+        $sql        = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
         $db_results = Dba::read($sql, array($mbid));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {

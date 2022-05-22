@@ -89,6 +89,7 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
+
         return $results;
     }
 
@@ -143,6 +144,7 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
+
         return $results;
     }
 

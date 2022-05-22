@@ -4489,5 +4489,5 @@ class Update
         }
 
         return $retval;
-     }
+    }
 } // end update.class
