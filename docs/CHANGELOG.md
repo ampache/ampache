@@ -1,28 +1,59 @@
 # CHANGELOG
 
-## Ampache developo
+## Ampache 5.4.0-release
+
+### Fixed
+
+* web_player being unable to play different formats in some cases
+
+## API develop
+
+**NO CHANGE**
+
+## Ampache 5.4.0-release
 
 ### Added
 
+* Translation Updates May 2022
 * Search
   * Add `file` to album and artist search
+* CLI
+  * New argument for run:updateCatalog `-f|--find` Find missing files and print a list of filenames
+  * New argument for cleanup:sortSongs `-f|--files` Rename files and keep them in the current folder
+  * New argument for cleanup:sortSongs `-l|--limit` Limit how many moves to allow before stopping
+  * New argument for cleanup:sortSongs `[catalogName]` Name of Catalog (optional)
+* Database 540002:
+  * Index `title` with `enabled` on `song` table to speed up searching
+  * Index `album` table columns; `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`
+  * Index `object_type` with `date` in `object_count` table
+
+### Changed
+
+* Moved to php-cs-fixer 3
+* Update from tags now shows an 'Error' status if there was an issues reading the file
 
 ### Fixed
 
 * SQL for random artist with mapping
+* SQL for servers < 5.0.0 might try to insert into a missing table
 * Respect grouping for song_count searches
 * Autoplay in xbmc localplay and conform to localplay api
 * Ungrouped albums were forced into groups
 * Artists array should overwrite artist_mbid arrays that are smaller
 * Some empty globals relating to user
+* More work on the forked Jplayer playlist code when using `play last`
+* DAAP play urls
+* Single disk download links on group pages
+* CLI
+  * cleanup:sortSongs was broken (It actually works again)
+  * cleanup:sortSongs removes incomplete copied files after failure
 
-## API develop
+## API 5.4.0
 
 ### Added
 
 * advanced_search
   * Add `file` to album and artist search
-
 
 ## Ampache 5.3.3-release
 

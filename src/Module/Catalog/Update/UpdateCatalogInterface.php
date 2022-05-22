@@ -33,6 +33,7 @@ interface UpdateCatalogInterface
         bool $addArt,
         bool $importPlaylists,
         bool $cleanup,
+        bool $missing,
         bool $verification,
         bool $updateInfo,
         bool $optimizeDatabase,

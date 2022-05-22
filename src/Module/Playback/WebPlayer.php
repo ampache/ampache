@@ -216,30 +216,6 @@ class WebPlayer
     }
 
     /**
-     * Get all supplied types for a playlist.
-     * @param Stream_Playlist $playlist
-     * @return array
-     */
-    public static function get_supplied_types($playlist)
-    {
-        $jptypes       = array();
-        $transcode_cfg = AmpConfig::get('transcode');
-        foreach ($playlist->urls as $item) {
-            $force_type = '';
-            if ($item->type == 'broadcast') {
-                $force_type = 'mp3';
-            }
-            $url_data = Stream_Url::parse($item->url);
-            $types    = self::get_types($item, $url_data, $transcode_cfg, $force_type);
-            if (!in_array($types['player'], $jptypes)) {
-                $jptypes[] = $types['player'];
-            }
-        }
-
-        return $jptypes;
-    }
-
-    /**
      * Get add_media javascript.
      * @param Stream_Playlist $playlist
      * @param string $callback_container

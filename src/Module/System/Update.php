@@ -638,8 +638,17 @@ class Update
         $update_string = "* Add missing rating item back in the type enum";
         $version[]     = array('version' => '530016', 'description' => $update_string);
 
+        $update_string = "* Index `title` with `enabled` on `song` table to speed up searching";
+        $version[]     = array('version' => '540000', 'description' => $update_string);
+
+        $update_string = "* Index `album` table columns.<br />* `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`";
+        $version[]     = array('version' => '540001', 'description' => $update_string);
+
+        $update_string = "* Index `object_type` with `date` in `object_count` table";
+        $version[]     = array('version' => '540002', 'description' => $update_string);
+
         $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table<br><br>NOTE: If you have private catalogs configured, you will need to create a special catalog filter for that user.";
-        $version[]     = array('version' => '530017', 'description' => $update_string);
+        $version[]     = array('version' => '540003', 'description' => $update_string);
 
         return $version;
     }
@@ -3425,12 +3434,6 @@ class Update
         Dba::write($sql);
         $sql = "UPDATE `album`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`addition_time` = `song`.`addition_time` WHERE `album`.`addition_time` != `song`.`addition_time` AND `song`.`album` = `album`.`id`;";
         Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
-        Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
-        Dba::write($sql);
-        $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";
-        Dba::write($sql);
 
         return $retval;
     }
@@ -4273,6 +4276,7 @@ class Update
 
         return $retval;
     }
+
     /**
      * update_530015
      *
@@ -4307,12 +4311,84 @@ class Update
         return (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
     }
 
-    /** update_530017
+    /**
+     * update_540000
+     *
+     * Index `title` with `enabled` on `song` table to speed up searching
+     */
+    public static function update_540000(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `title_enabled_IDX` USING BTREE ON `song` (`title`, `enabled`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_540001
+     *
+     * Index album tables. `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`
+     */
+    public static function update_540001(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `album` DROP KEY `catalog_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `catalog_IDX` USING BTREE ON `album` (`catalog`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `album_artist_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `album_artist_IDX` USING BTREE ON `album` (`album_artist`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `original_year_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `original_year_IDX` USING BTREE ON `album` (`original_year`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `release_type_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `release_type_IDX` USING BTREE ON `album` (`release_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `release_status_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `release_status_IDX` USING BTREE ON `album` (`release_status`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `mbid_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `mbid_IDX` USING BTREE ON `album` (`mbid`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `album` DROP KEY `mbid_group_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_540002
+     *
+     * Index `object_type` with `date` in `object_count` table
+     */
+    public static function update_540002(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_54003
      *
      * Add new tables and modify others to support catalog access feature
      *
      */
-    public static function update_530017(): bool
+    public static function update_540003(): bool
     {
         $retval     = true;
         $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));

@@ -50,6 +50,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $addArt,
         bool $importPlaylists,
         bool $cleanup,
+        bool $missing,
         bool $verification,
         bool $updateInfo,
         bool $optimizeDatabase,
@@ -81,15 +82,21 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
 
-            if ($cleanup === true) {
+            if ($missing === true) {
                 ob_start();
 
-                // Clean out dead files
                 $interactor->info(
-                    T_('Start cleaning orphaned media entries'),
+                    T_('Look for missing file media entries'),
                     true
                 );
-                $catalog->clean_catalog();
+                $files = $catalog->check_catalog_proc();
+                foreach ($files as $path) {
+                    /* HINT: filename (File path) */
+                    $interactor->info(
+                        sprintf(T_('Missing: %s'), $path),
+                        true
+                    );
+                }
 
                 $buffer = ob_get_contents();
 
@@ -100,46 +107,67 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info('------------------', true);
-            }
-            if ($addNew === true || $importPlaylists === true) {
-                ob_start();
+            } else {
+                if ($cleanup === true) {
+                    ob_start();
 
-                // Look for new files
-                $interactor->info(
-                    T_('Start adding new media'),
-                    true
-                );
-                $catalog->add_to_catalog($options);
+                    // Clean out dead files
+                    $interactor->info(
+                        T_('Start cleaning orphaned media entries'),
+                        true
+                    );
+                    $catalog->clean_catalog();
 
-                $buffer = ob_get_contents();
+                    $buffer = ob_get_contents();
 
-                ob_end_clean();
+                    ob_end_clean();
 
-                $interactor->info(
-                    $this->cleanBuffer($buffer),
-                    true
-                );
-                $interactor->info('------------------', true);
-            }
-            if ($verification === true) {
-                ob_start();
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                    $interactor->info('------------------', true);
+                }
+                if ($addNew === true || $importPlaylists === true) {
+                    ob_start();
 
-                // Verify Existing
-                $interactor->info(
-                    T_('Start verifying media related to Catalog entries'),
-                    true
-                );
-                $catalog->verify_catalog_proc();
+                    // Look for new files
+                    $interactor->info(
+                        T_('Start adding new media'),
+                        true
+                    );
+                    $catalog->add_to_catalog($options);
 
-                $buffer = ob_get_contents();
+                    $buffer = ob_get_contents();
 
-                ob_end_clean();
+                    ob_end_clean();
 
-                $interactor->info(
-                    $this->cleanBuffer($buffer),
-                    true
-                );
-                $interactor->info('------------------', true);
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                    $interactor->info('------------------', true);
+                }
+                if ($verification === true) {
+                    ob_start();
+
+                    // Verify Existing
+                    $interactor->info(
+                        T_('Start verifying media related to Catalog entries'),
+                        true
+                    );
+                    $catalog->verify_catalog_proc();
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer($buffer),
+                        true
+                    );
+                    $interactor->info('------------------', true);
+                }
             }
             if ($addArt === true) {
                 ob_start();
@@ -209,16 +237,16 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 }
                 $interactor->info('------------------', true);
             }
+            if ($cleanup === true || $verification === true) {
+                $this->catalogGarbageCollector->collect();
+            }
+            // clean up after the action
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_mapping('artist');
+            Catalog::update_mapping('album');
+            Catalog::update_counts();
         }
-        if ($cleanup === true || $verification === true) {
-            $this->catalogGarbageCollector->collect();
-        }
-        // clean up after the action
-        Catalog::clean_empty_albums();
-        Album::update_album_artist();
-        Catalog::update_mapping('artist');
-        Catalog::update_mapping('album');
-        Catalog::update_counts();
         if ($optimizeDatabase === true) {
             ob_start();
 

@@ -20,14 +20,13 @@
  *
  */
 
-use Ampache\Repository\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Browse $browse */
 /** @var array $object_ids */
 
 if (!Core::is_session_started()) {
