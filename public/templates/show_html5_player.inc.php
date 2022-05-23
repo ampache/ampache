@@ -313,37 +313,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
 </script>
 <?php // Load Aurora.js scripts
 if (AmpConfig::get('webplayer_aurora')) {
-    $atypes = array();
-    foreach ($supplied as $stype) {
-        if ($stype == 'ogg' || $stype == 'oga') {
-            // Ogg could requires vorbis/opus codecs
-            if (!in_array('ogg', $atypes)) {
-                $atypes[] = 'ogg';
-            }
-            if (!in_array('vorbis', $atypes)) {
-                $atypes[] = 'vorbis';
-            }
-            if (!in_array('opus', $atypes)) {
-                $atypes[] = 'opus';
-            }
-        } else {
-            if ($stype == 'm4a') {
-                // m4a could requires aac / alac codecs
-                if (!in_array('aac', $atypes)) {
-                    $atypes[] = 'aac';
-                }
-                if (!in_array('alac', $atypes)) {
-                    $atypes[] = 'alac';
-                }
-            } else {
-                // We support that other filetypes requires a codec name matching the filetype
-                if (!in_array($stype, $atypes)) {
-                    $atypes[] = $stype;
-                }
-            }
-        }
-    }
-
+    $atypes = array('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac');
     // Load only existing codec scripts
     if (!$isVideo) {
         foreach ($atypes as $atype) {
