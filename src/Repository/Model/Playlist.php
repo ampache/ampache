@@ -143,7 +143,7 @@ class Playlist extends playlist_object
             $join = 'AND';
         }
         if (!$includeHidden) {
-            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
+            $hide_string = str_replace('%', '\%', str_replace('_', '\_', Preference::get_by_user($user_id, 'api_hidden_playlists')));
             if (!empty($hide_string)) {
                 $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
             }
@@ -263,7 +263,7 @@ class Playlist extends playlist_object
             $join = 'AND';
         }
         if (!$includeHidden) {
-            $hide_string = Preference::get_by_user($user_id, 'api_hidden_playlists');
+            $hide_string = str_replace('%', '\%', str_replace('_', '\_', Preference::get_by_user($user_id, 'api_hidden_playlists')));
             if (!empty($hide_string)) {
                 $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
             }

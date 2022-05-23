@@ -89,5 +89,5 @@ interface SongRepositoryInterface
 
     public function delete(int $songId): bool;
 
-    public function collectGarbage(Song $song): bool;
+    public function collectGarbage(Song $song): void;
 }
