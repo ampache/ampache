@@ -147,7 +147,7 @@ class PlaylistViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/batch.php?action=playlist&%d',
+                '%s/batch.php?action=playlist&id=%d',
                 $webPath,
                 $playlistId
             ),
