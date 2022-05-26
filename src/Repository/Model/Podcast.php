@@ -514,7 +514,7 @@ class Podcast extends database_object implements library_item
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
         $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
-        $author      = html_entity_decode((string)$episode->author);
+        $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
         $source      = null;
         $time        = 0;

@@ -344,7 +344,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $title       = $data['title'] ?? $this->title;
         $website     = $data['website'] ?? null;
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
-        $author      = $data['author'] ?? null;
+        $author      = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
         $category    = $data['category'] ?? null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
