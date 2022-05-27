@@ -231,7 +231,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/album.php?action=%s&album_id=%d',
+                '%s/albums.php?action=%s&album_id=%d',
                 $webPath,
                 DeleteAction::REQUEST_KEY,
                 $albumId
