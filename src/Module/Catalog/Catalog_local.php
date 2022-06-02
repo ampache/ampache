@@ -662,7 +662,7 @@ class Catalog_local extends Catalog
             }
             $file_time = filemtime($row['file']);
             // check the modification time on the file to see if it's worth checking the tags.
-            if ($verify_by_time && ($this->last_update > $file_time || $row['`min_update_time`'] > $file_time)) {
+            if ($verify_by_time && ($this->last_update > $file_time || (array_key_exists('min_update_time', $row) && (int)$row['min_update_time'] > $file_time))) {
                 continue;
             }
 
