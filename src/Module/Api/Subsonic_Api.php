@@ -2306,7 +2306,7 @@ class Subsonic_Api
         $uploadRole   = ($input['uploadRole'] == 'true');
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
-        $maxbitrate   = $input['maxBitRate'];
+        $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
 
         if (Access::check('interface', 100)) {
             $access = 25;
@@ -2342,7 +2342,7 @@ class Subsonic_Api
                 if ($shareRole) {
                     Preference::update('share', $user_id, 1);
                 }
-                if ((int)$maxbitrate > 0) {
+                if ($maxbitrate > 0) {
                     Preference::update('transcode_bitrate', $user_id, $maxbitrate);
                 }
                 $response = Subsonic_Xml_Data::addSubsonicResponse('updateuser');
