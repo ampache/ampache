@@ -31,6 +31,7 @@ interface SongSorterInterface
         bool $dryRun = true,
         bool $filesOnly = false,
         int $limit = 0,
+        bool $windowsCompat = false,
         ?string $various_artist_override = null,
         ?string $catalogName = null
     ): void;
