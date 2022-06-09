@@ -77,8 +77,8 @@ final class SortFilesCommand extends Command
             $dryRun,
             $values['files'],
             $values['limit'],
-            $values['name'],
             $values['windows'],
+            $values['name'],
             $catalogName
         );
     }
