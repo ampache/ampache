@@ -47,6 +47,7 @@ final class SortFilesCommand extends Command
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
             ->option('-f|--files', T_('Rename files and keep them in the current folder'), 'boolval', false)
             ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
+            ->option('-w|--windows', T_('Replace all Windows-incompatible characters with an underscore'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
@@ -76,6 +77,7 @@ final class SortFilesCommand extends Command
             $dryRun,
             $values['files'],
             $values['limit'],
+            $values['windows'],
             $values['name'],
             $catalogName
         );
