@@ -91,7 +91,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 );
                 $files = $catalog->check_catalog_proc();
                 foreach ($files as $path) {
-                    /* HINT: filename (File path) */
+                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
                     $interactor->info(
                         sprintf(T_('Missing: %s'), $path),
                         true
@@ -106,7 +106,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     $this->cleanBuffer($buffer),
                     true
                 );
-                $interactor->info('------------------', true);
+                $interactor->info(
+                    '------------------',
+                    true
+                );
             } else {
                 if ($cleanup === true) {
                     ob_start();
@@ -126,7 +129,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         $this->cleanBuffer($buffer),
                         true
                     );
-                    $interactor->info('------------------', true);
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
                 }
                 if ($addNew === true || $importPlaylists === true) {
                     ob_start();
@@ -146,7 +152,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         $this->cleanBuffer($buffer),
                         true
                     );
-                    $interactor->info('------------------', true);
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
                 }
                 if ($verification === true) {
                     ob_start();
@@ -166,7 +175,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         $this->cleanBuffer($buffer),
                         true
                     );
-                    $interactor->info('------------------', true);
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
                 }
             }
             if ($addArt === true) {
@@ -187,7 +199,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     $this->cleanBuffer($buffer),
                     true
                 );
-                $interactor->info('------------------', true);
+                $interactor->info(
+                        '------------------',
+                        true
+                    );
             }
             if ($updateInfo === true && !$external) {
                 ob_start();
@@ -235,7 +250,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                 }
-                $interactor->info('------------------', true);
+                $interactor->info(
+                        '------------------',
+                        true
+                    );
             }
             if ($cleanup === true || $verification === true) {
                 $this->catalogGarbageCollector->collect();
@@ -266,7 +284,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
 
-            $interactor->info('------------------', true);
+            $interactor->info(
+                        '------------------',
+                        true
+                    );
         }
     }
 
@@ -289,7 +310,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         $newPath = rtrim(trim((string)$newPath), "/");
 
         if ($newPath === null || !is_dir($newPath)) {
-            $interactor->error('The new path is invalid', true);
+            $interactor->error(
+                T_('The new path is invalid'),
+                true
+            );
 
             return;
         }
@@ -330,7 +354,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            $interactor->info('----------------', true);
+            $interactor->info(
+                '------------------',
+                true
+            );
         }
     }
 

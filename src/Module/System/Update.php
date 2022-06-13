@@ -77,6 +77,111 @@ class Update
     } // get_version
 
     /**
+     * check_tables
+     *
+     * is something missing? why is it missing!?
+     * @param bool $execute
+     * @return array
+     */
+    public static function check_tables(bool $execute = false)
+    {
+        $db_version = (int)self::get_version();
+        $missing    = array();
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $tables     = array(
+            'image' => "CREATE TABLE IF NOT EXISTS `image` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `image` mediumblob DEFAULT NULL, `width` int(4) UNSIGNED DEFAULT 0, `height` int(4) UNSIGNED DEFAULT 0, `mime` varchar(64) COLLATE $collation DEFAULT NULL, `size` varchar(64) COLLATE $collation DEFAULT NULL, `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `kind` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tmp_browse' => "CREATE TABLE IF NOT EXISTS `tmp_browse` ( `id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) COLLATE $collation NOT NULL, `data` longtext COLLATE $collation NOT NULL, `object_data` longtext COLLATE $collation DEFAULT NULL, PRIMARY KEY (`sid`,`id`)) ENGINE=MyISAM DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'share' => "CREATE TABLE IF NOT EXISTS `share` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `allow_stream` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `allow_download` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `expire_days` int(4) UNSIGNED NOT NULL DEFAULT 0, `max_counter` int(4) UNSIGNED NOT NULL DEFAULT 0, `secret` varchar(20) COLLATE $collation DEFAULT NULL, `counter` int(4) UNSIGNED NOT NULL DEFAULT 0, `creation_date` int(11) UNSIGNED NOT NULL DEFAULT 0, `lastvisit_date` int(11) UNSIGNED NOT NULL DEFAULT 0, `public_url` varchar(255) COLLATE $collation DEFAULT NULL, `description` varchar(255) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'broadcast' => "CREATE TABLE IF NOT EXISTS `broadcast` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `name` varchar(64) COLLATE $collation DEFAULT NULL, `description` varchar(256) COLLATE $collation DEFAULT NULL, `is_private` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `song` int(11) UNSIGNED NOT NULL DEFAULT 0, `started` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `listeners` int(11) UNSIGNED NOT NULL DEFAULT 0, `key` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'player_control' => "CREATE TABLE IF NOT EXISTS `player_control` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `cmd` varchar(32) COLLATE $collation DEFAULT NULL, `value` varchar(256) COLLATE $collation DEFAULT NULL, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `send_date` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'recommendation' => "CREATE TABLE IF NOT EXISTS `recommendation` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'recommendation_item' => "CREATE TABLE IF NOT EXISTS `recommendation_item` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `recommendation` int(11) UNSIGNED NOT NULL, `recommendation_id` int(11) UNSIGNED DEFAULT NULL, `name` varchar(256) COLLATE $collation DEFAULT NULL, `rel` varchar(256) COLLATE $collation DEFAULT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'license' => "CREATE TABLE IF NOT EXISTS `license` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `description` varchar(256) COLLATE $collation DEFAULT NULL, `external_link` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=15 DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'daap_session' => "CREATE TABLE IF NOT EXISTS `daap_session` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `creationdate` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tvshow' => "CREATE TABLE IF NOT EXISTS `tvshow` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tvshow_season' => "CREATE TABLE IF NOT EXISTS `tvshow_season` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `season_number` int(11) UNSIGNED NOT NULL, `tvshow` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tvshow_episode' => "CREATE TABLE IF NOT EXISTS `tvshow_episode` ( `id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `season` int(11) UNSIGNED NOT NULL, `episode_number` int(11) UNSIGNED NOT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'movie' => "CREATE TABLE IF NOT EXISTS `movie` ( `id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'personal_video' => "CREATE TABLE IF NOT EXISTS `personal_video` ( `id` int(11) UNSIGNED NOT NULL, `location` varchar(256) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'clip' => "CREATE TABLE IF NOT EXISTS `clip` ( `id` int(11) UNSIGNED NOT NULL, `artist` int(11) DEFAULT NULL, `song` int(11) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tag_merge' => "CREATE TABLE IF NOT EXISTS `tag_merge` ( `tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'label' => "CREATE TABLE IF NOT EXISTS `label` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `category` varchar(40) COLLATE $collation DEFAULT NULL, `summary` text COLLATE $collation DEFAULT NULL, `address` varchar(256) COLLATE $collation DEFAULT NULL, `email` varchar(128) COLLATE $collation DEFAULT NULL, `website` varchar(256) COLLATE $collation DEFAULT NULL, `user` int(11) UNSIGNED DEFAULT NULL, `creation_date` int(11) UNSIGNED DEFAULT NULL, `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `country` varchar(64) COLLATE $collation DEFAULT NULL, `active` tinyint(1) UNSIGNED NOT NULL DEFAULT 1, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'label_asso' => "CREATE TABLE IF NOT EXISTS `label_asso` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `label` int(11) UNSIGNED NOT NULL, `artist` int(11) UNSIGNED NOT NULL, `creation_date` int(11) UNSIGNED DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'user_pvmsg' => "CREATE TABLE IF NOT EXISTS `user_pvmsg` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `subject` varchar(80) COLLATE $collation DEFAULT NULL, `message` text COLLATE $collation DEFAULT NULL, `from_user` int(11) UNSIGNED NOT NULL, `to_user` int(11) UNSIGNED NOT NULL, `is_read` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `creation_date` int(11) UNSIGNED DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'user_follower' => "CREATE TABLE IF NOT EXISTS `user_follower` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `follow_user` int(11) UNSIGNED NOT NULL, `follow_date` int(11) UNSIGNED DEFAULT NULL, `creation_date` int(11) UNSIGNED DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'metadata_field' => "CREATE TABLE IF NOT EXISTS `metadata_field` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) COLLATE $collation DEFAULT NULL, `public` tinyint(1) NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'metadata' => "CREATE TABLE IF NOT EXISTS `metadata` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `object_id` int(11) UNSIGNED NOT NULL, `field` int(11) UNSIGNED NOT NULL, `data` text COLLATE $collation NOT NULL, `type` varchar(50) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), KEY `field` (`field`), KEY `object_id` (`object_id`), KEY `type` (`type`), KEY `objecttype` (`object_id`,`type`), KEY `objectfield` (`object_id`,`field`,`type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'podcast' => "CREATE TABLE IF NOT EXISTS `podcast` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `feed` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) NOT NULL, `title` varchar(255) COLLATE $collation DEFAULT NULL, `website` varchar(255) COLLATE $collation DEFAULT NULL, `description` varchar(4096) COLLATE $collation DEFAULT NULL, `language` varchar(5) COLLATE $collation DEFAULT NULL, `copyright` varchar(255) COLLATE $collation DEFAULT NULL, `generator` varchar(64) COLLATE $collation DEFAULT NULL, `lastbuilddate` int(11) UNSIGNED NOT NULL DEFAULT 0, `lastsync` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `episodes` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'podcast_episode' => "CREATE TABLE IF NOT EXISTS `podcast_episode` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `title` varchar(255) COLLATE $collation DEFAULT NULL, `guid` varchar(255) COLLATE $collation DEFAULT NULL, `podcast` int(11) NOT NULL, `state` varchar(32) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `source` varchar(4096) COLLATE $collation DEFAULT NULL, `size` bigint(20) UNSIGNED NOT NULL DEFAULT 0, `time` int(11) UNSIGNED NOT NULL DEFAULT 0, `website` varchar(255) COLLATE $collation DEFAULT NULL, `description` varchar(4096) COLLATE $collation DEFAULT NULL, `author` varchar(64) COLLATE $collation DEFAULT NULL, `category` varchar(64) COLLATE $collation DEFAULT NULL, `played` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `pubdate` int(11) UNSIGNED NOT NULL, `addition_time` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `waveform` mediumblob DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'cache_object_count' => "CREATE TABLE IF NOT EXISTS `cache_object_count` ( `object_id` int(11) UNSIGNED NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL, `count` int(11) UNSIGNED NOT NULL DEFAULT 0, `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0, `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`object_id`,`object_type`,`threshold`,`count_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'cache_object_count_run' => "CREATE TABLE IF NOT EXISTS `cache_object_count_run` ( `object_id` int(11) UNSIGNED NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL, `count` int(11) UNSIGNED NOT NULL DEFAULT 0, `threshold` int(11) UNSIGNED NOT NULL DEFAULT 0, `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`object_id`,`object_type`,`threshold`,`count_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'catalog_map' => "CREATE TABLE IF NOT EXISTS `catalog_map` ( `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_catalog_map` (`object_id`,`object_type`,`catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'user_playlist' => "CREATE TABLE IF NOT EXISTS `user_playlist` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'user_data' => "CREATE TABLE IF NOT EXISTS `user_data` ( `user` int(11) DEFAULT NULL, `key` varchar(128) COLLATE $collation DEFAULT NULL, `value` varchar(255) COLLATE $collation DEFAULT NULL, UNIQUE KEY `unique_data` (`user`,`key`), KEY `user` (`user`), KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'deleted_song' => "CREATE TABLE IF NOT EXISTS `deleted_song` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED DEFAULT 0, `delete_time` int(11) UNSIGNED DEFAULT 0, `title` varchar(255) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `update_time` int(11) UNSIGNED DEFAULT 0, `album` int(11) UNSIGNED NOT NULL DEFAULT 0, `artist` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'deleted_video' => "CREATE TABLE IF NOT EXISTS `deleted_video` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'deleted_podcast_episode' => "CREATE TABLE IF NOT EXISTS `deleted_podcast_episode` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `podcast` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'artist_map' => "CREATE TABLE IF NOT EXISTS `artist_map` ( `artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`,`object_type`,`artist_id`), KEY `object_id_index` (`object_id`), KEY `artist_id_index` (`artist_id`), KEY `artist_id_type_index` (`artist_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
+            'album_map' => "CREATE TABLE IF NOT EXISTS `album_map` ( `album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`,`object_type`,`album_id`), KEY `object_id_index` (`object_id`), KEY `album_id_type_index` (`album_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+        );
+        $versions   = array(
+            'image' => 360003,
+            'tmp_browse' => 360005,
+            'share' => 360037,
+            'broadcast' => 360042,
+            'player_control' => 360042,
+            'recommendation' => 360044,
+            'recommendation_item' => 360044,
+            'license' => 370004,
+            'daap_session' => 370007,
+            'tvshow' => 370009,
+            'tvshow_season' => 370009,
+            'tvshow_episode' => 370009,
+            'movie' => 370009,
+            'personal_video' => 370009,
+            'clip' => 370009,
+            'tag_merge' => 370018,
+            'label' => 370033,
+            'label_asso' => 370033,
+            'user_pvmsg' => 370034,
+            'user_follower' => 370034,
+            'metadata_field' => 370041,
+            'metadata' => 370041,
+            'podcast' => 380001,
+            'podcast_episode' => 380001,
+            'cache_object_count' => 400008,
+            'cache_object_count_run' => 400008,
+            'catalog_map' => 500004,
+            'user_playlist' => 500006,
+            'user_data' => 500006,
+            'deleted_song' => 500013,
+            'deleted_video' => 500013,
+            'deleted_podcast_episode' => 500013,
+            'artist_map' => 530000,
+            'album_map' => 530001
+        );
+        foreach ($tables as $table_name => $table_sql) {
+            $sql        = "DESCRIBE `$table_name`;";
+            $db_results = Dba::read($sql);
+            // you might not be at the version required for this table so make sure it actually is missing.
+            if (!$db_results && $db_version >= $versions[$table_name]) {
+                $missing[] = $table_name;
+                if (!$execute) {
+                    debug_event(__CLASS__, 'MISSING TABLE: ' . $table_name, 1);
+                    continue;
+                }
+                if (Dba::write($table_sql)) {
+                    debug_event(__CLASS__, 'CREATED MISSING TABLE: ' . $table_name, 1);
+                }
+            }
+        }
+
+        return $missing;
+    }
+
+    /**
      * format_version
      *
      * Make the version number pretty.

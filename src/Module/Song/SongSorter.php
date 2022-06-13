@@ -88,12 +88,11 @@ final class SongSorter implements SongSorterInterface
                 // Check for file existence
                 if (!file_exists($song->file)) {
                     debug_event('sort_files', 'Missing: ' . $song->file, 1);
-                    /* HINT: filename (File path) */
+                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
                     $interactor->info(
                         sprintf(T_('Missing: %s'), $song->file),
                         true
                     );
-
                     continue;
                 }
                 $song->format();
@@ -208,14 +207,16 @@ final class SongSorter implements SongSorterInterface
 
         $home .= "/$sort_pattern";
         // dont send a mismatched file!
-        if (strpos($sort_pattern, '%') !== false) {
-            /* HINT: $sort_pattern after replacing %x values */
-            $interactor->info(
-                sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
-                true
-            );
+        foreach ($replace_array as $replace_string) {
+            if (strpos($sort_pattern, $replace_string) !== false) {
+                /* HINT: $sort_pattern after replacing %x values */
+                $interactor->info(
+                    sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
+                    true
+                );
 
-            return false;
+                return false;
+            }
         }
 
         return $home;
