@@ -47,8 +47,28 @@ final class AdminUpdateDatabaseCommand extends Command
     public function execute(): void
     {
         $interactor = $this->io();
+        $execute    = $this->values()['execute'] === true;
 
-        if (Update::need_update() && $this->values()['execute'] === true) {
+        // check tables
+        $missing = Update::check_tables($execute);
+        if (!empty($missing)) {
+            $message = ($execute)
+                ? T_('Missing database tables have been created')
+                : T_('Your database is missing these tables. Use -e|--execute to recreate them');
+            $interactor->info(
+                $message,
+                true
+            );
+            foreach ($missing as $table_name) {
+                /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                $interactor->info(
+                    sprintf(T_('Missing: %s'), $table_name),
+                    true
+                );
+            }
+        }
+
+        if (Update::need_update() && $execute) {
             Update::run_update();
         }
 

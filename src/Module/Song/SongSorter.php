@@ -88,12 +88,11 @@ final class SongSorter implements SongSorterInterface
                 // Check for file existence
                 if (!file_exists($song->file)) {
                     debug_event('sort_files', 'Missing: ' . $song->file, 1);
-                    /* HINT: filename (File path) */
+                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
                     $interactor->info(
                         sprintf(T_('Missing: %s'), $song->file),
                         true
                     );
-
                     continue;
                 }
                 $song->format();
