@@ -78,7 +78,10 @@ final class AdminAddUserCommand extends Command
 
             User::fix_preferences('-1');
         } else {
-            $interactor->error(T_('User creation failed'), true);
+            $interactor->error(
+                T_('User creation failed'),
+                true
+            );
         }
     }
 }

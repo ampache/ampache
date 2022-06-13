@@ -48,6 +48,11 @@ final class AdminUpdateDatabaseCommand extends Command
     {
         $interactor = $this->io();
         $execute    = $this->values()['execute'] === true;
+        /* HINT: db version string (e.g. 520006) */
+        $interactor->info(
+            sprintf(T_('Database version: %s'), Update::get_version()),
+            true
+        );
 
         // check tables
         $missing = Update::check_tables($execute);
@@ -81,11 +86,20 @@ final class AdminUpdateDatabaseCommand extends Command
 
         $result = Update::display_update();
         if ($result === []) {
-            $interactor->info(T_('No update needed'), true);
+            $interactor->info(
+                T_('No update needed'),
+                true
+            );
         } else {
             foreach ($result as $updateInfo) {
-                $interactor->info($updateInfo['version'], true);
-                $interactor->info($updateInfo['description'], true);
+                $interactor->info(
+                    $updateInfo['version'],
+                    true
+                );
+                $interactor->info(
+                    $updateInfo['description'],
+                    true
+                );
             }
         }
     }

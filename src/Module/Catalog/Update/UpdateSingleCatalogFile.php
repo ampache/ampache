@@ -59,7 +59,10 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             $album_id  = 0;
             ob_flush();
             if (!$catalog) {
-                $interactor->error(sprintf(T_('Catalog `%s` not found'), $catname), true);
+                $interactor->error(
+                    sprintf(T_('Catalog `%s` not found'), $catname),
+                    true
+                );
 
                 return;
             }
