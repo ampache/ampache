@@ -207,14 +207,16 @@ final class SongSorter implements SongSorterInterface
 
         $home .= "/$sort_pattern";
         // dont send a mismatched file!
-        if (strpos($sort_pattern, '%') !== false) {
-            /* HINT: $sort_pattern after replacing %x values */
-            $interactor->info(
-                sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
-                true
-            );
+        foreach ($replace_array as $replace_string) {
+            if (strpos($sort_pattern, $replace_string) !== false) {
+                /* HINT: $sort_pattern after replacing %x values */
+                $interactor->info(
+                    sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
+                    true
+                );
 
-            return false;
+                return false;
+            }
         }
 
         return $home;
