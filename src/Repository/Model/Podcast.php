@@ -556,7 +556,8 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        $state = ($pubdate > $afterdate)
+        // when adding a new feed sync everything.
+        $state = ($afterdate > 0 && $pubdate > $afterdate)
             ? 'pending'
             : 'skipped';
 
