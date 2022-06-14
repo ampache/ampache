@@ -556,30 +556,28 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        $state = ($pubdate > $afterdate)
+            ? 'pending'
+            : 'skipped';
 
-        if ($pubdate > $afterdate) {
-            debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
+        $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            return Dba::write($sql, array(
-                $title,
-                $guid,
-                $this->id,
-                $source,
-                $website,
-                $description,
-                $author,
-                $category,
-                $time,
-                $pubdate,
-                time(),
-                $this->catalog
-            ));
-        } else {
-            debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
-
-            return true;
-        }
+        return Dba::write($sql, array(
+            $title,
+            $guid,
+            $this->id,
+            $state,
+            $source,
+            $website,
+            $description,
+            $author,
+            $category,
+            $time,
+            $pubdate,
+            time(),
+            $this->catalog
+        ));
     }
 
     /**
