@@ -457,13 +457,13 @@ class Podcast extends database_object implements library_item
     /**
      * add_episodes
      * @param SimpleXMLElement $episodes
-     * @param integer $afterdate
+     * @param integer $lastSync
      * @param boolean $gather
      */
-    public function add_episodes($episodes, $afterdate = 0, $gather = false)
+    public function add_episodes($episodes, $lastSync = 0, $gather = false)
     {
         foreach ($episodes as $episode) {
-            $this->add_episode($episode, $afterdate);
+            $this->add_episode($episode, $lastSync);
         }
         $time   = time();
         $params = array($this->id);
@@ -505,10 +505,10 @@ class Podcast extends database_object implements library_item
     /**
      * add_episode
      * @param SimpleXMLElement $episode
-     * @param integer $afterdate
+     * @param integer $lastSync
      * @return PDOStatement|boolean
      */
-    private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
+    private function add_episode(SimpleXMLElement $episode, $lastSync = 0)
     {
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
@@ -557,9 +557,9 @@ class Podcast extends database_object implements library_item
             return false;
         }
         // when adding a new feed sync everything.
-        $state = ($afterdate > 0 && $pubdate > $afterdate)
-            ? 'pending'
-            : 'skipped';
+        $state = ($lastSync > 0 && $pubdate < $lastSync)
+            ? 'skipped'
+            : 'pending';
 
         debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
         $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
