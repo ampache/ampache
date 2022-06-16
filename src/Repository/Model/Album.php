@@ -377,7 +377,7 @@ class Album extends database_object implements library_item
         if (parent::is_cached('album_extra', $this->id)) {
             return parent::get_from_cache('album_extra', $this->id);
         }
-
+        $results = array();
         if (!$this->album_artist && $this->artist_count == 1) {
             $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
             $db_results = Dba::read($sql);
