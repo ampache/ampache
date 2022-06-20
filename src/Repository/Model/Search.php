@@ -863,7 +863,7 @@ class Search extends playlist_object
         $request = array();
         foreach ($data as $key => $value) {
             $prefix = substr($key, 0, 4);
-            $value  = trim((string)$value);
+            $value  = (string)$value;
 
             if ($prefix == 'rule' && strlen((string)$value)) {
                 $request[$key] = Dba::escape($value);
@@ -1039,7 +1039,7 @@ class Search extends playlist_object
         $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
         $sql = trim((string)$sql);
-        //debug_event(self::class, 'SQL get_items: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
+        //debug_event(self::class, 'SQL run: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
 
         $db_results = Dba::read($sql, $search_info['parameters']);
         $results    = array();
