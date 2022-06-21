@@ -530,6 +530,7 @@ class Search extends playlist_object
         $this->type_text('artist', T_('Song Artist'), $t_song_data);
         $this->type_text('album_artist', T_('Album Artist'), $t_song_data);
         $this->type_text('composer', T_('Composer'), $t_song_data);
+        $this->type_numeric('track', T_('Track'), 'numeric', $t_song_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_song_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_song_data);
         $this->type_text('label', T_('Label'), $t_song_data);
@@ -1463,6 +1464,9 @@ class Search extends playlist_object
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'year':
+                case 'release_type':
+                case 'release_status':
+                case 'catalog':
                     $where[]      = "`album`.`" . $rule[0] . "` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -1633,14 +1637,6 @@ class Search extends playlist_object
                     }
                     $parameters[] = $input;
                     break;
-                case 'release_type':
-                    $where[]      = "`album`.`release_type` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
-                case 'release_status':
-                    $where[]      = "`album`.`release_status` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
                 case 'other_user':
                     $other_userid = $input;
                     if ($sql_match_operator == 'userflag') {
@@ -1674,10 +1670,6 @@ class Search extends playlist_object
                     $key                       = md5($input . $sql_match_operator);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
                     $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
-                    break;
-                case 'catalog':
-                    $where[]      = "`album`.`catalog` $sql_match_operator ?";
-                    $parameters[] = $input;
                     break;
                 case 'tag':
                 case 'genre':
@@ -1852,11 +1844,8 @@ class Search extends playlist_object
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'yearformed':
-                    $where[]      = "`artist`.`yearformed` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
                 case 'placeformed':
-                    $where[]      = "`artist`.`placeformed` $sql_match_operator ?";
+                    $where[]      = "`artist`.`$rule[0]` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'time':
@@ -2267,21 +2256,18 @@ class Search extends playlist_object
                     $table['album']        = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist` = `album_artist`.`id`";
                     break;
-                case 'composer':
-                    $where[]      = "`song`.`composer` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
                 case 'time':
                     $input        = $input * 60;
                     $where[]      = "`song`.`time` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'file':
-                    $where[]      = "`song`.`file` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
+                case 'composer':
                 case 'year':
-                    $where[]      = "`song`.`year` $sql_match_operator ?";
+                case 'track':
+                case 'catalog':
+                case 'license':
+                    $where[]      = "`song`.`$rule[0]` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'comment':
@@ -2456,10 +2442,6 @@ class Search extends playlist_object
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id` = `song`.`$column`"
                         : "";
                     break;
-                case 'catalog':
-                    $where[]      = "`song`.`catalog` $sql_match_operator ?";
-                    $parameters[] = $input;
-                    break;
                 case 'other_user':
                 case 'other_user_album':
                 case 'other_user_artist':
@@ -2509,10 +2491,6 @@ class Search extends playlist_object
                         }
                         $where[]  = "`song`.`id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")";
                     }
-                    break;
-                case 'license':
-                    $where[]      = "`song`.`license` $sql_match_operator ?";
-                    $parameters[] = $input;
                     break;
                 case 'added':
                     $input        = strtotime((string) $input);

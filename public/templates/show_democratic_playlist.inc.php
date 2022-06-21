@@ -28,7 +28,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
+$democratic = Democratic::get_current_playlist();
+$web_path   = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -44,7 +48,7 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php if (!count($object_ids)) {
+<?php if (empty($object_ids) && isset($democratic->base_playlist)) {
     $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
     <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
@@ -67,7 +71,6 @@ $web_path = AmpConfig::get('web_path'); ?>
 </thead>
 <tbody>
 <?php
-$democratic = Democratic::get_current_playlist();
     $democratic->set_parent();
     foreach ($object_ids as $item) {
         if (!is_array($item)) {

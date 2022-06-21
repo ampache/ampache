@@ -168,7 +168,7 @@ final class SongSorter implements SongSorterInterface
         $album  = $this->sort_clean_name($song->f_album_full, $windowsCompat) ?? '%A';
         $artist = $this->sort_clean_name($song->f_artist_full, $windowsCompat) ?? '%a';
         $track  = $this->sort_clean_name($song->track, $windowsCompat) ?? '%T';
-        if ((int) $track < 10 && (int) $track > 0) {
+        if ((int) $track < 10) {
             $track = '0' . (string) $track;
         }
 
