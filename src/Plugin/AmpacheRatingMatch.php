@@ -164,7 +164,7 @@ class AmpacheRatingMatch
                 $set   = false;
                 foreach ($album->album_suite as $album_id) {
                     if (!$set) {
-                        $album_disk   = new Rating($album_id, 'artist');
+                        $album_disk   = new Rating($album_id, 'album');
                         $rating_album = $album_disk->get_user_rating($this->user->id);
                         if ($rating_album < $new_rating) {
                             Rating::set_rating_for_group($new_rating, $album->album_suite, $this->user->id);
