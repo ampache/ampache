@@ -349,6 +349,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops = [];
 
         $songprops[T_('Title')]         = scrub_out($this->song->title);
+        $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
         $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
         $songprops[T_('Album')]         = $this->song->f_album_link;
