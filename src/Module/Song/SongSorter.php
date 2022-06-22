@@ -185,8 +185,8 @@ final class SongSorter implements SongSorterInterface
             $artist = $various_artist;
         }
         $disk           = $album_object->disk ?? '%d';
-        $catalog_number = $album_object->catalog_number ?? '%C';
-        $barcode        = $album_object->barcode ?? '%b';
+        $catalog_number = $this->sort_clean_name($album_object->catalog_number) ?? '%C';
+        $barcode        = $this->sort_clean_name($album_object->barcode) ?? '%b';
         $original_year  = $album_object->original_year ?? '%Y';
         $genre          = (!empty($album_object->tags)) ? Tag::get_display($album_object->tags) : '%b';
         $release_type   = $album_object->release_type ?? '%r';
@@ -231,6 +231,9 @@ final class SongSorter implements SongSorterInterface
      */
     public function sort_clean_name($string, $windowsCompat = false)
     {
+        if (empty($string)) {
+            return $string;
+        }
         $string = ($windowsCompat)
             ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', $string)
             : str_replace(['/', '\\'], '_', $string);
