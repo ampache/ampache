@@ -1968,7 +1968,7 @@ class Search extends playlist_object
                         $table['myplayed'] = '';
                     }
                     $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT DISTINCT `artist_map`.`artist_id`, `object_count`.`user` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `artist_map`.`artist_id`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `artist`.`$column` = `myplayed_" . $my_type . "_" . $user_id . "`.`artist_id`"
+                        ? "LEFT JOIN (SELECT DISTINCT `artist_map`.`artist_id`, `object_count`.`user` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `artist_map`.`artist_id`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `artist`.`$column` = `myplayed_" . $my_type . "_" . $user_id . "`.`artist_id`"
                         : "";
                     $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`artist_id` $operator_sql";
                     break;

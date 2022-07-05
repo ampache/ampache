@@ -483,6 +483,8 @@
             $(document.documentElement).bind(event, keyBindings);
         }
     };
+    // Progress Bar / GUI Timer
+    var progress_start_time = 0;
 
     // Enable the global key control handler ready for any jPlayer instance with the keyEnabled option enabled.
     $.jPlayer.keys(true);
@@ -1047,7 +1049,8 @@
             this.aurora.canPlay = {};
             this.flash.canPlay = {};
             $.each(this.formats, function(priority, format) {
-                self.html.canPlay[format] = self.html[self.format[format].media].available && "" !== self.htmlElement[self.format[format].media].canPlayType(self.format[format].codec);
+                //self.html.canPlay[format] = self.html[self.format[format].media].available && "" !== self.htmlElement[self.format[format].media].canPlayType(self.format[format].codec);
+                self.html.canPlay[format] = true;
                 self.aurora.canPlay[format] = ($.inArray(format, self.aurora.formats) > -1);
                 self.flash.canPlay[format] = self.format[format].flashCanPlay && self.flash.available;
             });
@@ -1320,7 +1323,7 @@
         _uaBlocklist: function(list) {
             // list : object with properties that are all regular expressions. Property names are irrelevant.
             // Returns true if the user agent is matched in list.
-            var    ua = navigator.userAgent.toLowerCase(),
+            var ua = navigator.userAgent.toLowerCase(),
                 block = false;
 
             $.each(list, function(p, re) {
@@ -1713,7 +1716,7 @@
                         if(this.status.srcSet) {
 
                             // Need to read original status before issuing the setMedia command.
-                            var    currentTime = this.status.currentTime,
+                            var currentTime = this.status.currentTime,
                                 paused = this.status.paused;
 
                             this.setMedia(this.status.media);
@@ -1873,45 +1876,48 @@
             }
         },
         _updateInterface: function() {
-            if(this.css.jq.seekBar.length) {
-                this.css.jq.seekBar.width(this.status.seekPercent+"%");
-            }
-            if(this.css.jq.playBar.length) {
-                if(this.options.smoothPlayBar) {
-                    this.css.jq.playBar.stop().animate({
-                        width: this.status.currentPercentAbsolute+"%"
-                    }, 250, "linear");
-                } else {
-                    this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
+            var dateNow = Date.now();
+            if(500 < dateNow - progress_start_time) {
+                if(this.css.jq.seekBar.length) {
+                    this.css.jq.seekBar.width(this.status.seekPercent+"%");
                 }
-            }
-            var currentTimeText = "";
-            if(this.css.jq.currentTime.length) {
-                currentTimeText = this._convertTime(this.status.currentTime);
-                if(currentTimeText !== this.css.jq.currentTime.text()) {
-                    this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
+                //if(this.css.jq.playBar.length && false) {
+                if(this.css.jq.playBar.length) {
+                    if(this.options.smoothPlayBar) {
+                        this.css.jq.playBar.stop().animate({width: this.status.currentPercentAbsolute+"%"}, 250, "linear");
+                    } else {
+                        this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
+                    }
                 }
-            }
-            var durationText = "",
+                var currentTimeText = "";
+                if(this.css.jq.currentTime.length) {
+                    currentTimeText = this._convertTime(this.status.currentTime);
+                    if(currentTimeText !== this.css.jq.currentTime.text()) {
+                        this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
+                    }
+                }
+                var durationText = "",
                 duration = this.status.duration,
                 remaining = this.status.remaining;
-            if(this.css.jq.duration.length) {
-                if(typeof this.status.media.duration === "string") {
-                    durationText = this.status.media.duration;
-                } else {
-                    if(typeof this.status.media.duration === "number") {
-                        duration = this.status.media.duration;
-                        remaining = duration - this.status.currentTime;
+                if(this.css.jq.duration.length) {
+                        if(typeof this.status.media.duration === "string") {
+                            durationText = this.status.media.duration;
+                        } else {
+                            if(typeof this.status.media.duration === "number") {
+                                duration = this.status.media.duration;
+                                remaining = duration - this.status.currentTime;
+                            }
+                            if(this.options.remainingDuration) {
+                                durationText = (remaining > 0 ? "-" : "") + this._convertTime(remaining);
+                            } else {
+                                durationText = this._convertTime(duration);
+                            }
+                        }
+                        if(durationText !== this.css.jq.duration.text()) {
+                            this.css.jq.duration.text(durationText);
+                        }
                     }
-                    if(this.options.remainingDuration) {
-                        durationText = (remaining > 0 ? "-" : "") + this._convertTime(remaining);
-                    } else {
-                        durationText = this._convertTime(duration);
-                    }
-                }
-                if(durationText !== this.css.jq.duration.text()) {
-                    this.css.jq.duration.text(durationText);
-                }
+                progress_start_time = dateNow;
             }
         },
         _convertTime: ConvertTime.prototype.time,
@@ -1977,7 +1983,7 @@
              * media.stream = Boolean: * NOT IMPLEMENTED * Designating actual media streams. ie., "false/undefined" for files. Plan to refresh the flash every so often.
              */
 
-            var    self = this,
+            var self = this,
                 supported = false,
                 posterChanged = this.status.media.poster !== media.poster; // Compare before reset. Important for OSX Safari as this.htmlElement.poster.src is absolute, even if original poster URL was relative.
 
@@ -2797,7 +2803,7 @@
             }
         },
         _updateAutohide: function() {
-            var    self = this,
+            var self = this,
                 event = "mousemove.jPlayer",
                 namespace = ".jPlayerAutohide",
                 eventType = event + namespace,
