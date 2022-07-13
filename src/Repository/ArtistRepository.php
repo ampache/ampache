@@ -74,7 +74,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[] = (int) $row['artist_id'];
         }
 
         return $results;
