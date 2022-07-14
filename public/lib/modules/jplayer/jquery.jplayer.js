@@ -1049,8 +1049,7 @@
             this.aurora.canPlay = {};
             this.flash.canPlay = {};
             $.each(this.formats, function(priority, format) {
-                //self.html.canPlay[format] = self.html[self.format[format].media].available && "" !== self.htmlElement[self.format[format].media].canPlayType(self.format[format].codec);
-                self.html.canPlay[format] = true;
+                self.html.canPlay[format] = self.html[self.format[format].media].available && "" !== self.htmlElement[self.format[format].media].canPlayType(self.format[format].codec);
                 self.aurora.canPlay[format] = ($.inArray(format, self.aurora.formats) > -1);
                 self.flash.canPlay[format] = self.format[format].flashCanPlay && self.flash.available;
             });
