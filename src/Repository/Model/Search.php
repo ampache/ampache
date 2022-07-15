@@ -667,6 +667,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Name'), $t_artist_data);
         $this->type_text('album_title', T_('Album Title'), $t_artist_data);
         $this->type_text('song_title', T_('Song Title'), $t_artist_data);
+        $this->type_text('summary', T_('Summary'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
@@ -2023,6 +2024,10 @@ class Search extends playlist_object
                 case 'played_times':
                     $where[]      = "(`artist`.`total_count` $sql_match_operator ?)";
                     $parameters[] = $input;
+                    break;
+                case 'summary':
+                    $where[]      = "`artist`.`summary` $sql_match_operator ?";
+                    $parameters   = array_merge($parameters, array($input));
                     break;
                 case 'album_title':
                     $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
