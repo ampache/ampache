@@ -160,6 +160,11 @@ class User extends database_object
     public $f_avatar_medium;
 
     /**
+     * @var int $catalog_access_id;
+     */
+    public $catalog_access_id;
+
+    /**
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
@@ -326,28 +331,40 @@ class User extends database_object
     } // id_from_email
 
     /**
+     * get_user_catalogs
+     * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return integer[]
+     */
+    public static function get_user_catalogs($userid)
+    {
+        if (parent::is_cached('user_catalog', $userid)) {
+            return parent::get_from_cache('user_catalog', $userid);
+        }
+
+        $sql        = "SELECT catalog_id from catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=? AND catalog_access.enabled=1 ORDER BY catalog_access.catalog_id";
+        $db_results = Dba::read($sql, array($userid));
+
+        $catalogs = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $catalogs[] = (int)$row['catalog_id'];
+        }
+
+        parent::add_to_cache('user_catalog', $userid, $catalogs);
+
+        return $catalogs;
+    } // get_catalogs
+
+
+    /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]
      */
     public function get_catalogs()
     {
-        if (parent::is_cached('user_catalog', $this->id)) {
-            return parent::get_from_cache('user_catalog', $this->id);
-        }
-
-        $sql        = "SELECT * FROM `user_catalog` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $catalogs = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = (int)$row['catalog'];
-        }
-
-        parent::add_to_cache('user_catalog', $this->id, $catalogs);
-
-        return $catalogs;
+        return get_user_catalogs($this->id);
     } // get_catalogs
+
 
     /**
      * get_preferences
@@ -599,6 +616,7 @@ class User extends database_object
                 case 'website':
                 case 'state':
                 case 'city':
+                case 'catalog_access_group':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -614,6 +632,21 @@ class User extends database_object
 
         return $this->id;
     }
+
+    /**
+     * update_catalog_access_group
+     * updates their catalog filter
+     * @param $new_filter
+     */
+    public function update_catalog_access_group($new_filter)
+    {
+        $sql            = "UPDATE `user` SET `catalog_access_group` = ? WHERE `id` = ?";
+        $this->username = $new_username;
+
+        debug_event(self::class, 'Updating catalog access group', 4);
+
+        Dba::write($sql, array($new_filter, $this->id));
+    } // update_catalog_access_group
 
     /**
      * update_username
@@ -937,6 +970,7 @@ class User extends database_object
         $website,
         $password,
         $access,
+        $catalog_access_group = 1,
         $state = '',
         $city = '',
         $disabled = false,
@@ -952,9 +986,12 @@ class User extends database_object
         }
         $disabled = $disabled ? 1 : 0;
 
+        // Just in case a zero value slipped in from upper layers...
+        $catalog_access_group = $catalog_access_group ? $catalog_access_group : 1;
+
         /* Now Insert this new user */
-        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, time());
+        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_access_group`, `create_date`";
+        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_access_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";
@@ -969,7 +1006,7 @@ class User extends database_object
             $params[] = $city;
         }
 
-        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
         if (!empty($website)) {
             $sql .= ", ?";

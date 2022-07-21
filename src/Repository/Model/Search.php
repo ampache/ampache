@@ -69,6 +69,9 @@ class Search extends playlist_object
         } else {
             $this->search_user = Core::get_global('user');
         }
+
+//        debug_event(self::class, "SearchID: $search_id; Search Type: $searchtype\n" . print_r($this, true), 5);
+
         $this->searchtype = $searchtype;
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
@@ -868,7 +871,6 @@ class Search extends playlist_object
                 $request[$key] = Dba::escape($value);
             }
         }
-
         // Figure out if they want an AND based search or an OR based search
         $operator = $data['operator'] ?? '';
         switch ($operator) {
@@ -1770,9 +1772,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2134,9 +2136,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2623,9 +2625,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id` = `song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('artist', $join)) {
@@ -2714,9 +2716,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id` = `video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         ksort($table);
@@ -2809,9 +2811,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         ksort($table);
@@ -2893,9 +2895,9 @@ class Search extends playlist_object
 
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if ($join['catalog']) {
@@ -2987,9 +2989,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
 

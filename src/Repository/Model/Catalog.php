@@ -429,6 +429,287 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_catalog_filters
+     * This returns the filters, sorting by name or by id as indicated by $sort
+     * $sort = field to sort on (id or name)
+     * @return string[]
+     */
+    public static function get_catalog_filters($sort='name')
+    {
+        $results = array();
+        // Now fetch the rest;
+        $sql        = "SELECT `id`,`name` FROM `catalog_access_group` ORDER BY `$sort` ";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_catalog_filter_names
+     * This returns the names of the catalog filters that are available with the default filter listed first.
+     * @return string[]
+     */
+    public static function get_catalog_filter_names()
+    {
+        $results = array();
+
+        // Get the default filter and name
+        // Default filter is always the first one.
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = 1";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $results[]  = $row['name'];
+
+        // Now fetch the rest;
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` != 1 ORDER BY `name`";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    public static function get_catalog_filter_name($id = 1)
+    {
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'];
+    }
+
+    public static function get_catalog_filter_by_name($filter_name)
+    {
+        $sql        = "SELECT `id` FROM `catalog_access_group` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($filter_name));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['id'];
+    }
+
+    /**
+     * get_catalog_filter_name
+     * This returns the catalog filter name with the given ID.
+     * @return string
+     */
+    public static function get_catalog_name($filter_id = 1)
+    {
+        $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'];
+    }
+
+    /**
+     * filter_user_count
+     * Returns the number of users assigned to a particular filter.
+     * @return int
+     */
+    public static function filter_user_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) FROM `user` WHERE `catalog_access_group` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_catalog_count
+     * This returns the number of catalogs assigned to a filter.
+     * @return string
+     */
+    public static function filter_catalog_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) FROM `catalog_access` WHERE `access_group_id` = ? AND `enabled`=1";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_count
+     * This returns the number of filters.
+     * @return string
+     */
+    public static function filter_count()
+    {
+        $sql        = "SELECT COUNT(1) FROM `catalog_access_group`";
+        $db_results = Dba::read($sql, array($name));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['COUNT(1)'];
+    }
+
+    /**
+     * filter_name_exists
+     * This returns 1 if filter exists, .
+     * can specifiy and ID to ignore in this check, useful for filter rnames.
+     * @return integer
+     */
+    public static function filter_name_exists($filter_name, $exclude_id=0)
+    {
+        $params[]   = array($filter_name);
+        $sql        = "SELECT COUNT(1) FROM `catalog_access_group` WHERE `name` = '$filter_name' ";
+        if ($exclude_id) {
+            $sql .= "AND `id` != $exclude_id";
+            $params[] = array($exclude_id);
+        }
+
+        debug_event(__CLASS__, 'filter_name_exists: ' . $sql . "[$filter_name, $exclude_id]", 5);
+
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['COUNT(1)'];
+    }
+
+    /**
+     * check_filter_catalog_enabled
+     * Returns the `enabled` status of the filter/catalog combination
+     * @return string
+     */
+    public static function check_filter_catalog_enabled($filter_id, $catalog_id)
+    {
+        $sql        = "SELECT `enabled` FROM `catalog_access` WHERE `access_group_id` = ? AND `catalog_id` = ?";
+        $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['enabled'];
+    }
+
+    /**
+     * set_filter_catalog_enabled
+     * Sets the value of enabled based on the inputs
+     * @return string
+     */
+    public static function set_filter_catalog_enabled($filter_id, $catalog_id, $enabled)
+    {
+        $sql        = "UPDATE `catalog_access` SET `enabled` = ? WHERE `access_group_id` = ? AND `catalog_id` = ?";
+        $db_results = Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
+    }
+
+    /**
+     * add_catalog_to_filter_table
+     * Adds appropriate rows when a catalog is added.
+     * @return string
+     */
+    public static function add_catalog_to_filter_table($catalog_id)
+    {
+        $sql        = "SELECT `id` FROM `catalog_access_group` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        $sql        = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
+        foreach ($results as $filter_id) {
+            $sql .= "($filter_id, $catalog_id, 0),";
+        }
+        // Remove last comma to avoid SQL error
+        $sql        = substr($sql, 0, -1);
+        $db_results = Dba::write($sql);
+
+        return 1;
+
+
+
+
+        $db_results = Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
+    }
+
+    /**
+     * modify_filter
+     * This returns 1 if successful
+     * @return string
+     */
+    public static function modify_filter($filter_id, $filter_name, $catalogs)
+    {
+        // Modify the filter name
+        $sql        = "UPDATE `catalog_access_group` SET `name`='$filter_name' WHERE `id`=$filter_id";
+        $db_results = Dba::write($sql);
+
+        // Fill in catalog_access table for the filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        foreach ($results as $catalog_id) {
+            $cn         = Catalog::get_catalog_name($catalog_id);
+            $enabled    = $catalogs[$cn];
+            $sql        = "UPDATE `catalog_access` SET `enabled` = $enabled WHERE `access_group_id` = $filter_id AND `catalog_id` = $catalog_id";
+            $db_results = Dba::write($sql);
+        }
+
+        return 1;
+    }
+
+    /**
+     * create_filter
+     * This returns 1 if successful
+     * @return string
+     */
+    public static function create_filter($filter_name, $catalogs)
+    {
+        // Create the filter
+        $sql        = "INSERT INTO `catalog_access_group` (`name`) VALUES ('$filter_name')";
+        $db_results = Dba::write($sql);
+
+        $sql        = "SELECT `id` FROM `catalog_access_group` WHERE `name` = '$filter_name' ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $filter_id  = $row['id'];
+
+        // Fill in catalog_access table for the new filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        $sql = "INSERT INTO catalog_access (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
+        foreach ($results as $catalog_id) {
+            $cn      = Catalog::get_catalog_name($catalog_id);
+            $enabled = $catalogs[$cn];
+            $sql .= "($filter_id, $catalog_id, $enabled),";
+        }
+        // Remove last comma to avoid SQL error
+        $sql        = substr($sql, 0, -1);
+        $db_results = Dba::write($sql);
+
+        return 1;
+    }
+
+    /**
+     * delete_filter
+     * Deletes a filter then returns
+     * @return string
+     */
+    public static function delete_filter($filter_id)
+    {
+        $sql        = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return 1;
+    }
+
+    /**
      * Check if a file is an audio.
      * @param string $file
      * @return boolean
@@ -527,46 +808,46 @@ abstract class Catalog extends database_object
     public static function get_user_filter($type, $user_id)
     {
         switch ($type) {
-            case "video":
-            case "artist":
             case "album":
             case "song":
+            case "video":
             case "podcast":
             case "podcast_episode":
             case "live_stream":
-                $sql = " `$type`.`id` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+            case "artist":
+                $sql = " `$type`.`id` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "song_artist":
             case "song_album":
                 $type = str_replace('song_', '', (string) $type);
-                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "album_artist":
-                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "label":
-                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist'  AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `label_asso`.`label`) ";
+                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist'  AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1) GROUP BY `label_asso`.`label`) ";
                 break;
             case "playlist":
-                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song'  AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist_data`.`playlist`) ";
+                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song'  AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `playlist_data`.`playlist`) ";
                 break;
             case "share":
-                $sql = " `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `share`.`object_id`, `share`.`object_type`) ";
+                $sql = " `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)   GROUP BY `share`.`object_id`, `share`.`object_type`) ";
                 break;
             case "tag":
-                $sql = " `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tag_map`.`tag_id`) ";
+                $sql = " `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `tag_map`.`tag_id`) ";
                 break;
             case 'tvshow':
-                $sql = " `tvshow`.`id` IN (SELECT `tvshow` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tvshow_season`.`tvshow`) ";
+                $sql = " `tvshow`.`id` IN (SELECT `tvshow` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `tvshow_season`.`tvshow`) ";
                 break;
             case 'tvshow_season':
-                $sql = " `tvshow_season`.`tvshow` IN (SELECT `season` FROM `tvshow_episode` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tvshow_episode`.`season`) ";
+                $sql = " `tvshow_season`.`tvshow` IN (SELECT `season` FROM `tvshow_episode` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1) GROUP BY `tvshow_episode`.`season`) ";
                 break;
             case 'tvshow_episode':
             case 'movie':
             case 'personal_video':
             case 'clip':
-                $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `video`.`id`) ";
+                $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `video`.`id`) ";
                 break;
             // enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode')
             case "object_count_artist":
@@ -580,7 +861,7 @@ abstract class Catalog extends database_object
             case "object_count_podcast":
             case "object_count_podcast_episode":
                 $type = str_replace('object_count_', '', (string) $type);
-                $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             // enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode')
             case "rating_artist":
@@ -594,7 +875,7 @@ abstract class Catalog extends database_object
             case "rating_podcast":
             case "rating_podcast_episode":
                 $type = str_replace('rating_', '', (string) $type);
-                $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "user_flag_artist":
             case "user_flag_album":
@@ -602,16 +883,16 @@ abstract class Catalog extends database_object
             case "user_flag_video":
             case "user_flag_podcast_episode":
                 $type = str_replace('user_flag_', '', (string) $type);
-                $sql  = " `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "rating_playlist":
-                $sql  = " `rating`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist`.`id`) ";
+                $sql  = " `rating`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `playlist`.`id`) ";
                 break;
             case "user_flag_playlist":
-                $sql  = " `user_flag`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist`.`id`) ";
+                $sql  = " `user_flag`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  GROUP BY `playlist`.`id`) ";
                 break;
             case "catalog":
-                $sql = " `catalog`.`filter_user` IN (0, $user_id) ";
+                $sql = " `catalog`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)  ";
                 break;
             default:
                 $sql = "";
@@ -762,8 +1043,6 @@ abstract class Catalog extends database_object
             $sql .= $join . self::get_user_filter('catalog', $user_id);
         }
         $sql .= "ORDER BY `name`";
-        //debug_event(__CLASS__, "get_catalogs sql:" . $sql, 5);
-
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1228,10 +1507,8 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            //debug_event(self::class, 'get_artist_arrays ' . print_r($row, true), 5);
             $results[] = $row;
         }
-        //debug_event(self::class, 'get_artist_arrays ' . $sql, 5);
 
         return $results;
     }

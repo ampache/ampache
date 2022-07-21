@@ -26,6 +26,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
@@ -120,6 +121,25 @@ $web_path = AmpConfig::get('web_path');
                     <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
                     <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
                 </select>
+            </td>
+        </tr>
+
+<?php if (AmpConfig::get('catalog_filter')) { ?>
+        <tr>
+            <td><?php echo T_('Catalog Filter'); ?>:</td>
+            <td><?php
+
+    $filters  = Catalog::get_catalog_filters();
+    $options  = array();
+    foreach ($filters as $filter) {
+        $selected = "";
+        if ($filter['id'] == $client->catalog_access_group) {
+            $selected = ' selected = "selected" ';
+        }
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
+    }
+    echo '<select name="catalog_access_group">' . implode("\n", $options) . '</select>';
+}?>
             </td>
         </tr>
         <tr>

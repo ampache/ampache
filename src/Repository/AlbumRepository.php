@@ -46,17 +46,25 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (!$count) {
             $count = 1;
         }
+
         $sql  = "SELECT DISTINCT `album`.`id` FROM `album` ";
         $join = 'WHERE';
 
+        // Only selected albums user can access
+        if (AmpConfig::get('catalog_filter') && $userId > 0) {
+            $sql .= $join . Catalog::get_user_filter('album', $userId);
+            $join = 'AND';
+        }
+
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
+            $sql .= $join . "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
             $join = 'AND';
         }
         if (AmpConfig::get('catalog_filter') && $userId > 0) {
             $sql .= $join . Catalog::get_user_filter('album', $userId);
             $join = 'AND';
         }
+
         if (AmpConfig::get('album_group')) {
             $sql .= $join . " `album`.`disk` = 1 ";
             $join = 'AND';
@@ -74,7 +82,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $count
         );
         $db_results = Dba::read($sql);
-        //debug_event(self::class, 'getRandom ' . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -185,15 +192,18 @@ final class AlbumRepository implements AlbumRepositoryInterface
      *
      * @return int[]
      */
-    public function getAlbumSuite(
-        Album $album
-    ): array {
+    public function getAlbumSuite(Album $album): array
+    {
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? 0;
+
         $f_name = $album->get_fullname(true);
         if ($f_name == '') {
             return array();
         }
         $results = array();
-        $where   = "WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+
+        $where   = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
         $params  = array($f_name, $f_name);
         if ($album->mbid) {
             $where .= 'AND `album`.`mbid` = ? ';
@@ -227,20 +237,19 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $where .= 'AND `album`.`release_status` = ? ';
             $params[] = $album->release_status;
         }
-        $where .= 'AND `album`.`catalog` = ? ';
-        $params[]      = $album->catalog;
+
         $catalog_where = "";
         $catalog_join  = "";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $catalog_where .= " AND" . Catalog::get_user_filter('album', $user_id);
+        }
 
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= "AND `catalog`.`enabled` = '1'";
             $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
         }
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
-            $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
-        }
-        $sql = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
-        //debug_event(self::class, 'getAlbumSuite ' . $sql, 5);
+        $sql        = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join $where $catalog_where GROUP BY `album`.`id` ORDER BY `disk` ASC";
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -255,7 +264,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        debug_event(self::class, 'collectGarbage', 5);
         // delete old mappings or bad ones
         Dba::write("DELETE FROM `album_map` WHERE `object_id` NOT IN (SELECT `id` FROM `artist`);");
         Dba::write("DELETE FROM `album_map` WHERE `album_map`.`album_id` NOT IN (SELECT DISTINCT `song`.`album` FROM `song`);");
@@ -383,7 +391,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($allow_group_disks) {
             $sql = "SELECT MIN(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_id` = `album`.`id` " . $catalog_join . " WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY $sql_sort";
         }
-        //debug_event(self::class, 'getByArtist ' . $sql, 5);
 
         $db_results = Dba::read($sql, array($artistId));
         $results    = array();
@@ -427,9 +434,8 @@ final class AlbumRepository implements AlbumRepositoryInterface
         string $name,
         int $artistId
     ): array {
-        $sql    = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
-        $params = array($name, $name, $artistId);
-        //debug_event(self::class, 'getByName ' . $sql, 5);
+        $sql        = "SELECT `album`.`id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`album_artist` = ?";
+        $params     = array($name, $name, $artistId);
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -447,8 +453,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getByMbidGroup(
         string $mbid
     ): array {
-        $sql = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
-        //debug_event(self::class, 'getByMbid ' . $sql, 5);
+        $sql        = "SELECT `album`.`id` FROM `album` WHERE `album`.`mbid_group` = ?";
         $db_results = Dba::read($sql, array($mbid));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
