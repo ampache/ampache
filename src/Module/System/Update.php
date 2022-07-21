@@ -4518,7 +4518,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Add the default group into the protecdtion table
-        $sql = "INSERT IGNORE INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES (1);";
+        $sql = "INSERT IGNORE INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES (0);";
         $retval &= (Dba::write($sql) !== false);
 
         // Add the default access group to the user table and add TRIGGER to reset access to DEFAULT if current access group is deleted
@@ -4534,7 +4534,7 @@ class Update
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = $row['id'];
-            $sql     = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (1, $catalog, 1);";
+            $sql     = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
         // not sure if this is used but will check
