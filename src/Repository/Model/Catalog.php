@@ -542,7 +542,7 @@ abstract class Catalog extends database_object
 
     /**
      * filter_name_exists
-     * can specifiy and ID to ignore in this check, useful for filter rnames.
+     * can specifiy an ID to ignore in this check, useful for filter names.
      * @return bool
      */
     public static function filter_name_exists($filter_name, $exclude_id = 0)
@@ -565,7 +565,7 @@ abstract class Catalog extends database_object
     /**
      * check_filter_catalog_enabled
      * Returns the `enabled` status of the filter/catalog combination
-     * @return string
+     * @return int
      */
     public static function check_filter_catalog_enabled($filter_id, $catalog_id)
     {
@@ -579,20 +579,18 @@ abstract class Catalog extends database_object
     /**
      * set_filter_catalog_enabled
      * Sets the value of enabled based on the inputs
-     * @return string
+     * @return PDOStatement|boolean
      */
     public static function set_filter_catalog_enabled($filter_id, $catalog_id, $enabled)
     {
-        $sql        = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
-        $db_results = Dba::write($sql, array($enabled, $filter_id, $catalog_id));
-        $row        = Dba::fetch_assoc($db_results);
-
-        return 1;
+        $sql = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
+        return Dba::write($sql, array($enabled, $filter_id, $catalog_id));
     }
 
     /**
      * add_catalog_filter
      * Adds appropriate rows when a catalog is added.
+     * @return PDOStatement|boolean
      */
     public static function add_catalog_filter($catalog_id)
     {
