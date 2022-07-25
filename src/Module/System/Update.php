@@ -4492,7 +4492,7 @@ class Update
     /** update_550001
      *
      * Add new tables and modify others to support catalog access feature
-     *
+     * Remove the old per catalog filter_user
      */
     public static function update_550001(): bool
     {
@@ -4528,9 +4528,8 @@ class Update
             $sql     = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
-        // not sure if this is used but will check
-        //$sql        = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
-        //$db_results = Dba::write($sql);
+        $sql        = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+        $db_results = Dba::write($sql);
 
         return $retval;
     }

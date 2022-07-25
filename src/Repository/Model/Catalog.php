@@ -120,10 +120,6 @@ abstract class Catalog extends database_object
      * @var string $gather_types
      */
     public $gather_types;
-    /**
-     * @var integer $filter_user
-     */
-    public $filter_user;
 
     /**
      * @var string $f_name
@@ -163,10 +159,6 @@ abstract class Catalog extends database_object
      * @var integer $enabled
      */
     public $enabled;
-    /**
-     * @var string $f_filter_user
-     */
-    public $f_filter_user;
 
     /**
      * This is a private var that's used during catalog builds
@@ -1011,9 +1003,6 @@ abstract class Catalog extends database_object
         $this->f_update      = $this->last_update ? get_datetime((int)$this->last_update) : T_('Never');
         $this->f_add         = $this->last_add ? get_datetime((int)$this->last_add) : T_('Never');
         $this->f_clean       = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
-        $this->f_filter_user = ($this->filter_user == 0)
-            ? T_('Public Catalog')
-            : User::get_username($this->filter_user);
     }
 
     /**
@@ -1225,13 +1214,11 @@ abstract class Catalog extends database_object
             return true;
         }
         $params = array($catalog_id);
-        $sql    = "SELECT `filter_user` FROM `catalog` WHERE `id` = ?";
+        $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
 
         $db_results = Dba::read($sql, $params);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ((int)$row['filter_user'] == 0 || (int)$row['filter_user'] == $user_id) {
-                return true;
-            }
+        if (Dba::num_rows($db_results)) {
+            return true;
         }
 
         return false;
