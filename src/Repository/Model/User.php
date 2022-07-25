@@ -970,7 +970,7 @@ class User extends database_object
         $website,
         $password,
         $access,
-        $catalog_access_group = 1,
+        $catalog_access_group = 0,
         $state = '',
         $city = '',
         $disabled = false,
@@ -987,7 +987,7 @@ class User extends database_object
         $disabled = $disabled ? 1 : 0;
 
         // Just in case a zero value slipped in from upper layers...
-        $catalog_access_group = $catalog_access_group ? $catalog_access_group : 1;
+        $catalog_access_group = $catalog_access_group ?? 0;
 
         /* Now Insert this new user */
         $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_access_group`, `create_date`";

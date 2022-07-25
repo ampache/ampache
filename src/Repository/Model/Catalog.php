@@ -3759,6 +3759,14 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
     }
+    /**
+     * Delete catalog filters that might have gone missing
+     */
+    public static function garbage_collect_filters()
+    {
+        Dba::write("DELETE FROM `catalog_access` WHERE `access_group_id` NOT IN (SELECT `id` FROM `catalog_access_group`);");
+        Dba::write("UPDATE `user` SET `catalog_access_group` = 0 WHERE `catalog_access_group` NOT IN (SELECT `id` FROM `catalog_access_group`);");
+    }
 
     /**
      * Update the catalog map for a single item
