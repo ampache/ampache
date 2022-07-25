@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -753,7 +754,7 @@ class Update
         $version[]     = array('version' => '540002', 'description' => $update_string);
 
         // TODO need to look at keeping these groups or converting them instead
-        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table<br><br>**IMPORTANT UPDATE NOTES** If you have private catalogs configured you will need to recreate your catalog policy using the new access groups";
+        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all PUBLIC catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table<br><br>**IMPORTANT UPDATE NOTES** If you have private catalogs configured any user that has a private catalog will have their own filter group created";
         $version[]     = array('version' => '550001', 'description' => $update_string);
 
         return $version;
@@ -4504,6 +4505,7 @@ class Update
         // Add the new catalog_filter_group table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
+
         // Add the default group
         $sql = "INSERT IGNORE INTO `catalog_filter_group` (`id`, `name`) VALUES (0, 'DEFAULT');";
         $retval &= (Dba::write($sql) !== false);
@@ -4516,20 +4518,54 @@ class Update
         $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
         $retval &= (Dba::write($sql) !== false);
 
-        // Drop user_catalog table
-        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
-        $retval &= (Dba::write($sql) !== false);
+        // Copy existing filters into individual groups for each user. (if a user only has access to public catalogs they are given the default list)
+        $sql        = "SELECT `id`, `username` FROM `user`;";
+        $db_results = Dba::read($sql);
+        $user_list  = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $user_list[$row['id']] = $row['username'];
+        }
+        foreach ($user_list as $key => $value) {
+            $group_id   = 0;
+            $sql        = 'SELECT `filter_user` FROM `catalog` WHERE `filter_user` = ?;';
+            $db_results = Dba::read($sql, array($key));
+            if (Dba::num_rows($db_results)) {
+                $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES (" . Dba::escape($value) . ");";
+                Dba::write($sql);
+                $group_id = (int)Dba::insert_id();
+            }
+            if ($group_id > 0) {
+                $sql        = "SELECT `id`, `filter_user` FROM `catalog`;";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $catalog = $row['id'];
+                    $enabled = ($row['filter_user'] == 0 || $row['filter_user'] == $key)
+                        ? 1
+                        : 0;
+                    $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ($group_id, $catalog, $enabled);";
+                    $retval &= (Dba::write($sql) !== false);
+                }
+                $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
+                Dba::write($sql, array($group_id, $key));
+            }
+        }
 
-        // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the catalog_filter_group_map table as enabled.
-        $sql        = "SELECT `id` FROM `catalog`;";
+        // Add all public catalogs in the DEFAULT profile.
+        $sql        = "SELECT `id` FROM `catalog` WHERE `filter_user` = 0;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = $row['id'];
             $sql     = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
-        Dba::write($sql);
+        if ($retval) {
+            // Drop useless tables and columns but only if it all worked
+            $sql = "DROP TABLE IF EXISTS `user_catalog`;";
+            $retval &= (Dba::write($sql) !== false);
+
+            $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+            Dba::write($sql);
+        }
 
         return $retval;
     }

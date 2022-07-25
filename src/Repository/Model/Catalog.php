@@ -481,7 +481,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($filter_name));
         $row        = Dba::fetch_assoc($db_results);
 
-        return $row['id'];
+        return (int)$row['id'];
     }
 
     /**
@@ -584,6 +584,7 @@ abstract class Catalog extends database_object
     public static function set_filter_catalog_enabled($filter_id, $catalog_id, $enabled)
     {
         $sql = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
+
         return Dba::write($sql, array($enabled, $filter_id, $catalog_id));
     }
 
@@ -675,7 +676,7 @@ abstract class Catalog extends database_object
     {
         if ($filter_id > 0) {
             $params = array($filter_id);
-            $sql = "DELETE FROM `catalog_filter_group` WHERE `id` = ?";
+            $sql    = "DELETE FROM `catalog_filter_group` WHERE `id` = ?";
             if (Dba::write($sql, $params)) {
                 $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
 

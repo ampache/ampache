@@ -50,21 +50,14 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql  = "SELECT DISTINCT `album`.`id` FROM `album` ";
         $join = 'WHERE';
 
-        // Only selected albums user can access
-        if (AmpConfig::get('catalog_filter') && $userId > 0) {
-            $sql .= $join . Catalog::get_user_filter('album', $userId);
-            $join = 'AND';
-        }
-
         if (AmpConfig::get('catalog_disable')) {
-            $sql .= $join . "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
             $join = 'AND';
         }
         if (AmpConfig::get('catalog_filter') && $userId > 0) {
             $sql .= $join . Catalog::get_user_filter('album', $userId);
             $join = 'AND';
         }
-
         if (AmpConfig::get('album_group')) {
             $sql .= $join . " `album`.`disk` = 1 ";
             $join = 'AND';
