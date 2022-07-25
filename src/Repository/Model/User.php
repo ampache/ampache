@@ -160,9 +160,9 @@ class User extends database_object
     public $f_avatar_medium;
 
     /**
-     * @var int $catalog_access_id;
+     * @var int $catalog_access_group;
      */
-    public $catalog_access_id;
+    public $catalog_access_group;
 
     /**
      * Constructor
