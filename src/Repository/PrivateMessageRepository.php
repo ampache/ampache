@@ -49,7 +49,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
     public function getUnreadCount(
         int $userId
     ): int {
-        $sql    = "SELECT count(`id`) as amount FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'";
+        $sql    = "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'";
         $params = array($userId);
 
         $db_results = Dba::read($sql, $params);

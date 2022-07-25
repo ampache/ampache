@@ -89,12 +89,15 @@ if (!Core::is_session_started()) {
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
                 <?php
-        // Only show the catalogs this user is allowed to access
-        $catalogs          = implode(',',User::get_user_catalogs($_SESSION['userdata']['uid']));
-        $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
-        $db_results        = Dba::read($sql);
-        while ($data = Dba::fetch_assoc($db_results)) {
-            $results[] = $data;
+        $results  = array();
+        $catalogs = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+        if (!empty($catalogs)) {
+            // Only show the catalogs this user is allowed to access
+            $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
+            $db_results        = Dba::read($sql);
+            while ($data = Dba::fetch_assoc($db_results)) {
+                $results[] = $data;
+            }
         }
 
         foreach ($results as $entries) {

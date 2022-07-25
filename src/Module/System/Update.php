@@ -4517,7 +4517,7 @@ class Update
         $sql = "INSERT IGNORE INTO `catalog_access_group` (`id`, `name`) VALUES (0, 'DEFAULT');";
         $retval &= (Dba::write($sql) !== false);
 
-        // Add the default group into the protecdtion table
+        // Add the default group into the protection table
         $sql = "INSERT IGNORE INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES (0);";
         $retval &= (Dba::write($sql) !== false);
 
@@ -4530,7 +4530,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
-        $sql        = "SELECT id FROM catalog;";
+        $sql        = "SELECT `id` FROM `catalog`;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = $row['id'];

@@ -1772,9 +1772,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2103,8 +2103,8 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate_album':
                     $where[]                     = "((`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL))";
-                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
-                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
+                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT `album_artist`, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
+                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT `album_artist`, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
                     break;
                 default:
                     break;
@@ -2136,9 +2136,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2625,9 +2625,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id` = `song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if (array_key_exists('artist', $join)) {
@@ -2716,9 +2716,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id` = `video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         ksort($table);
@@ -2811,9 +2811,9 @@ class Search extends playlist_object
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         ksort($table);
@@ -2895,9 +2895,9 @@ class Search extends playlist_object
 
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
         if ($join['catalog']) {
@@ -2989,9 +2989,9 @@ class Search extends playlist_object
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT catalog_id FROM catalog_access INNER JOIN user ON user.catalog_access_group = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
+                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = catalog_access.access_group_id WHERE user.id=$user_id AND catalog_access.enabled=1)";
             }
         }
 

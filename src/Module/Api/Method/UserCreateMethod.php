@@ -67,7 +67,7 @@ final class UserCreateMethod
         $password             = $input['password'];
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
-        $catalog_access_group = $input['catalog_access_group'] ?? 1;
+        $catalog_access_group = $input['catalog_access_group'] ?? 0;
         $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_access_group, null, null, $disable, true);
 
         if ($user_id > 0) {
