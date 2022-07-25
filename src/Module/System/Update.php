@@ -4528,8 +4528,8 @@ class Update
             $sql     = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
-        $sql        = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
-        $db_results = Dba::write($sql);
+        $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+        Dba::write($sql);
 
         return $retval;
     }

@@ -426,7 +426,7 @@ abstract class Catalog extends database_object
      * $sort = field to sort on (id or name)
      * @return string[]
      */
-    public static function get_catalog_filters($sort='name')
+    public static function get_catalog_filters($sort = 'name')
     {
         $results = array();
         // Now fetch the rest;
@@ -594,6 +594,7 @@ abstract class Catalog extends database_object
      */
     public static function add_catalog_filter($catalog_id)
     {
+        $results    = array();
         $sql        = "SELECT `id` FROM `catalog_filter_group` ORDER BY `id`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1211,7 +1212,7 @@ abstract class Catalog extends database_object
         if (!AmpConfig::get('catalog_filter')) {
             return true;
         }
-        $params = array($catalog_id);
+        $params = array($catalog_id, $user_id);
         $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
 
         $db_results = Dba::read($sql, $params);

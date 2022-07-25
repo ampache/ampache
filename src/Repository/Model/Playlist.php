@@ -24,11 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Catalog;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 
 /**
@@ -306,10 +305,9 @@ class Playlist extends playlist_object
      */
     public function get_items()
     {
-        $results     = array();
-        $user        = Core::get_global('user');
-        $user_id     = $user->id ?? 0;
-        $object_type = array();
+        $results = array();
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? 0;
 
         // Iterate over the object types
         $sql              ='SELECT DISTINCT object_type FROM playlist_data';
@@ -364,12 +362,12 @@ class Playlist extends playlist_object
      */
     public function get_random_items($limit = '')
     {
-        $limit_sql = $limit ? 'LIMIT ' . (string)($limit) : '';
-
-        $results     = array();
-        $user        = Core::get_global('user');
-        $user_id     = $user->id ?? 0;
-        $object_type = array();
+        $limit_sql = (!empty($limit))
+            ? ' LIMIT ' . (string)($limit)
+            : '';
+        $results = array();
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? 0;
 
         // Iterate over the object types
         $sql              ='SELECT DISTINCT object_type FROM playlist_data';
@@ -400,7 +398,7 @@ class Playlist extends playlist_object
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
         }
-            $db_results  = Dba::read($sql, $params);
+            $db_results  = Dba::read($sql . $limit_sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
@@ -453,7 +451,6 @@ class Playlist extends playlist_object
      */
     public function get_media_count($type = '')
     {
-        $results = array();
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
         $params  = array($this->id);
