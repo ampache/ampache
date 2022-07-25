@@ -66,6 +66,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
 
 
         if (Catalog::delete_filter($filter_id)) {
+            Catalog::reset_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s has been deleted'), $filter_name),
