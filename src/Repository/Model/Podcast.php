@@ -528,7 +528,7 @@ class Podcast extends database_object implements library_item
             $duration = '00:' . $duration;
         }
         // process a time string "03:23:01"
-        $ptime = (preg_grep("/[0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
+        $ptime = (preg_grep("/[0-9]?[0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
             ? date_parse((string)$duration)
             : $duration;
         // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
