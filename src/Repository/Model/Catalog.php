@@ -527,7 +527,7 @@ abstract class Catalog extends database_object
      */
     public static function filter_catalog_count($filter_id)
     {
-        $sql        = "SELECT COUNT(1) FROM `catalog_access` WHERE `access_group_id` = ? AND `enabled`=1";
+        $sql        = "SELECT COUNT(1) FROM `catalog_access` WHERE `access_group_id` = ? AND `enabled` = 1";
         $db_results = Dba::read($sql, array($filter_id));
         $row        = Dba::fetch_assoc($db_results);
 
@@ -639,8 +639,8 @@ abstract class Catalog extends database_object
     public static function modify_filter($filter_id, $filter_name, $catalogs)
     {
         // Modify the filter name
-        $sql        = "UPDATE `catalog_access_group` SET `name`='$filter_name' WHERE `id`=$filter_id";
-        $db_results = Dba::write($sql);
+        $sql        = "UPDATE `catalog_access_group` SET `name` = ? WHERE `id` = ?;";
+        $db_results = Dba::write($sql, array($filter_name, $filter_id));
 
         // Fill in catalog_access table for the filter
         $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
@@ -689,10 +689,9 @@ abstract class Catalog extends database_object
             $sql .= "($filter_id, $catalog_id, $enabled),";
         }
         // Remove last comma to avoid SQL error
-        $sql        = substr($sql, 0, -1);
-        $db_results = Dba::write($sql);
+        $sql = substr($sql, 0, -1);
 
-        return 1;
+        return Dba::write($sql);
     }
 
     /**
@@ -702,11 +701,9 @@ abstract class Catalog extends database_object
      */
     public static function delete_filter($filter_id)
     {
-        $sql        = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
-        $db_results = Dba::write($sql, array($filter_id));
-        $row        = Dba::fetch_assoc($db_results);
+        $sql = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
 
-        return 1;
+        return Dba::write($sql, array($filter_id));
     }
 
     /**
@@ -791,9 +788,9 @@ abstract class Catalog extends database_object
             if ($type == "song") {
                 $type = "id";
             }
-            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
         } elseif ($type == "video") {
-            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -960,7 +957,7 @@ abstract class Catalog extends database_object
      */
     public static function set_update_info(string $key, int $value)
     {
-        Dba::write("REPLACE INTO `update_info` SET `key`= ?, `value`= ?;", array($key, $value));
+        Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     } // set_update_info
 
     /**
@@ -2119,7 +2116,7 @@ abstract class Catalog extends database_object
         $songs   = array();
         $results = array();
 
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1' ORDER BY `album`";
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1' ORDER BY `album`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -2147,7 +2144,7 @@ abstract class Catalog extends database_object
     {
         $songs = array();
 
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -2968,7 +2965,7 @@ abstract class Catalog extends database_object
         $time         = 0;
         $size         = 0;
         foreach ($media_tables as $table) {
-            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled` = '1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
@@ -3683,7 +3680,7 @@ abstract class Catalog extends database_object
         // Select all songs in catalog
         $params = array();
         if ($catalog_id) {
-            $sql      = "SELECT `id` FROM `song` WHERE `catalog`= ? ORDER BY `album`, `track`";
+            $sql      = "SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`";
             $params[] = $catalog_id;
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
@@ -3755,7 +3752,7 @@ abstract class Catalog extends database_object
         // delete non-existent maps
         $tables = ['album', 'artist', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'];
         foreach ($tables as $type) {
-            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
+            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = '$type' AND `$type`.`id` IS NULL;";
             Dba::write($sql);
         }
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";

@@ -20,16 +20,22 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-//debug_event(self::class, 'manage filters template', 5);
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
-Ui::show_box_top(T_('Manage Catalog Filters'), 'box box_manage_filter');
-?>
 
-<?php //require Ui::find_template('list_header.inc.php');?>
+$web_path = AmpConfig::get('web_path'); ?>
+<?php Ui::show_box_top(T_('Manage Catalog Filters'), 'box box_manage_filter'); ?>
+<div id="information_actions">
+    <ul style="float: left;">
+        <li>
+            <a class="option-list" href="<?php echo $web_path; ?>/admin/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a>
+        </li>
+    </ul>
+</div>
 <table class="tabledata striped-rows" data-objecttype="filter">
     <thead>
         <tr class="th-top">
