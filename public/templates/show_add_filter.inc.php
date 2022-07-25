@@ -31,22 +31,23 @@ use Ampache\Repository\Model\Catalog;
 Ui::show_box_top(T_('Add Catalog Filter'), 'box box_add_filter');
 
 if (!AmpConfig::get('catalog_filter')) {
-    echo "Catalog filters are disabled.  Please enable 'catalog_filters=true' in apache.cfg.php";
+    echo T_("Please enable 'catalog_filter' in your sever config file");
 } else { ?>
-  <p><?php echo T_("In the form below enter a filter name and check the boxes for each catalog to be included in this filter.  If a catalog is not checked, it will be excluded from any users assigned to this profile."); ?></p>
+  <p><?php echo T_("Catalog filters are a way to stop users accessing different catalogs"); ?></p>
+  <p><?php echo T_("If you do not tick a catalog, it will be hidden from users you assign to the filter"); ?></p>
 &nbsp;
   <?php echo AmpError::display('general'); ?>
   <form name="add_filter" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">
     <table class="tabledata">
         <tr>
-            <td><?php echo T_('Filter Name'); ?>: *</td>
+            <td><?php echo T_('Filter Name'); ?>:</td>
             <td><input type="text" name="name" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php echo AmpError::display('name'); ?>
             </td>
         </tr>
         <tr>
 <?php
-    echo "<td>" . T_('Included Catalogs') . ":</td><td></td></tr>";
+    echo "<td>" . T_('Catalogs') . ":</td><td></td></tr>";
 
     $catalogs =Catalog::get_catalogs();
     foreach ($catalogs as $catalog) {
