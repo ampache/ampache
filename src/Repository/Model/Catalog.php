@@ -458,13 +458,13 @@ abstract class Catalog extends database_object
 
         // Get the default filter and name
         // Default filter is always the first one.
-        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = 1";
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = 0";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
         $results[]  = $row['name'];
 
         // Now fetch the rest;
-        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` != 1 ORDER BY `name`";
+        $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` > 0 ORDER BY `name`";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -474,7 +474,7 @@ abstract class Catalog extends database_object
         return $results;
     }
 
-    public static function get_catalog_filter_name($id = 1)
+    public static function get_catalog_filter_name($id = 0)
     {
         $sql        = "SELECT `name` FROM `catalog_access_group` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($id));
@@ -497,7 +497,7 @@ abstract class Catalog extends database_object
      * This returns the catalog filter name with the given ID.
      * @return string
      */
-    public static function get_catalog_name($filter_id = 1)
+    public static function get_catalog_name($filter_id = 0)
     {
         $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($filter_id));
