@@ -549,7 +549,7 @@ abstract class Catalog extends database_object
     {
         $params = array($filter_name);
         $sql    = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group` WHERE `name` = ?";
-        if ($exclude_id > 0) {
+        if ($exclude_id >= 0) {
             $sql .= " AND `id` != $exclude_id";
             $params[] = array($exclude_id);
         }
