@@ -599,10 +599,10 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * add_catalog_to_filter_table
+     * add_catalog_filter
      * Adds appropriate rows when a catalog is added.
      */
-    public static function add_catalog_to_filter_table($catalog_id)
+    public static function add_catalog_filter($catalog_id)
     {
         $sql        = "SELECT `id` FROM `catalog_access_group` ORDER BY `id`";
         $db_results = Dba::read($sql);
@@ -610,7 +610,7 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
 
-        $sql        = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
+        $sql = "INSERT INTO `catalog_access` (`access_group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $filter_id) {
             $sql .= "($filter_id, $catalog_id, 0),";
         }
@@ -622,8 +622,6 @@ abstract class Catalog extends database_object
 
     /**
      * modify_filter
-     * This returns 1 if successful
-     * @return string
      */
     public static function modify_filter($filter_id, $filter_name, $catalogs)
     {
@@ -648,8 +646,7 @@ abstract class Catalog extends database_object
 
     /**
      * create_filter
-     * This returns 1 if successful
-     * @return string
+     * @return PDOStatement|boolean
      */
     public static function create_filter($filter_name, $catalogs)
     {
@@ -681,17 +678,18 @@ abstract class Catalog extends database_object
 
     /**
      * delete_filter
-     * Deletes a filter then returns
      * @return PDOStatement|boolean
      */
     public static function delete_filter($filter_id)
     {
-        $params = array($filter_id);
-        $sql    = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
-        if (Dba::write($sql, $params)) {
-            $sql = "DELETE FROM `catalog_access` WHERE `access_group_id` = ?";
+        if ($filter_id > 0) {
+            $params = array($filter_id);
+            $sql = "DELETE FROM `catalog_access_group` WHERE `id` = ?";
+            if (Dba::write($sql, $params)) {
+                $sql = "DELETE FROM `catalog_access` WHERE `access_group_id` = ?";
 
-            return Dba::write($sql, $params);
+                return Dba::write($sql, $params);
+            }
         }
 
         return false;

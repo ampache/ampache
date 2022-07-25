@@ -4505,20 +4505,12 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_access_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
 
-        // Add the new default_catalog_access_group table to prevent deletion of the default group
-        $sql = "CREATE TABLE IF NOT EXISTS `default_catalog_access_group` (`default_catalog_access_group_id` int(11) UNSIGNED PRIMARY KEY);";
-        $retval &= (Dba::write($sql) !== false);
-
         // Add the new catalog_access table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_access` (`access_group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
 
         // Add the default group
         $sql = "INSERT IGNORE INTO `catalog_access_group` (`id`, `name`) VALUES (0, 'DEFAULT');";
-        $retval &= (Dba::write($sql) !== false);
-
-        // Add the default group into the protection table
-        $sql = "INSERT IGNORE INTO `default_catalog_access_group` (`default_catalog_access_group_id`) VALUES (0);";
         $retval &= (Dba::write($sql) !== false);
 
         // Add the default access group to the user table and add TRIGGER to reset access to DEFAULT if current access group is deleted
