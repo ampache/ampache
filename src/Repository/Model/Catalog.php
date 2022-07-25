@@ -629,7 +629,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
         Dba::write($sql, array($filter_name, $filter_id));
 
-        // Fill in catalog_access table for the filter
+        // Fill in catalog_filter_group_map table for the filter
         $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -656,7 +656,7 @@ abstract class Catalog extends database_object
         Dba::write($sql, $params);
         $filter_id = Dba::insert_id();
 
-        // Fill in catalog_access table for the new filter
+        // Fill in catalog_filter_group_map table for the new filter
         $results    = array();
         $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
         $db_results = Dba::read($sql);
@@ -664,7 +664,7 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
 
-        $sql = "INSERT INTO catalog_access (`group_id`, `catalog_id`, `enabled`) VALUES ";
+        $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $catalog_id) {
             $cn      = Catalog::get_catalog_name($catalog_id);
             $enabled = $catalogs[$cn];

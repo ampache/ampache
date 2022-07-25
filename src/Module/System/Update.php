@@ -4504,24 +4504,23 @@ class Update
         // Add the new catalog_filter_group table
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
-
-        // Add the new catalog_access table
-        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        $retval &= (Dba::write($sql) !== false);
-
         // Add the default group
         $sql = "INSERT IGNORE INTO `catalog_filter_group` (`id`, `name`) VALUES (0, 'DEFAULT');";
         $retval &= (Dba::write($sql) !== false);
 
+        // Add the new catalog_filter_group_map table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
         // Add the default access group to the user table and add TRIGGER to reset access to DEFAULT if current access group is deleted
-        $sql = "ALTER TABLE `user` ADD catalog_filter_group INT(11) UNSIGNED NOT NULL DEFAULT 0;";
+        $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
         $retval &= (Dba::write($sql) !== false);
 
         // Drop user_catalog table
         $sql = "DROP TABLE IF EXISTS `user_catalog`;";
         $retval &= (Dba::write($sql) !== false);
 
-        // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the user_catalog_access table as enabled.
+        // Enable all catalogs in the DEFAULT profile initially.  Need to get a list of all catalog IDs and add them to the catalog_filter_group_map table as enabled.
         $sql        = "SELECT `id` FROM `catalog`;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
