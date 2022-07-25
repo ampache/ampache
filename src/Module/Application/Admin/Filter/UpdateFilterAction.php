@@ -69,8 +69,10 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filter_name           = (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $filter_id             = (int) scrub_in(filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $filter_id   = (int) scrub_in(filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $filter_name = ($filter_id == 0)
+            ? 'DEFAULT'
+            : (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
 
         if (empty($filter_name)) {
             AmpError::add('name', T_('A filter name is required'));
@@ -94,8 +96,8 @@ final class UpdateFilterAction extends AbstractFilterAction
         $catalogs      = Catalog::get_catalogs();
         $catalog_array = array();
         foreach ($catalogs as $catalog) {
-            $cn                 = Catalog::get_catalog_name($catalog);
-            $catalog_array[$cn] = (int) scrub_in(filter_input(INPUT_POST, $cn, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $catalog_name                 = Catalog::get_catalog_name($catalog);
+            $catalog_array[$catalog_name] = (int) scrub_in(filter_input(INPUT_POST, $catalog_name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         }
 
         // Attempt to modify the filter

@@ -27,7 +27,10 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
-/** @var Ampache\Repository\Model\Catalog $libitem */
+/** @var string $filter */
+/** @var int $num_users */
+/** @var int $num_catalogs */
+/** @var int $filter_id */
 ?>
 <td class="cel_name"><?php echo $filter?></td>
 <td class="cel_num_users"><?php echo $num_users ?></td>
@@ -38,11 +41,12 @@ $web_path = AmpConfig::get('web_path');
         <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
-       <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
-           <?php echo Ui::get_icon('delete', T_('Delete')); ?>
-       </a>
-    <?php
-    } ?>
+        <?php if ($filter_id > 0) { ?>
+           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
+               <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+           </a>
+        <?php } ?>
+    <?php } ?>
 </td>
 
 

@@ -34,7 +34,7 @@ if (!AmpConfig::get('catalog_filter')) {
     echo T_("Please enable 'catalog_filter' in your sever config file");
 } else { ?>
   <p><?php echo T_("Catalog filters are a way to stop users accessing different catalogs"); ?></p>
-  <p><?php echo T_("If you do not tick a catalog, it will be hidden from users you assign to the filter"); ?></p>
+  <p><?php echo T_("If you do not tick a catalog, it will be hidden from users that you assign to this filter"); ?></p>
 &nbsp;
   <?php echo AmpError::display('general'); ?>
   <form name="add_filter" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=add_filter"; ?>">

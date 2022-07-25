@@ -40,8 +40,8 @@ $web_path = AmpConfig::get('web_path'); ?>
     <thead>
         <tr class="th-top">
             <th class="cel_name essential persist"><?php echo T_('Filter name'); ?></th>
-            <th class="cel_num_users essential"><?php echo T_('Number of Users'); ?></th>
-            <th class="cel_num_catalogs essential"><?php echo T_('Number of Catalogs'); ?></th>
+            <th class="cel_num_users essential"><?php echo T_('Users'); ?></th>
+            <th class="cel_num_catalogs essential"><?php echo T_('Catalogs'); ?></th>
             <th class="cel_action cel_action_text essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>

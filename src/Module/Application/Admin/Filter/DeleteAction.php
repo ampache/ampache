@@ -56,9 +56,11 @@ final class DeleteAction extends AbstractFilterAction
 
         $filter_id   = (int) $request->getQueryParams()['filter_id'] ?? 0;
         $filter_name = $request->getQueryParams()['filter_name'];
+        /* HINT: The name of the catalog filter */
+        $warning_msg = sprintf(T_('This will permanently delete the catalog filter "%s"'), $filter_name) . '<br>' . T_('Users will be reset to the DEFAULT filter.');
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
-            sprintf(T_('This will permanently delete the catalog filter "%s"<br>All users assigned to that catalog filter will be re-assgined to the DEFAULT filter.'), $filter_name),
+            $warning_msg,
             sprintf(
                 'admin/filter.php?action=confirm_delete&amp;filter_id=%s&amp;filter_name=%s',
                 $filter_id,
