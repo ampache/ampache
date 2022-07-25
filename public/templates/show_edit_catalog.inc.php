@@ -62,6 +62,10 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
             <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
         </tr>
         <tr>
+            <td><?php echo T_('Catalog Media Type'); ?>:</td>
+            <td><?php echo scrub_out(ucfirst($catalog->gather_types)); ?></td>
+        </tr>
+        <tr>
             <td><?php echo T_('Filename Pattern'); ?>:</td>
             <td><input type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" /></td>
         </tr>
