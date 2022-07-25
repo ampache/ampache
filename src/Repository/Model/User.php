@@ -160,9 +160,9 @@ class User extends database_object
     public $f_avatar_medium;
 
     /**
-     * @var int $catalog_access_group;
+     * @var int $catalog_filter_group;
      */
-    public $catalog_access_group;
+    public $catalog_filter_group;
 
     /**
      * Constructor
@@ -341,7 +341,7 @@ class User extends database_object
             return parent::get_from_cache('user_catalog', $userid);
         }
 
-        $sql        = "SELECT `catalog_id` FROM `catalog_access` INNER JOIN `user` ON `user`.`catalog_access_group` = `catalog_access`.`access_group_id` WHERE `user`.`id`= ? AND `catalog_access`.`enabled` = 1 ORDER BY `catalog_access`.`catalog_id`";
+        $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled` = 1 ORDER BY `catalog_filter_group_map`.`catalog_id`";
         $db_results = Dba::read($sql, array($userid));
 
         $catalogs = array();
@@ -616,7 +616,7 @@ class User extends database_object
                 case 'website':
                 case 'state':
                 case 'city':
-                case 'catalog_access_group':
+                case 'catalog_filter_group':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -634,19 +634,19 @@ class User extends database_object
     }
 
     /**
-     * update_catalog_access_group
+     * update_catalog_filter_group
      * updates their catalog filter
      * @param $new_filter
      */
-    public function update_catalog_access_group($new_filter)
+    public function update_catalog_filter_group($new_filter)
     {
-        $sql            = "UPDATE `user` SET `catalog_access_group` = ? WHERE `id` = ?";
+        $sql            = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
         $this->username = $new_username;
 
         debug_event(self::class, 'Updating catalog access group', 4);
 
         Dba::write($sql, array($new_filter, $this->id));
-    } // update_catalog_access_group
+    } // update_catalog_filter_group
 
     /**
      * update_username
@@ -970,7 +970,7 @@ class User extends database_object
         $website,
         $password,
         $access,
-        $catalog_access_group = 0,
+        $catalog_filter_group = 0,
         $state = '',
         $city = '',
         $disabled = false,
@@ -987,11 +987,11 @@ class User extends database_object
         $disabled = $disabled ? 1 : 0;
 
         // Just in case a zero value slipped in from upper layers...
-        $catalog_access_group = $catalog_access_group ?? 0;
+        $catalog_filter_group = $catalog_filter_group ?? 0;
 
         /* Now Insert this new user */
-        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_access_group`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_access_group, time());
+        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_filter_group`, `create_date`";
+        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_filter_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";

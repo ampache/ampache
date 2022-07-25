@@ -81,7 +81,7 @@ final class UpdateUserAction extends AbstractUserAction
         $email                = (string) scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website              = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $access               = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $catalog_access_group = (int) scrub_in(filter_input(INPUT_POST, 'catalog_access_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $catalog_filter_group = (int) scrub_in(filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $pass1                = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $pass2                = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $state                = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
@@ -123,8 +123,8 @@ final class UpdateUserAction extends AbstractUserAction
         if ($access != $client->access) {
             $client->update_access($access);
         }
-        if ($catalog_access_group != $client->catalog_access_group) {
-            $client->update_catalog_access_group($catalog_access_group);
+        if ($catalog_filter_group != $client->catalog_filter_group) {
+            $client->update_catalog_filter_group($catalog_filter_group);
         }
         if ($email != $client->email) {
             $client->update_email($email);

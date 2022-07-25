@@ -67,8 +67,8 @@ final class UserCreateMethod
         $password             = $input['password'];
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
-        $catalog_access_group = $input['catalog_access_group'] ?? 0;
-        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_access_group, null, null, $disable, true);
+        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {
             Api::message('successfully created: ' . $username, $input['api_format']);

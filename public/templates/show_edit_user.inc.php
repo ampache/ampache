@@ -133,12 +133,12 @@ $web_path = AmpConfig::get('web_path');
     $options  = array();
     foreach ($filters as $filter) {
         $selected = "";
-        if ($filter['id'] == $client->catalog_access_group) {
+        if ($filter['id'] == $client->catalog_filter_group) {
             $selected = ' selected = "selected" ';
         }
         $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
     }
-    echo '<select name="catalog_access_group">' . implode("\n", $options) . '</select>';
+    echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
 }?>
             </td>
         </tr>
