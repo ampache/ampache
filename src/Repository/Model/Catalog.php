@@ -2181,13 +2181,9 @@ abstract class Catalog extends database_object
      */
     public static function update_settings($data)
     {
-        $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ?, `filter_user` = ? WHERE `id` = ?";
-        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['filter_user'], $data['catalog_id']);
+        $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
+        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         Dba::write($sql, $params);
-
-        if ($data['filter_user']) {
-            User::update_counts();
-        }
 
         return true;
     } // update_settings
