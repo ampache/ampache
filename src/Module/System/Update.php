@@ -1233,11 +1233,11 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `album` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `song` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

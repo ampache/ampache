@@ -478,15 +478,12 @@ class User extends database_object
 
     /**
      * is_logged_in
-     * checks to see if $this user is logged in returns their current IP if they
-     * are logged in
+     * checks to see if $this user is logged in returns their current IP if they are logged in
      */
     public function is_logged_in()
     {
-        $username = Dba::escape($this->username);
-
-        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username' AND `expire` > " . time();
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND `expire` > ?;";
+        $db_results = Dba::read($sql, array($this->username, time()));
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return $row['ip'] ?? null;
@@ -816,9 +813,9 @@ class User extends database_object
                 $enabled_sql = ($catalog_disable && $table !== 'podcast_episode')
                     ? " WHERE `$table`.`enabled`='1' AND"
                     : ' WHERE';
-                $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
-                $db_results  = Dba::read($sql);
-                $row         = Dba::fetch_row($db_results);
+                $sql        = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
+                $db_results = Dba::read($sql);
+                $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
                 $items += (int)($row[0] ?? 0);
                 $time += (int)($row[1] ?? 0);
