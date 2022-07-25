@@ -47,7 +47,7 @@ foreach ($filters as $filter) {
     $filter_id    = Catalog::get_catalog_filter_by_name($filter);
     $num_users    = Catalog::filter_user_count($filter_id);
     $num_catalogs = Catalog::filter_catalog_count($filter_id);
-//        debug_event(self::class, "Values:  fname:$filter, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);?>
+    //debug_event(self::class, "Values:  fname:$filter, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);?>
         <tr id="<?php $filter ?>">
             <?php require Ui::find_template('show_filter_row.inc.php'); ?>
         </tr>

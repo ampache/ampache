@@ -37,18 +37,17 @@ use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
-
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
-        ShowAction::REQUEST_KEY => ShowAction::class,
-        ShowAddFilterAction::REQUEST_KEY => ShowAddFilterAction::class,
-        DeleteAction::REQUEST_KEY => DeleteAction::class,
-        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
-        ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         AddFilterAction::REQUEST_KEY => AddFilterAction::class,
-        UpdateFilterAction::REQUEST_KEY => UpdateFilterAction::class,
         BrowseFiltersAction::REQUEST_KEY => BrowseFiltersAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowAddFilterAction::REQUEST_KEY => ShowAddFilterAction::class,
+        ShowEditAction::REQUEST_KEY => ShowEditAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        UpdateFilterAction::REQUEST_KEY => UpdateFilterAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

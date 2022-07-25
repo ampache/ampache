@@ -56,7 +56,7 @@ final class BrowseFiltersAction implements ApplicationActionInterface
         require_once Ui::find_template('show_manage_filters.inc.php');
 
         $this->ui->showQueryStats();
-//        $this->ui->showFooter();
+        //$this->ui->showFooter();
 
         return null;
     }

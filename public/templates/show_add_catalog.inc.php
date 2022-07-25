@@ -33,7 +33,7 @@ $allow_video    = AmpConfig::get('allow_video'); ?>
 <p><?php
 $catalog_filter="";
 if (AmpConfig::get('catalog_filter')) {
-    $catalog_filter = "<br>Remember to add this catalog to the catalog filters as appropriate";
+    $catalog_filter = "<br>" . T_("New catalogs are added to the DEFAULT group when created");
 }
 echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)$catalog_filter;"); ?></p>
 &nbsp;

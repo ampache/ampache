@@ -33,8 +33,8 @@ Ui::show_box_top(T_('Edit Catalog Filter'), 'box box_add_filter');
 if (!AmpConfig::get('catalog_filter')) {
     echo "Catalog filters are disabled.  Please enable 'catalog_filters=true' in apache.cfg.php";
 } else {
-    $filter_id   = (int) $request->getQueryParams()['filter_id'] ?? 0;
-    $filter_name = $request->getQueryParams()['filter_name']; ?><p><?php echo T_("In the form below you can rename a filter name and change which catalogs are included in this filter.  If a catalog is not checked, it will be excluded from any users assigned to this profile."); ?></p>
+    $filter_id   = (int) Core::get_request('filter_id') ?? 0;
+    $filter_name = Core::get_request('filter_name'); ?><p><?php echo T_("In the form below you can rename a filter name and change which catalogs are included in this filter.  If a catalog is not checked, it will be excluded from any users assigned to this profile."); ?></p>
 &nbsp;
   <?php echo AmpError::display('general'); ?>
   <form name="edit_filter" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=update_filter"; ?>">

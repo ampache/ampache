@@ -56,9 +56,9 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             return null;
         }
 
-//        if (!Core::form_verify('delete_filter')) {
-//            throw new AccessDeniedException();
-//        }
+        // if (!Core::form_verify('delete_filter')) {
+        //     throw new AccessDeniedException();
+        // }
         $this->ui->showHeader();
 
         $filter_id   = (int) $request->getQueryParams()['filter_id'] ?? 0;
