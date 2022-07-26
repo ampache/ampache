@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
@@ -36,26 +35,19 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ampache\Repository\Model\Catalog;
-use Psr\Log\LoggerInterface;
 
 final class UpdateFilterAction extends AbstractFilterAction
 {
     public const REQUEST_KEY = 'update_filter';
 
     private UiInterface $ui;
-    private ModelFactoryInterface $modelFactory;
     private ConfigContainerInterface $configContainer;
-    private LoggerInterface $logger;
 
     public function __construct(
         UiInterface $ui,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
-        $this->logger          = $logger;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 
@@ -101,10 +93,6 @@ final class UpdateFilterAction extends AbstractFilterAction
             $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
             $catalog_array[$catalog_id] = $catalog_status;
         }
-        $this->logger->debug(
-            'UpdateFilterAction: {' . print_r($catalog_array, true) . '}',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-        );
         // Attempt to modify the filter
         if (!Catalog::edit_catalog_filter($filter_id, $filter_name, $catalog_array)) {
             AmpError::add('general', T_("The filter was not modified"));
@@ -113,7 +101,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('Filter Updated'),
             sprintf(T_('%1$s has been updated'), $filter_name),
-            sprintf('%s/admin/filter.php?action=browse_catalog_filters', $this->configContainer->getWebPath())
+            sprintf('%s/admin/filter.php?action=show', $this->configContainer->getWebPath())
         );
 
         $this->ui->showQueryStats();

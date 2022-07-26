@@ -26,9 +26,6 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -40,17 +37,13 @@ final class ShowEditAction extends AbstractFilterAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 

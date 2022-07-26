@@ -26,15 +26,11 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Filter;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ampache\Repository\Model\Catalog;
@@ -44,16 +40,13 @@ final class AddFilterAction extends AbstractFilterAction
     public const REQUEST_KEY = 'add_filter';
 
     private UiInterface $ui;
-    private ModelFactoryInterface $modelFactory;
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 
@@ -106,7 +99,7 @@ final class AddFilterAction extends AbstractFilterAction
             T_('New Filter Added'),
             // HINT: %1 Username, %2 Access (Guest, User, Admin)
             sprintf(T_('%1$s has been created'), $filtername),
-            sprintf('%s/admin/filter.php?action=browse_catalog_filters', $this->configContainer->getWebPath())
+            sprintf('%s/admin/filter.php?action=show', $this->configContainer->getWebPath())
         );
 
         $this->ui->showQueryStats();

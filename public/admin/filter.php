@@ -30,7 +30,6 @@ use Ampache\Module\Application\Admin\Filter\ShowAction;
 use Ampache\Module\Application\Admin\Filter\ShowAddFilterAction;
 use Ampache\Module\Application\Admin\Filter\ShowEditAction;
 use Ampache\Module\Application\Admin\Filter\UpdateFilterAction;
-use Ampache\Module\Application\Admin\Filter\BrowseFiltersAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -41,7 +40,6 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         AddFilterAction::REQUEST_KEY => AddFilterAction::class,
-        BrowseFiltersAction::REQUEST_KEY => BrowseFiltersAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ShowAddFilterAction::REQUEST_KEY => ShowAddFilterAction::class,

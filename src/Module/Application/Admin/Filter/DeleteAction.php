@@ -26,9 +26,7 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,6 +35,8 @@ final class DeleteAction extends AbstractFilterAction
     public const REQUEST_KEY = 'delete';
 
     private UiInterface $ui;
+
+    private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,

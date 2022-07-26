@@ -24,41 +24,39 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\Filter;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction extends AbstractFilterAction
+final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        UiInterface $ui
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui = $ui;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            throw new AccessDeniedException();
+        }
+
         $this->ui->showHeader();
-        /*
-                $browse = $this->modelFactory->createBrowse();
-                $browse->reset_filters();
-                $browse->set_type('user');
-                $browse->set_simple_browse(true);
-                $browse->set_sort('name', 'ASC');
-                $browse->show_objects($browse->get_objects());
-                $browse->store();
-        */
+
+        require_once Ui::find_template('show_manage_filters.inc.php');
+
         $this->ui->showQueryStats();
-        $this->ui->showFooter();
+        //$this->ui->showFooter();
 
         return null;
     }
