@@ -641,7 +641,8 @@ abstract class Catalog extends database_object
     public static function edit_catalog_filter($filter_id, $filter_name, $catalogs)
     {
         // Modify the filter name
-        $sql = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
+        $results = array();
+        $sql     = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
         Dba::write($sql, array($filter_name, $filter_id));
 
         // Fill in catalog_filter_group_map table for the filter

@@ -218,7 +218,6 @@ final class SongRepository implements SongRepositoryInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
-        debug_event(self::class, 'getByLicense ' . $sql, 5);
 
         return $results;
     }

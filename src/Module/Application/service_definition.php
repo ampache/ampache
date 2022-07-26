@@ -251,7 +251,6 @@ return [
     Admin\Catalog\UpdateCatalogSettingsAction::class => autowire(Admin\Catalog\UpdateCatalogSettingsAction::class),
     Admin\Filter\AbstractFilterAction::class => autowire(Admin\Filter\AbstractFilterAction::class),
     Admin\Filter\AddFilterAction::class => autowire(Admin\Filter\AddFilterAction::class),
-    Admin\Filter\BrowseFiltersAction::class => autowire(Admin\Filter\BrowseFiltersAction::class),
     Admin\Filter\ConfirmDeleteAction::class => autowire(Admin\Filter\ConfirmDeleteAction::class),
     Admin\Filter\DeleteAction::class => autowire(Admin\Filter\DeleteAction::class),
     Admin\Filter\ShowAction::class => autowire(Admin\Filter\ShowAction::class),

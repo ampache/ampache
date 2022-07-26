@@ -637,8 +637,7 @@ class User extends database_object
      */
     public function update_catalog_filter_group($new_filter)
     {
-        $sql            = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
-        $this->username = $new_username;
+        $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
 
         debug_event(self::class, 'Updating catalog access group', 4);
 
