@@ -555,7 +555,7 @@ abstract class Catalog extends database_object
         }
 
         $db_results = Dba::read($sql, $params);
-        if ($db_results) {
+        if (Dba::num_rows($db_results) > 0) {
             return true;
         }
 
