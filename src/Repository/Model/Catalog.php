@@ -636,6 +636,7 @@ abstract class Catalog extends database_object
 
     /**
      * edit_catalog_filter
+     * @return bool
      */
     public static function edit_catalog_filter($filter_id, $filter_name, $catalogs)
     {
@@ -653,9 +654,13 @@ abstract class Catalog extends database_object
         foreach ($results as $catalog_id) {
             $cn      = Catalog::get_catalog_name($catalog_id);
             $enabled = $catalogs[$cn];
-            $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
-            Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+            $sql     = "REPLACE INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
+            if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
