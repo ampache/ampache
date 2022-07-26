@@ -101,7 +101,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         }
 
         // Attempt to modify the filter
-        $filter_id = Catalog::modify_filter($filter_id, $filter_name, $catalog_array);
+        $filter_id = Catalog::edit_catalog_filter($filter_id, $filter_name, $catalog_array);
         if ($filter_id < 1) {
             AmpError::add('general', T_("The filter was not modified"));
         }

@@ -4572,7 +4572,7 @@ class Update
         $sql        = "SELECT `id` FROM `catalog` WHERE `filter_user` = 0;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog = $row['id'];
+            $catalog = (int)$row['id'];
             $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }

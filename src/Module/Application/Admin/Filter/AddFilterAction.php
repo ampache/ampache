@@ -97,7 +97,7 @@ final class AddFilterAction extends AbstractFilterAction
         }
 
         // Attempt to create the filter
-        $filter_id = Catalog::create_filter($filtername, $catalog_array);
+        $filter_id = Catalog::add_catalog_filter_map($filtername, $catalog_array);
         if ($filter_id < 1) {
             AmpError::add('general', T_("The new filter was not created"));
         }

@@ -579,18 +579,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * set_filter_catalog_enabled
-     * Sets the value of enabled based on the inputs
-     * @return PDOStatement|boolean
-     */
-    public static function set_filter_catalog_enabled($filter_id, $catalog_id, $enabled)
-    {
-        $sql = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
-
-        return Dba::write($sql, array($enabled, $filter_id, $catalog_id));
-    }
-
-    /**
      * add_catalog_filter
      * Adds appropriate rows when a catalog is added.
      * @return PDOStatement|boolean
@@ -606,7 +594,7 @@ abstract class Catalog extends database_object
 
         $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $filter_id) {
-            $sql .= "($filter_id, $catalog_id, 0),";
+            $sql .= "" . (int)$filter_id . ", " . (int)$catalog_id. ", 0),";
         }
         // Remove last comma to avoid SQL error
         $sql = substr($sql, 0, -1);
@@ -615,34 +603,10 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * modify_filter
-     */
-    public static function modify_filter($filter_id, $filter_name, $catalogs)
-    {
-        // Modify the filter name
-        $sql = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($filter_name, $filter_id));
-
-        // Fill in catalog_filter_group_map table for the filter
-        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        foreach ($results as $catalog_id) {
-            $cn      = Catalog::get_catalog_name($catalog_id);
-            $enabled = $catalogs[$cn];
-            $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
-            Dba::write($sql, array($enabled, $filter_id, $catalog_id));
-        }
-    }
-
-    /**
-     * create_filter
+     * add_catalog_filter_map
      * @return PDOStatement|boolean
      */
-    public static function create_filter($filter_name, $catalogs)
+    public static function add_catalog_filter_map($filter_name, $catalogs)
     {
         // Create the filter
         $params = array($filter_name);
@@ -671,10 +635,34 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * delete_filter
+     * edit_catalog_filter
+     */
+    public static function edit_catalog_filter($filter_id, $filter_name, $catalogs)
+    {
+        // Modify the filter name
+        $sql = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
+        Dba::write($sql, array($filter_name, $filter_id));
+
+        // Fill in catalog_filter_group_map table for the filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        foreach ($results as $catalog_id) {
+            $cn      = Catalog::get_catalog_name($catalog_id);
+            $enabled = $catalogs[$cn];
+            $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
+            Dba::write($sql, array($enabled, $filter_id, $catalog_id));
+        }
+    }
+
+    /**
+     * delete_catalog_filter
      * @return PDOStatement|boolean
      */
-    public static function delete_filter($filter_id)
+    public static function delete_catalog_filter($filter_id)
     {
         if ($filter_id > 0) {
             $params = array($filter_id);
@@ -690,10 +678,10 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * reset_filter
-     * reset catalog filter to DEFAULT after deleting a filter group
+     * reset_user_filter
+     * reset a users's catalog filter to DEFAULT after deleting a filter group
      */
-    public static function reset_filter($filter_id)
+    public static function reset_user_filter($filter_id)
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?";
         Dba::write($sql, array($filter_id));

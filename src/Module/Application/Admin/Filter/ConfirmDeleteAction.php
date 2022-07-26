@@ -56,7 +56,7 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             return null;
         }
 
-        // if (!Core::form_verify('delete_filter')) {
+        // if (!Core::form_verify('delete_catalog_filter')) {
         //     throw new AccessDeniedException();
         // }
         $this->ui->showHeader();
@@ -65,8 +65,8 @@ final class ConfirmDeleteAction extends AbstractFilterAction
         $filter_name = $request->getQueryParams()['filter_name'];
 
 
-        if (Catalog::delete_filter($filter_id)) {
-            Catalog::reset_filter($filter_id);
+        if (Catalog::delete_catalog_filter($filter_id)) {
+            Catalog::reset_user_filter($filter_id);
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s has been deleted'), $filter_name),
