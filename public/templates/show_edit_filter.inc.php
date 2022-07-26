@@ -48,7 +48,8 @@ if (!AmpConfig::get('catalog_filter')) {
                 <input type="hidden" name="name" value="<?php echo $filter_name?>" />
                 <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
             <?php } else { ?>
-                <td><input type="text" name="name" maxlength="128" value="<?php echo $filter_name ?>" >
+                <td>
+                    <input type="text" name="name" maxlength="128" value="<?php echo $filter_name ?>" >
                     <?php echo AmpError::display('name'); ?>
                     <input type="hidden" name="filter_id" value="<?php echo $filter_id?>" />
                 </td>
@@ -59,10 +60,10 @@ if (!AmpConfig::get('catalog_filter')) {
     echo "<td>" . T_('Catalogs') . ":</td><td></td></tr>";
 
     $catalogs = Catalog::get_catalogs();
-    foreach ($catalogs as $catalog) {
-        $cn      = Catalog::get_catalog_name($catalog);
-        $checked = (Catalog::check_filter_catalog_enabled($filter_id, $catalog)) ? 'checked' : '';
-        echo "<tr><td>$cn</td>" . '<td><input type="checkbox" value="1" name="' . $cn . '" ' . $checked . '></td></tr>';
+    foreach ($catalogs as $catalog_id) {
+        $cn      = Catalog::get_catalog_name($catalog_id);
+        $checked = (Catalog::check_filter_catalog_enabled($filter_id, $catalog_id)) ? 'checked' : '';
+        echo "<tr><td>$cn</td>" . '<td><input type="checkbox" name="catalog_' . $catalog_id . '" value="1" ' . $checked . '></td></tr>';
     } ?>
     </table>
     <div class="formValidation">

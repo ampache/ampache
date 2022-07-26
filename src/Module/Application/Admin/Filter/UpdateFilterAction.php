@@ -26,18 +26,17 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Filter;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ampache\Repository\Model\Catalog;
+use Psr\Log\LoggerInterface;
 
 final class UpdateFilterAction extends AbstractFilterAction
 {
@@ -46,13 +45,16 @@ final class UpdateFilterAction extends AbstractFilterAction
     private UiInterface $ui;
     private ModelFactoryInterface $modelFactory;
     private ConfigContainerInterface $configContainer;
+    private LoggerInterface $logger;
 
     public function __construct(
         UiInterface $ui,
+        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
     ) {
         $this->ui              = $ui;
+        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
@@ -69,7 +71,7 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filter_id   = (int) scrub_in(filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $filter_id   = filter_input(INPUT_POST, 'filter_id', FILTER_SANITIZE_NUMBER_INT);
         $filter_name = ($filter_id == 0)
             ? 'DEFAULT'
             : (string) scrub_in(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
@@ -95,11 +97,14 @@ final class UpdateFilterAction extends AbstractFilterAction
 
         $catalogs      = Catalog::get_catalogs();
         $catalog_array = array();
-        foreach ($catalogs as $catalog) {
-            $catalog_name                 = Catalog::get_catalog_name($catalog);
-            $catalog_array[$catalog_name] = (int) scrub_in(filter_input(INPUT_POST, $catalog_name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        foreach ($catalogs as $catalog_id) {
+            $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
+            $catalog_array[$catalog_id] = $catalog_status;
         }
-
+        $this->logger->debug(
+            'UpdateFilterAction: {' . print_r($catalog_array, true) . '}',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
         // Attempt to modify the filter
         if (!Catalog::edit_catalog_filter($filter_id, $filter_name, $catalog_array)) {
             AmpError::add('general', T_("The filter was not modified"));

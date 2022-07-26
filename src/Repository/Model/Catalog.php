@@ -565,25 +565,25 @@ abstract class Catalog extends database_object
     /**
      * check_filter_catalog_enabled
      * Returns the `enabled` status of the filter/catalog combination
-     * @return int
+     * @return bool
      */
     public static function check_filter_catalog_enabled($filter_id, $catalog_id)
     {
-        $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
+        $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
         $db_results = Dba::read($sql, array($filter_id, $catalog_id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return (int)$row['enabled'];
+        if (Dba::num_rows($db_results)) {
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     /**
-     * add_catalog_filter
+     * add_catalog_filter_group_map
      * Adds appropriate rows when a catalog is added.
      * @return PDOStatement|boolean
      */
-    public static function add_catalog_filter($catalog_id)
+    public static function add_catalog_filter_group_map($catalog_id)
     {
         $results    = array();
         $sql        = "SELECT `id` FROM `catalog_filter_group` ORDER BY `id`";
@@ -592,9 +592,9 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
 
-        $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
+        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $filter_id) {
-            $sql .= "" . (int)$filter_id . ", " . (int)$catalog_id. ", 0),";
+            $sql .= "" . (int)$filter_id . ", " . (int)$catalog_id . ", 0),";
         }
         // Remove last comma to avoid SQL error
         $sql = substr($sql, 0, -1);
@@ -603,10 +603,10 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * add_catalog_filter_map
+     * add_catalog_filter_group
      * @return PDOStatement|boolean
      */
-    public static function add_catalog_filter_map($filter_name, $catalogs)
+    public static function add_catalog_filter_group($filter_name, $catalogs)
     {
         // Create the filter
         $params = array($filter_name);
@@ -652,11 +652,21 @@ abstract class Catalog extends database_object
         }
 
         foreach ($results as $catalog_id) {
-            $cn      = Catalog::get_catalog_name($catalog_id);
-            $enabled = $catalogs[$cn];
-            $sql     = "REPLACE INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
-            if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
-                return false;
+            $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
+            $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+            if (Dba::num_rows($db_results)) {
+                // update the values
+                $enabled = $catalogs[$catalog_id];
+                $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
+                if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+                    return false;
+                }
+            } else {
+                // missing group map? add it in
+                $sql = "INSERT INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
+                if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+                    return false;
+                }
             }
         }
 
