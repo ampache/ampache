@@ -4509,8 +4509,12 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
 
-        // Add the default group
-        $sql = "INSERT IGNORE INTO `catalog_filter_group` (`id`, `name`) VALUES (0, 'DEFAULT');";
+        // Add the default group (autoincrement starts at 1 so force it to be 0)
+        $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;";
         $retval &= (Dba::write($sql) !== false);
 
         // Add the new catalog_filter_group_map table

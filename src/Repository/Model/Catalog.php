@@ -669,6 +669,7 @@ abstract class Catalog extends database_object
                 }
             }
         }
+        self::garbage_collect_filters();
 
         return true;
     }
@@ -3752,6 +3753,7 @@ abstract class Catalog extends database_object
     {
         Dba::write("DELETE FROM `catalog_filter_group_map` WHERE `group_id` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
         Dba::write("UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
+        Dba::write("UPDATE IGNORE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT' AND `id` > 0;");
     }
 
     /**
