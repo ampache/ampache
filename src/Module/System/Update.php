@@ -753,9 +753,11 @@ class Update
         $update_string = "* Index `object_type` with `date` in `object_count` table";
         $version[]     = array('version' => '540002', 'description' => $update_string);
 
-        // TODO need to look at keeping these groups or converting them instead
-        $update_string = "* Add new tables to support catalog access feature<br />* Update user profiles to support catalog access feature<br />* Add all PUBLIC catalogs to DEFAULT group on upgrade<br />* Remove obsolete user_catalog table<br><br>**IMPORTANT UPDATE NOTES** If you have private catalogs configured any user that has a private catalog will have their own filter group created";
+        $update_string = "* Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups<br />* Add column `catalog_filter_group` to `user` table to assign a filter group";
         $version[]     = array('version' => '550001', 'description' => $update_string);
+
+        $update_string = "* Migrate catalog `filter_user` settings to the `catalog_filter_group` table<br>* Assign all public catalogs to the DEFAULT group<br>* Drop table `user_catalog`<br>* Remove `filter_user` from the `catalog` table<br><br><br>**IMPORTANT UPDATE NOTES** Any user that has a private catalog will have their own filter group created which includes all public catalogs";
+        $version[]     = array('version' => '550002', 'description' => $update_string);
 
         return $version;
     }
@@ -4492,8 +4494,9 @@ class Update
 
     /** update_550001
      *
-     * Add new tables and modify others to support catalog access feature
-     * Remove the old per catalog filter_user
+     * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
+     * Add column `catalog_filter_group` to `user` table to assign a filter group
+     * Create a DEFAULT group
      */
     public static function update_550001(): bool
     {
@@ -4511,12 +4514,26 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         // Add the new catalog_filter_group_map table
-        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
 
-        // Add the default access group to the user table and add TRIGGER to reset access to DEFAULT if current access group is deleted
+        // Add the default access group to the user table
         $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_550002
+     *
+     * Migrate catalog `filter_user` settings to catalog_filter groups
+     * Assign all public catalogs to the DEFAULT group
+     * Drop table `user_catalog`
+     * Remove `filter_user` from the `catalog` table
+     */
+    public static function update_550002(): bool
+    {
+        $retval = true;
 
         // Copy existing filters into individual groups for each user. (if a user only has access to public catalogs they are given the default list)
         $sql        = "SELECT `id`, `username` FROM `user`;";
@@ -4525,12 +4542,13 @@ class Update
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_list[$row['id']] = $row['username'];
         }
+        // If the user had a private catalog, create an individual group for them using the current filter and public catalogs.
         foreach ($user_list as $key => $value) {
             $group_id   = 0;
             $sql        = 'SELECT `filter_user` FROM `catalog` WHERE `filter_user` = ?;';
             $db_results = Dba::read($sql, array($key));
             if (Dba::num_rows($db_results)) {
-                $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES (" . Dba::escape($value) . ");";
+                $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('" . Dba::escape($value) . "');";
                 Dba::write($sql);
                 $group_id = (int)Dba::insert_id();
             }
@@ -4555,14 +4573,14 @@ class Update
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = $row['id'];
-            $sql     = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
             $retval &= (Dba::write($sql) !== false);
         }
-        if ($retval) {
-            // Drop useless tables and columns but only if it all worked
-            $sql = "DROP TABLE IF EXISTS `user_catalog`;";
-            $retval &= (Dba::write($sql) !== false);
+        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
+        $retval &= (Dba::write($sql) !== false);
 
+        if ($retval) {
+            // Drop filter_user but only if the migration has worked
             $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
             Dba::write($sql);
         }

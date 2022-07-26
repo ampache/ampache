@@ -537,7 +537,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
 
-        return $row['count'];
+        return (int)$row['count'] ?? 0;
     }
 
     /**
@@ -548,10 +548,10 @@ abstract class Catalog extends database_object
     public static function filter_name_exists($filter_name, $exclude_id = 0)
     {
         $params = array($filter_name);
-        $sql    = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group` WHERE `name` = ?";
+        $sql    = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
         if ($exclude_id >= 0) {
-            $sql .= " AND `id` != $exclude_id";
-            $params[] = array($exclude_id);
+            $sql .= " AND `id` != ?";
+            $params[] = $exclude_id;
         }
 
         $db_results = Dba::read($sql, $params);
@@ -571,9 +571,11 @@ abstract class Catalog extends database_object
     {
         $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
         $db_results = Dba::read($sql, array($filter_id, $catalog_id));
-        $row        = Dba::fetch_assoc($db_results);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int)$row['enabled'];
+        }
 
-        return (int)$row['enabled'];
+        return 0;
     }
 
     /**
