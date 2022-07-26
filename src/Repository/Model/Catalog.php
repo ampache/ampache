@@ -654,9 +654,9 @@ abstract class Catalog extends database_object
         foreach ($results as $catalog_id) {
             $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
             $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+            $enabled    = $catalogs[$catalog_id];
             if (Dba::num_rows($db_results)) {
                 // update the values
-                $enabled = $catalogs[$catalog_id];
                 $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
                 if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
                     return false;
