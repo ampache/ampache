@@ -45,7 +45,7 @@ $web_path = AmpConfig::get('web_path');
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
       <?php if (AmpConfig::get('catalog_filter')) { ?>
         <li id="sb_admin_filter_Add"><a href="<?php echo $web_path; ?>/admin/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a></li>
-        <li id="sb_admin_filter_Browse"><a href="<?php echo $web_path; ?>/admin/filter.php?action=show"><?php echo T_('Manage Catalog Filters'); ?></a></li>
+        <li id="sb_admin_filter_Browse"><a href="<?php echo $web_path; ?>/admin/filter.php"><?php echo T_('Manage Catalog Filters'); ?></a></li>
       <?php } ?>
       <?php if (AmpConfig::get('licensing')) { ?>
         <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>

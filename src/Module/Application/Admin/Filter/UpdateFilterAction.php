@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Admin\Filter;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -101,7 +100,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('Filter Updated'),
             sprintf(T_('%1$s has been updated'), $filter_name),
-            sprintf('%s/admin/filter.php?action=show', $this->configContainer->getWebPath())
+            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
         );
 
         $this->ui->showQueryStats();

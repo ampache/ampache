@@ -82,7 +82,7 @@ final class AddFilterAction extends AbstractFilterAction
             return null;
         }
 
-        $catalogs      =Catalog::get_catalogs();
+        $catalogs      = Catalog::get_catalogs();
         $catalog_array = array();
         foreach ($catalogs as $catalog) {
             $catalog_name                 = Catalog::get_catalog_name($catalog);
@@ -99,7 +99,7 @@ final class AddFilterAction extends AbstractFilterAction
             T_('New Filter Added'),
             // HINT: %1 Username, %2 Access (Guest, User, Admin)
             sprintf(T_('%1$s has been created'), $filtername),
-            sprintf('%s/admin/filter.php?action=show', $this->configContainer->getWebPath())
+            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
         );
 
         $this->ui->showQueryStats();
