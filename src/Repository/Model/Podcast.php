@@ -551,21 +551,25 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        // don't keep adding urls
         if (self::get_id_from_source($source) > 0) {
             debug_event(self::class, 'Episode source URL already exists, skipped', 3);
 
             return false;
         }
+        // podcast urls can change over time so check these
         if (self::get_id_from_title($this->id, $title, $time) > 0) {
             debug_event(self::class, 'Episode title already exists, skipped', 3);
 
             return false;
         }
 
-        // when adding a new feed sync everything.
-        $state = ($lastSync < 0 && $pubdate < $lastSync)
-            ? 'skipped'
-            : 'pending';
+        // by default you want to download all the episodes
+        $state = 'pending';
+        // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
+        if ($lastSync > 0 && $pubdate < $lastSync) {
+            $state = 'skipped';
+        }
 
         debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
         $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
