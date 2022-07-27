@@ -712,7 +712,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false AND" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " "
                 : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql WHERE `tag`.`is_hidden` = false ";
 
-            $sql .= " GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+            $sql .= "WHERE `name` IS NOT NULL GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         }
         $order = "`" . $order . "`";
         if ($order == 'count') {

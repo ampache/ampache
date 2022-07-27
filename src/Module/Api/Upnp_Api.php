@@ -1389,13 +1389,13 @@ class Upnp_Api
 
         $tokens = self::gettokens($query);
         $size   = sizeof($tokens);
-        //   for ($i=0; $i<sizeof($tokens); $i++) {
-        //       echo $tokens[$i]."|";
-        //   }
-        //   echo "\n";
+        // for ($i=0; $i<sizeof($tokens); $i++) {
+        //     echo $tokens[$i]."|";
+        // }
+        // echo "\n";
 
         // Go through all the tokens and transform anything we recognize
-        //If any translation goes to NUL then must remove previous token provided it is AND or OR
+        // If any translation goes to NUL then must remove previous token provided it is AND or OR
         for ($i=0; $i < $size; $i++) {
             for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {

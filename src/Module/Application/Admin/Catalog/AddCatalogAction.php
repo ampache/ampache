@@ -90,6 +90,9 @@ final class AddCatalogAction extends AbstractCatalogAction
                 return null;
             }
 
+            // Add catalog to filter table
+            Catalog::add_catalog_filter_group_map($catalog_id);
+
             $catalogIds[] = $catalog_id;
             catalog_worker('add_to_catalog', $catalogIds, $_POST);
 

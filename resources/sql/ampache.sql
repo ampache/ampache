@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: May 19, 2022 at 10:24 AM
+-- Generation Time: Jul 26, 2022 at 03:58 PM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.0.17
+-- PHP Version: 8.0.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache540`
+-- Database: `ampache550`
 --
 
 -- --------------------------------------------------------
@@ -264,7 +264,6 @@ CREATE TABLE IF NOT EXISTS `catalog` (
   `rename_pattern` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sort_pattern` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `gather_types` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `filter_user` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1434,7 +1433,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '540002'),
+('db_version', '550002'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1461,6 +1460,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `city` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `catalog_filter_group` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1480,21 +1480,6 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_catalog`
---
-
-DROP TABLE IF EXISTS `user_catalog`;
-CREATE TABLE IF NOT EXISTS `user_catalog` (
-  `user` int(11) UNSIGNED NOT NULL,
-  `catalog` int(11) UNSIGNED NOT NULL,
-  `level` smallint(4) UNSIGNED NOT NULL DEFAULT 5,
-  KEY `user` (`user`),
-  KEY `catalog` (`catalog`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

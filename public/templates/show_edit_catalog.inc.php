@@ -62,28 +62,16 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
             <td><?php echo scrub_out(ucfirst($catalog->catalog_type)); ?></td>
         </tr>
         <tr>
+            <td><?php echo T_('Catalog Media Type'); ?>:</td>
+            <td><?php echo scrub_out(ucfirst($catalog->gather_types)); ?></td>
+        </tr>
+        <tr>
             <td><?php echo T_('Filename Pattern'); ?>:</td>
             <td><input type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Folder Pattern'); ?>:<br /><?php echo T_("(no leading or ending '/')"); ?></td>
             <td><input type="text" name="sort_pattern" value="<?php echo scrub_out($catalog->sort_pattern);?>" /></td>
-        </tr>
-        <tr>
-<?php if (AmpConfig::get('catalog_filter')) {
-    echo "<td>" . T_('Catalog User') . ":<br /></td>\n<td>";
-    $options = array();
-    if (!empty($users)) {
-        foreach ($users as $user_id => $username) {
-            $selected  = ($user_id == $catalog->filter_user) ? ' selected="selected"' : '';
-            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
-        }
-        echo '<select name="filter_user">' . implode("\n", $options) . '</select>';
-    }
-} else {
-    echo "<td style=\"display: none;\">" . T_('Catalog User') . ":<br /></td>\n<td style=\"display: none;\">\n<select name=\"filter_user\"><option value=\"0\" selected=\"selected\">" . T_('Public Catalog') . "</option></select>";
-} ?>
-            </td>
         </tr>
     </table>
     <div class="formValidation">

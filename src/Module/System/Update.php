@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -752,6 +753,12 @@ class Update
         $update_string = "* Index `object_type` with `date` in `object_count` table";
         $version[]     = array('version' => '540002', 'description' => $update_string);
 
+        $update_string = "* Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups<br />* Add column `catalog_filter_group` to `user` table to assign a filter group";
+        $version[]     = array('version' => '550001', 'description' => $update_string);
+
+        $update_string = "* Migrate catalog `filter_user` settings to the `catalog_filter_group` table<br>* Assign all public catalogs to the DEFAULT group<br>* Drop table `user_catalog`<br>* Remove `filter_user` from the `catalog` table<br><br><br>**IMPORTANT UPDATE NOTES** Any user that has a private catalog will have their own filter group created which includes all public catalogs";
+        $version[]     = array('version' => '550002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1229,11 +1236,11 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `album` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `song` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4481,6 +4488,106 @@ class Update
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_550001
+     *
+     * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
+     * Add column `catalog_filter_group` to `user` table to assign a filter group
+     * Create a DEFAULT group
+     */
+    public static function update_550001(): bool
+    {
+        $retval     = true;
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        // Add the new catalog_filter_group table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default group (autoincrement starts at 1 so force it to be 0)
+        $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the new catalog_filter_group_map table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default access group to the user table
+        $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_550002
+     *
+     * Migrate catalog `filter_user` settings to catalog_filter groups
+     * Assign all public catalogs to the DEFAULT group
+     * Drop table `user_catalog`
+     * Remove `filter_user` from the `catalog` table
+     */
+    public static function update_550002(): bool
+    {
+        $retval = true;
+
+        // Copy existing filters into individual groups for each user. (if a user only has access to public catalogs they are given the default list)
+        $sql        = "SELECT `id`, `username` FROM `user`;";
+        $db_results = Dba::read($sql);
+        $user_list  = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $user_list[$row['id']] = $row['username'];
+        }
+        // If the user had a private catalog, create an individual group for them using the current filter and public catalogs.
+        foreach ($user_list as $key => $value) {
+            $group_id   = 0;
+            $sql        = 'SELECT `filter_user` FROM `catalog` WHERE `filter_user` = ?;';
+            $db_results = Dba::read($sql, array($key));
+            if (Dba::num_rows($db_results)) {
+                $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('" . Dba::escape($value) . "');";
+                Dba::write($sql);
+                $group_id = (int)Dba::insert_id();
+            }
+            if ($group_id > 0) {
+                $sql        = "SELECT `id`, `filter_user` FROM `catalog`;";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $catalog = $row['id'];
+                    $enabled = ($row['filter_user'] == 0 || $row['filter_user'] == $key)
+                        ? 1
+                        : 0;
+                    $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ($group_id, $catalog, $enabled);";
+                    $retval &= (Dba::write($sql) !== false);
+                }
+                $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
+                Dba::write($sql, array($group_id, $key));
+            }
+        }
+
+        // Add all public catalogs in the DEFAULT profile.
+        $sql        = "SELECT `id` FROM `catalog` WHERE `filter_user` = 0;";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $catalog = (int)$row['id'];
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
+            $retval &= (Dba::write($sql) !== false);
+        }
+        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+
+        if ($retval) {
+            // Drop filter_user but only if the migration has worked
+            $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+            Dba::write($sql);
+        }
 
         return $retval;
     }

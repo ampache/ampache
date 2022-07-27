@@ -2140,8 +2140,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $fields['tag']     = true;
         $fields['catalog'] = true;
         // FIXME: These are here to keep the ideas, don't want to have to worry about them for now
-        //        $fields['rating'] = true;
-        //        $fields['recently Played'] = true;
+        // $fields['rating'] = true;
+        // $fields['recently Played'] = true;
 
         return $fields;
     } // get_fields

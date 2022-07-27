@@ -60,13 +60,14 @@ final class UserCreate4Method
         if (!Api4::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
-        $username = $input['username'];
-        $fullname = $input['fullname'] ?? $username;
-        $email    = urldecode($input['email']);
-        $password = $input['password'];
-        $disable  = (bool)($input['disable'] ?? false);
-        $access   = 25;
-        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+        $username             = $input['username'];
+        $fullname             = $input['fullname'] ?? $username;
+        $email                = urldecode($input['email']);
+        $password             = $input['password'];
+        $disable              = (bool)($input['disable'] ?? false);
+        $access               = 25;
+        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {
             Api4::message('success', 'successfully created: ' . $username, null, $input['api_format']);
