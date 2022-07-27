@@ -556,7 +556,7 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        if (self::get_id_from_title($title, $time) > 0) {
+        if (self::get_id_from_title($this->id, $title, $time) > 0) {
             debug_event(self::class, 'Episode title already exists, skipped', 3);
 
             return false;
@@ -673,14 +673,15 @@ class Podcast extends database_object implements library_item
      *
      * Get episode id from the source url.
      *
+     * @param int $podcast_id
      * @param string $title
      * @param int $time
      * @return integer
      */
-    public static function get_id_from_title($title, $time)
+    public static function get_id_from_title($podcast_id, $title, $time)
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE title = ? AND `time` = ?";
-        $db_results = Dba::read($sql, array($title, $time));
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
+        $db_results = Dba::read($sql, array($podcast_id, $title, $time));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
