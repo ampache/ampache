@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.4.1-develop
+## Ampache 5.4.1-release
 
 ### Added
 
@@ -36,7 +36,7 @@
 * Artist getRandom using the wrong sql column name
 * Pocast episode time regex
 
-## API develop
+## API 5.4.1
 
 ### Added
 
