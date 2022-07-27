@@ -117,7 +117,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             // Check for manual search
             if (key_exists('search_limit', $data)) {
                 $limit = $data['search_limit'];
-                if (key_exists('artist_filter', $data)) {
+                if (key_exists('artist', $data) && !empty($data['artist'])) {
                     $filter[]= 'artist';
                 }
                 if (key_exists('year_filter', $data)) {
