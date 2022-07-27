@@ -556,6 +556,12 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        if (self::get_id_from_title($title, $time) > 0) {
+            debug_event(self::class, 'Episode title already exists, skipped', 3);
+
+            return false;
+        }
+
         // when adding a new feed sync everything.
         $state = ($lastSync < 0 && $pubdate < $lastSync)
             ? 'skipped'
@@ -654,6 +660,27 @@ class Podcast extends database_object implements library_item
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
         $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_title
+     *
+     * Get episode id from the source url.
+     *
+     * @param string $title
+     * @param int $time
+     * @return integer
+     */
+    public static function get_id_from_title($title, $time)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE title = ? AND `time` = ?";
+        $db_results = Dba::read($sql, array($title, $time));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
