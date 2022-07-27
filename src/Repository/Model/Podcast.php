@@ -563,6 +563,12 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
+        if (self::get_id_from_pubdate($this->id, $pubdate) > 0) {
+            debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
+
+            return false;
+        }
 
         // by default you want to download all the episodes
         $state = 'pending';
@@ -686,6 +692,27 @@ class Podcast extends database_object implements library_item
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
         $db_results = Dba::read($sql, array($podcast_id, $title, $time));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_pubdate
+     *
+     * Get episode id from the source url.
+     *
+     * @param int $podcast_id
+     * @param int $pubdate
+     * @return integer
+     */
+    public static function get_id_from_pubdate($podcast_id, $pubdate)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
+        $db_results = Dba::read($sql, array($podcast_id, $pubdate));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
