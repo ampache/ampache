@@ -89,7 +89,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
     $options = array();
     foreach ($filters as $filter) {
         $selected = "";
-        if ($filter['id'] == 1) {
+        if ($filter['id'] == 0) {
             $selected = ' selected = "selected" ';
         }
         $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';

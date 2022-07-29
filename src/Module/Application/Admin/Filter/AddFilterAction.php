@@ -86,7 +86,7 @@ final class AddFilterAction extends AbstractFilterAction
         $catalog_array = array();
         foreach ($catalogs as $catalog) {
             $catalog_name                 = Catalog::get_catalog_name($catalog);
-            $catalog_array[$catalog_name] = (int) scrub_in(filter_input(INPUT_POST, $catalog_name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog, FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Attempt to create the filter
@@ -97,7 +97,6 @@ final class AddFilterAction extends AbstractFilterAction
 
         $this->ui->showConfirmation(
             T_('New Filter Added'),
-            // HINT: %1 Username, %2 Access (Guest, User, Admin)
             sprintf(T_('%1$s has been created'), $filtername),
             sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
         );
