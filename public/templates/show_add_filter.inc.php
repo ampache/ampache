@@ -52,7 +52,7 @@ if (!AmpConfig::get('catalog_filter')) {
     $catalogs = Catalog::get_catalogs();
     foreach ($catalogs as $catalog_id) {
         $cn = Catalog::get_catalog_name($catalog_id);
-        echo "<tr><td>$cn</td>" . '<td><input type="checkbox" name="' . $catalog_id . '" value="1"></td></tr>';
+        echo "<tr><td>$cn</td>" . '<td><input type="checkbox" name="catalog_' . $catalog_id . '" value="1"></td></tr>';
     }
     ?>
     </table>
