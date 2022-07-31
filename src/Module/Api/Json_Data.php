@@ -968,6 +968,7 @@ class Json_Data
             $ourArray['license']               = $song->f_license;
             $ourArray['publisher']             = $song->label;
             $ourArray['language']              = $song->language;
+            $ourArray['lyrics']                = $song->lyrics;
             $ourArray['replaygain_album_gain'] = $song->replaygain_album_gain;
             $ourArray['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourArray['replaygain_track_gain'] = $song->replaygain_track_gain;

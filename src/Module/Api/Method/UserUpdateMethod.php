@@ -77,7 +77,7 @@ final class UserUpdateMethod
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
         $disable    = $input['disable'] ?? null;
-        $maxbitrate = $input['maxbitrate'] ?? null;
+        $maxbitrate = (int)($input['maxBitRate'] ?? 0);
 
         // identify the user to modify
         $user    = User::get_from_username($username);
@@ -116,7 +116,7 @@ final class UserUpdateMethod
             } elseif ($disable === '0') {
                 $userStateToggler->enable($user);
             }
-            if ((int) $maxbitrate > 0) {
+            if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
             Api::message('successfully updated: ' . $username, $input['api_format']);

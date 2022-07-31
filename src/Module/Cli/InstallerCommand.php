@@ -132,7 +132,10 @@ final class InstallerCommand extends Command
                 T_('Config file creation failed'),
                 true
             );
-            $interactor->error(AmpError::get('general'), true);
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
         }
     }
 }

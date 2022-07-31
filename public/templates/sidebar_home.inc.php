@@ -175,8 +175,8 @@ $web_path        = AmpConfig::get('web_path'); ?>
     <?php
     } ?>
     <li class="sb2_information">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . ((isset($_COOKIE['sb_info']) && $_COOKIE['sb_info'] == 'expanded') ? 'expanded' : 'collapsed')); ?></h4>
-        <ul class="sb3" id="sb_home_info" style="<?php if (!(isset($_COOKIE['sb_info']))) {
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . ((isset($_COOKIE['sb_information']) && $_COOKIE['sb_information'] == 'expanded') ? 'expanded' : 'collapsed')); ?></h4>
+        <ul class="sb3" id="sb_home_info" style="<?php if (!isset($_COOKIE['sb_information']) || (isset($_COOKIE['sb_information']) && $_COOKIE['sb_information'] == 'collapsed')) {
         echo 'display: none;';
     } ?>">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>

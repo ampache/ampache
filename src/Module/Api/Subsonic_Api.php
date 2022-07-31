@@ -1300,12 +1300,12 @@ class Subsonic_Api
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
-        if (AmpConfig::get('subsonic_always_download')) {
-            $params .= '&action=download&cache=1';
-        }
 
         $url = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
+            if (AmpConfig::get('subsonic_always_download')) {
+                $params .= '&action=download&cache=1';
+            }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
@@ -2306,7 +2306,7 @@ class Subsonic_Api
         $uploadRole   = ($input['uploadRole'] == 'true');
         $coverArtRole = ($input['coverArtRole'] == 'true');
         $shareRole    = ($input['shareRole'] == 'true');
-        $maxbitrate   = $input['maxBitRate'];
+        $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
 
         if (Access::check('interface', 100)) {
             $access = 25;
@@ -2342,7 +2342,7 @@ class Subsonic_Api
                 if ($shareRole) {
                     Preference::update('share', $user_id, 1);
                 }
-                if ((int)$maxbitrate > 0) {
+                if ($maxbitrate > 0) {
                     Preference::update('transcode_bitrate', $user_id, $maxbitrate);
                 }
                 $response = Subsonic_Xml_Data::addSubsonicResponse('updateuser');

@@ -55,8 +55,10 @@ Select the type of search based on the type of data you are searching for. (song
 | song_title               | Song Title                | text              |           album,artist           |
 | album_title              | Album Title               | text              |              artist              |
 | composer                 | Composer                  | text              |               song               |
+| track                    | Track                     | numeric           |               song               |
 | year                     | Year                      | numeric           |            song,album            |
 | original_year            | Original Year             | numeric           |              album               |
+| summary                  | Summary                   | text              |              artist              |
 | yearformed               | Year Formed               | numeric           |              artist              |
 | placeformed              | Place Formed              | text              |              artist              |
 | release_type             | Release Type              | text              |              album               |

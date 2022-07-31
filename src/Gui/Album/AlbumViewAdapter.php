@@ -265,7 +265,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/album.php?action=%s&album_id=%d',
+            '%s/albums.php?action=%s&album_id=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
             $this->album->getId()

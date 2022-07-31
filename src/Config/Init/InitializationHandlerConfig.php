@@ -32,8 +32,8 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.4.0-release';
-    private const CONFIG_VERSION = '61';
+    private const VERSION        = '5.4.1-release';
+    private const CONFIG_VERSION = '62';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 

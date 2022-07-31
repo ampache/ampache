@@ -59,7 +59,10 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             $album_id  = 0;
             ob_flush();
             if (!$catalog) {
-                $interactor->error(sprintf(T_('Catalog `%s` not found'), $catname), true);
+                $interactor->error(
+                    sprintf(T_('Catalog `%s` not found'), $catname),
+                    true
+                );
 
                 return;
             }
@@ -102,7 +105,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 return;
             }
             // existing files
-            $change = array();
             if ($file_test && Core::is_readable($filePath)) {
                 $interactor->info(
                     sprintf(T_('Reading File: "%s"'), $filePath),
@@ -112,6 +114,11 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     // Verify Existing files
                     $catalog = $media->catalog;
                     $change  = Catalog::update_media_from_tags($media);
+                    if (array_key_exists('element', $change) && is_array($change['element'])) {
+                        // update counts after adding/verifying
+                        Album::update_album_counts();
+                        Artist::update_artist_counts();
+                    }
                 }
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
@@ -120,6 +127,9 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     Catalog::get_id_from_file($filePath, $type);
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);
+                    // update counts after adding/verifying
+                    Album::update_album_counts();
+                    Artist::update_artist_counts();
                 }
                 if ($searchArtMode == 1 && $file_id) {
                     // Look for media art after adding new files
@@ -143,11 +153,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                             Catalog::gather_art_item($type, $file_id, true);
                         }
                     }
-                }
-                if (array_key_exists('element', $change) && is_array($change['element'])) {
-                    // update counts after adding/verifying
-                    Album::update_album_counts();
-                    Artist::update_artist_counts();
                 }
             }
         }

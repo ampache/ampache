@@ -136,6 +136,9 @@ class Ui implements UiInterface
      */
     public static function check_ticker()
     {
+        if (defined('SSE_OUTPUT') || defined('API')) {
+            return false;
+        }
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
             self::$_ticker = time();
 

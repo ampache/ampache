@@ -65,7 +65,7 @@ final class StreamMethod
         $object_id = (int) $input['id'];
         $user_id   = User::get_from_username(Session::username($input['auth']))->id;
 
-        $maxBitRate    = $input['bitrate'];
+        $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
         $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
@@ -78,7 +78,7 @@ final class StreamMethod
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0 && $type == 'song') {
+        if ($maxBitRate > 0 && $type == 'song') {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
