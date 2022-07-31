@@ -58,7 +58,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $this->charset_directory_correct($interactor, $catalog->path, $force);
         }
 
-        $interactor->ok(T_('Finished checking file names for valid characters'), true);
+        $interactor->ok(
+            T_('Finished checking file names for valid characters'),
+            true
+        );
     }
 
     /**
@@ -159,7 +162,10 @@ final class FileNameConverter implements FileNameConverterInterface
                         $this->charset_rename_file($interactor, $full_file,$translated_filename);
                     } else {
                         $interactor->eol();
-                        $interactor->warn(T_('Not renaming...'), true);
+                        $interactor->warn(
+                            T_('Not renaming...'),
+                            true
+                        );
                     }
                 } else {
                     $this->charset_rename_file($interactor, $full_file,$translated_filename);
@@ -195,7 +201,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $path .= '/' . $dir;
 
             if (!is_dir($path)) {
-                $interactor->info(printf(T_('Making directory: %s'), $path), true);
+                $interactor->info(
+                    printf(T_('Making directory: %s'), $path),
+                    true
+                );
                 $results_mkdir = mkdir($path);
                 if (!$results_mkdir) {
                     /* HINT: filename (File path) */
@@ -244,7 +253,10 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $interactor->ok(T_('File moved...'), true);
+        $interactor->ok(
+            T_('File moved...'),
+            true
+        );
         $interactor->eol();
 
         return true;

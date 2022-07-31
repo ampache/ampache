@@ -103,7 +103,6 @@ class Stats
             $params[] = $child_id;
         }
 
-
         return Dba::write($sql, $params);
     }
 

@@ -205,7 +205,7 @@ final class SongRepository implements SongRepositoryInterface
         return $deleted !== false;
     }
 
-    public function collectGarbage(Song $song): bool
+    public function collectGarbage(Song $song): void
     {
         foreach (Song::get_parent_array($song->id) as $song_artist_id) {
             Artist::remove_artist_map($song_artist_id, 'song', $song->id);

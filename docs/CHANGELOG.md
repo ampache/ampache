@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## Ampache 5.4.1-release
+
+### Added
+
+* Put next (n) and back (b) shortcuts in the web_player
+* Allow _ and % wildcards for hiding playlists (api_hidden_playlists)
+* Missing translations on CLI strings
+* Config version 62
+  * Added webplayer_debug (was previously undocumented/hidden)
+* Search
+  * Add `track` to song search
+  * Add `summary` to artist search
+* CLI
+  * New argument for cleanup:sortSongs `-w|--windows` Replace windows-incompatible strings with _
+  * Add a table check function to admin:updateDatabase. This will repair missing tables/details
+
+### Changed
+
+* Only enforce `subsonic_always_download` for song objects
+* Always insert podcast source urls. But mark them as skipped if out of date
+* When adding a podcast feed, sync everything
+* Don't trim search input (e.g. allow single spaces for search)
+
+### Fixed
+
+* web_player being unable to play different formats in some cases
+* Playlist download button missing ID
+* Truncate long podcast episode author lengths
+* Incorrect link on the albums page
+* Section on the information sidebar looking for the wrong cookie
+* Bad verify mod time check
+* SongSorter would get caught with % in your strings
+* Rating Match plugin may overwrite album rating
+* Artist getRandom using the wrong sql column name
+* Pocast episode time regex
+
+## API 5.4.1
+
+### Added
+
+* Include `lyrics` in Song objects
+* advanced_search
+  * Add `file` to album and artist search
+  * Add `track` to song search
+  * Add `summary` to artist search
+
 ## Ampache 5.4.0-release
 
 ### Added
@@ -44,7 +90,6 @@
 
 * advanced_search
   * Add `file` to album and artist search
-
 
 ## Ampache 5.3.3-release
 

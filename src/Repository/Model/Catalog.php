@@ -1842,7 +1842,7 @@ abstract class Catalog extends database_object
         $songs   = array();
         $results = array();
 
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1' ORDER BY `album`";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {

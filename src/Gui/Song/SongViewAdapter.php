@@ -354,6 +354,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Album')]         = $this->song->f_album_link;
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
+        $songprops[T_('Track')]         = $this->song->track;
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);

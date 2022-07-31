@@ -379,7 +379,6 @@ final class VaInfo implements VaInfoInterface
             }
         }
 
-
         return false;
     } // check_time
 

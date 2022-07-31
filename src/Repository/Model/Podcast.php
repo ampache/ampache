@@ -457,13 +457,13 @@ class Podcast extends database_object implements library_item
     /**
      * add_episodes
      * @param SimpleXMLElement $episodes
-     * @param integer $afterdate
+     * @param integer $lastSync
      * @param boolean $gather
      */
-    public function add_episodes($episodes, $afterdate = 0, $gather = false)
+    public function add_episodes($episodes, $lastSync = 0, $gather = false)
     {
         foreach ($episodes as $episode) {
-            $this->add_episode($episode, $afterdate);
+            $this->add_episode($episode, $lastSync);
         }
         $time   = time();
         $params = array($this->id);
@@ -505,16 +505,16 @@ class Podcast extends database_object implements library_item
     /**
      * add_episode
      * @param SimpleXMLElement $episode
-     * @param integer $afterdate
+     * @param integer $lastSync
      * @return PDOStatement|boolean
      */
-    private function add_episode(SimpleXMLElement $episode, $afterdate = 0)
+    private function add_episode(SimpleXMLElement $episode, $lastSync = 0)
     {
         $title       = html_entity_decode((string)$episode->title);
         $website     = (string)$episode->link;
         $guid        = (string)$episode->guid;
         $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
-        $author      = html_entity_decode((string)$episode->author);
+        $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
         $source      = null;
         $time        = 0;
@@ -528,7 +528,7 @@ class Podcast extends database_object implements library_item
             $duration = '00:' . $duration;
         }
         // process a time string "03:23:01"
-        $ptime = (preg_grep("/[0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
+        $ptime = (preg_grep("/[0-9]?[0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
             ? date_parse((string)$duration)
             : $duration;
         // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
@@ -551,35 +551,50 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        // don't keep adding urls
         if (self::get_id_from_source($source) > 0) {
             debug_event(self::class, 'Episode source URL already exists, skipped', 3);
 
             return false;
         }
+        // podcast urls can change over time so check these
+        if (self::get_id_from_title($this->id, $title, $time) > 0) {
+            debug_event(self::class, 'Episode title already exists, skipped', 3);
 
-        if ($pubdate > $afterdate) {
-            debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
-            $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            return Dba::write($sql, array(
-                $title,
-                $guid,
-                $this->id,
-                $source,
-                $website,
-                $description,
-                $author,
-                $category,
-                $time,
-                $pubdate,
-                time(),
-                $this->catalog
-            ));
-        } else {
-            debug_event(self::class, 'Episode published before ' . $afterdate . ' (' . $pubdate . '), skipped', 4);
-
-            return true;
+            return false;
         }
+        // podcast pubdate can be used to skip duplicate/fixed episodes when you already have them
+        if (self::get_id_from_pubdate($this->id, $pubdate) > 0) {
+            debug_event(self::class, 'Episode with the same publication date already exists, skipped', 3);
+
+            return false;
+        }
+
+        // by default you want to download all the episodes
+        $state = 'pending';
+        // if you're syncing an old podcast, check the pubdate and skip it if published to the feed before your last sync
+        if ($lastSync > 0 && $pubdate < $lastSync) {
+            $state = 'skipped';
+        }
+
+        debug_event(self::class, 'Adding new episode to podcast ' . $this->id . '... ' . $pubdate, 4);
+        $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        return Dba::write($sql, array(
+            $title,
+            $guid,
+            $this->id,
+            $state,
+            $source,
+            $website,
+            $description,
+            $author,
+            $category,
+            $time,
+            $pubdate,
+            time(),
+            $this->catalog
+        ));
     }
 
     /**
@@ -655,6 +670,49 @@ class Podcast extends database_object implements library_item
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
         $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_title
+     *
+     * Get episode id from the source url.
+     *
+     * @param int $podcast_id
+     * @param string $title
+     * @param int $time
+     * @return integer
+     */
+    public static function get_id_from_title($podcast_id, $title, $time)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
+        $db_results = Dba::read($sql, array($podcast_id, $title, $time));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_pubdate
+     *
+     * Get episode id from the source url.
+     *
+     * @param int $podcast_id
+     * @param int $pubdate
+     * @return integer
+     */
+    public static function get_id_from_pubdate($podcast_id, $pubdate)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
+        $db_results = Dba::read($sql, array($podcast_id, $pubdate));
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];

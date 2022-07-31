@@ -161,12 +161,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.4.0';
+    public static $version = '5.4.1';
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '540000';
+    public static $version_numeric = '541000';
 
     /**
      * @var Browse $browse

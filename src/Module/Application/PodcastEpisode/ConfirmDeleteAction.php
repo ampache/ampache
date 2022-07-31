@@ -83,13 +83,21 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Podcast Episode has been deleted'),
-                $this->configContainer->getWebPath()
+                sprintf(
+                    '%s/podcast.php?action=show&podcast=%s',
+                    $this->configContainer->getWebPath(),
+                    $episode->podcast
+                )
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Podcast Episode'),
-                $this->configContainer->getWebPath()
+                sprintf(
+                    '%s/podcast.php?action=show&podcast=%s',
+                    $this->configContainer->getWebPath(),
+                    $episode->podcast
+                )
             );
         }
 

@@ -422,7 +422,7 @@ class Dba
      */
     public static function check_database_inserted()
     {
-        $sql        = "DESCRIBE session";
+        $sql        = "DESCRIBE `session`";
         $db_results = self::read($sql);
 
         if (!$db_results) {

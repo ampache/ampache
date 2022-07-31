@@ -190,7 +190,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
     public function getBatchDownloadUrl(): string
     {
         return sprintf(
-            '%s/batch.php?action=playlist&%d',
+            '%s/batch.php?action=playlist&id=%d',
             $this->configContainer->getWebPath(),
             $this->playlist->getId()
         );

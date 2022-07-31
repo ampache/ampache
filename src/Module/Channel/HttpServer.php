@@ -311,7 +311,10 @@ final class HttpServer implements HttpServerInterface
         $channel->update_listeners(count($client_socks));
         debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);
 
-        $interactor->info('Client disconnected', true);
+        $interactor->info(
+            'Client disconnected',
+            true
+        );
 
         ob_flush();
     }
