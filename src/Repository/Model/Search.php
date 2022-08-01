@@ -1765,16 +1765,16 @@ class Search extends playlist_object
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`object_id` = `album`.`id`";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_album`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql = "`catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -1782,8 +1782,7 @@ class Search extends playlist_object
         }
         if (array_key_exists('image', $join)) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
-            $where_sql .= " AND `image`.`object_type`='album'";
-            $where_sql .= " AND `image`.`size`='original'";
+            $where_sql = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -2129,16 +2128,16 @@ class Search extends playlist_object
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql = "`catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2147,8 +2146,7 @@ class Search extends playlist_object
         if (array_key_exists('image', $join)) {
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
-            $where_sql .= " AND `image`.`object_type`='artist'";
-            $where_sql .= " AND `image`.`size`='original'";
+            $where_sql             = "(" . $where_sql . ") AND `image`.`object_type`='artist' AND `image`.`size`='original'";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -2617,17 +2615,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id` = `song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('artist', $join)) {
@@ -2708,17 +2706,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `video`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id` = `video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         ksort($table);
@@ -2797,23 +2795,23 @@ class Search extends playlist_object
         $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id`";
-            $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
+            $where_sql       = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
         }
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if ($catalog_disable) {
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                    $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 }
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         ksort($table);
@@ -2895,18 +2893,18 @@ class Search extends playlist_object
 
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if ($join['catalog']) {
             $table['3_catalog'] = "LEFT JOIN `catalog`AS `catalog_se` ON `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
             if ($catalog_disable) {
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
                 }
             }
         }
@@ -2981,17 +2979,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
 
