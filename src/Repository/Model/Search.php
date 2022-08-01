@@ -1782,7 +1782,7 @@ class Search extends playlist_object
         }
         if (array_key_exists('image', $join)) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
-            $where_sql = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
+            $where_sql       = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -2490,7 +2490,7 @@ class Search extends playlist_object
                     $itemstring = '';
                     if (count($results) > 0) {
                         foreach ($results as $item) {
-                            $itemstring .= ' ' . $item['object_id'] . ',';
+                            $itemstring .= $item['object_id'] . ',';
                         }
                         $where[]  = "`song`.`id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")";
                     }
