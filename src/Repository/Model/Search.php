@@ -2582,7 +2582,7 @@ class Search extends playlist_object
                             $metadata[$field] = array();
                         }
                         $metadata[$field][] = "`metadata`.`data` $sql_match_operator ?";
-                        $parameters[]       = $input;
+                        $parameters[]       = $parsedInput;
                     }
                     break;
                 default:
