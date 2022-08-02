@@ -455,10 +455,10 @@ class Playlist extends playlist_object
         $user_id = $user->id ?? 0;
         $params  = array($this->id);
 
-        $sql = 'SELECT COUNT(`playlist_data`.`id`) FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+        $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
         // NEED TO REVIST FOR ALL MEDIA TYPES;
         if (!empty($type)) {
-            $sql .= ' AND `playlist_data`.`object_type` = ?';
+            $sql .= 'AND `playlist_data`.`object_type` = ? ';
             $params[] = $type;
         }
         if (AmpConfig::get('catalog_filter')) {
@@ -466,17 +466,17 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
 
-        $sql .= "ORDER BY `playlist_data`.`track`";
+        $sql .= "GROUP BY `playlist_data`.`playlist`;";
 
-        //	debug_event(__CLASS__, "get_media_count(): " . $sql . print_r($params, true), 5);
+        //debug_event(__CLASS__, "get_media_count(): " . $sql . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
-        $row        = Dba::fetch_row($db_results);
+        $row        = Dba::fetch_assoc($db_results);
         if (empty($row)) {
             return null;
         }
 
-        return $row[0];
+        return $row['list_count'];
     } // get_media_count
 
     /**
