@@ -231,9 +231,10 @@ final class DefaultAction implements ApplicationActionInterface
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
                 $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
                 $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
+                $dfg      = 0; // This is the default filter group
 
                 // Attempt to create the user
-                $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $state, $city);
+                $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $dfg, $state, $city);
                 if ($user_id > 0) {
                     // tell me you're creating the user
                     $this->logger->info(
