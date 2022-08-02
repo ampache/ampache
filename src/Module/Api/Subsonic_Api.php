@@ -1166,14 +1166,15 @@ class Subsonic_Api
     public static function getplaylist($input)
     {
         $playlistid = self::_check_parameter($input, 'id');
-
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylist');
-        if (Subsonic_Xml_Data::_isSmartPlaylist($playlistid)) {
-            $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistid), 'song');
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
-        } else {
-            $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistid));
-            Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+        $response   = Subsonic_Xml_Data::addSubsonicResponse('getplaylist');
+        if ($playlistid) {
+            if (Subsonic_Xml_Data::_isSmartPlaylist($playlistid)) {
+                $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistid), 'song');
+                Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            } else {
+                $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistid));
+                Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
+            }
         }
         self::_apiOutput($input, $response);
     }
