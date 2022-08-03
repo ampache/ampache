@@ -120,9 +120,7 @@ $state_information   = (!isset($_COOKIE['sb_information']) || $_COOKIE['sb_infor
     <?php if (User::is_registered()) { ?>
     <li class="sb2_dashboard">
         <h4 class="header"><span class="sidebar-header-title"><?php echo $t_dashboards; ?></span><?php echo Ui::get_icon('all', $t_expander, 'dashboard', 'header-img ' . $state_dashboard); ?></h4>
-        <ul class="sb3" id="sb_home_dash" style="<?php if ($state_dashboard == 'collapsed') {
-            echo 'display: none;';
-        } ?>">
+        <ul class="sb3" id="sb_home_dash">
             <li id="sb_home_dash_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
             <li id="sb_home_dash_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
             <li id="sb_home_dash_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
@@ -197,9 +195,7 @@ $state_information   = (!isset($_COOKIE['sb_information']) || $_COOKIE['sb_infor
     } ?>
     <li class="sb2_information">
         <h4 class="header"><span class="sidebar-header-title"><?php echo $t_information; ?></span><?php echo Ui::get_icon('all', $t_expander, 'information', 'header-img ' . $state_information); ?></h4>
-        <ul class="sb3" id="sb_home_info" style="<?php if ($state_information == 'collapsed') {
-        echo 'display: none;';
-    } ?>">
+        <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_info_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
