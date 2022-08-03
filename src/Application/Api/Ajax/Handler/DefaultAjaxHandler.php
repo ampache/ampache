@@ -190,7 +190,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'action_buttons':
                 $rating_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
                 ob_start();
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
                     echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
