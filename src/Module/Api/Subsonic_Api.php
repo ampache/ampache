@@ -1303,7 +1303,7 @@ class Subsonic_Api
         $username      = $input['u'];
         $user          = User::get_from_username($username);
         $user_id       = $user->id;
-        $client        = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $client        = scrub_in($input['c'] ?? 'Subsonic');
 
         $params = '&client=' . rawurlencode($client);
         if ($contentLength == 'true') {
@@ -1352,7 +1352,7 @@ class Subsonic_Api
     {
         $fileid  = self::_check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $client  = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $client  = scrub_in($input['c'] ?? 'Subsonic');
         $params  = '&client=' . rawurlencode($client) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
@@ -1670,7 +1670,7 @@ class Subsonic_Api
         }
         $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
         $username   = $input['u'];
-        $client     = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $client     = scrub_in($input['c'] ?? 'Subsonic');
         $user       = User::get_from_username($username);
 
         if (!is_array($object_ids)) {
@@ -2544,7 +2544,7 @@ class Subsonic_Api
     {
         $username = $input['u'];
         $user     = User::get_from_username($username);
-        $client   = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+        $client   = scrub_in($input['c'] ?? 'Subsonic');
         $user_id  = $user->id;
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
         User::set_user_data($user_id, 'playqueue_time', time());
@@ -2567,7 +2567,7 @@ class Subsonic_Api
         if ($media->id) {
             $response  = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position  = (int)((int)$input['position'] / 1000);
-            $client    = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
+            $client    = scrub_in($input['c'] ?? 'Subsonic');
             $username  = $input['u'];
             $user      = User::get_from_username($username);
             $user_id   = $user->id;
