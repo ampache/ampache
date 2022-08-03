@@ -41,13 +41,13 @@ $web_path = AmpConfig::get('web_path');
         </tr>
         <tr>
             <td><?php echo T_('Username'); ?>:</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Full Name'); ?>:</td>
-            <td><input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+            <td><input type="text" name="fullname" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
     echo "checked";
 } ?> /> <?php echo T_('Public'); ?>
