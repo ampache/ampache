@@ -91,8 +91,8 @@ abstract class playlist_object extends database_object implements library_item
     {
         // format shared lists using the username
         $this->f_name = (($this->user == Core::get_global('user')->id))
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            ? scrub_out($this->name, FILTER_SANITIZE_STRING)
+            : scrub_out($this->name . " (" . $this->username . ")");
         $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
         $this->get_f_link();
     } // format
@@ -171,8 +171,8 @@ abstract class playlist_object extends database_object implements library_item
         $show_fullname = AmpConfig::get('show_playlist_username');
         $my_playlist   = $this->user == Core::get_global('user')->id;
         $this->f_name  = ($my_playlist || !$show_fullname)
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            ? scrub_out($this->name)
+            : scrub_out($this->name . " (" . $this->username . ")");
 
         return $this->f_name;
     }
@@ -187,8 +187,8 @@ abstract class playlist_object extends database_object implements library_item
         if (!isset($this->link)) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = ($this instanceof Search)
-                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . scrub_out($this->id)
-                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . scrub_out($this->id);
+                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id
+                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         }
 
         return $this->link;
