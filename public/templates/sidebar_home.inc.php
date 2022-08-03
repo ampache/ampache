@@ -213,7 +213,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
     <li class="sb2_information">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'sb_home_information', 'header-img ' . $state_home_information); ?>
+            <?php echo Ui::get_icon('all', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
         </h4>
         <ul class="sb3" id="sb_home_information">
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
