@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-$web_path   = AmpConfig::get('web_path');
 $categories = Preference::get_categories(); ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
