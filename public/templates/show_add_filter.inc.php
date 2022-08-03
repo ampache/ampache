@@ -41,7 +41,7 @@ if (!AmpConfig::get('catalog_filter')) {
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Filter Name'); ?>:</td>
-            <td><input type="text" name="name" maxlength="128" value="<?php echo $filtername ?? scrub_out(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><input type="text" name="name" maxlength="128" value="<?php echo $filtername ?? scrub_out(filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php echo AmpError::display('name'); ?>
             </td>
         </tr>
