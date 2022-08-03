@@ -71,10 +71,7 @@ final class SendAction implements ApplicationActionInterface
         if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-            $current_ip = filter_has_var(
-                INPUT_SERVER,
-                'HTTP_X_FORWARDED_FOR') ? Core::get_server('HTTP_X_FORWARDED_FOR') : Core::get_server('REMOTE_ADDR'
-            );
+            $current_ip = Core::get_user_ip();
             $result     = $this->newPasswordSender->send($email, $current_ip);
         }
         // Do not acknowledge a password has been sent or failed and go back to login
