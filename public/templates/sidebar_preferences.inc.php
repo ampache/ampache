@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+$web_path   = AmpConfig::get('web_path');
 $categories = Preference::get_categories(); ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
@@ -40,7 +41,10 @@ $categories = Preference::get_categories(); ?>
     echo "</li>";
 } ?>
   <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_preferences; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_preferences']) && $_COOKIE['sb_preferences'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="preferences" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo $t_preferences; ?></span>
+        <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_preferences_prefs']) && $_COOKIE['sb_preferences_prefs'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="preferences_prefs" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+    </h4>
     <ul class="sb3" id="sb_preferences_prefs">
 <?php
     foreach ($categories as $name) {
@@ -56,22 +60,31 @@ $categories = Preference::get_categories(); ?>
   </li>
         <?php if (Access::check('interface', 50)) { ?>
     <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_home_playlist']) && $_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-    <ul class="sb3" id="sb_preferences_prefs_playlist">
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span>
+        <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_preferences_playlist']) && $_COOKIE['sb_preferences_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="preferences_playlist" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+    </h4>
+    <ul class="sb3" id="sb_preferences_playlist">
 <li id="sb_preferences_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
 </ul>
 <?php } ?>
 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
             <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Upload'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_upload_sections']) && $_COOKIE['sb_upload_sections'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="upload" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Upload'); ?></span>
+        <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_preferences_upload']) && $_COOKIE['sb_preferences_upload'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="preferences_upload" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+    </h4>
     <ul class="sb3" id="sb_preferences_upload">
     <li id="sb_preferences_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload') ?></a></li>
     </li>
 </ul>
        <?php } ?>
 <?php if (!AmpConfig::get('simple_user_mode')) { ?>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Help'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_help_sections']) && $_COOKIE['sb_help_sections'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="help" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
+        <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_preferences_help']) && $_COOKIE['sb_preferences_help'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="preferences_help" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+    </h4>
     <ul class="sb3" id="sb_preferences_help">
         <li id="sb_preferences_help_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
         <li id="sb_preferences_help_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
