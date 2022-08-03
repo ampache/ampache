@@ -451,7 +451,7 @@ class Subsonic_Api
      */
     public static function getmusicfolders($input)
     {
-        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username = $input['u'];
         $user     = User::get_from_username($username);
         $catalogs = Catalog::get_catalogs('music', $user->id);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getmusicfolders');
@@ -471,7 +471,7 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $username         = self::_check_parameter($input, 'u');
+        $username         = $input['u'];
         $user             = User::get_from_username((string)$username);
         $musicFolderId    = $input['musicFolderId'] ?? '-1';
         $ifModifiedSince  = $input['ifModifiedSince'] ?? '';
@@ -904,7 +904,7 @@ class Subsonic_Api
             $size = 10;
         }
 
-        $username      = self::_check_parameter($input, 'u');
+        $username      = $input['u'];
         $genre         = $input['genre'] ?? '';
         $fromYear      = $input['fromYear'] ?? null;
         $toYear        = $input['toYear'] ?? null;
@@ -1158,7 +1158,7 @@ class Subsonic_Api
     {
         $username  = (isset($input['username']))
             ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
-            : (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+            : $input['u'];
         $user      = User::get_from_username((string)$username);
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
         $playlists = Playlist::get_playlists($user->id, '', true, true, false);
@@ -1300,7 +1300,7 @@ class Subsonic_Api
         $format        = $input['format'] ?? ''; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
         $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
-        $username      = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username      = $input['u'];
         $user          = User::get_from_username($username);
         $user_id       = $user->id;
         $client        = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
@@ -1669,7 +1669,7 @@ class Subsonic_Api
             return;
         }
         $submission = (array_key_exists('submission', $input) && ($input['submission'] === 'true' || $input['submission'] === '1'));
-        $username   = (string)$input['u'];
+        $username   = $input['u'];
         $client     = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $user       = User::get_from_username($username);
 
@@ -1796,7 +1796,7 @@ class Subsonic_Api
      */
     public static function updateshare($input)
     {
-        $username = self::_check_parameter($input, 'u');
+        $username = $input['u'];
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
             return;
@@ -1850,7 +1850,7 @@ class Subsonic_Api
      */
     public static function deleteshare($input)
     {
-        $username = self::_check_parameter($input, 'u');
+        $username = $input['u'];
         $user     = User::get_from_username((string)$username);
         $share_id = self::_check_parameter($input, 'id');
         if (!$share_id) {
@@ -1949,8 +1949,11 @@ class Subsonic_Api
      */
     public static function createpodcastchannel($input)
     {
-        $url      = self::_check_parameter($input, 'url');
-        $username = self::_check_parameter($input, 'u');
+        $url = self::_check_parameter($input, 'url');
+        if (!$url) {
+            return;
+        }
+        $username = $input['u'];
         $user     = User::get_from_username((string)$username);
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
@@ -2539,7 +2542,7 @@ class Subsonic_Api
      */
     public static function getplayqueue($input)
     {
-        $username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $username = $input['u'];
         $user     = User::get_from_username($username);
         $client   = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
         $user_id  = $user->id;
@@ -2565,7 +2568,7 @@ class Subsonic_Api
             $response  = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
             $position  = (int)((int)$input['position'] / 1000);
             $client    = (string)filter_var($input['c'], FILTER_SANITIZE_STRING) ?? 'Subsonic';
-            $username  = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+            $username  = $input['u'];
             $user      = User::get_from_username($username);
             $user_id   = $user->id;
             $user_data = User::get_user_data($user_id, 'playqueue_time');
@@ -2625,7 +2628,7 @@ class Subsonic_Api
         $albums = false;
         switch ($type) {
             case "random":
-                $username = self::_check_parameter($input, 'u');
+                $username = $input['u'];
                 $user     = User::get_from_username((string)$username);
                 $albums   = static::getAlbumRepository()->getRandom(
                     $user->id,
@@ -2633,12 +2636,12 @@ class Subsonic_Api
                 );
                 break;
             case "newest":
-                $username = self::_check_parameter($input, 'u');
+                $username = $input['u'];
                 $user     = User::get_from_username((string)$username);
                 $albums   = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
                 break;
             case "highest":
-                $username = self::_check_parameter($input, 'u');
+                $username = $input['u'];
                 $user     = User::get_from_username((string)$username);
                 $albums   = Rating::get_highest("album", $size, $offset, $user->id);
                 break;
