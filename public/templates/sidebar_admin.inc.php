@@ -60,11 +60,11 @@ $web_path = AmpConfig::get('web_path');
     <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'admin_ut', 'header-img ' . ((isset($_COOKIE['sb_admin_ut'])) ? $_COOKIE['sb_admin_ut'] : 'expanded')); ?>
+          <?php echo Ui::get_icon('all', $t_expander, 'admin_users', 'header-img ' . ((isset($_COOKIE['sb_admin_users'])) ? $_COOKIE['sb_admin_users'] : 'expanded')); ?>
       </h4>
-      <ul class="sb3" id="sb_admin_ut">
-        <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
-        <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
+      <ul class="sb3" id="sb_admin_users">
+        <li id="sb_admin_users_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
+        <li id="sb_admin_users_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
         <?php
           if (Mailer::is_mail_enabled()) { ?>
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
@@ -80,39 +80,39 @@ $web_path = AmpConfig::get('web_path');
     <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Access Control'); ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'admin_acl', 'header-img ' . ((isset($_COOKIE['sb_admin_acl'])) ? $_COOKIE['sb_admin_acl'] : 'expanded')); ?>
+          <?php echo Ui::get_icon('all', $t_expander, 'admin_access', 'header-img ' . ((isset($_COOKIE['sb_admin_access'])) ? $_COOKIE['sb_admin_access'] : 'expanded')); ?>
       </h4>
-      <ul class="sb3" id="sb_admin_acl">
-        <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
-        <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
+      <ul class="sb3" id="sb_admin_access">
+        <li id="sb_admin_access_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
+        <li id="sb_admin_access_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
       </ul>
     </li>
     <li>
-      <ul class="sb2" id="sb_admin_mo">
+      <ul class="sb2" id="sb_admin_modules">
         <li>
           <h4 class="header">
               <span class="sidebar-header-title"><?php echo T_('Modules'); ?></span>
-              <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_admin_mo'])) ? $_COOKIE['sb_admin_mo'] : 'expanded'; ?>" id="admin_mo" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+              <?php echo Ui::get_icon('all', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
           </h4>
-          <ul class="sb3" id="sb_admin_mo">
-            <li id="sb_admin_mo_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
-            <li id="sb_admin_mo_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
-            <li id="sb_admin_mo_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
+          <ul class="sb3" id="sb_admin_modules">
+            <li id="sb_admin_modules_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
+            <li id="sb_admin_modules_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
+            <li id="sb_admin_modules_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
           </ul>
         </li>
     </li>
     <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span>
-          <img src="<?php echo $web_path . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_admin_sc'])) ? $_COOKIE['sb_admin_sc'] : 'expanded'; ?>" id="admin_sc" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" />
+          <?php echo Ui::get_icon('all', $t_expander, 'admin_server', 'header-img ' . ((isset($_COOKIE['sb_admin_server'])) ? $_COOKIE['sb_admin_server'] : 'expanded')); ?>
       </h4>
-      <ul class="sb3" id="sb_admin_sc">
+      <ul class="sb3" id="sb_admin_server">
         <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
         <?php
           $categories = Preference::get_categories();
         foreach ($categories as $name) {
             $f_name = ucfirst($name); ?>
-          <li id="sb_admin_sc_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
+          <li id="sb_admin_server_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
         <?php
         } ?>
       </ul>
