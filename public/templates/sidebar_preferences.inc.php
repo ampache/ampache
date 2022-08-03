@@ -39,7 +39,7 @@ $categories = Preference::get_categories(); ?>
     Ajax::end_container();
     echo "</li>";
 } ?>
-  <li><h4 class="header"><span class="sidebar-header-title"><?php echo $t_preferences; ?></span><?php echo Ui::get_icon('all', $t_expander, 'preferences', 'header-all ' . ((isset($_COOKIE['sb_preferences'])) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title"><?php echo $t_preferences; ?></span><?php echo Ui::get_icon('all', $t_expander, 'preferences', 'header-all ' . ((isset($_COOKIE['sb_preferences']) && $_COOKIE['sb_preferences'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
 <?php
     foreach ($categories as $name) {
