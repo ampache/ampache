@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -485,13 +486,11 @@ class Browse extends Query
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_pages(Core::get_cookie($name) == 'true');
             }
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
                 $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
                     AmpConfig::get('libitem_browse_alpha'));
@@ -501,8 +500,7 @@ class Browse extends Query
             }
             $name = 'browse_' . $type . '_grid_view';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_grid_view(Core::get_cookie($name) == 'true');
             }
 
             parent::set_type($type, $custom_base);
