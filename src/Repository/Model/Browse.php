@@ -505,7 +505,7 @@ class Browse extends Query
 
             parent::set_type($type, $custom_base);
         } else {
-            debug_event(self::class, 'set_type invalid type: ' . filter_var($type, FILTER_SANITIZE_STRING), 5);
+            debug_event(self::class, 'set_type invalid type: ' . $type, 5);
         }
     }
 

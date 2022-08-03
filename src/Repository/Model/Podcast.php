@@ -306,7 +306,7 @@ class Podcast extends database_object implements library_item
     public function update(array $data)
     {
         $feed        = $data['feed'] ?? $this->feed;
-        $title       = (isset($data['title'])) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $title       = (isset($data['title'])) ? scrub_in($data['title']) : null;
         $website     = (isset($data['website'])) ? scrub_in($data['website']) : null;
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
         $language    = (isset($data['language'])) ? scrub_in($data['language']) : null;

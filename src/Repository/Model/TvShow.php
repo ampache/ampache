@@ -202,7 +202,7 @@ class TvShow extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = scrub_out(trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name)));
         }
 
         return $this->f_name;

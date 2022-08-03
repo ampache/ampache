@@ -1004,7 +1004,7 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $this->f_name        = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $this->f_name        = scrub_out($this->name);
         $this->link          = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         $this->f_link        = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
         $this->f_update      = $this->last_update ? get_datetime((int)$this->last_update) : T_('Never');

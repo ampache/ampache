@@ -90,10 +90,10 @@ function scrub_in($input)
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
+ * (Not deprecated yet see Ui::scrubOut)
  * @param string|null $string
  * @return string
  *
- * @deprecated see Ui::scrubOut
  */
 function scrub_out($string)
 {
