@@ -162,11 +162,11 @@ class Core
     public static function get_user_ip()
     {
         // get the x forward if it's valid
-        if (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)) {
-            return filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
+        if (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
+            return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
     }
 
     /**
