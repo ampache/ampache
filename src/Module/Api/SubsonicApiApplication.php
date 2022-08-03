@@ -149,7 +149,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $methods = array_diff(get_class_methods(Subsonic_Api::class), $internal_functions);
 
         // We do not use $_GET because of multiple parameters with the same name
-        $query_string = Core::get_server('QUERY_STRING');
+        $query_string = $_SERVER['QUERY_STRING'];
         // Trick to avoid $HTTP_RAW_POST_DATA
         $postdata = file_get_contents("php://input");
         if (!empty($postdata)) {
