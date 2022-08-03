@@ -111,8 +111,15 @@ class Core
         if (!array_key_exists($variable, $_SERVER)) {
             return '';
         }
+        if (filter_has_var(INPUT_SERVER, $variable)) {
+            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+        // INPUT_SERVER can sometimes fail
+        if (filter_has_var(INPUT_ENV, $variable)) {
+            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
 
-        return scrub_in($_SERVER[$variable]);
+        return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     /**
