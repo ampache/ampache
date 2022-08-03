@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
@@ -52,7 +51,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     private RequestParserInterface $requestParser;
 
-    private ArtCollectorInterface $artCollector;
 
     private SlideshowInterface $slideshow;
 
@@ -68,7 +66,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
@@ -77,7 +74,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         VideoRepositoryInterface $videoRepository
     ) {
         $this->requestParser    = $requestParser;
-        $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
         $this->albumRepository  = $albumRepository;
         $this->labelRepository  = $labelRepository;
