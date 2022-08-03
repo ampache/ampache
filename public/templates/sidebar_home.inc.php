@@ -77,7 +77,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
     Ajax::end_container();
     echo "</li>";
 } ?>
-    <li class="sb2_browse"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_browse; ?></span><?php echo Ui::get_icon('all', $t_expander, 'home_music', 'header-img ' . $state_home_music); ?></h4>
+    <li class="sb2_browse"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_browse; ?></span><?php echo Ui::get_icon('all', $t_expander, 'home_browse', 'header-img ' . $state_home_music); ?></h4>
         <?php
         $text = (string) scrub_in(Core::get_request('action')) . '_ac';
         if ($text) {
@@ -119,7 +119,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
     </li>
     <?php if (User::is_registered()) { ?>
     <li class="sb2_dashboard">
-        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_dashboards; ?></span><?php echo Ui::get_icon('all', $t_expander, 'dashboard', 'header-img ' . $state_dashboard); ?></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_dashboards; ?></span><?php echo Ui::get_icon('all', $t_expander, 'home_dashboard', 'header-img ' . $state_dashboard); ?></h4>
         <ul class="sb3" id="sb_home_dashboard">
             <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
             <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
@@ -170,7 +170,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
     </li>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
-    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlists; ?></span><?php echo Ui::get_icon('all', $t_expander, 'playlist', 'header-img ' . $state_home_playlist); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlists; ?></span><?php echo Ui::get_icon('all', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
