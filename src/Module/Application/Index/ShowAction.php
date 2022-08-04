@@ -38,18 +38,14 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -58,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $action = $this->requestParser->getFromRequest('action');
+        $action = Core::get_request('action');
 
         if (!Core::is_session_started()) {
             session_start();
@@ -69,7 +65,7 @@ final class ShowAction implements ApplicationActionInterface
 
         /**
          * Check for the refresh mojo, if it's there then require the
-         * refresh_javascript include. Must be greater than 5, I'm not
+         * refresh_javascript include. Must be greater then 5, I'm not
          * going to let them break their servers
          */
         if (
