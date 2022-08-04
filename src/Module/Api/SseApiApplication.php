@@ -34,7 +34,6 @@ use Ampache\Module\Util\UiInterface;
 
 final class SseApiApplication implements ApiApplicationInterface
 {
-
     private RequestParserInterface $requestParser;
 
     private UiInterface $ui;

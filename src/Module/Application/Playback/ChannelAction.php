@@ -55,7 +55,7 @@ final class ChannelAction implements ApplicationActionInterface
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker
     ) {
-        $this->requestParser   = $requestParser;
+        $this->requestParser         = $requestParser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
     }
