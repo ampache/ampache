@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,14 +42,18 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_add_shout';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ShoutRepositoryInterface $shoutRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ShoutRepositoryInterface $shoutRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->shoutRepository = $shoutRepository;
     }
@@ -56,7 +61,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Get our object first
-        $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
+        $object = Shoutbox::get_object($this->requestParser->getFromRequest('type'), (int) $this->requestParser->getFromRequest('id'));
 
         $this->ui->showHeader();
 
@@ -72,7 +77,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
         $object->format();
         if (get_class($object) == Song::class) {
-            $data = $_REQUEST['offset'];
+            $data = $this->requestParser->getFromRequest('offset');
         }
         $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
         $shouts      = $this->shoutRepository->getBy($object_type, $object->id);

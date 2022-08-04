@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\NowPlaying;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,6 +43,8 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -49,10 +52,12 @@ final class ShowAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
@@ -119,10 +124,11 @@ final class ShowAction implements ApplicationActionInterface
         );
 
         $results = Stream::get_now_playing();
+        $user_id = $this->requestParser->getFromRequest('user_id');
 
-        if (Core::get_request('user_id') !== '') {
+        if ($user_id !== '') {
             if (empty($results)) {
-                $last_song = Stats::get_last_play(Core::get_request('user_id'));
+                $last_song = Stats::get_last_play($user_id);
                 $media     = $this->modelFactory->createSong((int) $last_song['object_id']);
                 $media->format();
 
@@ -143,7 +149,7 @@ final class ShowAction implements ApplicationActionInterface
             }
             // If the URL specifies a specific user, filter the results on that user
             $results = array_filter($results, function ($item) {
-                return ($item['client']->id === Core::get_request('user_id'));
+                return ($item['client']->id === $this->requestParser->getFromRequest('user_id'));
             });
         }
 

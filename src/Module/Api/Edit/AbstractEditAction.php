@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -40,14 +41,18 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private LoggerInterface $logger;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger
     ) {
+        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
     }
@@ -57,7 +62,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         $this->logger->debug(
-            'Called for action: {' . Core::get_request('action') . '}',
+            'Called for action: {' . $this->requestParser->getFromRequest('action') . '}',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
@@ -104,7 +109,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         if ($libitem->get_user_owner() == Core::get_global('user')->id) {
             $level = '25';
         }
-        if (Core::get_request('action') == 'show_edit_playlist') {
+        if ($this->requestParser->getFromRequest('action') == 'show_edit_playlist') {
             $level = '25';
         }
 

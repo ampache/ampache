@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -43,14 +44,18 @@ final class ChannelAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'channel';
 
+    private RequestParserInterface $requestParser;
+
     private AuthenticationManagerInterface $authenticationManager;
 
     private NetworkCheckerInterface $networkChecker;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker
     ) {
+        $this->requestParser   = $requestParser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
     }
@@ -61,7 +66,7 @@ final class ChannelAction implements ApplicationActionInterface
 
         set_time_limit(0);
 
-        $channel = new Channel((int) Core::get_request('channel'));
+        $channel = new Channel((int)$this->requestParser->getFromRequest('channel'));
         if (!$channel->id) {
             debug_event('channel/index', 'Unknown channel.', 1);
 

@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,6 +42,8 @@ final class RecentAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'recent';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -50,11 +53,13 @@ final class RecentAction implements ApplicationActionInterface
     private VideoRepositoryInterface $videoRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         VideoRepositoryInterface $videoRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
@@ -72,7 +77,7 @@ final class RecentAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Information'));
 
-        $user_id = (int) Core::get_request('user_id');
+        $user_id = (int) $this->requestParser->getFromRequest('user_id');
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(

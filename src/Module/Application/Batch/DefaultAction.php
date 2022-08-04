@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Batch;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -46,6 +47,8 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private LoggerInterface $logger;
@@ -59,6 +62,7 @@ final class DefaultAction implements ApplicationActionInterface
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ZipHandlerInterface $zipHandler,
@@ -66,6 +70,7 @@ final class DefaultAction implements ApplicationActionInterface
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->zipHandler      = $zipHandler;
@@ -90,10 +95,10 @@ final class DefaultAction implements ApplicationActionInterface
         $media_ids    = [];
         $default_name = 'Unknown';
         $name         = $default_name;
-        $action       = (string) scrub_in(Core::get_request('action'));
+        $action       = (string) scrub_in($this->requestParser->getFromRequest('action'));
         $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
         $object_type  = ($action == 'browse')
-            ? (string) scrub_in(Core::get_request('type'))
+            ? (string) scrub_in($this->requestParser->getFromRequest('type'))
             : $action;
 
         if (!$this->zipHandler->isZipable($object_type)) {
@@ -109,7 +114,6 @@ final class DefaultAction implements ApplicationActionInterface
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
             }
-            $media_ids = [];
             foreach ($object_id as $item) {
                 $this->logger->debug(
                     'Requested item ' . $item,
@@ -143,7 +147,7 @@ final class DefaultAction implements ApplicationActionInterface
                     }
                     break;
                 case 'browse':
-                    $object_id        = (int)Core::get_request('browse_id');
+                    $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media_id) {

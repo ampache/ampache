@@ -85,15 +85,17 @@ final class ApiHandler implements ApiHandlerInterface
             $this->logger
         );
 
-        $action        = (string)Core::get_request('action');
-        $is_handshake  = $action == HandshakeMethod::ACTION;
-        $is_ping       = $action == PingMethod::ACTION;
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
+        $action        = $input['action'];
+        $is_handshake  = $action == HandshakeMethod::ACTION;
+        $is_ping       = $action == PingMethod::ACTION;
         $api_format    = $input['api_format'];
-        $version       = (isset($input['version'])) ? $input['version'] : Api::$version;
         $user          = $gatekeeper->getUser();
         $userId        = $user->id ?? -1;
+        $version       = (isset($input['version']))
+            ? $input['version']
+            : Api::$version;
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_session = Session::get_api_version($input['auth']);

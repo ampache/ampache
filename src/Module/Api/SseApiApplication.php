@@ -27,18 +27,24 @@ namespace Ampache\Module\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 
 final class SseApiApplication implements ApiApplicationInterface
 {
+
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui
     ) {
-        $this->ui = $ui;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
     }
 
     public function run(): void
@@ -85,7 +91,7 @@ final class SseApiApplication implements ApiApplicationInterface
                     flush();
                 }
 
-                Catalog::process_action(Core::get_request('action'), $catalogs, $options);
+                Catalog::process_action($this->requestParser->getFromRequest('action'), $catalogs, $options);
 
                 if (defined('SSE_OUTPUT')) {
                     echo "data: toggleVisible('ajax-loading')\n\n";

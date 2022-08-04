@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -40,6 +41,8 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'save_as_smartplaylist';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -47,10 +50,12 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -66,8 +71,8 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
         $playlist = $this->modelFactory->createSearch();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
-        $playlist->limit  = (int) Core::get_request('limit');
-        $playlist->random = (int) Core::get_request('random');
+        $playlist->limit  = (int) $this->requestParser->getFromRequest('limit');
+        $playlist->random = (int) $this->requestParser->getFromRequest('random');
         $playlist->create();
 
         $this->ui->showConfirmation(
