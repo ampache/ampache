@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,18 +41,14 @@ final class SendMailAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'send_mail';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
@@ -85,7 +80,7 @@ final class SendMailAction implements ApplicationActionInterface
             $mailer->subject = $_REQUEST['subject'];
             $mailer->message = $_REQUEST['message'];
 
-            if ($this->requestParser->getFromRequest('from') == 'system') {
+            if (Core::get_request('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
                 $mailer->sender      = Core::get_global('user')->email;

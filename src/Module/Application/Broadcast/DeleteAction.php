@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Broadcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -40,8 +39,6 @@ final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
 
-    private RequestParserInterface $requestParser;
-
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -49,12 +46,10 @@ final class DeleteAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
@@ -71,7 +66,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $object_id = $this->requestParser->getFromRequest('id');
+        $object_id = Core::get_request('id');
         $broadcast = $this->modelFactory->createBroadcast((int) $object_id);
         if ($broadcast->delete()) {
             $next_url = sprintf(

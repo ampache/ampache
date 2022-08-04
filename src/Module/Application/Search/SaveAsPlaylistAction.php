@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -41,8 +40,6 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'save_as_playlist';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -50,12 +47,10 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -73,11 +68,11 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 
         // Make sure we have a unique name
         $playlist_name = (isset($_POST['browse_name']))
-            ? (string) $this->requestParser->getFromRequest('browse_name')
+            ? (string) Core::get_request('browse_name')
             : Core::get_global('user')->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
         $playlist_type = (isset($_POST['browse_type']))
-            ? (string) $this->requestParser->getFromRequest('browse_type')
+            ? (string) Core::get_request('browse_type')
             : 'public';
 
         if (!empty($objects)) {

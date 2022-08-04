@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,18 +42,14 @@ final class ShowDebugAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_debug';
 
-    private RequestParserInterface $requestParser;
-
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
@@ -71,7 +66,7 @@ final class ShowDebugAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $configuration = AmpConfig::get_all();
-        if ($this->requestParser->getFromRequest('autoupdate') == 'force') {
+        if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once Ui::find_template('show_debug.inc.php');

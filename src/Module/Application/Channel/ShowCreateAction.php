@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Channel;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Channel;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -41,18 +40,14 @@ final class ShowCreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_create';
 
-    private RequestParserInterface $requestParser;
-
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
@@ -65,10 +60,10 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = Channel::format_type($this->requestParser->getFromRequest('type'));
+        $type = Channel::format_type(Core::get_request('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name($this->requestParser->getFromRequest('id'));
+            $object     = new $class_name(Core::get_request('id'));
             if ($object->id) {
                 $object->format();
                 require_once Ui::find_template('show_add_channel.inc.php');

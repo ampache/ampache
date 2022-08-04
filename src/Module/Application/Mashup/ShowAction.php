@@ -29,7 +29,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -39,23 +38,19 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui
     ) {
-        $this->requestParser = $requestParser;
-        $this->ui            = $ui;
+        $this->ui = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         session_start();
 
-        $object_type = $this->requestParser->getFromRequest('action');
+        $object_type = Core::get_request('action');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             throw new AccessDeniedException();
         }

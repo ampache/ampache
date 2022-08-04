@@ -29,7 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -45,8 +44,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'refresh_updated';
 
-    private RequestParserInterface $requestParser;
-
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
@@ -60,7 +57,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
     private UiInterface $ui;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
@@ -71,7 +67,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
         UiInterface $ui
     ) {
         parent::__construct($configContainer, $logger);
-        $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->talFactory      = $talFactory;
@@ -109,9 +104,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
             case 'song_row':
                 $hide_genres    = AmpConfig::get('hide_genres');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
-                $hide_arg       = $this->requestParser->getFromRequest('hide');
-                $argument_param = '&hide=' . $hide_arg;
-                $argument       = explode(',', $hide_arg);
+                $argument_param = '&hide=' . Core::get_request('hide');
+                $argument       = explode(',', Core::get_request('hide'));
                 $hide_artist    = in_array('cel_artist', $argument);
                 $hide_album     = in_array('cel_album', $argument);
                 $hide_year      = in_array('cel_year', $argument);

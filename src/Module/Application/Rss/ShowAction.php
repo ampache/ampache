@@ -30,7 +30,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AmpacheRss;
-use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,8 +39,6 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
     private ConfigContainerInterface $configContainer;
 
     private ResponseFactoryInterface $responseFactory;
@@ -49,12 +46,10 @@ final class ShowAction implements ApplicationActionInterface
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
@@ -70,14 +65,14 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type     = $this->requestParser->getFromRequest('type');
-        $rsstoken = $this->requestParser->getFromRequest('rsstoken');
+        $type     = Core::get_request('type');
+        $rsstoken = Core::get_request('rsstoken');
         $rss      = new AmpacheRss($type, $rsstoken);
         $params   = null;
 
         if ($type === 'podcast') {
             $params                = [];
-            $params['object_type'] = $this->requestParser->getFromRequest('object_type');
+            $params['object_type'] = Core::get_request('object_type');
             $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         }
 

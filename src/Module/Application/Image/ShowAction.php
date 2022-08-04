@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -58,8 +57,6 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_ACTION = 'show';
 
-    private RequestParserInterface $requestParser;
-
     private AuthenticationManagerInterface $authenticationManager;
 
     private ConfigContainerInterface $configContainer;
@@ -73,7 +70,6 @@ final class ShowAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         AuthenticationManagerInterface $authenticationManager,
         ConfigContainerInterface $configContainer,
         Horde_Browser $horde_browser,
@@ -81,7 +77,6 @@ final class ShowAction implements ApplicationActionInterface
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger
     ) {
-        $this->requestParser         = $requestParser;
         $this->authenticationManager = $authenticationManager;
         $this->configContainer       = $configContainer;
         $this->horde_browser         = $horde_browser;
@@ -100,19 +95,19 @@ final class ShowAction implements ApplicationActionInterface
         ) {
             // Check to see if they've got an interface session or a valid API session
             $token_check = $this->authenticationManager->tokenLogin(
-                $this->requestParser->getFromRequest('u'),
-                $this->requestParser->getFromRequest('t'),
-                $this->requestParser->getFromRequest('s')
+                Core::get_request('u'),
+                Core::get_request('t'),
+                Core::get_request('s')
             );
 
             $cookie = $_COOKIE[AmpConfig::get('session_name')] ?? '';
 
             if (
                 !Session::exists('interface', $cookie) &&
-                !Session::exists('api', $this->requestParser->getFromRequest('auth')) &&
+                !Session::exists('api', Core::get_request('auth')) &&
                 !empty($token_check)
             ) {
-                $auth = ($this->requestParser->getFromRequest('auth') !== '') ? $this->requestParser->getFromRequest('auth') : $this->requestParser->getFromRequest('t');
+                $auth = (Core::get_request('auth') !== '') ? Core::get_request('auth') : Core::get_request('t');
                 $this->logger->warning(
                     sprintf('Access denied, checked cookie session:%s and auth:%s', $cookie, $auth),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]

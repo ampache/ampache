@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -43,8 +42,6 @@ final class UninstallPluginAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'uninstall_plugin';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -52,12 +49,10 @@ final class UninstallPluginAction implements ApplicationActionInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger
     ) {
-        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
@@ -75,7 +70,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
         $plugins = Plugin::get_plugins();
         if (!array_key_exists($_REQUEST['plugin'], $plugins)) {
             $this->logger->error(
-                sprintf('Error: Invalid Plugin: %s selected', $this->requestParser->getFromRequest('plugin')),
+                sprintf('Error: Invalid Plugin: %s selected', Core::get_request('plugin')),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 

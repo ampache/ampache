@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SearchData;
 
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -39,8 +38,6 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
@@ -48,12 +45,10 @@ final class ShowAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->modelFactory    = $modelFactory;
@@ -63,7 +58,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $search = $this->modelFactory->createSearch(
             null,
-            $this->requestParser->getFromRequest('type')
+            Core::get_request('type')
         );
 
         $content = 'var types = ';

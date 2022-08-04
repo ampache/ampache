@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\User\UserStateTogglerInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
@@ -39,8 +38,6 @@ final class ConfirmDisableAction extends AbstractUserAction
 {
     public const REQUEST_KEY = 'confirm_disable';
 
-    private RequestParserInterface $requestParser;
-
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -50,13 +47,11 @@ final class ConfirmDisableAction extends AbstractUserAction
     private UserStateTogglerInterface $userStateToggler;
 
     public function __construct(
-        RequestParserInterface $requestParser,
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UserStateTogglerInterface $userStateToggler
     ) {
-        $this->requestParser    = $requestParser;
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;
         $this->configContainer  = $configContainer;
@@ -74,7 +69,7 @@ final class ConfirmDisableAction extends AbstractUserAction
         }
         $this->ui->showHeader();
 
-        $user = $this->modelFactory->createUser((int) $this->requestParser->getFromRequest('user_id'));
+        $user = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
         if ($this->userStateToggler->disable($user) === true) {
             $this->ui->showConfirmation(
