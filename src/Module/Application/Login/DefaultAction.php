@@ -135,8 +135,8 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['info']['offset_limit'] = 25;
                 } else {
                     if (Core::get_post('username') !== '') {
-                        $username = (string) scrub_in(Core::get_post('username'));
-                        $password = Core::get_post('password');
+                        $username = (string)$_POST['username'];
+                        $password = $_POST['password'];
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {
                             $username = (string) Core::get_server('REMOTE_USER');
