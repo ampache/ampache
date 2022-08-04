@@ -136,7 +136,7 @@ final class DefaultAction implements ApplicationActionInterface
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string)$_POST['username'];
-                        $password = $_POST['password'];
+                        $password = $_POST['password'] ?? '';
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {
                             $username = (string) Core::get_server('REMOTE_USER');
