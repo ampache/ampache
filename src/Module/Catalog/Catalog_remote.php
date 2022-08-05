@@ -276,6 +276,7 @@ class Catalog_remote extends Catalog
         $step    = 500;
         $current = 0;
         $total   = $remote_catalog_info['songs'];
+        $songs   = array();
 
         while ($total > $current) {
             $start = $current;
@@ -337,26 +338,23 @@ class Catalog_remote extends Catalog
             return 0;
         }
 
-        $dead = 0;
-
+        $dead       = 0;
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
+                if (count($song) == 1) {
+                    debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
+                } else {
+                    debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
+                    $dead++;
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                }
             } catch (Exception $error) {
                 // FIXME: What to do, what to do
                 debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
-            }
-
-            if (count($song) == 1) {
-                debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
-            } else {
-                debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
-                $dead++;
-                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
             }
         }
 

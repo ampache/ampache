@@ -53,6 +53,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
+        $songs   = array();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {

@@ -164,6 +164,7 @@ class Catalog_Seafile extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
+        $api_key        = null;
         $server_uri     = rtrim(trim($data['server_uri']), '/');
         $library_name   = trim($data['library_name']);
         $api_call_delay = trim($data['api_call_delay']);

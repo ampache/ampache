@@ -120,6 +120,7 @@ class Stream_Playlist
     {
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
         $sql         = '';
+        $fields      = array();
         $values      = array();
         $holders_arr = array();
 

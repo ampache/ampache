@@ -869,7 +869,7 @@ class Xml4_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param integer[] $object_ids Object IDs
+     * @param array $object_ids Object IDs
      * @param User $user
      * @return   string     return xml
      */

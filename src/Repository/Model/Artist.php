@@ -1006,10 +1006,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                     Song::update_utime($song_id, $time);
+                    Stats::migrate('artist', $this->id, $artist_id, $song_id);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
-                Stats::migrate('artist', $this->id, $artist_id, $song_id);
                 Useractivity::migrate('artist', $this->id, $artist_id);
                 Recommendation::migrate('artist', $this->id);
                 Share::migrate('artist', $this->id, $artist_id);

@@ -128,6 +128,7 @@ class AmpacheTmdb
             return null;
         }
 
+        $results = array();
         try {
             $token            = new ApiToken($this->api_key);
             $client           = new Client($token);

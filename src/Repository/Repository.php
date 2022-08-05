@@ -24,6 +24,7 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\DatabaseObject;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Model;
 use ReflectionClass;
 use ReflectionException;
@@ -84,6 +85,7 @@ class Repository
         $sql  = $this->assembleQuery($table, $field);
 
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
+        /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }

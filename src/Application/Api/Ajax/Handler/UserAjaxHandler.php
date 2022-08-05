@@ -48,6 +48,7 @@ final class UserAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
+        $results = array();
         $user_id = (int) (Core::get_request('user_id'));
 
         // Switch on the actions

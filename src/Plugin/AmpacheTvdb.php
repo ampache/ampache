@@ -125,6 +125,7 @@ class AmpacheTvdb
             return array();
         }
 
+        $results = array();
         try {
             $tvdburl = 'http://thetvdb.com';
             $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);

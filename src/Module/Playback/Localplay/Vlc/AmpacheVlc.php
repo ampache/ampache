@@ -556,7 +556,7 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array['state']  = $state;
+        $array['state']  = $state ?? '';
         $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat'] = $arrayholder['root']['repeat']['value'];
         $array['random'] = $arrayholder['root']['random']['value'];
