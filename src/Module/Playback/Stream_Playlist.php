@@ -320,7 +320,7 @@ class Stream_Playlist
                     $url['title'] = 'Random URL';
                     break;
                 default:
-                    $url['title'] = Stream_Url::get_title($url);
+                    $url['title'] = Stream_Url::get_title($url['url']);
                     $url['time']  = -1;
                     break;
             }

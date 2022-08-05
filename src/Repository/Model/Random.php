@@ -265,15 +265,15 @@ class Random
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
-     * @param array $sql_data
+     * @param string $sql_query
      * @param array $sql_params
      * @param array $data
      * @return array
      */
-    private static function advanced_results($sql_data, $sql_params, $data)
+    private static function advanced_results($sql_query, $sql_params, $data)
     {
         // Run the query generated above so we can while it
-        $db_results = Dba::read($sql_data, $sql_params);
+        $db_results = Dba::read($sql_query, $sql_params);
         $results    = array();
 
         $size_total = 0;

@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -128,6 +129,7 @@ final class CatalogFileMethod
                 switch ($item) {
                     case 'clean':
                         if ($media->id) {
+                            /** @var Catalog_local $catalog */
                             $catalog->clean_file($file, $type);
                         }
                         break;
@@ -138,6 +140,7 @@ final class CatalogFileMethod
                         break;
                     case 'add':
                         if (!$media->id) {
+                            /** @var Catalog_local $catalog */
                             $catalog->add_file($file, array());
                         }
                         break;
