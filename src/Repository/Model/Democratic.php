@@ -76,7 +76,7 @@ class Democratic extends Tmp_Playlist
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

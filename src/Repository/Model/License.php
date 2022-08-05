@@ -61,7 +61,7 @@ class License
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

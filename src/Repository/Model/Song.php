@@ -402,7 +402,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

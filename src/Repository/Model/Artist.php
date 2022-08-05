@@ -226,7 +226,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     public function isNew(): bool

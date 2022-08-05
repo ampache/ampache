@@ -90,7 +90,7 @@ class Channel extends database_object implements Media, library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

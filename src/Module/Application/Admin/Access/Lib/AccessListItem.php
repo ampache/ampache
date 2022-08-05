@@ -137,7 +137,7 @@ final class AccessListItem implements AccessListItemInterface
      */
     public function getId(): int
     {
-        return (int) $this->access->id;
+        return (int)$this->access->id;
     }
 
     /**

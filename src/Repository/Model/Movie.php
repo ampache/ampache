@@ -62,7 +62,7 @@ class Movie extends Video
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

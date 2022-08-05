@@ -85,7 +85,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     public function isNew(): bool

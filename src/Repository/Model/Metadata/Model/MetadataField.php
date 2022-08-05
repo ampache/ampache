@@ -45,10 +45,9 @@ class MetadataField extends DatabaseObject implements Model
     protected $public = true;
 
     /**
-     *
-     * @return integer
+     * Get ID of Database Object
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

@@ -113,7 +113,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**

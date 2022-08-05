@@ -32,5 +32,5 @@ interface Model
     /**
      * Get ID of Database Object
      */
-    public function getId();
+    public function getId(): int;
 }

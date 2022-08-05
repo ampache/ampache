@@ -63,7 +63,7 @@ class Useractivity extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
