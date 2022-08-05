@@ -65,6 +65,7 @@ interface playable_item
      * get_childrens
      *
      * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
+     * @return array
      */
     public function get_childrens();
 

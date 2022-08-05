@@ -329,7 +329,7 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()

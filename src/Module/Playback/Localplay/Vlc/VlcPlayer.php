@@ -381,7 +381,7 @@ class VlcPlayer
      * request to the VLC server and getting the response
      * @param $cmd
      * @param $args
-     * @return array|void|null
+     * @return array|null
      */
     private function sendCommand($cmd, $args)
     {

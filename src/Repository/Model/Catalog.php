@@ -529,7 +529,7 @@ abstract class Catalog extends database_object
     /**
      * filter_count
      * This returns the number of filters.
-     * @return string
+     * @return int
      */
     public static function filter_count()
     {

@@ -89,7 +89,7 @@ class Ldap
      * Note: This does not open a connection. It checks whether
      * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
-     * @return resource|false
+     * @return resource
      * @throws LdapException
      */
     private static function connect()

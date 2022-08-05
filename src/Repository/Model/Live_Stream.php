@@ -133,6 +133,7 @@ class Live_Stream extends database_object implements Media, library_item
     } // format
 
     /**
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()

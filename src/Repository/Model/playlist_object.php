@@ -156,7 +156,8 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return array|mixed
+     * Get item keywords for metadata searches.
+     * @return array
      */
     public function get_keywords()
     {
@@ -218,7 +219,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function get_childrens()
     {

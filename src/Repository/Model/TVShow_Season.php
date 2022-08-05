@@ -152,7 +152,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()

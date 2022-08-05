@@ -148,7 +148,6 @@ class Movie extends Video
     } // format
 
     /**
-     * get_keywords
      * Get item keywords for metadata searches.
      * @return array
      */

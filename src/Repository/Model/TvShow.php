@@ -175,7 +175,7 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()

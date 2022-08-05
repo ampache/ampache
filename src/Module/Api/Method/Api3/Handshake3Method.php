@@ -50,7 +50,7 @@ final class Handshake3Method
      *
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
-     * @param array
+     * @param array $input
      * @return boolean
      */
     public static function handshake(array $input): bool

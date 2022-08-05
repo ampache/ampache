@@ -286,8 +286,8 @@ class User extends database_object
      * get_from_apikey
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
-     * @param string apikey
-     * @return User|null $user
+     * @param string $apikey
+     * @return User|null
      */
     public static function get_from_apikey($apikey)
     {

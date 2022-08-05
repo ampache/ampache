@@ -198,7 +198,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()

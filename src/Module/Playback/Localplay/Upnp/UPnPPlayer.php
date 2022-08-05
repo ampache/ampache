@@ -140,7 +140,7 @@ class UPnPPlayer
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function GetCurrentItem()
     {
