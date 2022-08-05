@@ -86,8 +86,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $moment  = (int) AmpConfig::get('of_the_moment');
         $user    = Core::get_global('user');
+        $moment  = (int) AmpConfig::get('of_the_moment');
         // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
             $moment = 6;
@@ -262,7 +262,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = $this->requestParser->getFromRequest('year');
 
-                    if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
+                    if (!$this->wantedRepository->find($mbid, $user->id)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -275,12 +275,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
-                    $mbid = $this->requestParser->getFromRequest('mbid');
+                    $mbid    = $this->requestParser->getFromRequest('mbid');
+                    $user_id = $user->has_access('75') ? null : $user->id;
+                    $walbum  = new Wanted(Wanted::get_wanted($mbid));
 
-                    $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
-
-                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
+                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $user_id);
                     ob_start();
                     $walbum->accepted = false;
                     $walbum->id       = 0;
