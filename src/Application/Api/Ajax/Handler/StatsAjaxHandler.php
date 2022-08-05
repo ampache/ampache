@@ -28,9 +28,11 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Repository\Model\Song;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface
 {
@@ -73,6 +75,32 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 } else {
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
+                break;
+            case 'delete_play':
+                Stats::delete((int)$_REQUEST['activity_id']);
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $user_id   = $user->id ?? -1;
+                $data      = Song::get_recently_played($user_id);
+                $ajax_page = 'stats';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_played.inc.php');
+                $results['recently_played'] = ob_get_clean();
+                break;
+            case 'delete_skip':
+                Stats::delete((int)$_REQUEST['activity_id']);
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $user_id   = $user->id ?? -1;
+                $data      = Song::get_recently_played($user_id, 'skip');
+                $ajax_page = 'stats';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_skipped.inc.php');
+                $results['recently_skipped'] = ob_get_clean();
                 break;
         } // switch on action;
 
