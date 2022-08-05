@@ -436,7 +436,6 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param integer $song_id
      * @param string $elementName
-     * @param Album $album
      * @return SimpleXMLElement
      */
     public static function addSong($xml, $song_id, $elementName = 'song')

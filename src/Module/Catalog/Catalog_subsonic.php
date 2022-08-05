@@ -383,7 +383,7 @@ class Catalog_subsonic extends Catalog
      */
     public function check_catalog_proc()
     {
-        return false;
+        return array();
     }
 
     /**

@@ -368,7 +368,7 @@ class Catalog_remote extends Catalog
      */
     public function check_catalog_proc()
     {
-        return false;
+        return array();
     }
 
     /**

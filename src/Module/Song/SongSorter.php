@@ -250,7 +250,7 @@ final class SongSorter implements SongSorterInterface
      * and unlink.. This is a little unsafe, and as such it verifies the copy
      * worked by doing a filesize() before unlinking.
      * @param Interactor $interactor
-     * @param $song
+     * @param Song $song
      * @param $fullname
      * @param $test_mode
      * @return bool

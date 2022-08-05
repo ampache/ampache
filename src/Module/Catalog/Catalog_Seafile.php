@@ -561,7 +561,7 @@ class Catalog_Seafile extends Catalog
      */
     public function check_catalog_proc()
     {
-        return false;
+        return array();
     }
 
     /**

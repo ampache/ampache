@@ -1127,7 +1127,7 @@ class Catalog_local extends Catalog
             AmpError::add('general', T_('Catalog root unreadable, stopping check'));
             echo AmpError::display('general');
 
-            return false;
+            return array();
         }
 
         $missing     = array();
