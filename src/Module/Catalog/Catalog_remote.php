@@ -269,20 +269,34 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found',
-            '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
+        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
         $current = 0;
         $total   = $remote_catalog_info['songs'];
-        $songs   = array();
 
         while ($total > $current) {
             $start = $current;
             $current += $step;
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
+                // Iterate over the songs we retrieved and insert them
+                foreach ($songs as $data) {
+                    if ($this->check_remote_song($data['song'])) {
+                        debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                    } else {
+                        $data['song']['catalog'] = $this->id;
+                        $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
+                        if (!Song::insert($data['song'])) {
+                            debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                            /* HINT: Song Title */
+                            AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
+                            echo AmpError::display('general');
+                            flush();
+                        }
+                    }
+                }
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
                 AmpError::add('general', $error->getMessage());
@@ -290,22 +304,6 @@ class Catalog_remote extends Catalog
                 flush();
             }
 
-            // Iterate over the songs we retrieved and insert them
-            foreach ($songs as $data) {
-                if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
-                } else {
-                    $data['song']['catalog'] = $this->id;
-                    $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
-                    if (!Song::insert($data['song'])) {
-                        debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        /* HINT: Song Title */
-                        AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
-                        echo AmpError::display('general');
-                        flush();
-                    }
-                }
-            }
         } // end while
 
         Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));

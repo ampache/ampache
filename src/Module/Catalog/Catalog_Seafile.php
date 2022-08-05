@@ -164,7 +164,6 @@ class Catalog_Seafile extends Catalog
      */
     public static function create_type($catalog_id, $data)
     {
-        $api_key        = null;
         $server_uri     = rtrim(trim($data['server_uri']), '/');
         $library_name   = trim($data['library_name']);
         $api_call_delay = trim($data['api_call_delay']);
@@ -176,25 +175,21 @@ class Catalog_Seafile extends Catalog
 
             return false;
         }
-
         if (!strlen($library_name)) {
             AmpError::add('general', T_('Seafile server library name is required'));
 
             return false;
         }
-
         if (!strlen($username)) {
             AmpError::add('general', T_('Seafile username is required'));
 
             return false;
         }
-
         if (!strlen($password)) {
             AmpError::add('general', T_('Seafile password is required'));
 
             return false;
         }
-
         if (!is_numeric($api_call_delay)) {
             AmpError::add('general', T_('API Call Delay must have a numeric value'));
 
@@ -203,8 +198,11 @@ class Catalog_Seafile extends Catalog
 
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
-
+            $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
+            Dba::write($sql, array($server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id));
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
+
+            return true;
         } catch (Exception $error) {
             /* HINT: exception error message */
             AmpError::add('general',
@@ -212,14 +210,7 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
-        if ($api_key == null) {
-            return false;
-        }
-
-        $sql = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id));
-
-        return true;
+        return false;
     }
 
     /**
