@@ -363,20 +363,20 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user, $agent, $date)) {
+        if (!$this->check_play_history($user_id, $agent, $date)) {
             return false;
         }
-        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
-            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
         }
 
         if (!$this->played) {

@@ -405,16 +405,16 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // Do nothing
-        unset($user, $agent, $location, $date);
+        unset($user_id, $agent, $location, $date);
 
         return false;
     }
