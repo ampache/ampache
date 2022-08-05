@@ -52,8 +52,7 @@ $web_path = AmpConfig::get('web_path');
       <?php } ?>
       <?php if (AmpConfig::get('licensing')) { ?>
         <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
-      <?php
-} ?>
+      <?php } ?>
     </ul>
   </li>
   <?php if (Access::check('interface', 100)) { ?>
@@ -72,8 +71,7 @@ $web_path = AmpConfig::get('web_path');
           }
         if (AmpConfig::get('sociable')) { ?>
           <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
-        <?php
-        } ?>
+        <?php } ?>
         <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
       </ul>
     </li>
@@ -118,6 +116,5 @@ $web_path = AmpConfig::get('web_path');
       </ul>
     </li>
 </ul>
-<?php
-    } ?>
+<?php } ?>
 </ul>

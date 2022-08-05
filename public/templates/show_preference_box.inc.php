@@ -39,8 +39,7 @@ $is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_RE
     <?php if ($is_admin) { ?>
   <col id="col_applytoall" />
   <col id="col_level" />
-    <?php
-} ?>
+    <?php } ?>
 </colgroup>
 <thead>
     <tr class="th-top">
@@ -49,8 +48,7 @@ $is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_RE
         <?php if ($is_admin) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
@@ -105,8 +103,7 @@ $is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_RE
                     </select>
                     <?php unset(${$name}); ?>
                 </td>
-            <?php
-        } ?>
+            <?php } ?>
         </tr>
     <?php
     } // End foreach ($preferences['prefs'] as $pref)?>
@@ -118,8 +115,7 @@ $is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_RE
         <?php if ($is_admin) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </tfoot>
 </table>

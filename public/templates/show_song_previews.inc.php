@@ -39,8 +39,7 @@ use Ampache\Module\Util\Ui;
         <tr id="song_preview_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
 </table>
 <?php Ui::show_box_bottom(); ?>

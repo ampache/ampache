@@ -115,8 +115,7 @@ $t_logout          = T_('Log out'); ?>
 } else { ?>
     <li id="sb_tab_home" class="sb1">
         <div id="sidebar-page" class="sidebar-page-float">
-        <?php
-            require_once Ui::find_template('sidebar_home.inc.php'); ?>
+        <?php require_once Ui::find_template('sidebar_home.inc.php'); ?>
         </div>
     </li>
 <?php } ?>

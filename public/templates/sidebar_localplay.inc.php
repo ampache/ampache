@@ -54,13 +54,11 @@ if ($server_allow && $controller && $access_check) { ?>
 <?php if (Access::check('localplay', 75)) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
     <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
-<?php
-        } ?>
+<?php } ?>
     <li id="sb_localplay_info_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo T_('Show Playlist'); ?></a></li>
     </ul>
   </li>
-<?php
-    } ?>
+<?php } ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span>
@@ -82,8 +80,7 @@ if ($server_allow && $controller && $access_check) { ?>
     } ?>
     </ul>
   </li>
-<?php
-} else { ?>
+<?php } else { ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Localplay Disabled'); ?></span>
@@ -98,8 +95,6 @@ if ($server_allow && $controller && $access_check) { ?>
   <?php
         } elseif (!$access_check) { ?>
     <li><?php echo T_('Access Denied'); ?></li>
-  <?php
-        } ?>
-<?php
-    } ?>
+  <?php } ?>
+<?php } ?>
 </ul>

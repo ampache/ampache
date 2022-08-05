@@ -56,8 +56,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
-            <?php
-} ?>
+            <?php } ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
         </li>
@@ -74,8 +73,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 

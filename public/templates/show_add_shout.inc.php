@@ -47,8 +47,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
-<?php
-    } ?>
+<?php } ?>
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
@@ -61,8 +60,7 @@ $boxtitle = T_('Post to Shoutbox');
 </form>
 <?php Ui::show_box_bottom(); ?>
 </div>
-<?php
-} ?>
+<?php } ?>
 <div style="display: inline;">
 <?php
 $boxtitle = $object->get_fullname() . ' ' . T_('Shoutbox');

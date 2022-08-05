@@ -47,8 +47,7 @@ use Ampache\Module\Util\Ui;
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
 </table>
 <?php Ui::show_box_bottom(); ?>

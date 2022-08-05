@@ -32,8 +32,7 @@ use Ampache\Module\Util\Ui;
     <td><?php echo $field['description']; ?></td>
     <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Update Instance'); ?>" />

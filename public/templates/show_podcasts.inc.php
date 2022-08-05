@@ -51,8 +51,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
-        <?php
-} ?>
+        <?php } ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
@@ -98,8 +97,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -113,13 +111,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php } ?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+            require Ui::find_template('list_header.inc.php');
+        } ?>

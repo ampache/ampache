@@ -30,8 +30,7 @@ use Ampache\Module\Util\Ui;
 <tr>
     <?php foreach ($fields as $key => $field) { ?>
         <th><?php echo $field['description']; ?></th>
-    <?php
-} ?>
+    <?php } ?>
     <th><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($instances as $uid => $name) {
@@ -46,8 +45,7 @@ use Ampache\Module\Util\Ui;
                 echo "*****";
             } ?>
     </td>
-    <?php
-        } ?>
+    <?php } ?>
     <td>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo Ui::get_icon('edit', T_('Edit Instance')); ?></a>
         <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'delete', T_('Delete'), 'delete_instance_' . $uid); ?>

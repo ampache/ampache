@@ -171,8 +171,7 @@ $(function () {
 // Display a max file size client side if we know it
 if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
-<?php
-} ?>
+<?php } ?>
 <table class="tabledata">
 <?php if (Access::check('interface', 50)) {
     ?>
@@ -211,8 +210,7 @@ if ($upload_max > 0) { ?>
         </div>
     </td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
 <table class="tabledata">
 <tr>

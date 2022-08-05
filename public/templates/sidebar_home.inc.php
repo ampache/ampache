@@ -81,8 +81,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_icon('all', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
-        <?php
-        $text = (string) scrub_in(Core::get_request('action')) . '_ac';
+        <?php $text = (string) scrub_in(Core::get_request('action')) . '_ac';
         if ($text) {
             ${$text} = ' selected="selected"';
         } ?>
@@ -116,8 +115,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo $t_genres; ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
               <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads ?></a></li>
-            <?php
-        } ?>
+            <?php } ?>
         </ul>
     </li>
     <?php if (User::is_registered()) { ?>
@@ -195,20 +193,16 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic ?></a></li>
             <?php } ?>
             <?php if ($server_allow && $controller) { ?>
-            <?php
-                // Little bit of work to be done here
+            <?php // Little bit of work to be done here
                 $localplay             = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $current_instance      = $localplay->current_instance();
                 $class                 = $current_instance ? '' : ' class="active_instance"'; ?>
                 <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay ?></a></li>
-            <?php
-            } ?>
+            <?php } ?>
         </ul>
-        <?php
-        } ?>
+        <?php } ?>
     </li>
-    <?php
-    } ?>
+    <?php } ?>
     <li class="sb2_information">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>

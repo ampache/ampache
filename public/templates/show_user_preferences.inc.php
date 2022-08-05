@@ -54,8 +54,7 @@ use Ampache\Module\Util\Ui;
                         <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
-<?php
-} // End foreach ($preferences['prefs'] as $pref)?>
+<?php } ?>
 <tr>
     <td>
     <div class="formValidation">

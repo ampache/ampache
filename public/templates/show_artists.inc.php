@@ -66,13 +66,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('# Played'), 'artist_sort_total_count'); ?></th>
-            <?php
-    } ?>
+            <?php } ?>
             <?php if (!$hide_genres) {
-        ++$thcount; ?>
+    ++$thcount; ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php
-    } ?>
+} ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
@@ -113,8 +112,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -127,15 +125,13 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
             <?php if (!$hide_genres) { ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
             <th class="cel_action essential"> <?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

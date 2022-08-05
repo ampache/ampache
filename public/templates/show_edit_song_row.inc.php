@@ -63,8 +63,7 @@ use Ampache\Module\Api\Ajax;
                         </div>
                     </td>
                 </tr>
-                <?php
-                } ?>
+                <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
                 <td><input type="text" name="track" value="<?php echo scrub_out($libitem->track); ?>" /></td>
@@ -112,8 +111,7 @@ use Ampache\Module\Api\Ajax;
                             </div>
                         </td>
                     </tr>
-                    <?php
-                } ?>
+                    <?php } ?>
         </table>
         <?php if (Song::isCustomMetadataEnabled()): ?>
             <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>

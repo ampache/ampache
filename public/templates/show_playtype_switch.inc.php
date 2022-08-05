@@ -49,16 +49,14 @@ if (Preference::has_access('play_type')) { ?>
                 <option value="democratic" <?php if (isset($is_democratic)) {
         echo $is_democratic;
     } ?>><?php echo T_('Democratic'); ?></option>
-            <?php
-    } ?>
+            <?php } ?>
             <option value="web_player" <?php if (isset($is_web_player)) {
         echo $is_web_player;
     } ?>><?php echo T_('Web Player'); ?></option>
         </select>
         <?php echo Ajax::observe('play_type_select', 'change', Ajax::action('?page=stream&action=set_play_type', 'play_type_select', 'play_type_form')); ?>
     </form>
-<?php
-} else {
+<?php } else {
         echo T_(ucwords(AmpConfig::get('play_type')));
     } ?>
 </div>

@@ -43,8 +43,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         </li>
     </ul>
 </div>
-<?php
-} ?>
+<?php } ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -75,8 +74,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

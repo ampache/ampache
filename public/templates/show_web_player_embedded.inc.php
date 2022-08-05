@@ -33,8 +33,7 @@ function PlayerFrame()
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
-<?php
-} ?>
+<?php } ?>
         $webplayer.show();
         $("#webplayer-minimize").show();
     }

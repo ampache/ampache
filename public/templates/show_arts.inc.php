@@ -61,8 +61,7 @@ while ($count <= $rows) {
                 <?php
             } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
-                <?php
-            } ?>
+                <?php } ?>
                 </p>
             </td>
 <?php

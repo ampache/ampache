@@ -63,8 +63,7 @@ $environment = $dic->get(EnvironmentInterface::class);
     <?php if (!$environment->check_dependencies_folder()) { ?>
         <br />
         <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
-    <?php
-} ?>
+    <?php } ?>
     </td>
 </tr>
 <tr>

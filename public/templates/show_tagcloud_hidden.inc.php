@@ -70,11 +70,9 @@ $ui = $dic->get(UiInterface::class);
                 </li>
             </ul>
         </div>
-    <?php
-            } ?>
+    <?php } ?>
     </div>
-<?php
-        } ?>
+<?php } ?>
 
 <br /><br /><br />
 <?php Ajax::end_container(); ?>

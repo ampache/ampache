@@ -65,13 +65,11 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
-<?php
-    $democratic->set_parent();
+<?php $democratic->set_parent();
     foreach ($object_ids as $item) {
         if (!is_array($item)) {
             $item = (array) $item;
@@ -114,7 +112,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <?php } ?>
     </tr>
 </tfoot>
-<?php } // end else?>
+<?php } ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {

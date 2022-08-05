@@ -46,12 +46,10 @@ use Ampache\Repository\Model\Song;
                     echo $artist->get_f_link();
                 } ?>
             </div>
-        <?php
-    } ?>
+        <?php } ?>
     </div>
 </div>
-<?php
-} ?>
+<?php } ?>
 
 <?php if ($songs) { ?>
 <div class="np_group similars">
@@ -62,9 +60,7 @@ use Ampache\Repository\Model\Song;
             <?php $song = new Song($songArray['id']);
             echo $song->get_f_link(); ?>
             </div>
-        <?php
-        } ?>
+        <?php } ?>
     </div>
 </div>
-<?php
-    } ?>
+<?php } ?>

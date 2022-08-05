@@ -334,8 +334,7 @@ if ($is_share && $isVideo) { ?>
             top: 100px !important;
         }
     </style>
-    <?php
-} ?>
+    <?php } ?>
 </head>
 <body>
 <?php $areaClass = "";

@@ -55,18 +55,14 @@ if (!empty($albums)) {
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $album->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $album->id); ?>
-                <?php
-            } ?>
+                <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
-            <?php
-            } ?>
-        <?php
-                } ?>
+            <?php } ?>
+        <?php } ?>
         <?php echo Ajax::button('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album->id); ?>
         </div>
-        <?php
-            } ?>
+        <?php } ?>
         <?php
         if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>

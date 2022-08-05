@@ -56,14 +56,11 @@ if ($videos) {
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
-                <?php
-            } ?>
+                <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
-            <?php
-            } ?>
-        <?php
-        } ?>
+            <?php } ?>
+        <?php } ?>
         </div>
         <?php
         if (Access::check('interface', 25)) { ?>

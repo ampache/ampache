@@ -67,8 +67,7 @@ $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -
             } ?>
             </ul>
         </li>
-    <?php
-} ?>
+    <?php } ?>
 <?php
 // @todo remove after refactoring
 global $dic;
@@ -79,8 +78,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
-<?php
-    } ?>
+<?php } ?>
     <li>
     <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
@@ -102,15 +100,12 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         </ul>
     </li>
 </ul>
-<?php
-    if (AmpConfig::get('play_type') == 'localplay') {
-        require_once Ui::find_template('show_localplay_control.inc.php');
-    } ?>
+<?php if (AmpConfig::get('play_type') == 'localplay') {
+    require_once Ui::find_template('show_localplay_control.inc.php');
+} ?>
 <ul id="rb_current_playlist" class="striped-rows">
 
-<?php
-    $objects = array();
-
+<?php $objects = array();
     // FIXME :: this is kludgy
     if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
@@ -121,13 +116,11 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
              $("#footer").removeClass("footer-wild", 500);
              $("#rightbar").removeClass("hidden");
              $("#rightbar").show("slow");
-        <?php
-} else { ?>
+        <?php } else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
             $("#rightbar").hide("slow");
-        <?php
-    } ?>
+        <?php } ?>
     </script>
 <?php
     // Limit the number of objects we show here
@@ -153,14 +146,12 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         }
     } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
-<?php
-    } ?>
+<?php } ?>
 <?php if (isset($truncated)) { ?>
     <li>
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
-<?php
-    } ?>
+<?php } ?>
 </ul>
 <?php
 // We do a little magic here to force a reload depending on preference

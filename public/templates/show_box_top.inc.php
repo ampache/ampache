@@ -30,6 +30,5 @@ $class = $class ?: 'box'; ?>
     </div>
     <?php if ($title) { ?>
        <h3 class="box-title"><?php echo $title; ?></h3>
-      <?php
-} ?>
+      <?php } ?>
     <div class="box-content clearfix">

@@ -64,8 +64,7 @@ use Ampache\Module\Util\Ui;
         <?php echo (inet_ntop($data['ip'])) ?: T_('Invalid'); ?>
     </td>
 </tr>
-<?php
-    } ?>
+<?php } ?>
 <tr class="th-bottom">
   <th class="cel_date"><?php echo T_('Date'); ?></th>
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>

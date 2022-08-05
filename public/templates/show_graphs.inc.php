@@ -46,8 +46,7 @@ if (AmpConfig::get('geolocation')) { ?>
         $graph = new Graph();
         $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
-<?php
-    } ?>
+<?php } ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">

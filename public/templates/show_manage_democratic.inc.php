@@ -60,8 +60,7 @@ Ui::show_box_top(T_('Manage'));  ?>
     <tr>
         <td colspan="10"><span class="nodata"><?php echo T_('No democratic found'); ?></span></td>
     </tr>
-<?php
-        } ?>
+<?php } ?>
 </table>
 <br />
 <div>

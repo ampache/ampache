@@ -70,8 +70,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         </table>
     </form>
 </div>
-<?php
-    Ui::show_box_bottom();
+<?php Ui::show_box_bottom();
     $catalog_ids = Catalog::get_catalogs();
     $browse      = new Browse();
     $browse->set_type('catalog');

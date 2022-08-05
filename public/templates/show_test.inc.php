@@ -52,8 +52,7 @@ use Ampache\Module\Util\Ui;
                 <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
                 <?php if (!is_readable($configfile)) { ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>
-                <?php
-} ?>
+                <?php } ?>
             </p>
         </div>
         <div>

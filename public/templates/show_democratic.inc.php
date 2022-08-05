@@ -37,8 +37,7 @@ Ui::show_box_top($string, 'info-box'); ?>
 <li>
     <?php echo T_('Cooldown'); ?>:<?php echo $democratic->f_cooldown; ?>
 </li>
-<?php
-} ?>
+<?php } ?>
 <?php if (Access::check('interface', 75)) { ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage">
@@ -53,10 +52,8 @@ Ui::show_box_top($string, 'info-box'); ?>
 <li>
     <?php echo Ajax::button_with_text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id, 'delete', T_('Clear Playlist'), 'clear_democratic'); ?>
 </li>
-<?php
-        } ?>
-<?php
-    } ?>
+<?php } ?>
+<?php } ?>
 </ul>
 </div>
 <div style="text-align: right;">
@@ -67,8 +64,8 @@ Ui::show_box_top($string, 'info-box'); ?>
                 setTimeout(function() {
                     if (obj.checked) {
                         window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) {
-        echo " + '&reloadpage=1'";
-    } ?>;
+    echo " + '&reloadpage=1'";
+} ?>;
                     }
                 }, <?php echo(AmpConfig::get('refresh_limit') * 1000); ?>);
             }
@@ -77,11 +74,10 @@ Ui::show_box_top($string, 'info-box'); ?>
         $(document).ready(function() {
             reloadPageChanged(document.getElementById('chkreloadpage'));
         });
-        <?php
-    } ?>
+        <?php } ?>
     </script>
     <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) {
-        echo "checked";
-    } ?> /> <?php echo T_('Reload this page automatically'); ?>
+    echo "checked";
+} ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
 <?php Ui::show_box_bottom(); ?>

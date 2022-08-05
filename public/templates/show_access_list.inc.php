@@ -67,8 +67,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
 <?php
     /* Start foreach List Item */
     /** @var AccessListItemInterface $access $access */
-    foreach ($list as $access) {
-        ?>
+    foreach ($list as $access) { ?>
 <tr>
     <td><?php echo scrub_out($access->getName()); ?></td>
     <td><?php echo $access->getStartIp(); ?></td>
@@ -81,11 +80,9 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <a href="<?php echo $web_path; ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
-    <?php
-    } // end foreach?>
+    <?php } ?>
 </tbody>
 </table>
-<?php
-} // end if count?>
+<?php } ?>
 <?php Ajax::end_container(); ?>
 <?php Ui::show_box_bottom(); ?>

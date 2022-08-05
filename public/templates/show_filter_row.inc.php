@@ -36,8 +36,7 @@ $web_path = AmpConfig::get('web_path');
 <td class="cel_num_users"><?php echo $num_users ?></td>
 <td class="cel_num_catalogs"><?php echo $num_catalogs ?></td>
 <td class="cel_action">
-<?php
-    if (Access::check('interface', 100)) { ?>
+<?php if (Access::check('interface', 100)) { ?>
         <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>

@@ -62,8 +62,7 @@ use Ampache\Module\Util\Ui;
     <td><?php echo T_('Allow Download'); ?></td>
     <td><input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
 <div class="formValidation">
     <?php echo Core::form_register('add_share'); ?>

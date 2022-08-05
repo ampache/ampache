@@ -45,15 +45,14 @@ $categories = Preference::get_categories(); ?>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_prefs', 'header-img ' . ((isset($_COOKIE['sb_preference_prefs'])) ? $_COOKIE['sb_preference_prefs'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_preference_prefs">
-<?php
-    foreach ($categories as $name) {
-        if ($name == 'system') {
-            continue;
-        }
-        $f_name = ucfirst($name); ?>
+<?php foreach ($categories as $name) {
+    if ($name == 'system') {
+        continue;
+    }
+    $f_name = ucfirst($name); ?>
       <li id="sb_preference_prefs_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php
-    } ?>
+} ?>
       <li id="sb_preference_prefs_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
     </ul>
   </li>

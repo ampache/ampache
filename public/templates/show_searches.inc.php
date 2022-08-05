@@ -36,8 +36,7 @@ use Ampache\Module\Util\Ui;
                 <?php echo T_('Add Smart Playlist'); ?>
             </a>
         </li>
-        <?php
-} ?>
+        <?php } ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {

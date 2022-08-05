@@ -37,6 +37,5 @@ $confirmation = Core::form_register($form_name); ?>
         <input type="submit" value="<?php echo T_('Cancel'); ?>" />
         <?php echo $confirmation; ?>
     </form>
-<?php
-} ?>
+<?php } ?>
 <?php Ui::show_box_bottom(); ?>

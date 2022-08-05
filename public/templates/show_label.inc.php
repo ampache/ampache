@@ -70,10 +70,8 @@ if ($label->website) {
                     <?php echo T_('Post Shout'); ?>
                 </a>
             </li>
-            <?php
-    } ?>
-        <?php
-} ?>
+            <?php } ?>
+        <?php } ?>
         <?php if ($label->email) { ?>
         <li>
             <a href="mailto:<?php echo scrub_out($label->email); ?>">
@@ -81,8 +79,7 @@ if ($label->website) {
                 <?php echo T_('Send E-mail'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if ($isLabelEditable) { ?>
         <li>
             <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo addslashes(T_('Label Edit')) ?>', '')">
@@ -90,8 +87,7 @@ if ($label->website) {
                 <?php echo T_('Edit Label'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
             <a id="<?php echo 'delete_label_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
@@ -99,8 +95,7 @@ if ($label->website) {
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

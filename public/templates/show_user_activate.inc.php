@@ -55,8 +55,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     } else { ?>
 <h3><?php echo T_('Validation Failed'); ?></h3>
 <p><?php echo T_("The validation key used isn't correct"); ?></p>
-<?php
-    } ?>
+<?php } ?>
             </div>
         </div>
 <?php

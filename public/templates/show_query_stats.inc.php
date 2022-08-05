@@ -34,5 +34,4 @@ use Ampache\Module\System\Dba;
     $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
     | <?php echo T_('Load Time: '); ?><?php echo $load_time; ?>
     </span>
-<?php
-} ?>
+<?php } ?>

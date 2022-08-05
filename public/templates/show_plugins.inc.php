@@ -64,8 +64,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         <tr>
             <td colspan="5"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

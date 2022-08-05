@@ -65,8 +65,7 @@ $all          = T_('All');
                     <option value="rpc"><?php echo $apirpc; ?></option>
                     <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
-        <?php
-} else {
+        <?php } else {
     if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">

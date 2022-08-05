@@ -62,8 +62,7 @@ $status = $localplay->status(); ?>
         <tr>
             <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

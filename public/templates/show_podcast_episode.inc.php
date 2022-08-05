@@ -61,8 +61,7 @@ $web_path = AmpConfig::get('web_path');
                 <img src="<?php echo $web_path; ?>/waveform.php?podcast_episode=<?php echo $episode->id; ?>" />
             </div>
         </dd>
-        <?php
-    } ?>
+        <?php } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (!empty($episode->file)) { ?>
@@ -70,54 +69,42 @@ $web_path = AmpConfig::get('web_path');
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id, 'play', T_('Play'), 'play_podcast_episode_' . $episode->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'play_next', T_('Play next'), 'addnext_podcast_episode_' . $episode->id); ?>
-            <?php
-            } ?>
+            <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
-            <?php
-            } ?>
-        <?php
-        } ?>
+            <?php } ?>
+        <?php } ?>
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                 </a>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('podcast_episode', $episode->id, false); ?>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
             <a class="nohtml" href="<?php echo print_r($episode->play_url()); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
-            <?php
-        } ?>
+            <?php } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo addslashes(T_('Podcast Episode Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Catalog::can_remove($episode)) { ?>
             <a href="<?php echo $web_path; ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
-        <?php
-    } ?>
+        <?php } ?>
     </dd>
 <?php
     $songprops[T_('Title')]                  = $episode->get_fullname();
