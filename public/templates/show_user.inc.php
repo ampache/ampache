@@ -162,7 +162,7 @@ if (AmpConfig::get('sociable')) {
             $user_id = $client->id;
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
-        <div id="recentlyskipped" class="tab_content" style="display: block;">
+        <div id="recentlyskipped" class="tab_content">
             <?php $data = Song::get_recently_played($client->id, 'skip');
             Song::build_cache(array_keys($data));
             $user_id = $client->id;
