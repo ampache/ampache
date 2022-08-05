@@ -119,6 +119,7 @@ if (AmpConfig::get('sociable')) {
     <div id="tabs_container">
         <ul id="tabs">
             <li class="tab_active"><a href="#recentlyplayed"><?php echo T_('Recently Played'); ?></a></li>
+            <li class="tab_active"><a href="#recentlyskipped"><?php echo T_('Recently Skipped'); ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
             <?php } ?>
@@ -160,6 +161,12 @@ if (AmpConfig::get('sociable')) {
             Song::build_cache(array_keys($data));
             $user_id = $client->id;
             require Ui::find_template('show_recently_played.inc.php'); ?>
+        </div>
+        <div id="recentlyskipped" class="tab_content" style="display: block;">
+            <?php $data = Song::get_recently_played($client->id, 'skip');
+            Song::build_cache(array_keys($data));
+            $user_id = $client->id;
+            require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
         <?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">
