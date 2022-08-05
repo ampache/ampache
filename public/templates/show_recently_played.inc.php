@@ -145,7 +145,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
                     <?php
             } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=index&action=delete_activity&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=index&action=delete_play&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
