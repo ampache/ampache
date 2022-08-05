@@ -133,6 +133,11 @@ class Search extends playlist_object
         } // end switch on searchtype
     } // end constructor
 
+    public function getId(): int
+    {
+        return (int)$this->id;
+    }
+
     /**
      * set_basetypes
      *
