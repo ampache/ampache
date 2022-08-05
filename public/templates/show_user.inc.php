@@ -161,12 +161,6 @@ if (AmpConfig::get('sociable')) {
             $user_id = $client->id;
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
-        <div id="recentlyskipped" class="tab_content" style="display: block;">
-            <?php $data = Song::get_recently_played($client->id, 'skipped');
-            Song::build_cache(array_keys($data));
-            $user_id = $client->id;
-            require Ui::find_template('show_recently_skipped.inc.php'); ?>
-        </div>
         <?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">
         <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
