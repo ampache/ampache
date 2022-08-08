@@ -119,7 +119,7 @@ class Search extends playlist_object
                 break;
             case 'podcast_episode':
                 $this->podcast_episode_types();
-                $this->order_by = '`podcast_epsidoe`.`title`';
+                $this->order_by = '`podcast_episode`.`title`';
                 break;
             case 'label':
                 $this->label_types();
