@@ -65,7 +65,7 @@ final class AdvancedSearchMethod
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default) //optional
+     * type            = (string) 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
@@ -84,7 +84,7 @@ final class AdvancedSearchMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast_episode', 'label', 'user', 'video'))) {
+        if (!in_array(strtolower($type), Search::VALID_TYPES)) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -96,25 +96,31 @@ final class AdvancedSearchMethod
 
             return false;
         }
-
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 switch ($type) {
+                    case 'album':
+                        echo Json_Data::albums($results, array(), $user->id);
+                        break;
                     case 'artist':
                         echo Json_Data::artists($results, array(), $user->id);
                         break;
-                    case 'album':
-                        echo Json_Data::albums($results, array(), $user->id);
+                    case 'label':
+                        echo Json_Data::labels($results);
                         break;
                     case 'playlist':
                         echo Json_Data::playlists($results, $user->id);
                         break;
+                    case 'podcast':
+                        echo Json_Data::podcasts($results, $user->id);
+                        break;
                     case 'podcast_episode':
                         echo Json_Data::podcast_episodes($results, $user->id);
                         break;
-                    case 'label':
-                        echo Json_Data::labels($results);
+                    case 'genre':
+                    case 'tag':
+                        echo Json_Data::genres($results, $user->id);
                         break;
                     case 'user':
                         echo Json_Data::users($results);
@@ -129,20 +135,27 @@ final class AdvancedSearchMethod
                 break;
             default:
                 switch ($type) {
+                    case 'album':
+                        echo Xml_Data::albums($results, array(), $user->id);
+                        break;
                     case 'artist':
                         echo Xml_Data::artists($results, array(), $user->id);
                         break;
-                    case 'album':
-                        echo Xml_Data::albums($results, array(), $user->id);
+                    case 'label':
+                        echo Xml_Data::labels($results);
                         break;
                     case 'playlist':
                         echo Xml_Data::playlists($results, $user->id);
                         break;
+                    case 'podcast':
+                        echo Xml_Data::podcasts($results, $user->id);
+                        break;
                     case 'podcast_episode':
                         echo Xml_Data::podcast_episodes($results, $user->id);
                         break;
-                    case 'label':
-                        echo Xml_Data::labels($results);
+                    case 'genre':
+                    case 'tag':
+                        echo Xml_Data::genres($results, $user->id);
                         break;
                     case 'user':
                         echo Xml_Data::users($results);

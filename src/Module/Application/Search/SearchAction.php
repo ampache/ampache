@@ -63,7 +63,7 @@ final class SearchAction implements ApplicationActionInterface
         $searchType = Core::get_request('type');
         $rule_1     = Core::get_request('rule_1');
         if (empty($searchType)) {
-            $searchType = ($rule_1 == 'album' || $rule_1 == 'artist' || $rule_1 == 'playlist_name' || $rule_1 == 'podcast_episode' || $rule_1 == 'tag')
+            $searchType = in_array($rule_1, Search::VALID_TYPES)
                 ? str_replace('_name', ' ', $rule_1)
                 : 'song';
             // set the search type when you don't set one.
