@@ -186,6 +186,9 @@ class Ui implements UiInterface
      */
     public static function format_bytes($value, $precision = 2)
     {
+        if (!$value) {
+            return '';
+        }
         $pass = 0;
         while (strlen((string)floor($value)) > 3) {
             $value /= 1024;

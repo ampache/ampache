@@ -117,6 +117,10 @@ class Search extends playlist_object
                 $this->playlist_types();
                 $this->order_by = '`playlist`.`name`';
                 break;
+            case 'podcast_episode':
+                $this->podcast_episode_types();
+                $this->order_by = '`podcast_epsidoe`.`title`';
+                break;
             case 'label':
                 $this->label_types();
                 $this->order_by = '`label`.`name`';
@@ -520,7 +524,7 @@ class Search extends playlist_object
     }
 
     /**
-     * songtypes
+     * song_types
      *
      * this is where all the searchtypes for songs are defined
      */
@@ -661,7 +665,7 @@ class Search extends playlist_object
     }
 
     /**
-     * artisttypes
+     * artist_types
      *
      * this is where all the searchtypes for artists are defined
      */
@@ -733,7 +737,7 @@ class Search extends playlist_object
     } // artisttypes
 
     /**
-     * albumtypes
+     * album_types
      *
      * this is where all the searchtypes for albums are defined
      */
@@ -808,7 +812,7 @@ class Search extends playlist_object
     } // albumtypes
 
     /**
-     * videotypes
+     * video_types
      *
      * this is where all the searchtypes for videos are defined
      */
@@ -818,7 +822,7 @@ class Search extends playlist_object
     }
 
     /**
-     * playlisttypes
+     * playlist_types
      *
      * this is where all the searchtypes for playlists are defined
      */
@@ -828,7 +832,19 @@ class Search extends playlist_object
     }
 
     /**
-     * labeltypes
+     * podcast_episode_types
+     *
+     * this is where all the searchtypes for podcast_episodes are defined
+     */
+    private function podcast_episode_types()
+    {
+        $this->type_text('title', T_('Name'));
+        $this->type_text('podcast_title', T_('Podcast'));
+        $this->type_text('file', T_('Filename'));
+    }
+
+    /**
+     * label_types
      *
      * this is where all the searchtypes for labels are defined
      */
@@ -839,7 +855,7 @@ class Search extends playlist_object
     }
 
     /**
-     * usertypes
+     * user_types
      *
      * this is where all the searchtypes for users are defined
      */
@@ -849,7 +865,7 @@ class Search extends playlist_object
     }
 
     /**
-     * tagtypes
+     * tag_types
      *
      * this is where all the searchtypes for Genres are defined
      */
@@ -2826,6 +2842,100 @@ class Search extends playlist_object
 
         return array(
             'base' => 'SELECT DISTINCT(`playlist`.`id`), `playlist`.`name` FROM `playlist`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters
+        );
+    }
+
+    /**
+     * podcast_episode_to_sql
+     *
+     * Handles the generation of the SQL for podcast_episode searches.
+     * @return array
+     */
+    private function podcast_episode_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $user_id            = $this->search_user->id ?? 0;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where       = array();
+        $table       = array();
+        $join        = array();
+        $group       = array();
+        $having      = array();
+        $parameters  = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            if (!$type) {
+                return array();
+            }
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input              = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'] ?? '';
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[]      = "`podcast_episode`.`title` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'podcast_title':
+                    $where[]         = "`podcast`.`title` $sql_match_operator ?";
+                    $parameters[]    = $input;
+                    $join['podcast'] = true;
+                    break;
+                default:
+                    break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if ($join['podcast']) {
+            $table['0_podcast'] = "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast`";
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast_episode`.`catalog`";
+            if ($catalog_disable) {
+                if (!empty($where_sql)) {
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
+                }
+            }
+        }
+        if ($join['catalog_map']) {
+            if (!empty($where_sql)) {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`title` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
