@@ -844,7 +844,7 @@ class Search extends playlist_object
     private function podcast_types()
     {
         $this->type_text('title', T_('Name'));
-        $this->type_text('podcast_episode_title', T_('Podcast Episode'));
+        $this->type_text('podcast_episode', T_('Podcast Episode'));
     }
 
     /**
@@ -855,7 +855,7 @@ class Search extends playlist_object
     private function podcast_episode_types()
     {
         $this->type_text('title', T_('Name'));
-        $this->type_text('podcast_title', T_('Podcast'));
+        $this->type_text('podcast', T_('Podcast'));
         $this->type_text('file', T_('Filename'));
     }
 
