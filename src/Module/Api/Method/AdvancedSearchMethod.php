@@ -84,7 +84,7 @@ final class AdvancedSearchMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
+        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast_episode', 'label', 'user', 'video'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -110,6 +110,9 @@ final class AdvancedSearchMethod
                     case 'playlist':
                         echo Json_Data::playlists($results, $user->id);
                         break;
+                    case 'podcast_episode':
+                        echo Json_Data::podcast_episodes($results, $user->id);
+                        break;
                     case 'label':
                         echo Json_Data::labels($results);
                         break;
@@ -134,6 +137,9 @@ final class AdvancedSearchMethod
                         break;
                     case 'playlist':
                         echo Xml_Data::playlists($results, $user->id);
+                        break;
+                    case 'podcast_episode':
+                        echo Xml_Data::podcast_episodes($results, $user->id);
                         break;
                     case 'label':
                         echo Xml_Data::labels($results);

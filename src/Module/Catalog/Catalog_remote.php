@@ -303,7 +303,6 @@ class Catalog_remote extends Catalog
                 echo AmpError::display('general');
                 flush();
             }
-
         } // end while
 
         Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
