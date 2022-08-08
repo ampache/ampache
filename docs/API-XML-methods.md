@@ -1,6 +1,6 @@
 ---
-title: "API 5 XML Methods"
-metaTitle: "API 5 XML Methods"
+title: "API5 XML Methods"
+metaTitle: "API5 XML Methods"
 description: "API documentation"
 ---
 
@@ -311,16 +311,15 @@ Just add 1 to the rule value to create a new group of rules.
 * Optional (Metadata searches **only**)
   * rule_1_subtype
 
-| Input    | Type    | Description                                      | Optional |
-|----------|---------|--------------------------------------------------|----------|
-| operator | string  | 'and','or' (whether to match one rule or all)    | NO       |
-| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],           | NO       |
-| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]     | YES      |
-| type     | string  | 'song', 'album', 'artist', 'playlist',           | NO       |
-|          |         | 'label', 'user', 'video'                         |          |
-| random   | boolean | 0, 1 (random order of results; default to 0)     | YES      |
-| 'offset' | integer | Return results starting from this index position | YES      |
-| 'limit'  | integer | Maximum number of results to return              | YES      |
+| Input    | Type    | Description                                                                                            | Optional |
+|----------|---------|--------------------------------------------------------------------------------------------------------|----------|
+| operator | string  | 'and','or' (whether to match one rule or all)                                                          | NO       |
+| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],                                                                 | NO       |
+| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]                                                           | YES      |
+| type     | string  | 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' | NO       |
+| random   | boolean | 0, 1 (random order of results; default to 0)                                                           | YES      |
+| 'offset' | integer | Return results starting from this index position                                                       | YES      |
+| 'limit'  | integer | Maximum number of results to return                                                                    | YES      |
 
 * return
 
@@ -1973,13 +1972,13 @@ This gets the latest posted shouts
 
 This rates a library item
 
-| Input    | Type    | Description                                   | Optional |
-|----------|---------|-----------------------------------------------|---------:|
-| 'type'   | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
-|          |         | 'podcast', 'podcast_episode', 'video',        |          |
-|          |         | 'tvshow', 'tvshow_season'                     |          |
-| 'id'     | string  | library item id                               |       NO |
-| 'rating' | integer | rating between 0-5                            |       NO |
+| Input    | Type    | Description                            | Optional |
+|----------|---------|----------------------------------------|---------:|
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist', |       NO |
+|          |         | 'podcast', 'podcast_episode', 'video', |          |
+|          |         | 'tvshow', 'tvshow_season'              |          |
+| 'id'     | string  | library item id                        |       NO |
+| 'rating' | integer | rating between 0-5                     |       NO |
 
 * return
 

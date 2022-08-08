@@ -58,11 +58,13 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * advanced_search
   * Add `podcast` as a search type
     * Add rule `title`
-    * Add rule `podcast_episode` (Search podcast episode name)
+    * Add rule `podcast_episode` (Search by podcast episode name)
   * Add `podcast_episode` as a search type
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
     * Add rule `file`
+  * Add `genre` as a search type
+    * Add rule `title`
 
 ## Ampache 5.4.1-release
 
