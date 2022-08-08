@@ -70,7 +70,7 @@ class Search extends playlist_object
             $this->search_user = Core::get_global('user');
         }
 
-        debug_event(self::class, "SearchID: $search_id; Search Type: $searchtype\n" . print_r($this, true), 5);
+        //debug_event(self::class, "SearchID: $search_id; Search Type: $searchtype\n" . print_r($this, true), 5);
 
         $this->searchtype = $searchtype;
         if ($search_id > 0) {
@@ -922,6 +922,7 @@ class Search extends playlist_object
                 $request['type'] = 'tag';
                 break;
             default:
+                debug_event(self::class, "clean_request: reset $search_type to: song", 5);
                 $request['type'] = 'song';
                 break;
         }
