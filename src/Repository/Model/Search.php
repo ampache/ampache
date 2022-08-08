@@ -940,7 +940,7 @@ class Search extends playlist_object
                 $request['type'] = 'tag';
                 break;
             default:
-                debug_event(self::class, "clean_request: reset $search_type to: song", 5);
+                debug_event(self::class, "clean_request: search_type '$search_type' reset to: song", 5);
                 $request['type'] = 'song';
                 break;
         }
