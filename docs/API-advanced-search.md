@@ -34,7 +34,7 @@ This is passed as a type argument and will only return this object in results
 
 | Input    | Type    | Description                                                                                            | Optional |
 |----------|---------|--------------------------------------------------------------------------------------------------------|---------:|
-| operator | string  | 'and','or' (whether to match one rule or all)                                                          |       NO |
+| operator | string  | 'and', 'or' (whether to match one rule or all)                                                         |       NO |
 | rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],                                                                 |       NO |
 | rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]                                                           |      YES |
 | type     | string  | 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' |       NO |

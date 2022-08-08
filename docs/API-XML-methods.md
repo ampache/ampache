@@ -313,7 +313,7 @@ Just add 1 to the rule value to create a new group of rules.
 
 | Input    | Type    | Description                                                                                            | Optional |
 |----------|---------|--------------------------------------------------------------------------------------------------------|----------|
-| operator | string  | 'and','or' (whether to match one rule or all)                                                          | NO       |
+| operator | string  | 'and', 'or' (whether to match one rule or all)                                                         | NO       |
 | rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],                                                                 | NO       |
 | rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]                                                           | YES      |
 | type     | string  | 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' | NO       |
@@ -1021,7 +1021,7 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 | 'album'  | integer | $album_id                                                        | YES      |
 | 'artist' | integer | $artist_id                                                       | YES      |
 | 'flag'   | integer | get flagged songs only 0, 1 (default = 0)                        | YES      |
-| 'format' | string  | 'song', 'index','id' (default = 'song')                          | YES      |
+| 'format' | string  | 'song', 'index', 'id' (default = 'song')                         | YES      |
 | 'offset' | integer | Return results starting from this index position                 | YES      |
 | 'limit'  | integer | Maximum number of results to return                              | YES      |
 
@@ -1972,13 +1972,11 @@ This gets the latest posted shouts
 
 This rates a library item
 
-| Input    | Type    | Description                            | Optional |
-|----------|---------|----------------------------------------|---------:|
-| 'type'   | string  | 'song', 'album', 'artist', 'playlist', |       NO |
-|          |         | 'podcast', 'podcast_episode', 'video', |          |
-|          |         | 'tvshow', 'tvshow_season'              |          |
-| 'id'     | string  | library item id                        |       NO |
-| 'rating' | integer | rating between 0-5                     |       NO |
+| Input    | Type    | Description                                                                                            | Optional |
+|----------|---------|--------------------------------------------------------------------------------------------------------|---------:|
+| 'type'   | string  | 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video','tvshow', 'tvshow_season' |       NO |
+| 'id'     | string  | library item id                                                                                        |       NO |
+| 'rating' | integer | rating between 0-5                                                                                     |       NO |
 
 * return
 
@@ -2003,13 +2001,11 @@ This flags a library item as a favorite
 * Setting flag to true (1) will set the flag
 * Setting flag to false (0) will remove the flag
 
-| Input  | Type    | Description                            | Optional |
-|--------|---------|----------------------------------------|---------:|
-| 'type' | string  | 'song', 'album', 'artist', 'playlist', |       NO |
-|        |         | 'podcast', 'podcast_episode', 'video', |          |
-|        |         | 'tvshow', 'tvshow_season'              |          |
-| 'id'   | integer | $object_id                             |       NO |
-| 'flag' | boolean | 0, 1                                   |       NO |
+| Input  | Type    | Description                                                                                            | Optional |
+|--------|---------|--------------------------------------------------------------------------------------------------------|---------:|
+| 'type' | string  | 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video','tvshow', 'tvshow_season' |       NO |
+| 'id'   | integer | $object_id                                                                                             |       NO |
+| 'flag' | boolean | 0, 1                                                                                                   |       NO |
 
 * return
 
@@ -2180,7 +2176,7 @@ Make sure you remember to urlencode those file names!
 | Input     | Type    | Description                          | Optional |
 |-----------|---------|--------------------------------------|----------|
 | 'file'    | string  | FULL path to local file              | NO       |
-| 'task'    | string  | 'add','clean','verify','remove'      | NO       |
+| 'task'    | string  | 'add', 'clean', 'verify', 'remove'   | NO       |
 |           |         | (can include comma-separated values) | NO       |
 | 'catalog' | integer | $catalog_id                          | NO       |
 
