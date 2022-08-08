@@ -1,7 +1,7 @@
 ---
 title: "API 5 Errors"
 metaTitle: "API 5 Errors"
-metaDescription: "API documentation"
+description: "API documentation"
 ---
 
 Ampache's API errors are loosely based around the HTTP status codes. All errors are returned in the form of an XML/JSON Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.

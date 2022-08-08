@@ -1,7 +1,7 @@
 ---
 title: "Ampache API"
 metaTitle: "Ampache API"
-metaDescription: "API documentation"
+description: "API documentation"
 ---
 
 The Ampache API Provides methods for pulling out it's meta data in the form of
