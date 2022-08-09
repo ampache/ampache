@@ -174,8 +174,8 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
           <?php } ?>
               <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
             <?php if ($allowPodcast) { ?>
-                <li id="sb_home_search_podcast_episode"><a href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
                 <li id="sb_home_search_podcast"><a href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo $t_podcasts ?></a></li>
+                <li id="sb_home_search_podcast_episode"><a href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo $t_podcastEpisodes ?></a></li>
             <?php } ?>
           <?php if ($allowVideo) { ?>
               <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo $t_videos ?></a></li>

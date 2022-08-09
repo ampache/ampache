@@ -63,9 +63,12 @@ final class PodcastEpisodeAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $this->ui->show('show_browse_form.inc.php');
+
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
 
+        $browse->set_filter('catalog', $_SESSION['catalog']);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
