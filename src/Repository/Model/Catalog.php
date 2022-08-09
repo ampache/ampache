@@ -2229,6 +2229,7 @@ abstract class Catalog extends database_object
             case 'podcast_episode':
                 $episode = new Podcast_Episode($object_id);
                 self::update_media_from_tags($episode);
+
                 return array(
                     'object_id' => $object_id,
                     'change' => true
