@@ -2226,6 +2226,13 @@ abstract class Catalog extends database_object
             case 'song':
                 $songs[] = $object_id;
                 break;
+            case 'podcast_episode':
+                $episode = new Podcast_Episode($object_id);
+                self::update_media_from_tags($episode);
+                return array(
+                    'object_id' => $object_id,
+                    'change' => true
+                );
         } // end switch type
 
         if (!$api) {
@@ -2350,10 +2357,7 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        // Figure out what type of object this is and call the right  function
-        $name = ($type == 'song') ? 'song' : 'video';
-
+        $type      = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $functions = [
             'song' => static function ($results, $media) {
                 return self::update_song_from_tags($results, $media);
@@ -2361,9 +2365,12 @@ abstract class Catalog extends database_object
             'video' => static function ($results, $media) {
                 return self::update_video_from_tags($results, $media);
             },
+            'podcast_episode' => static function ($results, $media) {
+                return self::update_podcast_episode_from_tags($results, $media);
+            },
         ];
 
-        $callable = $functions[$name];
+        $callable = $functions[$type];
 
         // try and get the tags from your file
         debug_event(__CLASS__, 'Reading tags from ' . $media->file, 4);
@@ -2797,6 +2804,26 @@ abstract class Catalog extends database_object
         Video::update_utime($video->id, $update_time);
 
         return $info;
+    }
+
+    /**
+     * @param $results
+     * @param Podcast_Episode $podcast_episode
+     * @return array
+     */
+    public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode)
+    {
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $podcast_episode->id));
+
+        $podcast_episode->size = $results['size'];
+        $podcast_episode->time = $results['time'];
+
+        $array            = array();
+        $array['change']  = true;
+        $array['element'] = false;
+
+        return $array;
     }
 
     /**
