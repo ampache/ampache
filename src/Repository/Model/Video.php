@@ -312,7 +312,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function format($details = true)
     {
         $this->f_full_title = $this->get_fullname();
-        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . $this->get_fullname() . "\"> " . $this->get_fullname() . "</a>";
+        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -386,7 +386,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = scrub_out($this->title);
+            $this->f_name = $this->title;
         }
 
         return $this->f_name;

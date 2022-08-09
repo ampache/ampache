@@ -1324,8 +1324,8 @@ class User extends database_object
     {
         if (!isset($this->f_name)) {
             $this->f_name = ($this->fullname_public)
-                ? scrub_out($this->fullname)
-                : scrub_out($this->username);
+                ? $this->fullname
+                : $this->username;
         }
 
         return $this->f_name;

@@ -460,7 +460,7 @@ class Wanted extends database_object
      */
     public function get_fullname()
     {
-        return scrub_out($this->name);
+        return $this->name;
     }
 
     /**

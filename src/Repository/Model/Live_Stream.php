@@ -147,7 +147,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = scrub_out($this->name);
+            $this->f_name = $this->name;
         }
 
         return $this->f_name;
