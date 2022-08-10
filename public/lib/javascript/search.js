@@ -21,7 +21,7 @@
 
 var rowIter = 1;
 var rowCount = 0;
-
+// A search row is the js selection menu created for the search pages
 var SearchRow = {
     add(ruleType, operator, input, subtype) {
         if (typeof(ruleType) != "string") {
@@ -112,6 +112,7 @@ var SearchRow = {
                     inputNode.appendChild(option);
                     optioncount++;
                 });
+                SearchRow.sortSelect(inputNode);
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
@@ -223,6 +224,7 @@ var SearchRow = {
         input_cell.append(SearchRow.constructInput(this.selectedIndex, targetID, oldinput));
     },
     createSelect(attributes, options, selected, sort=false) {
+        // used for metadata selections
         var $select = $("<select>");
         $.each(attributes, function (key, value) {
             $select.attr(key, value);
@@ -248,6 +250,22 @@ var SearchRow = {
                 name: "rule_" + ruleNumber + "_subtype"
             }, type.subtypes, subtype, true);
             return $input[0];
+        }
+    },
+    sortSelect(selectElement) {
+        // Sort selection arrays
+        var sortArray = [];
+        for (var i=0; i < selectElement.options.length; i++) {
+            sortArray[i] = [];
+            sortArray[i][0] = selectElement.options[i].text;
+            sortArray[i][1] = selectElement.options[i].value;
+        }
+        sortArray.sort();
+        while (selectElement.options.length > 0) {
+            selectElement.options[0] = null;
+        }
+        for (var i=0; i < sortArray.length; i++) {
+            selectElement.options[i] = new Option(sortArray[i][0], sortArray[i][1]);
         }
     }
 };
