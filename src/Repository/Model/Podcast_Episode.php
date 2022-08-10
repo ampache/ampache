@@ -151,7 +151,19 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
         $this->f_pubdate     = date("c", (int)$this->pubdate);
-        $this->f_state       = ucfirst($this->state ?? '');
+        switch ($this->state) {
+            case 'skipped':
+                $this->f_state = T_('skipped');
+                break;
+            case 'pending':
+                $this->f_state = T_('pending');
+                break;
+            case 'completed':
+                $this->f_state = T_('completed');
+                break;
+            default:
+                $this->f_state = '';
+        }
 
         // Format the Time
         $min            = floor($this->time / 60);
