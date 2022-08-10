@@ -870,6 +870,8 @@ class Search extends playlist_object
         );
         $this->type_select('state', T_('State'), 'boolean_numeric', $episode_states);
         $this->type_numeric('time', T_('Length (in minutes)'));
+        $this->type_date('pubdate', T_('Publication Date'));
+        $this->type_date('added', T_('Added'));
         $this->type_text('file', T_('Filename'));
     }
 
@@ -3054,6 +3056,16 @@ class Search extends playlist_object
                         case 2:
                             $parameters[] = 'completed';
                     }
+                    break;
+                case 'pubdate':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`podcast_episode`.`pubdate` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'added':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`podcast_episode`.`addition_time` $sql_match_operator ?";
+                    $parameters[] = $input;
                     break;
                 case 'file':
                     $where[]      = "`podcast_episode`.`file` $sql_match_operator ?";
