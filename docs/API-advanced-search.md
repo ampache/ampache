@@ -34,11 +34,11 @@ This is passed as a type argument and will only return this object in results
 
 | Input    | Type    | Description                                                                                            | Optional |
 |----------|---------|--------------------------------------------------------------------------------------------------------|---------:|
-| operator | string  | 'and', 'or' (whether to match one rule or all)                                                         |       NO |
-| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],                                                                 |       NO |
-| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]                                                           |      YES |
-| type     | string  | 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' |       NO |
-| random   | boolean | 0, 1 (random order of results; default to 0)                                                           |      YES |
+| operator | string  | and, or (whether to match one rule or all)                                                             |       NO |
+| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                          |       NO |
+| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                   |      YES |
+| type     | string  | `song`, `album`, `artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `user`, `video` |       NO |
+| random   | boolean | `0`, `1` (random order of results; default to 0)                                                       |      YES |
 | offset   | integer |                                                                                                        |      YES |
 | limit'   | integer |                                                                                                        |      YES |
 
@@ -120,8 +120,7 @@ Select the type of search based on the type of data you are searching for. (song
 | playlist_name            | Playlist Name             | text              |                          song, album, artist                          |
 | comment                  | Comment                   | text              |                                 song                                  |
 | lyrics                   | Lyrics                    | text              |                                 song                                  |
-| file                     | Filename                  | text              |                          song, album, artist                          |
-|                          |                           |                   |                        video, podcast_episode                         |
+| file                     | Filename                  | text              |              song, album, artist, video, podcast_episode              |
 | bitrate                  | Bitrate                   | numeric           |                                 song                                  |
 | added                    | Added                     | date              |                                 song                                  |
 | updated                  | Updated                   | date              |                                 song                                  |

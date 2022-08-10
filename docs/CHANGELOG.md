@@ -15,6 +15,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 
 * Update Copyright notice to 2022
 * Add 'Recently Skipped' to user pages
+* Add Podcase Episodes to the browse pages and sidebar
 * Database 550002
   * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
   * Add column `catalog_filter_group` to `user` table to assign a filter group
@@ -30,6 +31,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
     * Add rule `file`
+* CLI
+  * Add verify for podcast catalogs (fix time and size from tags)
 
 ### Changed
 
