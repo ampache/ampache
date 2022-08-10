@@ -16,6 +16,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Update Copyright notice to 2022
 * Add 'Recently Skipped' to user pages
 * Add Podcase Episodes to the browse pages and sidebar
+* Translate podcast episode state and some other missing ones
 * Database 550002
   * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
   * Add column `catalog_filter_group` to `user` table to assign a filter group
@@ -26,11 +27,15 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Search
   * Add `podcast` as a search type
     * Add rule `title`
-    * Add rule `podcast_episode` (Search podcast episode name)
+    * Add rule `podcast_episode` (Search by podcast episode name)
   * Add `podcast_episode` as a search type
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
+    * Add rule `time` (Length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
     * Add rule `file`
+  * Add `genre` as a search type
+    * Add rule `title`
 * CLI
   * Add verify for podcast catalogs (fix time and size from tags)
 
@@ -48,6 +53,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Errors on empty values when loading the UI rows
 * Lots of docstring and code issues
 * Fixed up deleting plays (and now skips) on the user pages
+* Sorting playlist, user and smartlist names in search rows
 * Search
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
@@ -65,6 +71,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
   * Add `podcast_episode` as a search type
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
+    * Add rule `time` (Length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
     * Add rule `file`
   * Add `genre` as a search type
     * Add rule `title`
