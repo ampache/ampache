@@ -281,7 +281,9 @@ function SaveToExistingPlaylist(event)
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             item_ids += "," + jplaylist['playlist'][i]["media_id"];
         }
-        showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
+        if (item_ids !== "") {
+            showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
+        }
     }
 }
 
