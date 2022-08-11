@@ -4610,7 +4610,7 @@ class Update
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
