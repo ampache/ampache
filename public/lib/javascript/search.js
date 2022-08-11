@@ -106,13 +106,15 @@ var SearchRow = {
                     }
                     if (input == realValue) {
                         option.selected = true;
+                    } else {
+                        option.selected = false;
                     }
                     option.value = realValue;
                     option.innerHTML = widget["1"][i];
                     inputNode.appendChild(option);
                     optioncount++;
                 });
-                SearchRow.sortSelect(inputNode);
+                SearchRow.sortSelect(inputNode, input);
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
@@ -252,20 +254,22 @@ var SearchRow = {
             return $input[0];
         }
     },
-    sortSelect(selectElement) {
+    sortSelect(selectElement, selectedIndex) {
         // Sort selection arrays
         var sortArray = [];
         for (var i=0; i < selectElement.options.length; i++) {
             sortArray[i] = [];
             sortArray[i][0] = selectElement.options[i].text;
             sortArray[i][1] = selectElement.options[i].value;
+            sortArray[i][2] = selectElement.options[i].selected;
+
         }
         sortArray.sort();
         while (selectElement.options.length > 0) {
             selectElement.options[0] = null;
         }
         for (var i=0; i < sortArray.length; i++) {
-            selectElement.options[i] = new Option(sortArray[i][0], sortArray[i][1]);
+            selectElement.options[i] = new Option(sortArray[i][0], sortArray[i][1], false, sortArray[i][2]);
         }
     }
 };
