@@ -262,7 +262,6 @@ var SearchRow = {
             sortArray[i][0] = selectElement.options[i].text;
             sortArray[i][1] = selectElement.options[i].value;
             sortArray[i][2] = selectElement.options[i].selected;
-
         }
         sortArray.sort();
         while (selectElement.options.length > 0) {

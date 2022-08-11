@@ -547,7 +547,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         if (!isset($this->f_name)) {
             // set the full name
-            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            $this->f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
         }
 
         return $this->f_name;
