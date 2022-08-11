@@ -95,6 +95,7 @@ final class ConfigurationKeyEnum
     public const DAAP_PASS                             = 'daap_pass';
     public const DEBUG_MODE                            = 'debug';
     public const DEMO_CLEAR_SESSIONS                   = 'demo_clear_sessions';
+    public const DEMO_USE_SEARCH                       = 'demo_use_search';
     public const DEMO_MODE                             = 'demo_mode';
     public const DIRECTPLAY                            = 'directplay';
     public const DIRECT_PLAY_LIMIT                     = 'direct_play_limit';

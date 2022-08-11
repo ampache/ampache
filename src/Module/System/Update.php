@@ -763,6 +763,9 @@ class Update
         $update_string = "* Migrate catalog `filter_user` settings to the `catalog_filter_group` table<br>* Assign all public catalogs to the DEFAULT group<br>* Drop table `user_catalog`<br>* Remove `filter_user` from the `catalog` table<br><br><br>**IMPORTANT UPDATE NOTES** Any user that has a private catalog will have their own filter group created which includes all public catalogs";
         $version[]     = array('version' => '550002', 'description' => $update_string);
 
+        $update_string = "* Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play";
+        $version[]     = array('version' => '550003', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4592,6 +4595,23 @@ class Update
             $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
             Dba::write($sql);
         }
+
+        return $retval;
+    }
+
+    /** update_550003
+     *
+     * Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play
+     */
+    public static function update_550003(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

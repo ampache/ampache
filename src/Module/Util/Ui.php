@@ -762,6 +762,7 @@ class Ui implements UiInterface
             case 'album_group':
             case 'topmenu':
             case 'demo_clear_sessions':
+            case 'demo_use_search':
             case 'show_donate':
             case 'allow_upload':
             case 'upload_subdir':
