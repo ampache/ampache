@@ -136,7 +136,7 @@ final class PlayAction implements ApplicationActionInterface
         $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
         $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
         $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
-        $original     = $format == 'raw';
+        $original     = ($format == 'raw');
         $transcode_to = (!$original && $format != '') ? $format : null;
         $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
         $record_stats = true;
@@ -280,7 +280,7 @@ final class PlayAction implements ApplicationActionInterface
                 Session::createGlobalUser($user);
                 Preference::init();
 
-                /* If the user has been disabled (true value) */
+                // If the user has been disabled (true value)
                 if (make_bool($user->disabled)) {
                     debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
                     header('HTTP/1.1 403 User disabled');
@@ -307,7 +307,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
 
-            /* Update the users last seen information */
+            // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
             $uid   = 0;
@@ -368,9 +368,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         /**
-         * If we've got a tmp playlist then get the
-         * current song, and do any other crazyness
-         * we need to
+         * If we've got a Democratic playlist then get the current song, and redirect to that media files URL
          */
         if ($demo_id !== '') {
             $democratic = new Democratic($demo_id);
@@ -378,7 +376,7 @@ final class PlayAction implements ApplicationActionInterface
 
             // If there is a cooldown we need to make sure this song isn't a repeat
             if (!$democratic->cooldown) {
-                /* This takes into account votes etc and removes the */
+                // This takes into account votes, etc and removes the
                 $object_id = $democratic->get_next_object();
             } else {
                 // Pull history
@@ -393,6 +391,24 @@ final class PlayAction implements ApplicationActionInterface
                     }
                 } // while we've got the 'new' song in old the array
             } // end if we've got a cooldown
+            $media = new Song($object_id);
+            if ($media) {
+                // Always remove the play from the list
+                $democratic->delete_from_oid($object_id, $type);
+
+                // If the media is disabled
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                    debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                    header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url());
+
+                return null;
+            }
         } // if democratic ID passed
 
         /**
@@ -446,17 +462,6 @@ final class PlayAction implements ApplicationActionInterface
         $file_target    = false;
         $mediaCatalogId = $media->catalog ?? null;
         if ($mediaCatalogId) {
-            /* If the media is disabled */
-            if (isset($media->enabled) && !make_bool($media->enabled)) {
-                debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
-                // Check to see if this is a democratic playlist, if so remove it completely
-                if ($demo_id !== '' && isset($democratic)) {
-                    $democratic->delete_from_oid($object_id, $type);
-                }
-                header('HTTP/1.1 404 File disabled');
-
-                return null;
-            }
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id)) {
                 debug_event('play/index', "Error: You are not allowed to play $media->file", 3);
@@ -493,14 +498,6 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
         }
-        if ($media == null) {
-            // Handle democratic removal
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
-            }
-
-            return null;
-        }
         // load the cache file or the local file
         $stream_file = ($cache_file && $file_target) ? $file_target : $media->file;
 
@@ -509,11 +506,6 @@ final class PlayAction implements ApplicationActionInterface
             // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
             if (!empty($tmp_playlist)) {
                 $tmp_playlist->delete_track($object_id);
-            }
-            // FIXME: why are these separate?
-            // Remove the media votes if this is a democratic song
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
             }
 
             debug_event('play/index', "Media " . $stream_file . " ($media->title) does not have a valid filename specified", 2);
@@ -834,12 +826,6 @@ final class PlayAction implements ApplicationActionInterface
                 }
                 fclose($transcoder['stderr']);
             }
-        }
-
-        // If this is a democratic playlist remove the entry.
-        // We do this regardless of play amount.
-        if ($demo_id && isset($democratic)) {
-            $democratic->delete_from_oid($object_id, $type);
         }
 
         // Close sql connection
