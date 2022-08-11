@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
@@ -253,6 +255,16 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
+                break;
+            case 'search_random':
+                if (!Access::check('interface', 75)) {
+                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+
+                    return;
+                }
+
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
+                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             default:
                 $results['rfc3514'] = '0x1';
