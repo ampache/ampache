@@ -64,7 +64,7 @@ final class ShowCreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Show the create page
-        require_once Ui::find_template('show_create_democratic.inc.php');
+        require_once Ui::find_template('show_edit_democratic.inc.php');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
