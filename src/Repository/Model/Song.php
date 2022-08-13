@@ -1233,7 +1233,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $array            = array();
         $array['change']  = false;
-        $array['element'] = false;
+        $array['element'] = array();
 
         // Pull out all the currently set vars
         $fields = get_object_vars($media);

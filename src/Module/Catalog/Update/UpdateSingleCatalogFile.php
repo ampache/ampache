@@ -114,7 +114,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     // Verify Existing files
                     $catalog = $media->catalog;
                     $change  = Catalog::update_media_from_tags($media);
-                    if (array_key_exists('element', $change) && is_array($change['element'])) {
+                    if (array_key_exists('element', $change) && is_array($change['element']) && !empty($info['element'])) {
                         // update counts after adding/verifying
                         Album::update_album_counts();
                         Artist::update_artist_counts();

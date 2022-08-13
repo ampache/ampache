@@ -2250,7 +2250,7 @@ abstract class Catalog extends database_object
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
-            $diff   = array_key_exists('element', $info) && is_array($info['element']);
+            $diff   = array_key_exists('element', $info) && is_array($info['element']) && !empty($info['element']);
             $album  = ($album == true) || ($diff && array_key_exists('album', $info['element']));
             $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
             $tags   = ($tags == true) || ($diff && array_key_exists('tags', $info['element']));
