@@ -124,7 +124,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php } ?>
         <li>
-        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'all', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>

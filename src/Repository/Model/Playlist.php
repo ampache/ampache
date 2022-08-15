@@ -409,8 +409,8 @@ class Playlist extends playlist_object
                 );
             }
         } // end while
+        //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
 
-        debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
         return $results;
     } // get_random_items
 
