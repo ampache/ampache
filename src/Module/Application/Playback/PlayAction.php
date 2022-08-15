@@ -367,13 +367,11 @@ final class PlayAction implements ApplicationActionInterface
 
             return null;
         }
-        debug_event('play/index', "check for different types", 5);
 
         /**
          * If we've got a Democratic playlist then get the current song and redirect to that media files URL
          */
         if ($demo_id !== '') {
-            debug_event('play/index', "DEMOCRATIC PLAY", 5);
             $democratic = new Democratic($demo_id);
             $democratic->set_parent();
 
@@ -406,7 +404,6 @@ final class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
-                //debug_event('play/index', "redirecting democratic to: " . $media->id, 3);
 
                 // play the song instead of going through all the crap
                 header('Location: ' . $media->play_url());
@@ -423,7 +420,6 @@ final class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random !== '') {
-            debug_event('play/index', "RANDOM PLAY", 5);
             if ((int) Core::get_request('start') < 1) {
                 if (array_key_exists('random_type', $_REQUEST)) {
                     $rtype = $_REQUEST['random_type'];
@@ -447,7 +443,6 @@ final class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
-                debug_event('play/index', "redirecting random to: " . $media->id, 3);
 
                 // play the song instead of going through all the crap
                 header('Location: ' . $media->play_url());
@@ -460,7 +455,6 @@ final class PlayAction implements ApplicationActionInterface
             return null;
         } // if random
 
-        debug_event('play/index', "play the object", 5);
         if ($type == 'video') {
             $media = new Video($object_id);
             if (array_key_exists('subtitle', $_REQUEST)) {
@@ -523,7 +517,6 @@ final class PlayAction implements ApplicationActionInterface
             if ($type == "song_preview") {
                 $media->stream();
             } else {
-                debug_event('play/index', "redirecting to: " . $media->file, 3);
                 header('Location: ' . $media->file);
 
                 return null;
