@@ -24,13 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\User;
 
 class WebPlayer
 {
@@ -112,19 +115,24 @@ class WebPlayer
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
-        } else {
-            if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-                $media = new Song_Preview($urlinfo['id']);
-            } else {
-                if (array_key_exists('demo_id', $urlinfo)) {
-                    $democratic = new Democratic($urlinfo['demo_id']);
-                    if ($democratic->id) {
-                        $song_id = $democratic->get_next_object();
-                        if ($song_id) {
-                            $media = new Song($song_id);
-                        }
-                    }
+        }
+        if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
+            $media = new Song_Preview($urlinfo['id']);
+        }
+        if (array_key_exists('demo_id', $urlinfo)) {
+            $democratic = new Democratic($urlinfo['demo_id']);
+            if ($democratic->id) {
+                $song_id = $democratic->get_next_object();
+                if ($song_id) {
+                    $media = new Song($song_id);
                 }
+            }
+        }
+        if (array_key_exists('random_id', $urlinfo) && array_key_exists('random_type', $urlinfo)) {
+            $user    = new User($urlinfo['uid']);
+            $song_id = Random::get_single_song($urlinfo['random_type'], $user, $urlinfo['random_id']);
+            if ($song_id) {
+                $media = new Song($song_id);
             }
         }
 
@@ -310,7 +318,7 @@ class WebPlayer
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
 
-        //$url .= "&content_length=required";
+            //$url .= "&content_length=required";
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
@@ -320,10 +328,14 @@ class WebPlayer
                 case 'democratic':
                     $regex =  "/demo_id=([0-9]*)/";
                     break;
+                case 'random':
+                    $regex =  "/random_id=([0-9]*)/";
+                    break;
                 default:
                     $regex =  "/" . $item->type . "=([0-9]*)/";
                     break;
             }
+            debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
             preg_match($regex, $item->info_url, $matches);
             $json['media_id']   = $matches[1] ?? null;
             $json['media_type'] = $item->type;

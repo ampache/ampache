@@ -97,6 +97,11 @@ class Stream_Url extends MemoryObject
                                 $results['type'] = 'democratic';
                             }
                             break;
+                        case 'random_id':
+                            if (make_bool($value)) {
+                                $results['type'] = 'random';
+                            }
+                            break;
                     }
                     if (!empty($value)) {
                         $results[$key] = $value;

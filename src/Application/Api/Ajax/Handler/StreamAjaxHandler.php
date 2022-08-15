@@ -88,7 +88,8 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-                    $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
+                    $web_path                     = AmpConfig::get('web_path');
+                    $_SESSION['iframe']['target'] = $web_path . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
                     if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
                     }
@@ -106,7 +107,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                     if (AmpConfig::get('play_type') == 'localplay') {
                         $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
-                    $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
+                    $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 }
                 break;
             case 'basket':
@@ -120,10 +121,11 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
+                $web_path                     = AmpConfig::get('web_path');
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
-                    ? AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
-                    : AmpConfig::get('web_path') . '/stream.php?action=basket';
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
+                    ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
+                    : $web_path . '/stream.php?action=basket';
+                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 break;
             default:
                 $results['rfc3514'] = '0x1';

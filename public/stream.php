@@ -32,6 +32,7 @@ use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Module\Application\Stream\PlayFavoriteAction;
 use Ampache\Module\Application\Stream\PlayItemAction;
 use Ampache\Module\Application\Stream\PlaylistRandomAction;
+use Ampache\Module\Application\Stream\RandomAction;
 use Ampache\Module\Application\Stream\SearchRandomAction;
 use Ampache\Module\Application\Stream\TmpPlaylistAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -50,6 +51,7 @@ $dic->get(ApplicationRunner::class)->run(
         ArtistRandomAction::REQUEST_KEY => ArtistRandomAction::class,
         PlayItemAction::REQUEST_KEY => PlayItemAction::class,
         PlayFavoriteAction::REQUEST_KEY => PlayFavoriteAction::class,
+        RandomAction::REQUEST_KEY => RandomAction::class,
         SearchRandomAction::REQUEST_KEY => SearchRandomAction::class,
         TmpPlaylistAction::REQUEST_KEY => TmpPlaylistAction::class,
         BasketAction::REQUEST_KEY => BasketAction::class,

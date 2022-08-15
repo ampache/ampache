@@ -27,7 +27,6 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
@@ -129,6 +128,10 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                break;
+            case 'send_playlist':
+                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
+                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'advanced_random':
                 $object_ids = Random::advanced('song', $_POST);

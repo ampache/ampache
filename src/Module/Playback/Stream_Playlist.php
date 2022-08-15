@@ -317,7 +317,8 @@ class Stream_Playlist
                     $url['codec']     = $object->type;
                     break;
                 case 'random':
-                    $url['title'] = 'Random URL';
+                    $url['title']    = 'Random URL';
+                    $url['info_url'] = $object->get_f_link();
                     break;
                 default:
                     $url['title'] = Stream_Url::get_title($url['url']);

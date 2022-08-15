@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\SongRepositoryInterface;
@@ -99,6 +101,9 @@ class Random
                 break;
             case 'playlist':
                 $song_ids = self::get_playlist($user, $object_id);
+                break;
+            case 'search':
+                $song_ids = self::get_search($user, $object_id);
                 break;
             default:
                 $song_ids = self::get_default(1, $user);
@@ -215,6 +220,26 @@ class Random
 
         return $results;
     } // get_playlist
+
+    /**
+     * get_search
+     * Get a random song from a search (that you own)
+     * @param User $user
+     * @param int $search_id
+     * @return integer[]
+     */
+    public static function get_search($user, $search_id = 0)
+    {
+        $results = array();
+        $search  = new Search($search_id);
+        if ($search->has_access($user->id)) {
+            foreach ($search->get_random_items(1) as $songs) {
+                $results[] = $songs['object_id'];
+            }
+        }
+
+        return $results;
+    } // get_search
 
     /**
      * advanced
@@ -417,6 +442,17 @@ class Random
             'parameters' => $search_info['parameters']
         );
     }
+
+    /**
+     * get_play_url
+     * This returns the special play URL for random play
+     */
+    public static function get_play_url($object_type, $object_id)
+    {
+        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);
+
+        return Stream_Url::format($link);
+    } // get_play_url
 
     /**
      * @deprecated
