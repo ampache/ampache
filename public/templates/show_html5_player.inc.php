@@ -185,8 +185,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         var currentobject = 'podcast_episode'
                         var actiontype = 'podcast_episode'
                     } else if (playlist[index]['media_type'] == "random") {
-                        var currenttype = 'song'
-                        var currentobject = 'song_id'
+                        var currenttype = 'random'
+                        var currentobject = 'random'
                     } else {
                         var currenttype = 'song'
                         var currentobject = 'song_id'
