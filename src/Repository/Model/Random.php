@@ -91,7 +91,7 @@ class Random
      * @param string $random_type
      * @param User $user
      * @param int $object_id
-     * @return int|null
+     * @return int
      */
     public static function get_single_song($random_type, $user, $object_id = 0)
     {
@@ -108,8 +108,10 @@ class Random
             default:
                 $song_ids = self::get_default(1, $user);
         }
+        $song = array_pop($song_ids);
+        //debug_event(__CLASS__, "get_single_song:" . $song, 5);
 
-        return array_pop($song_ids);
+        return (int)$song;
     } // get_single_song
 
     /**
@@ -214,7 +216,7 @@ class Random
         $playlist = new Playlist($playlist_id);
         if ($playlist->has_access($user->id)) {
             foreach ($playlist->get_random_items(1) as $songs) {
-                $results[] = $songs['object_id'];
+                $results[] = (int)$songs['object_id'];
             }
         }
 
@@ -234,7 +236,7 @@ class Random
         $search  = new Search($search_id);
         if ($search->has_access($user->id)) {
             foreach ($search->get_random_items(1) as $songs) {
-                $results[] = $songs['object_id'];
+                $results[] = (int)$songs['object_id'];
             }
         }
 
