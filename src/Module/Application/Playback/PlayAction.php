@@ -420,39 +420,41 @@ final class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random !== '') {
-            if ((int) Core::get_request('start') < 1) {
+            if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
+                // continue the current object
+                $object_id = $_SESSION['random']['last'];
+            } else {
+                // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
                     $rtype = $_REQUEST['random_type'];
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype, $user, $object_id);
-                if ($object_id) {
+                $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
+                if ($object_id > 0) {
                     // Save this one in case we do a seek
                     $_SESSION['random']['last'] = $object_id;
                 }
-            } else {
-                $object_id = $_SESSION['random']['last'];
-            }
-            $media = new Song($object_id);
-            if ($media->id > 0) {
-                // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
-                    debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
-                    header('HTTP/1.1 404 File disabled');
+                $media = new Song($object_id);
+                if ($media->id > 0) {
+                    // If the media is disabled
+                    if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                        debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                        header('HTTP/1.1 404 File disabled');
+
+                        return null;
+                    }
+
+                    // play the song instead of going through all the crap
+                    header('Location: ' . $media->play_url());
 
                     return null;
                 }
-
-                // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url());
+                debug_event('play/index', "Error: RANDOM song could not be found", 3);
+                header('HTTP/1.1 404 File not found');
 
                 return null;
             }
-            debug_event('play/index', "Error: RANDOM song could not be found", 3);
-            header('HTTP/1.1 404 File not found');
-
-            return null;
         } // if random
 
         if ($type == 'video') {
