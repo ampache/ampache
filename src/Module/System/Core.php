@@ -345,7 +345,7 @@ class Core
      */
     public static function get_filesize($filename)
     {
-        if (!file_exists($filename)) {
+        if (!$filename || !file_exists($filename)) {
             return 0;
         }
         $size = filesize($filename);
