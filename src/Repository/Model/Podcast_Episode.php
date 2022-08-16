@@ -570,13 +570,13 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
                 $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
-                if (!is_file($file)) {
+                if (!Core::is_readable($file)) {
                     debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
                     if (file_put_contents($file, fopen($this->source, 'r'))) {
                         debug_event(self::class, 'Download completed.', 4);
                     }
                 }
-                if (is_file($file)) {
+                if (Core::is_readable($file)) {
                     debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
                     Catalog::update_media_from_tags($this);
                 } else {
