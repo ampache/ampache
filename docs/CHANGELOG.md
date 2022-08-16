@@ -28,12 +28,19 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
   * Add `podcast` as a search type
     * Add rule `title`
     * Add rule `podcast_episode` (Search by podcast episode name)
+    * Add rule `time` (Episode length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Episode Publication Date)
   * Add `podcast_episode` as a search type
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
     * Add rule `time` (Length in minutes)
     * Add rule `state` (Completed, Pending Skipped)
     * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Publication Date)
   * Add `genre` as a search type
     * Add rule `title`
 * CLI
@@ -68,12 +75,19 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
   * Add `podcast` as a search type
     * Add rule `title`
     * Add rule `podcast_episode` (Search by podcast episode name)
+    * Add rule `time` (Episode length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Episode Publication Date)
   * Add `podcast_episode` as a search type
     * Add rule `title`
     * Add rule `podcast` (Search by podcast name)
     * Add rule `time` (Length in minutes)
     * Add rule `state` (Completed, Pending Skipped)
     * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Publication Date)
   * Add `genre` as a search type
     * Add rule `title`
 

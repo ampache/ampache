@@ -101,7 +101,7 @@ Select the type of search based on the type of data you are searching for. (song
 | myplayedartist           | Played by Me (Artist)                   | boolean           |                              song, album                              |
 | album_count              | Album Count                             | numeric           |                                artist                                 |
 | song_count               | Song Count                              | numeric           |                             album, artist                             |
-| time                     | Length (in minutes)                     | numeric           |                 song, album, artist, podcast_episode                  |
+| time                     | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | genre                    | Genre                                   | tags              |                          song, album, artist                          |
 | tag                      | (*Alias of genre)                       |                   |                                                                       |
 | album_genre              | Album Genre                             | tags              |                                 song                                  |
@@ -121,11 +121,12 @@ Select the type of search based on the type of data you are searching for. (song
 | type                     | Playlist Type (private, public)         | text              |                               playlist                                |
 | comment                  | Comment                                 | text              |                                 song                                  |
 | lyrics                   | Lyrics                                  | text              |                                 song                                  |
-| file                     | Filename                                | text              |              song, album, artist, video, podcast_episode              |
-| state                    | File state (completed, pending skipped) | boolean_numeric   |                            podcast_episode                            |
+| file                     | Filename                                | text              |         song, album, artist, video, podcast, podcast_episode          |
+| state                    | File state (completed, pending skipped) | boolean_numeric   |                       podcast, podcast_episode                        |
 | bitrate                  | Bitrate                                 | numeric           |                                 song                                  |
-| added                    | Added                                   | date              |                                 song                                  |
+| added                    | Added                                   | date              |                    song, podcast, podcast_episode                     |
 | updated                  | Updated                                 | date              |                                 song                                  |
+| pubdate                  | Publication Date                        | date              |                       podcast, podcast_episode                        |
 | recent_played            | Recently Played                         | numeric_limit     |                          song, album, artist                          |
 | recent_added             | Recently Added                          | numeric_limit     |                              song, album                              |
 | recent_updated           | Recently Updated                        | numeric_limit     |                                 song                                  |

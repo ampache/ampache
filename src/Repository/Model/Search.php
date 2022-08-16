@@ -833,14 +833,15 @@ class Search extends playlist_object
      */
     private function playlist_types()
     {
-        $this->type_text('title', T_('Name'));
+        $t_playlist = T_('Playlist');
+        $this->type_text('title', T_('Name'), $t_playlist);
         $playlist_types = array(
             0 => T_('public'),
             1 => T_('private')
         );
-        $this->type_select('type', T_('Type'), 'boolean_numeric', $playlist_types);
+        $this->type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
-        $this->type_select('owner', T_('Owner'), 'user_numeric', $users);
+        $this->type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
     }
 
     /**
@@ -850,7 +851,7 @@ class Search extends playlist_object
      */
     private function podcast_types()
     {
-        $t_podcasts = T_('Podcasts');
+        $t_podcasts = T_('Podcast');
         $this->type_text('title', T_('Name'), $t_podcasts);
 
         $t_podcast_episodes = T_('Podcast Episodes');
@@ -876,7 +877,7 @@ class Search extends playlist_object
      */
     private function podcast_episode_types()
     {
-        $t_podcast_episodes = T_('Podcast Episodes');
+        $t_podcast_episodes = T_('Podcast Episode');
         $this->type_text('title', T_('Name'), $t_podcast_episodes);
         $this->type_text('podcast', T_('Podcast'), $t_podcast_episodes);
         $episode_states = array(
