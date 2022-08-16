@@ -861,7 +861,7 @@ class Search extends playlist_object
             2 => T_('completed')
         );
         $this->type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
-        $this->type_numeric('time', T_('Length (in minutes)'), $t_podcast_episodes);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_file_data = T_('File Data');
         $this->type_text('file', T_('Filename'), $t_file_data);
@@ -878,14 +878,14 @@ class Search extends playlist_object
     {
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->type_text('title', T_('Name'), $t_podcast_episodes);
-        $this->type_text('podcast', T_('Podcast'));
+        $this->type_text('podcast', T_('Podcast'), $t_podcast_episodes);
         $episode_states = array(
             0 => T_('skipped'),
             1 => T_('pending'),
             2 => T_('completed')
         );
         $this->type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
-        $this->type_numeric('time', T_('Length (in minutes)'), $t_podcast_episodes);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_file_data = T_('File Data');
         $this->type_text('file', T_('Filename'), $t_file_data);
