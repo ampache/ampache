@@ -311,6 +311,9 @@ class Core
      */
     public static function is_readable($path)
     {
+        if (!$path) {
+            return false;
+        }
         if (file_exists($path)) {
             if (is_dir($path)) {
                 $handle = opendir($path);
