@@ -119,22 +119,22 @@ class WebPlayer
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
             $media = new Song_Preview($urlinfo['id']);
         }
-        if (array_key_exists('demo_id', $urlinfo)) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
-                }
-            }
-        }
-        if (array_key_exists('random_id', $urlinfo) && array_key_exists('random_type', $urlinfo)) {
-            $user    = new User($urlinfo['uid']);
-            $song_id = Random::get_single_song($urlinfo['random_type'], $user, $urlinfo['random_id']);
-            if ($song_id) {
-                $media = new Song($song_id);
-            }
-        }
+        //        if (array_key_exists('demo_id', $urlinfo)) {
+        //            $democratic = new Democratic($urlinfo['demo_id']);
+        //            if ($democratic->id) {
+        //                $song_id = $democratic->get_next_object();
+        //                if ($song_id) {
+        //                    $media = new Song($song_id);
+        //                }
+        //            }
+        //        }
+        //        if (array_key_exists('random_id', $urlinfo) && array_key_exists('random_type', $urlinfo)) {
+        //            $user    = new User($urlinfo['uid']);
+        //            $song_id = Random::get_single_song($urlinfo['random_type'], $user, $urlinfo['random_id']);
+        //            if ($song_id) {
+        //                $media = new Song($song_id);
+        //            }
+        //        }
 
         return $media;
     } // get_media_object
@@ -317,7 +317,7 @@ class WebPlayer
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
-        } else {
+        } elseif (!empty($item->info_url)) {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
                 case 'live_stream':
