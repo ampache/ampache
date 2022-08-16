@@ -316,10 +316,6 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
                     break;
-                case 'random':
-                    $url['title']    = 'Random URL';
-                    $url['info_url'] = $object->get_f_link();
-                    break;
                 default:
                     $url['title'] = Stream_Url::get_title($url['url']);
                     $url['time']  = -1;

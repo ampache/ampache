@@ -163,6 +163,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     if (brkey != '') {
                         sendBroadcastMessage('SONG', currentjpitem.attr("data-media_id"));
                     }
+                    var hideactions = false;
                     if (playlist[index]['media_type'] == "song") {
                         var currenttype = 'song'
                         var currentobject = 'song_id'
@@ -188,9 +189,11 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     } else if (playlist[index]['media_type'] == "democratic") {
                         var currenttype = 'democratic'
                         var currentobject = 'democratic'
+                        var hideactions = true;
                     } else if (playlist[index]['media_type'] == "random") {
                         var currenttype = 'random'
                         var currentobject = 'random'
+                        var hideactions = true;
                     } else {
                         var currenttype = 'song'
                         var currentobject = 'song_id'
@@ -199,6 +202,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
 
                     <?php if (!$isVideo && !$isRadio && !$is_share) {
                     if ($iframed) {
+                        echo "if (!hideactions) {";
                         if (AmpConfig::get('sociable')) {
                             echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
                         }
@@ -222,6 +226,10 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                                 echo "waveformobj += '</a>';";
                             }
                         }
+                        echo "} else {";
+                        echo "var titleobj = obj.title;";
+                        echo "var artistobj = obj.artist;";
+                        echo "}";
                     } else {
                         echo "var titleobj = obj.title;";
                         echo "var artistobj = obj.artist;";

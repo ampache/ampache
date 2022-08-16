@@ -119,22 +119,6 @@ class WebPlayer
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
             $media = new Song_Preview($urlinfo['id']);
         }
-        if (array_key_exists('demo_id', $urlinfo)) {
-            $democratic = new Democratic($urlinfo['demo_id']);
-            if ($democratic->id) {
-                $song_id = $democratic->get_next_object();
-                if ($song_id) {
-                    $media = new Song($song_id);
-                }
-            }
-        }
-        if (array_key_exists('random_id', $urlinfo) && array_key_exists('random_type', $urlinfo)) {
-            $user    = new User($urlinfo['uid']);
-            $song_id = Random::get_single_song($urlinfo['random_type'], $user, $urlinfo['random_id']);
-            if ($song_id) {
-                $media = new Song($song_id);
-            }
-        }
 
         return $media;
     } // get_media_object
@@ -297,6 +281,7 @@ class WebPlayer
             ? $url_data['type']
             : $item->type;
 
+        //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
             if ($url_data['type'] == 'song') {
                 // get replaygain from the song_data table
@@ -333,9 +318,14 @@ class WebPlayer
                     $regex =  "/" . $item->type . "=([0-9]*)/";
                     break;
             }
-            debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
-            preg_match($regex, $item->info_url, $matches);
-            $json['media_id']   = $matches[1] ?? null;
+            if (!empty($item->info_url)) {
+                preg_match($regex, $item->info_url, $matches);
+                $json['media_id']   = $matches[1] ?? null;
+            }
+            if (!empty($url)) {
+                preg_match($regex, $item->url, $matches);
+                $json['media_id']   = $matches[1] ?? null;
+            }
             $json['media_type'] = $item->type;
         }
 
@@ -344,6 +334,7 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
+        //debug_event(__class__, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json);
     }
