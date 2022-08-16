@@ -2561,6 +2561,7 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'smartplaylist':
+                    //debug_event(self::class, 'song_to_sql: SUBSEARCH ' . $input, 5);
                     $subsearch  = new Search($input, 'song', $this->search_user);
                     $results    = $subsearch->get_items();
                     $itemstring = '';
