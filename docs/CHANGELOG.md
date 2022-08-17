@@ -28,7 +28,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
   * Drop table `user_catalog`
   * Remove `filter_user` from the `catalog` table
 * Search
-* Added more missing groups to search type lists
+  * Added more missing groups to search type lists
+  * Added missing `song` (was `song_title`) to album searches
   * Add `podcast` as a search type
     * Add rule `title`
     * Add rule `podcast_episode` (Search by podcast episode name)
@@ -71,6 +72,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Search
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
+  * Added aliases for some of the confusing search types
 * SubSonic
   * Checking parameters might return the error AND the empty response
 
@@ -102,6 +104,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 
 * API4::get_indexes podcast_episode was encoding into the API5 object
 * API4::share_create was unable to share when using lowercase types
+* advanced_search
+  * Added missing `song` (was `song_title`) to album searches
 
 ## Ampache 5.4.1-release
 

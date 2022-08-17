@@ -66,14 +66,15 @@ Select the type of search based on the type of data you are searching for. (song
 | anywhere                 | Any searchable text                     | text              |                                 song                                  |
 | title                    | Title / Name                            | text              | song, album, artist, playlist, label, podcast, podcast_episode, genre |
 | name                     | (*Alias of title)                       |                   |                                                                       |
+| song                     | Song Title                              | text              |                             album, artist                             |
+| song_title               | (*Alias of song)                        |                   |                                                                       |
 | album                    | Album Title                             | text              |                             song, artist                              |
+| album_title              | (*Alias of album)                       |                   |                                                                       |
 | artist                   | Artist                                  | text              |                          song, album, artist                          |
 | podcast                  | Podcast                                 | text              |                            podcast_episode                            |
 | podcast_episode          | Podcast Episode                         | text              |                                podcast                                |
 | album_artist             | Album Artist                            | text              |                                 song                                  |
 | song_artist              | Song Artist                             | text              |                                 album                                 |
-| song_title               | Song Title                              | text              |                             album, artist                             |
-| album_title              | Album Title                             | text              |                                artist                                 |
 | composer                 | Composer                                | text              |                                 song                                  |
 | track                    | Track                                   | numeric           |                                 song                                  |
 | year                     | Year                                    | numeric           |                              song, album                              |

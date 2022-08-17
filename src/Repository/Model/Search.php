@@ -679,8 +679,8 @@ class Search extends playlist_object
         $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
-        $this->type_text('album_title', T_('Album Title'), $t_artist_data);
-        $this->type_text('song_title', T_('Song Title'), $t_artist_data);
+        $this->type_text('album', T_('Album Title'), $t_artist_data);
+        $this->type_text('song', T_('Song Title'), $t_artist_data);
         $this->type_text('summary', T_('Summary'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
@@ -753,7 +753,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
         $this->type_text('song_artist', T_('Song Artist'), $t_album_data);
-        $this->type_text('song_title', T_('Song Title'), $t_album_data);
+        $this->type_text('song', T_('Song Title'), $t_album_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_album_data);
         $this->type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
@@ -922,7 +922,7 @@ class Search extends playlist_object
      */
     private function tag_types()
     {
-        $this->type_text('name', T_('Genre'));
+        $this->type_text('title', T_('Genre'));
     }
 
     /**
@@ -1787,6 +1787,7 @@ class Search extends playlist_object
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;
+                case 'song':
                 case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
@@ -2104,11 +2105,13 @@ class Search extends playlist_object
                     $where[]      = "`artist`.`summary` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
                     break;
+                case 'album':
                 case 'album_title':
                     $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
                     $parameters    = array_merge($parameters, array($input, $input));
                     $join['album'] = true;
                     break;
+                case 'song':
                 case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
@@ -2960,6 +2963,7 @@ class Search extends playlist_object
                     $where[]      = "`podcast`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
+                case 'podcast_episode':
                 case 'podcast_episode_title':
                     $where[]                 = "`podcast_episode`.`title` $sql_match_operator ?";
                     $parameters[]            = $input;
@@ -3091,6 +3095,7 @@ class Search extends playlist_object
                     $where[]      = "`podcast_episode`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
+                case 'podcast':
                 case 'podcast_title':
                     $where[]         = "`podcast`.`title` $sql_match_operator ?";
                     $parameters[]    = $input;
