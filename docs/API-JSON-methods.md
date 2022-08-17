@@ -1561,13 +1561,13 @@ Create a new user. (Requires the username, password and email.)
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input      | Type    | Description                | Optional |
-|------------|---------|----------------------------|---------:|
-| 'username' | string  | $username                  |       NO |
-| 'password' | string  | hash('sha256', $password)) |       NO |
-| 'email'    | string  | e.g. user@gmail.com        |       NO |
-| 'fullname' | string  |                            |      YES |
-| 'disable'  | boolean | `0`, `1`                   |      YES |
+| Input      | Type    | Description               | Optional |
+|------------|---------|---------------------------|---------:|
+| 'username' | string  | $username                 |       NO |
+| 'password' | string  | hash('sha256', $password) |       NO |
+| 'email'    | string  | e.g. user@gmail.com       |       NO |
+| 'fullname' | string  |                           |      YES |
+| 'disable'  | boolean | `0`, `1`                  |      YES |
 
 * return object
 
@@ -1589,17 +1589,17 @@ Update an existing user.
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input        | Type    | Description                | Optional |
-|--------------|---------|----------------------------|---------:|
-| 'username'   | string  | $username                  |       NO |
-| 'password'   | string  | hash('sha256', $password)) |      YES |
-| 'email'      | string  | e.g. user@gmail.com        |      YES |
-| 'fullname'   | string  |                            |      YES |
-| 'website'    | string  |                            |      YES |
-| 'state'      | string  |                            |      YES |
-| 'city'       | string  |                            |      YES |
-| 'disable'    | boolean | `0`, `1`                   |      YES |
-| 'maxbitrate' | string  |                            |      YES |
+| Input        | Type    | Description               | Optional |
+|--------------|---------|---------------------------|---------:|
+| 'username'   | string  | $username                 |       NO |
+| 'password'   | string  | hash('sha256', $password) |      YES |
+| 'email'      | string  | e.g. user@gmail.com       |      YES |
+| 'fullname'   | string  |                           |      YES |
+| 'website'    | string  |                           |      YES |
+| 'state'      | string  |                           |      YES |
+| 'city'       | string  |                           |      YES |
+| 'disable'    | boolean | `0`, `1`                  |      YES |
+| 'maxbitrate' | string  |                           |      YES |
 
 * return object
 
@@ -1637,7 +1637,7 @@ Delete an existing user.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_update.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_delete.json)
 
 ### licenses
 
@@ -2130,7 +2130,9 @@ Kick off a catalog update or clean for the selected catalog
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/catalog_action%20\(clean_catalog\).json)
+[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/catalog_action%20\(clean_catalog\).json)
+
+[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/catalog_action%20\(add_to_catalog\).json)
 
 ### catalog_file
 
