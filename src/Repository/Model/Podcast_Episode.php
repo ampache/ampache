@@ -579,33 +579,52 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * gather
      * download the podcast episode to your catalog
+     * @return bool
      */
     public function gather()
     {
         if (!empty($this->source)) {
-            $podcast = new Podcast($this->podcast);
-            $file    = $podcast->get_root_path();
+            // existing file (completed)
+            $file = $this->file;
+            if (empty($file)) {
+                // new file (pending)
+                $podcast = new Podcast($this->podcast);
+                $file    = $podcast->get_root_path();
+                if (!empty($file)) {
+                    $pinfo = pathinfo($this->source);
+                    $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
+                }
+            }
             if (!empty($file)) {
-                $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
                 if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
+                    // the file doesn't exist locally so download it
                     debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
                     if (file_put_contents($file, fopen($this->source, 'r'))) {
                         debug_event(self::class, 'Download completed.', 4);
                     }
                 }
                 if (Core::get_filesize(Core::conv_lc_file($file)) > 0) {
-                    $this->file = $file;
-                    self::update_file($this->file, $this->id);
+                    // the file exists so get/update file details in the DB
                     debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
+                    if (empty($this->file)) {
+                        $this->file = $file;
+                        self::update_file($this->file, $this->id);
+                    }
                     Catalog::update_media_from_tags($this);
-                } else {
-                    debug_event(self::class, 'Error when downloading podcast episode.', 1);
+
+                    return true;
                 }
+                debug_event(self::class, 'Error when downloading podcast episode.', 1);
+
+                return false;
             }
-        } else {
-            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
+            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', could not generate file path.', 3);
+
+            return false;
         }
+        debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
+
+        return false;
     }
 
     /**
