@@ -3012,7 +3012,7 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['podcast_episode']) {
+        if (array_key_exists('podcast_episode', $join)) {
             $table['0_podcast'] = "LEFT JOIN `podcast_episode` ON `podcast_episode`.`podcast` = `podcast`.`id`";
         }
         if ($join['catalog']) {
