@@ -3138,7 +3138,7 @@ class Search extends playlist_object
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        if ($join['podcast']) {
+        if (array_key_exists('podcast', $join)) {
             $table['0_podcast'] = "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast`";
         }
         if ($join['catalog']) {
@@ -3164,7 +3164,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`title` FROM `podcast_episode`',
+            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
