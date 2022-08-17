@@ -100,6 +100,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 
 ### Fixed
 
+* API4::get_indexes podcast_episode was encoding into the API5 object
 * API4::share_create was unable to share when using lowercase types
 
 ## Ampache 5.4.1-release
