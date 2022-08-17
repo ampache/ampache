@@ -1345,6 +1345,10 @@ tr#random_results td {
     white-space: nowrap;
 }
 
+.operatoris_true {
+    display: none;
+}
+
 div.box.box_rules {
     margin: 30px 0 30px 0;
 }
