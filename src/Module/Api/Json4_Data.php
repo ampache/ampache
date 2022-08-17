@@ -706,12 +706,8 @@ class Json4_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
-            $rating  = new Rating($episode_id, 'podcast_episode');
-            $flag    = new Userflag($episode_id, 'podcast_episode');
-            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
-                "title" => $episode->get_fullname(),
                 "name" => $episode->get_fullname(),
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
@@ -722,17 +718,8 @@ class Json4_Data
                 "state" => $episode->f_state,
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->f_size,
-                "mime" => $episode->mime,
                 "filename" => $episode->f_file,
-                "public_url" => $episode->link,
-                "url" => $episode->play_url('', 'api', false, $user_id),
-                "catalog" => $episode->catalog,
-                "art" => $art_url,
-                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
-                "rating" => ($rating->get_user_rating($user_id) ?: null),
-                "averagerating" => (string) ($rating->get_average_rating() ?: null),
-                "played" => $episode->played]);
+                "url" => $episode->link]);
         }
         if (!$encode) {
             return $JSON;
