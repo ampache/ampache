@@ -207,7 +207,7 @@ class Json4_Data
             case 'podcast':
                 return self::podcasts($objects, $user_id, $include);
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user_id);
+                return self::podcast_episodes($objects, $user_id, true, false);
             case 'video':
                 return self::videos($objects, $user_id);
             default:
