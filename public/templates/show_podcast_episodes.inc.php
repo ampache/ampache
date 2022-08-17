@@ -53,12 +53,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
                 <?php
 } ?>
-            <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'podcast_episode_sort_time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php } ?>
             <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubDate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
-            <th class="cel_state optional"><?php echo T_('State'); ?></th>
+            <th class="cel_state optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=state', T_('State'), 'podcast_episode_sort_state'); ?></th>
             <?php if ($show_ratings) {
         ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
