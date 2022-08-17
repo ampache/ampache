@@ -724,7 +724,7 @@ class Json4_Data
         if (!$encode) {
             return $JSON;
         }
-        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0];
+        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcast_episodes
