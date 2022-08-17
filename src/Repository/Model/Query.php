@@ -571,6 +571,22 @@ class Query
     {
         if (empty(self::$allowed_filters)) {
             self::$allowed_filters = array(
+                'song' => array(
+                    'add_lt',
+                    'add_gt',
+                    'update_lt',
+                    'update_gt',
+                    'exact_match',
+                    'alpha_match',
+                    'regex_match',
+                    'regex_not_match',
+                    'starts_with',
+                    'tag',
+                    'catalog',
+                    'catalog_enabled',
+                    'composer',
+                    'enabled'
+                ),
                 'album' => array(
                     'add_lt',
                     'add_gt',
@@ -599,23 +615,8 @@ class Query
                     'catalog',
                     'catalog_enabled'
                 ),
-                'song' => array(
-                    'add_lt',
-                    'add_gt',
-                    'update_lt',
-                    'update_gt',
-                    'exact_match',
-                    'alpha_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag',
-                    'catalog',
-                    'catalog_enabled',
-                    'composer',
-                    'enabled'
-                ),
                 'live_stream' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -623,12 +624,14 @@ class Query
                     'catalog_enabled'
                 ),
                 'playlist' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'smartplaylist' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -650,12 +653,14 @@ class Query
                     'regex_not_match'
                 ),
                 'license' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'tvshow' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -673,6 +678,7 @@ class Query
                     'starts_with'
                 ),
                 'label' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -691,12 +697,14 @@ class Query
                     'to_user',
                 ),
                 'podcast' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'podcast_episode' => array(
+                    'exact_match',
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -1609,6 +1617,9 @@ class Query
                 break;
             case 'live_stream':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `live_stream`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1635,6 +1646,9 @@ class Query
                 break;
             case 'playlist':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `playlist`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1661,6 +1675,9 @@ class Query
                 break;
             case 'smartplaylist':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `search`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1685,6 +1702,9 @@ class Query
                 break;
             case 'tag':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1697,9 +1717,6 @@ class Query
                         if (!empty($value)) {
                             $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                         }
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'tag':
                         $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
@@ -1721,6 +1738,9 @@ class Query
                             $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
                         }
                         $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
+                        break;
+                    case 'exact_match':
+                        $filter_sql = " `video`.`title` = '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'alpha_match':
                         $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -1744,6 +1764,9 @@ class Query
                 break;
             case 'license':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1757,15 +1780,15 @@ class Query
                             $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                         }
                         break;
-                    case 'exact_match':
-                        $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
                     default:
                         break;
                 } // end filter
                 break;
             case 'tvshow':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1778,9 +1801,6 @@ class Query
                         if (!empty($value)) {
                             $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                         }
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'year_lt':
                         $filter_sql = " `tvshow`.`year` < '" . Dba::escape($value) . "' AND ";
@@ -1819,6 +1839,9 @@ class Query
                 break;
             case 'label':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `label`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1881,6 +1904,9 @@ class Query
                 break;
             case 'podcast':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `podcast`.`title` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
@@ -1903,6 +1929,9 @@ class Query
                 break;
             case 'podcast_episode':
                 switch ($filter) {
+                    case 'exact_match':
+                        $filter_sql = " `podcast_episode`.`title` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'alpha_match':
                         $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                         break;
