@@ -238,6 +238,8 @@ class Query
         ),
         'podcast' => array(
             'title',
+            'website',
+            'episodes',
             'random'
         ),
         'podcast_episode' => array(
@@ -2262,7 +2264,9 @@ class Query
             case 'podcast':
                 switch ($field) {
                     case 'title':
-                        $sql = "`podcast`.`title`";
+                    case 'website':
+                    case 'episodes':
+                        $sql = "`podcast`.`$field`";
                         break;
                 }
                 break;
