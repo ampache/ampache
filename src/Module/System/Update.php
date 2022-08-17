@@ -766,6 +766,9 @@ class Update
         $update_string = "* Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play";
         $version[]     = array('version' => '550003', 'description' => $update_string);
 
+        $update_string = "* Make `demo_use_search`a system preference correctly";
+        $version[]     = array('version' => '550004', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4612,6 +4615,21 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_550004
+     *
+     * Make `demo_use_search`a system preference correctly
+     */
+    public static function update_550004(): bool
+    {
+        $retval = true;
+
+        // Update previous update preference
+        $sql = "UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search'";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }
