@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -78,6 +79,9 @@ final class DownloadMethod
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if ($type == 'search' || $type == 'playlist') {
+            $url   = Random::get_play_url($type, $object_id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);
