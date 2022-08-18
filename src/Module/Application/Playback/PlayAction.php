@@ -127,6 +127,7 @@ final class PlayAction implements ApplicationActionInterface
 
         /* These parameters had better come in on the url. */
         $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+        $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
         $uid          = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -368,6 +369,35 @@ final class PlayAction implements ApplicationActionInterface
             return null;
         }
 
+        //if democratic or random send the parameters you sent to the actual object
+        $additional_params = '';
+        if ($demo_id !== '' || $random !== '') {
+            if ($client) {
+                $additional_params .= "&client=" . $client;
+            }
+            if ($action) {
+                $additional_params .= "&action=" . $action;
+            }
+            if ($cache) {
+                $additional_params .= "&cache=" . $cache;
+            }
+            if ($player) {
+                $additional_params .= "&player=" . $player;
+            }
+            if ($format) {
+                $additional_params .= "&format=" . $format;
+            }
+            if ($transcode_to) {
+                $additional_params .= "&transcode_to=" . $transcode_to;
+            }
+            if ($cpaction) {
+                $additional_params .= "&custom_play_action=" . $cpaction;
+            }
+            if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
+                $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
+            }
+        }
+
         /**
          * If we've got a Democratic playlist then get the current song and redirect to that media files URL
          */
@@ -406,7 +436,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
 
                 // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url());
+                header('Location: ' . $media->play_url($additional_params, $client, function_exists('curl_version'), $user->id));
 
                 return null;
             }
@@ -446,7 +476,7 @@ final class PlayAction implements ApplicationActionInterface
                     }
 
                     // play the song instead of going through all the crap
-                    header('Location: ' . $media->play_url());
+                    header('Location: ' . $media->play_url($additional_params, $client, function_exists('curl_version'), $user->id));
 
                     return null;
                 }
@@ -629,8 +659,6 @@ final class PlayAction implements ApplicationActionInterface
 
         debug_event('play/index', $action . ' file (' . $stream_file . '}...', 5);
         debug_event('play/index', 'Media type {' . $media->type . '}', 5);
-
-        $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($cpaction) {
             debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
         }

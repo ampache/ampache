@@ -448,12 +448,35 @@ class Random
     /**
      * get_play_url
      * This returns the special play URL for random play
+     * @param string $object_type
+     * @param int $object_id
+     * @param string $additional_params
+     * @param string $player
+     * @param boolean $local
+     * @param int|string $uid
+     * @return string
      */
-    public static function get_play_url($object_type, $object_id)
+    public static function get_play_url($object_type, $object_id, $additional_params = '', $player = '', $local = false, $uid = false)
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id);
+        if (!$object_type || !$object_id) {
+            return '';
+        }
+        if (!$uid) {
+            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
+            $uid = Core::get_global('user')->id ?? 0;
+        }
+        // set no use when using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
 
-        return Stream_Url::format($link);
+        $url = Stream::get_base_url($local) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id) . 'uid=' . scrub_out($uid) . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=Random";
+
+        return Stream_Url::format($url);
     } // get_play_url
 
     /**
