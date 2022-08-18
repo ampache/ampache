@@ -65,7 +65,7 @@ final class StreamMethod
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
@@ -90,14 +90,16 @@ final class StreamMethod
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $url   = Random::get_play_url($type, $object_id, $params, 'api', function_exists('curl_version'), $user_id);
+            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $media   = new Song($song_id);
+            $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

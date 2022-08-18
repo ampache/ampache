@@ -62,7 +62,7 @@ final class DownloadMethod
         $type      = (string) $input['type'];
         $format    = $input['format'];
         $original  = $format && $format != 'raw';
-        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
         if ($original && $type == 'song') {
@@ -74,14 +74,16 @@ final class DownloadMethod
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'search' || $type == 'playlist') {
-            $url   = Random::get_play_url($type, $object_id);
+            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $media   = new Song($song_id);
+            $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);
