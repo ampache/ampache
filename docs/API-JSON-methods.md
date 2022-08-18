@@ -924,6 +924,8 @@ This create a new playlist and return it
 This modifies name and type of a playlist
 Previously name and type were mandatory while filter wasn't. this has been reversed.
 
+**NOTE** items and tracks must be sent together and be of equal length
+
 | Input    | Type   | Description                                                       | Optional |
 |----------|--------|-------------------------------------------------------------------|---------:|
 | 'filter' | string | UID of Playlist                                                   |       NO |
@@ -2610,12 +2612,12 @@ Binary data methods are used for returning raw data to the user such as a image 
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 
-**DEVELOP** `podcast_episode` has been added. `podcast` is incorrect and will be removed in Ampache 6
+**NOTE** search and playlist will only stream a random object from the list
 
 | Input     | Type    | Description                                                | Optional |
 |-----------|---------|------------------------------------------------------------|---------:|
 | 'id'      | integer | $object_id                                                 |       NO |
-| 'type'    | string  | `song`, `podcast_episode`, `podcast`                       |       NO |
+| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
 | 'bitrate' | integer | max bitrate for transcoding                                |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
 | 'offset'  | integer | Return results starting from this index position           |      YES |
@@ -2629,10 +2631,12 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 Downloads a given media file. set format=raw to download the full file
 
+**NOTE** search and playlist will only download a random object from the list
+
 | Input    | Type    | Description                                                | Optional |
 |----------|---------|------------------------------------------------------------|---------:|
 | 'id'     | integer | $object_id                                                 |       NO |
-| 'type'   | string  | `song`, `podcast_episode`                                  |       NO |
+| 'type'   | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
 | 'format' | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
 
 * return file (HTTP 200 OK)

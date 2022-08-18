@@ -74,6 +74,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * A lot of browse filters were missing for certain object types
 * Don't try to load the playlist ialog from the webplayer when you can't add things
 * When using random/Democratic play send the additional parameters to the actual media
+* Respect play urls with transcode_to instead of format
 * Search
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
@@ -85,7 +86,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 
 ### Added
 
-* Api::stream add new type's `playlist` and `search` (Streams a random object from these lists)
+* Api::stream add new types `playlist` and `search` (Streams a random object from these lists)
+* Api::download add new types `playlist` and `search`
 * advanced_search
   * Add `podcast` as a search type
     * Add rule `title`
