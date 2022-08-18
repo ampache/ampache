@@ -47,7 +47,7 @@ final class DownloadMethod
      *
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song', 'podcast_episode'
+     * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
@@ -65,10 +65,7 @@ final class DownloadMethod
         $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
-        if ($original && $type == 'song') {
-            $params .= '&transcode_to=' . $format;
-        }
-        if ($format && $type == 'song') {
+        if ($format && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&format=' . $format;
         }
         $url = '';

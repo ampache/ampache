@@ -77,10 +77,10 @@ final class StreamMethod
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($original && $type == 'song') {
-            $params .= '&transcode_to=' . $format;
+        if ($original && in_array($type, array('song', 'search', 'playlist'))) {
+            $params .= '&format=' . $format;
         }
-        if ($maxBitRate > 0 && $type == 'song') {
+        if ($maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {

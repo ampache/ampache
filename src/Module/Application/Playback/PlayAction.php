@@ -137,7 +137,7 @@ final class PlayAction implements ApplicationActionInterface
         $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
         $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
         $original     = ($format == 'raw');
-        $transcode_to = (!$original && $format != '') ? $format : null;
+        $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
         $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
         $record_stats = true;
         $use_auth     = AmpConfig::get('use_auth');
