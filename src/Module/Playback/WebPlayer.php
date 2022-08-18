@@ -72,7 +72,7 @@ class WebPlayer
      */
     public static function is_playlist_random($playlist)
     {
-        return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "random");
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Random");
     }
 
     /**
@@ -82,7 +82,7 @@ class WebPlayer
      */
     public static function is_playlist_democratic($playlist)
     {
-        return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "democratic");
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Democratic");
     }
 
     /**

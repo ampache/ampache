@@ -57,11 +57,9 @@ if (isset($playlist)) {
         // No special stuff for now
         $isRadio = true;
         $radio   = $playlist->urls[0];
-    } else {
-        $isVideo      = WebPlayer::is_playlist_video($playlist);
-        $isVideo      = WebPlayer::is_playlist_video($playlist);
-        $isDemocratic = WebPlayer::is_playlist_democratic($playlist);
-        $isRandom     = WebPlayer::is_playlist_random($playlist);
     }
+    $isVideo      = WebPlayer::is_playlist_video($playlist);
+    $isDemocratic = WebPlayer::is_playlist_democratic($playlist);
+    $isRandom     = WebPlayer::is_playlist_random($playlist);
 }
 require_once Ui::find_template('show_html5_player.inc.php'); ?>
