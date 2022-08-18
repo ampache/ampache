@@ -249,7 +249,7 @@ class Democratic extends Tmp_Playlist
      */
     public function play_url()
     {
-        $link = Stream::get_base_url() . '&uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
+        $link = Stream::get_base_url() . 'id=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_Url::format($link);
     } // play_url

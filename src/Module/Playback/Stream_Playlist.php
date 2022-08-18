@@ -405,7 +405,7 @@ class Stream_Playlist
         if ($redirect) {
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
-            header('Location: ' . Stream::get_base_url() . '&uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
+            header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
 
             return false;
         }
