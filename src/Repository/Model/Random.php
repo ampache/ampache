@@ -470,7 +470,7 @@ class Random
             $uid = -1;
         }
 
-        $url = Stream::get_base_url($local) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id) . 'uid=' . scrub_out($uid) . $additional_params;
+        $url = Stream::get_base_url($local) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out($object_id) . '&uid=' . scrub_out($uid) . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }
