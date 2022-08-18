@@ -13,6 +13,8 @@ global $dic;
 
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
+/** @var bool $isDemocratic */
+/** @var bool $isRandom */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
 
 $environment   = $dic->get(EnvironmentInterface::class);
@@ -23,9 +25,9 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
 
 $autoplay = true;
 $iframed  = $iframed ?? false;
-$is_share = $is_share ?? false;
+$isShare  = $isShare ?? false;
 $embed    = $embed ?? false;
-if ($is_share) {
+if ($isShare) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');
 }
 if (!$iframed) {
@@ -103,7 +105,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
             auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",
             <?php } ?>
-            <?php if (!$is_share) { ?>
+            <?php if (!$isShare) { ?>
             size: {
                 <?php if ($isVideo) {
                     if ($iframed) { ?>
@@ -200,7 +202,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         var actiontype = 'song'
                     }
 
-                    <?php if (!$isVideo && !$isRadio && !$is_share) {
+                    <?php if (!$isVideo && !$isRadio && !$isShare && !$isDemocratic && !$isRandom) {
                     if ($iframed) {
                         echo "if (!hideactions) {";
                         if (AmpConfig::get('sociable')) {
@@ -215,7 +217,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                             echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                         }
                         echo "actionsobj += '<div id=\'action_buttons\'></div>';";
-                        if (AmpConfig::get('waveform') && !$is_share) {
+                        if (AmpConfig::get('waveform') && !$isShare) {
                             echo "var waveformobj = '';";
                             if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
                                 echo "waveformobj += '<a href=\"#\" title=\"" . addslashes(T_('Double click to post a new shout')) . "\" onClick=\"javascript:WaveformClick(' + currentjpitem.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
@@ -241,19 +243,19 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
-                    if (AmpConfig::get('waveform') && !$is_share) { ?>
+                    if (AmpConfig::get('waveform') && !$isShare) { ?>
                     $('.waveform').html(waveformobj);
                     <?php }
                     }
                 }
-                    if (AmpConfig::get('song_page_title') && !$is_share) {
+                    if (AmpConfig::get('song_page_title') && !$isShare) {
                         echo "var mediaTitle = obj.title;\n";
                         echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
                         echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title', '')) . "';";
                     } ?>
                 }
             });
-            <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
+            <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
             HideWaveform();
             <?php } ?>
 
@@ -266,7 +268,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             if (brkey != '') {
                 sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
-            <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
+            <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
             if (int_position != last_int_position && event.jPlayer.status.currentTime > 0) {
                 last_int_position = int_position;
@@ -339,7 +341,7 @@ if (AmpConfig::get('webplayer_aurora')) {
 }
 
 // TODO: avoid share style here
-if ($is_share && $isVideo) { ?>
+if ($isShare && $isVideo) { ?>
     <style>
         div.jp-jplayer
         {
@@ -351,7 +353,7 @@ if ($is_share && $isVideo) { ?>
 </head>
 <body>
 <?php $areaClass = "";
-if ((!AmpConfig::get('waveform') || $is_share) && !$embed) {
+if ((!AmpConfig::get('waveform') || $isShare) && !$embed) {
     $areaClass .= " jp-area-center";
 }
 if ($embed) {
@@ -446,13 +448,13 @@ if (!$isVideo) {
                             <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $repeaton; ?>"><?php echo $repeaton; ?></a></li>
                             <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $repeatoff; ?>"><?php echo $repeatoff; ?></a></li>
                         </ul>
-                        <?php if (AmpConfig::get('waveform') && !$is_share) { ?>
+                        <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
                             <div class="waveform"></div>
                             <?php } ?>
                         <?php } ?>
                 </div>
             </div>
-            <?php if (!$is_share && !$environment->isMobile()) { ?>
+            <?php if (!$isShare && !$environment->isMobile()) { ?>
                 <div class="player_actions">
                     <?php if (AmpConfig::get('broadcast') && Access::check('interface', 25)) { ?>
                         <div id="broadcast" class="broadcast action_button">
@@ -516,10 +518,10 @@ if (!$isVideo) {
         </div>
     </div>
 </div>
-<?php if (!$iframed || $is_share) {
+<?php if (!$iframed || $isShare) {
         require_once Ui::find_template('uberviz.inc.php');
     } ?>
-<?php if (!$is_share) { ?>
+<?php if (!$isShare) { ?>
 </body>
     </html>
 <?php } ?>

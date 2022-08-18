@@ -66,6 +66,26 @@ class WebPlayer
     }
 
     /**
+     * Check if the playlist is a random playlist.
+     * @param Stream_Playlist $playlist
+     * @return boolean
+     */
+    public static function is_playlist_random($playlist)
+    {
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "random");
+    }
+
+    /**
+     * Check if the playlist is a democratic playlist.
+     * @param Stream_Playlist $playlist
+     * @return boolean
+     */
+    public static function is_playlist_democratic($playlist)
+    {
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "democratic");
+    }
+
+    /**
      * Get types information for an item.
      * @param Stream_URL $item
      * @param string $force_type

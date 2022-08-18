@@ -921,7 +921,7 @@ final class PlayAction implements ApplicationActionInterface
 
     private function is_shared_media(Share $share, $media_id): bool
     {
-        $is_shared = false;
+        $isShare = false;
         switch ($share->object_type) {
             case 'album':
                 $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
@@ -929,8 +929,8 @@ final class PlayAction implements ApplicationActionInterface
                 $songs      = $this->songRepository->getByAlbum((int) $object->id);
 
                 foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
                         break;
                     }
                 }
@@ -940,17 +940,17 @@ final class PlayAction implements ApplicationActionInterface
                 $object     = new $class_name($share->object_id);
                 $songs      = $object->get_songs();
                 foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
                         break;
                     }
                 }
                 break;
             default:
-                $is_shared = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
+                $isShare = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
                 break;
         }
 
-        return $is_shared;
+        return $isShare;
     }
 }

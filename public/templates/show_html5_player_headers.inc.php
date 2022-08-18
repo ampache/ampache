@@ -17,9 +17,9 @@ $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
 $iframed  = $iframed ?? false;
-$is_share = $is_share ?? false;
+$isShare = $isShare ?? false;
 
-if ($iframed || $is_share) { ?>
+if ($iframed || $isShare) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
 <?php } else { ?>
 <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
@@ -363,7 +363,7 @@ function ApplyReplayGain()
 </script>
 <?php } ?>
 <script>
-<?php if (AmpConfig::get('waveform') && !$is_share) { ?>
+<?php if (AmpConfig::get('waveform') && !$isShare) { ?>
 var wavclicktimer = null;
 var shouts = {};
 function WaveformClick(songid, time)
@@ -530,7 +530,7 @@ function stopBroadcast()
     brconn = null;
 }
 
-<?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
+<?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$isShare) { ?>
 window.parent.onbeforeunload = function (evt) {
     if (typeof $("#jquery_jplayer_1") !== 'undefined' && typeof $("#jquery_jplayer_1").data("jPlayer") !== 'undefined' && !$("#jquery_jplayer_1").data("jPlayer").status.paused &&
             (typeof document.activeElement === 'undefined' || (typeof document.activeElement.href !== 'undefined' && document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
@@ -547,7 +547,7 @@ window.parent.onbeforeunload = function (evt) {
     return null;
 }
 <?php } ?>
-<?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$is_share) { ?>
+<?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$isShare) { ?>
 window.addEventListener('storage', function (event) {
   if (event.key == 'ampache-current-webplayer') {
     // The latest used webplayer is not this player, pause song if playing
