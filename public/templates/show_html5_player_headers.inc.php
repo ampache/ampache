@@ -279,7 +279,10 @@ function SaveToExistingPlaylist(event)
     if (jplaylist['playlist'].length > 0) {
         var item_ids = "";
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
-            item_ids += "," + jplaylist['playlist'][i]["media_id"];
+                if (jplaylist['playlist'][0]['media_type'] == 'song' || jplaylist['playlist'][0]['media_type'] == 'podcast_episode' || jplaylist['playlist'][0]['media_type'] == 'video') {
+                    item_ids += "," + jplaylist['playlist'][i]["media_id"];
+                }
+            }
         }
         if (item_ids !== "") {
             showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);

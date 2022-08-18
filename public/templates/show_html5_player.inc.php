@@ -410,7 +410,6 @@ if (!$isVideo) {
                             <div class="jp-volume-bar">
                                 <div class="jp-volume-bar-value"></div>
                             </div>
-
                             <ul class="jp-toggles">
                                 <li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="<?php echo $fullscreen; ?>"><?php echo $fullscreen; ?></a></li>
                                 <li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="<?php echo $restscreen; ?>"><?php echo $restscreen; ?></a></li>
@@ -481,7 +480,6 @@ if (!$isVideo) {
                                     <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))) ?>
                                 </a>
                             </div>
-
                             <?php } ?>
                         <div id="slideshow" class="slideshow action_button">
                             <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))) ?></a>
