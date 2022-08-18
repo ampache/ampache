@@ -19,6 +19,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Add Podcase Episodes to the browse pages and sidebar
 * Translate podcast episode state and some other missing ones
 * Allow using a smartplaylist in Democratic play
+* Allow podcast_episode table sort by `time` and `state`
+* Allow podcast table sort by `website` and `episodes`
 * Database 550004
   * Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play
   * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
@@ -58,6 +60,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Made getID function required for library_item's
 * Update codeql-analysis.yml to v2
 * When streaming a Democratic or Random item, redirect to the result
+* Hide 'is_true' boxes on search rows (you can't change it so why show it?)
 
 ### Fixed
 
@@ -69,6 +72,8 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Sorting playlist, user and smartlist names in search rows
 * SQL in get_tags with catalog_filter is disabled
 * A lot of browse filters were missing for certain object types
+* Don't try to load the playlist ialog from the webplayer when you can't add things
+* When using random/Democratic play send the additional parameters to the actual media
 * Search
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
@@ -80,6 +85,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 
 ### Added
 
+* Api::stream add new type's `playlist` and `search` (Streams a random object from these lists)
 * advanced_search
   * Add `podcast` as a search type
     * Add rule `title`

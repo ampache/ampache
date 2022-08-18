@@ -45,6 +45,7 @@ final class StreamMethod
      *
      * Streams a given media file.
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
+     * Search and Playlist will only stream a random object not the whole thing
      *
      * @param array $input
      * id      = (string) $song_id|$podcast_episode_id
