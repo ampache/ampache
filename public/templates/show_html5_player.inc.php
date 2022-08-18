@@ -475,7 +475,7 @@ if (!$isVideo) {
     } ?>
                         </div>
                         <?php } ?>
-                    <?php if ($iframed) { ?>
+                    <?php if ($iframed && (!$isVideo && !$isRadio && !$isShare && !$isDemocratic && !$isRandom)) { ?>
                         <?php if (Access::check('interface', 25)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
