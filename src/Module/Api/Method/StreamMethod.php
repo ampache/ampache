@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -47,7 +48,7 @@ final class StreamMethod
      *
      * @param array $input
      * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song', 'podcast_episode', 'podcast'
+     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
      * bitrate = (integer) max bitrate for transcoding // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
@@ -93,6 +94,9 @@ final class StreamMethod
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        }
+        if ($type == 'search' || $type == 'playlist') {
+            $url   = Random::get_play_url($type, $object_id, $params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);
