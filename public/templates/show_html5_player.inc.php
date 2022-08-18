@@ -199,7 +199,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     }
 
                     <?php if (!$isVideo && !$isRadio && !$isShare) {
-                    if ($iframed) {
+                    if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) {
                         if (AmpConfig::get('sociable')) {
                             echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
                         }
