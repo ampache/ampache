@@ -468,14 +468,13 @@ if (!$isVideo) {
     } ?>
                         </div>
                     <?php } ?>
-                    <?php if ($iframed) { ?>
+                    <?php if ($iframed && (!$isRadio && !$isRandom && !$isDemocratic)) { ?>
                         <?php if (Access::check('interface', 25)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))) ?>
                                 </a>
                             </div>
-
                         <?php } ?>
                         <div id="slideshow" class="slideshow action_button">
                             <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))) ?></a>
