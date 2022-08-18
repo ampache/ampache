@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 $embed = $_REQUEST['embed'];
 
-$isShare = true;
+$isShare  = true;
 $playlist = $share->create_fake_playlist();
 
 require Ui::find_template('show_web_player.inc.php');
