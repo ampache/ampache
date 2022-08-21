@@ -247,7 +247,7 @@ class Query
             'category',
             'author',
             'time',
-            'pubDate',
+            'pubdate',
             'state',
             'random'
         )
@@ -2276,7 +2276,7 @@ class Query
                     case 'category':
                     case 'author':
                     case 'time':
-                    case 'pubDate':
+                    case 'pubdate':
                     case 'state':
                         $sql = "`podcast_episode`.`$field`";
                         break;

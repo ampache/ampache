@@ -57,7 +57,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
             <?php } ?>
-            <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubDate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
+            <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubdate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
             <th class="cel_state optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=state', T_('State'), 'podcast_episode_sort_state'); ?></th>
             <?php if ($show_ratings) {
         ++$thcount; ?>
