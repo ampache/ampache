@@ -15,7 +15,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 * Update Copyright notice to 2022
 * Added a new option 'Random Play' (shuffle) to playlists and smartlists
 * Add 'Recently Skipped' to user pages
-* Add Podcase Episodes to the browse pages and sidebar
+* Add Podcast Episodes to the browse pages and sidebar
 * Translate podcast episode state and some other missing ones
 * Allow using a smartplaylist in Democratic play
 * Allow podcast_episode table sort by `time` and `state`
