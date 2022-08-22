@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Update;
 
@@ -48,6 +49,16 @@ final class AdminUpdateDatabaseCommand extends Command
     {
         $interactor = $this->io();
         $execute    = $this->values()['execute'] === true;
+        /* HINT: Ampache version string (e.g. 5.4.0-release, develop) */
+        $interactor->info(
+            sprintf(T_('Ampache version: %s'), AmpConfig::get('version')),
+            true
+        );
+        /* HINT: config version string (e.g. 62) */
+        $interactor->info(
+            sprintf(T_('Config version: %s'), AmpConfig::get('int_config_version')),
+            true
+        );
         /* HINT: db version string (e.g. 520006) */
         $interactor->info(
             sprintf(T_('Database version: %s'), Update::get_version()),

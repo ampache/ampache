@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,43 +39,55 @@ $categories = Preference::get_categories(); ?>
     Ajax::end_container();
     echo "</li>";
 } ?>
-  <li><h4 class="header"><span class="sidebar-header-title"><?php echo $t_preferences; ?></span><?php echo Ui::get_icon('all', $t_expander, 'preferences', 'header-all ' . ((isset($_COOKIE['sb_preferences'])) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
-    <ul class="sb3" id="sb_preferences_sections">
+  <li>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo $t_preferences; ?></span>
+        <?php echo Ui::get_icon('all', $t_expander, 'preference_prefs', 'header-img ' . ((isset($_COOKIE['sb_preference_prefs'])) ? $_COOKIE['sb_preference_prefs'] : 'expanded')); ?>
+    </h4>
+    <ul class="sb3" id="sb_preference_prefs">
+<?php foreach ($categories as $name) {
+    if ($name == 'system') {
+        continue;
+    }
+    $f_name = ucfirst($name); ?>
+      <li id="sb_preference_prefs_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
 <?php
-    foreach ($categories as $name) {
-        if ($name == 'system') {
-            continue;
-        }
-        $f_name = ucfirst($name); ?>
-      <li id="sb_preferences_sections_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
-<?php
-    } ?>
-      <li id="sb_preferences_sections_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
+} ?>
+      <li id="sb_preference_prefs_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
     </ul>
   </li>
         <?php if (Access::check('interface', 50)) { ?>
     <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_home_playlist']) && $_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-    <ul class="sb3" id="sb_home_playlist">
-<li id="sb_preferences_sections_playlist"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span>
+        <?php echo Ui::get_icon('all', $t_expander, 'preference_playlist', 'header-img ' . ((isset($_COOKIE['sb_preference_playlist'])) ? $_COOKIE['sb_preference_playlist'] : 'expanded')); ?>
+    </h4>
+    <ul class="sb3" id="sb_preference_playlist">
+<li id="sb_preference_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
 </ul>
 <?php } ?>
 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
             <li>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Upload'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_upload_sections']) && $_COOKIE['sb_upload_sections'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="upload" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-    <ul class="sb3" id="sb_upload_sections">
-    <li id="sb_upload_sections_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload') ?></a></li>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Upload'); ?></span>
+        <?php echo Ui::get_icon('all', $t_expander, 'preference_upload', 'header-img ' . ((isset($_COOKIE['sb_preference_upload'])) ? $_COOKIE['sb_preference_upload'] : 'expanded')); ?>
+    </h4>
+    <ul class="sb3" id="sb_preference_upload">
+    <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload') ?></a></li>
     </li>
 </ul>
        <?php } ?>
 <?php if (!AmpConfig::get('simple_user_mode')) { ?>
-    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Help'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo (isset($_COOKIE['sb_help_sections']) && $_COOKIE['sb_help_sections'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="help" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
-    <ul class="sb3" id="sb_help_sections">
-        <li id="sb_help_sections_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
-        <li id="sb_help_sections_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
+    <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
+        <?php echo Ui::get_icon('all', $t_expander, 'preference_help', 'header-img ' . ((isset($_COOKIE['sb_preference_help'])) ? $_COOKIE['sb_preference_help'] : 'expanded')); ?>
+    </h4>
+    <ul class="sb3" id="sb_preference_help">
+        <li id="sb_preference_help_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
+        <li id="sb_preference_help_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
-            <li id="sb_help_sections_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
+            <li id="sb_preference_help_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
         <?php } ?>
     </ul>
 <?php } ?>

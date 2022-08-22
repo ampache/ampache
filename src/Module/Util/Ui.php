@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -186,6 +186,9 @@ class Ui implements UiInterface
      */
     public static function format_bytes($value, $precision = 2)
     {
+        if (!$value) {
+            return '';
+        }
         $pass = 0;
         while (strlen((string)floor($value)) > 3) {
             $value /= 1024;
@@ -759,6 +762,7 @@ class Ui implements UiInterface
             case 'album_group':
             case 'topmenu':
             case 'demo_clear_sessions':
+            case 'demo_use_search':
             case 'show_donate':
             case 'allow_upload':
             case 'upload_subdir':

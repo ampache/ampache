@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,7 +69,7 @@ $logic_operator = strtolower($logic_operator); ?>
 if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES));
     $mysearch->parse_rules(Search::clean_request($_REQUEST));
     $out = $mysearch->to_js();
 }

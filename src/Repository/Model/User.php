@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -160,6 +160,11 @@ class User extends database_object
     public $f_avatar_medium;
 
     /**
+     * @var int $catalog_filter_group;
+     */
+    public $catalog_filter_group;
+
+    /**
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
@@ -281,8 +286,8 @@ class User extends database_object
      * get_from_apikey
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
-     * @param string apikey
-     * @return User|null $user
+     * @param string $apikey
+     * @return User|null
      */
     public static function get_from_apikey($apikey)
     {
@@ -326,28 +331,40 @@ class User extends database_object
     } // id_from_email
 
     /**
+     * get_user_catalogs
+     * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return integer[]
+     */
+    public static function get_user_catalogs($userid)
+    {
+        if (parent::is_cached('user_catalog', $userid)) {
+            return parent::get_from_cache('user_catalog', $userid);
+        }
+
+        $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled` = 1 ORDER BY `catalog_filter_group_map`.`catalog_id`";
+        $db_results = Dba::read($sql, array($userid));
+
+        $catalogs = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $catalogs[] = (int)$row['catalog_id'];
+        }
+
+        parent::add_to_cache('user_catalog', $userid, $catalogs);
+
+        return $catalogs;
+    } // get_catalogs
+
+
+    /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]
      */
     public function get_catalogs()
     {
-        if (parent::is_cached('user_catalog', $this->id)) {
-            return parent::get_from_cache('user_catalog', $this->id);
-        }
-
-        $sql        = "SELECT * FROM `user_catalog` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $catalogs = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = (int)$row['catalog'];
-        }
-
-        parent::add_to_cache('user_catalog', $this->id, $catalogs);
-
-        return $catalogs;
+        return self::get_user_catalogs($this->id);
     } // get_catalogs
+
 
     /**
      * get_preferences
@@ -461,15 +478,12 @@ class User extends database_object
 
     /**
      * is_logged_in
-     * checks to see if $this user is logged in returns their current IP if they
-     * are logged in
+     * checks to see if $this user is logged in returns their current IP if they are logged in
      */
     public function is_logged_in()
     {
-        $username = Dba::escape($this->username);
-
-        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username' AND `expire` > " . time();
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`= ? AND `expire` > ?;";
+        $db_results = Dba::read($sql, array($this->username, time()));
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return $row['ip'] ?? null;
@@ -599,6 +613,7 @@ class User extends database_object
                 case 'website':
                 case 'state':
                 case 'city':
+                case 'catalog_filter_group':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -614,6 +629,20 @@ class User extends database_object
 
         return $this->id;
     }
+
+    /**
+     * update_catalog_filter_group
+     * updates their catalog filter
+     * @param $new_filter
+     */
+    public function update_catalog_filter_group($new_filter)
+    {
+        $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating catalog access group', 4);
+
+        Dba::write($sql, array($new_filter, $this->id));
+    } // update_catalog_filter_group
 
     /**
      * update_username
@@ -783,9 +812,9 @@ class User extends database_object
                 $enabled_sql = ($catalog_disable && $table !== 'podcast_episode')
                     ? " WHERE `$table`.`enabled`='1' AND"
                     : ' WHERE';
-                $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
-                $db_results  = Dba::read($sql);
-                $row         = Dba::fetch_row($db_results);
+                $sql        = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
+                $db_results = Dba::read($sql);
+                $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
                 $items += (int)($row[0] ?? 0);
                 $time += (int)($row[1] ?? 0);
@@ -882,8 +911,8 @@ class User extends database_object
     public function insert_ip_history()
     {
         $sip = (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+            ? filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)
+            : filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
         debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
 
         // Remove port information if any
@@ -937,6 +966,7 @@ class User extends database_object
         $website,
         $password,
         $access,
+        $catalog_filter_group = 0,
         $state = '',
         $city = '',
         $disabled = false,
@@ -952,9 +982,12 @@ class User extends database_object
         }
         $disabled = $disabled ? 1 : 0;
 
+        // Just in case a zero value slipped in from upper layers...
+        $catalog_filter_group = $catalog_filter_group ?? 0;
+
         /* Now Insert this new user */
-        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `create_date`";
-        $params = array($username, $disabled, $fullname, $email, $password, $access, time());
+        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_filter_group`, `create_date`";
+        $params = array($username, $disabled, $fullname, $email, $password, $access, $catalog_filter_group, time());
 
         if (!empty($website)) {
             $sql .= ", `website`";
@@ -969,7 +1002,7 @@ class User extends database_object
             $params[] = $city;
         }
 
-        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
 
         if (!empty($website)) {
             $sql .= ", ?";
@@ -1291,8 +1324,8 @@ class User extends database_object
     {
         if (!isset($this->f_name)) {
             $this->f_name = ($this->fullname_public)
-                ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-                : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                ? $this->fullname
+                : $this->username;
         }
 
         return $this->f_name;

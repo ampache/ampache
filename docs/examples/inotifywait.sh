@@ -50,7 +50,7 @@ inotifywait -m -r --event close_write --event moved_to --event create --event de
         do
             if [[ "$file" =~ .*$i$ ]]; then
                 echo "$file"
-                php /var/www/bin/cli run:updateCatalogFile -n music -f "$file" -cavg
+                php /var/www/bin/cli run:updateCatalogFile -n music -f "$file" -cage
             fi
         done
     done

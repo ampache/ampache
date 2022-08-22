@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,13 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\User;
 
 class WebPlayer
 {
@@ -60,6 +63,26 @@ class WebPlayer
     public static function is_playlist_video($playlist)
     {
         return (count($playlist->urls) > 0 && $playlist->urls[0]->type == "video");
+    }
+
+    /**
+     * Check if the playlist is a random playlist.
+     * @param Stream_Playlist $playlist
+     * @return boolean
+     */
+    public static function is_playlist_random($playlist)
+    {
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Random");
+    }
+
+    /**
+     * Check if the playlist is a democratic playlist.
+     * @param Stream_Playlist $playlist
+     * @return boolean
+     */
+    public static function is_playlist_democratic($playlist)
+    {
+        return (count($playlist->urls) > 0 && $playlist->urls[0]->title == "Democratic");
     }
 
     /**
@@ -112,20 +135,9 @@ class WebPlayer
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
-        } else {
-            if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-                $media = new Song_Preview($urlinfo['id']);
-            } else {
-                if (array_key_exists('demo_id', $urlinfo)) {
-                    $democratic = new Democratic($urlinfo['demo_id']);
-                    if ($democratic->id) {
-                        $song_id = $democratic->get_next_object();
-                        if ($song_id) {
-                            $media = new Song($song_id);
-                        }
-                    }
-                }
-            }
+        }
+        if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
+            $media = new Song_Preview($urlinfo['id']);
         }
 
         return $media;
@@ -289,6 +301,7 @@ class WebPlayer
             ? $url_data['type']
             : $item->type;
 
+        //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
             if ($url_data['type'] == 'song') {
                 // get replaygain from the song_data table
@@ -309,8 +322,6 @@ class WebPlayer
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
-
-        //$url .= "&content_length=required";
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
@@ -320,12 +331,21 @@ class WebPlayer
                 case 'democratic':
                     $regex =  "/demo_id=([0-9]*)/";
                     break;
+                case 'random':
+                    $regex =  "/random_id=([0-9]*)/";
+                    break;
                 default:
                     $regex =  "/" . $item->type . "=([0-9]*)/";
                     break;
             }
-            preg_match($regex, $item->info_url, $matches);
-            $json['media_id']   = $matches[1] ?? null;
+            if (!empty($item->info_url)) {
+                preg_match($regex, $item->info_url, $matches);
+                $json['media_id']   = $matches[1] ?? null;
+            }
+            if (!empty($url)) {
+                preg_match($regex, $item->url, $matches);
+                $json['media_id']   = $matches[1] ?? null;
+            }
             $json['media_type'] = $item->type;
         }
 
@@ -334,6 +354,7 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
+        //debug_event(__class__, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json);
     }

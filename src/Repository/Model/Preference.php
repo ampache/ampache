@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -81,6 +81,7 @@ class Preference extends database_object
         'daap_backend',
         'daap_pass',
         'demo_clear_sessions',
+        'demo_use_search',
         'direct_play_limit',
         'disabled_custom_metadata_fields',
         'disabled_custom_metadata_fields_input',
@@ -765,6 +766,7 @@ class Preference extends database_object
             'album_group' => T_('Album - Group multiple disks'),
             'topmenu' => T_('Top menu'),
             'demo_clear_sessions' => T_('Democratic - Clear votes for expired user sessions'),
+            'demo_use_search' => T_('Democratic - Use smartlists for base playlist'),
             'show_donate' => T_('Show donate button in footer'),
             'upload_catalog' => T_('Destination catalog'),
             'allow_upload' => T_('Allow user uploads'),

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,8 +46,7 @@ if (AmpConfig::get('geolocation')) { ?>
         $graph = new Graph();
         $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
-<?php
-    } ?>
+<?php } ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">

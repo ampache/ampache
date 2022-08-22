@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -175,25 +175,21 @@ class Catalog_Seafile extends Catalog
 
             return false;
         }
-
         if (!strlen($library_name)) {
             AmpError::add('general', T_('Seafile server library name is required'));
 
             return false;
         }
-
         if (!strlen($username)) {
             AmpError::add('general', T_('Seafile username is required'));
 
             return false;
         }
-
         if (!strlen($password)) {
             AmpError::add('general', T_('Seafile password is required'));
 
             return false;
         }
-
         if (!is_numeric($api_call_delay)) {
             AmpError::add('general', T_('API Call Delay must have a numeric value'));
 
@@ -202,8 +198,11 @@ class Catalog_Seafile extends Catalog
 
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
-
+            $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
+            Dba::write($sql, array($server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id));
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
+
+            return true;
         } catch (Exception $error) {
             /* HINT: exception error message */
             AmpError::add('general',
@@ -211,14 +210,7 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Exception while Authenticating: ' . $error->getMessage(), 2);
         }
 
-        if ($api_key == null) {
-            return false;
-        }
-
-        $sql = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id));
-
-        return true;
+        return false;
     }
 
     /**
@@ -561,7 +553,7 @@ class Catalog_Seafile extends Catalog
      */
     public function check_catalog_proc()
     {
-        return false;
+        return array();
     }
 
     /**

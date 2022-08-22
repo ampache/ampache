@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -124,7 +125,9 @@ class Update
             'deleted_video' => "CREATE TABLE IF NOT EXISTS `deleted_video` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
             'deleted_podcast_episode' => "CREATE TABLE IF NOT EXISTS `deleted_podcast_episode` ( `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `addition_time` int(11) UNSIGNED NOT NULL, `delete_time` int(11) UNSIGNED NOT NULL, `title` varchar(255) COLLATE $collation DEFAULT NULL, `file` varchar(4096) COLLATE $collation DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `podcast` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
             'artist_map' => "CREATE TABLE IF NOT EXISTS `artist_map` ( `artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`,`object_type`,`artist_id`), KEY `object_id_index` (`object_id`), KEY `artist_id_index` (`artist_id`), KEY `artist_id_type_index` (`artist_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
-            'album_map' => "CREATE TABLE IF NOT EXISTS `album_map` ( `album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`,`object_type`,`album_id`), KEY `object_id_index` (`object_id`), KEY `album_id_type_index` (`album_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
+            'album_map' => "CREATE TABLE IF NOT EXISTS `album_map` ( `album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`,`object_type`,`album_id`), KEY `object_id_index` (`object_id`), KEY `album_id_type_index` (`album_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
+            'catalog_filter_group' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT'); UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT'; ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;",
+            'catalog_filter_group_map' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;"
         );
         $versions   = array(
             'image' => 360003,
@@ -160,7 +163,9 @@ class Update
             'deleted_video' => 500013,
             'deleted_podcast_episode' => 500013,
             'artist_map' => 530000,
-            'album_map' => 530001
+            'album_map' => 530001,
+            'catalog_filter_group' => 550001,
+            'catalog_filter_group_map' => 550001
         );
         foreach ($tables as $table_name => $table_sql) {
             $sql        = "DESCRIBE `$table_name`;";
@@ -752,6 +757,18 @@ class Update
         $update_string = "* Index `object_type` with `date` in `object_count` table";
         $version[]     = array('version' => '540002', 'description' => $update_string);
 
+        $update_string = "* Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups<br />* Add column `catalog_filter_group` to `user` table to assign a filter group";
+        $version[]     = array('version' => '550001', 'description' => $update_string);
+
+        $update_string = "* Migrate catalog `filter_user` settings to the `catalog_filter_group` table<br>* Assign all public catalogs to the DEFAULT group<br>* Drop table `user_catalog`<br>* Remove `filter_user` from the `catalog` table<br><br><br>**IMPORTANT UPDATE NOTES** Any user that has a private catalog will have their own filter group created which includes all public catalogs";
+        $version[]     = array('version' => '550002', 'description' => $update_string);
+
+        $update_string = "* Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play";
+        $version[]     = array('version' => '550003', 'description' => $update_string);
+
+        $update_string = "* Make `demo_use_search`a system preference correctly";
+        $version[]     = array('version' => '550004', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1229,11 +1246,11 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `artist` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `album` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `song` SET `mbid` = null WHERE `mbid` = ''";
+        $sql = "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4480,6 +4497,138 @@ class Update
         $sql    = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_550001
+     *
+     * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
+     * Add column `catalog_filter_group` to `user` table to assign a filter group
+     * Create a DEFAULT group
+     */
+    public static function update_550001(): bool
+    {
+        $retval     = true;
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        // Add the new catalog_filter_group table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default group (autoincrement starts at 1 so force it to be 0)
+        $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the new catalog_filter_group_map table
+        $sql = "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        // Add the default access group to the user table
+        $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_550002
+     *
+     * Migrate catalog `filter_user` settings to catalog_filter groups
+     * Assign all public catalogs to the DEFAULT group
+     * Drop table `user_catalog`
+     * Remove `filter_user` from the `catalog` table
+     */
+    public static function update_550002(): bool
+    {
+        $retval = true;
+
+        // Copy existing filters into individual groups for each user. (if a user only has access to public catalogs they are given the default list)
+        $sql        = "SELECT `id`, `username` FROM `user`;";
+        $db_results = Dba::read($sql);
+        $user_list  = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $user_list[$row['id']] = $row['username'];
+        }
+        // If the user had a private catalog, create an individual group for them using the current filter and public catalogs.
+        foreach ($user_list as $key => $value) {
+            $group_id   = 0;
+            $sql        = 'SELECT `filter_user` FROM `catalog` WHERE `filter_user` = ?;';
+            $db_results = Dba::read($sql, array($key));
+            if (Dba::num_rows($db_results)) {
+                $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('" . Dba::escape($value) . "');";
+                Dba::write($sql);
+                $group_id = (int)Dba::insert_id();
+            }
+            if ($group_id > 0) {
+                $sql        = "SELECT `id`, `filter_user` FROM `catalog`;";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $catalog = $row['id'];
+                    $enabled = ($row['filter_user'] == 0 || $row['filter_user'] == $key)
+                        ? 1
+                        : 0;
+                    $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ($group_id, $catalog, $enabled);";
+                    $retval &= (Dba::write($sql) !== false);
+                }
+                $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
+                Dba::write($sql, array($group_id, $key));
+            }
+        }
+
+        // Add all public catalogs in the DEFAULT profile.
+        $sql        = "SELECT `id` FROM `catalog` WHERE `filter_user` = 0;";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $catalog = (int)$row['id'];
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);";
+            $retval &= (Dba::write($sql) !== false);
+        }
+        $sql = "DROP TABLE IF EXISTS `user_catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+
+        if ($retval) {
+            // Drop filter_user but only if the migration has worked
+            $sql = "ALTER TABLE `catalog` DROP COLUMN `filter_user`;";
+            Dba::write($sql);
+        }
+
+        return $retval;
+    }
+
+    /** update_550003
+     *
+     * Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play
+     */
+    public static function update_550003(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_550004
+     *
+     * Make `demo_use_search`a system preference correctly
+     */
+    public static function update_550004(): bool
+    {
+        $retval = true;
+
+        // Update previous update preference
+        $sql = "UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search'";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

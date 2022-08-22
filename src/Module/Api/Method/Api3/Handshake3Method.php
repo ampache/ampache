@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class Handshake3Method
      *
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
-     * @param array
+     * @param array $input
      * @return boolean
      */
     public static function handshake(array $input): bool
@@ -88,7 +88,7 @@ final class Handshake3Method
         }
 
         // Log this attempt
-        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: $username ($user_id)", 1);
+        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: " . $client->username . " ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;

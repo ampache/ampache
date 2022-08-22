@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,8 +32,7 @@ if (!is_array($theme_css_base)) {
 }
 foreach ($theme_css_base as $css_base) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>" />
-<?php
-} ?>
+<?php } ?>
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print" />

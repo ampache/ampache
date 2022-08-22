@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,8 @@ namespace Ampache\Module\Application\ShowGet;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,14 +41,18 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
+    private RequestParserInterface $requestParser;
+
     private ResponseFactoryInterface $responseFactory;
 
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
     }
@@ -56,19 +62,19 @@ final class ShowAction implements ApplicationActionInterface
         $content = '';
 
         if (array_key_exists('param_name', $_REQUEST)) {
-            $name = (string) scrub_in(filter_var($_REQUEST['param_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $name = $this->requestParser->getFromRequest('param_name');
             if (array_key_exists($name, $_REQUEST)) {
                 $content .= sprintf(
                     '%s: %s',
                     $name,
-                    (string) scrub_in(filter_var($_REQUEST['name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))
+                    $this->requestParser->getFromRequest('name')
                 );
             }
         }
 
         if (array_key_exists('error', $_REQUEST)) {
-            $error             = (string) scrub_in(filter_var($_REQUEST['error'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-            $error_description = (string) scrub_in(filter_var($_REQUEST['error_description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+            $error             = $this->requestParser->getFromRequest('error');
+            $error_description = $this->requestParser->getFromRequest('error_description');
             $content .= sprintf('%s error: %s', $error, $error_description);
         }
 

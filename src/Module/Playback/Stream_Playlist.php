@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -120,6 +120,7 @@ class Stream_Playlist
     {
         debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
         $sql         = '';
+        $fields      = array();
         $values      = array();
         $holders_arr = array();
 
@@ -315,11 +316,8 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
                     break;
-                case 'random':
-                    $url['title'] = 'Random URL';
-                    break;
                 default:
-                    $url['title'] = Stream_Url::get_title($url);
+                    $url['title'] = Stream_Url::get_title($url['url']);
                     $url['time']  = -1;
                     break;
             }

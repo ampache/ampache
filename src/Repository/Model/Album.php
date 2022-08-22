@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -679,10 +679,10 @@ class Album extends database_object implements library_item
     {
         // return the basic name without all the wild formatting
         if ($simple) {
-            return trim(trim($this->prefix . ' ' . trim($this->name)));
+            return trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
         }
         if ($force_year) {
-            $f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            $f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
             if ($this->year > 0) {
                 $f_name .= " (" . $this->year . ")";
             }
@@ -695,7 +695,7 @@ class Album extends database_object implements library_item
         }
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
-            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            $this->f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
             // Album pages should show a year and looking if we need to display the release year
             if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year && $this->year > 0) {
                 $this->f_name .= " (" . $this->year . ")";

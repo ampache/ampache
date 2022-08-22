@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -118,7 +118,8 @@ if (AmpConfig::get('sociable')) {
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
-            <li class="tab_active"><a href="#recentlyplayed"><?php echo T_('Recently Played'); ?></a></li>
+            <li class="tab_active"><a href="#recently_played"><?php echo T_('Recently Played'); ?></a></li>
+            <li ><a href="#recently_skipped"><?php echo T_('Recently Skipped'); ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
             <?php } ?>
@@ -131,7 +132,7 @@ if (AmpConfig::get('sociable')) {
         </ul>
     </div>
     <div id="tabs_content">
-        <div id="recentlyplayed" class="tab_content" style="display: block;">
+        <div id="recently_played" class="tab_content" style="display: block;">
         <?php $current_list = Tmp_Playlist::get_from_username($client->username);
         if ($current_list) {
             $tmp_playlist = new Tmp_Playlist($current_list);
@@ -158,8 +159,16 @@ if (AmpConfig::get('sociable')) {
         }
             $data = Song::get_recently_played($client->id);
             Song::build_cache(array_keys($data));
-            $user_id = $client->id;
+            $user_id   = $client->id;
+            $ajax_page = 'stats';
             require Ui::find_template('show_recently_played.inc.php'); ?>
+        </div>
+        <div id="recently_skipped" class="tab_content">
+            <?php $data = Song::get_recently_played($client->id, 'skip');
+            Song::build_cache(array_keys($data));
+            $user_id   = $client->id;
+            $ajax_page = 'stats';
+            require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
         <?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">

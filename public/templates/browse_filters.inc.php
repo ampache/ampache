@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\User;
 
 /** @var Browse $browse */
 /** @var array $object_ids */
@@ -42,25 +43,21 @@ if (!Core::is_session_started()) {
             <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php $browse->set_catalog($_SESSION['catalog']);
     echo scrub_out($browse->get_filter('starts_with')); ?>" onKeyUp="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with'); ?>', 'multi_alpha_filter');">
         </form>
-    <?php
-} // end if alpha_match?>
+    <?php } ?>
     <?php if (in_array('minimum_count', $allowed_filters)) { ?>
         <input id="mincountCB" type="checkbox" value="1" />
         <label id="mincountLabel" for="mincountCB"><?php echo T_('Minimum Count'); ?></label><br />
         <?php echo Ajax::observe('mincountCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=min_count&value=1', '')); ?>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (in_array('rated', $allowed_filters)) { ?>
         <input id="ratedCB" type="checkbox" value="1" />
         <label id="ratedLabel" for="ratedCB"><?php echo T_('Rated'); ?></label><br />
         <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1', '')); ?>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (in_array('unplayed', $allowed_filters)) { ?>
         <input id="unplayedCB" type="checkbox" <?php echo $string = ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
         <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (in_array('playlist_type', $allowed_filters)) { ?>
         <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? 'checked="checked"' : ''; ?>/>
         <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists'); ?></label><br />
@@ -79,18 +76,23 @@ if (!Core::is_session_started()) {
         <input id="typeArtistRadio" type="radio" name="object_type" value="1" />
         <label id="typeArtistLabel" for="typeArtistRadio"><?php echo T_('Artist'); ?></label><br />
         <?php echo Ajax::observe('typeArtistRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist', '')); ?>
-    <?php
-    } ?>
+    <?php } ?>
 
     <?php if (in_array('catalog', $allowed_filters)) { ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $sql = 'SELECT `id`, `name` FROM `catalog`';
-        $db_results        = Dba::read($sql);
-        while ($data = Dba::fetch_assoc($db_results)) {
-            $results[] = $data;
+                <?php
+        $results  = array();
+        $catalogs = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+        if (!empty($catalogs)) {
+            // Only show the catalogs this user is allowed to access
+            $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
+            $db_results        = Dba::read($sql);
+            while ($data = Dba::fetch_assoc($db_results)) {
+                $results[] = $data;
+            }
         }
 
         foreach ($results as $entries) {
@@ -104,8 +106,7 @@ if (!Core::is_session_started()) {
             </select>
         <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id, 'catalog_select', 'catalog_choice')); ?>
         </form>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (in_array('show_art', $allowed_filters)) { ?>
         <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" checked="checked"/>
         <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, '')); ?>

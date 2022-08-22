@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,20 +66,17 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id, 'play', T_('Play All'), 'directplay_full_' . $podcast->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
                 <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&playnext=true', 'play_next', T_('Play All Next'), 'addnext_podcast_' . $podcast->id); ?>
             </li>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
@@ -88,15 +85,14 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
                     <?php echo T_('Graphs'); ?>
                 </a>
             </li>
-        <?php
-        } ?>
+        <?php } ?>
     <?php if (AmpConfig::get('use_rss')) {
-            ?>
+        ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
-        } ?>
+    } ?>
         <li>
             <a href="<?php echo $podcast->website; ?>" target="_blank">
                 <?php echo Ui::get_icon('link', T_('Website')); ?>
@@ -112,8 +108,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'), 'sync_podcast_' . $podcast->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 75)) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
@@ -121,8 +116,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

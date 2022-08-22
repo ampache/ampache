@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -65,8 +65,7 @@ $all          = T_('All');
                     <option value="rpc"><?php echo $apirpc; ?></option>
                     <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
-        <?php
-} else {
+        <?php } else {
     if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">

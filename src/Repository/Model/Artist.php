@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -226,7 +226,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     public function isNew(): bool
@@ -547,7 +547,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         if (!isset($this->f_name)) {
             // set the full name
-            $this->f_name = trim(trim($this->prefix . ' ' . trim($this->name)));
+            $this->f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
         }
 
         return $this->f_name;
@@ -1006,10 +1006,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                     Song::update_utime($song_id, $time);
+                    Stats::migrate('artist', $this->id, $artist_id, $song_id);
                 }
                 $updated    = true;
                 $current_id = $artist_id;
-                Stats::migrate('artist', $this->id, $artist_id, $song_id);
                 Useractivity::migrate('artist', $this->id, $artist_id);
                 Recommendation::migrate('artist', $this->id);
                 Share::migrate('artist', $this->id, $artist_id);

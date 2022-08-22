@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -32,11 +33,11 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var array $object_ids */
 
 $web_path     = AmpConfig::get('web_path');
-$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
 $random_count = $_POST['random'] ?? 1;
-$random_type  = (in_array($get_type, array('song', 'album', 'artist', 'video')))
+$random_type  = (in_array($get_type, Random::VALID_TYPES))
     ? $get_type
     : null;
 if (!$random_type) {

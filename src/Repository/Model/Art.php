@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ class Art extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -182,10 +182,11 @@ class Art extends database_object
 
             return false;
         }
+        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
 
         // Check image size doesn't exceed the limit
-        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
-            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+        if ($max_upload_size > 0 && strlen((string) $source) > $max_upload_size) {
+            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . $max_upload_size . ').', 1);
 
             return false;
         }

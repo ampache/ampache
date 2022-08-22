@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,23 +49,21 @@ use Ampache\Module\Util\Ui;
         </tr>
     </thead>
     <tbody>
-        <?php
-        foreach ($object_ids as $channel_id) {
-            $libitem = new Channel($channel_id);
-            $libitem->format(); ?>
+        <?php foreach ($object_ids as $channel_id) {
+    $libitem = new Channel($channel_id);
+    $libitem->format(); ?>
         <tr id="channel_row_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_channel_row.inc.php'); ?>
         </tr>
         <?php
-        } ?>
+} ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="13"><span class="nodata"><?php echo T_('No channel found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
 </table>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+        require Ui::find_template('list_header.inc.php');
+    } ?>

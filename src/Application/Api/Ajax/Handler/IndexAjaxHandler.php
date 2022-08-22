@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
@@ -52,7 +51,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     private RequestParserInterface $requestParser;
 
-    private ArtCollectorInterface $artCollector;
 
     private SlideshowInterface $slideshow;
 
@@ -68,7 +66,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
@@ -77,7 +74,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         VideoRepositoryInterface $videoRepository
     ) {
         $this->requestParser    = $requestParser;
-        $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
         $this->albumRepository  = $albumRepository;
         $this->labelRepository  = $labelRepository;
@@ -90,8 +86,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $moment  = (int) AmpConfig::get('of_the_moment');
         $user    = Core::get_global('user');
+        $moment  = (int) AmpConfig::get('of_the_moment');
         // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
             $moment = 6;
@@ -266,7 +262,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = $this->requestParser->getFromRequest('year');
 
-                    if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
+                    if (!$this->wantedRepository->find($mbid, $user->id)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -279,12 +275,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
-                    $mbid = $this->requestParser->getFromRequest('mbid');
+                    $mbid    = $this->requestParser->getFromRequest('mbid');
+                    $user_id = $user->has_access('75') ? null : $user->id;
+                    $walbum  = new Wanted(Wanted::get_wanted($mbid));
 
-                    $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
-
-                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
+                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $user_id);
                     ob_start();
                     $walbum->accepted = false;
                     $walbum->id       = 0;
@@ -303,15 +298,16 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['wanted_action_' . $mbid] = ob_get_clean();
                 }
                 break;
-            case 'delete_activity':
+            case 'delete_play':
                 Stats::delete((int)$_REQUEST['activity_id']);
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $data = Song::get_recently_played();
+                $user_id   = $user->id ?? -1;
+                $data      = Song::get_recently_played($user_id);
+                $ajax_page = 'index';
                 Song::build_cache(array_keys($data));
-                $user_id = $user->id ?? -1;
                 require_once Ui::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -320,9 +316,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $data = Song::get_recently_played();
+                $user_id   = $user->id ?? -1;
+                $data      = Song::get_recently_played();
+                $ajax_page = 'index';
                 Song::build_cache(array_keys($data));
-                $user_id = $user->id ?? -1;
                 require_once Ui::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;

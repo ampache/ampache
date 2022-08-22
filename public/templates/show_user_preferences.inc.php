@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,8 +54,7 @@ use Ampache\Module\Util\Ui;
                         <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
-<?php
-} // End foreach ($preferences['prefs'] as $pref)?>
+<?php } ?>
 <tr>
     <td>
     <div class="formValidation">

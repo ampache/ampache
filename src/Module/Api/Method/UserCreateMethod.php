@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,13 +61,14 @@ final class UserCreateMethod
         if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
-        $username = $input['username'];
-        $fullname = $input['fullname'] ?? $username;
-        $email    = urldecode($input['email']);
-        $password = $input['password'];
-        $disable  = (bool)($input['disable'] ?? false);
-        $access   = 25;
-        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+        $username             = $input['username'];
+        $fullname             = $input['fullname'] ?? $username;
+        $email                = urldecode($input['email']);
+        $password             = $input['password'];
+        $disable              = (bool)($input['disable'] ?? false);
+        $access               = 25;
+        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {
             Api::message('successfully created: ' . $username, $input['api_format']);

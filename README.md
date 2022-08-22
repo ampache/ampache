@@ -8,11 +8,11 @@
 
 ## News
 
-This cycle we have added support for multiple Album and Song artists.
+Private catalogs have been given a lot of love and the update has now merged into develop.
 
-This allows multiple artists to be part of a single song/album object and is created from file tags.
+This feature will be released in Ampache 5.5.0 and will allow you to assign a catalog to multiple users instead of just one.
 
-Check out the [wiki](https://github.com/ampache/ampache/wiki/multi-artist) for more information about this feature.
+Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) for more information about this feature.
 
 
 The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.

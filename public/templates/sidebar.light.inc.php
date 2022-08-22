@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,12 +35,10 @@ use Ampache\Module\Util\Ui;
     <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres ?></a></li>
     <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
-    <?php
-} ?>
+    <?php } ?>
     <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
-    <?php
-    } ?>
+    <?php } ?>
     <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
     <?php } ?>

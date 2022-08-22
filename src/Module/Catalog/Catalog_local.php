@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -590,8 +590,8 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        /** @var Album|Video $media_type */
-        foreach (array(Video::class, Album::class) as $media_type) {
+        /** @var Album|Video|Podcast_Episode $media_type */
+        foreach (array(Video::class, Album::class, Podcast_Episode::class) as $media_type) {
             $type  = ObjectTypeToClassNameMapper::reverseMap($media_type);
             $total = $stats[$type];
             if ($total == 0) {
@@ -629,14 +629,23 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql = ($tableName == 'album')
-            ? "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size"
-            : "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `min_update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+        switch ($tableName) {
+            case 'album':
+                $sql = "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size";
+                break;
+            case 'podcast_episode':
+                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->id . " ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
+                break;
+            case 'video':
+            default:
+                $sql = "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . $this->id . " AND `$tableName`.`update_time` < `catalog`.`last_update` ORDER BY `min_update_time` DESC, `$tableName`.`file` LIMIT $count, $chunk_size";
+                break;
+        }
         $db_results = Dba::read($sql);
 
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
 
-        if (AmpConfig::get('memory_cache')) {
+        if (AmpConfig::get('memory_cache') && $tableName !== 'podcast_episode') {
             $media_ids = array();
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
@@ -645,7 +654,7 @@ class Catalog_local extends Catalog
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
-        $verify_by_time = AmpConfig::get('catalog_verify_by_time');
+        $verify_by_time = AmpConfig::get('catalog_verify_by_time', false) && $tableName !== 'podcast_episode';
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
@@ -1127,7 +1136,7 @@ class Catalog_local extends Catalog
             AmpError::add('general', T_('Catalog root unreadable, stopping check'));
             echo AmpError::display('general');
 
-            return false;
+            return array();
         }
 
         $missing     = array();

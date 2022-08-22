@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -123,6 +123,9 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
     <?php } ?>
+        <li>
+        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+        </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
         </li>

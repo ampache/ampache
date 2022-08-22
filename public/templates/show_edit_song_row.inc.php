@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,8 +63,7 @@ use Ampache\Module\Api\Ajax;
                         </div>
                     </td>
                 </tr>
-                <?php
-                } ?>
+                <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
                 <td><input type="text" name="track" value="<?php echo scrub_out($libitem->track); ?>" /></td>
@@ -112,8 +111,7 @@ use Ampache\Module\Api\Ajax;
                             </div>
                         </td>
                     </tr>
-                    <?php
-                } ?>
+                    <?php } ?>
         </table>
         <?php if (Song::isCustomMetadataEnabled()): ?>
             <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -73,8 +73,7 @@ if ($is_mashup) {
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
-    <?php
-    } ?>
+    <?php } ?>
     </span>
 </td>
 <?php if (!$is_table) { ?>
@@ -96,16 +95,13 @@ if ($is_mashup) {
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
                     <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
                 </span>
-            <?php
-            } ?>
+            <?php } ?>
         </td>
-    <?php
-    } ?>
+    <?php } ?>
 <td class="cel_action">
     <?php if (Access::check_function('download') && !empty($libitem->file)) { ?>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
-        <?php
-} ?>
+        <?php } ?>
 <?php
     if (Access::check('interface', 50)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
@@ -120,6 +116,5 @@ if ($is_mashup) {
     <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
-    <?php
-    } ?>
+    <?php } ?>
 </td>

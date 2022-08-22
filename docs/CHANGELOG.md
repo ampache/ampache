@@ -1,5 +1,125 @@
 # CHANGELOG
 
+## Ampache 5.5.0
+
+Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
+
+Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) for more information about this feature.
+
+**NOTE** Any user that has a private catalog will have their own filter group created which includes all public catalogs
+
+PHP8.1 has now been fixed up completely and is now fully supported.
+
+### Added
+
+* Update Copyright notice to 2022
+* Added a new option 'Random Play' (shuffle) to playlists and smartlists
+* Add 'Recently Skipped' to user pages
+* Add Podcast Episodes to the browse pages and sidebar
+* Translate podcast episode state and some other missing ones
+* Allow using a smartplaylist in Democratic play
+* Allow podcast_episode table sort by `time` and `state`
+* Allow podcast table sort by `website` and `episodes`
+* Database 550004
+  * Add system preference `demo_use_search`, Use smartlists for base playlist in Democratic play
+  * Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups
+  * Add column `catalog_filter_group` to `user` table to assign a filter group
+  * Migrate catalog `filter_user` settings to the `catalog_filter_group` table
+  * Assign all public catalogs to the DEFAULT group
+  * Drop table `user_catalog`
+  * Remove `filter_user` from the `catalog` table
+* Search
+  * Added more missing groups to search type lists
+  * Added missing `song` (was `song_title`) to album searches
+  * Add `podcast` as a search type
+    * Add rule `title`
+    * Add rule `podcast_episode` (Search by podcast episode name)
+    * Add rule `time` (Episode length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Episode Publication Date)
+  * Add `podcast_episode` as a search type
+    * Add rule `title`
+    * Add rule `podcast` (Search by podcast name)
+    * Add rule `time` (Length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Publication Date)
+  * Add `genre` as a search type
+    * Add rule `title`
+* CLI
+  * Add verify for podcast catalogs (fix time and size from tags)
+
+### Changed
+
+* Private catalogs have been migrated into [Catalog filters](https://github.com/ampache/ampache/wiki/catalog-filters)
+* Interface cookies for the sidebar state have new names matching their page and group
+* Made getID function required for library_item's
+* Update codeql-analysis.yml to v2
+* When streaming a Democratic or Random item, redirect to the result
+* Hide 'is_true' boxes on search rows (you can't change it so why show it?)
+* Hide action buttons from random and demo webplayer lists
+
+### Fixed
+
+* The cookies for the interface sidebar had multiple issues holding and restoring status
+* Removed **A LOT** of FILTER_SANITIZE_STRING from code for PHP8.1
+* Errors on empty values when loading the UI rows
+* Lots of docstring and code issues
+* Fixed up deleting plays (and now skips) on the user pages
+* Sorting playlist, user and smartlist names in search rows
+* SQL in get_tags when catalog_filter is disabled
+* A lot of browse filters were missing for certain object types
+* Don't try to load the playlist dialog from the webplayer when you can't add things
+* When using random/Democratic play send the additional parameters to the actual media
+* Respect play urls with transcode_to instead of format
+* Updated example `docs/examples/inotifywait.sh`
+* Podcast_episode browse may sent a camel case argument
+* Null max_upload_size could still be counted as a limit
+* Search
+  * SQL might have connected AND and OR incorrectly
+  * Metadata search might have badly parsed input
+  * Added aliases for some of the confusing search types
+* SubSonic
+  * Checking parameters might return the error AND the empty response
+
+## API 5.5.0
+
+This will likely be the last 5.x API release. API6 will be a continuation of API5 and not be a significant change like the 4->5 transition.
+
+### Added
+
+* Api::stream add new types `playlist` and `search` (Streams a random object from these lists)
+* Api::download add new types `playlist` and `search`
+* advanced_search
+  * Add `podcast` as a search type
+    * Add rule `title`
+    * Add rule `podcast_episode` (Search by podcast episode name)
+    * Add rule `time` (Episode length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Episode Publication Date)
+  * Add `podcast_episode` as a search type
+    * Add rule `title`
+    * Add rule `podcast` (Search by podcast name)
+    * Add rule `time` (Length in minutes)
+    * Add rule `state` (Completed, Pending Skipped)
+    * Add rule `file`
+    * Add rule `added`
+    * Add rule `pubdate` (Publication Date)
+  * Add `genre` as a search type
+    * Add rule `title`
+
+### Fixed
+
+* API4::get_indexes podcast_episode was encoding into the API5 object
+* API4::share_create was unable to share when using lowercase types
+* advanced_search
+  * Added missing `song` (was `song_title`) to album searches
+
 ## Ampache 5.4.1-release
 
 ### Added
@@ -58,7 +178,7 @@
   * New argument for cleanup:sortSongs `-f|--files` Rename files and keep them in the current folder
   * New argument for cleanup:sortSongs `-l|--limit` Limit how many moves to allow before stopping
   * New argument for cleanup:sortSongs `[catalogName]` Name of Catalog (optional)
-* Database 540002:
+* Database 540002
   * Index `title` with `enabled` on `song` table to speed up searching
   * Index `album` table columns; `catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`
   * Index `object_type` with `date` in `object_count` table
@@ -223,7 +343,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Config version 61
   * Add disable_xframe_sameorigin (allow disabling "X-Frame-Options: SAMEORIGIN")
   * Disable catalog_verify_by_time by default
-* Database 530016:
+* Database 530016
   * Create `artist_map` table and fill it with data
   * Create `album_map` table and fill it with data
   * Use `song_count` & `artist_count` using `album_map`
@@ -241,7 +361,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
   * Use a unique index on `object_count`
   * Compact `cache_object_count`, `cache_object_count_run` columns
   * Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links
-* search:
+* Search
   * Add `songrating` to album search (My Rating (Song))
   * Add `songrating` (My Rating (Song)) and `albumrating` (My Rating (Album)) to artist search
   * Allow empty/null searches for all mbid searches
@@ -266,12 +386,12 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * jPlayer (Webplayer):
   * Shuffle now follows the currently playing track (If playing)
   * Shuffle also does not track the old playlist so you can't undo a shuffle
-* Subsonic:
+* Subsonic
   * Check for art instead of always sending an art attribute
 
 ### Removed
 
-* search:
+* Search
   * removed mbid group sql from `possible_duplicate` and `possible_duplicate_album`
 
 ### Fixed
@@ -307,10 +427,10 @@ There have been a few fixes and changes to the module to make the webplayer a lo
   * Fixed moving items in the playlist
   * Fixed adding after the current playing track
   * Fixed logic behind the index and order between the HTML and the JS lists
-* Search:
+* Search
   * played search for album and artist was including your user in the results
   * other_user artist search sql
-* Subsonic:
+* Subsonic
   * Artist was missing starred status
 
 ## API 5.3.0
@@ -339,7 +459,7 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Improve description of rss feed to make each play more unique
 * Wait 30 minutes between catalog updates before running update_counts
 * On database connection failure, go to test.php
-* Search:
+* Search
   * Added no_tag as a possible search item (song, album, artist)
   * Document the alias names of search rules (docs/API-advanced-search.md)
   * Add playlist and playlist_name search to artist types
@@ -379,9 +499,9 @@ There have been a few fixes and changes to the module to make the webplayer a lo
 * Respect sidebar_light preference when no cookie is present
 * Don't try to create users that already exist
 * Add/Edit catalogs in the UI missing filter_user
-* Search:
+* Search
   * possible_duplicate was grouping too much together
-* Subsonic:
+* Subsonic
   * Jukeboxcontrol didn't send an index to the client
 
 ## API 5.2.1
@@ -431,7 +551,7 @@ API3 is not recommended for use outside of running old applications and it is re
 * Config version 59
   * Removed overwrite_tags (It doesn't do anything)
   * playlist_art now true by default
-* Database 520005:
+* Database 520005
   * Make sure preference names are always unique
   * Add ui options ('api_enable_3', 'api_enable_4', 'api_enable_5') to enable/disable specific API versions
   * Add ui option ('api_force_version') to force a specific API response (even if that version is disabled)
@@ -516,7 +636,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Send the user to an error page when the config wasn't written
 * Config version 58
   * Removed subsonic_stream_scrobble
-* Database 510005:
+* Database 510005
   * Add `subsonic_always_download` to preferences
 
 ### Changed
@@ -596,7 +716,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * Config version 57
 * NEW config options
   * allow_upload_scripts: Allow or disallow upload scripts on the server
-* Database 510004:
+* Database 510004
   * Add `podcast` to object_count table
   * Add `podcast` to cache_object_count table
   * Add `live_stream` to the rating table
@@ -764,7 +884,7 @@ If you want to keep utf8 make sure you set it before running updates.
   * Add 'favorite_album', 'favorite_artist' to song search
   * Add 'release_status' to album search
   * Add 1, 5 and 10 to the Maximum Results limit
-* Database 500015:
+* Database 500015
   * Add `song_count`, `album_count`, `album_group_count` to artist table
   * Add `release_status`, `addition_time`, `catalog`, `song_count`, `artist_count` to album table
   * Add `mbid`, `country`, `active` to label table
@@ -978,7 +1098,7 @@ This version of the API is the first semantic version. "5.0.0"
 * SQL query in random::advanced_sql was ambiguous
 * Filtering random and search page type element
 * NowPlaying stats would be overwritten when they didn't need to be
-* SubSonic:
+* Subsonic
   * getNowPlaying was unable to return playing media or the correct time
   * createShare would not set the object_id correctly and ignored expires value
 
@@ -1059,7 +1179,7 @@ This version of the API is the first semantic version. "5.0.0"
 * Album::get_random_songs not returning id's
 * Bookmark::get_bookmarks typo for get_bookmark_ids
 * Sorting album browses by artist name could fail with mysql
-* SubSonic: getPlaylists should always send a user
+* Subsonic getPlaylists should always send a user
 * Album browsing SQL didn't include Artist name in grouping
 * CVE-2021-21399: Unauthenticated SubSonic backend access in Ampache
 
@@ -1341,12 +1461,12 @@ There also a few API changes to enable a bit better control for older clients.
 
 ### Added
 
-* Subsonic: Generate errors for objects missing art
+* Subsonic Generate errors for objects missing art
 
 ### Changed
 
 * Don't mark short songs as skipped
-* Subsonic: Stop converting strings to ints in JSON responses
+* Subsonic Stop converting strings to ints in JSON responses
 
 ### Fixed
 
@@ -1354,8 +1474,8 @@ There also a few API changes to enable a bit better control for older clients.
 * Workaround null values for new columns in search table
 * Check release_type length before inserting into the database
 * Ensure Album Artist is set correctly on songs
-* Subsonic: Fix callbacks for similarSongs2 and artistInfo2
-* Subsonic: getCoverArt fixes
+* Subsonic Fix callbacks for similarSongs2 and artistInfo2
+* Subsonic getCoverArt fixes
 
 ### API 4.2.3
 
@@ -1449,7 +1569,7 @@ Minor bugfixes
 
 ### Deprecated
 
-* Search rules 'has image','image height', 'image width', 'filename'. (Removed in Ampache 5.0.0)
+* Search rules 'has image', 'image height', 'image width', 'filename'. (Removed in Ampache 5.0.0)
 
 ### Fixed
 
@@ -1861,10 +1981,10 @@ Notes about this release that can't be summed up in a log line
 * Add year information and links to the data rows and interface
 * Add debugging in song.class.php when the file may be corrupt
 * Allow the main sidebar to be reordered using CSS (.sb2_music, .sb2_video, .sb2_*)
-* Subsonic: Update api to 1.13.0 [<http://www.subsonic.org/pages/api.jsp>]
-* Subsonic: Allow token auth using API Key instead of password.
-* Subsonic: New Method: updateUser
-* Subsonic: New Method: getTopSongs
+* Subsonic Update api to 1.13.0 [<http://www.subsonic.org/pages/api.jsp>]
+* Subsonic Allow token auth using API Key instead of password.
+* Subsonic New Method: updateUser
+* Subsonic New Method: getTopSongs
 * Config Version 40
   * Add: mail_enable - Enable or disable email server features otherwise, you can reset your password and never receive an email with the new one
   * Add: rating_browse_filter, rating_browse_minimum_stars - filter based on a star rating.
@@ -1903,7 +2023,7 @@ Notes about this release that can't be summed up in a log line
 * Lots of code tweaks to make things more uniform and readable.
 * Default to mashup for artists and albums
 * Remove '[Disk x]' when grouped from all UI areas by enforcing the group setting.
-* Subsonic: Enable getChatMessages, addMessage allowing server chat
+* Subsonic Enable getChatMessages, addMessage allowing server chat
 
 ### Removed
 
@@ -1924,9 +2044,9 @@ Notes about this release that can't be summed up in a log line
 * Make test.php, init.php & install.php show an error page instead of blank screen. (gettext)
 * Fix slideshow creating black screen when using web player
 * Fixed QRCode views
-* Subsonic: Don't ignore group settings with id3 browsing
-* Subsonic: Fix cover art for playlists and albums
-* Subsonic: Api fixes for podcast playback, Ultrasonic/Dsub workarounds
+* Subsonic Don't ignore group settings with id3 browsing
+* Subsonic Fix cover art for playlists and albums
+* Subsonic Api fixes for podcast playback, Ultrasonic/Dsub workarounds
 
 ### Security
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,8 +61,7 @@ while ($count <= $rows) {
                 <?php
             } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
-                <?php
-            } ?>
+                <?php } ?>
                 </p>
             </td>
 <?php

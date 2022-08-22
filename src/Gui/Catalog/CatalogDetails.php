@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,11 +50,6 @@ final class CatalogDetails implements CatalogDetailsInterface
     public function getFullInfo(): string
     {
         return scrub_out($this->catalog->f_full_info);
-    }
-
-    public function getFilterUser(): string
-    {
-        return scrub_out($this->catalog->f_filter_user);
     }
 
     public function getLastUpdateDate(): string

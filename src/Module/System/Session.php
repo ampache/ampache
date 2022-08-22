@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -314,7 +314,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
+        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0';
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -778,8 +778,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
-                FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
+        if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') != 'on') {
             return true;
         }
 

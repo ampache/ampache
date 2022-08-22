@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ namespace Ampache\Repository;
 
 use Ampache\Repository\Model\DatabaseObject;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Model;
 use ReflectionClass;
 use ReflectionException;
@@ -84,6 +85,7 @@ class Repository
         $sql  = $this->assembleQuery($table, $field);
 
         $statement = Dba::read($sql, is_array($value) ? $value : array($value));
+        /** @var library_item $object */
         while ($object = Dba::fetch_object($statement, $this->modelClassName)) {
             $data[$object->getId()] = $object;
         }

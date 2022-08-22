@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,38 +28,11 @@ use Ampache\Repository\Model\Democratic;
 
 /** @var Democratic $democratic */
 
-/**
- * show_playlist_select
- * This one is for playlists!
- * @param string $name
- * @param string $selected
- * @param string $style
- */
-function show_playlist_select($name, $selected = '', $style = '')
-{
-    echo "<select name=\"$name\" style=\"$style\">\n";
-    echo "\t<option value=\"\">" . T_('None') . "</option>\n";
-
-    $sql              = "SELECT `id`, `name` FROM `playlist` ORDER BY `name`";
-    $db_results       = Dba::read($sql);
-    $nb_items         = Dba::num_rows($db_results);
-    $index            = 1;
-    $already_selected = false;
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $select_txt = '';
-        if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {
-            $select_txt       = 'selected="selected"';
-            $already_selected = true;
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['name']) . "</option>\n";
-        ++$index;
-    } // end while users
-
-    echo "</select>\n";
-} // show_playlist_select
-
+$level25  = ($democratic->level == 25) ? 'selected' : '';
+$level50  = ($democratic->level == 50) ? 'selected' : '';
+$level75  = ($democratic->level == 75) ? 'selected' : '';
+$level100 = ($democratic->level == 100) ? 'selected' : '';
+$default  = ($democratic->primary) ? 'checked' : '';
 Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
     <table class="tabledata">
@@ -69,7 +42,7 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
         </tr>
         <tr>
             <td><?php echo T_('Base Playlist'); ?></td>
-            <td><?php show_playlist_select('democratic', $democratic->base_playlist); ?></td>
+            <td><?php echo Democratic::show_playlist_select('democratic', $democratic->base_playlist); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Cooldown Time'); ?></td>
@@ -79,27 +52,24 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
             <td><?php echo T_('Level'); ?></td>
             <td>
                 <select name="level">
-                    <option value="25" <?php if ($democratic->level == 25) {
-    echo "selected";
-} ?>><?php echo T_('User'); ?></option>
-                    <option value="50" <?php if ($democratic->level == 50) {
-    echo "selected";
-} ?>><?php echo T_('Content Manager'); ?></option>
-                    <option value="75" <?php if ($democratic->level == 75) {
-    echo "selected";
-} ?>><?php echo T_('Catalog Manager'); ?></option>
-                    <option value="100" <?php if ($democratic->level == 100) {
-    echo "selected";
-} ?>><?php echo T_('Admin'); ?></option>
+                    <option value="25" <?php echo $level25; ?>><?php echo T_('User'); ?></option>
+                    <option value="50" <?php echo $level50; ?>><?php echo T_('Content Manager'); ?></option>
+                    <option value="75" <?php echo $level75; ?>><?php echo T_('Catalog Manager'); ?></option>
+                    <option value="100" <?php echo $level100; ?>><?php echo T_('Admin'); ?></option>
                 </select>
-
+            </td>
         <tr>
             <td><?php echo T_('Make Default'); ?></td>
-            <td><input type="checkbox" name="make_default" value="1" <?php if ($democratic->primary) {
-    echo "checked";
-} ?> /></td>
+            <td><input type="checkbox" name="make_default" value="1" <?php echo $default; ?> /></td>
         </tr>
-        <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <th><?php echo T_('Apply to All'); ?></th>
+            <td>&nbsp;</td>
+        </tr>
         <tr>
             <td><?php echo T_('Force Democratic Play'); ?></td>
             <td><input type="checkbox" value="1" name="force_democratic" /></td>

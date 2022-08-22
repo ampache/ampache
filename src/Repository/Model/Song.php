@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -402,7 +402,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -1233,7 +1233,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $array            = array();
         $array['change']  = false;
-        $array['element'] = false;
+        $array['element'] = array();
 
         // Pull out all the currently set vars
         $fields = get_object_vars($media);
@@ -1300,6 +1300,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     private static function clean_string_field_value($value)
     {
+        if (!$value) {
+            return '';
+        }
         $value = trim(stripslashes(preg_replace('/\s+/', ' ', $value)));
 
         // Strings containing  only UTF-8 BOM = empty string
@@ -2140,8 +2143,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $fields['tag']     = true;
         $fields['catalog'] = true;
         // FIXME: These are here to keep the ideas, don't want to have to worry about them for now
-        //        $fields['rating'] = true;
-        //        $fields['recently Played'] = true;
+        // $fields['rating'] = true;
+        // $fields['recently Played'] = true;
 
         return $fields;
     } // get_fields
@@ -2249,9 +2252,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * it uses the popular threshold to figure out how many to pull
      * it will only return unique object
      * @param integer $user_id
+     * @param string $count_type
      * @return array
      */
-    public static function get_recently_played($user_id = 0)
+    public static function get_recently_played($user_id = 0, $count_type = 'stream')
     {
         $personal_info_recent = 91;
         $personal_info_time   = 92;
@@ -2264,7 +2268,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $results = array();
         $valid   = ($user_id > 0);
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = '$count_type' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }

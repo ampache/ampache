@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 $embed = $_REQUEST['embed'];
 
-$is_share = true;
+$isShare  = true;
 $playlist = $share->create_fake_playlist();
 
 require Ui::find_template('show_web_player.inc.php');
@@ -46,5 +46,4 @@ if (!empty($embed)) {
 } else { ?>
 </body>
 </html>
-<?php
-}
+<?php }

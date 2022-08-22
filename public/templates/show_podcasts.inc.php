@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,8 +51,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
-        <?php
-} ?>
+        <?php } ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
@@ -64,8 +63,8 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title', T_('Title'), 'podcast_sort_title'); ?></th>
-            <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
-            <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
+            <th class="cel_siteurl"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=website', T_('Website'), 'podcast_sort_website'); ?></th>
+            <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
     ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
@@ -98,8 +97,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -113,13 +111,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <?php } ?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+            require Ui::find_template('list_header.inc.php');
+        } ?>

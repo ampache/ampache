@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ class Podcast extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -169,7 +169,7 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -306,7 +306,7 @@ class Podcast extends database_object implements library_item
     public function update(array $data)
     {
         $feed        = $data['feed'] ?? $this->feed;
-        $title       = (isset($data['title'])) ? filter_var($data['title'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) : null;
+        $title       = (isset($data['title'])) ? scrub_in($data['title']) : null;
         $website     = (isset($data['website'])) ? scrub_in($data['website']) : null;
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
         $language    = (isset($data['language'])) ? scrub_in($data['language']) : null;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,8 +58,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -95,16 +94,14 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         <tr>
             <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if ($show_art) { ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update_bottom'); ?></th>
@@ -112,12 +109,11 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
-            } ?>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+            require Ui::find_template('list_header.inc.php');
+        } ?>

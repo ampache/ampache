@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Ampache\Repository\Model\Browse $browse */
 ?>
 <?php Ui::show_box_top(T_('Options'), 'info-box');
-$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES); ?>
+$search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES); ?>
 <div id="information_actions">
 <ul>
     <?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
