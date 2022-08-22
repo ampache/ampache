@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -257,7 +257,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -312,7 +312,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function format($details = true)
     {
         $this->f_full_title = $this->get_fullname();
-        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . $this->get_fullname() . "\"> " . $this->get_fullname() . "</a>";
+        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -386,7 +386,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->title, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = $this->title;
         }
 
         return $this->f_name;
@@ -823,19 +823,19 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user, $agent, $date)) {
+        if (!$this->check_play_history($user_id, $agent, $date)) {
             return false;
         }
-        Stats::insert('video', $this->id, $user, $agent, $location, 'stream', $date);
+        Stats::insert('video', $this->id, $user_id, $agent, $location, 'stream', $date);
 
         if ($this->played) {
             return true;

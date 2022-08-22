@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -136,8 +136,8 @@ final class PlayAction implements ApplicationActionInterface
         $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
         $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
         $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
-        $original     = $format == 'raw';
-        $transcode_to = (!$original && $format != '') ? $format : null;
+        $original     = ($format == 'raw');
+        $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
         $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
         $record_stats = true;
         $use_auth     = AmpConfig::get('use_auth');
@@ -155,7 +155,7 @@ final class PlayAction implements ApplicationActionInterface
             $type = 'song';
         }
         // random play url can be multiple types but default to song if missing
-        if (empty($type) && $random !== '') {
+        if ($random !== '') {
             $type = 'song';
         }
         // if you don't specify, assume stream
@@ -232,8 +232,7 @@ final class PlayAction implements ApplicationActionInterface
             $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         $apikey = filter_input(INPUT_GET, 'apikey', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        $user = null;
+        $user   = null;
         // If explicit user authentication was passed
         $user_authenticated = false;
         if (!empty($apikey)) {
@@ -280,7 +279,7 @@ final class PlayAction implements ApplicationActionInterface
                 Session::createGlobalUser($user);
                 Preference::init();
 
-                /* If the user has been disabled (true value) */
+                // If the user has been disabled (true value)
                 if (make_bool($user->disabled)) {
                     debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
                     header('HTTP/1.1 403 User disabled');
@@ -307,7 +306,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
 
-            /* Update the users last seen information */
+            // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
             $uid   = 0;
@@ -364,13 +363,13 @@ final class PlayAction implements ApplicationActionInterface
                 throw new AccessDeniedException();
             }
 
-            return $playlist->generate_playlist($playlist_type);
+            $playlist->generate_playlist($playlist_type);
+
+            return null;
         }
 
         /**
-         * If we've got a tmp playlist then get the
-         * current song, and do any other crazyness
-         * we need to
+         * If we've got a Democratic playlist then get the current song and redirect to that media files URL
          */
         if ($demo_id !== '') {
             $democratic = new Democratic($demo_id);
@@ -378,7 +377,7 @@ final class PlayAction implements ApplicationActionInterface
 
             // If there is a cooldown we need to make sure this song isn't a repeat
             if (!$democratic->cooldown) {
-                /* This takes into account votes etc and removes the */
+                // This takes into account votes, etc and removes the
                 $object_id = $democratic->get_next_object();
             } else {
                 // Pull history
@@ -393,25 +392,68 @@ final class PlayAction implements ApplicationActionInterface
                     }
                 } // while we've got the 'new' song in old the array
             } // end if we've got a cooldown
+            $media = new Song($object_id);
+            if ($media->id > 0) {
+                // Always remove the play from the list
+                $democratic->delete_from_oid($object_id, $type);
+
+                // If the media is disabled
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                    debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                    header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url());
+
+                return null;
+            }
+            debug_event('play/index', "Error: DEMOCRATIC song could not be found", 3);
+            header('HTTP/1.1 404 File not found');
+
+            return null;
         } // if democratic ID passed
 
         /**
-         * if we are doing random let's pull the random object
+         * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random !== '') {
-            if ((int) Core::get_request('start') < 1) {
+            if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
+                // continue the current object
+                $object_id = $_SESSION['random']['last'];
+            } else {
+                // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
                     $rtype = $_REQUEST['random_type'];
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype, $user, $object_id);
-                if ($object_id) {
+                $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
+                if ($object_id > 0) {
                     // Save this one in case we do a seek
                     $_SESSION['random']['last'] = $object_id;
                 }
-            } else {
-                $object_id = $_SESSION['random']['last'];
+                $media = new Song($object_id);
+                if ($media->id > 0) {
+                    // If the media is disabled
+                    if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                        debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                        header('HTTP/1.1 404 File disabled');
+
+                        return null;
+                    }
+
+                    // play the song instead of going through all the crap
+                    header('Location: ' . $media->play_url());
+
+                    return null;
+                }
+                debug_event('play/index', "Error: RANDOM song could not be found", 3);
+                header('HTTP/1.1 404 File not found');
+
+                return null;
             }
         } // if random
 
@@ -446,17 +488,6 @@ final class PlayAction implements ApplicationActionInterface
         $file_target    = false;
         $mediaCatalogId = $media->catalog ?? null;
         if ($mediaCatalogId) {
-            /* If the media is disabled */
-            if (isset($media->enabled) && !make_bool($media->enabled)) {
-                debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
-                // Check to see if this is a democratic playlist, if so remove it completely
-                if ($demo_id !== '' && isset($democratic)) {
-                    $democratic->delete_from_oid($object_id, $type);
-                }
-                header('HTTP/1.1 404 File disabled');
-
-                return null;
-            }
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id)) {
                 debug_event('play/index', "Error: You are not allowed to play $media->file", 3);
@@ -493,14 +524,6 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
         }
-        if ($media == null) {
-            // Handle democratic removal
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
-            }
-
-            return null;
-        }
         // load the cache file or the local file
         $stream_file = ($cache_file && $file_target) ? $file_target : $media->file;
 
@@ -509,11 +532,6 @@ final class PlayAction implements ApplicationActionInterface
             // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
             if (!empty($tmp_playlist)) {
                 $tmp_playlist->delete_track($object_id);
-            }
-            // FIXME: why are these separate?
-            // Remove the media votes if this is a democratic song
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
             }
 
             debug_event('play/index', "Media " . $stream_file . " ($media->title) does not have a valid filename specified", 2);
@@ -836,12 +854,6 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        // If this is a democratic playlist remove the entry.
-        // We do this regardless of play amount.
-        if ($demo_id && isset($democratic)) {
-            $democratic->delete_from_oid($object_id, $type);
-        }
-
         // Close sql connection
         // Warning: do not call functions requiring sql after this point
         Dba::disconnect();
@@ -909,7 +921,7 @@ final class PlayAction implements ApplicationActionInterface
 
     private function is_shared_media(Share $share, $media_id): bool
     {
-        $is_shared = false;
+        $isShare = false;
         switch ($share->object_type) {
             case 'album':
                 $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
@@ -917,8 +929,8 @@ final class PlayAction implements ApplicationActionInterface
                 $songs      = $this->songRepository->getByAlbum((int) $object->id);
 
                 foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
                         break;
                     }
                 }
@@ -928,17 +940,17 @@ final class PlayAction implements ApplicationActionInterface
                 $object     = new $class_name($share->object_id);
                 $songs      = $object->get_songs();
                 foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
                         break;
                     }
                 }
                 break;
             default:
-                $is_shared = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
+                $isShare = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
                 break;
         }
 
-        return $is_shared;
+        return $isShare;
     }
 }

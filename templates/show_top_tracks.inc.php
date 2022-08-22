@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,18 +70,16 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
         <th class="cel_time optional"><?php echo T_('Time'); ?></th>
         <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if (AmpConfig::get('show_skipped_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
-            Rating::build_cache('song', $object_ids);
-            Userflag::build_cache('song', $object_ids);
-        }
+    Rating::build_cache('song', $object_ids);
+    Userflag::build_cache('song', $object_ids);
+}
         } ?>
         <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
     </tr>

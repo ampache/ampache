@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,10 +32,11 @@ use Ampache\Module\Util\Ui;
 
 global $dic;
 
-$user_id  = $user_id ?? -1;
-$link     = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
-$web_path = AmpConfig::get('web_path');
-$is_admin = Access::check('interface', 100);
+$ajax_page = $ajax_page ?? 'index';
+$user_id   = $user_id ?? -1;
+$link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
+$web_path  = AmpConfig::get('web_path');
+$is_admin  = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -145,7 +146,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
                     <?php
             } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=index&action=delete_activity&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>

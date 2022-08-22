@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,8 +47,10 @@ final class TagAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
-        $action  = Core::get_request('action');
+        $results   = array();
+        $action    = Core::get_request('action');
+        $type      = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_id = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         // Switch on the actions
         switch ($action) {
@@ -63,13 +65,13 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 $results['labels'] = $labels;
                 break;
             case 'add_tag':
-                if (!static::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+                if (!static::can_edit_tag_map($type, $object_id, false)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
 
                     return;
                 }
                 debug_event('tag.ajax', 'Adding new tag...', 5);
-                Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
+                Tag::add_tag_map($type, (int) $object_id, (int) $_GET['tag_id'], false);
                 break;
             case 'add_tag_by_name':
                 if (!Access::check('interface', 75)) {
@@ -78,7 +80,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
                 debug_event('tag.ajax', 'Adding new tag by name...', 5);
-                Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
+                Tag::add($type, $object_id, $_GET['tag_name'], false);
                 break;
             case 'delete':
                 if (!Access::check('interface', 75)) {
@@ -93,18 +95,18 @@ final class TagAjaxHandler implements AjaxHandlerInterface
 
                 return;
             case 'remove_tag_map':
-                if (!static::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+                if (!static::can_edit_tag_map($type, $object_id, false)) {
                     debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete unauthorized tag map', 1);
 
                     return;
                 }
                 debug_event('tag.ajax', 'Removing tag map...', 5);
                 $tag = new Tag($_GET['tag_id']);
-                $tag->remove_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false);
+                $tag->remove_map($type, $object_id, false);
                 break;
             case 'browse_type':
                 $browse = new Browse($_GET['browse_id']);
-                $browse->set_filter('object_type', filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+                $browse->set_filter('object_type', $type);
                 $browse->store();
                 break;
             case 'add_filter':

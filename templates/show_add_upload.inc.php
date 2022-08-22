@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var integer|string $upload_max */
 
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
@@ -171,8 +173,7 @@ $(function () {
 // Display a max file size client side if we know it
 if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
-<?php
-} ?>
+<?php } ?>
 <table class="tabledata">
 <?php if (Access::check('interface', 50)) {
     ?>
@@ -211,8 +212,7 @@ if ($upload_max > 0) { ?>
         </div>
     </td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
 <table class="tabledata">
 <tr>

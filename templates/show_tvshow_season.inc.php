@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,10 +50,8 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     <span id="userflag_<?php echo $season->id; ?>_tvshow_season">
         <?php echo Userflag::show($season->id, 'tvshow_season'); ?>
     </span>
-    <?php
-    } ?>
-<?php
-} ?>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
@@ -61,20 +59,17 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, 'play', T_('Play All'), 'directplay_full_' . $season->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
                 <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_season_' . $season->id); ?>
             </li>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo addslashes(T_('Season Edit')) ?>', '')">
@@ -82,8 +77,7 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
                 <?php echo T_('Edit Season'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Catalog::can_remove($season)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
@@ -91,8 +85,7 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

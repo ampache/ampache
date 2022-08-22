@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UtilityFactoryInterface;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -113,7 +112,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -151,7 +150,26 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
         $this->f_pubdate     = date("c", (int)$this->pubdate);
-        $this->f_state       = ucfirst($this->state);
+        switch ($this->state) {
+            case 'skipped':
+                $this->f_state = T_('skipped');
+                break;
+            case 'pending':
+                $this->f_state = T_('pending');
+                break;
+            case 'completed':
+                $this->f_state = T_('completed');
+                break;
+            default:
+                $this->f_state = '';
+        }
+        // format the file
+        if (!empty($this->file)) {
+            $data          = pathinfo($this->file);
+            $this->type    = strtolower((string)$data['extension']);
+            $this->mime    = Song::type_to_mime($this->type);
+            $this->enabled = true;
+        }
 
         // Format the Time
         $min            = floor($this->time / 60);
@@ -194,6 +212,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     }
 
     /**
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -363,20 +382,20 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // ignore duplicates or skip the last track
-        if (!$this->check_play_history($user, $agent, $date)) {
+        if (!$this->check_play_history($user_id, $agent, $date)) {
             return false;
         }
-        if (Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date)) {
-            Stats::insert('podcast', $this->podcast, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
+            Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
         }
 
         if (!$this->played) {
@@ -407,6 +426,17 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     {
         self::_update_item('played', ($new_played ? 1 : 0), $id, '25');
     } // update_played
+
+    /**
+     * update_file
+     * sets the file path
+     * @param boolean $new_played
+     * @param integer $id
+     */
+    public static function update_file($path, $id)
+    {
+        self::_update_item('file', $path, $id, '25');
+    } // update_file
 
     /**
      * _update_item
@@ -549,40 +579,52 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * gather
      * download the podcast episode to your catalog
+     * @return bool
      */
     public function gather()
     {
         if (!empty($this->source)) {
-            $podcast = new Podcast($this->podcast);
-            $file    = $podcast->get_root_path();
-            if (!empty($file)) {
-                $pinfo = pathinfo($this->source);
-
-                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
-                debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                if (file_put_contents($file, fopen($this->source, 'r'))) {
-                    debug_event(self::class, 'Download completed.', 4);
-                    $this->file = $file;
-
-                    $vainfo = $this->getUtilityFactory()->createVaInfo($this->file);
-                    $vainfo->get_info();
-                    $key   = VaInfo::get_tag_type($vainfo->tags);
-                    $infos = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
-                    // No time information, get it from file
-                    if ($this->time < 1) {
-                        $this->time = $infos['time'];
-                    }
-                    $this->size = $infos['size'];
-
-                    $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
-                    Dba::write($sql, array($this->file, $this->size, $this->time, $this->id));
-                } else {
-                    debug_event(self::class, 'Error when downloading podcast episode.', 1);
+            // existing file (completed)
+            $file = $this->file;
+            if (empty($file)) {
+                // new file (pending)
+                $podcast = new Podcast($this->podcast);
+                $file    = $podcast->get_root_path();
+                if (!empty($file)) {
+                    $pinfo = pathinfo($this->source);
+                    $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
                 }
             }
-        } else {
-            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
+            if (!empty($file)) {
+                if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
+                    // the file doesn't exist locally so download it
+                    debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
+                    if (file_put_contents($file, fopen($this->source, 'r'))) {
+                        debug_event(self::class, 'Download completed.', 4);
+                    }
+                }
+                if (Core::get_filesize(Core::conv_lc_file($file)) > 0) {
+                    // the file exists so get/update file details in the DB
+                    debug_event(self::class, 'Updating details ' . $file . ' ...', 4);
+                    if (empty($this->file)) {
+                        $this->file = $file;
+                        self::update_file($this->file, $this->id);
+                    }
+                    Catalog::update_media_from_tags($this);
+
+                    return true;
+                }
+                debug_event(self::class, 'Error when downloading podcast episode.', 1);
+
+                return false;
+            }
+            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', could not generate file path.', 3);
+
+            return false;
         }
+        debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
+
+        return false;
     }
 
     /**

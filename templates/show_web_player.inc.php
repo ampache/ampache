@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,24 +39,27 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>
 <?php
-if (!isset($is_share) || (isset($is_share) && !$is_share)) {
+if (!isset($isShare) || (isset($isShare) && !$isShare)) {
      $stream_id = $_REQUEST['playlist_id'];
      if (is_string($stream_id) || is_integer($stream_id)) {
          $playlist = new Stream_Playlist($stream_id);
      }
  }
 
-$isRadio = false;
-$isVideo = false;
-$radio   = null;
+$isRadio      = false;
+$isVideo      = false;
+$isDemocratic = false;
+$isRandom     = false;
+$radio        = null;
 if (isset($playlist)) {
     if (WebPlayer::is_playlist_radio($playlist)) {
         // Special stuff for web radio (to better handle Icecast/Shoutcast metadata ...)
         // No special stuff for now
         $isRadio = true;
         $radio   = $playlist->urls[0];
-    } else {
-        $isVideo = WebPlayer::is_playlist_video($playlist);
     }
+    $isVideo      = WebPlayer::is_playlist_video($playlist);
+    $isDemocratic = WebPlayer::is_playlist_democratic($playlist);
+    $isRandom     = WebPlayer::is_playlist_random($playlist);
 }
 require_once Ui::find_template('show_html5_player.inc.php'); ?>

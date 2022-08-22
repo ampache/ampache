@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -94,10 +94,8 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
     <span id="userflag_<?php echo $album->id; ?>_album">
         <?php echo Userflag::show($album->id, 'album'); ?>
     </span>
-    <?php
-        } ?>
-<?php
-    } ?>
+    <?php } ?>
+<?php } ?>
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <br />
     <div style="display:inline;">
@@ -117,16 +115,13 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_'); ?>
         </li>
-            <?php
-        } ?>
+            <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_'); ?>
         </li>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if ($show_playlist_add) { ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_'); ?>
@@ -134,8 +129,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_random&' . $album->get_http_album_query_ids('id'), 'random', T_('Random to Temporary Playlist'), 'play_random_'); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <li>
                 <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
@@ -143,8 +137,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
                     <?php echo T_('Update from tags'); ?>
                 </a>
             </li>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>">
@@ -152,8 +145,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
                 <?php echo T_('Download'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>
@@ -194,18 +186,14 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album_id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
-            <?php
-            } ?>
+            <?php } ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('album', $album_id, false); ?>
-            <?php
-            } ?>
-        <?php
-        } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album_id; ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
-        <?php
-        } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $album_id ?>', 'reorder_songs_table_<?php echo $album_id ?>', 'song_',
                                             '<?php echo $web_path ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
@@ -217,8 +205,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
             <a id="<?php echo 'edit_album_' . $album_id ?>" onclick="showEditDialog('album_row', '<?php echo $album_id ?>', '<?php echo 'edit_album_' . $album_id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
-        <?php
-        } ?>
+        <?php } ?>
     </div>
     <div id='reordered_list_<?php echo $album_id; ?>'>
     <?php

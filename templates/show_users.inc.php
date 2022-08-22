@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,10 +40,8 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_activity" />
 <?php if (AmpConfig::get('track_user_ip')) { ?>
   <col id="col_lastip" />
-<?php
-    } ?>
-<?php
-} ?>
+<?php } ?>
+<?php } ?>
   <col id="col_action" />
   <col id="col_online" />
 </colgroup>
@@ -56,14 +54,11 @@ $web_path = AmpConfig::get('web_path'); ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
-      <?php
-        } ?>
-      <?php
-    } ?>
+      <?php } ?>
+      <?php } ?>
       <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow essential"><?php echo T_('Following'); ?></th>
-      <?php
-    } ?>
+      <?php } ?>
       <th class="cel_action essential"><?php echo T_('Action'); ?></th>
       <th class="cel_online"><?php echo T_('Online'); ?></th>
     </tr>
@@ -94,14 +89,11 @@ foreach ($object_ids as $user_id) {
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
-      <?php
-        } ?>
-      <?php
-    } ?>
+      <?php } ?>
+      <?php } ?>
       <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow"><?php echo T_('Following'); ?></th>
-      <?php
-    } ?>
+      <?php } ?>
       <th class="cel_action"><?php echo T_('Action'); ?></th>
       <th class="cel_online"><?php echo T_('Online'); ?></th>
     </tr>

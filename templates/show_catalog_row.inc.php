@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,8 +42,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
 <td class="cel_action cel_action_text">
 <?php if (!$libitem->isReady()) { ?>
     <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $libitem->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
-<?php
-} ?>
+<?php } ?>
 <form>
     <select name="catalog_action_menu">
 <?php if ($libitem->isReady()) { ?>
@@ -55,8 +54,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <option value="import_to_catalog"><?php echo T_('Import'); ?></option>
         <option value="update_file_tags"><?php echo T_('Update File Tags'); ?></option>
 
-<?php
-    } ?>
+<?php } ?>
         <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
     </select>
     <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
@@ -64,7 +62,6 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
         </span>
-    <?php
-    } ?>
+    <?php } ?>
 </form>
 </td>

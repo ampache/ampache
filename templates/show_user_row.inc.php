@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,16 +59,14 @@ use Ampache\Module\Util\Ui;
         }
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <td class="cel_follow"><?php echo $userFollowStateRenderer->render($libitem->getId(), Core::get_global('user')->getId()); ?></td>
-            <?php
-        } ?>
+            <?php } ?>
     <td class="cel_action">
     <?php
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
-        <?php
-        } ?>
+        <?php } ?>
     <?php
         if (Access::check('interface', 100)) { ?>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&amp;user_id=<?php echo $libitem->id; ?>">
@@ -87,8 +85,7 @@ use Ampache\Module\Util\Ui;
         <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
-        <?php
-        } ?>
+        <?php } ?>
     </td>
     <?php
         if (($libitem->is_logged_in()) && ($libitem->is_online())) {

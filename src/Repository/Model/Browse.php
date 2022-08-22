@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -105,7 +106,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -485,13 +486,11 @@ class Browse extends Query
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_pages(Core::get_cookie($name) == 'true');
             }
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
                 $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
                     AmpConfig::get('libitem_browse_alpha'));
@@ -501,13 +500,12 @@ class Browse extends Query
             }
             $name = 'browse_' . $type . '_grid_view';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_grid_view(Core::get_cookie($name) == 'true');
             }
 
             parent::set_type($type, $custom_base);
         } else {
-            debug_event(self::class, 'set_type invalid type: ' . filter_var($type, FILTER_SANITIZE_STRING), 5);
+            debug_event(self::class, 'set_type invalid type: ' . $type, 5);
         }
     }
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,8 +75,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No season found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -87,13 +86,12 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="cel_episodes"><?php echo T_('Episodes'); ?></th>
             <?php if ($show_ratings) { ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-                <?php
-            } ?>
+                <?php } ?>
             <th class="cel_action"><?php echo T_('Actions'); ?></th>
         </tr>
     <tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+            require Ui::find_template('list_header.inc.php');
+        } ?>

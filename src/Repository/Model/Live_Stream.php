@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ class Live_Stream extends database_object implements Media, library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -133,6 +133,7 @@ class Live_Stream extends database_object implements Media, library_item
     } // format
 
     /**
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -146,7 +147,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = $this->name;
         }
 
         return $this->f_name;
@@ -405,16 +406,16 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // Do nothing
-        unset($user, $agent, $location, $date);
+        unset($user_id, $agent, $location, $date);
 
         return false;
     }

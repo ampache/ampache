@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,7 +104,7 @@ class Broadcast extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -199,7 +199,7 @@ class Broadcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_link = '<a href="' . $this->get_link() . '">' . $this->get_fullname() . '</a>';
+        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         if ($details) {
             $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
@@ -222,7 +222,7 @@ class Broadcast extends database_object implements library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = $this->name;
         }
 
         return $this->f_name;

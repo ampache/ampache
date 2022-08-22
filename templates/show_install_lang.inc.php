@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,9 +31,8 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <p><?php echo AmpError::display('general'); ?></p>
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="form-group">
-        <?php
-            $languages = get_languages();
-            $var_name  = $htmllang . "_lang";
+        <?php $languages = get_languages();
+            $var_name    = $htmllang . "_lang";
 
             echo "<select class=\"form-control\" name=\"htmllang\">\n";
 

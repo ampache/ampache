@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,13 +27,15 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Search;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 
 $democratic = Democratic::get_current_playlist();
-$web_path   = AmpConfig::get('web_path'); ?>
-<?php if ($browse->is_show_header()) {
+$web_path   = AmpConfig::get('web_path');
+$use_search = AmpConfig::get('demo_use_search');
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata striped-rows">
@@ -49,7 +51,9 @@ $web_path   = AmpConfig::get('web_path'); ?>
   <?php } ?>
 </colgroup>
 <?php if (empty($object_ids) && isset($democratic->base_playlist)) {
-    $playlist = new Playlist($democratic->base_playlist); ?>
+    $playlist = ($use_search)
+        ? new Search($democratic->base_playlist)
+        : new Playlist($democratic->base_playlist); ?>
 <tr>
     <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
 </tr>
@@ -65,13 +69,11 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
         <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
-<?php
-    $democratic->set_parent();
+<?php $democratic->set_parent();
     foreach ($object_ids as $item) {
         if (!is_array($item)) {
             $item = (array) $item;
@@ -114,7 +116,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
         <?php } ?>
     </tr>
 </tfoot>
-<?php } // end else?>
+<?php } ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {

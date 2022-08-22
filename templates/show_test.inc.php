@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,8 +52,7 @@ use Ampache\Module\Util\Ui;
                 <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
                 <?php if (!is_readable($configfile)) { ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>
-                <?php
-} ?>
+                <?php } ?>
             </p>
         </div>
         <div>

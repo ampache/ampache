@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,6 +37,7 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
+    public const VALID_TYPES     = array('song', 'album', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
 
     public $searchtype;
     public $rules          = array();
@@ -69,6 +70,9 @@ class Search extends playlist_object
         } else {
             $this->search_user = Core::get_global('user');
         }
+
+        //debug_event(self::class, "SearchID: $search_id; Search Type: $searchtype\n" . print_r($this, true), 5);
+
         $this->searchtype = $searchtype;
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
@@ -114,6 +118,14 @@ class Search extends playlist_object
                 $this->playlist_types();
                 $this->order_by = '`playlist`.`name`';
                 break;
+            case 'podcast':
+                $this->podcast_types();
+                $this->order_by = '`podcast`.`title`';
+                break;
+            case 'podcast_episode':
+                $this->podcast_episode_types();
+                $this->order_by = '`podcast_episode`.`pubdate` DESC';
+                break;
             case 'label':
                 $this->label_types();
                 $this->order_by = '`label`.`name`';
@@ -129,6 +141,11 @@ class Search extends playlist_object
                 break;
         } // end switch on searchtype
     } // end constructor
+
+    public function getId(): int
+    {
+        return (int)$this->id;
+    }
 
     /**
      * set_basetypes
@@ -512,7 +529,7 @@ class Search extends playlist_object
     }
 
     /**
-     * songtypes
+     * song_types
      *
      * this is where all the searchtypes for songs are defined
      */
@@ -653,7 +670,7 @@ class Search extends playlist_object
     }
 
     /**
-     * artisttypes
+     * artist_types
      *
      * this is where all the searchtypes for artists are defined
      */
@@ -662,8 +679,8 @@ class Search extends playlist_object
         $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->type_text('title', T_('Name'), $t_artist_data);
-        $this->type_text('album_title', T_('Album Title'), $t_artist_data);
-        $this->type_text('song_title', T_('Song Title'), $t_artist_data);
+        $this->type_text('album', T_('Album Title'), $t_artist_data);
+        $this->type_text('song', T_('Song Title'), $t_artist_data);
         $this->type_text('summary', T_('Summary'), $t_artist_data);
         $this->type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
         $this->type_text('placeformed', T_('Place Formed'), $t_artist_data);
@@ -725,7 +742,7 @@ class Search extends playlist_object
     } // artisttypes
 
     /**
-     * albumtypes
+     * album_types
      *
      * this is where all the searchtypes for albums are defined
      */
@@ -736,7 +753,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'), $t_album_data);
         $this->type_text('artist', T_('Album Artist'), $t_album_data);
         $this->type_text('song_artist', T_('Song Artist'), $t_album_data);
-        $this->type_text('song_title', T_('Song Title'), $t_album_data);
+        $this->type_text('song', T_('Song Title'), $t_album_data);
         $this->type_numeric('year', T_('Year'), 'numeric', $t_album_data);
         $this->type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
         $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
@@ -800,7 +817,7 @@ class Search extends playlist_object
     } // albumtypes
 
     /**
-     * videotypes
+     * video_types
      *
      * this is where all the searchtypes for videos are defined
      */
@@ -810,17 +827,75 @@ class Search extends playlist_object
     }
 
     /**
-     * playlisttypes
+     * playlist_types
      *
      * this is where all the searchtypes for playlists are defined
      */
     private function playlist_types()
     {
-        $this->type_text('title', T_('Name'));
+        $t_playlist = T_('Playlist');
+        $this->type_text('title', T_('Name'), $t_playlist);
+        $playlist_types = array(
+            0 => T_('public'),
+            1 => T_('private')
+        );
+        $this->type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
+        $users = $this->getUserRepository()->getValidArray();
+        $this->type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
     }
 
     /**
-     * labeltypes
+     * podcast_types
+     *
+     * this is where all the searchtypes for podcasts are defined
+     */
+    private function podcast_types()
+    {
+        $t_podcasts = T_('Podcast');
+        $this->type_text('title', T_('Name'), $t_podcasts);
+
+        $t_podcast_episodes = T_('Podcast Episodes');
+        $this->type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
+        $episode_states = array(
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        );
+        $this->type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+
+        $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
+        $this->type_date('pubdate', T_('Publication Date'), $t_file_data);
+        $this->type_date('added', T_('Added'), $t_file_data);
+    }
+
+    /**
+     * podcast_episode_types
+     *
+     * this is where all the searchtypes for podcast_episodes are defined
+     */
+    private function podcast_episode_types()
+    {
+        $t_podcast_episodes = T_('Podcast Episode');
+        $this->type_text('title', T_('Name'), $t_podcast_episodes);
+        $this->type_text('podcast', T_('Podcast'), $t_podcast_episodes);
+        $episode_states = array(
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        );
+        $this->type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+
+        $t_file_data = T_('File Data');
+        $this->type_text('file', T_('Filename'), $t_file_data);
+        $this->type_date('pubdate', T_('Publication Date'), $t_file_data);
+        $this->type_date('added', T_('Added'), $t_file_data);
+    }
+
+    /**
+     * label_types
      *
      * this is where all the searchtypes for labels are defined
      */
@@ -831,7 +906,7 @@ class Search extends playlist_object
     }
 
     /**
-     * usertypes
+     * user_types
      *
      * this is where all the searchtypes for users are defined
      */
@@ -841,13 +916,13 @@ class Search extends playlist_object
     }
 
     /**
-     * tagtypes
+     * tag_types
      *
      * this is where all the searchtypes for Genres are defined
      */
     private function tag_types()
     {
-        $this->type_text('name', T_('Genre'));
+        $this->type_text('title', T_('Genre'));
     }
 
     /**
@@ -868,7 +943,6 @@ class Search extends playlist_object
                 $request[$key] = Dba::escape($value);
             }
         }
-
         // Figure out if they want an AND based search or an OR based search
         $operator = $data['operator'] ?? '';
         switch ($operator) {
@@ -883,21 +957,25 @@ class Search extends playlist_object
 
         // Verify the type
         $search_type = $data['type'] ?? '';
+        //Search::VALID_TYPES = array('song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
+            case 'song':
             case 'album':
             case 'artist':
-            case 'video':
-            case 'song':
-            case 'tag':  // for Genres
-            case 'playlist':
             case 'label':
+            case 'playlist':
+            case 'podcast':
+            case 'podcast_episode':
+            case 'tag':  // for Genres
             case 'user':
+            case 'video':
                 $request['type'] = $data['type'];
                 break;
             case 'genre':
                 $request['type'] = 'tag';
                 break;
             default:
+                debug_event(self::class, "clean_request: search_type '$search_type' reset to: song", 5);
                 $request['type'] = 'song';
                 break;
         }
@@ -1709,6 +1787,7 @@ class Search extends playlist_object
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;
+                case 'song':
                 case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
@@ -1763,16 +1842,16 @@ class Search extends playlist_object
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`object_id` = `album`.`id`";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_album`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql = "`catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -1780,8 +1859,7 @@ class Search extends playlist_object
         }
         if (array_key_exists('image', $join)) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
-            $where_sql .= " AND `image`.`object_type`='album'";
-            $where_sql .= " AND `image`.`size`='original'";
+            $where_sql       = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -2027,11 +2105,13 @@ class Search extends playlist_object
                     $where[]      = "`artist`.`summary` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
                     break;
+                case 'album':
                 case 'album_title':
                     $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
                     $parameters    = array_merge($parameters, array($input, $input));
                     $join['album'] = true;
                     break;
+                case 'song':
                 case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
@@ -2101,8 +2181,8 @@ class Search extends playlist_object
                     break;
                 case 'possible_duplicate_album':
                     $where[]                     = "((`dupe_album_search1`.`dupe_album_id1` IS NOT NULL OR `dupe_album_search2`.`dupe_album_id2` IS NOT NULL))";
-                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT album_artist, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
-                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT album_artist, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
+                    $table['dupe_album_search1'] = "LEFT JOIN (SELECT `album_artist`, MIN(`id`) AS `dupe_album_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search1` ON `artist`.`id` = `dupe_album_search1`.`album_artist`";
+                    $table['dupe_album_search2'] = "LEFT JOIN (SELECT `album_artist`, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `artist`.`id` = `dupe_album_search2`.`album_artist`";
                     break;
                 default:
                     break;
@@ -2127,16 +2207,16 @@ class Search extends playlist_object
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_artist` ON `catalog_map_artist`.`object_id` = `artist`.`id` AND `catalog_map_artist`.`object_type` = 'artist'";
             $table['3_catalog']     = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `catalog_map_artist`.`catalog_id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1'";
+                $where_sql = "`catalog_se`.`enabled` = '1'";
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
@@ -2145,8 +2225,7 @@ class Search extends playlist_object
         if (array_key_exists('image', $join)) {
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
-            $where_sql .= " AND `image`.`object_type`='artist'";
-            $where_sql .= " AND `image`.`size`='original'";
+            $where_sql             = "(" . $where_sql . ") AND `image`.`object_type`='artist' AND `image`.`size`='original'";
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
@@ -2485,12 +2564,13 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'smartplaylist':
+                    //debug_event(self::class, 'song_to_sql: SUBSEARCH ' . $input, 5);
                     $subsearch  = new Search($input, 'song', $this->search_user);
                     $results    = $subsearch->get_items();
                     $itemstring = '';
                     if (count($results) > 0) {
                         foreach ($results as $item) {
-                            $itemstring .= ' ' . $item['object_id'] . ',';
+                            $itemstring .= $item['object_id'] . ',';
                         }
                         $where[]  = "`song`.`id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")";
                     }
@@ -2582,7 +2662,7 @@ class Search extends playlist_object
                             $metadata[$field] = array();
                         }
                         $metadata[$field][] = "`metadata`.`data` $sql_match_operator ?";
-                        $parameters[]       = $input;
+                        $parameters[]       = $parsedInput;
                     }
                     break;
                 default:
@@ -2615,17 +2695,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_song` ON `catalog_map_song`.`object_id` = `song`.`id` AND `catalog_map_song`.`object_type` = 'song' AND `catalog_map_song`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('artist', $join)) {
@@ -2706,17 +2786,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `video`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `video`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_video` ON `catalog_map_video`.`object_id` = `video`.`id` AND `catalog_map_video`.`object_type` = 'video' AND `catalog_map_video`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         ksort($table);
@@ -2780,6 +2860,16 @@ class Search extends playlist_object
                     $where[]      = "`playlist`.`name` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
+                case 'type':
+                    $where[]      = "`playlist`.`type` $sql_match_operator ?";
+                    $parameters[] = ($input == 1)
+                        ? 'private'
+                        : 'public';
+                    break;
+                case 'owner':
+                    $where[]      = "`playlist`.`user` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
                 default:
                     break;
             } // switch on ruletype
@@ -2795,23 +2885,23 @@ class Search extends playlist_object
         $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
         if ($join['song']) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id`";
-            $where_sql .= " AND `playlist_data`.`object_type` = 'song'";
+            $where_sql       = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
         }
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if ($catalog_disable) {
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                    $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
                 }
             }
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         ksort($table);
@@ -2821,6 +2911,265 @@ class Search extends playlist_object
 
         return array(
             'base' => 'SELECT DISTINCT(`playlist`.`id`), `playlist`.`name` FROM `playlist`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters
+        );
+    }
+
+    /**
+     * podcast__to_sql
+     *
+     * Handles the generation of the SQL for podcast_episode searches.
+     * @return array
+     */
+    private function podcast_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $user_id            = $this->search_user->id ?? 0;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where       = array();
+        $table       = array();
+        $join        = array();
+        $group       = array();
+        $having      = array();
+        $parameters  = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            if (!$type) {
+                return array();
+            }
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input              = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'] ?? '';
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[]      = "`podcast`.`title` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'podcast_episode':
+                case 'podcast_episode_title':
+                    $where[]                 = "`podcast_episode`.`title` $sql_match_operator ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'time':
+                    $input                   = $input * 60;
+                    $where[]                 = "`podcast_episode`.`time` $sql_match_operator ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'state':
+                    $where[]      = "`podcast_episode`.`state` $sql_match_operator ?";
+                    switch ($input) {
+                        case 0:
+                            $parameters[] = 'skipped';
+                            break;
+                        case 1:
+                            $parameters[] = 'pending';
+                            break;
+                        case 2:
+                            $parameters[] = 'completed';
+                    }
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'pubdate':
+                    $input                   = strtotime((string) $input);
+                    $where[]                 = "`podcast_episode`.`pubdate` $sql_match_operator ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'added':
+                    $input                   = strtotime((string) $input);
+                    $where[]                 = "`podcast_episode`.`addition_time` $sql_match_operator ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'file':
+                    $where[]                 = "`podcast_episode`.`file` $sql_match_operator ?";
+                    $parameters[]            = $input;
+                    $join['podcast_episode'] = true;
+                    break;
+                default:
+                    break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if (array_key_exists('podcast_episode', $join)) {
+            $table['0_podcast'] = "LEFT JOIN `podcast_episode` ON `podcast_episode`.`podcast` = `podcast`.`id`";
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast`.`catalog`";
+            if ($catalog_disable) {
+                if (!empty($where_sql)) {
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
+                }
+            }
+        }
+        if ($join['catalog_map']) {
+            if (!empty($where_sql)) {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`podcast`.`id`), `podcast`.`title` FROM `podcast`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => $table_sql,
+            'group_sql' => $group_sql,
+            'having_sql' => $having_sql,
+            'parameters' => $parameters
+        );
+    }
+
+    /**
+     * podcast_episode_to_sql
+     *
+     * Handles the generation of the SQL for podcast_episode searches.
+     * @return array
+     */
+    private function podcast_episode_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $user_id            = $this->search_user->id ?? 0;
+        $catalog_disable    = AmpConfig::get('catalog_disable');
+        $catalog_filter     = AmpConfig::get('catalog_filter');
+
+        $where       = array();
+        $table       = array();
+        $join        = array();
+        $group       = array();
+        $having      = array();
+        $parameters  = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            if (!$type) {
+                return array();
+            }
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $input              = $this->_mangle_data($rule[2], $type, $operator);
+            $sql_match_operator = $operator['sql'] ?? '';
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[]      = "`podcast_episode`.`title` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'podcast':
+                case 'podcast_title':
+                    $where[]         = "`podcast`.`title` $sql_match_operator ?";
+                    $parameters[]    = $input;
+                    $join['podcast'] = true;
+                    break;
+                case 'time':
+                    $input        = $input * 60;
+                    $where[]      = "`podcast_episode`.`time` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'state':
+                    $where[]      = "`podcast_episode`.`state` $sql_match_operator ?";
+                    switch ($input) {
+                        case 0:
+                            $parameters[] = 'skipped';
+                            break;
+                        case 1:
+                            $parameters[] = 'pending';
+                            break;
+                        case 2:
+                            $parameters[] = 'completed';
+                    }
+                    break;
+                case 'pubdate':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`podcast_episode`.`pubdate` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'added':
+                    $input        = strtotime((string) $input);
+                    $where[]      = "`podcast_episode`.`addition_time` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'file':
+                    $where[]      = "`podcast_episode`.`file` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                default:
+                    break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $join['catalog']     = $catalog_disable || $catalog_filter;
+        $join['catalog_map'] = $catalog_filter;
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        if (array_key_exists('podcast', $join)) {
+            $table['0_podcast'] = "LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast`";
+        }
+        if ($join['catalog']) {
+            $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `podcast_episode`.`catalog`";
+            if ($catalog_disable) {
+                if (!empty($where_sql)) {
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
+                } else {
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
+                }
+            }
+        }
+        if ($join['catalog_map']) {
+            if (!empty($where_sql)) {
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            } else {
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+            }
+        }
+        ksort($table);
+        $table_sql  = implode(' ', $table);
+        $group_sql  = implode(',', $group);
+        $having_sql = implode(" $sql_logic_operator ", $having);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2893,18 +3242,18 @@ class Search extends playlist_object
 
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_map_artist`.`object_type` = 'artist' AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if ($join['catalog']) {
             $table['3_catalog'] = "LEFT JOIN `catalog`AS `catalog_se` ON `catalog_map_artist`.`catalog_id` = `catalog_se`.`id`";
             if ($catalog_disable) {
                 if (!empty($where_sql)) {
-                    $where_sql .= " AND `catalog_se`.`enabled` = '1'";
+                    $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1'";
                 } else {
-                    $where_sql .= " `catalog_se`.`enabled` = '1'";
+                    $where_sql = "`catalog_se`.`enabled` = '1'";
                 }
             }
         }
@@ -2979,17 +3328,17 @@ class Search extends playlist_object
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             } else {
-                $where_sql .= " `catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
+                $where_sql = "`catalog_se`.`enabled` = '1' AND `song`.`enabled` = 1";
             }
         }
         if ($join['catalog_map']) {
             $table['2_catalog_map'] = "LEFT JOIN `catalog_map` AS `catalog_map_album` ON `catalog_map_album`.`object_id` = `album`.`id` AND `catalog_map_album`.`object_type` = 'album' AND `catalog_map_album`.`catalog_id` = `catalog_se`.`id`";
             if (!empty($where_sql)) {
-                $where_sql .= " AND `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql .= " `catalog_se`.`filter_user` IN (0, $user_id)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
 

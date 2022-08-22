@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -281,8 +281,8 @@ class User extends database_object
      * get_from_apikey
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
-     * @param string apikey
-     * @return User|null $user
+     * @param string $apikey
+     * @return User|null
      */
     public static function get_from_apikey($apikey)
     {
@@ -882,8 +882,8 @@ class User extends database_object
     public function insert_ip_history()
     {
         $sip = (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+            ? filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)
+            : filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
         debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
 
         // Remove port information if any
@@ -1291,8 +1291,8 @@ class User extends database_object
     {
         if (!isset($this->f_name)) {
             $this->f_name = ($this->fullname_public)
-                ? filter_var($this->fullname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-                : filter_var($this->username, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                ? $this->fullname
+                : $this->username;
         }
 
         return $this->f_name;

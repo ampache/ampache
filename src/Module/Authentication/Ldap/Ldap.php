@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,7 +89,7 @@ class Ldap
      * Note: This does not open a connection. It checks whether
      * the given parameters are plausible and can be used to open a
      * connection as soon as one is needed.
-     * @return resource|false
+     * @return resource
      * @throws LdapException
      */
     private static function connect()

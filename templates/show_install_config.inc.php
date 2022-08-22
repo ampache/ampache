@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -149,14 +149,12 @@ require __DIR__ . '/install_header.inc.php'; ?>
             <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
                 echo 'selected';
             } ?>><?php echo $mode; ?></option>
-        <?php
-            } ?>
+        <?php } ?>
         </select>
         <?php
         if (count($modes) == 0) { ?>
         <label><?php echo T_('No default transcoding application found. You may need to install a popular application (FFmpeg, avconv ...) or customize transcoding settings manually after installation.'); ?></label>
-        <?php
-        } ?>
+        <?php } ?>
     </div>
 </div>
 
@@ -255,8 +253,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
                     <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
-                <?php
-        } ?>
+                <?php } ?>
 
                 <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                 <div class="col-sm-4">

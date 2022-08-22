@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,7 @@ final class SearchAction implements ApplicationActionInterface
         $searchType = Core::get_request('type');
         $rule_1     = Core::get_request('rule_1');
         if (empty($searchType)) {
-            $searchType = ($rule_1 == 'album' || $rule_1 == 'artist' || $rule_1 == 'playlist_name' || $rule_1 == 'tag')
+            $searchType = in_array($rule_1, Search::VALID_TYPES)
                 ? str_replace('_name', ' ', $rule_1)
                 : 'song';
             // set the search type when you don't set one.

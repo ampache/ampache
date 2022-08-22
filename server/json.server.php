@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,18 +21,20 @@ declare(strict_types=1);
  *
  */
 
-/**
- * This is accessed remotly to allow outside scripts access to ampache information
- * as such it needs to verify the session id that is passed
- */
+declare(strict_types=1);
 
-use Ampache\Module\Api\JsonApiApplication;
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Index\ShowAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
-
-define('NO_SESSION', '1');
-define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(JsonApiApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,8 +90,7 @@ if ($directplay_limit > 0) {
         <span id="userflag_<?php echo $album->id; ?>_album">
             <?php echo Userflag::show($album->id, 'album'); ?>
         </span>
-        <?php
-    } ?>
+        <?php } ?>
     <?php } ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
@@ -101,8 +100,7 @@ if (AmpConfig::get('show_played_times')) { ?>
         /* HINT: Number of times an object has been played */
         sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
 </div>
-<?php
-    } ?>
+<?php } ?>
 
 <?php
 $owner_id = $album->get_user_owner();
@@ -129,14 +127,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
         </li>
-            <?php
-        } ?>
+            <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
         </li>
-            <?php
-        } ?>
+            <?php } ?>
         <?php
     } ?>
 
@@ -162,8 +158,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
@@ -175,17 +170,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php
     } ?>
-        <?php
-    } ?>
+        <?php } ?>
     <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
         $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
@@ -195,8 +187,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                     <?php echo T_('Graphs'); ?>
                 </a>
             </li>
-        <?php
-        } ?>
+        <?php } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
                                             '<?php echo $web_path; ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">

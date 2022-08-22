@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,8 +49,7 @@ use Ampache\Module\Util\UiInterface;
     <input type="hidden" name="method" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
     <?php if (Access::check('interface', 100)) { ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
-    <?php
-    } ?>
+    <?php } ?>
 </div>
 <?php
 }  // end if not account

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,10 +71,7 @@ final class SendAction implements ApplicationActionInterface
         if (isset($_POST['email']) && Core::get_post('email')) {
             /* Get the email address and the current ip*/
             $email      = scrub_in(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-            $current_ip = filter_has_var(
-                INPUT_SERVER,
-                'HTTP_X_FORWARDED_FOR') ? Core::get_server('HTTP_X_FORWARDED_FOR') : Core::get_server('REMOTE_ADDR'
-            );
+            $current_ip = Core::get_user_ip();
             $result     = $this->newPasswordSender->send($email, $current_ip);
         }
         // Do not acknowledge a password has been sent or failed and go back to login

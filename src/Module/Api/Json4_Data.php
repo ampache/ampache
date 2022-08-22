@@ -207,7 +207,7 @@ class Json4_Data
             case 'podcast':
                 return self::podcasts($objects, $user_id, $include);
             case 'podcast_episode':
-                return self::podcast_episodes($objects, $user_id);
+                return self::podcast_episodes($objects, $user_id, true, false);
             case 'video':
                 return self::videos($objects, $user_id);
             default:
@@ -711,7 +711,6 @@ class Json4_Data
             $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
-                "title" => $episode->get_fullname(),
                 "name" => $episode->get_fullname(),
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
@@ -737,7 +736,7 @@ class Json4_Data
         if (!$encode) {
             return $JSON;
         }
-        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0];
+        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcast_episodes
@@ -896,7 +895,7 @@ class Json4_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param integer[] $object_ids Object IDs
+     * @param array $object_ids Object IDs
      * @param User $user
      * @return string    return JSON
      */

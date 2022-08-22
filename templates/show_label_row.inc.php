@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,13 +48,11 @@ use Ampache\Module\Util\Ui;
     <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=label&amp;id=<?php echo $libitem->id ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')) ?>
     </a>
-    <?php
-    }
+    <?php }
     if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_label_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/labels.php?action=delete&label_id=<?php echo $libitem->id ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>
-    <?php
-    }
+    <?php }
 } ?>
 </td>

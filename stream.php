@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,8 @@ use Ampache\Module\Application\Stream\DownloadAction;
 use Ampache\Module\Application\Stream\PlayFavoriteAction;
 use Ampache\Module\Application\Stream\PlayItemAction;
 use Ampache\Module\Application\Stream\PlaylistRandomAction;
+use Ampache\Module\Application\Stream\RandomAction;
+use Ampache\Module\Application\Stream\SearchRandomAction;
 use Ampache\Module\Application\Stream\TmpPlaylistAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -49,6 +51,8 @@ $dic->get(ApplicationRunner::class)->run(
         ArtistRandomAction::REQUEST_KEY => ArtistRandomAction::class,
         PlayItemAction::REQUEST_KEY => PlayItemAction::class,
         PlayFavoriteAction::REQUEST_KEY => PlayFavoriteAction::class,
+        RandomAction::REQUEST_KEY => RandomAction::class,
+        SearchRandomAction::REQUEST_KEY => SearchRandomAction::class,
         TmpPlaylistAction::REQUEST_KEY => TmpPlaylistAction::class,
         BasketAction::REQUEST_KEY => BasketAction::class,
     ],

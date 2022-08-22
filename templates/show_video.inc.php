@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,8 +66,7 @@ $subtitles = $video->get_subtitles();
     } ?>
 </select>
 </div>
-<?php
-} ?>
+<?php } ?>
 </div>
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
@@ -84,60 +83,47 @@ $subtitles = $video->get_subtitles();
                 <?php echo Userflag::show($video->id, 'video'); ?>
             </div>
         </dd>
-    <?php
-        } ?>
-<?php
-    } ?>
+    <?php } ?>
+<?php } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
             <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_video_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
-                <?php
-            } ?>
+                <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
     <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('video', $video->id, false); ?>
-            <?php
-        } ?>
-        <?php
-    } ?>
+            <?php } ?>
+        <?php } ?>
         <?php if (Access::check_function('download')) { ?>
             <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
-            <?php
-        } ?>
+            <?php } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Catalog::can_remove($video)) { ?>
             <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
-        <?php
-    } ?>
+        <?php } ?>
     </dd>
 <?php
   $videoprops[T_('Title')]   = scrub_out($video->f_name);

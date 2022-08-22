@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,8 +63,7 @@ $('#browse_<?php echo $browse->id; ?>_scroll').jscroll({
     autoTriggerUntil: 5,
 });
 </script>
-<?php
-} ?>
+<?php } ?>
 <?php
 
 // Next
@@ -105,8 +104,7 @@ if ($limit > 0 && $total > $limit) {
         echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter . $argument_param, $value, 'browse_' . $uid . '_alpha_' . $key);
     } ?>
     </div>
-<?php
-} ?>
+<?php } ?>
 <?php if ($pages > 1 && $start > -1) {
         $current_page = 0;
         if ($start > 0) {
@@ -132,8 +130,7 @@ if ($limit > 0 && $total > $limit) {
     &nbsp;
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=-1&browse_uid=' . $uid . $argument_param, T_('All'), 'browse_' . $uid . 'all', '', 'all'); ?></span>
     </span>
-<?php
-        }
+<?php }
     } ?>
     <span class="browse-options">
         <a href="javascript:showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
@@ -143,8 +140,7 @@ if ($limit > 0 && $total > $limit) {
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_grid_view_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_grid_view()) ? '' : 'checked'); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=grid_view&value=' + ($('#browse_" . $browse->id . "_grid_view_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_grid_view_" . $is_header); ?>"><?php echo T_('Grid View'); ?></span>
             <?php if (!$browse->is_static_content()) { ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
-            <?php
-} ?>
+            <?php } ?>
         <?php if ($browse->is_use_pages()) { ?>
             <span>|</span>
             <span>
@@ -160,8 +156,7 @@ if ($limit > 0 && $total > $limit) {
                     </script>
                 </form>
             </span>
-        <?php
-    } ?>
+        <?php } ?>
         </span>
     </span>
 </div>
@@ -169,5 +164,4 @@ if ($limit > 0 && $total > $limit) {
 <?php if (!$browse->is_use_pages() && $is_header) { ?>
 <div id="browse_<?php echo $browse->id; ?>_scroll">
 <p>
-<?php
-    } ?>
+<?php } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,8 +40,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                 <td><?php echo T_('Full Name'); ?>:</td>
                 <td><input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" /></td>
             </tr>
-        <?php
-} ?>
+        <?php } ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
             <td><input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" /></td>
@@ -51,22 +50,19 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                 <td><?php echo T_('Website'); ?>:</td>
                 <td><input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" /></td>
             </tr>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (in_array('state', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('State'); ?>:</td>
                 <td><input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" /></td>
             </tr>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (in_array('city', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('City'); ?>:</td>
                 <td><input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" /></td>
             </tr>
-        <?php
-    } ?>
+        <?php } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
             <td><?php echo AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>

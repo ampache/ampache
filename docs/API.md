@@ -1,7 +1,7 @@
 ---
 title: "Ampache API"
 metaTitle: "Ampache API"
-metaDescription: "API documentation"
+description: "API documentation"
 ---
 
 The Ampache API Provides methods for pulling out it's meta data in the form of
@@ -55,8 +55,8 @@ The key that must be passed to Ampache is `SHA256(TIME+KEY)` where `KEY` is `SHA
 
 ```PHP
 $time = time();
-$key = hash('sha256','mypassword');
-$passphrase = hash('sha256',$time . $key);
+$key = hash('sha256', 'mypassword');
+$passphrase = hash('sha256', $time . $key);
 ```
 
 Once you've generated the encoded passphrase, you can call the following URL (localhost/ampache is the location of your Ampache installation)

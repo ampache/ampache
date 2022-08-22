@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,5 +34,4 @@ use Ampache\Module\System\Dba;
     $load_time     = number_format(($load_time_end - AmpConfig::get('load_time_begin')), 4); ?>
     | <?php echo T_('Load Time: '); ?><?php echo $load_time; ?>
     </span>
-<?php
-} ?>
+<?php } ?>
