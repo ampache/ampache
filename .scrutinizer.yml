@@ -12,7 +12,7 @@ build:
                         format: clover
 filter:
     excluded_paths:
-        - 'public/lib/components/*'
+        - 'lib/components/*'
         - 'vendor/*'
         - 'tests'
     paths: {  }
@@ -21,7 +21,7 @@ tools:
         enabled: true
         filter:
             excluded_paths:
-                - 'public/lib/components/*'
+                - 'lib/components/*'
                 - 'vendor/*'
                 - 'public/themes/*'
                 - '.github.*'
@@ -36,7 +36,7 @@ tools:
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'public/lib/components/*'
+                - 'lib/components/*'
                 - 'vendor/*'
             paths: {  }
     php_analyzer:
@@ -44,11 +44,11 @@ tools:
         extensions:
             - php
         dependency_paths:
-            - 'public/lib/components/*'
+            - 'lib/components/*'
             - 'vendor/*'
         filter:
             excluded_paths:
-                - 'public/lib/components/*'
+                - 'lib/components/*'
                 - 'vendor/*'
                 - 'public/themes/*'
             paths: {  }
@@ -62,19 +62,19 @@ tools:
             - '\bimplement(?:s|ed)?\b'
         filter:
             excluded_paths:
-                - 'public/lib/components/*'
+                - 'lib/components/*'
                 - 'vendor/*'
             paths: {  }
     php_loc:
         enabled: true
         excluded_dirs:
-            - 'public/lib/components/*'
+            - 'lib/components/*'
             - 'vendor/*'
     php_cpd:
         enabled: true
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'public/lib/components/*'
+                - 'lib/components/*'
                 - 'vendor/*'
             paths: {  }
