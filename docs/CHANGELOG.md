@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## Ampache develop
+## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
 
@@ -86,7 +86,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * SubSonic
   * Checking parameters might return the error AND the empty response
 
-## API develop
+## API 5.5.0
 
 ### Added
 
