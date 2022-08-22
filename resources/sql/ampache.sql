@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Jul 26, 2022 at 03:58 PM
+-- Generation Time: Aug 22, 2022 at 01:53 PM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.0.20
+-- PHP Version: 8.1.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -869,7 +869,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -989,7 +989,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', NULL),
 (171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL),
 (172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
-(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme');
+(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
+(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'system', NULL);
 
 -- --------------------------------------------------------
 
@@ -1433,7 +1434,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '550002'),
+('db_version', '550004'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1685,7 +1686,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 171, ''),
 (-1, 172, '0'),
 (-1, 173, '1'),
-(-1, 174, '0');
+(-1, 174, '0'),
+(-1, 175, '0');
 
 -- --------------------------------------------------------
 
