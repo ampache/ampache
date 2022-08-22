@@ -97,5 +97,6 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         MetadataField::garbage_collection();
 
         Catalog::garbage_collect_mapping();
+        Catalog::garbage_collect_filters();
     }
 }

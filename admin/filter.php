@@ -23,18 +23,29 @@
 
 declare(strict_types=1);
 
+use Ampache\Module\Application\Admin\Filter\AddFilterAction;
+use Ampache\Module\Application\Admin\Filter\ConfirmDeleteAction;
+use Ampache\Module\Application\Admin\Filter\DeleteAction;
+use Ampache\Module\Application\Admin\Filter\ShowAction;
+use Ampache\Module\Application\Admin\Filter\ShowAddFilterAction;
+use Ampache\Module\Application\Admin\Filter\ShowEditAction;
+use Ampache\Module\Application\Admin\Filter\UpdateFilterAction;
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Index\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/src/Config/Init.php';
-
+$dic = require __DIR__ . '/../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
+        AddFilterAction::REQUEST_KEY => AddFilterAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowAddFilterAction::REQUEST_KEY => ShowAddFilterAction::class,
+        ShowEditAction::REQUEST_KEY => ShowEditAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
+        UpdateFilterAction::REQUEST_KEY => UpdateFilterAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

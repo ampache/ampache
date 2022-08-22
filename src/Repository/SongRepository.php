@@ -27,6 +27,8 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Song;
 
@@ -44,7 +46,13 @@ final class SongRepository implements SongRepositoryInterface
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= " AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
+
         if ($limit) {
             $sql .= " LIMIT " . (string)$limit;
         }
@@ -69,6 +77,11 @@ final class SongRepository implements SongRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song_data`.`label` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ? ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= " AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, [$labelName]);
@@ -91,6 +104,11 @@ final class SongRepository implements SongRepositoryInterface
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "ORDER BY RAND()";
 
         $db_results = Dba::read($sql, array($artist->getId()));
@@ -114,6 +132,11 @@ final class SongRepository implements SongRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = " . $artist->getId() . " AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = " . $artist->getId() . " AND `artist_map`.`object_type` = 'song' ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string)$count;
 
         $db_results = Dba::read($sql);
@@ -136,6 +159,11 @@ final class SongRepository implements SongRepositoryInterface
         $sql   = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
@@ -158,6 +186,11 @@ final class SongRepository implements SongRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? ";
+
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        }
+
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
