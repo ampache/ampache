@@ -26,6 +26,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var integer|string $upload_max */
+
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));

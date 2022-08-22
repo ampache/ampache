@@ -61,6 +61,7 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Update codeql-analysis.yml to v2
 * When streaming a Democratic or Random item, redirect to the result
 * Hide 'is_true' boxes on search rows (you can't change it so why show it?)
+* Hide action buttons from random and demo webplayer lists
 
 ### Fixed
 
@@ -75,6 +76,9 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Don't try to load the playlist ialog from the webplayer when you can't add things
 * When using random/Democratic play send the additional parameters to the actual media
 * Respect play urls with transcode_to instead of format
+* Updated example `docs/examples/inotifywait.sh`
+* Podcast_episode browse may sent a camel case argument
+* Null max_upload_size could still be counted as a limit
 * Search
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
