@@ -182,10 +182,11 @@ class Art extends database_object
 
             return false;
         }
+        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
 
         // Check image size doesn't exceed the limit
-        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
-            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+        if ($max_upload_size > 0 && strlen((string) $source) > $max_upload_size) {
+            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . $max_upload_size . ').', 1);
 
             return false;
         }
