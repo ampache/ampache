@@ -1,7 +1,6 @@
 # CHANGELOG
 
-
-## Ampache develop
+## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
 
@@ -9,14 +8,14 @@ Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) fo
 
 **NOTE** Any user that has a private catalog will have their own filter group created which includes all public catalogs
 
-PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 goes out of support
+PHP8.1 has now been fixed up completely and is now fully supported.
 
 ### Added
 
 * Update Copyright notice to 2022
 * Added a new option 'Random Play' (shuffle) to playlists and smartlists
 * Add 'Recently Skipped' to user pages
-* Add Podcase Episodes to the browse pages and sidebar
+* Add Podcast Episodes to the browse pages and sidebar
 * Translate podcast episode state and some other missing ones
 * Allow using a smartplaylist in Democratic play
 * Allow podcast_episode table sort by `time` and `state`
@@ -71,9 +70,9 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * Lots of docstring and code issues
 * Fixed up deleting plays (and now skips) on the user pages
 * Sorting playlist, user and smartlist names in search rows
-* SQL in get_tags with catalog_filter is disabled
+* SQL in get_tags when catalog_filter is disabled
 * A lot of browse filters were missing for certain object types
-* Don't try to load the playlist ialog from the webplayer when you can't add things
+* Don't try to load the playlist dialog from the webplayer when you can't add things
 * When using random/Democratic play send the additional parameters to the actual media
 * Respect play urls with transcode_to instead of format
 * Updated example `docs/examples/inotifywait.sh`
@@ -86,7 +85,9 @@ PHP8.1 has now been fixed up completely and is now full supported before PHP7.4 
 * SubSonic
   * Checking parameters might return the error AND the empty response
 
-## API develop
+## API 5.5.0
+
+This will likely be the last 5.x API release. API6 will be a continuation of API5 and not be a significant change like the 4->5 transition.
 
 ### Added
 
