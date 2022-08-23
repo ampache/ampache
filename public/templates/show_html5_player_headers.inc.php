@@ -279,9 +279,17 @@ if ($iframed) { ?>
             if (jplaylist['playlist'].length > 0) {
                 var item_ids = "";
                 for (var i = 0; i < jplaylist['playlist'].length; i++) {
-                    item_ids += "," + jplaylist['playlist'][i]["media_id"];
+                    if (jplaylist['playlist'][0]['media_type'] === "song") {
+                        if (item_ids === "") {
+                            item_ids = jplaylist['playlist'][i]["media_id"];
+                        } else {
+                            item_ids += "," + jplaylist['playlist'][i]["media_id"];
+                        }
+                    }
                 }
-                showPlaylistDialog(event, jplaylist['playlist'][0]['media_type'], item_ids);
+                if (item_ids !== "") {
+                    showPlaylistDialog(event, 'song', item_ids);
+                }
             }
         }
 

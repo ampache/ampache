@@ -2698,8 +2698,7 @@ abstract class Catalog extends database_object
             $labelRepository = static::getLabelRepository();
 
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = Label::helper($label_name)
-                    ?: $labelRepository->lookup($label_name);
+                $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
                     $artists = $label->get_artists();
