@@ -366,12 +366,16 @@ final class SongViewAdapter implements SongViewAdapterInterface
         } else {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
-        $songprops[T_('Comment')]       = scrub_out($this->song->comment);
-        $label_string                   = '';
-        foreach (array_map('trim', explode(';', $this->song->label)) as $label_name) {
-            $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
+        $songprops[T_('Comment')] = scrub_out($this->song->comment);
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            $label_string                   = '';
+            foreach (array_map('trim', explode(';', $this->song->label)) as $label_name) {
+                $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+            }
+            $songprops[T_('Label')] = rtrim($label_string, ', ');
+        } else {
+            $songprops[T_('Label')] = scrub_out($this->song->label);
         }
-        $songprops[T_('Label')]          = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) ? $label_string : scrub_out($this->song->label);
         $songprops[T_('Song Language')]  = scrub_out($this->song->language);
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
