@@ -46,9 +46,6 @@ $showArtist      = AmpConfig::get('show_artist'); ?>
     <?php if (AmpConfig::get('label')) { ?>
         <a class="category <?php echo ($filter_str == 'label') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo T_('Labels'); ?></a>
     <?php }
-    if (AmpConfig::get('channel')) { ?>
-        <a class="category <?php echo ($filter_str == 'channel') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo T_('Channels'); ?></a>
-    <?php }
     if (AmpConfig::get('broadcast')) { ?>
         <a class="category <?php echo ($filter_str == 'broadcast') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a>
     <?php }

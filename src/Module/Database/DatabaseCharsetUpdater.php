@@ -114,13 +114,6 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `uri` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `username` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `password` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `name` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `description` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `url` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `interface` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `admin_password` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `stream_type` varchar(8) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `democratic` MODIFY COLUMN `name` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `image` MODIFY COLUMN `mime` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `image` MODIFY COLUMN `size` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");

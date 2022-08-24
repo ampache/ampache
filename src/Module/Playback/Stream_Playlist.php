@@ -305,10 +305,6 @@ class Stream_Playlist
                     $url['author'] = $object->f_artist_full;
                     $url['codec']  = $object->type;
                     break;
-                case 'channel':
-                    $url['title'] = $object->name;
-                    $url['codec'] = $object->stream_type;
-                    break;
                 case 'podcast_episode':
                     $url['title']     = $object->f_name;
                     $url['author']    = $object->f_podcast;

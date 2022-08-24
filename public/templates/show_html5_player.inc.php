@@ -180,9 +180,6 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     } else if (playlist[index]['media_type'] === "song_preview") {
                         var currenttype = 'song_preview'
                         var currentobject = 'song_preview'
-                    } else if (playlist[index]['media_type'] === "channel") {
-                        var currenttype = 'channel'
-                        var currentobject = 'channel'
                     } else if (playlist[index]['media_type'] === "podcast_episode") {
                         var currenttype = 'podcast_episode'
                         var currentobject = 'podcast_episode'

@@ -529,7 +529,6 @@ final class InstallationHelper implements InstallationHelperInterface
             'licensing' => 'false',
             'wanted' => 'false',
             'channel' => 'false',
-            'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
             'share' => 'false'
@@ -548,7 +547,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $trconfig['ratings']                   = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
-                $trconfig['channel']                   = 'false';
                 $trconfig['live_stream']               = 'false';
 
                 $dbconfig['download']    = '0';

@@ -132,14 +132,6 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
-    <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('flow'); ?>
-                <?php echo T_('Create Channel'); ?>
-            </a>
-        </li>
-    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <?php $search_id = $playlist->has_search($playlist->user);
         if ($search_id > 0) { ?>
