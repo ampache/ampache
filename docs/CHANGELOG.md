@@ -2,11 +2,6 @@
 
 ## Ampache develop
 
-### Added
-
-* Translation Updates August 2022
-* Grouping for label search items
-
 ### Changed
 
 * webplayer
@@ -31,6 +26,26 @@
 * Api::get_indexes set album_artist filter correctly
 * Api4::get_indexes set album_artist filter correctly
 * Api::artists set album_artist filter correctly
+
+## Ampache 5.5.1
+
+I made a mistake in the release string so we need a new point release already!
+
+You will get this error when using the zip releases so we need to do it. At least on the plus side you'll get the latest translations.
+
+### Added
+
+* Translation Updates August 2022
+* Grouping for label search items
+
+### Fixed
+
+* Release version string is incorrect and will tell you you have updates if you use the release files
+* Missing comma between label links on song pages
+
+## API 5.5.1
+
+**NO CHANGE**
 
 ## Ampache 5.5.0
 
