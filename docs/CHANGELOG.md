@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Ampache 5.5.1
+
+I made a mistake in the release string so we need a new point release already!
+
+### Added
+
+* Translation Updates August 2022
+* Grouping for label search items
+
+### Fixed
+
+* Release version string is incorrect and will tell you you have updates if you use the release files
+* Missing comma between label links on song pages
+
 ## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
