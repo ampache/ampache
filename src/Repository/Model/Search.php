@@ -2223,13 +2223,6 @@ class Search extends playlist_object
             } // switch on ruletype artist
         } // foreach rule
 
-        if ($album_artist) {
-            $where[] = "`artist`.`album_count` > 0";
-        }
-        if ($song_artist) {
-            $where[] = "`artist`.`song_count` > 0";
-        }
-
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
@@ -2267,6 +2260,20 @@ class Search extends playlist_object
             $table['0_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`artist_id` = `artist`.`id`";
             $table['1_song']       = "LEFT JOIN `song` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song'";
             $where_sql             = "(" . $where_sql . ") AND `image`.`object_type`='artist' AND `image`.`size`='original'";
+        }
+        if ($album_artist) {
+            if (!empty($where_sql)) {
+                $where_sql = "(" . $where_sql . ") AND `artist`.`album_count` > 0";
+            } else {
+                $where_sql = "`artist`.`album_count` > 0";
+            }
+        }
+        if ($song_artist) {
+            if (!empty($where_sql)) {
+                $where_sql = "(" . $where_sql . ") AND `artist`.`song_count` > 0";
+            } else {
+                $where_sql = "`artist`.`song_count` > 0";
+            }
         }
         ksort($table);
         $table_sql  = implode(' ', $table);
