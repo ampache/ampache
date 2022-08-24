@@ -307,6 +307,9 @@ class Json4_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if (!isset($artist->id)) {
+                continue;
+            }
             $artist->format();
 
             $rating     = new Rating($artist_id, 'artist');
@@ -319,12 +322,12 @@ class Json4_Data
             if (in_array("albums", $include)) {
                 $albums = self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false);
             } else {
-                $albums = ($artist->albums ?: 0);
+                $albums = ($artist->albums ?? 0);
             }
             if (in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false);
             } else {
-                $songs = ($artist->songs ?: 0);
+                $songs = ($artist->songs ?? 0);
             }
 
             array_push($JSON, array(

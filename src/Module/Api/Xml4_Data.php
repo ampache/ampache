@@ -366,6 +366,9 @@ class Xml4_Data
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user_id, false);
                     } else {
                         $artist = new Artist($object_id);
+                        if (!isset($artist->id)) {
+                            continue;
+                        }
                         $albums = static::getAlbumRepository()->getByArtist($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
@@ -517,6 +520,9 @@ class Xml4_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if (!isset($artist->id)) {
+                continue;
+            }
             $artist->format();
 
             $rating     = new Rating($artist_id, 'artist');
@@ -530,12 +536,12 @@ class Xml4_Data
             if (in_array("albums", $include)) {
                 $albums = self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false);
             } else {
-                $albums = ($artist->albums ?: 0);
+                $albums = ($artist->albums ?? 0);
             }
             if (in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false);
             } else {
-                $songs = ($artist->songs ?: 0);
+                $songs = ($artist->songs ?? 0);
             }
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . ($artist->albums ?: 0) . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . ($artist->songs ?: 0) . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";

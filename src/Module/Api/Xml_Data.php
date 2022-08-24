@@ -610,6 +610,9 @@ class Xml_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
+            if (!isset($artist->id)) {
+                continue;
+            }
             $artist->format();
 
             $rating     = new Rating($artist_id, 'artist');
