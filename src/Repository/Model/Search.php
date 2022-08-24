@@ -37,9 +37,10 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array('song', 'album', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
+    public const VALID_TYPES     = array('song', 'album', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
 
-    public $searchtype;
+    public $searchType;
+    public $objectType;
     public $rules          = array();
     public $logic_operator = 'AND';
     public $type           = 'public';
@@ -60,20 +61,20 @@ class Search extends playlist_object
     /**
      * constructor
      * @param integer $search_id
-     * @param string $searchtype
+     * @param string $searchType
      * @param User|null $user
      */
-    public function __construct($search_id = 0, $searchtype = 'song', ?User $user = null)
+    public function __construct($search_id = 0, $searchType = 'song', ?User $user = null)
     {
         if ($user !== null) {
             $this->search_user = $user;
         } else {
             $this->search_user = Core::get_global('user');
         }
+        //debug_event(self::class, "SearchID: $search_id; Search Type: $searchType\n" . print_r($this, true), 5);
 
-        //debug_event(self::class, "SearchID: $search_id; Search Type: $searchtype\n" . print_r($this, true), 5);
-
-        $this->searchtype = $searchtype;
+        $this->searchType  = $searchType;
+        $this->objectType = $searchType;
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
@@ -97,7 +98,7 @@ class Search extends playlist_object
         $this->set_basetypes();
 
         $this->types = array();
-        switch ($searchtype) {
+        switch ($searchType) {
             case 'song':
                 $this->song_types();
                 $this->order_by = '`song`.`file`';
@@ -109,6 +110,11 @@ class Search extends playlist_object
             case 'video':
                 $this->video_types();
                 $this->order_by = '`video`.`file`';
+                break;
+            case 'album_artist':
+                $this->artist_types();
+                $this->order_by    = '`artist`.`name`';
+                $this->objectType = 'artist';
                 break;
             case 'artist':
                 $this->artist_types();
@@ -139,7 +145,7 @@ class Search extends playlist_object
                 $this->tag_types();
                 $this->order_by = '`tag`.`name`';
                 break;
-        } // end switch on searchtype
+        } // end switch on searchType
     } // end constructor
 
     public function getId(): int
@@ -531,7 +537,7 @@ class Search extends playlist_object
     /**
      * song_types
      *
-     * this is where all the searchtypes for songs are defined
+     * this is where all the searchTypes for songs are defined
      */
     private function song_types()
     {
@@ -672,7 +678,7 @@ class Search extends playlist_object
     /**
      * artist_types
      *
-     * this is where all the searchtypes for artists are defined
+     * this is where all the searchTypes for artists are defined
      */
     private function artist_types()
     {
@@ -744,7 +750,7 @@ class Search extends playlist_object
     /**
      * album_types
      *
-     * this is where all the searchtypes for albums are defined
+     * this is where all the searchTypes for albums are defined
      */
     private function album_types()
     {
@@ -819,7 +825,7 @@ class Search extends playlist_object
     /**
      * video_types
      *
-     * this is where all the searchtypes for videos are defined
+     * this is where all the searchTypes for videos are defined
      */
     private function video_types()
     {
@@ -829,7 +835,7 @@ class Search extends playlist_object
     /**
      * playlist_types
      *
-     * this is where all the searchtypes for playlists are defined
+     * this is where all the searchTypes for playlists are defined
      */
     private function playlist_types()
     {
@@ -847,7 +853,7 @@ class Search extends playlist_object
     /**
      * podcast_types
      *
-     * this is where all the searchtypes for podcasts are defined
+     * this is where all the searchTypes for podcasts are defined
      */
     private function podcast_types()
     {
@@ -873,7 +879,7 @@ class Search extends playlist_object
     /**
      * podcast_episode_types
      *
-     * this is where all the searchtypes for podcast_episodes are defined
+     * this is where all the searchTypes for podcast_episodes are defined
      */
     private function podcast_episode_types()
     {
@@ -897,7 +903,7 @@ class Search extends playlist_object
     /**
      * label_types
      *
-     * this is where all the searchtypes for labels are defined
+     * this is where all the searchTypes for labels are defined
      */
     private function label_types()
     {
@@ -909,7 +915,7 @@ class Search extends playlist_object
     /**
      * user_types
      *
-     * this is where all the searchtypes for users are defined
+     * this is where all the searchTypes for users are defined
      */
     private function user_types()
     {
@@ -919,7 +925,7 @@ class Search extends playlist_object
     /**
      * tag_types
      *
-     * this is where all the searchtypes for Genres are defined
+     * this is where all the searchTypes for Genres are defined
      */
     private function tag_types()
     {
@@ -958,10 +964,11 @@ class Search extends playlist_object
 
         // Verify the type
         $search_type = $data['type'] ?? '';
-        //Search::VALID_TYPES = array('song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
+        //Search::VALID_TYPES = array('song', 'album', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
             case 'song':
             case 'album':
+            case 'album_artist':
             case 'artist':
             case 'label':
             case 'playlist':
@@ -1189,7 +1196,7 @@ class Search extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
-                'object_type' => $this->searchtype,
+                'object_type' => $this->objectType,
                 'track' => $count++,
                 'track_id' => $row['id'],
             );
@@ -1241,7 +1248,7 @@ class Search extends playlist_object
             } else {
                 $sql .= " AND ";
             }
-            $sql .= "`" . $this->searchtype . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->searchtype . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
@@ -1261,7 +1268,7 @@ class Search extends playlist_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = array(
                 'object_id' => $row['id'],
-                'object_type' => $this->searchtype
+                'object_type' => $this->objectType
             );
         }
 
@@ -1325,7 +1332,7 @@ class Search extends playlist_object
         // parse the remaining rule* keys
         $this->rules  = array();
         foreach ($data as $rule => $value) {
-            if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
+            if ((($this->objectType == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $this->name_to_basetype($value)) {
@@ -1410,7 +1417,8 @@ class Search extends playlist_object
      */
     public function to_sql()
     {
-        return call_user_func(array($this, $this->searchtype . "_to_sql"));
+        debug_event(self::class, 'to_sql: ' . $this->searchType, 5);
+        return call_user_func(array($this, $this->searchType . "_to_sql"));
     }
 
     /**
@@ -1881,6 +1889,17 @@ class Search extends playlist_object
     }
 
     /**
+     * album_artist_to_sql
+     *
+     * Handles the generation of the SQL for album_artist searches.
+     * @return array
+     */
+    private function album_artist_to_sql()
+    {
+        return self::artist_to_sql();
+    }
+
+    /**
      * artist_to_sql
      *
      * Handles the generation of the SQL for artist searches.
@@ -1892,6 +1911,7 @@ class Search extends playlist_object
         $user_id            = $this->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
+        $album_artist       = ($this->searchType == 'album_artist');
 
         $where       = array();
         $table       = array();
@@ -2189,6 +2209,10 @@ class Search extends playlist_object
                     break;
             } // switch on ruletype artist
         } // foreach rule
+
+        if ($album_artist) {
+            $where[] = "`artist`.`album_count` < 0";
+        }
 
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;

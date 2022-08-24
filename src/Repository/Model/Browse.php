@@ -483,6 +483,12 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = '')
     {
+        if ($type === 'album_artist') {
+            $this->set_type('artist', $custom_base);
+            $this->set_album_artist(true);
+
+            return;
+        }
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
