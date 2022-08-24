@@ -37,7 +37,7 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array('song', 'album', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
+    public const VALID_TYPES     = array('song', 'album', 'song_artist', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
 
     public $searchType;
     public $objectType;
@@ -73,7 +73,7 @@ class Search extends playlist_object
         }
         //debug_event(self::class, "SearchID: $search_id; Search Type: $searchType\n" . print_r($this, true), 5);
 
-        $this->searchType  = $searchType;
+        $this->searchType = $searchType;
         $this->objectType = $searchType;
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
@@ -112,8 +112,9 @@ class Search extends playlist_object
                 $this->order_by = '`video`.`file`';
                 break;
             case 'album_artist':
+            case 'song_artist':
                 $this->artist_types();
-                $this->order_by    = '`artist`.`name`';
+                $this->order_by   = '`artist`.`name`';
                 $this->objectType = 'artist';
                 break;
             case 'artist':
@@ -1417,7 +1418,6 @@ class Search extends playlist_object
      */
     public function to_sql()
     {
-        debug_event(self::class, 'to_sql: ' . $this->searchType, 5);
         return call_user_func(array($this, $this->searchType . "_to_sql"));
     }
 
@@ -1912,6 +1912,7 @@ class Search extends playlist_object
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
         $album_artist       = ($this->searchType == 'album_artist');
+        $song_artist        = ($this->searchType == 'song_artist');
 
         $where       = array();
         $table       = array();
@@ -2212,6 +2213,9 @@ class Search extends playlist_object
 
         if ($album_artist) {
             $where[] = "`artist`.`album_count` > 0";
+        }
+        if ($song_artist) {
+            $where[] = "`artist`.`song_count` > 0";
         }
 
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
