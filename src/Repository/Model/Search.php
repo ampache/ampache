@@ -901,8 +901,9 @@ class Search extends playlist_object
      */
     private function label_types()
     {
-        $this->type_text('title', T_('Name'));
-        $this->type_text('category', T_('Category'));
+        $t_label = T_('Label');
+        $this->type_text('title', T_('Name'), $t_label);
+        $this->type_text('category', T_('Category'), $t_label);
     }
 
     /**
