@@ -969,6 +969,7 @@ class Search extends playlist_object
         switch ($search_type) {
             case 'song':
             case 'album':
+            case 'song_artist':
             case 'album_artist':
             case 'artist':
             case 'label':
