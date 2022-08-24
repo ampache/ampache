@@ -462,5 +462,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function remove()
     {
+        return true;
     }
 }

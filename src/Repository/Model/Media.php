@@ -91,8 +91,8 @@ interface Media
 
     /**
      * remove
-     * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove();
 }

@@ -386,7 +386,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     } // update
 
     /**
-     * @return PDOStatement|boolean
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -403,7 +405,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
                 Art::garbage_collection('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);

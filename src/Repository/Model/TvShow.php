@@ -465,7 +465,9 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * @return PDOStatement|boolean
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -482,7 +484,7 @@ class TvShow extends database_object implements library_item
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
                 Art::garbage_collection('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);

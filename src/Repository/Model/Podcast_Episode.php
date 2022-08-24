@@ -542,7 +542,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * remove
-     * @return PDOStatement|boolean
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -561,7 +562,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
         $sql = "DELETE FROM `podcast_episode` WHERE `id` = ?";
 
-        return Dba::write($sql, $params);
+        return (Dba::write($sql, $params) !== false);
     }
 
     /**

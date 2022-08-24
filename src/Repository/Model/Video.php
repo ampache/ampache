@@ -1107,7 +1107,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -1123,7 +1125,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             Dba::write($sql, $params);
 
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = Dba::write($sql, $params);
+            $deleted = (Dba::write($sql, $params) !== false);
             if ($deleted) {
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);

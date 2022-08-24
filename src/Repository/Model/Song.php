@@ -2560,7 +2560,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * remove
-     * Remove the song from disk.
+     * Delete the object from disk and/or database where applicable.
      * @return bool
      */
     public function remove(): bool
