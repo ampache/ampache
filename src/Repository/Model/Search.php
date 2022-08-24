@@ -2211,7 +2211,7 @@ class Search extends playlist_object
         } // foreach rule
 
         if ($album_artist) {
-            $where[] = "`artist`.`album_count` < 0";
+            $where[] = "`artist`.`album_count` > 0";
         }
 
         $join['catalog']     = array_key_exists('catalog', $join) || $catalog_disable || $catalog_filter;
