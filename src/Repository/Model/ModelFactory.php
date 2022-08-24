@@ -111,12 +111,6 @@ final class ModelFactory implements ModelFactoryInterface
         return new Live_Stream($liveStreamId);
     }
 
-    public function createChannel(
-        int $channelId
-    ): Channel {
-        return new Channel($channelId);
-    }
-
     public function createPodcast(
         int $podcastId
     ): Podcast {

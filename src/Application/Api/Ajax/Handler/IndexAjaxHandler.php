@@ -33,7 +33,6 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Recommendation;
@@ -349,33 +348,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
-                break;
-            case 'start_channel':
-                if (Access::check('interface', 75)) {
-                    ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        if ($channel->check_channel()) {
-                            $channel->stop_channel();
-                        }
-                        $channel->start_channel();
-                        sleep(1);
-                        echo $channel->get_channel_state();
-                    }
-                    $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
-                }
-                break;
-            case 'stop_channel':
-                if (Access::check('interface', 75)) {
-                    ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        $channel->stop_channel();
-                        sleep(1);
-                        echo $channel->get_channel_state();
-                    }
-                    $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
-                }
                 break;
             case 'slideshow':
                 ob_start();

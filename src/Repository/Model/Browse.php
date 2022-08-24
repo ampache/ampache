@@ -376,10 +376,6 @@ class Browse extends Query
                 $box_title = T_('Songs');
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;
-            case 'channel':
-                $box_title = T_('Channels');
-                $box_req   = Ui::find_template('show_channels.inc.php');
-                break;
             case 'broadcast':
                 $box_title = T_('Broadcasts');
                 $box_req   = Ui::find_template('show_broadcasts.inc.php');

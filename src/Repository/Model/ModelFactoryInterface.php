@@ -75,10 +75,6 @@ interface ModelFactoryInterface
         int $liveStreamId
     ): Live_Stream;
 
-    public function createChannel(
-        int $channelId
-    ): Channel;
-
     public function createPodcast(
         int $podcastId
     ): Podcast;
