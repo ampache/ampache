@@ -1890,6 +1890,17 @@ class Search extends playlist_object
     }
 
     /**
+     * song_artist_to_sql
+     *
+     * Handles the generation of the SQL for song_artist searches.
+     * @return array
+     */
+    private function song_artist_to_sql()
+    {
+        return self::artist_to_sql();
+    }
+
+    /**
      * album_artist_to_sql
      *
      * Handles the generation of the SQL for album_artist searches.
