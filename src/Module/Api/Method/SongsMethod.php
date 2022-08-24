@@ -68,7 +68,7 @@ final class SongsMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
         // Filter out disabled songs
-        Api::set_filter('enabled', '1');
+        Api::set_filter('enabled', '1', $browse);
 
         $songs = $browse->get_objects();
         if (empty($songs)) {

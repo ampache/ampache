@@ -23,10 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * API Class
@@ -138,20 +135,6 @@ class Api4
     public static $version = '443000';
 
     /**
-     *  @var Browse $browse
-     */
-    private static $browse = null;
-
-    public static function getBrowse(): Browse
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-
-        return self::$browse;
-    }
-
-    /**
      * constructor
      * This really isn't anything to do here, so it's private
      */
@@ -159,17 +142,6 @@ class Api4
     {
         // Rien a faire
     } // constructor
-
-    /**
-     * _auto_init
-     * Automatically called when this class is loaded.
-     */
-    public static function _auto_init()
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-    }
 
     /**
      * message

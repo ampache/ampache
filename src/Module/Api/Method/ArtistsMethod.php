@@ -59,19 +59,20 @@ final class ArtistsMethod
      */
     public static function artists(array $input): bool
     {
-        $browse = Api::getBrowse();
+        $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
+        $browse       = Api::getBrowse();
         $browse->reset_filters();
-        $browse->set_type('artist');
+        if ($album_artist) {
+            $browse->set_type('album_artist');
+        } else {
+            $browse->set_type('artist');
+        }
         $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
-        // set the album_artist filter (if enabled)
-        if (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1) {
-            Api::set_filter('album_artist', true);
-        }
 
         $artists = $browse->get_objects();
         if (empty($artists)) {

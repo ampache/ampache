@@ -29,7 +29,6 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Session;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api4;
 use Ampache\Repository\Model\User;
 
 /**
@@ -56,7 +55,7 @@ final class Albums4Method
      */
     public static function albums(array $input)
     {
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');

@@ -66,7 +66,8 @@ final class GetIndexesMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
+        $album_artist = ((string)$input['type'] == 'album_artist');
+        $type         = ($album_artist) ? 'artist' : (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -98,17 +99,17 @@ final class GetIndexesMethod
         }
         $browse = Api::getBrowse();
         $browse->reset_filters();
-        $browse->set_type($type);
+        if ($album_artist) {
+            $browse->set_type('album_artist');
+        } else {
+            $browse->set_type($type);
+        }
         $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
-        // set the album_artist filter (if enabled)
-        if ((string) $input['type'] == 'album_artist') {
-            Api::set_filter('album_artist', true, $browse);
-        }
 
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);

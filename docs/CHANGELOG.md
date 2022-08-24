@@ -24,6 +24,14 @@
   * Add song_artist as a search type (uses artist rules)
   * Add album_artist as a search type (uses artist rules)
 
+### Fixed
+
+* Api::songs set_filter call without browse parameter may have lost info
+* Api4::songs set_filter call without browse parameter may have lost info
+* Api::get_indexes set album_artist filter correctly
+* Api4::get_indexes set album_artist filter correctly
+* Api::artists set album_artist filter correctly
+
 ## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
