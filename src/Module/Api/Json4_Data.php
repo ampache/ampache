@@ -410,7 +410,7 @@ class Json4_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include)) {
+            if (in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user_id, false);
             } else {
                 $songs = $album->song_count;

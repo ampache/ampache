@@ -44,9 +44,12 @@ class AlbumSongs3Method
      */
     public static function album_songs(array $input)
     {
-        $album = new Album($input['filter']);
-        $songs = static::getAlbumRepository()->getSongs($album->id);
         $user  = User::get_from_username(Session::username($input['auth']));
+        $album = new Album($input['filter']);
+        $songs = array();
+        if (isset($album->id)) {
+            $songs = static::getAlbumRepository()->getSongs($album->id);
+        }
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);

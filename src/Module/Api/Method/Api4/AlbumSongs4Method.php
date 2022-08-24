@@ -57,24 +57,24 @@ class AlbumSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new Album($input['filter']);
+        $album = new Album((int)$input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
 
-        // songs for all disks
-        if (AmpConfig::get('album_group')) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $allsongs = static::getAlbumRepository()->getSongs($discid);
+        if (isset($album->id)) {
+            // songs for all disks
+            if (AmpConfig::get('album_group')) {
+                $disc_ids = $album->get_group_disks_ids();
+                $allsongs = static::getAlbumRepository()->getSongsGrouped($disc_ids);
                 foreach ($allsongs as $songid) {
                     $songs[] = $songid;
                 }
+            } else {
+                // songs for just this disk
+                $songs = static::getAlbumRepository()->getSongs($album->id);
             }
-        } else {
-            // songs for just this disk
-            $songs = static::getAlbumRepository()->getSongs($album->id);
         }
         if (!empty($songs)) {
             switch ($input['api_format']) {

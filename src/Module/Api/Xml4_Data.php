@@ -573,6 +573,9 @@ class Xml4_Data
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
+            if (!isset($album->id)) {
+                continue;
+            }
             $album->format();
 
             $disk   = $album->disk;
@@ -594,7 +597,7 @@ class Xml4_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include)) {
+            if (in_array("songs", $include) && isset($album->id)) {
                 $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user_id, false);
             } else {
                 $songs = $album->song_count;
