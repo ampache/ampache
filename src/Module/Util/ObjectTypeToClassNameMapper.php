@@ -26,7 +26,6 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
@@ -61,7 +60,6 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
-        'channel' => Channel::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
         'user' => User::class,

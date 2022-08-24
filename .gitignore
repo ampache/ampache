@@ -18,7 +18,6 @@ logs/
 nbproject/
 node_modules/
 public/.maintenance
-public/channel/.htaccess
 public/play/.htaccess
 public/rest/.htaccess
 public/lib/components

@@ -79,7 +79,6 @@ final class ConfigurationKeyEnum
     public const CATALOG_CHECK_DUPLICATE               = 'catalog_check_duplicate';
     public const CATALOG_DISABLE                       = 'catalog_disable';
     public const CATALOG_FILTER                        = 'catalog_filter';
-    public const CHANNEL                               = 'channel';
     public const COMMON_ABBR                           = 'common_abbr';
     public const COMPOSER_BINARY_PATH                  = 'composer_binary_path';
     public const CRON_CACHE                            = 'cron_cache';

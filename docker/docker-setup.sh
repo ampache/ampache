@@ -1,9 +1,6 @@
 #!/bin/sh
 
 # create the htaccess files
-if [ ! -f ../public/channel/.htaccess ]; then
-  cp ../public/channel/.htaccess.dist ../public/channel/.htaccess
-fi
 if [ ! -f ../public/play/.htaccess ]; then
   cp ../public/play/.htaccess.dist ../public/play/.htaccess
 fi

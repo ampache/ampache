@@ -313,7 +313,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
                  * Templates that don't need anything special
                  *
                  * broadcast_row
-                 * channel_row
                  * label_row
                  * live_stream_row
                  * pvmsg_row

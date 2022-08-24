@@ -538,15 +538,6 @@ function check_config_writable()
 /**
  * @return boolean
  */
-function check_htaccess_channel_writable()
-{
-    return ((file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/')));
-}
-
-/**
- * @return boolean
- */
 function check_htaccess_rest_writable()
 {
     return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))

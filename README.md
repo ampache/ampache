@@ -85,8 +85,8 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-/channel/.htaccess, and /play/.htaccess files if any.
+its place and then copying the old /config/ampache.cfg.php,
+/rest/.htaccess, and /play/.htaccess files if any.
 All database updates will be handled by Ampache.
 
 ## License

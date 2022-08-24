@@ -97,9 +97,6 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php } ?>
-            <?php if (AmpConfig::get('channel')) { ?>
-                <li id="sb_home_browse_channel"><a href="<?php echo $web_path; ?>/browse.php?action=channel"><?php echo $t_channels ?></a></li>
-            <?php } ?>
             <?php if (AmpConfig::get('broadcast')) { ?>
                 <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts ?></a></li>
             <?php } ?>

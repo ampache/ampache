@@ -61,7 +61,6 @@ class Browse extends Query
         'wanted',
         'share',
         'song_preview',
-        'channel',
         'broadcast',
         'license',
         'tvshow',

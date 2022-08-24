@@ -29,7 +29,6 @@ use Ampache\Module\Application\Browse\AlbumArtistAction;
 use Ampache\Module\Application\Browse\ArtistAction;
 use Ampache\Module\Application\Browse\BroadcastAction;
 use Ampache\Module\Application\Browse\CatalogAction;
-use Ampache\Module\Application\Browse\ChannelAction;
 use Ampache\Module\Application\Browse\ClipAction;
 use Ampache\Module\Application\Browse\FileAction;
 use Ampache\Module\Application\Browse\LabelAction;
@@ -71,7 +70,6 @@ $dic->get(ApplicationRunner::class)->run(
         LiveStreamAction::REQUEST_KEY => LiveStreamAction::class,
         TvShowAction::REQUEST_KEY => TvShowAction::class,
         LabelAction::REQUEST_KEY => LabelAction::class,
-        ChannelAction::REQUEST_KEY => ChannelAction::class,
         BroadcastAction::REQUEST_KEY => BroadcastAction::class,
         VideoAction::REQUEST_KEY => VideoAction::class,
         PodcastAction::REQUEST_KEY => PodcastAction::class,
