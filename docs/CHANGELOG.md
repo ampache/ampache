@@ -14,6 +14,10 @@ I made a mistake in the release string so we need a new point release already!
 * Release version string is incorrect and will tell you you have updates if you use the release files
 * Missing comma between label links on song pages
 
+## API 5.5.1
+
+**NO CHANGE**
+
 ## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
