@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Ampache develop
+
+### Added
+
+* Translation Updates August 2022
+* Grouping for label search items
+
+### Changed
+
+* webplayer
+  * Only send songs (for now) to the 'Add all to playlist' button
+
+### Fixed
+
+* Missing comma between label links on song pages
+
+## API develop
+
+### Added
+
+* advanced_search
+  * Add song_artist as a search type (uses artist rules)
+  * Add album_artist as a search type (uses artist rules)
+
 ## Ampache 5.5.0
 
 Private catalogs have been given a lot of love. This feature allows you to assign a catalog to multiple users instead of just one.
