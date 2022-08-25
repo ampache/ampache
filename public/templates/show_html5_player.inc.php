@@ -72,7 +72,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         }, [], {
             playlistOptions: {
                 autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
-                loopOnPrevious: false,
+                loopOnPrevious: <?php echo ($isRandom || $isDemocratic) ? 'true' : 'false'; ?>,
                 shuffleOnLoop: true,
                 enableRemoveControls: true,
                 displayTime: 'slow',
@@ -82,6 +82,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             },
             swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
+            loop: <?php echo ($isRandom || $isDemocratic) ? 'true' : 'false'; ?>,
             audioFullScreen: true,
             smoothPlayBar: true,
             toggleDuration: true,
@@ -98,7 +99,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     $solutions[] = 'aurora';
                 }
                 echo implode(',', $solutions); ?>",
-            nativeSupport:true,
+            nativeSupport: true,
             oggSupport: false,
             supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8",
             volume: jp_volume,
