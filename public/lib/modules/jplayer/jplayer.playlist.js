@@ -261,13 +261,13 @@
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 var htmlIndex = parseInt($(playlistRow).attr("name"),10);
                 if (htmlIndex !== i) {
-                    // set the this.current value if it's moved in the list
-                    if ($(value).hasClass("jp-playlist-current")) {
+                    // set the this.current to match the correct playlistRow if it's moved in the list
+                    if ($(playlistRow).hasClass("jp-playlist-current")) {
                         console.log("this.current: " + current_item + " => " + i);
                         current_item = i;
                     }
                     // re-index the list
-                    $(value).attr("name", i);
+                    $(playlistRow).attr("name", i);
                 }
             });
             this.current  = current_item;
@@ -581,13 +581,13 @@
                 var htmlIndex = parseInt($(playlistRow).attr("name"), 10);
                 // This row is not in the same row it used to be
                 if (htmlIndex !== i) {
-                    // jp-playlist-current is given to the highlighted row in the html
-                    if ($(value).hasClass("jp-playlist-current")) {
+                    // set the this.current to match the correct playlistRow if it's moved in the list
+                    if ($(playlistRow).hasClass("jp-playlist-current")) {
                         console.log("this.current: " + current_item + " => " + i);
                         current_item = i;
                     }
                     // re-index the playlist-row list
-                    $(value).attr("name", i);
+                    $(playlistRow).attr("name", i);
                 }
                 playlist_after.push(playlist_before[i]);
             });
