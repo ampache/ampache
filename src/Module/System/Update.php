@@ -769,6 +769,9 @@ class Update
         $update_string = "* Make `demo_use_search`a system preference correctly";
         $version[]     = array('version' => '550004', 'description' => $update_string);
 
+        $update_string = "* Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played";
+        $version[]     = array('version' => '600001', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4630,6 +4633,23 @@ class Update
         // Update previous update preference
         $sql = "UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search'";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_600001
+     *
+     * Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
+     */
+    public static function update_600001(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

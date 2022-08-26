@@ -979,6 +979,37 @@ class Ui implements UiInterface
                 echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
                 echo "</select>\n";
                 break;
+            case 'webplayer_removeplayed':
+                $is_one   = '';
+                $is_two   = '';
+                $is_three = '';
+                $is_five  = '';
+                $is_ten   = '';
+                $is_all   = '';
+                if ($value == '1') {
+                    $is_one = 'selected="selected"';
+                } elseif ($value == '2') {
+                    $is_two = 'selected="selected"';
+                } elseif ($value == '3') {
+                    $is_three = 'selected="selected"';
+                } elseif ($value == '5') {
+                    $is_five = 'selected="selected"';
+                } elseif ($value == '10') {
+                    $is_ten = 'selected="selected"';
+                } elseif ($value == '999') {
+                    $is_all = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
+                echo "<option value=\"1\" $is_one>" . T_('Keep last played track') . "</option>\n";
+                /* HINT: Keep (2|3|4|5|10) previous tracks */
+                echo "<option value=\"2\" $is_two>" . sprintf(T_('Keep %s previous tracks'), '2') . "</option>\n";
+                echo "<option value=\"3\" $is_three>" . sprintf(T_('Keep %s previous tracks'), '3') . "</option>\n";
+                echo "<option value=\"5\" $is_five>" . sprintf(T_('Keep %s previous tracks'), '5') . "</option>\n";
+                echo "<option value=\"10\" $is_ten>" . sprintf(T_('Keep %s previous tracks'), '10') . "</option>\n";
+                echo "<option value=\"999\" $is_all>" . T_('Remove all previous tracks') . "</option>\n";
+                echo "</select>\n";
+                break;
             case 'theme_name':
                 $themes = get_themes();
                 echo "<select name=\"$name\">\n";
