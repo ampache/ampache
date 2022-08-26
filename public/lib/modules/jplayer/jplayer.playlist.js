@@ -77,6 +77,7 @@
 
         // Override the default repeat event handler
         this.options.repeat = function(event) {
+            console.log("repeat " + event.jPlayer.options.loop);
             self.loop = event.jPlayer.options.loop;
         };
 
@@ -155,10 +156,9 @@
         _options: { // static object, instanced in constructor
             playlistOptions: {
                 autoPlay: false,
-                loopOnPrevious: false,
                 removePlayed: false, // remove tracks before the current playlist item
                 removeCount: 0, // shift the index back to keep x items BEFORE the current index
-                shuffleOnLoop: true,
+                shuffleOnLoop: false, // i don't really have a good answer for what this option is
                 enableRemoveControls: false,
                 displayTime: "slow",
                 addTime: "fast",
@@ -645,15 +645,10 @@
             $(this.cssSelector.jPlayer).jPlayer("pause");
         },
         next: function() {
-            var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
             if (this.loop) {
-                // See if we need to shuffle before looping to start, and only shuffle if more than 1 item.
-                if (index === 0 && this.shuffled && this.options.playlistOptions.shuffleOnLoop && this.playlist.length > 1) {
-                    this.shuffle(true);
-                } else {
-                    this.play(index);
-                }
+                    this.play(this.current);
             } else {
+                var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
                 // The index will be zero if it just looped round
                 if (index > 0) {
                     this.play(index);
@@ -662,7 +657,7 @@
         },
         previous: function() {
             var index = (this.current - 1 >= 0) ? this.current - 1 : this.playlist.length - 1;
-            if (this.loop && this.options.playlistOptions.loopOnPrevious || index < this.playlist.length - 1) {
+            if (this.loop || index < this.playlist.length - 1) {
                 this.play(index);
             }
         },
