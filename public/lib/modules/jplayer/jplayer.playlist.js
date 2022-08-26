@@ -400,6 +400,7 @@
                     this.select(0);
                 }
             }
+            this._refreshHtmlPlaylist()
         },
         addAfter: function(media, index) {
             console.log("addAfter " + index);
@@ -528,9 +529,6 @@
                         });
                         playlistRow++;
                     }
-                    this.current = 0;
-                    self.scan();
-                    self._updateControls();
                     $.each(self.playlist, function(i) {
                         if (i >= index) {
                             playlist_after.push(playlist_before[i]);
@@ -541,6 +539,7 @@
                 }
                 console.log(playlist_before);
                 console.log(self.playlist);
+                this._refreshHtmlPlaylist()
 
                 return true;
             }
@@ -600,21 +599,12 @@
             console.log("select " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
-                startIndex = index - this.options.playlistOptions.removeCount;
-                console.log("currentIndex: " + index);
-                console.log("startIndex: " + startIndex);
-                console.log("removeCount: " + this.options.playlistOptions.removeCount);
-                console.log(this.playlist[index])
-                if (this.current !== index && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
-                    this.removeBefore(startIndex);
-                } else {
-                    this.current = index;
-                }
-                this._highlight(this.current);
-                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
+                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[index]);
             } else {
-                this.current = 0;
+                index = 0;
             }
+            this._highlight(index);
+            this._refreshHtmlPlaylist();
         },
         setCurrent: function(index) {
             console.log("setCurrent " + index);
@@ -628,6 +618,11 @@
             }
             console.log("play " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
+            startIndex = index - this.options.playlistOptions.removeCount;
+            if (this.current !== index && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
+                this.removeBefore(startIndex);
+                index = index + this.options.playlistOptions.removeCount;
+            }
 
             if ("function" === typeof this.options.callbackPlay) {
                 this.options.callbackPlay(index);
