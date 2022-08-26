@@ -106,20 +106,20 @@
         });
 
         // Create click handlers for the extra buttons that do playlist functions.
-        $(this.cssSelector.previous).click(function(e) {
-            e.preventDefault();
+        $(this.cssSelector.previous).click(function(event) {
+            event.preventDefault();
             self.previous();
             self.blur(this);
         });
 
-        $(this.cssSelector.next).click(function(e) {
-            e.preventDefault();
+        $(this.cssSelector.next).click(function(event) {
+            event.preventDefault();
             self.next();
             self.blur(this);
         });
 
-        $(this.cssSelector.shuffle).click(function(e) {
-            e.preventDefault();
+        $(this.cssSelector.shuffle).click(function(event) {
+            event.preventDefault();
             if (self.shuffled && $(self.cssSelector.jPlayer).jPlayer("option", "useStateClassSkin")) {
                 self.shuffle(false);
             } else {
@@ -127,8 +127,8 @@
             }
             self.blur(this);
         });
-        $(this.cssSelector.shuffleOff).click(function(e) {
-            e.preventDefault();
+        $(this.cssSelector.shuffleOff).click(function(event) {
+            event.preventDefault();
             self.shuffle(false);
             self.blur(this);
         }).hide();
@@ -197,7 +197,7 @@
                 if (self.options.playlistOptions.autoPlay) {
                     self.play(self.current);
                 } else {
-                    self.select(self.current);
+                    self.setCurrent(self.current);
                 }
             });
         },
@@ -255,26 +255,27 @@
             }
         },
         _refreshHtmlPlaylist: function() {
+            console.log("_refreshHtmlPlaylist");
             // After addAfter() and remove() functions, new items need their webPlayer indexes reset
             // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
+            var isAdjusted = false;
             var current_item = this.current
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 var htmlIndex = parseInt($(playlistRow).attr("name"),10);
                 if (htmlIndex !== i) {
-                    // set the this.current to match the correct playlistRow if it's moved in the list
-                    if ($(playlistRow).hasClass("jp-playlist-current")) {
+                    // set the self.current index playlistRow if it's going to change.
+                    if (!isAdjusted && current_item === htmlIndex) {
                         console.log("this.current: " + current_item + " => " + i);
+                        console.log(playlistRow);
                         current_item = i;
                     }
                     // re-index the list
                     $(playlistRow).attr("name", i);
                 }
             });
-            this.current  = current_item;
+            this.current = current_item;
         },
         _createListItem: function(media) {
-            var self = this;
-
             // Wrap the <li> contents in a <div>
             var attrClass = " class=\"playlist-row ";
             if (typeof media.attrClass === "string") {
@@ -388,10 +389,13 @@
                 playlist_after.push(playlist_before[i]);
             });
             playlist_after.push(media);
-            this.playlist = playlist_after;
-            this.original = playlist_after;
+            self.playlist = playlist_after;
+            self.original = playlist_after;
+
+            console.log("current: " + self.current);
             console.log(playlist_before);
             console.log(self.playlist);
+            console.log("-----------");
 
             if (playNow) {
                 this.play(this.playlist.length - 1);
@@ -400,7 +404,6 @@
                     this.select(0);
                 }
             }
-            this._refreshHtmlPlaylist()
         },
         addAfter: function(media, index) {
             console.log("addAfter " + index);
@@ -428,13 +431,15 @@
             });
             this.playlist = playlist_after;
             this.original = playlist_after;
-            console.log(playlist_before);
-            console.log(self.playlist);
 
             if (this.original.length === 1) {
                 this.select(0);
             }
             this._refreshHtmlPlaylist();
+            console.log("current: " + self.current);
+            console.log(playlist_before);
+            console.log(self.playlist);
+            console.log("-----------");
         },
         remove: function(index) {
             console.log("remove " + index);
@@ -481,7 +486,6 @@
                             }
 
                             self.removing = false;
-                            self._refreshHtmlPlaylist();
                         });
                         $.each(self.playlist, function(i) {
                             if (i !== index) {
@@ -491,15 +495,17 @@
                         this.playlist = playlist_after;
                         this.original = playlist_after;
                     }
+                    console.log("current: " + self.current);
                     console.log(playlist_before);
                     console.log(self.playlist);
+                    console.log("-----------");
 
                     return true;
                 }
             }
         },
         removeBefore: function(index) {
-            console.log("removeBefore:" + index);
+            console.log("removeBefore " + index);
             var self = this;
             if (typeof index === "undefined") {
                 this._initPlaylist([]);
@@ -508,40 +514,59 @@
                 });
                 return true;
             } else {
+                var new_index = 0;
+                var current_item = this.current;
                 var playlist_before = [];
                 var playlist_after = [];
                 $.each(self.playlist, function(i) {
                     playlist_before[i] = self.playlist[i];
                 });
-                var playlistRow = 0;
-                index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
-                if (0 <= index && index < this.playlist.length) {
-                    this.removing = true;
-
-                    while (playlistRow < index) {
-                        if ("playlist" === jplaylist.type) {
-                            var trackId = $($(".jp-playlist-item-remove")[playlistRow]).parent().parent().attr("track_id");
-                            jplaylist.rmTrack(trackId, jplaylist.name);
-                        }
-
-                        $(this.cssSelector.playlist + " li:nth-child(" + (playlistRow + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
-                            $(this).remove();
+                if (this.removing) {
+                    return false;
+                } else {
+                    index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
+                    if (0 <= index && index < this.playlist.length) {
+                        this.removing = true;
+                        // if ("playlist" === jplaylist.type) {
+                        //     var trackId = $($(".jp-playlist-item-remove")[index]).parent().parent().attr("track_id");
+                        //     jplaylist.rmTrack(trackId, jplaylist.name);
+                        // }
+                        // var removeCount = 0;
+                        // while (removeCount < index) {
+                        //     $(this.cssSelector.playlist + " li:nth-child(" + (removeCount + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function () {
+                        //         $(this).remove();
+                        //     });
+                        //     removeCount++;
+                        // }
+                        // re-index the list
+                        $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
+                            var htmlIndex = parseInt($(playlistRow).attr("name"),10);
+                            if (htmlIndex < index) {
+                                $(playlistRow).remove();
+                            } else {
+                                // set the self.current index playlistRow if it's going to change.
+                                if ((current_item === htmlIndex || $(playlistRow).hasClass("jp-playlist-current"))) {
+                                    console.log("this.current: " + current_item + " => " + new_index);
+                                    console.log(playlistRow);
+                                    self.current = new_index;
+                                }
+                                $(playlistRow).attr("name", new_index);
+                                playlist_after.push(playlist_before[htmlIndex]);
+                                new_index++;
+                            }
                         });
-                        playlistRow++;
-                    }
-                    $.each(self.playlist, function(i) {
-                        if (i >= index) {
-                            playlist_after.push(playlist_before[i]);
-                        }
-                    });
-                    this.playlist = playlist_after;
-                    this.original = playlist_after;
-                }
-                console.log(playlist_before);
-                console.log(self.playlist);
-                this._refreshHtmlPlaylist()
 
-                return true;
+                        this.playlist = playlist_after;
+                        this.original = playlist_after;
+                    }
+
+                    console.log("current: " + self.current);
+                    console.log(playlist_before);
+                    console.log(self.playlist);
+                    console.log("-----------");
+
+                    return true;
+                }
             }
         },
         removeAll: function() {
@@ -568,6 +593,7 @@
             console.log("scan " + this.current);
             // scan is used when you rearrange items in the webplayer playlist (show_html5_player.inc.php)
             var self = this;
+            var isAdjusted = false;
             var current_item = this.current
             var playlist_before = [];
             var playlist_after = [];
@@ -575,55 +601,55 @@
                 playlist_before[i] = self.playlist[i];
             });
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
-                // the htmlIndex is the index in the list BEFORE it was moved
-                var htmlIndex = parseInt($(playlistRow).attr("name"), 10);
-                // This row is not in the same row it used to be
+                var htmlIndex = parseInt($(playlistRow).attr("name"),10);
+                $(playlistRow)
                 if (htmlIndex !== i) {
-                    // set the this.current to match the correct playlistRow if it's moved in the list
-                    if ($(playlistRow).hasClass("jp-playlist-current")) {
+                    // set the self.current index playlistRow if it's going to change.
+                    if (!isAdjusted && (current_item === htmlIndex || $(playlistRow).hasClass("jp-playlist-current"))) {
                         console.log("this.current: " + current_item + " => " + i);
-                        current_item = i;
+                        console.log(playlistRow);
+                        self.current = i;
+                        isAdjusted = true;
                     }
-                    // re-index the playlist-row list
+                    // re-index the list
                     $(playlistRow).attr("name", i);
                 }
                 playlist_after.push(playlist_before[i]);
             });
-            this.playlist = playlist_after;
-            this.original = playlist_after;
-            this.current  = current_item;
+            console.log(this.cssSelector.playlist + " ul li");
+            self.playlist = playlist_after;
+            self.original = playlist_after;
+
+            console.log("current: " + self.current);
             console.log(playlist_before);
             console.log(self.playlist);
+            console.log("-----------");
         },
         select: function(index) {
             console.log("select " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
-                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[index]);
+                this.current = index;
+                this._highlight(index);
+                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
+                console.log(this.playlist[this.current])
             } else {
-                index = 0;
+                this.current = 0;
             }
-            this._highlight(index);
-            this._refreshHtmlPlaylist();
         },
         setCurrent: function(index) {
-            console.log("setCurrent " + index);
-            if (this.current !== index) {
-                this.select(index);
+            if (index < 0) {
+                index = 0
             }
+            console.log("setCurrent " + index);
+            if (index >= 0 && this.current !== index) {
+                this.current = index;
+            }
+            this._highlight(index);
         },
         play: function(index) {
-            if (typeof index === "undefined") {
-                index = 0;
-            }
             console.log("play " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
-            startIndex = index - this.options.playlistOptions.removeCount;
-            if (this.current !== index && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
-                this.removeBefore(startIndex);
-                index = index + this.options.playlistOptions.removeCount;
-            }
-
             if ("function" === typeof this.options.callbackPlay) {
                 this.options.callbackPlay(index);
             }
@@ -636,15 +662,34 @@
             } else if (typeof index === "undefined") {
                 $(this.cssSelector.jPlayer).jPlayer("play");
             }
+            // remove leftovers if needed
+            startIndex = index - this.options.playlistOptions.removeCount;
+            if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
+                console.log("index " + index);
+                console.log("startIndex " + startIndex);
+                //only one track so remove that one
+                if (startIndex === 1) {
+                    this.remove(0);
+                } else {
+                    this.removeBefore(startIndex);
+                    this._refreshHtmlPlaylist();
+                }
+            }
         },
         pause: function() {
             $(this.cssSelector.jPlayer).jPlayer("pause");
         },
         next: function() {
+            var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
+
             if (this.loop) {
-                    this.play(this.current);
+                // See if we need to shuffle before looping to start, and only shuffle if more than 1 item.
+                if (index === 0 && this.shuffled && this.options.playlistOptions.shuffleOnLoop && this.playlist.length > 1) {
+                    this.shuffle(true, true); // playNow
+                } else {
+                    this.play(index);
+                }
             } else {
-                var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
                 // The index will be zero if it just looped round
                 if (index > 0) {
                     this.play(index);
@@ -653,11 +698,12 @@
         },
         previous: function() {
             var index = (this.current - 1 >= 0) ? this.current - 1 : this.playlist.length - 1;
-            if (this.loop || index < this.playlist.length - 1) {
+
+            if (this.loop && this.options.playlistOptions.loopOnPrevious || index < this.playlist.length - 1) {
                 this.play(index);
             }
         },
-        shuffle: function(shuffled) {
+        shuffle: function(shuffled, playNow) {
             var self = this;
             if (typeof shuffled === "undefined") {
                 shuffled = !this.shuffled;
@@ -672,7 +718,7 @@
                         var playlist_items = [];
                         // push the current track first
                         final_list.push(current_item);
-                        // remove the current track from the list
+                        // remove the current track form the list
                         $.each(self.playlist, function(i, media) {
                             if (media !== current_item) {
                                 playlist_items.push(media);
@@ -693,8 +739,9 @@
                         // If a song is playing, it continues. If not playing it doesn't start playing.
                         self._highlight(0);
                     } else {
+                        self.shuffled = false;
                         self._refresh(true); // Instant
-                        self.select(self.current);
+                        self.setCurrent(self.current);
                     }
                     // we only shuffle the list and then unset shuffle immediately
                     this.original = this.playlist;
@@ -710,3 +757,4 @@
         }
     };
 })(jQuery);
+
