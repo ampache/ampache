@@ -23,10 +23,16 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";
 
-$autoplay = true;
-$iframed  = $iframed ?? false;
-$isShare  = $isShare ?? false;
-$embed    = $embed ?? false;
+$autoplay       = true;
+$iframed        = $iframed ?? false;
+$isShare        = $isShare ?? false;
+$embed          = $embed ?? false;
+$loopOnPrevious = ($isRandom || $isDemocratic);
+$removeCount    = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$removePlayed   = ($removeCount > 0);
+if ($removePlayed && $removeCount === 999) {
+    $removeCount = 0;
+}
 if ($isShare) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');
 }
@@ -72,7 +78,9 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         }, [], {
             playlistOptions: {
                 autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
-                loopOnPrevious: <?php echo ($isRandom || $isDemocratic) ? 'true' : 'false'; ?>,
+                loopOnPrevious: <?php echo ($loopOnPrevious) ? 'true' : 'false'; ?>,
+                removePlayed: <?php echo ($removePlayed) ? 'true' : 'false'; ?>, // remove tracks before the current playlist item
+                removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
                 shuffleOnLoop: true,
                 enableRemoveControls: true,
                 displayTime: 'slow',
@@ -82,7 +90,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             },
             swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
-            loop: <?php echo ($isRandom || $isDemocratic) ? 'true' : 'false'; ?>,
+            loop: <?php echo ($loopOnPrevious) ? 'true' : 'false'; ?>,
             audioFullScreen: true,
             smoothPlayBar: true,
             toggleDuration: true,

@@ -1,5 +1,5 @@
 /**
- * FORKED BY AMPACHE 2022/02/01
+ * FORKED BY AMPACHE 2022-02-01
  * USING LAST UPDATED GIT VERSION (https://github.com/jplayer/jPlayer)
  * https://github.com/jplayer/jPlayer/blob/master/dist/jplayer/jquery.jplayer.js
  */

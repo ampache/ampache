@@ -1,5 +1,5 @@
 /**
- * FORKED BY AMPACHE 2022/02/01
+ * FORKED BY AMPACHE 2022-02-01
  * USING LAST UPDATED GIT VERSION (https://github.com/jplayer/jPlayer)
  * https://github.com/jplayer/jPlayer/blob/master/dist/add-on/jplayer.playlist.js
  */
@@ -25,7 +25,6 @@
 
 // Before you minify this file comment out ALL the debug, it's loud
 (function($, undefined) {
-
     jPlayerPlaylist = function(cssSelector, playlist, options) {
         var self = this;
 
@@ -33,7 +32,6 @@
         this.loop = false; // Flag used with the jPlayer repeat event
         this.shuffled = false;
         this.removing = false; // Flag is true during remove animation, disabling the remove() method until complete.
-
         this.cssSelector = $.extend({}, this._cssSelector, cssSelector); // Object: Containing the css selectors for jPlayer and its cssSelectorAncestor
         this.options = $.extend(true, {
             keyBindings: {
@@ -158,6 +156,8 @@
             playlistOptions: {
                 autoPlay: false,
                 loopOnPrevious: false,
+                removePlayed: false, // remove tracks before the current playlist item
+                removeCount: 0, // shift the index back to keep x items BEFORE the current index
                 shuffleOnLoop: true,
                 enableRemoveControls: false,
                 displayTime: "slow",
@@ -224,7 +224,6 @@
              *    function -> use animation timings and excute function at half way point.
              */
             var self = this;
-
             if (instant && !$.isFunction(instant)) {
                 $(this.cssSelector.playlist + " ul").empty();
                 $.each(self.playlist, function(i) {
@@ -258,20 +257,20 @@
         _refreshHtmlPlaylist: function() {
             // After addAfter() and remove() functions, new items need their webPlayer indexes reset
             // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
-            var self = this;
-            var isAdjusted = false;
-            $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-                var jindex = parseInt($(value).attr("name"),10);
-                if (jindex !== index) {
-                    // set the self.current index value if it's going to change.
-                    if (!isAdjusted && self.current === parseInt($(value).attr("name"), 10)) {
-                        self.current = index;
-                        isAdjusted = true;
+            var current_item = this.current
+            $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
+                var htmlIndex = parseInt($(playlistRow).attr("name"),10);
+                if (htmlIndex !== i) {
+                    // set the this.current value if it's moved in the list
+                    if ($(value).hasClass("jp-playlist-current")) {
+                        console.log("this.current: " + current_item + " => " + i);
+                        current_item = i;
                     }
                     // re-index the list
-                    $(value).attr("name", index);
+                    $(value).attr("name", i);
                 }
             });
+            this.current  = current_item;
         },
         _createListItem: function(media) {
             var self = this;
@@ -309,8 +308,8 @@
         _createItemHandlers: function() {
             var self = this;
             // Create live handlers for the playlist items
-            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.itemClass).on("click", "a." + this.options.playlistOptions.itemClass, function(e) {
-                e.preventDefault();
+            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.itemClass).on("click", "a." + this.options.playlistOptions.itemClass, function(event) {
+                event.preventDefault();
                 var index = $(this).parent().parent().index();
                 if (self.current !== index) {
                     self.play(index);
@@ -321,15 +320,15 @@
             });
 
             // Create live handlers that disable free media links to force access via right click
-            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.freeItemClass).on("click", "a." + this.options.playlistOptions.freeItemClass, function(e) {
-                e.preventDefault();
+            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.freeItemClass).on("click", "a." + this.options.playlistOptions.freeItemClass, function(event) {
+                event.preventDefault();
                 $(this).parent().parent().find("." + self.options.playlistOptions.itemClass).click();
                 self.blur(this);
             });
 
             // Create live handlers for the remove controls
-            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.removeItemClass).on("click", "a." + this.options.playlistOptions.removeItemClass, function(e) {
-                e.preventDefault();
+            $(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.removeItemClass).on("click", "a." + this.options.playlistOptions.removeItemClass, function(event) {
+                event.preventDefault();
                 var index = $(this).parent().parent().index();
                 self.remove(index);
                 self.blur(this);
@@ -393,7 +392,6 @@
             this.playlist = playlist_after;
             this.original = playlist_after;
             console.log(self.playlist);
-
 
             if (playNow) {
                 this.play(this.playlist.length - 1);
@@ -499,6 +497,54 @@
                 }
             }
         },
+        removeBefore: function(index) {
+            console.log("removeBefore:" + index);
+            var self = this;
+            if (typeof index === "undefined") {
+                this._initPlaylist([]);
+                this._refresh(function() {
+                    $(self.cssSelector.jPlayer).jPlayer("clearMedia");
+                });
+                return true;
+            } else {
+                var playlist_before = [];
+                var playlist_after = [];
+                $.each(self.playlist, function(i) {
+                    playlist_before[i] = self.playlist[i];
+                });
+                console.log(playlist_before);
+                var playlistRow = 0;
+                index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
+                if (0 <= index && index < this.playlist.length) {
+                    this.removing = true;
+
+                    while (playlistRow < index) {
+                        if ("playlist" === jplaylist.type) {
+                            var trackId = $($(".jp-playlist-item-remove")[playlistRow]).parent().parent().attr("track_id");
+                            jplaylist.rmTrack(trackId, jplaylist.name);
+                        }
+
+                        $(this.cssSelector.playlist + " li:nth-child(" + (playlistRow + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
+                            $(this).remove();
+                        });
+                        playlistRow++;
+                    }
+                    self.current = 0;
+                    self.scan();
+                    self._updateControls();
+                    $.each(self.playlist, function(i) {
+                        if (i >= index) {
+                            playlist_after.push(playlist_before[i]);
+                        }
+                    });
+                    this.playlist = playlist_after;
+                    this.original = playlist_after;
+                }
+                console.log(self.playlist);
+
+                return true;
+            }
+        },
         removeAll: function() {
             this.original = [];
             this._originalPlaylist();
@@ -520,50 +566,65 @@
             });
         },
         scan: function() {
+            console.log("scan " + this.current);
             // scan is used when you rearrange items in the webplayer playlist (show_html5_player.inc.php)
             var self = this;
-            var isAdjusted = false;
+            var current_item = this.current
             var playlist_before = [];
             var playlist_after = [];
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
             console.log(playlist_before);
-            $.each($(this.cssSelector.playlist + " ul li"), function(index, value) {
-                var jindex = parseInt($(value).attr("name"),10);
-                if (jindex !== index) {
-                    // set the self.current index value if it's going to change.
-                    if (!isAdjusted && self.current === jindex) {
-                        self.current = index;
-                        isAdjusted = true;
+            $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
+                // the htmlIndex is the index in the list BEFORE it was moved
+                var htmlIndex = parseInt($(playlistRow).attr("name"), 10);
+                // This row is not in the same row it used to be
+                if (htmlIndex !== i) {
+                    // jp-playlist-current is given to the highlighted row in the html
+                    if ($(value).hasClass("jp-playlist-current")) {
+                        console.log("this.current: " + current_item + " => " + i);
+                        current_item = i;
                     }
-                    // re-index the list
-                    $(value).attr("name", index);
+                    // re-index the playlist-row list
+                    $(value).attr("name", i);
                 }
-                playlist_after.push(playlist_before[jindex]);
+                playlist_after.push(playlist_before[i]);
             });
             this.playlist = playlist_after;
             this.original = playlist_after;
+            this.current  = current_item;
             console.log(self.playlist);
         },
         select: function(index) {
             console.log("select " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
-                this.current = index;
                 this._highlight(index);
-                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
-                console.log(this.playlist[this.current])
+                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[index]);
+                startIndex = index - this.options.playlistOptions.removeCount;
+                console.log("currentIndex: " + index);
+                console.log("startIndex: " + startIndex);
+                console.log("removeCount: " + this.options.playlistOptions.removeCount);
+                console.log(this.playlist[index])
+                if (this.current !== index && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
+                    this.removeBefore(startIndex);
+                }
+                this.current = index;
             } else {
                 this.current = 0;
             }
         },
         setCurrent: function(index) {
             console.log("setCurrent " + index);
-            this.current = index;
-            this.select(this.current);
+            if (this.current !== index) {
+                this.select(index);
+            }
         },
         play: function(index) {
+            if (typeof index === "undefined") {
+                index = 0;
+            }
             console.log("play " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
 
@@ -585,11 +646,10 @@
         },
         next: function() {
             var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
-
             if (this.loop) {
                 // See if we need to shuffle before looping to start, and only shuffle if more than 1 item.
                 if (index === 0 && this.shuffled && this.options.playlistOptions.shuffleOnLoop && this.playlist.length > 1) {
-                    this.shuffle(true, true); // playNow
+                    this.shuffle(true);
                 } else {
                     this.play(index);
                 }
@@ -602,40 +662,37 @@
         },
         previous: function() {
             var index = (this.current - 1 >= 0) ? this.current - 1 : this.playlist.length - 1;
-
             if (this.loop && this.options.playlistOptions.loopOnPrevious || index < this.playlist.length - 1) {
                 this.play(index);
             }
         },
-        shuffle: function(shuffled, playNow) {
+        shuffle: function(shuffled) {
             var self = this;
-
             if (typeof shuffled === "undefined") {
                 shuffled = !this.shuffled;
             }
 
             if (shuffled || shuffled !== this.shuffled) {
-
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
                     self.shuffled = shuffled;
                     if (shuffled) {
-                        var item = self.playlist[self.current];
+                        var current_item = self.playlist[self.current];
                         var final_list = [];
                         var playlist_items = [];
                         // push the current track first
-                        final_list.push(item);
-                        // remove the current track form the list
-                        $.each(self.playlist, function(i,v) {
-                            if (v !== item) {
-                                playlist_items.push(v);
+                        final_list.push(current_item);
+                        // remove the current track from the list
+                        $.each(self.playlist, function(i, media) {
+                            if (media !== current_item) {
+                                playlist_items.push(media);
                             }
                         });
                         // shuffle remaining tracks
                         playlist_items.sort(function(a, b){
                             return 0.5 - Math.random();
                         });
-                        $.each(playlist_items, function(i,v) {
-                            final_list.push(v);
+                        $.each(playlist_items, function(i, media) {
+                            final_list.push(media);
                         });
                         // sorted!
                         self.playlist = final_list
@@ -645,7 +702,6 @@
                         // If a song is playing, it continues. If not playing it doesn't start playing.
                         self._highlight(0);
                     } else {
-                        self.shuffled = false;
                         self._refresh(true); // Instant
                         self.select(self.current);
                     }
