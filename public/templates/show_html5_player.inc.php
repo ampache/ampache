@@ -235,7 +235,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     } ?>
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
-                    <?php if ($iframed) { ?>
+                    <?php if ($iframed && !$isRadio && !$isRandom && !$isDemocratic) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
