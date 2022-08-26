@@ -378,7 +378,6 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-            console.log(playlist_before);
             $(this.cssSelector.playlist + " ul")
                 .append(this._createListItem(media))
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
@@ -391,6 +390,7 @@
             playlist_after.push(media);
             this.playlist = playlist_after;
             this.original = playlist_after;
+            console.log(playlist_before);
             console.log(self.playlist);
 
             if (playNow) {
@@ -413,7 +413,6 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-            console.log(playlist_before);
             $(this.cssSelector.playlist + " ul")
                 .find("li[name=" + index + "]").after(this._createListItem(media)).end()
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
@@ -428,6 +427,7 @@
             });
             this.playlist = playlist_after;
             this.original = playlist_after;
+            console.log(playlist_before);
             console.log(self.playlist);
 
             if (this.original.length === 1) {
@@ -450,7 +450,6 @@
                 $.each(self.playlist, function(i) {
                     playlist_before[i] = self.playlist[i];
                 });
-                console.log(playlist_before);
                 if (this.removing) {
                     return false;
                 } else {
@@ -491,6 +490,7 @@
                         this.playlist = playlist_after;
                         this.original = playlist_after;
                     }
+                    console.log(playlist_before);
                     console.log(self.playlist);
 
                     return true;
@@ -512,7 +512,6 @@
                 $.each(self.playlist, function(i) {
                     playlist_before[i] = self.playlist[i];
                 });
-                console.log(playlist_before);
                 var playlistRow = 0;
                 index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
                 if (0 <= index && index < this.playlist.length) {
@@ -529,7 +528,7 @@
                         });
                         playlistRow++;
                     }
-                    self.current = 0;
+                    this.current = 0;
                     self.scan();
                     self._updateControls();
                     $.each(self.playlist, function(i) {
@@ -540,6 +539,7 @@
                     this.playlist = playlist_after;
                     this.original = playlist_after;
                 }
+                console.log(playlist_before);
                 console.log(self.playlist);
 
                 return true;
@@ -575,7 +575,6 @@
             $.each(self.playlist, function(i) {
                 playlist_before[i] = self.playlist[i];
             });
-            console.log(playlist_before);
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 // the htmlIndex is the index in the list BEFORE it was moved
                 var htmlIndex = parseInt($(playlistRow).attr("name"), 10);
@@ -594,14 +593,13 @@
             this.playlist = playlist_after;
             this.original = playlist_after;
             this.current  = current_item;
+            console.log(playlist_before);
             console.log(self.playlist);
         },
         select: function(index) {
             console.log("select " + index);
             index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
-                this._highlight(index);
-                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[index]);
                 startIndex = index - this.options.playlistOptions.removeCount;
                 console.log("currentIndex: " + index);
                 console.log("startIndex: " + startIndex);
@@ -609,8 +607,11 @@
                 console.log(this.playlist[index])
                 if (this.current !== index && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
                     this.removeBefore(startIndex);
+                } else {
+                    this.current = index;
                 }
-                this.current = index;
+                this._highlight(this.current);
+                $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
             } else {
                 this.current = 0;
             }
