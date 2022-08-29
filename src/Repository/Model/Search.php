@@ -593,9 +593,9 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
-        $this->type_text('album_tag', T_('Album Genre'), $t_genre);
-        $this->type_text('artist_tag', T_('Artist Genre'), $t_genre);
-        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
+        $this->type_text('album_genre', T_('Album Genre'), $t_genre);
+        $this->type_text('artist_genre', T_('Artist Genre'), $t_genre);
+        $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
@@ -718,7 +718,8 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
-        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
+        $this->type_text('song_genre', T_('Song Genre'), $t_genre);
+        $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
@@ -792,7 +793,8 @@ class Search extends playlist_object
 
         $t_genre = T_('Genre');
         $this->type_text('tag', $t_genre, $t_genre);
-        $this->type_boolean('no_tag', T_('No Genre'), 'is_true', $t_genre);
+        $this->type_text('song_genre', T_('Song Genre'), $t_genre);
+        $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($user_id);
@@ -1767,6 +1769,12 @@ class Search extends playlist_object
                 case 'no_genre':
                     $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
+                case 'song_tag':
+                case 'song_genre':
+                    $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    $parameters[] = $input;
+                    $join['song'] = true;
+                    break;
                 case 'playlist_name':
                     $where[]      = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?)";
                     $parameters[] = $input;
@@ -1972,6 +1980,12 @@ class Search extends playlist_object
                 case 'no_tag':
                 case 'no_genre':
                     $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
+                    break;
+                case 'song_tag':
+                case 'song_genre':
+                    $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    $parameters[] = $input;
+                    $join['song'] = true;
                     break;
                 case 'playlist_name':
                     $where[]    = "(`artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `playlist`.`name` $sql_match_operator ?) OR `artist`.`id` IN (SELECT `artist_map`.`artist_id` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`album` AND `artist_map`.`object_type` = 'album' WHERE `playlist`.`name` $sql_match_operator ?))";
