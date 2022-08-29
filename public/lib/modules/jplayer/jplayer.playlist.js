@@ -527,17 +527,6 @@
                     index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
                     if (0 <= index && index < this.playlist.length) {
                         this.removing = true;
-                        // if ("playlist" === jplaylist.type) {
-                        //     var trackId = $($(".jp-playlist-item-remove")[index]).parent().parent().attr("track_id");
-                        //     jplaylist.rmTrack(trackId, jplaylist.name);
-                        // }
-                        // var removeCount = 0;
-                        // while (removeCount < index) {
-                        //     $(this.cssSelector.playlist + " li:nth-child(" + (removeCount + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function () {
-                        //         $(this).remove();
-                        //     });
-                        //     removeCount++;
-                        // }
                         // re-index the list
                         $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                             var htmlIndex = parseInt($(playlistRow).attr("name"),10);
@@ -555,7 +544,7 @@
                                 new_index++;
                             }
                         });
-
+                        this.removing = false;
                         this.playlist = playlist_after;
                         this.original = playlist_after;
                     }
