@@ -499,7 +499,7 @@
         options: { // Instanced in $.jPlayer() constructor
             swfPath: "/lib/modules/jplayer", // Path to jquery.jplayer.swf. Can be relative, absolute or server root relative.
             solution: "html, aurora, flash", // Valid solutions: html, flash, aurora. Order defines priority. 1st is highest,
-            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8", // Defines which formats jPlayer will try and support and the priority by the order. 1st is highest,
+            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8, m4v, m3u8v, m3uv, ogv, webmv, flv, rtmpv", // Defines which formats jPlayer will try and support and the priority by the order. 1st is highest,
             auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8", // List the aurora.js codecs being loaded externally. Its core supports "wav". Specify format in jPlayer context. EG., The aac.js codec gives the "m4a" format.
             preload: "metadata",  // HTML5 Spec values: none, metadata, auto.
             volume: 0.8, // The volume. Number 0 to 1.

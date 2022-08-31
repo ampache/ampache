@@ -108,7 +108,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                 echo implode(',', $solutions); ?>",
             nativeSupport: true,
             oggSupport: false,
-            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8",
+            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8, m4v, m3u8v, m3uv, ogv, webmv, flv, rtmpv",
             volume: jp_volume,
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
             auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",
