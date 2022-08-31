@@ -2362,6 +2362,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if ($media_type != 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
         }
+        if (!$player && $media_type === 'song') {
+            $player = 'webplayer';
+        }
         // webplayer / api transcode actions
         $has_player_target = false;
         if ($player) {
