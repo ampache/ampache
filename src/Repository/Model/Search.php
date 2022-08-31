@@ -824,6 +824,7 @@ class Search extends playlist_object
 
         $t_musicbrainz = T_('MusicBrainz');
         $this->type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
+        $this->type_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
     } // albumtypes
 
     /**
@@ -1763,6 +1764,8 @@ class Search extends playlist_object
                     break;
                 case 'tag':
                 case 'genre':
+                case 'album_tag':
+                case 'album_genre':
                     $where[]      = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
@@ -1818,6 +1821,7 @@ class Search extends playlist_object
                     $join['album_map'] = true;
                     break;
                 case 'mbid':
+                case 'mbid_album':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`album`.`mbid` IS NULL";
@@ -1830,6 +1834,21 @@ class Search extends playlist_object
                     }
                     $where[]      = "`album`.`mbid` $sql_match_operator ?";
                     $parameters[] = $input;
+                    break;
+                case 'mbid_artist':
+                    if (!$input || $input == '%%' || $input == '%') {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`artist`.`mbid` IS NOT NULL";
+                            break;
+                        }
+                    }
+                    $where[]           = "`artist`.`mbid` $sql_match_operator ?";
+                    $parameters[]      = $input;
+                    $join['album_map'] = true;
                     break;
                 case 'possible_duplicate':
                 case 'possible_duplicate_album':
@@ -2211,6 +2230,7 @@ class Search extends playlist_object
                     $join['catalog'] = true;
                     break;
                 case 'mbid':
+                case 'mbid_artist':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`artist`.`mbid` IS NULL";
@@ -2362,6 +2382,8 @@ class Search extends playlist_object
                     break;
                 case 'tag':
                 case 'genre':
+                case 'song_tag':
+                case 'song_genre':
                     $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;

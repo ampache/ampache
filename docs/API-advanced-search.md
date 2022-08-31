@@ -107,7 +107,9 @@ Select the type of search based on the type of data you are searching for. (song
 | time                     | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | genre                    | Genre                                   | tags              |                          song, album, artist                          |
 | tag                      | (*Alias of genre)                       |                   |                                                                       |
-| album_genre              | Album Genre                             | tags              |                                 song                                  |
+| song_genre               | Song Genre                              | tags              |                          song, album, artist                          |
+| song_tag                 | (*Alias of song_genre)                  |                   |                                                                       |
+| album_genre              | Album Genre                             | tags              |                              song, album                              |
 | album_tag                | (*Alias of album_genre)                 |                   |                                                                       |
 | artist_genre             | Artist Genre                            | tags              |                                 song                                  |
 | artist_tag               | (*Alias of artist_genre)                |                   |                                                                       |
@@ -135,14 +137,14 @@ Select the type of search based on the type of data you are searching for. (song
 | recent_updated           | Recently Updated                        | numeric_limit     |                                 song                                  |
 | catalog                  | Catalog                                 | boolean_numeric   |                          song, album, artist                          |
 | mbid                     | MusicBrainz ID                          | text              |                          song, album, artist                          |
-| mbid_album               | MusicBrainz ID (Album)                  | text              |                                 song                                  |
-| mbid_artist              | MusicBrainz ID (Artist)                 | text              |                                 song                                  |
+| mbid_album               | MusicBrainz ID (Album)                  | text              |                              song, album                              |
+| mbid_artist              | MusicBrainz ID (Artist)                 | text              |                          song, album, artist                          |
 | metadata                 | Metadata                                | metadata (mixed)  |                                 song                                  |
 | has_image                | Local Image                             | boolean           |                             album, artist                             |
 | image_height             | Image Height                            | numeric           |                             album, artist                             |
 | image_width              | Image Width                             | numeric           |                             album, artist                             |
 | possible_duplicate       | Possible Duplicate                      | is_true           |                          song, album, artist                          |
-| possible_duplicate_album | Possible Duplicate Albums               | is_true           |                                artist                                 |
+| possible_duplicate_album | Possible Duplicate Albums               | is_true           |                          song, album, artist                          |
 | username                 | Username                                | text              |                                 user                                  |
 | category                 | Category                                | text              |                                 label                                 |
 
