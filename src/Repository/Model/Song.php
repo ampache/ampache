@@ -2221,10 +2221,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        $type = $this->type;
+        $type = (strpos($additional_params, 'action=download'))
+            ? Stream::get_transcode_format($this->type, null, $player)
+            : $this->type;
 
         $this->format();
-        $media_name = $this->get_stream_name() . "." . Stream::get_transcode_format($type, null, $player);
+        $media_name = $this->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
