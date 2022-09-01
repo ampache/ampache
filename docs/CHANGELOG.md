@@ -6,6 +6,9 @@
 
 * Tmp_Playlist::get items may not order by the playlist id
 * Fix album time update when time is NULL
+* PlayAction didn't record stats for downloads
+* PlayAction transcode settings could be ignored
+* Set the file extension on urls on generation
 * webplayer
   * Video types missing from supported types
   * Playlist sorting issues
