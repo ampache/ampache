@@ -165,7 +165,7 @@ final class PlayAction implements ApplicationActionInterface
             $action       = 'download';
             $record_stats = false;
         }
-
+        $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $resolution    = '';
@@ -498,7 +498,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if ($action !== 'download' && !empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
+            if (!$is_download && !empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
                 $cache_file   = true;
                 $original     = true;
@@ -552,7 +552,7 @@ final class PlayAction implements ApplicationActionInterface
         $location   = Session::get_geolocation($sessionkey);
 
         // If they are just trying to download make sure they have rights and then present them with the download file
-        if ($action == 'download' && !$original) {
+        if ($is_download && !$original) {
             if ($transcode_to) {
                 debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
             }
@@ -563,7 +563,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $record_stats = false;
-        } elseif ($action == 'download' && AmpConfig::get('download')) {
+        } elseif ($is_download) {
             debug_event('play/index', 'Downloading raw file...', 4);
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
@@ -633,7 +633,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         // Determine whether to transcode
         $transcode    = false;
-        $transcode_to = Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
+        $transcode_to = ($is_download) ? false : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
