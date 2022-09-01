@@ -2,14 +2,48 @@
 
 ## Ampache develop
 
+### Added
+
+* Database 600001
+  * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
+* Config version 63
+  * Drop Channels from config
+  * Reset the art_order defaults
+* search
+  * add song_genre to album and artist searches
+  * add possible_duplicate_album to song search
+  * add mbid_artist to album search
+  * alias possible_duplicate_album => possible_duplicate for album search
+  * alias album_genre => genre for album search
+  * alias mbid_album => mbid for album search
+  * alias mbid_artist => mbid for artist search
+  * alias song_genre => genre for song search
+* webplayer
+  * Code cleanup and attempt to make it a bit less confusing
+  * Enable restart on democratic or random play
+  * Allow removing played tracks on next
+
 ### Changed
 
+* Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
+* Scrutinizer moved to php8.1
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
+* Download url parameter order matching "client, action, cache"
+
+### Removed
+
+* Travic CI config file
 
 ### Fixed
 
-* Missing comma between label links on song pages
+* Work around for possible release string errors (future releasese will drop "-release")
+* Ignore case in genre comparison
+* Transcoding format for could be ignored (`encode_player_webplayer_target`)
+* Set the file extension based on expected transcode / download 
+* Don't look at the transcode cache when downloading a raw file
+* If you are transcoding redirect to the transcoded file
+* Download stats for song, video, podcast_episode
 
 ## API develop
 
