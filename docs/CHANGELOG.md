@@ -38,11 +38,6 @@
 
 * Work around for possible release string errors (future releasese will drop "-release")
 * Ignore case in genre comparison
-* Transcoding format for could be ignored (`encode_player_webplayer_target`)
-* Set the file extension based on expected transcode / download 
-* Don't look at the transcode cache when downloading a raw file
-* If you are transcoding redirect to the transcoded file
-* Download stats for song, video, podcast_episode
 
 ## API develop
 
@@ -65,6 +60,12 @@
 
 * Tmp_Playlist::get_items may not order by the playlist id
 * Fix album time update when time is NULL
+* Transcoding format for could be ignored (`encode_player_webplayer_target`)
+* Set the file extension based on expected transcode / download 
+* Don't look at the transcode cache when downloading a raw file
+* If you are transcoding redirect to the transcoded file
+* Download stats for song, video, podcast_episode
+* Set the file extension on urls on generation
 * webplayer
   * Video types missing from supported types
   * Playlist sorting issues
@@ -76,6 +77,11 @@
 * advanced_search
   * Add song_artist as a search type (uses artist rules)
   * Add album_artist as a search type (uses artist rules)
+
+### Fixed
+
+* advanced_search
+  * unable to retrieve song_artist or album_artist results
 
 ## Ampache 5.5.1
 
