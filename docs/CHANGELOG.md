@@ -11,8 +11,11 @@
 
 * Tmp_Playlist::get_items may not order by the playlist id
 * Fix album time update when time is NULL
-* PlayAction didn't record stats for downloads
-* PlayAction transcode settings could be ignored
+* Transcoding format for could be ignored (`encode_player_webplayer_target`)
+* Set the file extension based on expected transcode / download 
+* Don't look at the transcode cache when downloading a raw file
+* If you are transcoding redirect to the transcoded file
+* Download stats for song, video, podcast_episode
 * Set the file extension on urls on generation
 * webplayer
   * Video types missing from supported types
