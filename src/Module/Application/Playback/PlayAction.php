@@ -545,7 +545,7 @@ final class PlayAction implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
-        $sessionkey = $session_id ?: Stream::get_session();
+        $sessionkey = $session_id ?? Stream::get_session();
         $agent      = (!empty($client))
             ? $client
             : Session::agent($sessionkey);
@@ -633,7 +633,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         // Determine whether to transcode
         $transcode    = false;
-        $transcode_to = Stream::get_transcode_format((string)$media->type, $transcode_to, $player, (string) $media->type);
+        $transcode_to = Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
