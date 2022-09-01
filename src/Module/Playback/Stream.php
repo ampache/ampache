@@ -91,6 +91,63 @@ class Stream
     }
 
     /**
+     * Get transcode format for media based on config settings
+     *
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @return string
+     */
+    public static function get_transcode_format(
+        $source,
+        $target = null,
+        $player = null,
+        $media_type = 'song'
+    ) {
+        // default target for songs
+        $setting_target = 'encode_target';
+        // default target for video
+        if ($media_type != 'song') {
+            $setting_target = 'encode_' . $media_type . '_target';
+        }
+        if (!$player && $media_type === 'song') {
+            $player = 'webplayer';
+        }
+        // webplayer / api transcode actions
+        $has_player_target = false;
+        if ($player) {
+            // encode target for songs in webplayer/api
+            $player_setting_target = 'encode_player_' . $player . '_target';
+            if ($media_type != 'song') {
+                // encode target for video in webplayer/api
+                $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+            }
+            $has_player_target = AmpConfig::get($player_setting_target);
+        }
+        $has_default_target = AmpConfig::get($setting_target);
+        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
+
+        // Fall backwards from the specific transcode formats to default
+        // TARGET > PLAYER > CODEC > DEFAULT
+        if ($target) {
+            return $target;
+        } elseif ($has_player_target) {
+            $target = $has_player_target;
+        } elseif ($has_codec_target) {
+            $target = $has_codec_target;
+        } elseif ($has_default_target) {
+            $target = $has_default_target;
+        }
+        // fall back to resampling if no default
+        if (!$target) {
+            $target = $source;
+        }
+
+        return $target;
+    }
+
+    /**
      * get_allowed_bitrate
      * @return integer
      */

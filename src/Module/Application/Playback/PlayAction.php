@@ -632,7 +632,8 @@ final class PlayAction implements ApplicationActionInterface
             debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
         }
         // Determine whether to transcode
-        $transcode = false;
+        $transcode    = false;
+        $transcode_to = Stream::get_transcode_format((string)$media->type, $transcode_to, $player, (string) $media->type);
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
