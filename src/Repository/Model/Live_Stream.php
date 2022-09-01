@@ -365,7 +365,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_stream_types($player = null)
     {
-        return array('foreign');
+        return array('native');
     } // native_stream
 
     /**
