@@ -541,7 +541,8 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name = $stream_name ?? $media->get_stream_name() . "." . $media->type;
+        $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
+        $transcode_to = ($is_download) ? false : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
 
@@ -552,18 +553,19 @@ final class PlayAction implements ApplicationActionInterface
         $location   = Session::get_geolocation($sessionkey);
 
         // If they are just trying to download make sure they have rights and then present them with the download file
-        if ($is_download && !$original) {
-            if ($transcode_to) {
-                debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
-            }
-            if (!$share_id) {
-                if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
-                    debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+        if ($is_download) {
+            if (!$original) {
+                if ($transcode_to) {
+                    debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
                 }
+                if (!$share_id) {
+                    if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
+                        debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
+                        Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                    }
+                }
+                $record_stats = false;
             }
-            $record_stats = false;
-        } elseif ($is_download) {
             debug_event('play/index', 'Downloading raw file...', 4);
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
@@ -633,7 +635,6 @@ final class PlayAction implements ApplicationActionInterface
         }
         // Determine whether to transcode
         $transcode    = false;
-        $transcode_to = ($is_download) ? false : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
