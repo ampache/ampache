@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## Ampache 5.5.2-develop
+
+### Fixed
+
+* Tmp_Playlist::get items may not order by the playlist id
+* Fix album time update when time is NULL
+* webplayer
+  * Video types missing from supported types
+  * Playlist sorting issues
+
+## API 5.5.2-develop
+
+### Fixed
+
+* advanced_search
+  * unable to retrieve song_artist or album_artist results
+
 ## Ampache 5.5.1
 
 I made a mistake in the release string so we need a new point release already!
