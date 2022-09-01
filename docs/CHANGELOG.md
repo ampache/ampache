@@ -19,7 +19,6 @@
   * alias mbid_artist => mbid for artist search
   * alias song_genre => genre for song search
 * webplayer
-  * Code cleanup and attempt to make it a bit less confusing
   * Enable restart on democratic or random play
   * Allow removing played tracks on next
 
@@ -47,12 +46,6 @@
 
 ## API develop
 
-### Added
-
-* advanced_search
-  * Add song_artist as a search type (uses artist rules)
-  * Add album_artist as a search type (uses artist rules)
-
 ### Fixed
 
 * Api::songs set_filter call without browse parameter may have lost info
@@ -60,6 +53,29 @@
 * Api::get_indexes set album_artist filter correctly
 * Api4::get_indexes set album_artist filter correctly
 * Api::artists set album_artist filter correctly
+
+## Ampache 5.5.2-develop
+
+### Added
+
+* webplayer
+  * Code cleanup and attempt to make it a bit less confusing
+
+### Fixed
+
+* Tmp_Playlist::get_items may not order by the playlist id
+* Fix album time update when time is NULL
+* webplayer
+  * Video types missing from supported types
+  * Playlist sorting issues
+
+## API 5.5.2-develop
+
+### Added
+
+* advanced_search
+  * Add song_artist as a search type (uses artist rules)
+  * Add album_artist as a search type (uses artist rules)
 
 ## Ampache 5.5.1
 
