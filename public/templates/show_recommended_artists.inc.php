@@ -96,12 +96,12 @@ $cel_counter = "cel_counter"; ?>
         </tr>
         <?php
         } ?>
-        <?php
+        <?php $web_path = AmpConfig::get('web_path');
         /* Foreach through every missing artist that has been passed to us */
         foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
             <td></td>
-            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
+            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo $web_path; ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
         </tr>
         <?php } ?>
         <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>

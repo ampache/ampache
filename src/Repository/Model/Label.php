@@ -403,12 +403,12 @@ class Label extends database_object implements library_item
             return '';
         }
 
-        $results = '';
-
+        $web_path = AmpConfig::get('web_path');
+        $results  = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {
             if ($link) {
-                $results .= '<a href="' . AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
+                $results .= '<a href="' . $web_path . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
             }
             $results .= $value;
             if ($link) {

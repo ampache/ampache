@@ -211,7 +211,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     foreach ($sres as $artist) {
                         $results[] = array(
                             'type' => T_('Missing Artists'),
-                            'link' => AmpConfig::get('web_path') . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
+                            'link' => $web_path . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
                             'label' => scrub_out($artist['name']),
                             'value' => scrub_out($artist['name']),
                             'rels' => '',
