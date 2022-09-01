@@ -2221,7 +2221,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        $type = (strpos($additional_params, 'action=download'))
+        $type = (!empty($additional_params) && strpos($additional_params, 'action=download'))
             ? Stream::get_transcode_format($this->type, null, $player)
             : $this->type;
 
