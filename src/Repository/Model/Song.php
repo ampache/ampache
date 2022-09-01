@@ -2224,7 +2224,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $type = $this->type;
 
         $this->format();
-        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = $this->get_stream_name() . "." . Stream::get_transcode_format($type, null, $player);
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 

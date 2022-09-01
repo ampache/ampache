@@ -111,7 +111,7 @@ class Stream
         if ($media_type != 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
         }
-        if (!$player && $media_type === 'song') {
+        if (!$player && in_array($media_type, array('song', 'podcast_episode'))) {
             $player = 'webplayer';
         }
         // webplayer / api transcode actions
