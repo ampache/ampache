@@ -2356,50 +2356,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $media_type = 'song',
         $options = array()
     ) {
-        // default target for songs
-        $setting_target = 'encode_target';
-        // default target for video
-        if ($media_type != 'song') {
-            $setting_target = 'encode_' . $media_type . '_target';
-        }
-        if (!$player && $media_type === 'song') {
-            $player = 'webplayer';
-        }
-        // webplayer / api transcode actions
-        $has_player_target = false;
-        if ($player) {
-            // encode target for songs in webplayer/api
-            $player_setting_target = 'encode_player_' . $player . '_target';
-            if ($media_type != 'song') {
-                // encode target for video in webplayer/api
-                $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
-            }
-            $has_player_target = AmpConfig::get($player_setting_target);
-        }
-        $has_default_target = AmpConfig::get($setting_target);
-        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
-
-        // Fall backwards from the specific transcode formats to default
-        // TARGET > PLAYER > CODEC > DEFAULT
-        if ($target) {
-            debug_event(self::class, 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_player_target) {
-            $target = $has_player_target;
-            debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target) {
-            $target = $has_codec_target;
-            debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target) {
-            $target = $has_default_target;
-            debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
-        }
-        // fall back to resampling if no default
-        if (!$target) {
-            $target = $source;
-            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
-        }
-
-        $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        $target = Stream::get_transcode_format($source, $target, $player, $media_type);
+        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
 
