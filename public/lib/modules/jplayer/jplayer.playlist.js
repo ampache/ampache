@@ -659,6 +659,7 @@
                 //only one track so remove that one
                 if (startIndex === 1) {
                     this.remove(0);
+                    this._refreshHtmlPlaylist();
                 } else {
                     this.removeBefore(startIndex);
                     this._refreshHtmlPlaylist();
