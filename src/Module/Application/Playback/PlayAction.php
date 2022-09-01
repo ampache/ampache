@@ -160,12 +160,12 @@ final class PlayAction implements ApplicationActionInterface
             $action = 'stream';
         }
         // allow disabling stat recording from the play url
-        if (($action === 'download' || $cache === '1') || !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
             $action       = 'download';
             $record_stats = false;
         }
-        $is_download   = ($action == 'download');
+        $is_download   = ($action == 'download' || $cache == '1');
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $resolution    = '';
@@ -197,7 +197,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         $subtitle         = '';
         $send_full_stream = (string)AmpConfig::get('send_full_stream');
-        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream === $player);
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
 
         if (!$type) {
             $type = 'song';
@@ -800,7 +800,7 @@ final class PlayAction implements ApplicationActionInterface
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                         debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) === Song::class) {
+                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }

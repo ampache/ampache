@@ -141,7 +141,6 @@ class Stream
         } elseif ($has_default_target) {
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
-
         }
         // fall back to resampling if no default
         if (!$target) {
