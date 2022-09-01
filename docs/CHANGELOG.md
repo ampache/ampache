@@ -2,9 +2,14 @@
 
 ## Ampache 5.5.2-develop
 
+### Added
+
+* webplayer
+  * Code cleanup and attempt to make it a bit less confusing
+
 ### Fixed
 
-* Tmp_Playlist::get items may not order by the playlist id
+* Tmp_Playlist::get_items may not order by the playlist id
 * Fix album time update when time is NULL
 * PlayAction didn't record stats for downloads
 * PlayAction transcode settings could be ignored
@@ -14,6 +19,12 @@
   * Playlist sorting issues
 
 ## API 5.5.2-develop
+
+### Added
+
+* advanced_search
+  * Add song_artist as a search type (uses artist rules)
+  * Add album_artist as a search type (uses artist rules)
 
 ### Fixed
 
