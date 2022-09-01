@@ -2317,7 +2317,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string $player
      * @return array
      */
-    public static function get_stream_types_for_type($type, $player = '')
+    public static function get_stream_types_for_type($type, $player = 'webplayer')
     {
         $types     = array();
         $transcode = AmpConfig::get('transcode_' . $type);
