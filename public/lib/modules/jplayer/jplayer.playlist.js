@@ -374,11 +374,8 @@
         add: function(media, playNow) {
             console.log("add");
             var self = this;
-            var playlist_before = [];
+            var playlist_before = this.original;
             var playlist_after = [];
-            $.each(self.playlist, function(i) {
-                playlist_before[i] = self.playlist[i];
-            });
             $(this.cssSelector.playlist + " ul")
                 .append(this._createListItem(media))
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
@@ -400,23 +397,20 @@
             if (playNow) {
                 this.play(this.playlist.length - 1);
             } else {
-                if (this.original.length === 1) {
+                if (this.playlist.length === 1) {
                     this.select(0);
                 }
             }
         },
         addAfter: function(media, index) {
             console.log("addAfter " + index);
-            if (index >= this.original.length || index < 0) {
+            if (index >= this.playlist.length || index < 0) {
                 console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
                 return;
             }
             var self = this;
-            var playlist_before = [];
+            var playlist_before = this.original;
             var playlist_after = [];
-            $.each(self.playlist, function(i) {
-                playlist_before[i] = self.playlist[i];
-            });
             $(this.cssSelector.playlist + " ul")
                 .find("li[name=" + index + "]").after(this._createListItem(media)).end()
                 .find("li:last-child").hide().slideDown(this.options.playlistOptions.addTime);
@@ -432,7 +426,7 @@
             this.playlist = playlist_after;
             this.original = playlist_after;
 
-            if (this.original.length === 1) {
+            if (this.playlist.length === 1) {
                 this.select(0);
             }
             this._refreshHtmlPlaylist();
@@ -451,11 +445,8 @@
                 });
                 return true;
             } else {
-                var playlist_before = [];
+                var playlist_before = this.original;
                 var playlist_after = [];
-                $.each(self.playlist, function(i) {
-                    playlist_before[i] = self.playlist[i];
-                });
                 if (this.removing) {
                     return false;
                 } else {
@@ -471,15 +462,17 @@
                         $(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
                             $(this).remove();
 
-                            if (self.original.length) {
+                            if (self.playlist.length) {
                                 if (index === self.current) {
-                                    self.current = (index < self.original.length) ? self.current : self.original.length - 1; // To cope when last element being selected when it was removed
+                                    self.current = (index < self.playlist.length) ? self.current : self.playlist.length - 1; // To cope when last element being selected when it was removed
                                     self.select(self.current);
                                 } else if (index < self.current) {
-                                    self.current--;
+                                    console.log("this.current: " + self.current + " => " + (self.current - 1));
+                                    self.current = self.current - 1;
                                 }
                             } else {
                                 $(self.cssSelector.jPlayer).jPlayer("clearMedia");
+                                console.log("this.current: " + self.current + " => 0");
                                 self.current = 0;
                                 self.shuffled = false;
                                 self._updateControls();
@@ -492,10 +485,13 @@
                                 playlist_after.push(playlist_before[i]);
                             }
                         });
+                        this.current = self.current;
                         this.playlist = playlist_after;
                         this.original = playlist_after;
                     }
-                    console.log("current: " + self.current);
+                    // sort the list after removal
+                    this._refreshHtmlPlaylist();
+                    console.log("current: " + this.current);
                     console.log(playlist_before);
                     console.log(self.playlist);
                     console.log("-----------");
@@ -516,7 +512,7 @@
             } else {
                 var new_index = 0;
                 var current_item = this.current;
-                var playlist_before = [];
+                var playlist_before = this.original;
                 var playlist_after = [];
                 $.each(self.playlist, function(i) {
                     playlist_before[i] = self.playlist[i];
@@ -584,11 +580,8 @@
             var self = this;
             var isAdjusted = false;
             var current_item = this.current
-            var playlist_before = [];
+            var playlist_before = this.original;
             var playlist_after = [];
-            $.each(self.playlist, function(i) {
-                playlist_before[i] = self.playlist[i];
-            });
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 var htmlIndex = parseInt($(playlistRow).attr("name"),10);
                 $(playlistRow)
@@ -616,12 +609,12 @@
         },
         select: function(index) {
             console.log("select " + index);
-            index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
+            index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
                 this.current = index;
                 this._highlight(index);
                 $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
-                console.log(this.playlist[this.current])
+                console.log(this.playlist[this.current]);
             } else {
                 this.current = 0;
             }
@@ -638,7 +631,7 @@
         },
         play: function(index) {
             console.log("play " + index);
-            index = (index < 0) ? this.original.length + index : index; // Negative index relates to end of array.
+            index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
             if ("function" === typeof this.options.callbackPlay) {
                 this.options.callbackPlay(index);
             }
@@ -656,14 +649,8 @@
             if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
                 console.log("index " + index);
                 console.log("startIndex " + startIndex);
-                //only one track so remove that one
-                if (startIndex === 1) {
-                    this.remove(0);
-                    this._refreshHtmlPlaylist();
-                } else {
-                    this.removeBefore(startIndex);
-                    this._refreshHtmlPlaylist();
-                }
+                this.removeBefore(startIndex);
+                this._refreshHtmlPlaylist();
             }
         },
         pause: function() {
