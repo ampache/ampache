@@ -573,7 +573,7 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             if (!$share_id) {
-                if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
+                if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
                     Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
                 }
