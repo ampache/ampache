@@ -592,7 +592,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->type_text('genre', $t_genre, $t_genre);
+        $this->type_text('tag', $t_genre, $t_genre);
         $this->type_text('album_genre', T_('Album Genre'), $t_genre);
         $this->type_text('artist_genre', T_('Artist Genre'), $t_genre);
         $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
@@ -718,7 +718,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->type_text('genre', $t_genre, $t_genre);
+        $this->type_text('tag', $t_genre, $t_genre);
         $this->type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
@@ -793,7 +793,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->type_text('genre', $t_genre, $t_genre);
+        $this->type_text('tag', $t_genre, $t_genre);
         $this->type_text('song_genre', T_('Song Genre'), $t_genre);
         $this->type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
@@ -1306,262 +1306,15 @@ class Search extends playlist_object
     } // get_total_duration
 
     /**
-     * get_rule_type
+     * name_to_basetype
      *
-     * Iterates over $this->types to validate the rule name for the passed string.
+     * Iterates over our array of types to find out the basetype for
+     * the passed string.
      * @param string $name
      * @return string|false
      */
-    public function get_rule_type($name)
+    public function name_to_basetype($name)
     {
-        switch ($this->objectType) {
-            case 'song':
-                switch ($name) {
-                    case 'anywhere':
-                    case 'tag':
-                    case 'genre':
-                    case 'song_tag':
-                    case 'song_genre':
-                    case 'no_tag':
-                    case 'no_genre':
-                    case 'album_tag':
-                    case 'album_genre':
-                    case 'artist_tag':
-                    case 'artist_genre':
-                    case 'title':
-                    case 'name':
-                    case 'album':
-                    case 'artist':
-                    case 'album_artist':
-                    case 'time':
-                    case 'file':
-                    case 'composer':
-                    case 'year':
-                    case 'track':
-                    case 'catalog':
-                    case 'license':
-                    case 'comment':
-                    case 'label':
-                    case 'played':
-                    case 'last_play':
-                    case 'last_skip':
-                    case 'last_play_or_skip':
-                    case 'played_times':
-                    case 'skipped_times':
-                    case 'played_or_skipped_times':
-                    case 'play_skip_ratio':
-                    case 'myplayed':
-                    case 'myplayedalbum':
-                    case 'myplayedartist':
-                    case 'bitrate':
-                    case 'rating':
-                    case 'favorite':
-                    case 'favorite_album':
-                    case 'favorite_artist':
-                    case 'myrating':
-                    case 'albumrating':
-                    case 'artistrating':
-                    case 'other_user':
-                    case 'other_user_album':
-                    case 'other_user_artist':
-                    case 'playlist_name':
-                    case 'playlist':
-                    case 'smartplaylist':
-                    case 'added':
-                    case 'updated':
-                    case 'recent_played':
-                    case 'recent_added':
-                    case 'recent_updated':
-                    case 'mbid':
-                    case 'mbid_album':
-                    case 'mbid_artist':
-                    case 'possible_duplicate':
-                    case 'possible_duplicate_album':
-                    case 'orphaned_album':
-                    case 'metadata':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'album':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'year':
-                    case 'release_type':
-                    case 'release_status':
-                    case 'catalog':
-                    case 'original_year':
-                    case 'time':
-                    case 'rating':
-                    case 'favorite':
-                    case 'myrating':
-                    case 'artistrating':
-                    case 'songrating':
-                    case 'myplayed':
-                    case 'myplayedartist':
-                    case 'played':
-                    case 'last_play':
-                    case 'last_skip':
-                    case 'last_play_or_skip':
-                    case 'played_times':
-                    case 'song_count':
-                    case 'other_user':
-                    case 'recent_played':
-                    case 'recent_added':
-                    case 'tag':
-                    case 'genre':
-                    case 'album_tag':
-                    case 'album_genre':
-                    case 'no_tag':
-                    case 'no_genre':
-                    case 'song_tag':
-                    case 'song_genre':
-                    case 'playlist_name':
-                    case 'playlist':
-                    case 'file':
-                    case 'has_image':
-                    case 'image_height':
-                    case 'image_width':
-                    case 'artist':
-                    case 'album_artist':
-                    case 'song':
-                    case 'song_title':
-                    case 'song_artist':
-                    case 'mbid':
-                    case 'mbid_album':
-                    case 'mbid_artist':
-                    case 'possible_duplicate':
-                    case 'possible_duplicate_album':
-                    case 'duplicate_mbid_group':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'artist':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'yearformed':
-                    case 'placeformed':
-                    case 'time':
-                    case 'tag':
-                    case 'genre':
-                    case 'no_tag':
-                    case 'no_genre':
-                    case 'song_tag':
-                    case 'song_genre':
-                    case 'playlist_name':
-                    case 'playlist':
-                    case 'rating':
-                    case 'favorite':
-                    case 'file':
-                    case 'has_image':
-                    case 'image_height':
-                    case 'image_width':
-                    case 'myrating':
-                    case 'albumrating':
-                    case 'songrating':
-                    case 'myplayed':
-                    case 'played':
-                    case 'last_play':
-                    case 'last_skip':
-                    case 'last_play_or_skip':
-                    case 'played_times':
-                    case 'summary':
-                    case 'album':
-                    case 'album_title':
-                    case 'song':
-                    case 'song_title':
-                    case 'album_count':
-                    case 'song_count':
-                    case 'other_user':
-                    case 'recent_played':
-                    case 'catalog':
-                    case 'mbid':
-                    case 'mbid_artist':
-                    case 'possible_duplicate':
-                    case 'possible_duplicate_album':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'video':
-                switch ($name) {
-                    case 'file':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'playlist':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'type':
-                    case 'owner':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'podcast':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'podcast_episode':
-                    case 'podcast_episode_title':
-                    case 'time':
-                    case 'state':
-                    case 'pubdate':
-                    case 'added':
-                    case 'file':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'podcast_episode':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'podcast':
-                    case 'podcast_title':
-                    case 'time':
-                    case 'state':
-                    case 'pubdate':
-                    case 'added':
-                    case 'file':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'user':
-                switch ($name) {
-                    case 'username':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-            case 'genre':
-            case 'tag':
-            case 'label':
-                switch ($name) {
-                    case 'title':
-                    case 'name':
-                    case 'category':
-                        return $name;
-                    default:
-                        break;
-                }
-                break;
-        }
-        // if that failed, try the old way
         foreach ($this->types as $type) {
             if ($type['name'] == $name) {
                 return $type['type'];
@@ -1585,11 +1338,13 @@ class Search extends playlist_object
         // parse the remaining rule* keys
         $this->rules  = array();
         foreach ($data as $rule => $value) {
-            $rule_type = $this->get_rule_type($value);
-            if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $rule_type) {
+            if ((($this->objectType == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
+                $value = 'title';
+            }
+            if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $this->name_to_basetype($value)) {
                 $ruleID     = (string)$ruleID[1];
                 $input_rule = (string)($data['rule_' . $ruleID . '_input'] ?? '');
-                $operator   = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'];
+                $operator   = $this->basetypes[$this->name_to_basetype($value)][$data['rule_' . $ruleID . '_operator']]['name'];
                 // keep vertical bar in regular expression
                 if (in_array($operator, ['regexp', 'notregexp'])) {
                     $input_rule = str_replace("|", "\0", $input_rule);
@@ -1762,7 +1517,7 @@ class Search extends playlist_object
         $groupdisks  = AmpConfig::get('album_group');
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -2208,7 +1963,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -2595,7 +2350,7 @@ class Search extends playlist_object
         $metadata    = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3091,7 +2846,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3175,7 +2930,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3280,7 +3035,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3412,7 +3167,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3537,7 +3292,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3628,7 +3383,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3708,7 +3463,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->get_rule_type($rule[0]);
+            $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
