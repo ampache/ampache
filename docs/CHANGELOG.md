@@ -17,6 +17,10 @@
 * If you are transcoding redirect to the transcoded file
 * Download stats for song, video, podcast_episode
 * Set the file extension on urls on generation
+* Don't overwrite artist art when searching for album art
+* Retrieve song art from tags the same ay they are found ('invalid' art)
+* search
+  * Bad SQL on 0 rating query for album/artist search
 * webplayer
   * Video types missing from supported types
   * Playlist sorting issues
