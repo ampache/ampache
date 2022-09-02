@@ -60,7 +60,7 @@ final class AdminUpdateDatabaseCommand extends Command
             sprintf(T_('Config version: %s'), AmpConfig::get('int_config_version')),
             true
         );
-        /* HINT: db version string (e.g. 5.2.0 Build:006) */
+        /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
             sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
             true
@@ -105,7 +105,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     T_('Updated'),
                     true
                 );
-                /* HINT: db version string (e.g. 5.2.0 Build:006) */
+                /* HINT: db version string (e.g. 5.2.0 Build: 006) */
                 $interactor->info(
                     sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
                     true
