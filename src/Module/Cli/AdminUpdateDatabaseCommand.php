@@ -47,6 +47,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
     public function execute(): void
     {
+        $updated    = false;
         $interactor = $this->io();
         $execute    = $this->values()['execute'] === true;
         /* HINT: Ampache version string (e.g. 5.4.0-release, develop) */
@@ -59,7 +60,7 @@ final class AdminUpdateDatabaseCommand extends Command
             sprintf(T_('Config version: %s'), AmpConfig::get('int_config_version')),
             true
         );
-        /* HINT: db version string (e.g. 520006) */
+        /* HINT: db version string (e.g. 5.2.0 Build:006) */
         $interactor->info(
             sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
             true
@@ -85,6 +86,7 @@ final class AdminUpdateDatabaseCommand extends Command
         }
 
         if (Update::need_update() && $execute) {
+            $updated = true;
             Update::run_update();
         }
 
@@ -97,10 +99,23 @@ final class AdminUpdateDatabaseCommand extends Command
 
         $result = Update::display_update();
         if ($result === []) {
-            $interactor->info(
-                T_('No update needed'),
-                true
-            );
+            if ($updated) {
+                // tell the user that the database was updated and the version
+                $interactor->info(
+                    T_('Updated'),
+                    true
+                );
+                /* HINT: db version string (e.g. 5.2.0 Build:006) */
+                $interactor->info(
+                    sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
+                    true
+                );
+            } else {
+                $interactor->info(
+                    T_('No update needed'),
+                    true
+                );
+            }
         } else {
             foreach ($result as $updateInfo) {
                 $interactor->info(
