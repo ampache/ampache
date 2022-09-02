@@ -1017,49 +1017,56 @@ class Art extends database_object
             $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
-            if (array_key_exists('format_name', $id3) && $id3['format_name'] == "WMA") {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
-            } elseif (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more then one
+            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
+                return $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+            }
+
+            if (isset($id3['id3v2']['APIC'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['id3v2']['APIC'] as $image) {
-                    if (!isset($image['picturetypeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['id3v2']['PIC'])) {
-                // Foreach in case they have more then one
+            }
+
+            if (isset($id3['id3v2']['PIC'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['id3v2']['PIC'] as $image) {
-                    if (!isset($image['picturetypeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['flac']['PICTURE'])) {
-                // Foreach in case they have more then one
-                foreach ($id3['comments']['picture'] as $image) {
-                    if (!isset($image['typeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+            }
+
+            if (isset($id3['flac']['PICTURE'])) {
+                // Foreach in case they have more than one
+                foreach ($id3['flac']['PICTURE'] as $image) {
+                    if (isset($image['typeid']) && array_key_exists('data', $image)) {
+                        $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
+                        if ($data['title'] == $title) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['comments']['picture'])) {
-                // Foreach in case they have more then one
+            }
+
+            if (isset($id3['comments']['picture'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['comments']['picture'] as $image) {
-                    if (!isset($image['picturetype']) && !isset($image['description'])) {
-                        break;
+                    if (isset($image['picturetype']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == 'ID3 ' . $image['picturetype']) {
+                            return $image['data'];
+                        }
                     }
-                    if ((isset($image['picturetype']) && $data['title'] == 'ID3 ' . $image['picturetype']) || (isset($image['description']) && $data['title'] == 'ID3 ' . $image['description'])) {
-                        return $image['data'];
+                    if (isset($image['description']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == 'ID3 ' . $image['description']) {
+                            return $image['data'];
+                        }
                     }
                 }
             }
