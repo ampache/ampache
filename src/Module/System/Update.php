@@ -772,6 +772,9 @@ class Update
         $update_string = "* Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played";
         $version[]     = array('version' => '600001', 'description' => $update_string);
 
+        $update_string = "* Drop channel table";
+        $version[]     = array('version' => '600002', 'description' => $update_string);
+
         return $version;
     }
 
@@ -974,7 +977,7 @@ class Update
                 $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`) VALUES('" . Dba::escape($row['art']) . "', '" . $row['art_mime'] . "', 'original', '" . $type . "', '" . $row['object_id'] . "')";
                 Dba::write($sql);
             }
-            $sql = "DROP TABLE `" . $type . "_data`";
+            $sql = "DROP TABLE IF EXISTS `" . $type . "_data`";
             $retval &= (Dba::write($sql) !== false);
         }
 
@@ -1824,9 +1827,9 @@ class Update
         $retval  = true;
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $sql = "DROP TABLE dynamic_playlist";
+        $sql = "DROP TABLE IF EXISTS `dynamic_playlist`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "DROP TABLE dynamic_playlist_data";
+        $sql = "DROP TABLE IF EXISTS `dynamic_playlist_data``";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user_vote` ADD `sid` varchar(256) CHARACTER SET $charset NULL AFTER `date`";
         $retval &= (Dba::write($sql) !== false);
@@ -4650,6 +4653,19 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_600002
+     *
+     * Drop channel table
+     */
+    public static function update_600002(): bool
+    {
+        $retval = true;
+        $sql    = "DROP TABLE IF EXISTS `channel`";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }
