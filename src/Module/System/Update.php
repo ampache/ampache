@@ -195,7 +195,7 @@ class Update
      */
     public static function format_version($data)
     {
-        return substr($data, 0, strlen((string)$data) - 5) . '.' . substr($data, strlen((string)$data) - 5, 1) . ' Build:' . substr($data, strlen((string)$data) - 4, strlen((string)$data));
+        return substr($data, 0, strlen((string)$data) - 4) . '.' . substr($data, strlen((string)$data) - 4, 1) . ' Build:' . substr($data, strlen((string)$data) - 3, strlen((string)$data));
     }
 
     /**

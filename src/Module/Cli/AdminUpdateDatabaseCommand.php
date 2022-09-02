@@ -61,7 +61,7 @@ final class AdminUpdateDatabaseCommand extends Command
         );
         /* HINT: db version string (e.g. 520006) */
         $interactor->info(
-            sprintf(T_('Database version: %s'), Update::get_version()),
+            sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
             true
         );
 
