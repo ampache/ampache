@@ -828,7 +828,7 @@ class Search extends playlist_object
     } // albumtypes
 
     /**
-     * set_video_rules
+     * _set_types_video
      *
      * this is where all the searchTypes for videos are defined
      */
