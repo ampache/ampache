@@ -969,7 +969,7 @@ class Search extends playlist_object
 
         // Verify the type
         $search_type = $data['type'] ?? '';
-        //Search::VALID_TYPES = array('song', 'album', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
+        //Search::VALID_TYPES = array('song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
             case 'song':
             case 'album':
