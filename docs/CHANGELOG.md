@@ -4,6 +4,14 @@
 
 ### Added
 
+* search
+  * Class rework and many additional aliases, check the docs for [advanced_search](https://ampache.org/api/api-advanced-search)
+  * Add `song_artist` as a search type (uses artist rules)
+  * Add `album_artist` as a search type (uses artist rules)
+  * Add `song_genre` to album search
+  * Add `mbid_artist` to album search
+  * Add `song_genre` to artist search
+  * Add `possible_duplicate_album` to song search
 * webplayer
   * Code cleanup and attempt to make it a bit less confusing
 
@@ -20,8 +28,10 @@
 * Don't overwrite artist art when searching for album art
 * Retrieve song art from tags the same ay they are found ('invalid' art)
 * search
+  * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
 * webplayer
+  * Desired transcode format not being respected
   * Video types missing from supported types
   * Playlist sorting issues
 
@@ -32,6 +42,10 @@
 * advanced_search
   * Add song_artist as a search type (uses artist rules)
   * Add album_artist as a search type (uses artist rules)
+  * Add `song_genre` to album search
+  * Add `mbid_artist` to album search
+  * Add `song_genre` to artist search
+  * Add `possible_duplicate_album` to song search
 
 ### Fixed
 
@@ -1118,7 +1132,7 @@ This version of the API is the first semantic version. "5.0.0"
 * Return empty objects when the request was correct but the results were empty
 * Don't transcode podcast_episodes
 * localplay
-  * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
+  * Added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * system_update: update the database if required as well
 * playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
 * catalog_file: Allow comma-separate task values. (good for API inotify scripts)
