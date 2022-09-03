@@ -73,9 +73,13 @@ Select the type of search based on the type of data you are searching for. (song
 | album                    | Album Title                             | text              |                             song, artist                              |
 | album_title              | (*Alias of album)                       |                   |                                                                       |
 | artist                   | Artist                                  | text              |                          song, album, artist                          |
+| artist_title             | (*Alias of artist)                      |                   |                                                                       |
 | podcast                  | Podcast                                 | text              |                            podcast_episode                            |
+| podcast_title            | (*Alias of podcast)                     |                   |                                                                       |
 | podcast_episode          | Podcast Episode                         | text              |                                podcast                                |
+| podcast_episode_title    | (*Alias of podcast_episode)             |                   |                                                                       |
 | album_artist             | Album Artist                            | text              |                                 song                                  |
+| album_artist_title       | (*Alias of album_artist)                |                   |                                                                       |
 | song_artist              | Song Artist                             | text              |                                 album                                 |
 | composer                 | Composer                                | text              |                                 song                                  |
 | track                    | Track                                   | numeric           |                                 song                                  |

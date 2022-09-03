@@ -1322,6 +1322,12 @@ class Search extends playlist_object
                     case 'name':
                         $name = 'title';
                         break;
+                    case 'album_title':
+                        $name = 'album';
+                        break;
+                    case 'album_artist_title':
+                        $name = 'album_artist';
+                        break;
                     case 'tag':
                     case 'song_tag':
                     case 'song_genre':
@@ -1343,10 +1349,15 @@ class Search extends playlist_object
             case 'album':
                 switch ($name) {
                     case 'name':
+                    case 'album_title':
                         $name = 'title';
                         break;
                     case 'song_title':
                         $name = 'song';
+                        break;
+                    case 'album_artist':
+                    case 'album_artist_title':
+                        $name = 'artist';
                         break;
                     case 'tag':
                     case 'album_tag':
@@ -1372,6 +1383,7 @@ class Search extends playlist_object
             case 'artist':
                 switch ($name) {
                     case 'name':
+                    case 'artist_title':
                         $name = 'title';
                         break;
                     case 'album_title':
