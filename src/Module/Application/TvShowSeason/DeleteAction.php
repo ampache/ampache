@@ -55,7 +55,9 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $tvshow_season_id = (int) $request->getQueryParams()['tvshow_season_id'] ?? 0;
-
+        if ($tvshow_season_id < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The entire TV Season will be deleted'),
