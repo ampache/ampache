@@ -587,7 +587,6 @@ class Query
                     'add_gt',
                     'update_lt',
                     'update_gt',
-                    'show_art',
                     'starts_with',
                     'exact_match',
                     'alpha_match',
