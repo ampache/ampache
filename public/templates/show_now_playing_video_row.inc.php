@@ -36,7 +36,7 @@ $media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
         <?php echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
                 echo '<div>' . $np_user->f_avatar_medium . '</div>';
