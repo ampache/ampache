@@ -114,7 +114,7 @@ class ShowActionTest extends MockeryTestCase
             )
             ->once();
 
-        $this->expectOutputString('You have requested an Artist that does not exist.');
+        $this->expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

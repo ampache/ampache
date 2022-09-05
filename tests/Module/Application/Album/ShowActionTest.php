@@ -123,7 +123,7 @@ class ShowActionTest extends MockeryTestCase
             )
             ->once();
 
-        $this->expectOutputString('You have requested an Album that does not exist.');
+        $this->expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

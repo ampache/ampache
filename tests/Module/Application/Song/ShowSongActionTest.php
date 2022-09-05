@@ -116,7 +116,7 @@ class ShowSongActionTest extends MockeryTestCase
             )
             ->once();
 
-        $this->expectOutputString('You have requested a Song that does not exist.');
+        $this->expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run(
