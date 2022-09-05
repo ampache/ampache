@@ -315,7 +315,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            if (!$this->is_shared_media($share, $object_id)) {
+            if (!$share->is_shared_media($object_id)) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;
@@ -906,38 +906,4 @@ final class PlayAction implements ApplicationActionInterface
         return null;
     }
 
-    private function is_shared_media(Share $share, $media_id): bool
-    {
-        $isShare = false;
-        switch ($share->object_type) {
-            case 'album':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
-                $songs      = $this->songRepository->getByAlbum((int) $object->id);
-
-                foreach ($songs as $songid) {
-                    $isShare = ($media_id == $songid);
-                    if ($isShare) {
-                        break;
-                    }
-                }
-                break;
-            case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
-                $songs      = $object->get_songs();
-                foreach ($songs as $songid) {
-                    $isShare = ($media_id == $songid);
-                    if ($isShare) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $isShare = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
-                break;
-        }
-
-        return $isShare;
-    }
 }

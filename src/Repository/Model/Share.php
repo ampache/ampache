@@ -407,6 +407,48 @@ class Share extends database_object
     }
 
     /**
+     * is_shared_media
+     * Has this media object come from a shared object?
+     * @param $media_id
+     * @return boolean
+     */
+    public function is_shared_media($media_id): bool
+    {
+        $isShare = false;
+        switch ($this->object_type) {
+            case 'album':
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                /** @var Album $object */
+                $songs      = $object->get_child_ids();
+
+                foreach ($songs as $songid) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
+                        break;
+                    }
+                }
+                break;
+            case 'playlist':
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                $songs      = $object->get_songs();
+                foreach ($songs as $songid) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
+                        break;
+                    }
+                }
+                break;
+            default:
+                $isShare = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
+                break;
+        }
+
+        return $isShare;
+    }
+
+    /**
      * @return Stream_Playlist
      */
     public function create_fake_playlist()
