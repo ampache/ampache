@@ -3751,9 +3751,9 @@ abstract class Catalog extends database_object
         // fill the data
         debug_event(__CLASS__, 'Update mapping for table: ' . $table, 5);
         if ($table == 'artist') {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `song`.`catalog` > 0 GROUP BY `song`.`catalog`, 'artist', `artist_map`.`artist_id`;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `song`.`catalog` > 0 GROUP BY `song`.`catalog`, 'artist', `artist_map`.`artist_id`;";
             Dba::write($sql);
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `album_map`.`object_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` AND `album_map`.`object_type` = 'album' WHERE `album`.`catalog` > 0 GROUP BY `album`.`catalog`, 'artist', `album_map`.`object_id`;";
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `album`.`catalog` > 0 AND `artist_map`.`object_type` = 'album' GROUP BY `album`.`catalog`, 'artist', `artist_map`.`artist_id`;";
             Dba::write($sql);
         } else {
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0 GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
