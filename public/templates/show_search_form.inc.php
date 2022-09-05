@@ -45,7 +45,7 @@ $browse_id       = (isset($browse))
     : 0;
 $currentType     = (isset($searchType))
     ? $searchType
-    : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+    : (string) filter_input(INPUT_REQUEST, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
 $currentType     = (in_array($currentType, Search::VALID_TYPES))
     ? $currentType
     : null;
