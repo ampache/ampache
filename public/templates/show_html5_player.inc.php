@@ -311,15 +311,14 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         replaygainEnabled = false;
         <?php echo WebPlayer::add_media_js($playlist); ?>
 
+        <?php if (!$isShare || ($isShare && $isVideo)) { ?>
         $("#jquery_jplayer_1").resizable({
             alsoResize: "#jquery_jplayer_1 video",
             handles: "nw, ne, se, sw, n, e, w, s"
         });
-
         $("#jquery_jplayer_1 video").resizable();
-
         $("#jquery_jplayer_1").draggable();
-
+        <?php } ?>
     });
 </script>
 <?php // Load Aurora.js scripts
