@@ -765,7 +765,6 @@ a.jp-video-play-icon {
 .jp-jplayer-audio {
     top: 10px;
     left: 20px;
-    position:inherit;
 }
 
 /* @group TOGGLES */
