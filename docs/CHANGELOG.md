@@ -27,6 +27,7 @@
 * Set the file extension on urls on generation
 * Don't overwrite artist art when searching for album art
 * Retrieve song art from tags the same ay they are found ('invalid' art)
+* Searching from the search bar not pickup up the rules for the search page
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
