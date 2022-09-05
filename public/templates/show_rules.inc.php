@@ -27,8 +27,8 @@ use Ampache\Module\Util\Ui;
 
 /** @var null|Search $playlist */
 
-$currentType = (isset($searchType))
-    ? $searchType
+$currentType = (isset($currentType))
+    ? $currentType
     : Core::get_request('type');
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
@@ -37,7 +37,7 @@ if (isset($playlist)) {
 }
 $logic_operator = strtolower($logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) scrub_out(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) ?: 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType ?: 'song'; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
