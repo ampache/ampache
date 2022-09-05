@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
@@ -77,6 +78,9 @@ final class ShowUserAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        if ($userId < 1) {
+            throw new AccessDeniedException();
+        }
 
         $client = $this->modelFactory->createUser($userId);
 
