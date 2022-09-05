@@ -62,19 +62,21 @@ final class DeleteAction implements ApplicationActionInterface
         }
 
         $albumId = $request->getQueryParams()['album_id'] ?? 0;
-
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('The Album and all files will be deleted'),
-            sprintf(
-                '%s/albums.php?action=confirm_delete&album_id=%d',
-                $this->configContainer->getWebPath(),
-                $albumId
-            ),
-            1,
-            'delete_album'
-        );
-
+        if ($albumId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('The Album and all files will be deleted'),
+                sprintf(
+                    '%s/albums.php?action=confirm_delete&album_id=%d',
+                    $this->configContainer->getWebPath(),
+                    $albumId
+                ),
+                1,
+                'delete_album'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

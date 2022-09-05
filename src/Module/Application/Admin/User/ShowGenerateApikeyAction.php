@@ -50,19 +50,21 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
         $this->ui->showHeader();
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
-
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('This will replace your existing API key'),
-            sprintf(
-                'admin/users.php?action=%s&user_id=%d',
-                GenerateApikeyAction::REQUEST_KEY,
-                $userId
-            ),
-            1,
-            'generate_apikey'
-        );
-
+        if ($userId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('This will replace your existing API key'),
+                sprintf(
+                    'admin/users.php?action=%s&user_id=%d',
+                    GenerateApikeyAction::REQUEST_KEY,
+                    $userId
+                ),
+                1,
+                'generate_apikey'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -85,7 +85,7 @@ final class ShowAction implements ApplicationActionInterface
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_('You have requested an Album that does not exist.');
+            echo T_('You have requested an object that does not exist');
         // allow single disks to not be shown as multi's
         } elseif (($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false) || (int)count($album->album_suite) == 1) {
             $this->ui->show(

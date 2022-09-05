@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
@@ -79,25 +78,22 @@ final class ShowUserAction implements ApplicationActionInterface
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
         if ($userId < 1) {
-            throw new AccessDeniedException();
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $client = $this->modelFactory->createUser($userId);
+            $this->ui->show(
+                'show_user.inc.php',
+                [
+                    'client' => $client,
+                    'activities' => $this->useractivityRepository->getActivities($userId),
+                    'followers' => $this->userFollowerRepository->getFollowers($userId),
+                    'following' => $this->userFollowerRepository->getFollowing($userId),
+                    'userFollowStateRenderer' => $this->userFollowStateRenderer,
+                    'userActivityRenderer' => $this->userActivityRenderer
+                ]
+            );
+            show_table_render(false, true);
         }
-
-        $client = $this->modelFactory->createUser($userId);
-
-        $this->ui->show(
-            'show_user.inc.php',
-            [
-                'client' => $client,
-                'activities' => $this->useractivityRepository->getActivities($userId),
-                'followers' => $this->userFollowerRepository->getFollowers($userId),
-                'following' => $this->userFollowerRepository->getFollowing($userId),
-                'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                'userActivityRenderer' => $this->userActivityRenderer
-            ]
-        );
-
-        show_table_render(false, true);
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

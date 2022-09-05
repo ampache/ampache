@@ -84,7 +84,7 @@ final class ShowAction implements ApplicationActionInterface
                 'Requested an artist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_('You have requested an Artist that does not exist.');
+            echo T_('You have requested an object that does not exist');
         } else {
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE) === true) {
                 $multi_object_ids = $this->albumRepository->getByArtist(

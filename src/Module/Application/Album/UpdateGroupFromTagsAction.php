@@ -62,25 +62,28 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         }
 
         $albumId = (int) $request->getQueryParams()['album_id'] ?? 0;
+        if ($albumId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $album = $this->modelFactory->createAlbum($albumId);
+            $album->format();
 
-        $album = $this->modelFactory->createAlbum($albumId);
-        $album->format();
-
-        $this->ui->showHeader();
-        $this->ui->show(
-            'show_update_item_group.inc.php',
-            [
-                'object_id' => $albumId,
-                'catalog_id' => $album->get_catalogs(),
-                'type' => 'album',
-                'objects' => $album->album_suite,
-                'target_url' => sprintf(
-                    '%s/albums.php?action=show&amp;album=%d',
-                    $this->configContainer->getWebPath(),
-                    $albumId
-                )
-            ]
-        );
+            $this->ui->showHeader();
+            $this->ui->show(
+                'show_update_item_group.inc.php',
+                [
+                    'object_id' => $albumId,
+                    'catalog_id' => $album->get_catalogs(),
+                    'type' => 'album',
+                    'objects' => $album->album_suite,
+                    'target_url' => sprintf(
+                        '%s/albums.php?action=show&amp;album=%d',
+                        $this->configContainer->getWebPath(),
+                        $albumId
+                    )
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
