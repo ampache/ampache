@@ -58,17 +58,18 @@ final class DeleteAction implements ApplicationActionInterface
         if ($tvshow_season_id < 1) {
             echo T_('You have requested an object that does not exist');
         } else {
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('The entire TV Season will be deleted'),
-            sprintf(
-                '%s/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=%d',
-                $this->configContainer->getWebPath(),
-                $tvshow_season_id
-            ),
-            1,
-            'delete_tvshow_season'
-        );
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('The entire TV Season will be deleted'),
+                sprintf(
+                    '%s/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=%d',
+                    $this->configContainer->getWebPath(),
+                    $tvshow_season_id
+                ),
+                1,
+                'delete_tvshow_season'
+            );
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
