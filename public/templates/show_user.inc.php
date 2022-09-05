@@ -49,6 +49,7 @@ $create_date = $client->create_date ? get_datetime((int) $client->create_date) :
 $web_path    = AmpConfig::get('web_path');
 $client->format();
 Ui::show_box_top($client->get_fullname()); ?>
+<?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
@@ -65,7 +66,8 @@ if (AmpConfig::get('sociable')) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
-<?php }
+<?php } ?>
+<?php
     } ?>
     </ul>
 <?php
@@ -86,11 +88,10 @@ if (AmpConfig::get('sociable')) {
         <?php } elseif ($client->id == Core::get_global('user')->id) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
 
-        <?php }
-    if (AmpConfig::get('use_now_playing_embedded')) { ?>
+        <?php } ?>
+<?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
- <?php } ?>
-
+<?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>
     <dd><?php echo $create_date; ?></dd>
@@ -113,8 +114,8 @@ if (AmpConfig::get('sociable')) {
     <?php } ?>
     </dd>
 </dl><br />
+<?php } ?>
 <?php Ui::show_box_bottom(); ?>
-
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
