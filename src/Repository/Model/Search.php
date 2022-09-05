@@ -72,7 +72,9 @@ class Search extends playlist_object
             $this->search_user = Core::get_global('user');
         }
         //debug_event(self::class, "SearchID: $search_id; Search Type: $searchType\n" . print_r($this, true), 5);
-
+        $searchType       = (in_array(strtolower($searchType), self::VALID_TYPES))
+            ? strtolower($searchType)
+            : 'song';
         $this->searchType = $searchType;
         $this->objectType = $searchType;
         if ($search_id > 0) {
