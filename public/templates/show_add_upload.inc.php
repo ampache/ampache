@@ -185,7 +185,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td class="upload_select">
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
+        <?php show_artist_select('artist_id', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="artist_select_album_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
@@ -194,7 +194,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td class="upload_select">
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
+        <?php show_album_select('album_id', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
         <div id="album_select_upload_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>
