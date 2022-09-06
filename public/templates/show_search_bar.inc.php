@@ -40,7 +40,7 @@ $t_search = T_('Search'); ?>
             <option value="title"><?php echo T_('Songs')?></option>
             <option value="album"><?php echo $t_albums?></option>
             <option value="artist"><?php echo $t_artists?></option>
-            <option value="playlist_name"><?php echo $t_playlists?></option>
+            <option value="playlist"><?php echo $t_playlists?></option>
             <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
             <?php } ?>

@@ -66,7 +66,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         'type' => 'artist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
-                        'rule_1' => 'name',
+                        'rule_1' => 'title',
                     );
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -148,13 +148,13 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
-                if ($target == 'anywhere' || $target == 'playlist_name') {
+                if ($target == 'anywhere' || $target == 'playlist') {
                     $searchreq = array(
                         'limit' => $limit,
                         'type' => 'playlist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
-                        'rule_1' => 'name',
+                        'rule_1' => 'title',
                     );
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
@@ -182,7 +182,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         'type' => 'label',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
-                        'rule_1' => 'name',
+                        'rule_1' => 'title',
                     );
                     $sres = Search::run($searchreq);
 
