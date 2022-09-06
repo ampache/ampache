@@ -449,7 +449,8 @@ class Search extends playlist_object
      */
     private function _add_type_numeric($name, $label, $type = 'numeric', $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('input', 'number'),
@@ -467,7 +468,8 @@ class Search extends playlist_object
      */
     private function _add_type_date($name, $label, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => 'date',
             'widget' => array('input', 'datetime-local'),
@@ -485,7 +487,8 @@ class Search extends playlist_object
      */
     private function _add_type_text($name, $label, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => 'text',
             'widget' => array('input', 'text'),
@@ -505,7 +508,8 @@ class Search extends playlist_object
      */
     private function _add_type_select($name, $label, $type, $array, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('select', $array),
@@ -524,7 +528,8 @@ class Search extends playlist_object
      */
     private function _add_type_boolean($name, $label, $type = 'boolean', $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('input', 'hidden'),
@@ -663,7 +668,8 @@ class Search extends playlist_object
             foreach ($metadataFieldRepository->findAll() as $metadata) {
                 $metadataFields[$metadata->getId()] = $metadata->getName();
             }
-            $this->types['metadata'] = array(
+            $this->types[] = array(
+                'name' => 'metadata',
                 'label' => $t_metadata,
                 'type' => 'multiple',
                 'subtypes' => $metadataFields,
@@ -1204,19 +1210,19 @@ class Search extends playlist_object
             );
         }
         $this->date = time();
-        $this->_set_last(count($results), 'last_count');
-        $this->_set_last(self::get_total_duration($results), 'last_duration');
+        $this->set_last(count($results), 'last_count');
+        $this->set_last(self::get_total_duration($results), 'last_duration');
 
         return $results;
     }
 
     /**
-     * _set_last
+     * set_last
      *
      * @param integer $count
      * @param string $column
      */
-    private function _set_last($count, $column)
+    private function set_last($count, $column)
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
             $search_id = Dba::escape($this->id);
@@ -1302,14 +1308,14 @@ class Search extends playlist_object
     } // get_total_duration
 
     /**
-     * _get_rule_name
+     * get_rule_type
      *
-     * Validate the rule name and return the rule type
+     * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
      * @return string|false
      */
-    private function _get_rule_name($name)
+    public function get_rule_type($name)
     {
         // check that the rule you sent is not an alias (needed for pulling details from the rule)
         switch ($this->objectType) {
@@ -1443,24 +1449,10 @@ class Search extends playlist_object
                 }
                 break;
         }
-        //debug_event(self::class, '_get_rule_name: ' . $name, 5);
-
-        return $name;
-    }
-
-    /**
-     * _get_rule_type
-     *
-     * Iterate over $this->types to validate the rule name and return the rule type
-     * (text, date, etc)
-     * @param string $name
-     * @return string|false
-     */
-    private function _get_rule_type($name)
-    {
-        //debug_event(self::class, '_get_rule_type: ' . $name, 5);
-        if (array_key_exists($name, $this->types)) {
-            return $this->types[$name]['type'];
+        foreach ($this->types as $type) {
+            if ($type['name'] == $name) {
+                return $type['type'];
+            }
         }
 
         return false;
@@ -1480,8 +1472,7 @@ class Search extends playlist_object
         // parse the remaining rule* keys
         $this->rules  = array();
         foreach ($data as $rule => $value) {
-            $rule_name = $this->_get_rule_name($value);
-            $rule_type = $this->_get_rule_type($rule_name);
+            $rule_type = $this->get_rule_type($value);
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID) && $rule_type) {
                 $ruleID     = (string)$ruleID[1];
                 $input_rule = (string)($data['rule_' . $ruleID . '_input'] ?? '');
@@ -1492,7 +1483,7 @@ class Search extends playlist_object
                 }
                 foreach (explode('|', $input_rule) as $input) {
                     $this->rules[] = array(
-                        $rule_name,
+                        $value,
                         $operator,
                         in_array($operator, ['regexp', 'notregexp']) ? str_replace("\0", "|", $input) : $input,
                         $data['rule_' . $ruleID . '_subtype'] ?? null
@@ -1658,7 +1649,7 @@ class Search extends playlist_object
         $groupdisks  = AmpConfig::get('album_group');
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -1691,6 +1682,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]    = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?)";
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
@@ -1902,13 +1894,18 @@ class Search extends playlist_object
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
                     $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
                     break;
+                case 'tag':
                 case 'genre':
+                case 'album_tag':
+                case 'album_genre':
                     $where[]      = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
+                case 'no_tag':
                 case 'no_genre':
                     $where[] = "`album`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     break;
+                case 'song_tag':
                 case 'song_genre':
                     $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
@@ -1939,11 +1936,13 @@ class Search extends playlist_object
                     $join['image'] = true;
                     break;
                 case 'artist':
+                case 'album_artist':
                     $where[]           = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) AND `album_map`.`object_type` = 'album')";
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;
                 case 'song':
+                case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
                     $join['song'] = true;
@@ -1954,6 +1953,7 @@ class Search extends playlist_object
                     $join['album_map'] = true;
                     break;
                 case 'mbid':
+                case 'mbid_album':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`album`.`mbid` IS NULL";
@@ -1983,6 +1983,7 @@ class Search extends playlist_object
                     $join['album_map'] = true;
                     break;
                 case 'possible_duplicate':
+                case 'possible_duplicate_album':
                     $where[]               = "(`dupe_search1`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL)";
                     $table['dupe_search1'] = "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search1` ON `album`.`id` = `dupe_search1`.`dupe_id1`";
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk`, `year`, `release_type`, `release_status` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
@@ -2094,7 +2095,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -2110,6 +2111,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]    = "(`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?)";
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
@@ -2123,15 +2125,20 @@ class Search extends playlist_object
                     $where[]      = "`artist`.`time` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
+                case 'tag':
                 case 'genre':
+                case 'artist_tag':
+                case 'artist_genre':
                     $where[]      = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
+                case 'song_tag':
                 case 'song_genre':
                     $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
+                case 'no_tag':
                 case 'no_genre':
                     $where[] = "`artist`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     break;
@@ -2302,11 +2309,13 @@ class Search extends playlist_object
                     $parameters   = array_merge($parameters, array($input));
                     break;
                 case 'album':
+                case 'album_title':
                     $where[]       = "(`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) AND `artist_map`.`artist_id` IS NOT NULL";
                     $parameters    = array_merge($parameters, array($input, $input));
                     $join['album'] = true;
                     break;
                 case 'song':
+                case 'song_title':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters   = array_merge($parameters, array($input));
                     $join['song'] = true;
@@ -2355,6 +2364,7 @@ class Search extends playlist_object
                     $join['catalog'] = true;
                     break;
                 case 'mbid':
+                case 'mbid_artist':
                     if (!$input || $input == '%%' || $input == '%') {
                         if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
                             $where[]      = "`artist`.`mbid` IS NULL";
@@ -2474,7 +2484,7 @@ class Search extends playlist_object
         $metadata    = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -2505,23 +2515,30 @@ class Search extends playlist_object
                     $join['song_data'] = true;
                     break;
                 case 'title':
+                case 'name':
                     $where[]      = "`song`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
+                case 'tag':
                 case 'genre':
+                case 'song_tag':
+                case 'song_genre':
                     $where[]      = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     break;
+                case 'album_tag':
                 case 'album_genre':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     $where[]        = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
                     $parameters[]   = $input;
                     break;
+                case 'artist_tag':
                 case 'artist_genre':
                     $where[]         = "`artist`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='artist' AND `tag`.`id` IS NOT NULL)";
                     $parameters[]    = $input;
                     $join['artist']  = true;
                     break;
+                case 'no_tag':
                 case 'no_genre':
                     $where[] = "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     break;
@@ -2757,9 +2774,10 @@ class Search extends playlist_object
                     }
                     break;
                 case 'playlist_name':
-                    $join['playlist'] = true;
-                    $where[]          = "`playlist`.`name` $sql_match_operator ?";
-                    $parameters[]     = $input;
+                    $join['playlist']      = true;
+                    $join['playlist_data'] = true;
+                    $where[]               = "`playlist`.`name` $sql_match_operator ?";
+                    $parameters[]          = $input;
                     break;
                 case 'playlist':
                     $where[]      = "`song`.`id` $sql_match_operator IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song')";
@@ -2894,9 +2912,11 @@ class Search extends playlist_object
         if (array_key_exists('song_data', $join)) {
             $table['song_data'] = "LEFT JOIN `song_data` ON `song`.`id` = `song_data`.`song_id`";
         }
-        if (array_key_exists('playlist', $join)) {
-            $table['4_playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
-            $table['5_playlist']      = "LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id`";
+        if (array_key_exists('playlist_data', $join)) {
+            $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";
+            if (array_key_exists('playlist', $join)) {
+                $table['playlist'] = "LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id`";
+            }
         }
         if ($join['catalog']) {
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
@@ -2960,7 +2980,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3044,7 +3064,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3057,11 +3077,12 @@ class Search extends playlist_object
             }
             $input              = $this->_filter_data($rule[2], $type, $operator);
             $sql_match_operator = $operator['sql'] ?? '';
-            if ($user_id > 0 && !Access::check('interface', 100, $user_id)) {
-                $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . ")";
-            }
+
+            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . ")";
+
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "`playlist`.`name` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -3148,7 +3169,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3164,10 +3185,12 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "`podcast`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'podcast_episode':
+                case 'podcast_episode_title':
                     $where[]                 = "`podcast_episode`.`title` $sql_match_operator ?";
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
@@ -3278,7 +3301,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3294,10 +3317,12 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "`podcast_episode`.`title` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'podcast':
+                case 'podcast_title':
                     $where[]         = "`podcast`.`title` $sql_match_operator ?";
                     $parameters[]    = $input;
                     $join['podcast'] = true;
@@ -3401,7 +3426,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3417,6 +3442,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "`label`.`name` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -3491,7 +3517,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();
@@ -3507,6 +3533,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'title':
+                case 'name':
                     $where[]      = "`tag`.`name` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
@@ -3570,7 +3597,7 @@ class Search extends playlist_object
         $parameters  = array();
 
         foreach ($this->rules as $rule) {
-            $type     = $this->_get_rule_type($rule[0]);
+            $type     = $this->get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
                 return array();

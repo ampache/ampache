@@ -575,7 +575,7 @@ class Playlist extends playlist_object
         if ($this->_update_item('last_update', $last_update, 50)) {
             $this->last_update = $last_update;
         }
-        $this->_set_last($this->get_total_duration(), 'last_duration');
+        $this->set_last($this->get_total_duration(), 'last_duration');
     } // update_last_update
 
     /**
@@ -731,12 +731,12 @@ class Playlist extends playlist_object
     } // set_items
 
     /**
-     * _set_last
+     * set_last
      *
      * @param integer $count
      * @param string $column
      */
-    private function _set_last($count, $column)
+    private function set_last($count, $column)
     {
         if ($this->id && in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
