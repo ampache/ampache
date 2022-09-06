@@ -144,11 +144,14 @@ class Share extends database_object
         $max_counter = 0,
         $description = ''
     ) {
-        $object_type = self::format_type($object_type);
-        if (empty($object_type)) {
+        if (empty(self::format_type($object_type))) {
+            debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
+
             return '';
         }
         if (!$allow_stream && !$allow_download) {
+            debug_event(self::class, 'create_share: must allow stream OR allow download', 1);
+
             return '';
         }
 
@@ -171,8 +174,8 @@ class Share extends database_object
             $object_type,
             $object_id,
             time(),
-            $allow_stream ?: 0,
-            $allow_download ?: 0,
+            $allow_stream ?? 0,
+            $allow_download ?? 0,
             $expire,
             $secret,
             0,
