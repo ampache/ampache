@@ -120,6 +120,8 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
+                Album::update_album_counts();
+                Artist::update_artist_counts();
 
                 ob_get_contents();
                 ob_end_clean();
