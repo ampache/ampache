@@ -27,6 +27,8 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -70,7 +72,7 @@ final class CreateAction implements ApplicationActionInterface
 
         $share_id = Share::create_share(
             $_REQUEST['type'],
-            (int) $_REQUEST['id'],
+            (int)$_REQUEST['id'],
             make_bool($_REQUEST['allow_stream'] ?? null),
             make_bool($_REQUEST['allow_download'] ?? null),
             (int) $_REQUEST['expire'],
@@ -79,7 +81,21 @@ final class CreateAction implements ApplicationActionInterface
         );
 
         if (!$share_id) {
-            require_once Ui::find_template('show_add_share.inc.php');
+            debug_event(__CLASS__, 'Share failed: ' . (int)$_REQUEST['id'], 2);
+
+            $class_name = ObjectTypeToClassNameMapper::map($_REQUEST['type']);
+            $object     = new $class_name((int)$_REQUEST['id']);
+            if ($object->id) {
+                $message = T_('Failed to create share');
+                $object->format();
+                require_once Ui::find_template('show_add_share.inc.php');
+            }  else {
+                $this->ui->showContinue(
+                    T_('There Was a Problem'),
+                    T_('Failed to create share'),
+                    AmpConfig::get('web_path') . '/stats.php?action=share'
+                );
+            }
         } else {
             $share = new Share($share_id);
             $body  = T_('Share created') . '<br />' .
