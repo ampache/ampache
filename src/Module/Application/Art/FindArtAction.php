@@ -126,7 +126,7 @@ final class FindArtAction extends AbstractArtAction
                     );
                 } else {
                     $this->ui->showContinue(
-                        T_("There Was a Problem"),
+                        T_('There Was a Problem'),
                         T_('Art file failed to insert, check the dimensions are correct.'),
                         $burl
                     );
