@@ -80,6 +80,9 @@ class Upload
                     $options['license'] = Core::get_post('license');
                 }
 
+                if (Core::get_request('artist') !== '') {
+                    $options['artist_id'] = (int)Core::get_request('artist');
+                }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
                     if (!$artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id)) {
