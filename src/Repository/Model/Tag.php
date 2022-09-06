@@ -132,7 +132,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
+        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
 
         $db_results = Dba::read($sql);
 
@@ -553,7 +553,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT $limit";
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?LIMIT $limit";
 
         $db_results = Dba::read($sql, array($type, $object_id));
         $results    = array();
@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $params = array($type);
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
