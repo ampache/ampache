@@ -2483,6 +2483,14 @@ abstract class Catalog extends database_object
                 $song->tags[] = $tag['name'];
             }
         }
+        $is_upload_artist = false;
+        if ($song->artist) {
+            $is_upload_artist = Artist::is_upload($song->artist);
+        }
+        $is_upload_albumartist = false;
+        if ($song->album) {
+            $is_upload_albumartist = Artist::is_upload(Album::get_album_artist($song->album));
+        }
         // info for the artist table.
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
@@ -2512,9 +2520,13 @@ abstract class Catalog extends database_object
             $artist = $artists_array[0];
         }
         // check whether this artist exists (and the album_artist)
-        $new_song->artist = Artist::check($artist, $artist_mbid);
+        $new_song->artist = ($is_upload_artist)
+            ? $song->artist
+            : Artist::check($artist, $artist_mbid);
         if ($albumartist) {
-            $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            $new_song->albumartist = ($is_upload_albumartist)
+                ? $song->albumartist
+                : Artist::check($albumartist, $albumartist_mbid);
             if (!$new_song->albumartist) {
                 $new_song->albumartist = $song->albumartist;
             }
