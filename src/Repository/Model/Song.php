@@ -460,15 +460,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
             $artist = $artists_array[0];
         }
-        if (isset($results['license'])) {
-            $licenseRepository = static::getLicenseRepository();
-            $licenseName       = (string) $results['license'];
-            $licenseId         = $licenseRepository->find($licenseName);
-            $license           = ($licenseId === 0)
-                ? $licenseRepository->create($licenseName, '', '')
-                : $licenseId;
-        } else {
-            $license = null;
+        $license_id = null;
+        if (isset($results['license']) && (int)$results['license'] > 0) {
+            $license_id = (int)$results['license'];
         }
 
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
@@ -530,7 +524,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $year,
             $track_mbid,
             $user_upload,
-            $license,
+            $license_id,
             $composer,
             $channels
         ));
