@@ -99,7 +99,7 @@ class Upload
 
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
-                    if (!$album_id = self::check_album(Core::get_request('album_name'))) {
+                    if (!$album_id = self::check_album(Core::get_request('album_name'), $options['artist_id'])) {
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -235,20 +235,21 @@ class Upload
     /**
      * check_album
      * @param string $album_name
+     * @param int $artist_id
      * @return boolean|integer
      */
-    public static function check_album($album_name)
+    public static function check_album($album_name, $artist_id)
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
-            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, 0, null, null, $album_name);
-            if ((int) $album_id < 0) {
+            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, 0, null, null, $artist_id);
+            if ((int)$album_id < 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
                 return false;
             }
 
-            return (int) $album_id;
+            return (int)$album_id;
         }
 
         return false;
