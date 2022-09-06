@@ -2305,10 +2305,10 @@ abstract class Catalog extends database_object
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
         }
         // check counts
-        if ($album || $maps) {
+        if ($album || $maps || $type == 'album') {
             Album::update_album_counts();
         }
-        if ($artist || $maps) {
+        if ($artist || $maps || $type == 'artist') {
             Artist::update_artist_counts();
         }
         // collect the garbage too
