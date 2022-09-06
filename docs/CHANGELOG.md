@@ -4,6 +4,7 @@
 
 ### Added
 
+* Check for upload_catalog before showing upload pages
 * search
   * Class rework and many additional aliases, check the docs for [advanced_search](https://ampache.org/api/api-advanced-search)
   * Add `song_artist` as a search type (uses artist rules)
@@ -14,6 +15,10 @@
   * Add `possible_duplicate_album` to song search
 * webplayer
   * Code cleanup and attempt to make it a bit less confusing
+
+### Changed
+
+* Do not overwrite a custom Artist/Album when updating from tags
 
 ### Fixed
 
@@ -28,6 +33,7 @@
 * Don't overwrite artist art when searching for album art
 * Retrieve song art from tags the same ay they are found ('invalid' art)
 * Searching from the search bar not pickup up the rules for the search page
+* Upload artist, album and license selection
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search

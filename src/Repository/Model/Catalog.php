@@ -2305,10 +2305,10 @@ abstract class Catalog extends database_object
             Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
         }
         // check counts
-        if ($album || $maps) {
+        if ($album || $maps || $type == 'album') {
             Album::update_album_counts();
         }
-        if ($artist || $maps) {
+        if ($artist || $maps || $type == 'artist') {
             Artist::update_artist_counts();
         }
         // collect the garbage too
@@ -2511,10 +2511,30 @@ abstract class Catalog extends database_object
             }
             $artist = $artists_array[0];
         }
+        $is_upload_artist = false;
+        if ($song->artist) {
+            $is_upload_artist = Artist::is_upload($song->artist);
+            if ($is_upload_artist) {
+                debug_event(__CLASS__, "$song->artist : is an uploaded song artist", 4);
+                $artist_mbid_array = array();
+            }
+        }
+        $is_upload_albumartist = false;
+        if ($song->album) {
+            $is_upload_albumartist = Artist::is_upload($song->albumartist);
+            if ($is_upload_albumartist) {
+                debug_event(__CLASS__, "$song->albumartist : is an uploaded album artist", 4);
+                $albumartist_mbid_array = array();
+            }
+        }
         // check whether this artist exists (and the album_artist)
-        $new_song->artist = Artist::check($artist, $artist_mbid);
+        $new_song->artist = ($is_upload_artist)
+            ? $song->artist
+            : Artist::check($artist, $artist_mbid);
         if ($albumartist) {
-            $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            $new_song->albumartist = ($is_upload_albumartist)
+                ? $song->albumartist
+                : Artist::check($albumartist, $albumartist_mbid);
             if (!$new_song->albumartist) {
                 $new_song->albumartist = $song->albumartist;
             }
@@ -2524,7 +2544,9 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = Album::check($song->catalog, $album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number);
+        $new_song->album = ($is_upload_albumartist)
+            ? $song->album
+            : Album::check($song->catalog, $album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }

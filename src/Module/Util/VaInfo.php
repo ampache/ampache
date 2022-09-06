@@ -714,6 +714,9 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_mbid($mbid)
     {
+        if (empty($mbid)) {
+            return null;
+        }
         if (is_array($mbid)) {
             $mbid = implode(";", $mbid);
         }
@@ -732,6 +735,9 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_mbid_array($mbid)
     {
+        if (empty($mbid)) {
+            return array();
+        }
         if (is_array($mbid)) {
             $mbid = implode(";", $mbid);
         }

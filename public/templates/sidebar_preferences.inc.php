@@ -67,7 +67,7 @@ $categories = Preference::get_categories(); ?>
     </li>
 </ul>
 <?php } ?>
-<?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
+<?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
             <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Upload'); ?></span>
