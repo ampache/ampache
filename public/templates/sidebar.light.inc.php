@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
     <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
     <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php } ?>
-    <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
+    <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog')) { ?>
     <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
     <?php } ?>
     <?php if ($is_session) { ?>

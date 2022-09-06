@@ -437,7 +437,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                     </a>
                 </div>
                 <?php } ?>
-                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
+                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog')) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
