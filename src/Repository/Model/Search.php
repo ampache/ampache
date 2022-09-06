@@ -449,7 +449,8 @@ class Search extends playlist_object
      */
     private function _add_type_numeric($name, $label, $type = 'numeric', $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('input', 'number'),
@@ -467,7 +468,8 @@ class Search extends playlist_object
      */
     private function _add_type_date($name, $label, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => 'date',
             'widget' => array('input', 'datetime-local'),
@@ -485,7 +487,8 @@ class Search extends playlist_object
      */
     private function _add_type_text($name, $label, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => 'text',
             'widget' => array('input', 'text'),
@@ -505,7 +508,8 @@ class Search extends playlist_object
      */
     private function _add_type_select($name, $label, $type, $array, $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('select', $array),
@@ -524,7 +528,8 @@ class Search extends playlist_object
      */
     private function _add_type_boolean($name, $label, $type = 'boolean', $group = '')
     {
-        $this->types[$name] = array(
+        $this->types[] = array(
+            'name' => $name,
             'label' => $label,
             'type' => $type,
             'widget' => array('input', 'hidden'),
@@ -663,7 +668,8 @@ class Search extends playlist_object
             foreach ($metadataFieldRepository->findAll() as $metadata) {
                 $metadataFields[$metadata->getId()] = $metadata->getName();
             }
-            $this->types['metadata'] = array(
+            $this->types[] = array(
+                'name' => 'metadata',
                 'label' => $t_metadata,
                 'type' => 'multiple',
                 'subtypes' => $metadataFields,
@@ -1304,7 +1310,7 @@ class Search extends playlist_object
     /**
      * _get_rule_type
      *
-     * Find valid rules by checking $this->types[$name] to validate and return the rule type
+     * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
      * @return string|false
@@ -1443,9 +1449,10 @@ class Search extends playlist_object
                 }
                 break;
         }
-
-        if (array_key_exists($name, $this->types)) {
-            return $this->types['name']['type'];
+        foreach ($this->types as $type) {
+            if ($type['name'] == $name) {
+                return $type['type'];
+            }
         }
 
         return false;
