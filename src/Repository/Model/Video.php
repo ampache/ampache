@@ -312,7 +312,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function format($details = true)
     {
         $this->f_full_title = $this->get_fullname();
-        $this->f_link       = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+        $this->get_f_link();
         $this->f_codec      = $this->video_codec . ' / ' . $this->audio_codec;
         if ($this->resolution_x || $this->resolution_y) {
             $this->f_resolution = $this->resolution_x . 'x' . $this->resolution_y;
@@ -405,6 +405,21 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $link_text    = scrub_out($this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . $link_text . "\"> " . $link_text . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -1107,7 +1122,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -1123,7 +1140,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             Dba::write($sql, $params);
 
             $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = Dba::write($sql, $params);
+            $deleted = (Dba::write($sql, $params) !== false);
             if ($deleted) {
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
