@@ -73,8 +73,8 @@ final class CreateAction implements ApplicationActionInterface
         $share_id = Share::create_share(
             $_REQUEST['type'],
             (int)$_REQUEST['id'],
-            make_bool($_REQUEST['allow_stream'] ?? null),
-            make_bool($_REQUEST['allow_download'] ?? null),
+            (int)$_REQUEST['allow_stream'] ?? 0,
+            (int)$_REQUEST['allow_download'] ?? 0,
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']

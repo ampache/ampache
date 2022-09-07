@@ -94,7 +94,15 @@ final class ShareCreate4Method
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $share[] = Share::create_share($object_type, $object_id, true, $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD), $expire_days, $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH), 0, $description);
+            $share[] = Share::create_share(
+                $object_type,
+                $object_id,
+                true,
+                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+                $expire_days,
+                $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                0,
+                $description);
         }
         Catalog::count_table('share');
         ob_end_clean();
