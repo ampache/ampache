@@ -76,8 +76,8 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = Share::format_type($this->requestParser->getFromRequest('type'));
-        if (!empty($type) && !empty($_REQUEST['id'])) {
+        $type = Share::is_valid_type($this->requestParser->getFromRequest('type'));
+        if (!$type && !empty($_REQUEST['id'])) {
             $object_id = $this->requestParser->getFromRequest('id');
             if (is_array($object_id)) {
                 $object_id = $object_id[0];

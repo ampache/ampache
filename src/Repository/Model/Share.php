@@ -36,6 +36,7 @@ use PDOStatement;
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
+    public const VALID_TYPES     = array('song', 'album', 'playlist', 'video');
 
     public $id;
     public $user;
@@ -110,17 +111,13 @@ class Share extends database_object
      * @param string $type
      * @return string
      */
-    public static function format_type($type)
+    public static function is_valid_type($type)
     {
-        switch ($type) {
-            case 'album':
-            case 'song':
-            case 'playlist':
-            case 'video':
-                return $type;
-            default:
-                return '';
+        if (in_array(strtolower($type), self::VALID_TYPES)) {
+            return $type;
         }
+
+        return false;
     }
 
     /**
@@ -144,11 +141,14 @@ class Share extends database_object
         $max_counter = 0,
         $description = ''
     ) {
-        $object_type = self::format_type($object_type);
-        if (empty($object_type)) {
+        if (!self::is_valid_type($object_type)) {
+            debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
+
             return '';
         }
         if (!$allow_stream && !$allow_download) {
+            debug_event(self::class, 'create_share: must allow stream OR allow download', 1);
+
             return '';
         }
 
@@ -171,8 +171,8 @@ class Share extends database_object
             $object_type,
             $object_id,
             time(),
-            $allow_stream ?: 0,
-            $allow_download ?: 0,
+            $allow_stream ?? 0,
+            $allow_download ?? 0,
             $expire,
             $secret,
             0,
@@ -231,12 +231,13 @@ class Share extends database_object
         $sql   = "SELECT `id` FROM `share` ";
         $multi = 'WHERE ';
         if (!$user->has_access('75')) {
-            $sql .= "WHERE `user` = '" . $user->id . "'";
+            $sql .= "WHERE `user` = " . $user->id;
             $multi = ' AND ';
         }
         if (AmpConfig::get('catalog_filter')) {
             $sql .= $multi . Catalog::get_user_filter('share', $user->id);
         }
+        //debug_event(self::class, 'get_share_list_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -244,7 +245,7 @@ class Share extends database_object
     /**
      * get_share_list
      * @param User $user
-     * @return array
+     * @return int[]
      */
     public static function get_share_list($user)
     {
@@ -253,7 +254,7 @@ class Share extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -275,12 +276,14 @@ class Share extends database_object
         }
     }
 
+    /**
+     * @return Song|Artist|Album|playlist_object
+     */
     private function getObject()
     {
         if ($this->object === null) {
             $class_name   = ObjectTypeToClassNameMapper::map($this->object_type);
             $this->object = new $class_name($this->object_id);
-            $this->object->format();
         }
 
         return $this->object;
@@ -288,7 +291,7 @@ class Share extends database_object
 
     public function getObjectUrl(): string
     {
-        return $this->getObject()->f_link;
+        return $this->getObject()->get_f_link();
     }
 
     public function getObjectName(): string
@@ -404,6 +407,48 @@ class Share extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * is_shared_media
+     * Has this media object come from a shared object?
+     * @param $media_id
+     * @return boolean
+     */
+    public function is_shared_media($media_id): bool
+    {
+        $isShare = false;
+        switch ($this->object_type) {
+            case 'album':
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                /** @var Album $object */
+                $songs      = $object->get_child_ids();
+
+                foreach ($songs as $songid) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
+                        break;
+                    }
+                }
+                break;
+            case 'playlist':
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                $songs      = $object->get_songs();
+                foreach ($songs as $songid) {
+                    $isShare = ($media_id == $songid);
+                    if ($isShare) {
+                        break;
+                    }
+                }
+                break;
+            default:
+                $isShare = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
+                break;
+        }
+
+        return $isShare;
     }
 
     /**
