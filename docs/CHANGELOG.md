@@ -20,6 +20,7 @@
 
 * Do not overwrite a custom Artist/Album when updating from tags
 * Ignore case when comparing Genre
+* Show an error on share create failures
 
 ### Fixed
 
@@ -36,6 +37,8 @@
 * Searching from the search bar not pickup up the rules for the search page
 * Upload artist, album and license selection
 * Don't show hidden Genres on object rows
+* Video needs get_f_link funciton
+* Playlists need to be in catalog_map table
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
