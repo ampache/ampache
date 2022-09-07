@@ -87,18 +87,20 @@ final class ShareAction implements ApplicationActionInterface
         $object_ids = ($user->id)
             ? Share::get_share_list($user)
             : array();
+        if ($user->id && !empty($object_ids)) {
+            $browse     = $this->modelFactory->createBrowse();
+            $browse->set_type('share');
+            $browse->set_static_content(true);
+            $browse->save_objects($object_ids);
+            $browse->show_objects($object_ids);
+            $browse->store();
 
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type('share');
-        $browse->set_static_content(true);
-        $browse->save_objects($object_ids);
-        $browse->show_objects($object_ids);
-        $browse->store();
+            $this->ui->showBoxBottom();
 
-        $this->ui->showBoxBottom();
-
-        show_table_render(false, true);
-
+            show_table_render(false, true);
+        } else {
+            echo T_('No records found');
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
