@@ -24,6 +24,8 @@ use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="share">
     <thead>

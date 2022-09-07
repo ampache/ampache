@@ -36,6 +36,7 @@ use PDOStatement;
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
+    public const VALID_TYPES     = array('song', 'album', 'playlist', 'video');
 
     public $id;
     public $user;
@@ -110,17 +111,13 @@ class Share extends database_object
      * @param string $type
      * @return string
      */
-    public static function format_type($type)
+    public static function is_valid_type($type)
     {
-        switch ($type) {
-            case 'album':
-            case 'song':
-            case 'playlist':
-            case 'video':
+        if (in_array(strtolower($type), self::VALID_TYPES)) {
                 return $type;
-            default:
-                return '';
         }
+
+        return false;
     }
 
     /**
@@ -144,7 +141,7 @@ class Share extends database_object
         $max_counter = 0,
         $description = ''
     ) {
-        if (empty(self::format_type($object_type))) {
+        if (!self::is_valid_type($object_type)) {
             debug_event(self::class, 'create_share: Bad object_type ' . $object_type, 1);
 
             return '';
@@ -240,6 +237,7 @@ class Share extends database_object
         if (AmpConfig::get('catalog_filter')) {
             $sql .= $multi . Catalog::get_user_filter('share', $user->id);
         }
+        //debug_event(self::class, 'get_share_list_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -247,7 +245,7 @@ class Share extends database_object
     /**
      * get_share_list
      * @param User $user
-     * @return array
+     * @return int[]
      */
     public static function get_share_list($user)
     {
@@ -256,7 +254,7 @@ class Share extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -278,12 +276,14 @@ class Share extends database_object
         }
     }
 
+    /**
+     * @return Song|Artist|Album|playlist_object
+     */
     private function getObject()
     {
         if ($this->object === null) {
             $class_name   = ObjectTypeToClassNameMapper::map($this->object_type);
             $this->object = new $class_name($this->object_id);
-            $this->object->format();
         }
 
         return $this->object;
@@ -291,7 +291,7 @@ class Share extends database_object
 
     public function getObjectUrl(): string
     {
-        return $this->getObject()->f_link;
+        return $this->getObject()->get_f_link();
     }
 
     public function getObjectName(): string
