@@ -114,7 +114,7 @@ class Share extends database_object
     public static function is_valid_type($type)
     {
         if (in_array(strtolower($type), self::VALID_TYPES)) {
-                return $type;
+            return $type;
         }
 
         return false;
