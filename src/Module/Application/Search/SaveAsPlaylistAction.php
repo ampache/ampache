@@ -102,7 +102,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
             );
         } else {
             $this->ui->showConfirmation(
-                T_("There Was a Problem"),
+                T_('There Was a Problem'),
                 T_("Failed to create playlist"),
                 sprintf(
                     '%s/index.php',
