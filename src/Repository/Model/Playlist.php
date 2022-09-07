@@ -639,6 +639,7 @@ class Playlist extends playlist_object
             );
         }
         $this->add_medias($medias);
+        Catalog::update_mapping('playlist');
     } // add_songs
 
     /**

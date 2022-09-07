@@ -231,7 +231,7 @@ class Share extends database_object
         $sql   = "SELECT `id` FROM `share` ";
         $multi = 'WHERE ';
         if (!$user->has_access('75')) {
-            $sql .= "WHERE `user` = '" . $user->id . "'";
+            $sql .= "WHERE `user` = " . $user->id;
             $multi = ' AND ';
         }
         if (AmpConfig::get('catalog_filter')) {

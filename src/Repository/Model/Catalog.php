@@ -3777,7 +3777,11 @@ abstract class Catalog extends database_object
             Dba::write($sql);
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `album`.`catalog` > 0 AND `artist_map`.`object_type` = 'album' GROUP BY `album`.`catalog`, 'artist', `artist_map`.`artist_id`;";
             Dba::write($sql);
+        } elseif ($table == 'playlist') {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `song`.`catalog` > 0 GROUP BY `song`.`catalog`, 'playlist', `playlist`.`id`;";
+            Dba::write($sql);
         } else {
+            // 'album', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0 GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
             Dba::write($sql);
         }
