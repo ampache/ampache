@@ -1,5 +1,69 @@
 # CHANGELOG
 
+## Ampache 5.5.2-develop
+
+### Added
+
+* Check for upload_catalog before showing upload pages
+* search
+  * Class rework and many additional aliases, check the docs for [advanced_search](https://ampache.org/api/api-advanced-search)
+  * Add `song_artist` as a search type (uses artist rules)
+  * Add `album_artist` as a search type (uses artist rules)
+  * Add `song_genre` to album search
+  * Add `mbid_artist` to album search
+  * Add `song_genre` to artist search
+  * Add `possible_duplicate_album` to song search
+* webplayer
+  * Code cleanup and attempt to make it a bit less confusing
+
+### Changed
+
+* Do not overwrite a custom Artist/Album when updating from tags
+* Ignore case when comparing Genre
+* Show an error on share create failures
+
+### Fixed
+
+* Tmp_Playlist::get_items may not order by the playlist id
+* Fix album time update when time is NULL
+* Transcoding format for could be ignored (`encode_player_webplayer_target`)
+* Set the file extension based on expected transcode / download 
+* Don't look at the transcode cache when downloading a raw file
+* If you are transcoding redirect to the transcoded file
+* Download stats for song, video, podcast_episode
+* Set the file extension on urls on generation
+* Don't overwrite artist art when searching for album art
+* Retrieve song art from tags the same ay they are found ('invalid' art)
+* Searching from the search bar not pickup up the rules for the search page
+* Upload artist, album and license selection
+* Don't show hidden Genres on object rows
+* Video needs get_f_link funciton
+* Playlists need to be in catalog_map table
+* search
+  * Correctly identify alias rule types
+  * Bad SQL on 0 rating query for album/artist search
+* webplayer
+  * Desired transcode format not being respected
+  * Video types missing from supported types
+  * Playlist sorting issues
+
+## API 5.5.2-develop
+
+### Added
+
+* advanced_search
+  * Add song_artist as a search type (uses artist rules)
+  * Add album_artist as a search type (uses artist rules)
+  * Add `song_genre` to album search
+  * Add `mbid_artist` to album search
+  * Add `song_genre` to artist search
+  * Add `possible_duplicate_album` to song search
+
+### Fixed
+
+* advanced_search
+  * unable to retrieve song_artist or album_artist results
+
 ## Ampache 5.5.1
 
 I made a mistake in the release string so we need a new point release already!
@@ -1080,7 +1144,7 @@ This version of the API is the first semantic version. "5.0.0"
 * Return empty objects when the request was correct but the results were empty
 * Don't transcode podcast_episodes
 * localplay
-  * added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
+  * Added 'track' parameter used by 'skip' commands to go to the playlist track (playlist starts at 1)
 * system_update: update the database if required as well
 * playlist_edit: added 'owner' as an optional parameter (Change playlist owner to the user id)
 * catalog_file: Allow comma-separate task values. (good for API inotify scripts)

@@ -132,7 +132,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
+        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
 
         $db_results = Dba::read($sql);
 
@@ -553,7 +553,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $object_id = (int)($object_id);
 
         $limit = (int)($limit);
-        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? LIMIT $limit";
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ?LIMIT $limit";
 
         $db_results = Dba::read($sql, array($type, $object_id));
         $results    = array();
@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $params = array($type);
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
@@ -757,12 +757,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return '';
         }
 
-        $results = '';
+        $web_path = AmpConfig::get('web_path');
+        $results  = '';
 
         // Iterate through the tags, format them according to type and element id
         foreach ($tags as $value) {
             if ($link) {
-                $results .= '<a href="' . AmpConfig::get('web_path') . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . scrub_out($value['name']) . '">';
+                $results .= '<a href="' . $web_path . '/browse.php?action=tag&show_tag=' . $value['id'] . (!empty($filter_type) ? '&type=' . $filter_type : '') . '" title="' . scrub_out($value['name']) . '">';
             }
             $results .= $value['name'];
             if ($link) {
@@ -807,7 +808,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 $ctag  = new Tag($ctv['id']);
                 foreach ($editedTags as $tk => $tv) {
                     //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
-                    if ($ctag->name == $tv) {
+                    if (strtolower($ctag->name) == strtolower($tv)) {
                         $found = true;
                         break;
                     }

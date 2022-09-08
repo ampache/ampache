@@ -518,6 +518,18 @@ class Artist extends database_object implements library_item, GarbageCollectible
         return $this->has_art;
     }
 
+    public static function is_upload($artist_id): bool
+    {
+        $sql        = "SELECT `user` FROM `artist` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($artist_id));
+        $user       = 0;
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = (int)$results['user'];
+        }
+
+        return ($user > 0);
+    }
+
     /**
      * Get item keywords for metadata searches.
      * @return array

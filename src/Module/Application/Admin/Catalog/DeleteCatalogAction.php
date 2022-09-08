@@ -81,7 +81,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
             );
         } else {
             $this->ui->showConfirmation(
-                T_("There Was a Problem"),
+                T_('There Was a Problem'),
                 T_("There was an error deleting this Catalog"),
                 $next_url
             );

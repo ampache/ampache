@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
@@ -45,7 +46,7 @@ $browse_id       = (isset($browse))
     : 0;
 $currentType     = (isset($searchType))
     ? $searchType
-    : (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+    : Core::get_request('type');
 $currentType     = (in_array($currentType, Search::VALID_TYPES))
     ? $currentType
     : null;

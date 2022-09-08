@@ -108,7 +108,6 @@ final class UpdateRecordAction implements ApplicationActionInterface
             );
         } else {
             $this->ui->showConfirmation(
-
                 T_('No Problem'),
                 T_('Your Access Control List has been updated'),
                 sprintf(

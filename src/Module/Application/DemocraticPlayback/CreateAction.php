@@ -80,7 +80,7 @@ final class CreateAction implements ApplicationActionInterface
         } else {
             if (!$democratic->update($_POST)) {
                 $this->ui->showConfirmation(
-                    T_("There Was a Problem"),
+                    T_('There Was a Problem'),
                     T_("Cooldown out of range."),
                     AmpConfig::get('web_path') . "/democratic.php?action=manage"
                 );
