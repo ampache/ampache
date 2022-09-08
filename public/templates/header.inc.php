@@ -156,9 +156,13 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 return btoa(window.location.href.substring(jsWebPath.length + 1));
             }
             $(document).ajaxSuccess(function() {
-               title = window.location.hash.replace(/[#$&=_?]/g, ' ');
-               title = title.replace(/\b(?:index|action|type|tab|.php|[a-z]*_id|[0-9]*)\b/gi, ' ');
-               document.title = title.trim() + ' | ' + jsSiteTitle;
+                var title = window.location.hash.replace(/[#$&=_?]/g, ' ');
+                title = title.replace(/\b(?:index|action|type|tab|.php|[a-z]*_id|[0-9]*)\b/gi, ' ');
+                if (title.trim() !== '') {
+                    document.title = title.trim() + ' | ' + jsSiteTitle;
+                } else {
+                    document.title = jsSiteTitle;
+                }
             });
         </script>
         <?php
