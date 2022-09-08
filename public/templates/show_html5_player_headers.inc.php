@@ -554,7 +554,7 @@ if ($iframed) { ?>
     window.addEventListener('storage', function (event) {
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
-            if (event.newValue != jpuqid) {
+            if (typeof jpuqid === 'undefined' || (typeof jpuqid !== 'undefined' && event.newValue != jpuqid)) {
                 if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
                     $("#jquery_jplayer_1").data("jPlayer").pause();
                 }
