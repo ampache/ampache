@@ -34,6 +34,7 @@ RUN     apt-get -q -q update \
           libtheora-dev \
           libvorbis-dev \
           libvpx-dev \
+          locales \
           logrotate \
           make \
           p7zip-full \
@@ -65,6 +66,8 @@ RUN     apt-get -q -q update \
     &&  chmod -R 775 /media \
     &&  chown -R www-data:www-data /var/www \
     &&  chmod -R 775 /var/www \
+    &&  sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+    &&  locale-gen \
     &&  ln -s /etc/apache2/sites-available/001-ampache.conf /etc/apache2/sites-enabled/ \
     &&  a2enmod rewrite \
     &&  apt-get -qq purge \
