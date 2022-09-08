@@ -110,10 +110,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
 
         foreach ($updates as $update) {
             $result[] = [
-                'title' => sprintf(
-                    T_('Version: %s'),
-                    Update::format_version($update['version'])
-                ),
+                'title' => $update['version'],
                 'description' => $update['description'],
             ];
         }
