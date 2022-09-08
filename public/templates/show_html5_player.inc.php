@@ -34,7 +34,7 @@ if ($removePlayed && $removeCount === 999) {
     $removeCount = 0;
 }
 if ($isShare) {
-    $autoplay = (array_key_exists('catalogs', $_REQUEST) && $_REQUEST['autoplay'] === 'true');
+    $autoplay = (array_key_exists('autoplay', $_REQUEST) && make_bool($_REQUEST['autoplay']));
 }
 if (!$iframed) {
     require_once Ui::find_template('show_html5_player_headers.inc.php');
