@@ -127,8 +127,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
             var jsWebPath = "<?php echo $web_path; ?>";
             var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
-            var jsSaveTitle = "<?php echo T_('Save') ?>";
-            var jsCancelTitle = "<?php echo T_('Cancel') ?>";
+            var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')) ?>";
+            var jsSaveTitle = "<?php echo addslashes(T_('Save')) ?>";
+            var jsCancelTitle = "<?php echo addslashes(T_('Cancel')) ?>";
         </script>
 
         <?php if ($site_ajax) {
@@ -154,6 +155,11 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
                 return btoa(window.location.href.substring(jsWebPath.length + 1));
             }
+            $(document).ajaxSuccess(function() {
+               title = window.location.hash.replace(/[#$&=_?]/g, ' ');
+               title = title.replace(/\b(?:action|type|tab|.php|[a-z]*_id|[0-9]*)\b/gi, ' ');
+               document.title = title.trim() + ' | ' + jsSiteTitle;
+            });
         </script>
         <?php
             } else { ?>
