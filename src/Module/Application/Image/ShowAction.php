@@ -158,12 +158,14 @@ final class ShowAction implements ApplicationActionInterface
                     require_once Ui::find_template('show_big_art.inc.php');
                     break;
                 case 'session':
-                    // If we need to pull the data out of the session
                     Session::check();
-                    $filename    = scrub_in($_REQUEST['image_index']);
-                    $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-                    $mime        = $_SESSION['form']['images'][$filename]['mime'];
-                    $typeManaged = true;
+                    // If we need to pull the data out of the session
+                    if (array_key_exists('form', $_SESSION)) {
+                        $filename    = scrub_in($_REQUEST['image_index']);
+                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+                        $mime        = $_SESSION['form']['images'][$filename]['mime'];
+                        $typeManaged = true;
+                    }
                     break;
             }
         }
