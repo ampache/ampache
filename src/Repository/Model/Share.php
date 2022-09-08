@@ -228,13 +228,14 @@ class Share extends database_object
      */
     public static function get_share_list_sql($user)
     {
-        $sql   = "SELECT `id` FROM `share` ";
-        $multi = 'WHERE ';
+        $sql     = "SELECT `id` FROM `share` ";
+        $multi   = 'WHERE ';
+        $user_id = $user->id ?? 0;
         if (!$user->has_access('75')) {
             $sql .= "WHERE `user` = " . $user->id;
             $multi = ' AND ';
         }
-        if (AmpConfig::get('catalog_filter')) {
+        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= $multi . Catalog::get_user_filter('share', $user->id);
         }
         //debug_event(self::class, 'get_share_list_sql ' . $sql, 5);
