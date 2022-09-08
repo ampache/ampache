@@ -316,7 +316,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
-                $data      = Song::get_recently_played();
+                $data      = Song::get_recently_played($user_id);
                 $ajax_page = 'index';
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_played.inc.php');

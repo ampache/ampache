@@ -70,9 +70,9 @@ if (isset($user->id)) {
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
-        $data = Song::get_recently_played();
+        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
+        $data    = Song::get_recently_played($user_id);
         Song::build_cache(array_keys($data));
-        $user_id   = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
         $ajax_page = 'index';
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>

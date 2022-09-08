@@ -31,14 +31,14 @@ use Ampache\Module\Util\Ui;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
-    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed']) ?? 'http://'; ?>" />
+    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed'] ?? '') ?? 'http://'; ?>" />
         <?php echo AmpError::display('feed'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog'] ?? 0), '', false, 'podcast'); ?>
         <?php echo AmpError::display('catalog'); ?>
     </td>
 </tr>
