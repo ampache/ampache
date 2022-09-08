@@ -275,7 +275,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
                     $mbid    = $this->requestParser->getFromRequest('mbid');
-                    $user_id = $user->has_access('75') ? null : $user->id;
+                    $user_id = $user->has_access(75) ? null : $user->id;
                     $walbum  = new Wanted(Wanted::get_wanted($mbid));
 
                     $this->wantedRepository->deleteByMusicbrainzId($mbid, $user_id);

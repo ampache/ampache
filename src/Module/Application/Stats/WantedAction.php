@@ -70,7 +70,7 @@ final class WantedAction implements ApplicationActionInterface
         $this->ui->showBoxTop(T_('Information'));
 
         $userId = null;
-        if (!Core::get_global('user')->has_access('75')) {
+        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
             $userId = Core::get_global('user')->id;
         }
 

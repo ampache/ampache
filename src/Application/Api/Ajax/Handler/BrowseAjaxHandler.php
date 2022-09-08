@@ -160,7 +160,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (!Core::get_global('user')->has_access('75')) {
+                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');

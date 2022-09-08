@@ -90,7 +90,7 @@ class Share extends database_object
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
         $params = array($share_id);
-        if (!$user->has_access('75')) {
+        if (!$user->has_access(75)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
         }
@@ -231,7 +231,7 @@ class Share extends database_object
         $sql     = "SELECT `id` FROM `share` ";
         $multi   = 'WHERE ';
         $user_id = $user->id ?? 0;
-        if (!$user->has_access('75')) {
+        if (!$user->has_access(75)) {
             $sql .= "WHERE `user` = " . $user->id;
             $multi = ' AND ';
         }
@@ -264,7 +264,7 @@ class Share extends database_object
     public function show_action_buttons()
     {
         if ($this->id) {
-            if (Core::get_global('user')->has_access('75') || $this->user == (int)Core::get_global('user')->id) {
+            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {
                 if ($this->allow_download) {
                     echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download&cache=1\">" . Ui::get_icon('download',
                             T_('Download')) . "</a>";
@@ -338,7 +338,7 @@ class Share extends database_object
             $this->description,
             $this->id
         );
-        if (!$user->has_access('75')) {
+        if (!$user->has_access(75)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
         }

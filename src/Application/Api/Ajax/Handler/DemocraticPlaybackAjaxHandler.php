@@ -58,7 +58,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'delete':
-                if (!Core::get_global('user')->has_access('75')) {
+                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;
