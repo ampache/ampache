@@ -38,7 +38,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
 use PDOStatement;
-use Requests;
+use WpOrg\Requests;
 use RuntimeException;
 
 /**
@@ -991,7 +991,7 @@ class Art extends database_object
             $options = array();
             try {
                 $options['timeout'] = 10;
-                Requests::register_autoloader();
+                Requests\Autoload::register();
                 $request = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {

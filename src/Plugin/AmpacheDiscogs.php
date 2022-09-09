@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class AmpacheDiscogs
 {

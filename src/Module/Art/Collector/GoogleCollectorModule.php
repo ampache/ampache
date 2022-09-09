@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Requests;
+use WpOrg\Requests\Requests;
 
 final class GoogleCollectorModule implements CollectorModuleInterface
 {

@@ -62,7 +62,7 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
-use Requests;
+use WpOrg\Requests\Requests;
 use SimpleXMLElement;
 
 /**

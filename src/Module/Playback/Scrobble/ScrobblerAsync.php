@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Scrobble;
 
-use Requests;
+use WpOrg\Requests;
 use Thread;
 use Ampache\Repository\Model\User;
 
@@ -46,7 +46,7 @@ abstract class ScrobblerAsync extends Thread
 
     public function run()
     {
-        Requests::register_autoloader();
+        Requests\Autoload::register();
         if ($this->song_info) {
             User::save_mediaplay($this->user, $this->song_info);
         }

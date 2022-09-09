@@ -27,7 +27,7 @@ namespace Ampache\Module\LastFm;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Core;
-use Requests;
+use WpOrg\Requests\Requests;
 use SimpleXMLElement;
 
 final class LastFmQuery implements LastFmQueryInterface
