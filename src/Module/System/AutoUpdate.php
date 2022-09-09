@@ -28,7 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
-use WpOrg\Requests;
+use WpOrg\Requests\Requests;
 
 /**
  * AutoUpdate Class

@@ -992,7 +992,7 @@ class Art extends database_object
             try {
                 $options['timeout'] = 10;
                 Requests\Autoload::register();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
+                $request = Requests\Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
