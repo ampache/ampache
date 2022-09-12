@@ -19,13 +19,15 @@ $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SP
     <a class="category <?php echo ($filter_str == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=artist">
         <?php echo T_('Artists'); ?>
     </a>
+    <?php if (Access::check('interface', 25)) { ?>
     <a class="category <?php echo ($filter_str == 'playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=playlist">
         <?php echo T_('Playlists'); ?>
     </a>
+    <?php } ?>
     <?php if (AmpConfig::get('podcast')) { ?>
         <a class="category <?php echo ($filter_str == 'podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
-    <?php }
-    if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    <?php } ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <a class="category <?php echo ($filter_str == 'video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
 </div>
