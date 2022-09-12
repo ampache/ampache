@@ -105,13 +105,16 @@ $t_logout          = T_('Log out'); ?>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
             echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
-        }
+        } ?>
+    <?php
     } ?>
+    <?php if ($is_session) { ?>
     <li id="sb_tab_logout" class="sb1">
         <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
         <?php echo Ui::get_icon('logout', $t_logout); ?>
         </a>
     </li>
+    <?php } ?>
 <?php
 } else { ?>
     <li id="sb_tab_home" class="sb1">
