@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 $web_path         = AmpConfig::get('web_path');
-$is_session       = (!empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$is_session       = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
@@ -84,10 +84,12 @@ $t_logout          = T_('Log out'); ?>
     // List of buttons ( id, title, icon, access level)
     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) {
-        $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
+        $sidebar_items[] = array('id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volumeup', 'access' => 5);
     }
-    $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
-    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
+    if ($is_session) {
+        $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5);
+        $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
+    } ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
