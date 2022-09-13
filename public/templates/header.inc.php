@@ -157,7 +157,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             }
             $(document).ajaxSuccess(function() {
                 var title = window.location.hash.replace(/[#$&=_?]/g, ' ');
-                title = title.replace(/\b(?:index|action|type|tab|.php|[a-z]*_id|[0-9]*)\b/gi, ' ');
+                title = title.replace(/\b(?:index|action|type|tab|.php|\[\]|[a-z]*_id|[0-9]*)\b/gi, ' ');
                 title = title.trim();
                 if (title !== '') {
                     document.title = title + ' | ' + jsSiteTitle;
