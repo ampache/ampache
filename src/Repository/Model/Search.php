@@ -1517,7 +1517,7 @@ class Search extends playlist_object
             $rule_name     = $this->_get_rule_name($data["rule_" . $ruleID]);
             $rule_type     = $this->_get_rule_type($rule_name);
             $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
-            $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'];
+            $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression
             $is_regex = in_array($rule_operator, ['regexp', 'notregexp']);
             if ($is_regex) {
@@ -1693,7 +1693,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -2144,7 +2144,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -2554,7 +2554,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3043,7 +3043,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3127,7 +3127,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3231,7 +3231,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3362,7 +3362,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3486,7 +3486,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3576,7 +3576,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
@@ -3655,7 +3655,7 @@ class Search extends playlist_object
             $type     = $this->_get_rule_type($rule[0]);
             $operator = array();
             if (!$type) {
-                return array();
+                continue;
             }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
