@@ -99,7 +99,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                    echo scrub_out(Core::get_server('REMOTE_ADDR'));
+                    echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
                 } else {
                     echo scrub_out(Core::get_request('start'));
                 } ?>" /></td>
@@ -108,7 +108,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                     if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                        echo scrub_out(Core::get_server('REMOTE_ADDR'));
+                        echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
                     } else {
                         echo scrub_out(Core::get_request('end'));
                     } ?>" /></td>

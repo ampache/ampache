@@ -93,7 +93,7 @@ final class Ping4Method
             $xmldata = array_merge($xmldata, $countarray);
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

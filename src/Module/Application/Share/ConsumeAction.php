@@ -86,7 +86,7 @@ final class ConsumeAction implements ApplicationActionInterface
                 throw new AccessDeniedException(
                     sprintf(
                         'Access Denied:%s is not in the Interface Access list',
-                        Core::get_server('REMOTE_ADDR')
+                        filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
                     )
                 );
             }

@@ -232,7 +232,7 @@ final class ApiHandler implements ApiHandlerInterface
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
             $this->logger->warning(
-                sprintf('Unauthorized access attempt to API [%s]', Core::get_server('REMOTE_ADDR')),
+                sprintf('Unauthorized access attempt to API [%s]', filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             ob_end_clean();

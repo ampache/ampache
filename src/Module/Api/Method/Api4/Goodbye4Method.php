@@ -56,7 +56,7 @@ final class Goodbye4Method
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
             Dba::write($sql, array($input['auth']));
 
-            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api4::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
 

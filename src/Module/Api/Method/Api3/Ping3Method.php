@@ -59,7 +59,7 @@ final class Ping3Method
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         echo Xml3_Data::keyed_array($xmldata);
