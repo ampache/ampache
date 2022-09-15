@@ -81,6 +81,7 @@ Select the type of search based on the type of data you are searching for. (song
 | album_artist             | Album Artist                            | text              |                                 song                                  |
 | album_artist_title       | (*Alias of album_artist)                |                   |                                                                       |
 | song_artist              | Song Artist                             | text              |                                 album                                 |
+| song_artist_title        | (*Alias of song_artist)                 |                   |                                                                       |
 | composer                 | Composer                                | text              |                                 song                                  |
 | track                    | Track                                   | numeric           |                                 song                                  |
 | year                     | Year                                    | numeric           |                              song, album                              |
@@ -141,8 +142,9 @@ Select the type of search based on the type of data you are searching for. (song
 | recent_updated           | Recently Updated                        | numeric_limit     |                                 song                                  |
 | catalog                  | Catalog                                 | boolean_numeric   |                          song, album, artist                          |
 | mbid                     | MusicBrainz ID                          | text              |                          song, album, artist                          |
-| mbid_album               | MusicBrainz ID (Album)                  | text              |                              song, album                              |
+| mbid_album               | MusicBrainz ID (Album)                  | text              |                          song, album, artist                          |
 | mbid_artist              | MusicBrainz ID (Artist)                 | text              |                          song, album, artist                          |
+| mbid_song                | MusicBrainz ID (Song)                   | text              |                          song, album, artist                          |
 | metadata                 | Metadata                                | metadata (mixed)  |                                 song                                  |
 | has_image                | Local Image                             | boolean           |                             album, artist                             |
 | image_height             | Image Height                            | numeric           |                             album, artist                             |
