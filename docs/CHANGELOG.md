@@ -41,6 +41,7 @@
 * Video needs get_f_link function
 * Playlists need to be in catalog_map table
 * Insert Podcasts more often in catalog_map
+* Subsonic basic auth may get filtered
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
