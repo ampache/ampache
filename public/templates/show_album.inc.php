@@ -205,9 +205,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if ($isAlbumEditable) {
         $t_upload = T_('Upload');
-        if (AmpConfig::get('allow_upload')) { ?>
+        if (AmpConfig::get('allow_upload') && $album->album_artist > 0) { ?>
                 <li>
-                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo($album->album_artist ?: $album->album_artist); ?>&album=<?php echo $album->id ?>">
+                    <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
                         <?php echo $t_upload; ?>
                     </a>

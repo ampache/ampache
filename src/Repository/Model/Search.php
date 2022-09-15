@@ -2567,6 +2567,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'anywhere':
+                    // 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
                     $tag_string   = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     $parameters[] = $input;
                     // we want AND NOT and like for this query to really exclude them
@@ -3160,7 +3161,6 @@ class Search extends playlist_object
             } // switch on ruletype
         } // foreach rule
 
-        $join['song']        = array_key_exists('song', $join) || $catalog_disable || $catalog_filter;
         $join['catalog']     = $catalog_disable || $catalog_filter;
         $join['catalog_map'] = $catalog_filter;
 
@@ -3168,11 +3168,9 @@ class Search extends playlist_object
 
         // always join the table data
         $table['0_playlist_data'] = "LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id`";
-        if ($join['song']) {
-            $table['0_song'] = "LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id`";
-            $where_sql       = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
-        }
         if ($join['catalog']) {
+            $table['0_song']    = "LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id`";
+            $where_sql          = "(" . $where_sql . ") AND `playlist_data`.`object_type` = 'song'";
             $table['1_catalog'] = "LEFT JOIN `catalog` AS `catalog_se` ON `catalog_se`.`id` = `song`.`catalog`";
             if ($catalog_disable) {
                 if (!empty($where_sql)) {

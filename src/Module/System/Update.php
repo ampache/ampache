@@ -1829,7 +1829,7 @@ class Update
 
         $sql = "DROP TABLE IF EXISTS `dynamic_playlist`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "DROP TABLE IF EXISTS `dynamic_playlist_data``";
+        $sql = "DROP TABLE IF EXISTS `dynamic_playlist_data`";
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `user_vote` ADD `sid` varchar(256) CHARACTER SET $charset NULL AFTER `date`";
         $retval &= (Dba::write($sql) !== false);
