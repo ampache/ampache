@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.2-develop
+## Ampache 5.5.2-release
 
 ### Added
 
@@ -51,7 +51,7 @@
   * Video types missing from supported types
   * Playlist sorting issues
 
-## API 5.5.2-develop
+## API 5.5.2
 
 ### Added
 
