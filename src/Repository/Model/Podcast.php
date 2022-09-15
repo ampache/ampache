@@ -498,6 +498,7 @@ class Podcast extends database_object implements library_item
         // update the episode count after adding / removing episodes
         $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
         Dba::write($sql, $params);
+        Catalog::update_mapping('podcast');
         Catalog::update_mapping('podcast_episode');
         Catalog::count_table('podcast_episode');
         $this->update_lastsync($time);
