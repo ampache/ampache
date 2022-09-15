@@ -378,6 +378,8 @@ class Podcast extends database_object implements library_item
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results, false)) {
             if ((int) $row['id'] > 0) {
+                Catalog::update_map($catalog_id, 'podcast', (int) $row['id']);
+
                 return (int) $row['id'];
             }
         }
