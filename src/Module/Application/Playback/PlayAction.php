@@ -220,11 +220,11 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // Authenticate the user if specified
-        $username = Core::get_server('PHP_AUTH_USER');
+        $username = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($username)) {
             $username = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-        $password = Core::get_server('PHP_AUTH_PW');
+        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
             $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
         }
