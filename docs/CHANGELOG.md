@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.2-develop
+## Ampache 5.5.2-release
 
 ### Added
 
@@ -20,27 +20,29 @@
 * Do not overwrite a custom Artist/Album when updating from tags
 * Ignore case when comparing Genre
 * Show an error on share create failures
-* Pull some function back into the search query
+* Pull some function back into the search class
 * When searching without rules treat it like a browse and return results unfiltered
 
 ### Fixed
 
 * Tmp_Playlist::get_items may not order by the playlist id
 * Fix album time update when time is NULL
-* Transcoding format for could be ignored (`encode_player_webplayer_target`)
-* Set the file extension based on expected transcode / download 
+* Transcoding format could be ignored (`encode_player_webplayer_target`)
+* Set the file extension based on expected transcode / download format
 * Don't look at the transcode cache when downloading a raw file
 * If you are transcoding redirect to the transcoded file
 * Download stats for song, video, podcast_episode
-* Set the file extension on urls on generation
+* Set the file extension for urls on generation
 * Don't overwrite artist art when searching for album art
-* Retrieve song art from tags the same ay they are found ('invalid' art)
-* Searching from the search bar not pickup up the rules for the search page
+* Retrieve song art from tags the same way they are found ('invalid' art)
+* Searching from the search bar did not pickup up the rules for the search page
 * Upload artist, album and license selection
 * Don't show hidden Genres on object rows
-* Video needs get_f_link funciton
+* Video needs get_f_link function
 * Playlists need to be in catalog_map table
 * Insert Podcasts more often in catalog_map
+* Subsonic basic auth may get filtered
+* Don't filter auth in the PlayAction if sent
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
@@ -49,7 +51,7 @@
   * Video types missing from supported types
   * Playlist sorting issues
 
-## API 5.5.2-develop
+## API 5.5.2
 
 ### Added
 

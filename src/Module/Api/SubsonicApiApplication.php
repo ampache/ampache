@@ -28,7 +28,6 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -77,11 +76,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         // Authenticate the user with preemptive HTTP Basic authentication first
-        $userName = Core::get_server('PHP_AUTH_USER');
+        $userName = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($userName)) {
             $userName = $_REQUEST['u'] ?? '';
         }
-        $password = Core::get_server('PHP_AUTH_PW');
+        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
             $password = $_REQUEST['p'] ?? '';
         }
@@ -122,7 +121,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Session::createGlobalUser($user);
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
-            debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
+            debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ']', 3);
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
 
