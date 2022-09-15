@@ -76,11 +76,11 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         // Authenticate the user with preemptive HTTP Basic authentication first
-        $userName = $_REQUEST['PHP_AUTH_USER'];
+        $userName = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($userName)) {
             $userName = $_REQUEST['u'] ?? '';
         }
-        $password = $_REQUEST['PHP_AUTH_PW'];
+        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
             $password = $_REQUEST['p'] ?? '';
         }

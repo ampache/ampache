@@ -220,11 +220,11 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // Authenticate the user if specified
-        $username = Core::get_server('PHP_AUTH_USER');
+        $username = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($username)) {
             $username = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-        $password = Core::get_server('PHP_AUTH_PW');
+        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
             $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
         }
@@ -287,7 +287,7 @@ final class PlayAction implements ApplicationActionInterface
                 // If require_session is set then we need to make sure we're legit
                 if ($use_auth && AmpConfig::get('require_session')) {
                     if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
-                        debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
+                        debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
                     } elseif (!Session::exists('stream', $session_id)) {
                         // No valid session id given, try with cookie session from web interface
                         $session_id = $_COOKIE[$session_name];
@@ -609,7 +609,7 @@ final class PlayAction implements ApplicationActionInterface
         $force_downsample = false;
         if (AmpConfig::get('downsample_remote')) {
             if (!$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT)) {
-                debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
+                debug_event('play/index', 'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
                 $force_downsample = true;
             }
         }
