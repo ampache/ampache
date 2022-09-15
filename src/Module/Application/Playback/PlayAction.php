@@ -222,13 +222,13 @@ final class PlayAction implements ApplicationActionInterface
         // Authenticate the user if specified
         $username = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($username)) {
-            $username = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_SPECIAL_CHARS);
+            $username = $_REQUEST['u'] ?? '';
         }
         $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
-            $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
+            $password = $_REQUEST['p'] ?? '';
         }
-        $apikey = filter_input(INPUT_GET, 'apikey', FILTER_SANITIZE_SPECIAL_CHARS);
+        $apikey = $_REQUEST['apikey'] ?? '';
         $user   = null;
         // If explicit user authentication was passed
         $user_authenticated = false;
