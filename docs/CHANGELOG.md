@@ -42,6 +42,7 @@
 * Playlists need to be in catalog_map table
 * Insert Podcasts more often in catalog_map
 * Subsonic basic auth may get filtered
+* Don't filter auth in the PlayAction if sent
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
