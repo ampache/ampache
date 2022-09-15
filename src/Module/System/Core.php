@@ -140,7 +140,7 @@ class Core
     public static function get_user_ip()
     {
         // get the x forward if it's valid
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_has_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
             return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 

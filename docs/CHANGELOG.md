@@ -9,9 +9,8 @@
   * Class rework and many additional aliases, check the docs for [advanced_search](https://ampache.org/api/api-advanced-search)
   * Add `song_artist` as a search type (uses artist rules)
   * Add `album_artist` as a search type (uses artist rules)
-  * Add `song_genre` to album search
-  * Add `mbid_artist` to album search
-  * Add `song_genre` to artist search
+  * Add `song_genre`, `mbid_artist`, `mbid_song` to album search
+  * Add `song_genre`, `mbid_album`, `mbid_song` to artist search
   * Add `possible_duplicate_album` to song search
 * webplayer
   * Code cleanup and attempt to make it a bit less confusing
@@ -21,6 +20,8 @@
 * Do not overwrite a custom Artist/Album when updating from tags
 * Ignore case when comparing Genre
 * Show an error on share create failures
+* Pull some function back into the search query
+* When searching without rules treat it like a browse and return results unfiltered
 
 ### Fixed
 
@@ -39,6 +40,7 @@
 * Don't show hidden Genres on object rows
 * Video needs get_f_link funciton
 * Playlists need to be in catalog_map table
+* Insert Podcasts more often in catalog_map
 * search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
@@ -52,11 +54,10 @@
 ### Added
 
 * advanced_search
-  * Add song_artist as a search type (uses artist rules)
-  * Add album_artist as a search type (uses artist rules)
-  * Add `song_genre` to album search
-  * Add `mbid_artist` to album search
-  * Add `song_genre` to artist search
+  * Add `song_artist` as a search type (uses artist rules)
+  * Add `album_artist` as a search type (uses artist rules)
+  * Add `song_genre`, `mbid_artist`, `mbid_song` to album search
+  * Add `song_genre`, `mbid_album`, `mbid_song` to artist search
   * Add `possible_duplicate_album` to song search
 
 ### Fixed

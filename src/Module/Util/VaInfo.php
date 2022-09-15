@@ -300,10 +300,7 @@ final class VaInfo implements VaInfoInterface
         } else {
             $enc = mb_detect_encoding($tags, $mb_order, true);
             if ($enc !== false) {
-                if (!array_key_exists($enc, $encodings)) {
-                    $encodings[$enc] = 0;
-                }
-                $encodings[$enc]++;
+                $encodings[$enc] = 1;
             }
         }
 
@@ -1429,7 +1426,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumid'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz release group id':
-                        $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);;
+                        $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album type':
                         $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
@@ -1727,7 +1724,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumid'] = self::parse_mbid($value);
                         break;
                     case 'musicbrainz/release group id':
-                        $parsed['mb_albumid_group'] = self::parse_mbid($value);;
+                        $parsed['mb_albumid_group'] = self::parse_mbid($value);
                         break;
                     case 'musicbrainz/album type':
                         $parsed['release_type'] = $value;

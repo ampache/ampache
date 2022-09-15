@@ -73,7 +73,7 @@ if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
     $mysearch = new Search(null, $currentType);
-    $mysearch->parse_rules(Search::clean_request($_REQUEST));
+    $mysearch->set_rules($_REQUEST);
     $out = $mysearch->to_js();
 }
 if ($out) {
