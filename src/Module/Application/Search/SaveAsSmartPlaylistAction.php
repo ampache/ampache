@@ -65,7 +65,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $playlist = $this->modelFactory->createSearch();
-        $playlist->parse_rules(Search::clean_request($_REQUEST));
+        $playlist->set_rules($_REQUEST);
         $playlist->limit  = (int) Core::get_request('limit');
         $playlist->random = (int) Core::get_request('random');
         $playlist->create();

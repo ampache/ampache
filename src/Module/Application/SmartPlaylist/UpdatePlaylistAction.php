@@ -56,9 +56,7 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
         );
 
         if ($playlist->has_access()) {
-            $playlist->parse_rules(
-                Search::clean_request($request->getParsedBody())
-            );
+            $playlist->set_rules($request->getParsedBody());
             $playlist->update();
             $playlist->format();
         } else {

@@ -71,7 +71,7 @@ final class LogoutAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             // To end a legitimate session, just call logout.
-            setcookie($sessionName . '_remember', null, $cookie_options);
+            setcookie($sessionName . '_remember', '', $cookie_options);
 
             $this->authenticationManager->logout($input['session'], false);
         } else {
