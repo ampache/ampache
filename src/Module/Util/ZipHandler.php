@@ -81,7 +81,7 @@ final class ZipHandler implements ZipHandlerInterface
                     ? $filter
                     : dirname($file);
                 $artpath = $dirname . '/' . $art;
-                $folder  = explode('/', $dirname)[substr_count($dirname, "/", 0)];
+                $folder  = explode('/', $dirname)[substr_count($dirname, "/")];
                 $pl .= $folder . "/" . basename($file) . "\n";
                 try {
                     $arc->addFileFromPath($folder . '/' . basename($file), $file, $options);

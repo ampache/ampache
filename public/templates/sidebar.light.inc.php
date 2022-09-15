@@ -25,8 +25,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
+/** require@ public/templates/header.inc.php */
 ?>
-
 <ul id="sidebar-light">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>

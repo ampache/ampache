@@ -84,7 +84,7 @@ class UPnPFind
         $msg .= 'MAN: "ssdp:discover"' . "\r\n";
         $msg .= "MX: 3\r\n";
         $msg .= "ST: upnp:rootdevice\r\n";
-        $msg .= '' . "\r\n";
+        $msg .= "\r\n";
 
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);

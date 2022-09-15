@@ -49,13 +49,11 @@ $current_user      = Core::get_global('user');
 $t_home      = T_('Home');
 $t_play      = T_('Play');
 $t_artists   = T_('Artists');
-$t_a_artists = T_('Album Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
 $t_genres    = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
-$t_logout    = T_('Log out');
 
 global $dic;
 

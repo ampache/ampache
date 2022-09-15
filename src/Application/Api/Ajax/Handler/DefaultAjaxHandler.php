@@ -69,10 +69,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                switch ($request_type) {
-                    case 'delete':
-                        Core::get_global('user')->playlist->delete_track($request_id);
-                        break;
+                if ($request_type == 'delete') {
+                    Core::get_global('user')->playlist->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');

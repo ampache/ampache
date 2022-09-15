@@ -70,11 +70,11 @@ $categories = Preference::get_categories(); ?>
 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
             <li>
     <h4 class="header">
-        <span class="sidebar-header-title"><?php echo T_('Upload'); ?></span>
+        <span class="sidebar-header-title"><?php echo $t_upload; ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_upload', 'header-img ' . ((isset($_COOKIE['sb_preference_upload'])) ? $_COOKIE['sb_preference_upload'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_preference_upload">
-    <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo T_('Upload') ?></a></li>
+    <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
     </li>
 </ul>
        <?php } ?>

@@ -116,10 +116,10 @@ final class SongTagWriter implements SongTagWriterInterface
                 if (!empty($id3v2Data)) {
                     unset($id3v2Data['text']);
                     foreach ($id3v2Data as $key => $value) {
-                        if (isset($songMeta[$key]) && $id3v2Data[$key][0] !== $songMeta[$key]) {
+                        if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
                             $ndata[$key][] = $songMeta[$key];
                         } else {
-                            $ndata[$key][] = $id3v2Data[$key][0];
+                            $ndata[$key][] = $value[0];
                         }
                     }
                 } else {
@@ -148,17 +148,17 @@ final class SongTagWriter implements SongTagWriterInterface
                                 $ndata[$key][] = $songMeta[$key];
                             }
                         } else {
-                            $ndata[$key] = $vorbiscomments[$key];
+                            $ndata[$key] = $value;
                         }
                     }
                 }
                 // Insert vorbiscomments that might not be in file.
                 foreach ($songMeta as $key => $value) {
-                    if (!isset($vorbiscomments[$key]) && isset($songMeta[$key])) {
+                    if (!isset($vorbiscomments[$key]) && isset($value)) {
                         if ($key == 'releasetype' || $key == 'releasestatus') {
-                            $ndata[$key] = $songMeta[$key];
+                            $ndata[$key] = $value;
                         } else {
-                            $ndata[$key][] = $songMeta[$key];
+                            $ndata[$key][] = $value;
                         }
                     }
                 }
@@ -401,7 +401,7 @@ final class SongTagWriter implements SongTagWriterInterface
     private function getVorbisMetadata(
         Song $song
     ): array {
-        $song->format(true);
+        $song->format();
         $meta = [];
 
         $meta['date']                = $song->year;
@@ -427,7 +427,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['genre'] = implode(', ', $meta['genre']);
 
         $album = new Album($song->album);
-        $album->format(true);
+        $album->format();
 
         $meta['musicbrainz_albumartistid']  = $song->albumartist_mbid;
         $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
@@ -521,7 +521,7 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['genre'] = implode(', ', $meta['genre']);
 
         $album = new Album($song->album);
-        $album->format(true);
+        $album->format();
         $meta['original_year'] = $album->original_year;  //TORY
 
         $meta['text'] = array();

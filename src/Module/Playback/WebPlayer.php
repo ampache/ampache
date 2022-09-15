@@ -199,7 +199,7 @@ class WebPlayer
         $transcode = false;
 
         // Check transcode is required
-        $valid_types = Song::get_stream_types_for_type($file_type, 'webplayer');
+        $valid_types = Song::get_stream_types_for_type($file_type);
         if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side

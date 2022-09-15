@@ -1023,7 +1023,7 @@ class Catalog_local extends Catalog
     {
         $podcasts = self::get_podcasts();
         foreach ($podcasts as $podcast) {
-            $podcast->sync_episodes(false);
+            $podcast->sync_episodes();
             $episodes = $podcast->get_episodes('pending');
             foreach ($episodes as $episode_id) {
                 $episode = new Podcast_Episode($episode_id);

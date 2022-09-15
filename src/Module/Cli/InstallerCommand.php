@@ -107,7 +107,7 @@ final class InstallerCommand extends Command
         ), true);
 
         // Install the database
-        if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force, true)) {
+        if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force)) {
             $interactor->error(
                 T_('Database creation failed'),
                 true

@@ -28,7 +28,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
 ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {

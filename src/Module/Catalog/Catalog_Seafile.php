@@ -379,8 +379,7 @@ class Catalog_Seafile extends Catalog
             '',
             '',
             $sort_pattern,
-            $rename_pattern,
-            true
+            $rename_pattern
         );
         if (!$is_cached) {
             $vainfo->forceSize($file->size);
