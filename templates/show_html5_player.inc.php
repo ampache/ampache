@@ -71,7 +71,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             cssSelectorAncestor: "#jp_container_1"
         }, [], {
             playlistOptions: {
-                autoPlay: <?php echo ($autoplay) ? true : false; ?>,
+                autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
                 removePlayed: false, // remove tracks before the current playlist item
                 removeCount: 0, // shift the index back to keep x items BEFORE the current index
                 loopOnPrevious: false,
