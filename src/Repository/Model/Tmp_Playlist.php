@@ -145,20 +145,20 @@ class Tmp_Playlist extends database_object
     public function get_items()
     {
         $session_name = AmpConfig::get('session_name');
+        $sql          = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` ";
         if (isset($_COOKIE[$session_name])) {
             // Select all objects for this session
-            $session    = $_COOKIE[$session_name];
-            $sql        = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ?;";
-            $db_results = Dba::read($sql, array($session));
+            $sql .= "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ORDER BY `id`;";
+            $db_results = Dba::read($sql, array($_COOKIE[$session_name]));
         } else {
             // try to guess
-            $sql        = "SELECT `object_type`, `id`, `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id`";
+            $sql .= "WHERE `tmp_playlist` = ? ORDER BY `id`;";
             $db_results = Dba::read($sql, array($this->id));
         }
+        //debug_event(self::class, 'get_items ' . $sql, 5);
 
-        /* Define the array */
+        // Define the array
         $items = array();
-
         $count = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
             $items[] = array(

@@ -145,8 +145,6 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->get_fullname();
-        $this->get_link();
         $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         $this->artists = count($this->get_artists());
     }

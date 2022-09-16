@@ -47,9 +47,9 @@ abstract class DatabaseObject
         //$this->originalData = get_object_vars($this);
     }
 
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return (int)$this->id;
     }
 
     //protected function isPropertyDirty($property)

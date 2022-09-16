@@ -65,7 +65,7 @@ final class AdvancedSearchMethod
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
+     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
@@ -103,6 +103,8 @@ final class AdvancedSearchMethod
                     case 'album':
                         echo Json_Data::albums($results, array(), $user->id);
                         break;
+                    case 'song_artist':
+                    case 'album_artist':
                     case 'artist':
                         echo Json_Data::artists($results, array(), $user->id);
                         break;

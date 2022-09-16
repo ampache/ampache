@@ -27,6 +27,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
 
+$has_failed     = $message ?? false;
+$allow_stream   = $_REQUEST['allow_stream'] ?? false;
+$allow_download = $_REQUEST['allow_download'] ?? false;
 ?>
 <?php Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
@@ -55,12 +58,18 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Allow Stream'); ?></td>
-    <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
+    <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
-    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
+    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
+</tr>
+<?php } ?>
+<?php if ($has_failed) { ?>
+<tr>
+    <td>&nbsp;</td>
+    <td><p class="alert alert-danger"><?php echo $message; ?></p></td>
 </tr>
 <?php } ?>
 </table>

@@ -47,10 +47,10 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
                     if ($user->id) {
-                        $latitude  = (float) $_REQUEST['latitude'];
-                        $longitude = (float) $_REQUEST['longitude'];
-                        $name      = $_REQUEST['name'];
+                        $name      = $_REQUEST['name'] ?? null;
                         if (empty($name)) {
+                            $latitude  = (float)($_REQUEST['latitude'] ?? 0);
+                            $longitude = (float)($_REQUEST['longitude'] ?? 0);
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
                             if (empty($name)) {

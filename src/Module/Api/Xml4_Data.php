@@ -366,6 +366,9 @@ class Xml4_Data
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user_id, false);
                     } else {
                         $artist = new Artist($object_id);
+                        if (!isset($artist->id)) {
+                            break;
+                        }
                         $albums = static::getAlbumRepository()->getByArtist($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {

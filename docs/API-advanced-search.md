@@ -19,10 +19,12 @@ This is passed as a type argument and will only return this object in results
 * [song](https://ampache.org/api/advanced-search/song-advanced-search)
 * [album](https://ampache.org/api/advanced-search/album-advanced-search)
 * [artist](https://ampache.org/api/advanced-search/artist-advanced-search)
+* song_artist (**NOTE** same rules as artist but only returns song artists) (**Ampache develop**)
+* album_artist (**NOTE** same rules as artist but only returns album artists) (**Ampache develop**)
 * [label](https://ampache.org/api/advanced-search/label-advanced-search)
 * [playlist](https://ampache.org/api/advanced-search/playlist-advanced-search)
-* [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache develop**)
-* [podcast_episode](https://ampache.org/api/advanced-search/podcast_episode-advanced-search) (**Ampache develop**)
+* [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache 5.5.0+**)
+* [podcast_episode](https://ampache.org/api/advanced-search/podcast_episode-advanced-search) (**Ampache 5.5.0+**)
 * [genre](https://ampache.org/api/advanced-search/genre-advanced-search)
 * tag (*Alias of genre)
 * [user](https://ampache.org/api/advanced-search/user-advanced-search)
@@ -61,6 +63,8 @@ Use operator ('and', 'or') to choose whether to join or separate each rule when 
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
+Searching 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
+
 | rule_1                   | Title                                   | Operator Type     |                              Valid Types                              |
 |--------------------------|-----------------------------------------|-------------------|:---------------------------------------------------------------------:|
 | anywhere                 | Any searchable text                     | text              |                                 song                                  |
@@ -71,10 +75,15 @@ Select the type of search based on the type of data you are searching for. (song
 | album                    | Album Title                             | text              |                             song, artist                              |
 | album_title              | (*Alias of album)                       |                   |                                                                       |
 | artist                   | Artist                                  | text              |                          song, album, artist                          |
+| artist_title             | (*Alias of artist)                      |                   |                                                                       |
 | podcast                  | Podcast                                 | text              |                            podcast_episode                            |
+| podcast_title            | (*Alias of podcast)                     |                   |                                                                       |
 | podcast_episode          | Podcast Episode                         | text              |                                podcast                                |
+| podcast_episode_title    | (*Alias of podcast_episode)             |                   |                                                                       |
 | album_artist             | Album Artist                            | text              |                                 song                                  |
+| album_artist_title       | (*Alias of album_artist)                |                   |                                                                       |
 | song_artist              | Song Artist                             | text              |                                 album                                 |
+| song_artist_title        | (*Alias of song_artist)                 |                   |                                                                       |
 | composer                 | Composer                                | text              |                                 song                                  |
 | track                    | Track                                   | numeric           |                                 song                                  |
 | year                     | Year                                    | numeric           |                              song, album                              |
@@ -105,7 +114,9 @@ Select the type of search based on the type of data you are searching for. (song
 | time                     | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | genre                    | Genre                                   | tags              |                          song, album, artist                          |
 | tag                      | (*Alias of genre)                       |                   |                                                                       |
-| album_genre              | Album Genre                             | tags              |                                 song                                  |
+| song_genre               | Song Genre                              | tags              |                          song, album, artist                          |
+| song_tag                 | (*Alias of song_genre)                  |                   |                                                                       |
+| album_genre              | Album Genre                             | tags              |                              song, album                              |
 | album_tag                | (*Alias of album_genre)                 |                   |                                                                       |
 | artist_genre             | Artist Genre                            | tags              |                                 song                                  |
 | artist_tag               | (*Alias of artist_genre)                |                   |                                                                       |
@@ -133,14 +144,15 @@ Select the type of search based on the type of data you are searching for. (song
 | recent_updated           | Recently Updated                        | numeric_limit     |                                 song                                  |
 | catalog                  | Catalog                                 | boolean_numeric   |                          song, album, artist                          |
 | mbid                     | MusicBrainz ID                          | text              |                          song, album, artist                          |
-| mbid_album               | MusicBrainz ID (Album)                  | text              |                                 song                                  |
-| mbid_artist              | MusicBrainz ID (Artist)                 | text              |                                 song                                  |
+| mbid_album               | MusicBrainz ID (Album)                  | text              |                          song, album, artist                          |
+| mbid_artist              | MusicBrainz ID (Artist)                 | text              |                          song, album, artist                          |
+| mbid_song                | MusicBrainz ID (Song)                   | text              |                          song, album, artist                          |
 | metadata                 | Metadata                                | metadata (mixed)  |                                 song                                  |
 | has_image                | Local Image                             | boolean           |                             album, artist                             |
 | image_height             | Image Height                            | numeric           |                             album, artist                             |
 | image_width              | Image Width                             | numeric           |                             album, artist                             |
 | possible_duplicate       | Possible Duplicate                      | is_true           |                          song, album, artist                          |
-| possible_duplicate_album | Possible Duplicate Albums               | is_true           |                                artist                                 |
+| possible_duplicate_album | Possible Duplicate Albums               | is_true           |                          song, album, artist                          |
 | username                 | Username                                | text              |                                 user                                  |
 | category                 | Category                                | text              |                                 label                                 |
 

@@ -141,7 +141,6 @@ class Podcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->get_fullname();
         $this->f_description   = scrub_out($this->description);
         $this->f_language      = scrub_out($this->language);
         $this->f_copyright     = scrub_out($this->copyright);
@@ -379,6 +378,8 @@ class Podcast extends database_object implements library_item
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results, false)) {
             if ((int) $row['id'] > 0) {
+                Catalog::update_map($catalog_id, 'podcast', (int) $row['id']);
+
                 return (int) $row['id'];
             }
         }
@@ -497,6 +498,7 @@ class Podcast extends database_object implements library_item
         // update the episode count after adding / removing episodes
         $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
         Dba::write($sql, $params);
+        Catalog::update_mapping('podcast');
         Catalog::update_mapping('podcast_episode');
         Catalog::count_table('podcast_episode');
         $this->update_lastsync($time);
@@ -638,7 +640,8 @@ class Podcast extends database_object implements library_item
 
     /**
      * remove
-     * @return string|null
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -649,13 +652,15 @@ class Podcast extends database_object implements library_item
         }
 
         $sql = "DELETE FROM `podcast` WHERE `id` = ?";
-        Dba::write($sql, array($this->id));
-        $insert_id = Dba::insert_id();
 
-        Catalog::count_table('podcast');
-        Catalog::count_table('podcast_episode');
+        if (Dba::write($sql, array($this->id)) !== false) {
+            Catalog::count_table('podcast');
+            Catalog::count_table('podcast_episode');
 
-        return $insert_id;
+            return true;
+        }
+
+        return false;
     }
 
     /**

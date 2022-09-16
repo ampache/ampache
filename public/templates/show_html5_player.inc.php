@@ -72,6 +72,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
         }, [], {
             playlistOptions: {
                 autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
+                removePlayed: false, // remove tracks before the current playlist item
+                removeCount: 0, // shift the index back to keep x items BEFORE the current index
                 loopOnPrevious: false,
                 shuffleOnLoop: true,
                 enableRemoveControls: true,
@@ -82,6 +84,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             },
             swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
+            loop: false, // this is the jplayer loop status
             audioFullScreen: true,
             smoothPlayBar: true,
             toggleDuration: true,
@@ -98,9 +101,9 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                     $solutions[] = 'aurora';
                 }
                 echo implode(',', $solutions); ?>",
-            nativeSupport:true,
+            nativeSupport: true,
             oggSupport: false,
-            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8",
+            supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8, m4v, m3u8v, m3uv, ogv, webmv, flv, rtmpv",
             volume: jp_volume,
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
             auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",

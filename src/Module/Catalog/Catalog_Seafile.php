@@ -521,7 +521,7 @@ class Catalog_Seafile extends Catalog
                 try {
                     $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
                 } catch (Exception $error) {
-                    Ui::update_text(T_("There Was a Problem"),
+                    Ui::update_text(T_('There Was a Problem'),
                         /* HINT: %1 filename (File path), %2 Error Message */ sprintf(T_('There was an error while checking this song "%1$s": %2$s'),
                             $file['filename'], $error->getMessage()));
                     debug_event('seafile_catalog', 'Clean Exception: ' . $error->getMessage(), 2);

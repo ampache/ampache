@@ -61,7 +61,7 @@ final class AdvancedSearch4Method
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
+     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
      * limit           = (integer))
      */
@@ -82,6 +82,8 @@ final class AdvancedSearch4Method
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
+                    case 'song_artist':
+                    case 'album_artist':
                     case 'artist':
                         echo Json4_Data::artists($results, array(), $user->id);
                         break;

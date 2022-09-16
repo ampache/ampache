@@ -101,9 +101,12 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require Ui::find_template('show_add_upload.inc.php');
-
+        if ($this->configContainer->get(ConfigurationKeyEnum::UPLOAD_CATALOG) > 0) {
+            require Ui::find_template('show_add_upload.inc.php');
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog');
+        }
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();

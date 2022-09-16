@@ -19,7 +19,7 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
-* [API 5.5 Documentation](https://ampache.org/api/versions/api-5.5)
+* [API 5.5 Documentation](https://ampache.org/api/api-5)
 * [API 5.1 Documentation](https://ampache.org/api/versions/api-5.1)
 * [API 5.0 Documentation](https://ampache.org/api/versions/api-5.0)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
