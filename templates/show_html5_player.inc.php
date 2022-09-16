@@ -71,8 +71,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             cssSelectorAncestor: "#jp_container_1"
         }, [], {
             playlistOptions: {
-                autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
-                removePlayed: 'false', // remove tracks before the current playlist item
+                autoPlay: <?php echo ($autoplay) ? true : false; ?>,
+                removePlayed: false, // remove tracks before the current playlist item
                 removeCount: 0, // shift the index back to keep x items BEFORE the current index
                 loopOnPrevious: false,
                 shuffleOnLoop: true,
@@ -84,7 +84,7 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
             },
             swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
-            loop: 'false', // this is the jplayer loop status
+            loop: false, // this is the jplayer loop status
             audioFullScreen: true,
             smoothPlayBar: true,
             toggleDuration: true,
