@@ -70,6 +70,8 @@ RUN     apt-get -q -q update \
     &&  locale-gen \
     &&  ln -s /etc/apache2/sites-available/001-ampache.conf /etc/apache2/sites-enabled/ \
     &&  a2enmod rewrite \
+    &&  sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+    &&  locale-gen \
     &&  apt-get -qq purge \
           libdvd-pkg \
           lsb-release \

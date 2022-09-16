@@ -63,6 +63,8 @@ Use operator ('and', 'or') to choose whether to join or separate each rule when 
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
+Searching 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
+
 | rule_1                   | Title                                   | Operator Type     |                              Valid Types                              |
 |--------------------------|-----------------------------------------|-------------------|:---------------------------------------------------------------------:|
 | anywhere                 | Any searchable text                     | text              |                                 song                                  |
