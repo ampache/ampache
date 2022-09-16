@@ -59,7 +59,7 @@ $categories = Preference::get_categories(); ?>
         <?php if (Access::check('interface', 50)) { ?>
     <li>
     <h4 class="header">
-        <span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span>
+        <span class="sidebar-header-title"><?php echo $t_playlist; ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_playlist', 'header-img ' . ((isset($_COOKIE['sb_preference_playlist'])) ? $_COOKIE['sb_preference_playlist'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_preference_playlist">
