@@ -541,7 +541,7 @@ class AmpacheVlc extends localplay_controller
      * This works as in requesting the status.xml file from VLC.
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */

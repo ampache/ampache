@@ -646,7 +646,7 @@ class AmpacheXbmc extends localplay_controller
      * This works as in requesting the xbmc properties
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $array = array();
         if (!$this->_xbmc) {

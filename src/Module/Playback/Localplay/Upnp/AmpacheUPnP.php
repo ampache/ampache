@@ -499,34 +499,34 @@ class AmpacheUPnP extends localplay_controller
      * This works as in requesting the UPnP properties
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         debug_event('upnp.controller', 'status', 5);
-        $status = array();
+        $array = array();
         if (!$this->_upnp) {
-            return $status;
+            return $array;
         }
 
         $item = $this->_upnp->GetCurrentItem();
 
 
-        $status['state']       = $this->_upnp->GetState();
-        $status['volume']      = $this->_upnp->GetVolume();
-        $status['repeat']      = false;
-        $status['random']      = false;
-        $status['track']       = $item['link'] ?? '';
-        $status['track_title'] = $item['name'] ?? '';
+        $array['state']       = $this->_upnp->GetState();
+        $array['volume']      = $this->_upnp->GetVolume();
+        $array['repeat']      = false;
+        $array['random']      = false;
+        $array['track']       = $item['link'] ?? '';
+        $array['track_title'] = $item['name'] ?? '';
 
-        $url_data = Stream_Url::parse($status['track']);
+        $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
             $song = new Song($url_data['id']);
             if ($song->id) {
-                $status['track_artist'] = $song->get_artist_fullname();
-                $status['track_album']  = $song->get_album_fullname();
+                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_album']  = $song->get_album_fullname();
             }
         }
 
-        return $status;
+        return $array;
     }
 
     /**

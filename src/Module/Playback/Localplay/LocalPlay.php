@@ -313,7 +313,7 @@ class LocalPlay
      * There is an expected array format
      * @return array|false
      */
-    public function status()
+    public function status(): array
     {
         $data = $this->_player->status();
 

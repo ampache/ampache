@@ -68,7 +68,7 @@ abstract class localplay_controller
     /**
      * @return array
      */
-    abstract public function status();
+    abstract public function status(): array;
 
     // For display we need the following 'instance' functions
 

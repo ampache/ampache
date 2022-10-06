@@ -527,8 +527,9 @@ class AmpacheHttpq extends localplay_controller
      * That this Localplay method supports. required function
      * @return array
      */
-    public function status()
+    public function status(): array
     {
+        $array = array();
         /* Construct the Array */
         $array['state']  = $this->_httpq->state();
         $array['volume'] = $this->_httpq->get_volume();

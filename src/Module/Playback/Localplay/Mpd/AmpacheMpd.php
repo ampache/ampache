@@ -521,7 +521,7 @@ class AmpacheMpd extends localplay_controller
      * features that this Localplay method supports.
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $array = array();
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
