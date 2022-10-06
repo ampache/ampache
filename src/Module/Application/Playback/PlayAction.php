@@ -50,7 +50,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,7 +64,6 @@ final class PlayAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-    private SongRepositoryInterface $songRepository;
 
     private UserRepositoryInterface $userRepository;
 
@@ -73,13 +71,11 @@ final class PlayAction implements ApplicationActionInterface
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
-        SongRepositoryInterface $songRepository,
         UserRepositoryInterface $userRepository
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
-        $this->songRepository        = $songRepository;
         $this->userRepository        = $userRepository;
     }
 
@@ -231,7 +227,6 @@ final class PlayAction implements ApplicationActionInterface
         $apikey = $_REQUEST['apikey'] ?? '';
         $user   = null;
         // If explicit user authentication was passed
-        $user_authenticated = false;
         if (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
         } elseif (!empty($username) && !empty($password)) {
@@ -256,40 +251,40 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // did you pass a specific user id? (uid)
-        $user_id = ($user_id > 0)
-            ? $user_id
-            : $user->id;
+        $user_id = ($user instanceof User)
+            ? $user->id
+            : $user_id;
 
         if (!$share_id) {
             // No explicit authentication, use session
             if (!$user instanceof User) {
                 $user = new User($user_id);
+            }
 
-                // If the user has been disabled (true value)
-                if (make_bool($user->disabled)) {
-                    debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
-                    header('HTTP/1.1 403 User disabled');
+            // If the user has been disabled (true value)
+            if (make_bool($user->disabled)) {
+                debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
+                header('HTTP/1.1 403 User disabled');
 
-                    return null;
-                }
+                return null;
+            }
 
-                // If require_session is set then we need to make sure we're legit
-                if ($use_auth && AmpConfig::get('require_session')) {
-                    if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
-                        debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
-                    } elseif (!Session::exists('stream', $session_id)) {
-                        // No valid session id given, try with cookie session from web interface
-                        $session_id = $_COOKIE[$session_name] ?? false;
-                        if (!Session::exists('interface', $session_id)) {
-                            debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
-                            header('HTTP/1.1 403 Session Expired');
+            // If require_session is set then we need to make sure we're legit
+            if ($use_auth && AmpConfig::get('require_session')) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
+                    debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
+                } elseif (!Session::exists('stream', $session_id)) {
+                    // No valid session id given, try with cookie session from web interface
+                    $session_id = $_COOKIE[$session_name] ?? false;
+                    if (!Session::exists('interface', $session_id)) {
+                        debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
+                        header('HTTP/1.1 403 Session Expired');
 
-                            return null;
-                        }
+                        return null;
                     }
-                    // Now that we've confirmed the session is valid extend it
-                    Session::extend($session_id, 'stream');
                 }
+                // Now that we've confirmed the session is valid extend it
+                Session::extend($session_id, 'stream');
             }
 
             // Update the users last seen information
@@ -322,7 +317,7 @@ final class PlayAction implements ApplicationActionInterface
         Session::createGlobalUser($user);
         Preference::init();
 
-        // If we are in demo mode.. die here
+        // If we are in demo mode; die here
         if (AmpConfig::get('demo_mode')) {
             throw new AccessDeniedException(
                 'Streaming Access Denied: Disable demo_mode in \'config/ampache.cfg.php\''
