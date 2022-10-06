@@ -126,7 +126,7 @@ final class PlayAction implements ApplicationActionInterface
         $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $uid          = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
         $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -212,8 +212,8 @@ final class PlayAction implements ApplicationActionInterface
 
         // First things first, if we don't have a uid/oid stop here
         // Added $session_id here as user may not be specified but then ssid may be and will be checked later
-        if (empty($uid) && empty($session_id) && (!$share_id && !$secret && !$random)) {
-            debug_event('play/index', 'No object UID specified, nothing to play', 2);
+        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+            debug_event('play/index', 'No object OID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 
             return null;
@@ -236,22 +236,22 @@ final class PlayAction implements ApplicationActionInterface
             $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user != null) {
                 Session::createGlobalUser($user);
-                $uid = $user->id;
+                $user_id = $user->id;
                 Preference::init();
                 $user_authenticated = true;
             }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
-                $user = User::get_from_username($auth['username']);
-                $uid  = $user->id;
+                $user    = User::get_from_username($auth['username']);
+                $user_id = $user->id;
                 Session::createGlobalUser($user);
                 Preference::init();
                 $user_authenticated = true;
             }
         }
 
-        if (empty($uid) && (!$share_id && !$secret)) {
+        if (empty($user_id) && (!$share_id && !$secret)) {
             debug_event('play/index', 'No user specified', 2);
             header('HTTP/1.1 400 No User Specified');
 
@@ -266,13 +266,13 @@ final class PlayAction implements ApplicationActionInterface
             $user = (array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : new User(-1);
-            $uid  = $user->id;
+            $user_id = $user->id;
         }
 
         if (!$share_id) {
             // No explicit authentication, use session
             if (!$user_authenticated) {
-                $user = new User($uid);
+                $user = new User($user_id);
                 Session::createGlobalUser($user);
                 Preference::init();
 
@@ -306,8 +306,8 @@ final class PlayAction implements ApplicationActionInterface
             // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
-            $uid   = 0;
-            $share = new Share((int) $share_id);
+            $user_id = 0;
+            $share   = new Share((int) $share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
@@ -356,7 +356,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($type == 'playlist' && isset($playlist_type)) {
             $playlist = new Stream_Playlist($object_id);
             // Some rudimentary security
-            if ($uid != $playlist->user) {
+            if ($user_id != $playlist->user) {
                 throw new AccessDeniedException();
             }
 
@@ -575,10 +575,10 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                    Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 }
             } else {
-                Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download', $time);
+                Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
             }
 
             // Check to see if we should be throttling because we can get away with it
@@ -794,21 +794,21 @@ final class PlayAction implements ApplicationActionInterface
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
                 if (($action != 'download') && $record_stats) {
-                    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                    Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
+                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }
                     }
                 } elseif (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
-                        Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                        debug_event('play/index', 'Registering download for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
+                        Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                     }
                 } elseif ($share_id) {
                     // shares are people too
