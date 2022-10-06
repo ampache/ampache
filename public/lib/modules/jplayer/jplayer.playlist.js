@@ -596,7 +596,8 @@
                     // re-index the list
                     $(playlistRow).attr("name", i);
                 }
-                playlist_after.push(playlist_before[i]);
+                // the old playlist isn't sorted the new way so use htmlIndex to get the right index
+                playlist_after.push(playlist_before[htmlIndex]);
             });
             console.log(this.cssSelector.playlist + " ul li");
             self.playlist = playlist_after;
