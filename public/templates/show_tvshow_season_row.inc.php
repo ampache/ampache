@@ -34,7 +34,6 @@ use Ampache\Module\Util\Ui;
 /** @var TvShow $libitem */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

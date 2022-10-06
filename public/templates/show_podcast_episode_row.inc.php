@@ -38,7 +38,6 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_time */
 /** @var string $cel_counter */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Podcast $libitem */
 
 use Ampache\Repository\Model\Podcast;
 
+/** @var Podcast $libitem */
 ?>
 <div>
     <form method="post" id="edit_podcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">

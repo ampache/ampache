@@ -22,10 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
+/** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access $access */
 ?>
 <?php Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
@@ -66,7 +66,6 @@ $web_path   = AmpConfig::get('web_path'); ?>
 <tbody>
 <?php
     /* Start foreach List Item */
-    /** @var AccessListItemInterface $access $access */
     foreach ($list as $access) { ?>
 <tr>
     <td><?php echo scrub_out($access->getName()); ?></td>

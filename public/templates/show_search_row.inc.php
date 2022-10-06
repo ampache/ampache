@@ -29,7 +29,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $libitem */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

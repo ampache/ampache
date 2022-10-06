@@ -26,6 +26,8 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var array $playlists */
+
 Ui::show_box_top(T_('Manage'));  ?>
 <table class="tabledata striped-rows">
     <tr class="th-top">

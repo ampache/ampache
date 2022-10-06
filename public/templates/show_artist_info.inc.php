@@ -26,9 +26,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
 /** @var array $biography */
-
 ?>
-
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
     $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;

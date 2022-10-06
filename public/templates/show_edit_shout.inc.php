@@ -27,7 +27,6 @@ use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $shout */
 /** @var User $client */
-
 ?>
 <?php Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/shout.php?action=edit_shout">

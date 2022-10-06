@@ -27,6 +27,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
 
+/** @var string $message */
+/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
+
 $has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;

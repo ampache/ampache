@@ -43,7 +43,6 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Playlist $playlist */
 /** @var array $object_ids */
-
 ?>
 <?php
 ob_start();

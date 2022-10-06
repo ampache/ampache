@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var TVShow_Season $libitem */
 
 use Ampache\Repository\Model\TVShow_Season;
 
+/** @var TVShow_Season $libitem */
 ?>
 <div>
     <form method="post" id="edit_tvshow_season_<?php echo $libitem->id; ?>" class="edit_dialog_content">

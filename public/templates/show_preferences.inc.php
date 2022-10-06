@@ -34,7 +34,6 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 /** @var string $fullname */
-
 ?>
 <?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {

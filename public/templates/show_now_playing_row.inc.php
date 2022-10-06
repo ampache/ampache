@@ -33,7 +33,6 @@ use Ampache\Module\Api\Ajax;
 /** @var Ampache\Repository\Model\User $np_user */
 /** @var string $web_path */
 /** @var string $agent */
-
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
