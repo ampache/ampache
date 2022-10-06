@@ -40,7 +40,6 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 
         $show_browse = false;
         $results     = array();
-        $action      = Core::get_request('action');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {

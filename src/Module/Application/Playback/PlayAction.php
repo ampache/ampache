@@ -517,11 +517,6 @@ final class PlayAction implements ApplicationActionInterface
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
-            // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
-            if (!empty($tmp_playlist)) {
-                $tmp_playlist->delete_track($object_id);
-            }
-
             debug_event('play/index', "Media " . $stream_file . " ($media->title) does not have a valid filename specified", 2);
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
 

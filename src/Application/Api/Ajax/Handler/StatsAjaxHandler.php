@@ -47,7 +47,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
                     if ($user->id) {
-                        $name      = $_REQUEST['name'] ?? null;
+                        $name = $_REQUEST['name'] ?? null;
                         if (empty($name)) {
                             $latitude  = (float)($_REQUEST['latitude'] ?? 0);
                             $longitude = (float)($_REQUEST['longitude'] ?? 0);
@@ -64,12 +64,11 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                                     }
                                 }
                             }
-                        }
-
-                        // Better to check for bugged values here and keep previous user good location
-                        // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
-                        if ($latitude > 0 && $longitude > 0) {
-                            Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                            // Better to check for bugged values here and keep previous user good location
+                            // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
+                            if ($latitude > 0 && $longitude > 0) {
+                                Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                            }
                         }
                     }
                 } else {

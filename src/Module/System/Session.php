@@ -95,6 +95,7 @@ final class Session implements SessionInterface
 
             $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } elseif (!$useAuth) {
+            $auth                 = array();
             $auth['success']      = 1;
             $auth['username']     = '-1';
             $auth['fullname']     = "Ampache User";

@@ -44,6 +44,8 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
+        $results = array();
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'flip_state':

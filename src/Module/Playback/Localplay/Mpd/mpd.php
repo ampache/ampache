@@ -1038,8 +1038,8 @@ class mpd
     {
         $this->_debug('GetAlbums', 'start', 5);
 
-        $params[] = self::TABLE_ALBUM;
-        if ($artist === null) {
+        $params = array(self::TABLE_ALBUM);
+        if ($artist !== null) {
             $params[] = $artist;
         }
 

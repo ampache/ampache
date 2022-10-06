@@ -2251,10 +2251,10 @@ abstract class Catalog extends database_object
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
             $diff   = array_key_exists('element', $info) && is_array($info['element']) && !empty($info['element']);
-            $album  = ($album == true) || ($diff && array_key_exists('album', $info['element']));
-            $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
-            $tags   = ($tags == true) || ($diff && array_key_exists('tags', $info['element']));
-            $maps   = ($maps == true) || ($diff && array_key_exists('maps', $info));
+            $album  = ($album === true) || ($diff && array_key_exists('album', $info['element']));
+            $artist = ($artist === true) || ($diff && array_key_exists('artist', $info['element']));
+            $tags   = ($tags === true) || ($diff && array_key_exists('tags', $info['element']));
+            $maps   = ($maps === true) || ($diff && array_key_exists('maps', $info));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if ($diff && array_key_exists($type, $info['element'])) {
