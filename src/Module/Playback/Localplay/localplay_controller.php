@@ -93,7 +93,7 @@ abstract class localplay_controller
 
     abstract public function get_instances();
 
-    abstract public function instance_fields();
+    abstract public function instance_fields(): array;
 
     /**
      * @param $uid

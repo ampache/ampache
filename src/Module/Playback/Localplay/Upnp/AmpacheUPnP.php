@@ -180,8 +180,9 @@ class AmpacheUPnP extends localplay_controller
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields         = array();
         $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['url']  = array('description' => T_('URL'), 'type' => 'url');
 

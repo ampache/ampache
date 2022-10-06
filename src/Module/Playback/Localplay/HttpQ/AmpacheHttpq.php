@@ -189,8 +189,9 @@ class AmpacheHttpq extends localplay_controller
      * This returns a keyed array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields             = array();
         $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
         $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
