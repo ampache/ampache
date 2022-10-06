@@ -234,18 +234,10 @@ final class PlayAction implements ApplicationActionInterface
         $user_authenticated = false;
         if (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
-            if ($user != null) {
-                Session::createGlobalUser($user);
-                Preference::init();
-                $user_authenticated = true;
-            }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
                 $user    = User::get_from_username($auth['username']);
-                Session::createGlobalUser($user);
-                Preference::init();
-                $user_authenticated = true;
             }
         }
         // try the session ID as well
@@ -263,12 +255,6 @@ final class PlayAction implements ApplicationActionInterface
                 : new User(-1);
         }
 
-        if (!($user instanceof User) && (!$demo_id && !$share_id && !$secret)) {
-            debug_event('play/index', 'No user specified {' . print_r($user, true) . '}', 2);
-            header('HTTP/1.1 400 No User Specified');
-
-            return null;
-        }
         // did you pass a specific user id? (uid)
         $user_id = ($user_id > 0)
             ? $user_id
@@ -276,10 +262,8 @@ final class PlayAction implements ApplicationActionInterface
 
         if (!$share_id) {
             // No explicit authentication, use session
-            if (!$user_authenticated) {
+            if (!$user instanceof User) {
                 $user = new User($user_id);
-                Session::createGlobalUser($user);
-                Preference::init();
 
                 // If the user has been disabled (true value)
                 if (make_bool($user->disabled)) {
@@ -327,9 +311,16 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             $user = new User($share->user);
-            Session::createGlobalUser($user);
-            Preference::init();
         }
+
+        if (!($user instanceof User) && (!$share_id && !$secret)) {
+            debug_event('play/index', 'No user specified {' . print_r($user, true) . '}', 2);
+            header('HTTP/1.1 400 No User Specified');
+
+            return null;
+        }
+        Session::createGlobalUser($user);
+        Preference::init();
 
         // If we are in demo mode.. die here
         if (AmpConfig::get('demo_mode')) {
