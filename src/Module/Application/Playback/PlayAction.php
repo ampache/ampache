@@ -295,7 +295,7 @@ final class PlayAction implements ApplicationActionInterface
                         debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
                     } elseif (!Session::exists('stream', $session_id)) {
                         // No valid session id given, try with cookie session from web interface
-                        $session_id = $_COOKIE[$session_name];
+                        $session_id = $_COOKIE[$session_name] ?? false;
                         if (!Session::exists('interface', $session_id)) {
                             debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
                             header('HTTP/1.1 403 Session Expired');
