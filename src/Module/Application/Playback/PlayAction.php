@@ -236,7 +236,6 @@ final class PlayAction implements ApplicationActionInterface
             $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user != null) {
                 Session::createGlobalUser($user);
-                $user_id = $user->id;
                 Preference::init();
                 $user_authenticated = true;
             }
@@ -244,18 +243,10 @@ final class PlayAction implements ApplicationActionInterface
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
                 $user    = User::get_from_username($auth['username']);
-                $user_id = $user->id;
                 Session::createGlobalUser($user);
                 Preference::init();
                 $user_authenticated = true;
             }
-        }
-
-        if (empty($user_id) && (!$share_id && !$secret)) {
-            debug_event('play/index', 'No user specified', 2);
-            header('HTTP/1.1 400 No User Specified');
-
-            return null;
         }
 
         $session_name = AmpConfig::get('session_name');
@@ -266,8 +257,18 @@ final class PlayAction implements ApplicationActionInterface
             $user = (array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : new User(-1);
-            $user_id = $user->id;
         }
+
+        if (!($user instanceof User) && (!$share_id && !$secret)) {
+            debug_event('play/index', 'No user specified', 2);
+            header('HTTP/1.1 400 No User Specified');
+
+            return null;
+        }
+        // did you pass a specific user id? (uid)
+        $user_id = ($user_id > 0)
+            ? $user_id
+            : $user->id;
 
         if (!$share_id) {
             // No explicit authentication, use session
