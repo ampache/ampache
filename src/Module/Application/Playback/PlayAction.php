@@ -260,7 +260,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         if (!($user instanceof User) && (!$share_id && !$secret)) {
-            debug_event('play/index', 'No user specified', 2);
+            debug_event('play/index', 'No user specified {' . print_r($user, true) . '}', 2);
             header('HTTP/1.1 400 No User Specified');
 
             return null;
