@@ -330,7 +330,7 @@ class Catalog_remote extends Catalog
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
-            debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
+            debug_event('remote.catalog', 'Remote login failed', 1);
 
             return 0;
         }
@@ -339,13 +339,13 @@ class Catalog_remote extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
                 if (count($song) == 1) {
-                    debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
+                    debug_event('remote.catalog', 'keeping song', 5);
                 } else {
-                    debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
+                    debug_event('remote.catalog', 'removing song', 5);
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }

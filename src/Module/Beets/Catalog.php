@@ -212,7 +212,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $inserted = Song::insert($song);
         if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
+            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5);
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
             /* HINT: filename (file path) */

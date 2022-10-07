@@ -649,7 +649,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
-    debug_event('log.lib', $log_line, $level, '', 'ampache');
+    debug_event('log.lib', $log_line, $level, 'ampache');
 }
 
 /**
@@ -666,7 +666,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  *
  * @deprecated Use LegacyLogger
  */
-function debug_event($type, $message, $level, $file = '', $username = '')
+function debug_event($type, $message, $level, $username = '')
 {
     if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;

@@ -273,8 +273,7 @@ class Catalog_subsonic extends Catalog
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $data['path'], 5);
                                 } else {
                                     $data['catalog'] = $this->id;
-                                    debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5,
-                                        'ampache-catalog');
+                                    debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5);
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
@@ -353,8 +352,7 @@ class Catalog_subsonic extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                'ampache-catalog');
+            debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
