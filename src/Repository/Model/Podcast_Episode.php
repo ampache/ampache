@@ -182,7 +182,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->f_size = Ui::format_bytes($this->size);
         $this->f_file = $this->get_fullname() . '.' . $this->type;
 
-        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->get_f_link();
 
         if ($details) {
             $podcast = new Podcast($this->podcast);
@@ -257,6 +257,20 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -430,7 +444,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * update_file
      * sets the file path
-     * @param boolean $new_played
+     * @param boolean $path
      * @param integer $id
      */
     public static function update_file($path, $id)

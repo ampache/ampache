@@ -148,8 +148,8 @@ class Podcast extends database_object implements library_item
         $this->f_website       = scrub_out($this->website);
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
+        $this->get_f_link();
 
         return true;
     }
@@ -210,6 +210,20 @@ class Podcast extends database_object implements library_item
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
     }
 
     /**

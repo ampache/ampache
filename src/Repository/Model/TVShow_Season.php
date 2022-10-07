@@ -141,8 +141,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $tvshow->format($details);
         $this->f_tvshow      = $tvshow->get_link();
         $this->f_tvshow_link = $tvshow->f_link;
-
-        $this->f_link = '<a href="' . $this->get_link() . '" title="' . $tvshow->get_fullname() . ' - ' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->get_f_link();
 
         if ($details) {
             $this->_get_extra_info();
@@ -205,6 +204,20 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return $this->link;
     }
 
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $tvshow       = new TvShow($this->tvshow);
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . $tvshow->get_fullname() . ' - ' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
     /**
      * @return array
      */

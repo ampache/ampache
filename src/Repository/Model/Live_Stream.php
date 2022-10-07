@@ -124,7 +124,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_link          = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        $this->get_f_link();
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
@@ -166,6 +166,20 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
     }
 
     /**

@@ -55,6 +55,12 @@ interface playable_item
     public function get_link();
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link();
+
+    /**
      * get_parent
      *
      * Get parent. Return parent `object_type`, `object_id` ; null otherwise.

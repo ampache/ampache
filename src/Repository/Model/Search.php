@@ -1324,7 +1324,7 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string|false
+     * @return string
      */
     private function _get_rule_name($name)
     {

@@ -163,8 +163,7 @@ class TvShow extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
-
+        $this->get_f_link();
         if ($details) {
             $this->_get_extra_info();
             $this->tags   = Tag::get_top_tags('tvshow', $this->id);
@@ -221,6 +220,20 @@ class TvShow extends database_object implements library_item
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
     }
 
     /**

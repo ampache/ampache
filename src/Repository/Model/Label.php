@@ -145,7 +145,7 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+        $this->get_f_link();
         $this->artists = count($this->get_artists());
     }
 
@@ -215,6 +215,20 @@ class Label extends database_object implements library_item
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+        }
+
+        return $this->f_link;
     }
 
     /**
