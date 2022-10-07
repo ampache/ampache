@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -501,7 +502,7 @@ class Subsonic_Xml_Data
             $valid_types   = Song::get_stream_types_for_type($song->type, 'api');
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
                 // $transcode_settings = Song::get_transcode_settings_for_media(null, null, 'api', 'song');
-                $transcode_type = AmpConfig::get('encode_player_api_target', 'mp3');
+                $transcode_type = Stream::get_transcode_format($song->type, null, 'api');
                 $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
                 $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
             }
