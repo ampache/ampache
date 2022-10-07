@@ -1484,23 +1484,23 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_composer
      * updates the composer field
-     * @param string $new_value
+     * @param string $new_composer
      * @param integer $song_id
      */
-    public static function update_composer($new_value, $song_id)
+    public static function update_composer($new_composer, $song_id)
     {
-        self::_update_item('composer', $new_value, $song_id, 50, true);
+        self::_update_item('composer', $new_composer, $song_id, 50, true);
     } // update_composer
 
     /**
      * update_publisher
      * updates the publisher field
-     * @param string $new_value
+     * @param string $new_publisher
      * @param integer $song_id
      */
-    public static function update_publisher($new_value, $song_id)
+    public static function update_publisher($new_publisher, $song_id)
     {
-        self::_update_item('publisher', $new_value, $song_id, 50, true);
+        self::_update_item('publisher', $new_publisher, $song_id, 50, true);
     } // update_publisher
 
     /**
@@ -1690,9 +1690,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param mixed $value
-     * @param integer $song_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $song_id
+     * @param int $level
      * @param boolean $check_owner
      * @return PDOStatement|boolean
      */

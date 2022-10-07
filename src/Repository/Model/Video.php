@@ -1188,9 +1188,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param integer $value
-     * @param integer $video_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $video_id
+     * @param int $level
      * @return boolean
      */
     private static function _update_item($field, $value, $video_id, $level)

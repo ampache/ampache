@@ -582,8 +582,8 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param string|integer $value
-     * @param integer $level
+     * @param string|int $value
+     * @param int $level
      * @return PDOStatement|boolean
      */
     private function _update_item($field, $value, $level)

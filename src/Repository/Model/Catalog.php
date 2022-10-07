@@ -966,7 +966,7 @@ abstract class Catalog extends database_object
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', (int)$new_enabled, $catalog_id, '75');
+        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id, '75');
     } // update_enabled
 
     /**
@@ -976,9 +976,9 @@ abstract class Catalog extends database_object
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param boolean $value
-     * @param integer $catalog_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $catalog_id
+     * @param int $level
      * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)

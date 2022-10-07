@@ -444,7 +444,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * update_file
      * sets the file path
-     * @param boolean $path
+     * @param string $path
      * @param integer $id
      */
     public static function update_file($path, $id)
@@ -459,12 +459,12 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param integer $value
-     * @param integer $song_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $episode_id
+     * @param int $level
      * @return boolean
      */
-    private static function _update_item($field, $value, $song_id, $level)
+    private static function _update_item($field, $value, $episode_id, $level)
     {
         /* Check them Rights! */
         if (!Access::check('interface', $level)) {
@@ -477,7 +477,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         $sql = "UPDATE `podcast_episode` SET `$field` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $song_id));
+        Dba::write($sql, array($value, $episode_id));
 
         return true;
     } // _update_item
