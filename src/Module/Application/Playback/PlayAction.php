@@ -224,15 +224,20 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($password)) {
             $password = $_REQUEST['p'] ?? '';
         }
-        $apikey = $_REQUEST['apikey'] ?? '';
-        $user   = null;
+        $apikey    = $_REQUEST['apikey'] ?? '';
+        $user      = null;
+        $user_auth = false;
         // If explicit user authentication was passed
         if (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
+            if ($user) {
+                $user_auth = true;
+            }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
-                $user    = User::get_from_username($auth['username']);
+                $user      = User::get_from_username($auth['username']);
+                $user_auth = true;
             }
         }
         // try the session ID as well
@@ -270,7 +275,7 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             // If require_session is set then we need to make sure we're legit
-            if ($use_auth && AmpConfig::get('require_session')) {
+            if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
                 if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
                     debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
                 } elseif (!Session::exists('stream', $session_id)) {
