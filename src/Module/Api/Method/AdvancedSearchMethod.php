@@ -157,7 +157,7 @@ final class AdvancedSearchMethod
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results, $user->id);
+                        echo Xml_Data::genres($results);
                         break;
                     case 'user':
                         echo Xml_Data::users($results);

@@ -1044,7 +1044,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Userflag::garbage_collection();
                 Label::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
-                self::update_artist_counts($current_id);
+                self::update_artist_counts();
             } // if updated
         } elseif ($this->mbid != $mbid) {
             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';

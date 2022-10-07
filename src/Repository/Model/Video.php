@@ -1167,7 +1167,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $time = time();
         }
 
-        self::_update_item('update_time', $time, $video_id, 75, true);
+        self::_update_item('update_time', $time, $video_id, 75);
     } // update_utime
 
     /**

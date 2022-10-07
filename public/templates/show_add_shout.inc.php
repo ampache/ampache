@@ -25,13 +25,16 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var string $data */
+/** @var  Ampache\Repository\Model\library_item $object */
+/** @var string $object_type */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
-    if ($data) {
+    if (!empty($data)) {
         $boxtitle .= ' (' . $data . ')';
     }
     Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>

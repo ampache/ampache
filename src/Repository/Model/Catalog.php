@@ -3180,7 +3180,7 @@ abstract class Catalog extends database_object
             // migrate linked tables first
             //Stats::migrate('artist', $row['maxid'], $row['minid']);
             Useractivity::migrate('artist', $row['maxid'], $row['minid']);
-            Recommendation::migrate('artist', $row['maxid'], $row['minid']);
+            Recommendation::migrate('artist', $row['maxid']);
             Share::migrate('artist', $row['maxid'], $row['minid']);
             Shoutbox::migrate('artist', $row['maxid'], $row['minid']);
             Tag::migrate('artist', $row['maxid'], $row['minid']);

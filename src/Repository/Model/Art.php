@@ -627,9 +627,8 @@ class Art extends database_object
 
     /**
      * read_from_images
-     * @param string $name
      */
-    private static function read_from_images($name = 'blankalbum.png')
+    private static function read_from_images()
     {
         $path = __DIR__ . '/../../../public/images/blankalbum.png';
         if (!Core::is_readable($path)) {

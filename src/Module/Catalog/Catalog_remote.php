@@ -251,13 +251,11 @@ class Catalog_remote extends Catalog
     /**
      * update_remote_catalog
      *
-     * Pulls the data from a remote catalog and adds any missing songs to the
-     * database.
-     * @param integer $type
+     * Pulls the data from a remote catalog and adds any missing songs to the database.
      * @return boolean
      * @throws Exception
      */
-    public function update_remote_catalog($type = 0)
+    public function update_remote_catalog()
     {
         set_time_limit(0);
 

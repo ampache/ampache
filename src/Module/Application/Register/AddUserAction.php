@@ -120,13 +120,13 @@ final class AddUserAction implements ApplicationActionInterface
 
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            $captcha         = captcha::solved();
+            $captcha = captcha::solved();
             if (!isset($captcha)) {
                 AmpError::add('captcha', T_('Captcha is required'));
             }
             if (isset($captcha)) {
                 if ($captcha) {
-                    $msg="SUCCESS";
+                    $msg = "SUCCESS";
                 } else {
                     AmpError::add('captcha', T_('Captcha failed'));
                 }

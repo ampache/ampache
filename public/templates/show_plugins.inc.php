@@ -23,6 +23,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 
+/** @var array $plugins */
+
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">

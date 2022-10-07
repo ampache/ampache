@@ -67,7 +67,7 @@ final class ShowDebugAction implements ApplicationActionInterface
 
         $configuration = AmpConfig::get_all();
         if (Core::get_request('autoupdate') == 'force') {
-            $version = AutoUpdate::get_latest_version(true);
+            AutoUpdate::get_latest_version(true);
         }
         require_once Ui::find_template('show_debug.inc.php');
 
