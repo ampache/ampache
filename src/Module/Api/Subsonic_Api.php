@@ -1678,10 +1678,10 @@ class Subsonic_Api
             $rid[]      = $object_ids;
             $object_ids = $rid;
         }
-        $user_data = User::get_user_data($user->id, 'playqueue_time');
-        $now_time  = time();
+        $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+        $now_time       = time();
         // don't scrobble after setting the play queue too quickly
-        if ($user_data['playqueue_time'] < ($now_time - 2)) {
+        if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
                 $time     = isset($input['time']) ? (int) $input['time'] / 1000 : time();
                 $previous = Stats::get_last_play($user->id, $client, $time);
@@ -2565,16 +2565,16 @@ class Subsonic_Api
         $current = (int)$input['current'];
         $media   = Subsonic_Xml_Data::_getAmpacheObject($current);
         if ($media->id) {
-            $response  = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
-            $position  = (int)((int)$input['position'] / 1000);
-            $client    = scrub_in($input['c'] ?? 'Subsonic');
-            $username  = $input['u'];
-            $user      = User::get_from_username($username);
-            $user_id   = $user->id;
-            $user_data = User::get_user_data($user_id, 'playqueue_time');
-            $time      = time();
+            $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
+            $position       = (int)((int)$input['position'] / 1000);
+            $client         = scrub_in($input['c'] ?? 'Subsonic');
+            $username       = $input['u'];
+            $user           = User::get_from_username($username);
+            $user_id        = $user->id;
+            $playqueue_time = (int)(User::get_user_data($user->id, 'playqueue_time')['playqueue_time'] ?? 0);
+            $time           = time();
             // wait a few seconds before smashing out play times
-            if ($user_data['playqueue_time'] < ($time - 2)) {
+            if ($playqueue_time < ($time - 2)) {
                 $previous = Stats::get_last_play($user_id, $client);
                 $type     = Subsonic_Xml_Data::_getAmpacheType($current);
                 // long pauses might cause your now_playing to hide
