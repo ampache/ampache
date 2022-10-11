@@ -50,7 +50,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,7 +64,6 @@ final class PlayAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-    private SongRepositoryInterface $songRepository;
 
     private UserRepositoryInterface $userRepository;
 
@@ -73,13 +71,11 @@ final class PlayAction implements ApplicationActionInterface
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
-        SongRepositoryInterface $songRepository,
         UserRepositoryInterface $userRepository
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
-        $this->songRepository        = $songRepository;
         $this->userRepository        = $userRepository;
     }
 
@@ -126,7 +122,7 @@ final class PlayAction implements ApplicationActionInterface
         $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $uid          = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
         $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -212,8 +208,8 @@ final class PlayAction implements ApplicationActionInterface
 
         // First things first, if we don't have a uid/oid stop here
         // Added $session_id here as user may not be specified but then ssid may be and will be checked later
-        if (empty($uid) && empty($session_id) && (!$share_id && !$secret && !$random)) {
-            debug_event('play/index', 'No object UID specified, nothing to play', 2);
+        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+            debug_event('play/index', 'No object OID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 
             return null;
@@ -228,86 +224,79 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($password)) {
             $password = $_REQUEST['p'] ?? '';
         }
-        $apikey = $_REQUEST['apikey'] ?? '';
-        $user   = null;
+        $apikey    = $_REQUEST['apikey'] ?? '';
+        $user      = null;
+        $user_auth = false;
         // If explicit user authentication was passed
-        $user_authenticated = false;
         if (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
-            if ($user != null) {
-                Session::createGlobalUser($user);
-                $uid = $user->id;
-                Preference::init();
-                $user_authenticated = true;
+            if ($user) {
+                $user_auth = true;
             }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
-                $user = User::get_from_username($auth['username']);
-                $uid  = $user->id;
-                Session::createGlobalUser($user);
-                Preference::init();
-                $user_authenticated = true;
+                $user      = User::get_from_username($auth['username']);
+                $user_auth = true;
             }
         }
-
-        if (empty($uid) && (!$share_id && !$secret)) {
-            debug_event('play/index', 'No user specified', 2);
-            header('HTTP/1.1 400 No User Specified');
-
-            return null;
+        // try the session ID as well
+        if ($user == null) {
+            $user = User::get_from_username(Session::username($session_id));
         }
 
         $session_name = AmpConfig::get('session_name');
         // Identify the user according to it's web session
         // We try to avoid the generic 'Ampache User' as much as possible
-        if (array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
+        if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
             Session::check();
             $user = (array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : new User(-1);
-            $uid  = $user->id;
         }
+
+        // did you pass a specific user id? (uid)
+        $user_id = ($user instanceof User)
+            ? $user->id
+            : $user_id;
 
         if (!$share_id) {
             // No explicit authentication, use session
-            if (!$user_authenticated) {
-                $user = new User($uid);
-                Session::createGlobalUser($user);
-                Preference::init();
+            if (!$user instanceof User) {
+                $user = new User($user_id);
+            }
 
-                // If the user has been disabled (true value)
-                if (make_bool($user->disabled)) {
-                    debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
-                    header('HTTP/1.1 403 User disabled');
+            // If the user has been disabled (true value)
+            if (make_bool($user->disabled)) {
+                debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
+                header('HTTP/1.1 403 User disabled');
 
-                    return null;
-                }
+                return null;
+            }
 
-                // If require_session is set then we need to make sure we're legit
-                if ($use_auth && AmpConfig::get('require_session')) {
-                    if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
-                        debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
-                    } elseif (!Session::exists('stream', $session_id)) {
-                        // No valid session id given, try with cookie session from web interface
-                        $session_id = $_COOKIE[$session_name];
-                        if (!Session::exists('interface', $session_id)) {
-                            debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
-                            header('HTTP/1.1 403 Session Expired');
+            // If require_session is set then we need to make sure we're legit
+            if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
+                    debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
+                } elseif (!Session::exists('stream', $session_id)) {
+                    // No valid session id given, try with cookie session from web interface
+                    $session_id = $_COOKIE[$session_name] ?? false;
+                    if (!Session::exists('interface', $session_id)) {
+                        debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
+                        header('HTTP/1.1 403 Session Expired');
 
-                            return null;
-                        }
+                        return null;
                     }
-                    // Now that we've confirmed the session is valid extend it
-                    Session::extend($session_id, 'stream');
                 }
+                // Now that we've confirmed the session is valid extend it
+                Session::extend($session_id, 'stream');
             }
 
             // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
-            $uid   = 0;
-            $share = new Share((int) $share_id);
+            $user_id = 0;
+            $share   = new Share((int) $share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
@@ -322,11 +311,18 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             $user = new User($share->user);
-            Session::createGlobalUser($user);
-            Preference::init();
         }
 
-        // If we are in demo mode.. die here
+        if (!($user instanceof User) && (!$share_id && !$secret)) {
+            debug_event('play/index', 'No user specified {' . print_r($user, true) . '}', 2);
+            header('HTTP/1.1 400 No User Specified');
+
+            return null;
+        }
+        Session::createGlobalUser($user);
+        Preference::init();
+
+        // If we are in demo mode; die here
         if (AmpConfig::get('demo_mode')) {
             throw new AccessDeniedException(
                 'Streaming Access Denied: Disable demo_mode in \'config/ampache.cfg.php\''
@@ -356,7 +352,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($type == 'playlist' && isset($playlist_type)) {
             $playlist = new Stream_Playlist($object_id);
             // Some rudimentary security
-            if ($uid != $playlist->user) {
+            if ($user_id != $playlist->user) {
                 throw new AccessDeniedException();
             }
 
@@ -526,11 +522,6 @@ final class PlayAction implements ApplicationActionInterface
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
-            // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
-            if (!empty($tmp_playlist)) {
-                $tmp_playlist->delete_track($object_id);
-            }
-
             debug_event('play/index', "Media " . $stream_file . " ($media->title) does not have a valid filename specified", 2);
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
 
@@ -575,10 +566,10 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                    Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 }
             } else {
-                Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download', $time);
+                Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
             }
 
             // Check to see if we should be throttling because we can get away with it
@@ -794,21 +785,21 @@ final class PlayAction implements ApplicationActionInterface
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
                 if (($action != 'download') && $record_stats) {
-                    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                    Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
+                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }
                     }
                 } elseif (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
-                        Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                        debug_event('play/index', 'Registering download for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
+                        Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                     }
                 } elseif ($share_id) {
                     // shares are people too
