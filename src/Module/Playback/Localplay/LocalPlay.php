@@ -313,7 +313,7 @@ class LocalPlay
      * There is an expected array format
      * @return array|false
      */
-    public function status()
+    public function status(): array
     {
         $data = $this->_player->status();
 
@@ -602,7 +602,7 @@ class LocalPlay
      * This loads the fields from the Localplay
      * player and returns them
      */
-    public function get_instance_fields()
+    public function get_instance_fields(): array
     {
         return $this->_player->instance_fields();
     } // get_instance_fields
