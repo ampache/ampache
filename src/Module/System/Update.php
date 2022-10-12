@@ -4681,7 +4681,7 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `podcast` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "UPDATE `podcast`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`object_id`;";
+        $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;";
         Dba::write($sql);
 
         return $retval;
