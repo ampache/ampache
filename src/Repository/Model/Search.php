@@ -566,9 +566,9 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged', T_('My Loved Songs'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_album', T_('My Loved Albums'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_artist', T_('My Loved Artists'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $this->_add_type_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
             $this->_add_type_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
