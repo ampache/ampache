@@ -881,6 +881,20 @@ class Search extends playlist_object
         $this->_add_type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
+        $t_play_data = T_('Play History');
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
+
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
         $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
@@ -904,6 +918,20 @@ class Search extends playlist_object
         );
         $this->_add_type_select('state', T_('State'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+
+        $t_play_data = T_('Play History');
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
@@ -3282,6 +3310,70 @@ class Search extends playlist_object
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;
+                case 'played':
+                    $where[]                 = "`podcast_episode`.`played` = '$sql_match_operator'";
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'last_play':
+                    $my_type = 'podcast';
+                    if (!array_key_exists('last_play', $table)) {
+                        $table['last_play'] = '';
+                    }
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `podcast`.`id` = `last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[]                 = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
+                case 'last_skip':
+                    $my_type = 'podcast_episode';
+                    if (!array_key_exists('last_skip', $table)) {
+                        $table['last_skip'] = '';
+                    }
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type' "
+                        : "";
+                    $where[]                 = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'last_play_or_skip':
+                    $my_type = 'podcast_episode';
+                    if (!array_key_exists('last_play_or_skip', $table)) {
+                        $table['last_play_or_skip'] = '';
+                    }
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[]                 = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $join['podcast_episode'] = true;
+                    break;
+                case 'played_times':
+                    $where[]                 = "(`podcast`.`total_count` $sql_match_operator ?)";
+                    $parameters[]            = $input;
+                    break;
+                case 'skipped_times':
+                    $where[]                 = "(`podcast`.`total_skip` $sql_match_operator ?)";
+                    $parameters[]            = $input;
+                    break;
+                case 'played_or_skipped_times':
+                    $where[]                 = "((`podcast`.`total_count` + `podcast`.`total_skip`) $sql_match_operator ?)";
+                    $parameters[]            = $input;
+                    break;
+                case 'play_skip_ratio':
+                    $where[]                 = "(((`podcast`.`total_count`/`podcast`.`total_skip`) * 100) $sql_match_operator ?)";
+                    $parameters[]            = $input;
+                    break;
+                case 'myplayed':
+                    $my_type      = 'podcast';
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    if (!array_key_exists('myplayed', $table)) {
+                        $table['myplayed'] = '';
+                    }
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `podcast`.`id` = `myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[]                 = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
+                    break;
                 case 'added':
                     $input                   = strtotime((string) $input);
                     $where[]                 = "`podcast_episode`.`addition_time` $sql_match_operator ?";
@@ -3409,6 +3501,67 @@ class Search extends playlist_object
                     $input        = strtotime((string) $input);
                     $where[]      = "`podcast_episode`.`pubdate` $sql_match_operator ?";
                     $parameters[] = $input;
+                    break;
+                case 'played':
+                    $where[] = "`podcast_episode`.`played` = '$sql_match_operator'";
+                    break;
+                case 'last_play':
+                    $my_type = 'podcast_episode';
+                    if (!array_key_exists('last_play', $table)) {
+                        $table['last_play'] = '';
+                    }
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
+                case 'last_skip':
+                    $my_type = 'podcast_episode';
+                    if (!array_key_exists('last_skip', $table)) {
+                        $table['last_skip'] = '';
+                    }
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type' "
+                        : "";
+                    $where[] = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
+                case 'last_play_or_skip':
+                    $my_type = 'podcast_episode';
+                    if (!array_key_exists('last_play_or_skip', $table)) {
+                        $table['last_play_or_skip'] = '';
+                    }
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
+                    break;
+                case 'played_times':
+                    $where[]      = "(`podcast_episode`.`total_count` $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'skipped_times':
+                    $where[]      = "(`podcast_episode`.`total_skip` $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'played_or_skipped_times':
+                    $where[]      = "((`podcast_episode`.`total_count` + `podcast_episode`.`total_skip`) $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'play_skip_ratio':
+                    $where[]      = "(((`podcast_episode`.`total_count`/`podcast_episode`.`total_skip`) * 100) $sql_match_operator ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'myplayed':
+                    $my_type      = 'podcast_episode';
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    if (!array_key_exists('myplayed', $table)) {
+                        $table['myplayed'] = '';
+                    }
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'added':
                     $input        = strtotime((string) $input);
