@@ -775,6 +775,9 @@ class Update
         $update_string = "* Drop channel table";
         $version[]     = array('version' => '600002', 'description' => $update_string);
 
+        $update_string = "* Add `total_skip` to podcast table";
+        $version[]     = array('version' => '600003', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4666,6 +4669,20 @@ class Update
         $retval = true;
         $sql    = "DROP TABLE IF EXISTS `channel`";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+    /** update_600003
+     *
+     * Add `total_skip` to podcast table
+     */
+    public static function update_600003(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `podcast`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
 
         return $retval;
     }
