@@ -869,6 +869,7 @@ class Search extends playlist_object
     {
         $t_podcasts = T_('Podcast');
         $this->_add_type_text('title', T_('Name'), $t_podcasts);
+        $this->_add_type_numeric('episode_count', T_('Episode Count'), 'numeric', $t_podcasts);
 
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
@@ -1893,7 +1894,7 @@ class Search extends playlist_object
                 case 'song_count':
                     if ($groupdisks) {
                         $table['play_count'] = "LEFT JOIN (SELECT MIN(`album`.`id`) AS `id`, SUM(`song_count`) AS `song_count` FROM `album` GROUP BY `album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`,`album`.`prefix`,`album`.`name`,`album`.`album_artist`,`album`.`release_type`,`album`.`release_status`,`album`.`mbid`,`album`.`year`,`album`.`original_year`,`album`.`mbid_group`) AS `album_song_count` ON `album`.`id` = `album_song_count`.`id`";
-                        $where[]             = "(`album_song_count`.`song_count` $sql_match_operator ?)";
+                        $where[]             = "`album_song_count`.`song_count` $sql_match_operator ?";
                     } else {
                         $where[]      = "(`album`.`song_count` $sql_match_operator ?)";
                     }
@@ -2360,11 +2361,11 @@ class Search extends playlist_object
                     break;
                 case 'album_count':
                     $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-                    $where[]      = "($group_column $sql_match_operator ?)";
+                    $where[]      = "$group_column $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`artist`.`song_count` $sql_match_operator ?)";
+                    $where[]      = "`artist`.`song_count` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'other_user':
@@ -3243,6 +3244,10 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'title':
                     $where[]      = "`podcast`.`title` $sql_match_operator ?";
+                    $parameters[] = $input;
+                    break;
+                case 'episode_count':
+                    $where[]      = "`podcast`.`episodes` $sql_match_operator ?";
                     $parameters[] = $input;
                     break;
                 case 'podcast_episode':
