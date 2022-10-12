@@ -566,6 +566,9 @@ class Search extends playlist_object
             $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
             $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
+            $this->_add_type_boolean('my_flagged', T_('My Loved Songs'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_album', T_('My Loved Albums'), 'boolean', $t_ratings);
+            $this->_add_type_boolean('my_flagged_artist', T_('My Loved Artists'), 'boolean', $t_ratings);
             $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
             $this->_add_type_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
             $this->_add_type_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
@@ -2833,6 +2836,23 @@ class Search extends playlist_object
                     $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id` = `song`.`$column`"
                         : "";
+                    break;
+                case 'my_flagged':
+                case 'my_flagged_album':
+                case 'my_flagged_artist':
+                    // combine these as they all do the same thing just different tables
+                    $looking      = str_replace('my_flagged_', '', $rule[0]);
+                    $column       = ($looking == 'my_flagged') ? 'id' : $looking;
+                    $my_type      = ($looking == 'my_flagged') ? 'song' : $looking;
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    if (!array_key_exists('my_flagged_', $table)) {
+                        $table['my_flagged_'] = '';
+                    }
+                    $table['my_flagged_'] .= (!strpos((string) $table['my_flagged_'], "my_flagged__" . $my_type . "_" . $user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user_flag`.`object_type` = '$my_type' AND `user_flag`.`count_type` = 'stream' AND `user_flag`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `my_flagged__" . $my_type . "_" . $user_id . "` ON `song`.`$column` = `my_flagged__" . $my_type . "_" . $user_id . "`.`object_id` AND `my_flagged__" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                        : "";
+                    $where[] = "`my_flagged__" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
                     break;
                 case 'other_user':
                 case 'other_user_album':
