@@ -491,7 +491,7 @@
                     return false;
                 } else {
                     index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
-                    if (0 <= index && index < this.playlist.length) {
+                    if (0 <= index && index <= this.playlist.length) {
                         this.removing = true;
                         // re-index the list
                         $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
@@ -625,19 +625,21 @@
         },
         next: function() {
             var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
+            console.log("next " + index);
 
             if (this.loop) {
                 // repeat the track
                 this.play(this.current);
             } else {
-                // play the next track if there is one
                 if (index > 0) {
+                    // play the next track if there is one
                     this.play(index);
                 } else {
-                    // The index will be zero if it just looped round
-                    startIndex = index - this.options.playlistOptions.removeCount;
+                    // The index will be zero if it just looped round so just check for removal
+                    startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
                     if (index === 0 && this.options.playlistOptions.removePlayed) {
-                        this.remove(0)
+                        console.log("startIndex " + startIndex);
+                        this.removeBefore(startIndex);
                     }
                 }
             }
