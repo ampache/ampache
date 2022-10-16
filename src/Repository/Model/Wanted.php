@@ -165,7 +165,7 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && ($artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
+                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && (!empty($artist) && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
                             if ($wanted->id) {
