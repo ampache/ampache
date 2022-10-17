@@ -436,10 +436,10 @@
                     if (0 <= index && index < this.playlist.length) {
                         this.removing = true;
                         // I think this part is irrelevant now
-                        //if ("playlist" === jplaylist.type) {
+                        // if ("playlist" === jplaylist.type) {
                         //    var trackId = $($(".jp-playlist-item-remove")[index]).parent().parent().attr("track_id");
                         //    jplaylist.rmTrack(trackId, jplaylist.name);
-                        //}
+                        // }
 
                         $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                             var htmlIndex = parseInt($(playlistRow).attr("name"),10);

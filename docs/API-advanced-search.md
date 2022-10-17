@@ -106,7 +106,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | play_skip_ratio          | Played/Skipped ratio                    | numeric           |                                 song                                  |
 | last_play                | My Last Play                            | days              |                          song, album, artist                          |
 | played                   | Played                                  | boolean           |                                 song                                  |
-| myplayed                 | Played by Me                            | boolean           |                          song, album, artist                          |
+| myplayed                 | Played by Me                            | boolean           |             song, album, artist, podcast, podcast_episode             |
 | myplayedalbum            | Played by Me (Album)                    | boolean           |                                 song                                  |
 | myplayedartist           | Played by Me (Artist)                   | boolean           |                              song, album                              |
 | album_count              | Album Count                             | numeric           |                                artist                                 |
