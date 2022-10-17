@@ -21,7 +21,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Change to master branch
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
-  * src/Config/Init/InitializationHandlerConfig.php (Set VERSION and CONFIG_VERSION)
+  * src/Config/Init/InitializationHandlerConfig.php (Search for "// AMPACHE_VERSION" to find the lines that need updating)
   * src/Module/Api/Api.php (Set $version and $version_numeric)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
