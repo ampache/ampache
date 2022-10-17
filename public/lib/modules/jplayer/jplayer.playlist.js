@@ -30,7 +30,7 @@
 
         this.current = 0;
         this.loop = false; // Flag used with the jPlayer repeat event
-        this.shuffled = false;
+        this.shuffling = false;
         this.removing = false; // Flag is true during remove animation, disabling the remove() method until complete.
         this.cssSelector = $.extend({}, this._cssSelector, cssSelector); // Object: Containing the css selectors for jPlayer and its cssSelectorAncestor
         this.options = $.extend(true, {
@@ -117,16 +117,13 @@
 
         $(this.cssSelector.shuffle).click(function(event) {
             event.preventDefault();
-            if (self.shuffled && $(self.cssSelector.jPlayer).jPlayer("option", "useStateClassSkin")) {
-                self.shuffle(false);
-            } else {
-                self.shuffle(true);
-            }
+            self.shuffle();
             self.blur(this);
         });
         $(this.cssSelector.shuffleOff).click(function(event) {
             event.preventDefault();
-            self.shuffle(false);
+            self.shuffling = false;
+            self.shuffle();
             self.blur(this);
         }).hide();
 
@@ -329,13 +326,13 @@
                 $(this.cssSelector.playlist + " ." + this.options.playlistOptions.removeItemClass).hide();
             }
 
-            if (this.shuffled) {
+            if (this.shuffling) {
                 $(this.cssSelector.jPlayer).jPlayer("addStateClass", "shuffled");
             } else {
                 $(this.cssSelector.jPlayer).jPlayer("removeStateClass", "shuffled");
             }
             if ($(this.cssSelector.shuffle).length && $(this.cssSelector.shuffleOff).length) {
-                if (this.shuffled) {
+                if (this.shuffling) {
                     $(this.cssSelector.shuffleOff).show();
                     $(this.cssSelector.shuffle).hide();
                 } else {
@@ -439,10 +436,10 @@
                     if (0 <= index && index < this.playlist.length) {
                         this.removing = true;
                         // I think this part is irrelevant now
-                        //if ("playlist" === jplaylist.type) {
+                        // if ("playlist" === jplaylist.type) {
                         //    var trackId = $($(".jp-playlist-item-remove")[index]).parent().parent().attr("track_id");
                         //    jplaylist.rmTrack(trackId, jplaylist.name);
-                        //}
+                        // }
 
                         $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                             var htmlIndex = parseInt($(playlistRow).attr("name"),10);
@@ -494,7 +491,7 @@
                     return false;
                 } else {
                     index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
-                    if (0 <= index && index < this.playlist.length) {
+                    if (0 <= index && index <= this.playlist.length) {
                         this.removing = true;
                         // re-index the list
                         $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
@@ -628,18 +625,22 @@
         },
         next: function() {
             var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
+            console.log("next " + index);
 
             if (this.loop) {
-                // See if we need to shuffle before looping to start, and only shuffle if more than 1 item.
-                if (index === 0 && this.shuffled && this.options.playlistOptions.shuffleOnLoop && this.playlist.length > 1) {
-                    this.shuffle(true, true); // playNow
-                } else {
-                    this.play(index);
-                }
+                // repeat the track
+                this.play(this.current);
             } else {
-                // The index will be zero if it just looped round
                 if (index > 0) {
+                    // play the next track if there is one
                     this.play(index);
+                } else {
+                    // The index will be zero if it just looped round so just check for removal
+                    startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
+                    if (index === 0 && this.options.playlistOptions.removePlayed) {
+                        console.log("startIndex " + startIndex);
+                        this.removeBefore(startIndex);
+                    }
                 }
             }
         },
@@ -650,49 +651,45 @@
                 this.play(index);
             }
         },
-        shuffle: function(shuffled, playNow) {
+        shuffle: function() {
             var self = this;
-            if (typeof shuffled === "undefined") {
-                shuffled = !this.shuffled;
-            }
 
-            if (shuffled || shuffled !== this.shuffled) {
+            if (!self.shuffling) {
+                console.log("shuffle");
+                self.shuffling = true;
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
-                    self.shuffled = shuffled;
-                    if (shuffled) {
-                        var current_item = self.playlist[self.current];
-                        var final_list = [];
-                        var playlist_items = [];
-                        // push the current track first
-                        final_list.push(current_item);
-                        // remove the current track form the list
-                        $.each(self.playlist, function(i, media) {
-                            if (media !== current_item) {
-                                playlist_items.push(media);
-                            }
-                        });
-                        // shuffle remaining tracks
-                        playlist_items.sort(function(a, b){
-                            return 0.5 - Math.random();
-                        });
-                        $.each(playlist_items, function(i, media) {
-                            final_list.push(media);
-                        });
-                        // sorted!
-                        self.playlist = final_list
-                        self.current = 0;
-                        self.shuffled = false;
-                        self._refresh(true);
-                        // If a song is playing, it continues. If not playing it doesn't start playing.
-                        self._highlight(0);
-                    } else {
-                        self.shuffled = false;
-                        self._refresh(true); // Instant
-                        self.setCurrent(self.current);
-                    }
+                    var current_item = self.playlist[self.current];
+                    var final_list = [];
+                    var playlist_items = [];
+                    // push the current track first
+                    final_list.push(current_item);
+                    // remove the current track form the list
+                    $.each(self.playlist, function(i, media) {
+                        if (media !== current_item) {
+                            playlist_items.push(media);
+                        }
+                    });
+                    // shuffle remaining tracks
+                    playlist_items.sort(function(a, b){
+                        return 0.5 - Math.random();
+                    });
+                    $.each(playlist_items, function(i, media) {
+                        final_list.push(media);
+                    });
+                    // sorted!
+                    self.playlist = final_list
+                    self.current = 0;
+                    self.shuffling = false;
+                    self._refresh(true);
+                    // If a song is playing, it continues. If not playing it doesn't start playing.
+                    self._highlight(0);
 
                     $(this).slideDown(self.options.playlistOptions.shuffleTime);
                 });
+                console.log("current: " + self.current);
+                console.log(playlist_before);
+                console.log(self.playlist);
+                console.log("-----------");
             }
         },
         blur: function(that) {

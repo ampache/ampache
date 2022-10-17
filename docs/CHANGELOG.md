@@ -10,6 +10,7 @@
 * Update some docker files to match current images
 * webplayer
   * Another code rework, remove the old 'original' list
+  * Shuffle is an action instead of a state of the playlist
 
 ### Fixed
 
@@ -21,6 +22,7 @@
 * webplayer
   * Reordering the list could lose track of items
   * Remove single item from list could create a weird list
+  * Remove the final track when it's finished playing (if you've set that option)
 
 ## API 5.5.3
 
