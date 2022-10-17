@@ -165,7 +165,7 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && ($artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
+                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && (!empty($artist) && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
                             if ($wanted->id) {
@@ -283,7 +283,7 @@ class Wanted extends database_object
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access('75'))
+                $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access(75))
                     ? null
                     : Core::get_global('user')->id;
                 static::getWantedRepository()->deleteByMusicbrainzId(
@@ -299,7 +299,7 @@ class Wanted extends database_object
      */
     public function accept()
     {
-        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access('75')) {
+        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array($this->mbid));
             $this->accepted = true;
@@ -325,7 +325,7 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
+        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept');
         $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 
@@ -345,13 +345,13 @@ class Wanted extends database_object
     {
         if ($this->id) {
             if (!$this->accepted) {
-                if (Core::get_global('user')->has_access('75')) {
+                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
                     echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'),
                         'wanted_accept_' . $this->mbid);
                 }
             }
             if (
-                Core::get_global('user')->has_access('75') ||
+                Core::get_global('user')->has_access(75) ||
                 (
                     static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
                     $this->accepted != '1'
