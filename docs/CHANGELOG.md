@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.3-develop
+## Ampache 5.5.3-release
 
 ### Changed
 
