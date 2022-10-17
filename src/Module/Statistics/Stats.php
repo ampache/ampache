@@ -149,7 +149,7 @@ class Stats
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "DELETE FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ?";
                 Dba::write($sql, array($row['date'], $row['user'], $row['agent'], $row['count_type']));
-                if (in_array($row['object_type'], array('song', 'album', 'video', 'podcast_episode')) && $row['count_type'] === 'stream' && $row['user'] > 0 && $row['agent'] !== 'debug') {
+                if (in_array($row['object_type'], array('song', 'album', 'video', 'podcast', 'podcast_episode')) && $row['count_type'] === 'stream' && $row['user'] > 0 && $row['agent'] !== 'debug') {
                     self::count($row['object_type'], $row['object_id'], 'down');
                 }
             }
@@ -163,6 +163,7 @@ class Stats
     {
         switch ($type) {
             case 'song':
+            case 'podcast':
             case 'podcast_episode':
             case 'video':
                 $sql = ($count_type == 'down')
@@ -234,10 +235,10 @@ class Stats
 
         // the count was inserted
         if ($db_results) {
-            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
+            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
                 self::count($type, $object_id);
                 // don't register activity for album or artist plays
-                if (!in_array($type, array('album', 'artist'))) {
+                if (!in_array($type, array('album', 'artist', 'podcast'))) {
                     static::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
                 }
             }

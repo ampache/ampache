@@ -1908,7 +1908,7 @@ class Search extends playlist_object
                             $table['favorite'] = '';
                         }
                         $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$other_userid"))
-                            ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` ON `song`.`album` = `favorite_album_$other_userid`.`object_id` AND `favorite_album_$other_userid`.`object_type` = 'album'"
+                            ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` ON `album`.`id` = `favorite_album_$other_userid`.`object_id` AND `favorite_album_$other_userid`.`object_type` = 'album'"
                             : "";
                     } else {
                         $column  = 'id';
