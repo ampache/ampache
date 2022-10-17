@@ -180,8 +180,9 @@ class AmpacheVlc extends localplay_controller
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields             = array();
         $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
         $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
@@ -540,7 +541,7 @@ class AmpacheVlc extends localplay_controller
      * This works as in requesting the status.xml file from VLC.
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
@@ -556,6 +557,7 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
+        $array           = array();
         $array['state']  = $state ?? '';
         $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat'] = $arrayholder['root']['repeat']['value'];

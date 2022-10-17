@@ -1,11 +1,43 @@
 # CHANGELOG
 
+## Ampache 5.5.3-release
+
+### Changed
+
+* Update copyright year in footer.inc.php
+* Localplay status and instance_fields function cleanup
+* Update some docker files to match current images
+* Allow adding streams to playlists (including rightbar)
+* webplayer
+  * Another code rework, remove the old 'original' list
+  * Shuffle is an action instead of a state of the playlist
+
+### Fixed
+
+* Hidden Genres shouldn't have a catalog
+* Streaming with certain parameters could not identify a session/user
+* Should be counting podcast objects in stats
+* Null artist->id on wanted pages
+* Search
+  * Album 'other_user' favorite searches
+* SubSonic
+  * Error if you didn't have data when using get_user_data
+  * Response data might fall back to mp3 and not match the output format
+* webplayer
+  * Reordering the list could lose track of items
+  * Remove single item from list could create a weird list
+  * Remove the final track when it's finished playing (if you've set that option)
+
+## API 5.5.3
+
+**NO CHANGE**
+
 ## Ampache 5.5.2-release
 
 ### Added
 
 * Check for upload_catalog before showing upload pages
-* search
+* Search
   * Class rework and many additional aliases, check the docs for [advanced_search](https://ampache.org/api/api-advanced-search)
   * Add `song_artist` as a search type (uses artist rules)
   * Add `album_artist` as a search type (uses artist rules)
@@ -43,7 +75,7 @@
 * Insert Podcasts more often in catalog_map
 * Subsonic basic auth may get filtered
 * Don't filter auth in the PlayAction if sent
-* search
+* Search
   * Correctly identify alias rule types
   * Bad SQL on 0 rating query for album/artist search
 * webplayer
