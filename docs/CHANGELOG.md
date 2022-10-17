@@ -8,6 +8,7 @@
 * Update copyright year in footer.inc.php
 * Localplay status and instance_fields function cleanup
 * Update some docker files to match current images
+* Allow adding streams to playlists (including rightbar)
 * webplayer
   * Another code rework, remove the old 'original' list
   * Shuffle is an action instead of a state of the playlist
@@ -16,6 +17,10 @@
 
 * Hidden Genres shouldn't have a catalog
 * Streaming with certain parameters could not identify a session/user
+* Should be counting podcast objects in stats
+* Null artist->id on wanted pages
+* Search
+  * Album 'other_user' favorite searches
 * SubSonic
   * Error if you didn't have data when using get_user_data
   * Response data might fall back to mp3 and not match the output format
