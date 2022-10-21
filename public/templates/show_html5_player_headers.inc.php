@@ -92,8 +92,9 @@ if ($iframed || $isShare) { ?>
 <script>
     function ExitPlayer()
     {
-        $("#webplayer").text('');
-        $("#webplayer").hide();
+        var webPlayer = document.querySelector("#webplayer");
+        webPlayer.textContent = "";
+        webPlayer.style.display = "none";
 
         <?php
         if (AmpConfig::get('song_page_title')) {
@@ -104,23 +105,37 @@ if ($iframed || $isShare) { ?>
 
     function TogglePlayerVisibility()
     {
-        if ($("#webplayer").is(":visible")) {
-            $("#webplayer").slideUp();
+        // Vanilla version of jQuery slideUp/Down
+        // Need to keep using 'display' as many other things test webplayer for visibility
+        var webPlayer = document.querySelector('#webplayer');
+
+        if (webPlayer.style.display !== 'none') {
+            let doAnimate = webPlayer.animate({ transform: 'translateY(100%)' }, { duration: 400, easing: 'ease-in' });
+            doAnimate.onfinish = function() {
+                webPlayer.style.transform = 'translateY(100%)';
+                webPlayer.style.display = 'none';
+            };
         } else {
-            $("#webplayer").slideDown();
+            webPlayer.style.display = 'block';
+            let doAnimate = webPlayer.animate({ transform: 'translateY(0%)' }, { duration: 400, easing: 'ease-in' });
+            doAnimate.onfinish = function() {
+                webPlayer.style.transform = 'translateY(0%)';
+            };
         }
     }
 
     function TogglePlaylistExpand()
     {
-        if ($(".jp-playlist").css("opacity") !== '1') {
-            $(".jp-playlist").css('top', '-255%');
-            $(".jp-playlist").css('opacity', '1');
-            $(".jp-playlist").css('height', '350%');
+        var jpPlaylist = document.querySelector('.jp-playlist');
+
+        if (jpPlaylist.style.opacity !== '1') {
+            jpPlaylist.style.top = '-255%';
+            jpPlaylist.style.opacity = '1';
+            jpPlaylist.style.height = '350%';
         } else {
-            $(".jp-playlist").css('top', '0px');
-            $(".jp-playlist").css('opacity', '0.9');
-            $(".jp-playlist").css('height', '95%');
+            jpPlaylist.style.top = '0px';
+            jpPlaylist.style.opacity = '0.9';
+            jpPlaylist.style.height = '95%';
         }
     }
 </script>
@@ -191,7 +206,7 @@ if ($iframed) { ?>
 
         function isVisualizerEnabled()
         {
-            return ($('#uberviz').css('visibility') == 'visible');
+            return document.querySelector('#uberviz').style.visibility === 'visible';
         }
 
         var vizInitialized = false;
@@ -200,34 +215,34 @@ if ($iframed) { ?>
         function ShowVisualizer()
         {
             if (isVisualizerEnabled()) {
-                $('#uberviz').css('visibility', 'hidden');
-                $('#equalizerbtn').css('visibility', 'hidden');
-                $('#equalizer').css('visibility', 'hidden');
-                $('#header').css('background-color', vizPrevHeaderColor);
-                $('#webplayer').css('background-color', vizPrevPlayerColor);
-                $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-                $('.jp-playlist').css('background-color', 'rgb(20, 20, 20)');
+                document.querySelector('#uberviz').style.visibility = 'hidden';
+                document.querySelector('#equalizerbtn').style.visibility = 'hidden';
+                document.querySelector('#equalizer').style.visibility = 'hidden';
+                document.querySelector('#header').style.backgroundColor = vizPrevHeaderColor;
+                document.querySelector('#webplayer').style.backgroundColor = vizPrevPlayerColor;
+                document.querySelector('.jp-interface').style.backgroundColor = 'rgb(25, 25, 25)';
+                document.querySelector('.jp-playlist').style.backgroundColor = 'rgb(20, 20, 20)';
             } else {
                 // Resource not yet initialized? Do it.
                 if (!vizInitialized) {
                     if ((typeof AudioContext !== 'undefined') || (typeof webkitAudioContext !== 'undefined')) {
                         UberVizMain.init();
                         vizInitialized = true;
-                        AudioHandler.loadMediaSource($('.jp-jplayer').find('audio').get(0));
+                        AudioHandler.loadMediaSource(document.querySelector('.jp-jplayer audio'));
                     }
                 }
 
                 if (vizInitialized) {
-                    $('#uberviz').css('visibility', 'visible');
-                    $('#equalizerbtn').css('visibility', 'visible');
-                    vizPrevHeaderColor = $('#header').css('background-color');
-                    $('#header').css('background-color', 'transparent');
-                    vizPrevPlayerColor = $('#webplayer').css('background-color');
-                    $('#webplayer').css('cssText', 'background-color: #000 !important;');
-                    $('#webplayer').show();
-                    $("#webplayer-minimize").show();
-                    $('.jp-interface').css('background-color', '#000');
-                    $('.jp-playlist').css('background-color', '#000');
+                    vizPrevHeaderColor = document.querySelector('#header').style.backgroundColor;
+                    vizPrevPlayerColor = document.querySelector('#webplayer').style.backgroundColor;
+                    document.querySelector('#uberviz').style.visibility = 'visible';
+                    document.querySelector('#equalizerbtn').style.visibility = 'visible';
+                    document.querySelector('#header').style.backgroundColor = 'transparent';
+                    document.querySelector('#webplayer').style.setProperty('background-color', '#000', 'important');
+                    document.querySelector('#webplayer').style.display = 'block';
+                    document.querySelector('#webplayer-minimize').style.display = 'block';
+                    document.querySelector('.jp-interface').style.backgroundColor = '#000';
+                    document.querySelector('.jp-playlist').style.backgroundColor = '#000';
                 } else {
                     alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
                 }
@@ -255,10 +270,11 @@ if ($iframed) { ?>
         function ShowEqualizer()
         {
             if (isVisualizerEnabled()) {
-                if ($('#equalizer').css('visibility') == 'visible') {
-                    $('#equalizer').css('visibility', 'hidden');
+                var equalizer = document.querySelector('#equalizer');
+                if (equalizer.style.visibility === 'visible') {
+                    equalizer.style.visibility = 'hidden';
                 } else {
-                    $('#equalizer').css('visibility', 'visible');
+                    equalizer.style.visibility = 'visible';
                 }
             }
         }
@@ -302,7 +318,7 @@ if ($iframed) { ?>
         function ToggleReplayGain()
         {
             if (replaygainNode === null) {
-                var mediaElement = $('.jp-jplayer').find('audio').get(0);
+                var mediaElement = document.querySelector('.jp-jplayer audio');
                 if (mediaElement) {
                     if (audioContext !== null) {
                         mediaSource = audioContext.createMediaElementSource(mediaElement);
@@ -320,9 +336,9 @@ if ($iframed) { ?>
                 ApplyReplayGain();
 
                 if (replaygainEnabled) {
-                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
+                    document.querySelector('#replaygainbtn').style.boxShadow = '0px 1px 0px 0px orange';
                 } else {
-                    $('#replaygainbtn').css('box-shadow', '');
+                    document.querySelector('#replaygainbtn').style.boxShadow = '';
                 }
             }
         }
@@ -389,8 +405,8 @@ if ($iframed) { ?>
 
     function ClickTimeOffset(e)
     {
-        var parrentOffset = $(".waveform").offset().left;
-        var offset = e.pageX - parrentOffset;
+        var parentOffset = document.querySelector('.waveform').getBoundingClientRect().left;
+        var offset = e.pageX - parentOffset;
         var duration = $("#jquery_jplayer_1").data("jPlayer").status.duration;
         var time = duration * (offset / 400);
 
@@ -399,12 +415,12 @@ if ($iframed) { ?>
 
     function ShowWaveform()
     {
-        $('.waveform').css('visibility', 'visible');
+        document.querySelector('.waveform').style.visibility = 'visible';
     }
 
     function HideWaveform()
     {
-        $('.waveform').css('visibility', 'hidden');
+        document.querySelector('.waveform').style.visibility = 'hidden';
     }
 <?php } ?>
 
@@ -428,16 +444,16 @@ if ($iframed) { ?>
         listenBroadcast();
 
         // Hide few UI information on listening mode
-        $('.jp-previous').css('visibility', 'hidden');
-        $('.jp-play').css('visibility', 'hidden');
-        $('.jp-pause').css('visibility', 'hidden');
-        $('.jp-next').css('visibility', 'hidden');
-        $('.jp-stop').css('visibility', 'hidden');
-        $('.jp-toggles').css('visibility', 'hidden');
-        $('.jp-playlist').css('visibility', 'hidden');
-        $('#broadcast').css('visibility', 'hidden');
+        document.querySelector('.jp-previous').style.visibility = 'hidden';
+        document.querySelector('.jp-play').style.visibility = 'hidden';
+        document.querySelector('.jp-pause').style.visibility = 'hidden';
+        document.querySelector('.jp-next').style.visibility = 'hidden';
+        document.querySelector('.jp-stop').style.visibility = 'hidden';
+        document.querySelector('.jp-toggles').style.visibility = 'hidden';
+        document.querySelector('.jp-playlist').style.visibility = 'hidden';
+        document.querySelector('#broadcast').style.visibility = 'hidden';
 
-        $('.jp-seek-bar').css('pointer-events', 'none');
+        document.querySelector('.jp-seek-bar').style.pointerEvents = 'none';
 
         brconn.onopen = function(e) {
             sendBroadcastMessage('AUTH_SID', '<?php echo Stream::get_session(); ?>');
@@ -479,7 +495,7 @@ if ($iframed) { ?>
                         }
                         break;
                     case 'SONG':
-                        addMedia($.parseJSON(atob(msg[1])));
+                        addMedia(JSON.parse(atob(msg[1])));
                         brLoadingSong = true;
                         // Buffering song position in case it is asked in the next sec.
                         // Otherwise we will move forward on the previous song instead of the new currently loading one
@@ -500,7 +516,7 @@ if ($iframed) { ?>
                         }
                         break;
                     case 'NB_LISTENERS':
-                        $('#broadcast_listeners').html(msg[1]);
+                        document.querySelector('#broadcast_listeners').innerHTML = msg[1];
                         break;
                     case 'INFO':
                         // Display information notification to user here
