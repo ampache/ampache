@@ -141,13 +141,16 @@ $t_logout          = T_('Log out'); ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        //
-        // Handles open/close of sidebar sections
-        //
-        var headers = document.querySelectorAll('#sidebar .header');
+        loadSidebarPanel();
 
-        headers.forEach(function(header) {
-            header.addEventListener('click', function() {
+        var sidebar = document.querySelector('#sidebar');
+
+        sidebar.addEventListener('click', function(e) {
+            //
+            // Handles open/close of sidebar sections
+            //
+            var header = e.target.closest('.header');
+            if (header) {
                 var panel = header.nextElementSibling;
                 panel.style.maxHeight = parseInt(panel.style.maxHeight) > 0 ? '0px' : panel.scrollHeight + "px";
 
@@ -156,37 +159,53 @@ $t_logout          = T_('Log out'); ?>
 
                 var sbstate = header.querySelector('.collapsed') ? 'collapsed': 'expanded';
                 Cookies.set('sb_' + header.querySelector('.header-img').getAttribute('id'), sbstate, {<?php echo $cookie_string ?>});
-            });
-        });
+            }
 
+            var tabIcon = e.target.closest('*[id^="sb_tab_"]');
+            if (tabIcon) {
+                loadSidebarPanel();
+            }
+        });
+    });
+
+    function loadSidebarPanel() {
         //
         // Initiates sidebar section visibility
         //
-        // Get a string of all the cookies.
-        var cookieArray = document.cookie.split(";");
-        var result = [];
-        // Create a key/value array with the individual cookies.
-        for (var elem in cookieArray) {
-            var temp = cookieArray[elem].split("=");
-            // We need to trim whitespaces.
-            temp[0] = temp[0].trim();
-            temp[1] = temp[1].trim();
-            // Only take sb_* cookies (= sidebar cookies)
-            if (temp[0].substring(0, 3) === "sb_") {
-                result[temp[0].substring(3)] = temp[1];
+
+        // waits for the ajaxed tab content to load
+        var checkExist = setInterval(function() {
+            if (document.querySelector('#sidebar-page')) {
+                clearInterval(checkExist);
+
+                // Get a string of all the cookies.
+                var cookieArray = document.cookie.split(";");
+                var result = [];
+                // Create a key/value array with the individual cookies.
+                for (var elem in cookieArray) {
+                    var temp = cookieArray[elem].split("=");
+                    // We need to trim whitespaces.
+                    temp[0] = temp[0].trim();
+                    temp[1] = temp[1].trim();
+                    // Only take sb_* cookies (= sidebar cookies)
+                    if (temp[0].substring(0, 3) === "sb_") {
+                        result[temp[0].substring(3)] = temp[1];
+                    }
+                }
+                // Finds the elements and if the cookie is collapsed, it collapsed the found element.
+                for (var key in result) {
+                    var list = document.querySelector('#sb_' + key);
+                    console.debug(list, key);
+                    var icon = document.querySelector('#' + key);
+                    if (list && icon && result[key] === "collapsed") {
+                        icon.classList.remove('expanded');
+                        icon.classList.add('collapsed')
+                        list.style.maxHeight = '0px';
+                    } else if (list) {
+                        list.style.maxHeight = list.scrollHeight + 'px';
+                    }
+                }
             }
-        }
-        // Finds the elements and if the cookie is collapsed, it collapsed the found element.
-        for (var key in result) {
-            var list = document.querySelector('#sb_' + key);
-            var icon = document.querySelector('#' + key);
-            if (icon && result[key] === "collapsed") {
-                icon.classList.remove('expanded');
-                icon.classList.add('collapsed')
-                list.style.maxHeight = '0px';
-            } else {
-                list.style.maxHeight = list.scrollHeight + 'px';
-            }
-        }
-    });
+        }, 100); // check every 100ms
+    }
 </script>
