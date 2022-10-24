@@ -34,6 +34,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 $web_path          = AmpConfig::get('web_path');
+$access100         = Access::check('interface', 100);
+$access25          = ($access100 || Access::check('interface', 25));
 $site_lang         = AmpConfig::get('lang');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
@@ -439,7 +441,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                     </a>
                 </div>
 
-                <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
+                <?php if (AmpConfig::get('ratings') && $access25) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
@@ -447,7 +449,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                     </a>
                 </div>
                 <?php } ?>
-                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
+                <?php if (AmpConfig::get('allow_upload') && $access25 && AmpConfig::get('upload_catalog') > 0) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
@@ -515,7 +517,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php if (Access::check('interface', 100)) {
+                <?php if ($access100) {
                             echo '<div id=update_notify>';
                             //if (!AmpConfig::get('hide_ampache_messages', false)) {
                             //    AutoUpdate::show_ampache_message();

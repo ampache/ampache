@@ -28,6 +28,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 /** @var \Ampache\Repository\Model\User $client */
+
+$access100      = Access::check('interface', 100);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">
@@ -78,7 +80,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
                 <?php } ?>
             </td>
@@ -93,7 +95,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>

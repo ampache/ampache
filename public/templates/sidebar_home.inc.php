@@ -47,8 +47,8 @@ $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
-$access25        = Access::check('interface', 25);
 $access50        = Access::check('interface', 50);
+$access25        = ($access50 || Access::check('interface', 25));
 // expanded by default
 $state_home_browse   = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
     ? 'collapsed'

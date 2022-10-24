@@ -31,6 +31,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+$access50   = Access::check('interface', 50);
+$access25   = ($access50 || Access::check('interface', 25));
 $categories = Preference::get_categories(); ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
@@ -56,7 +58,7 @@ $categories = Preference::get_categories(); ?>
       <li id="sb_preference_prefs_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
     </ul>
   </li>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if ($access50) { ?>
     <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo $t_playlist; ?></span>
@@ -67,7 +69,7 @@ $categories = Preference::get_categories(); ?>
     </li>
 </ul>
 <?php } ?>
-<?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
+<?php if (AmpConfig::get('allow_upload') && $access25 && AmpConfig::get('upload_catalog') > 0) { ?>
             <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo $t_upload; ?></span>

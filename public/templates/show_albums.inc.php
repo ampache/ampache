@@ -37,13 +37,18 @@ use Ampache\Module\Util\Ui;
 /** @var string $limit_threshold */
 
 $web_path          = AmpConfig::get('web_path');
+$access25          = Access::check('interface', 25);
+$show_playlist_add = $access25;
+$show_direct_play  = AmpConfig::get('directplay');
+$directplay_limit  = AmpConfig::get('direct_play_limit', 0);
+// album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$group_release     = AmpConfig::get('album_release_type');
+$original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
 $is_table          = $browse->is_grid_view();
-$group_release     = AmpConfig::get('album_release_type');
-$original_year     = AmpConfig::get('use_original_year');
 $year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
 $album_text  = T_('Album');
@@ -108,21 +113,12 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             Rating::build_cache('album', $object_ids);
             Userflag::build_cache('album', $object_ids);
         }
-
-        $show_direct_play     = AmpConfig::get('directplay');
-        $directplay_limit     = AmpConfig::get('direct_play_limit');
-
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);
             $libitem->format(true, $limit_threshold);
-            $show_direct_play  = $show_direct_play;
-            $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
-                if ($show_direct_play) {
-                    $show_direct_play = $show_playlist_add;
-                }
+                $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
