@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Art;
 
 final class DbCollectorModule implements CollectorModuleInterface
 {
-
     /**
      * This function retrieves art that's already in the database
      */

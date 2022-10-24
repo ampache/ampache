@@ -58,9 +58,8 @@ final class AlbumArtistAction implements ApplicationActionInterface
         session_start();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->set_type('artist');
+        $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
-        $browse->set_album_artist(true);
 
         $this->ui->showHeader();
 

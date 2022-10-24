@@ -274,7 +274,6 @@ class AmpacheRss
         $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played(-1);
         $results = array();
 
-
         foreach ($data as $item) {
             $client = new User($item['user']);
             $song   = new Song($item['object_id']);

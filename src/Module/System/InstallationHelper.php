@@ -32,7 +32,6 @@ use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
-
     /**
      * splits up a standard SQL dump file into distinct sql queries
      * @param string $sql

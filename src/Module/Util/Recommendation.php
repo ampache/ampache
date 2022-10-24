@@ -37,7 +37,6 @@ use Ampache\Repository\Model\Song;
 
 class Recommendation
 {
-
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results

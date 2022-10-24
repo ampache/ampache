@@ -374,7 +374,6 @@ class AmpacheMpd extends localplay_controller
         return $this->_mpd->Pause();
     } // pause
 
-
     /**
      * volume
      * This tells MPD to set the volume to the parameter

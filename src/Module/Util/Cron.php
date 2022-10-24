@@ -43,7 +43,6 @@ use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
 {
-
     /**
      * set_cron_date
      * Record when the cron has finished.

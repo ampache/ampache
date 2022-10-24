@@ -509,7 +509,6 @@ class AmpacheUPnP extends localplay_controller
 
         $item = $this->_upnp->GetCurrentItem();
 
-
         $array['state']       = $this->_upnp->GetState();
         $array['volume']      = $this->_upnp->GetVolume();
         $array['repeat']      = false;

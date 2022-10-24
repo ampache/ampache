@@ -96,8 +96,7 @@ Ui::show_box_top($title, 'info-box'); ?>
     </span>
     <?php } ?>
 <?php } ?>
-<?php
-if (AmpConfig::get('show_played_times')) { ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
         /* HINT: Number of times an object has been played */

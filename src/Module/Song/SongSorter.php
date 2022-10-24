@@ -337,7 +337,6 @@ final class SongSorter implements SongSorterInterface
             }
             debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
 
-
             // Look for the folder art and copy that as well
             if ($old_dir != $directory) {
                 // don't move things into the same dir

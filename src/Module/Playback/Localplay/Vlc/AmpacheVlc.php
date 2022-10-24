@@ -44,7 +44,6 @@ class AmpacheVlc extends localplay_controller
     private $version     = 'Beta 0.2';
     private $description = 'Controls a VLC instance';
 
-
     /* Constructed variables */
     private $_vlc;
 

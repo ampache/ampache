@@ -74,7 +74,6 @@ use SimpleXMLElement;
  */
 class Subsonic_Api
 {
-
     /**
      * check_parameter
      * @param array $input

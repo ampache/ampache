@@ -50,7 +50,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     private RequestParserInterface $requestParser;
 
-
     private SlideshowInterface $slideshow;
 
     private AlbumRepositoryInterface $albumRepository;

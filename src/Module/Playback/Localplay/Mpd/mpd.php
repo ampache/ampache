@@ -450,7 +450,6 @@ class mpd
         $stats  = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
 
-
         if (!$stats || !$status) {
             return false;
         }

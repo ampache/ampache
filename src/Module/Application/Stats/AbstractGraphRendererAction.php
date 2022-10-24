@@ -35,7 +35,6 @@ use Ampache\Module\Util\Ui;
 
 abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 {
-
     /**
      * @throws ApplicationException
      */

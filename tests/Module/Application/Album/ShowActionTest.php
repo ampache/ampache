@@ -135,10 +135,16 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
+        $isEditAble = true;
 
         $albumId = 42;
 
         $album->album_suite = [1, 2, 3];
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -157,10 +163,6 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
-            ->once()
-            ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -175,7 +177,8 @@ class ShowActionTest extends MockeryTestCase
             ->with(
                 'show_album_group_disks.inc.php',
                 [
-                    'album' => $album
+                    'album' => $album,
+                    'isAlbumEditable' => $isEditAble,
                 ]
             )
             ->once();
@@ -307,10 +310,6 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $album->shouldReceive('isNew')
             ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
             ->once()
             ->andReturnFalse();
 

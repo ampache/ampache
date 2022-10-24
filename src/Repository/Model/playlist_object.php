@@ -121,11 +121,11 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access($user_id = null)
     {
-        if (!Access::check('interface', 25)) {
-            return false;
-        }
         if (Access::check('interface', 100)) {
             return true;
+        }
+        if (!Access::check('interface', 25)) {
+            return false;
         }
         // allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {

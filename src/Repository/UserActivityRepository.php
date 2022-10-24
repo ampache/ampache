@@ -29,7 +29,6 @@ use Ampache\Module\System\Dba;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {
-
     /**
      * @return int[]
      */

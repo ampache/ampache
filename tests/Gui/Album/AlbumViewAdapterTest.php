@@ -194,10 +194,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
         $albumId = 666;
         $webPath = 'some-path';
 
-        $this->album->shouldReceive('get_http_album_query_ids')
-            ->withArgs(['id'])
-            ->once()
-            ->andReturn($albumId);
+        $this->album->id = $albumId;
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
@@ -206,9 +203,9 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/batch.php?action=album&%s',
+                '%s/batch.php?action=album&id=%s',
                 $webPath,
-                $albumId
+                $this->album->id
             ),
             $this->subject->getBatchDownloadUrl()
         );

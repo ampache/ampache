@@ -55,8 +55,8 @@ final class AdminUpdateDatabaseCommand extends Command
             sprintf(T_('Ampache version: %s'), AmpConfig::get('version')),
             true
         );
-        /* HINT: config version string (e.g. 62) */
         $interactor->info(
+        /* HINT: config version string (e.g. 62) */
             sprintf(T_('Config version: %s'), AmpConfig::get('int_config_version')),
             true
         );
@@ -92,7 +92,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         if (Update::need_update()) {
             $interactor->info(
-                T_('The following updates need to be performed:'),
+                "\n" . T_('The following updates need to be performed:'),
                 true
             );
         }
@@ -123,7 +123,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
                 $interactor->info(
-                    $updateInfo['description'],
+                    "\n" . str_replace(array("<b>", "</b>"), "", (str_replace(array("<br />"), "\n", $updateInfo['description']))),
                     true
                 );
             }

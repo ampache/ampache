@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Search;
 
 final class TagSearch implements SearchInterface
 {
-
     /**
      * Handles the generation of the SQL for tag (genre) searches.
      * @param Search $search

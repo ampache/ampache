@@ -64,7 +64,6 @@ final class PlayAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
