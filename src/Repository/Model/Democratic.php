@@ -286,7 +286,7 @@ class Democratic extends Tmp_Playlist
             return $data[0]['object_id'];
         } else {
             $sql        = "SELECT `id` FROM `song` WHERE `enabled`='1'";
-            if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+            if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')->id);
             }
             $sql .= " ORDER BY RAND() LIMIT 1";

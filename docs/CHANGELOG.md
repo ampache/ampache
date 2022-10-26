@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Ampache 5.5.4-develop
+
+### Fixed
+
+* Don't use catalog_filter and rating_filter without a valid user
+* Search
+  * SQL for Artist `catalog` searches
+
+## API 5.5.4-develop
+
+### Fixed
+
+* User count in Api::ping and Api::handshake was doubled
+
 ## Ampache 5.5.3-release
 
 ### Changed
