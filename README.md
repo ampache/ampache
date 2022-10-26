@@ -8,16 +8,7 @@
 
 ## News
 
-Private catalogs have been given a lot of love and the update has now merged into develop.
-
-This feature will be released in Ampache 5.5.0 and will allow you to assign a catalog to multiple users instead of just one.
-
-Check out the [wiki](https://github.com/ampache/ampache/wiki/catalog-filters) for more information about this feature.
-
-
-The old and long ignored module [jPlayer](https://github.com/jplayer/jPlayer) has been forked into the base Ampache code.
-
-There have been a few fixes and changes to the module to make the webplayer a lot better to use.
+Ampache6 is about to shake up the develop branch. Keep track using the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details)
 
 ## Basics
 
@@ -62,7 +53,9 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 * PHP 7.1-7.4 (Ampache 4.x.x)
 * PHP 7.4 (Ampache 5.0.x and higher)
 * PHP 8.0 (Ampache 5.1.x and higher)
-* PHP 8.1 (Ampache 5.5.x and higher)
+* PHP 8.1 (Ampache 5.5.0 and higher)
+
+**NOTE** That php7.4 will not be released for Ampache6 but can still be used.
 
 * PHP modules:
   * PDO
