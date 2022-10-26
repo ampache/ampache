@@ -2397,7 +2397,7 @@ class Search extends playlist_object
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]         = "`catalog_se`.`catalog_id` $sql_match_operator ?";
+                    $where[]         = "`catalog_se`.`id` $sql_match_operator ?";
                     $parameters[]    = $input;
                     $join['catalog'] = true;
                     break;
