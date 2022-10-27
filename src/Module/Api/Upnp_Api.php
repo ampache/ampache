@@ -823,7 +823,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
-                            $album_ids              = static::getAlbumRepository()->getByArtist($artist->id);
+                            $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
@@ -1597,7 +1597,7 @@ class Upnp_Api
             'id' => 'amp://music/artists/' . $artist->id,
             'parentID' => $parent,
             'restricted' => 'false',
-            'childCount' => $artist->albums,
+            'childCount' => $artist->album_count,
             'dc:title' => self::_replaceSpecialSymbols($artist->get_fullname()),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',

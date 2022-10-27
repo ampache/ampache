@@ -43,36 +43,37 @@ use Ampache\Module\Util\Ui;
 class Browse extends Query
 {
     private const BROWSE_TYPES = array(
-        'song',
         'album',
-        'user',
+        'album_disk',
         'artist',
-        'live_stream',
-        'playlist',
-        'playlist_media',
-        'playlist_localplay',
-        'smartplaylist',
+        'broadcast',
         'catalog',
+        'clip',
+        'democratic',
+        'label',
+        'license',
+        'live_stream',
+        'movie',
+        'personal_video',
+        'playlist',
+        'playlist_localplay',
+        'playlist_media',
+        'podcast',
+        'podcast_episode',
+        'pvmsg',
+        'share',
         'shoutbox',
+        'smartplaylist',
+        'song',
+        'song_preview',
         'tag',
         'tag_hidden',
-        'video',
-        'democratic',
-        'wanted',
-        'share',
-        'song_preview',
-        'broadcast',
-        'license',
         'tvshow',
-        'tvshow_season',
         'tvshow_episode',
-        'movie',
-        'clip',
-        'personal_video',
-        'label',
-        'pvmsg',
-        'podcast',
-        'podcast_episode'
+        'tvshow_season',
+        'user',
+        'video',
+        'wanted'
     );
 
     /**
@@ -287,17 +288,17 @@ class Browse extends Query
             case 'album':
                 Album::build_cache($object_ids);
                 $box_title         = T_('Albums') . $match;
-                $allow_group_disks = false;
-                if (is_array($argument)) {
-                    $allow_group_disks = $argument['group_disks'];
-                    if (array_key_exists('title', $argument)) {
-                        $box_title = $argument['title'];
-                    }
-                }
-                if (AmpConfig::get('album_group')) {
-                    $allow_group_disks = true;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
                 }
                 $box_req = Ui::find_template('show_albums.inc.php');
+                break;
+            case 'album_disk':
+                $box_title         = T_('Albums') . $match;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
+                }
+                $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
             case 'user':
                 $box_title = T_('Browse Users') . $match;

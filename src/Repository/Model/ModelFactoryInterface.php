@@ -53,6 +53,10 @@ interface ModelFactoryInterface
         ?int $albumId = null
     ): Album;
 
+    public function createAlbumDisk(
+        ?int $albumDiskId = null
+    ): AlbumDisk;
+
     public function createArtist(
         ?int $artistId = null
     ): Artist;

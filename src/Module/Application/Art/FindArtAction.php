@@ -64,7 +64,7 @@ final class FindArtAction extends AbstractArtAction
             throw new AccessDeniedException();
         }
 
-        $object_id = $item->id;
+        $object_id = $item->getId();
 
         $burl = '';
         if (isset($_GET['burl'])) {

@@ -22,57 +22,61 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Application\Art;
+namespace Ampache\Module\Application\Browse;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ClearArtAction extends AbstractArtAction
+final class AlbumDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'clear_art';
+    public const REQUEST_KEY = 'album_disk';
 
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->ui              = $ui;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        session_start();
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
-
-        $item = $this->getItem($gatekeeper);
-
-        if ($item === null) {
-            throw new AccessDeniedException();
-        }
-
-        $art = $this->modelFactory->createArt($item->getId(), $object_type);
-        $art->reset();
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type(static::REQUEST_KEY);
+        $browse->set_simple_browse(true);
 
         $this->ui->showHeader();
 
-        $this->ui->showContinue(
-            T_('No Problem'),
-            T_('Art information has been removed from the database'),
-            $burl
-        );
+        $this->ui->show('show_browse_form.inc.php');
+
+        // Browser is able to save page on current session. Only applied to main menus.
+        $browse->set_update_session(true);
+
+        $browse->set_filter('catalog', $_SESSION['catalog']);
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_sort('name', 'ASC');
+        $browse->update_browse_from_session(); // Update current index depending on what is in session.
+        $browse->show_objects();
+
+        $browse->store();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

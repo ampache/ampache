@@ -386,7 +386,6 @@ class Json_Data
         $JSON = [];
 
         Rating::build_cache('artist', $artists);
-
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if (!isset($artist->id)) {
@@ -402,7 +401,7 @@ class Json_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false)
+                ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), array(), $user_id, false)
                 : array();
             $songs = (in_array("songs", $include))
                 ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false)
@@ -412,7 +411,7 @@ class Json_Data
                 "id" => (string)$artist->id,
                 "name" => $artist->get_fullname(),
                 "albums" => $albums,
-                "albumcount" => (int) $artist->albums,
+                "albumcount" => (int)$artist->album_count ?? 0,
                 "songs" => $songs,
                 "songcount" => (int) $artist->songs,
                 "genre" => self::genre_array($artist->tags),
@@ -465,7 +464,6 @@ class Json_Data
             $album = new Album($album_id);
             $album->format();
 
-            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
             $year   = ($original_year && $album->original_year)
@@ -503,16 +501,11 @@ class Json_Data
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user_id, false)
                 : array();
 
-            // count multiple disks
-            if ($album->allow_group_disks) {
-                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
-            }
-
             $ourArray['time']          = (int) $album->total_duration;
             $ourArray['year']          = (int) $year;
             $ourArray['tracks']        = $songs;
             $ourArray['songcount']     = (int) $album->song_count;
-            $ourArray['diskcount']     = (int) $disk;
+            $ourArray['diskcount']     = (int) $album->disk_count;
             $ourArray['type']          = $album->release_type;
             $ourArray['genre']         = self::genre_array($album->tags);
             $ourArray['art']           = $art_url;
@@ -918,7 +911,6 @@ class Json_Data
             if (!$song->id) {
                 continue;
             }
-
             $song->format();
             $rating  = new Rating($song_id, 'song');
             $flag    = new Userflag($song_id, 'song');

@@ -79,6 +79,12 @@ final class ModelFactory implements ModelFactoryInterface
         return new Album($albumId);
     }
 
+    public function createAlbumDisk(
+        ?int $albumDiskId = null
+    ): AlbumDisk {
+        return new AlbumDisk($albumDiskId);
+    }
+
     public function createArtist(
         ?int $artistId = null
     ): Artist {

@@ -35,7 +35,6 @@ return [
     Album\DeleteAction::class => autowire(Album\DeleteAction::class),
     Album\ConfirmDeleteAction::class => autowire(Album\ConfirmDeleteAction::class),
     Album\UpdateFromTagsAction::class => autowire(Album\UpdateFromTagsAction::class),
-    Album\UpdateGroupFromTagsAction::class => autowire(Album\UpdateGroupFromTagsAction::class),
     Album\SetTrackNumbersAction::class => autowire(Album\SetTrackNumbersAction::class),
     Album\ShowMissingAction::class => autowire(Album\ShowMissingAction::class),
     Album\ShowAction::class => autowire(Album\ShowAction::class),

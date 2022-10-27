@@ -618,19 +618,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $limit_sql .= (string)($count);
         }
 
-        $sql = ($type == 'album')
-            ? "SELECT DISTINCT MIN(`tag_map`.`object_id`) AS `object_id` FROM `tag_map` LEFT JOIN `album` ON `tag_map`.`object_id` = `album`.`id` "
-            : "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` ";
-        $sql .= "WHERE $tag_sql `tag_map`.`object_type` = ?";
+        $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE $tag_sql `tag_map`.`object_type` = ?";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-        if ($type == 'album') {
-            if (AmpConfig::get('album_group')) {
-                $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`";
-            } else {
-                $sql .= " GROUP BY `album`.`id`, `album`.`disk`";
-            }
         }
         $sql .= $limit_sql;
         $db_results = Dba::read($sql, $sql_param);
@@ -706,7 +696,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $type_sql = (!empty($type))
                 ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
                 : "";
-            $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')))
+            $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
                 ? "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `name` IS NOT NULL "
                 : "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` $type_sql AND `tag`.`is_hidden` = false WHERE `name` IS NOT NULL ";
 

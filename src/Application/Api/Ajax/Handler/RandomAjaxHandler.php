@@ -81,20 +81,27 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $album = new Album($album_id[0]);
-                // songs for all disks
-                if (AmpConfig::get('album_group')) {
-                    $disc_ids = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc     = new Album($discid);
-                        $allsongs = $this->songRepository->getByAlbum($disc->id);
-                        foreach ($allsongs as $songid) {
-                            $songs[] = $songid;
-                        }
-                    }
-                } else {
-                    // songs for just this disk
-                    $songs = $this->songRepository->getByAlbum($album->id);
+                $songs = $this->songRepository->getByAlbum($album->id);
+
+                foreach ($songs as $song_id) {
+                    Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                break;
+            case 'album_disk':
+                $album_id = $this->albumRepository->getRandom(
+                    Core::get_global('user')->id ?? -1,
+                    null
+                );
+
+                if (empty($album_id)) {
+                    $results['rfc3514'] = '0x1';
+                    break;
+                }
+
+                $album = new Album($album_id[0]);
+                $songs = $this->songRepository->getByAlbum($album->id);
+
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

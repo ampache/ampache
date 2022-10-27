@@ -104,26 +104,15 @@ class AlbumViewAdapterTest extends MockeryTestCase
     {
         $id                 = 666;
         $albumSuiteSingle   = [1];
-        $albumSuiteMultiple = [1,2,3];
-
-        // single disc test
-        $this->album->album_suite = $albumSuiteSingle;
+        $albumSuiteMultiple = '666';
 
         $this->album->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($id);
 
-        $this->assertEquals(
-            $id,
-            $this->subject->getAlbumSuiteIds()
-        );
-
-        // multiple disc test
-        $this->album->album_suite = $albumSuiteMultiple;
-
         $this->assertSame(
-            implode(',', $albumSuiteMultiple),
+            $albumSuiteMultiple,
             $this->subject->getAlbumSuiteIds()
         );
     }

@@ -98,6 +98,18 @@ class Query
             'release_type',
             'random'
         ),
+        'album_disk' => array(
+            'name',
+            'year',
+            'original_year',
+            'artist',
+            'album_artist',
+            'generic_artist',
+            'song_count',
+            'total_count',
+            'release_type',
+            'random'
+        ),
         'artist' => array(
             'name',
             'album',
@@ -350,8 +362,10 @@ class Query
                 break;
             case 'artist':
             case 'album_artist':
+            case 'album_disk':
             case 'catalog':
             case 'album':
+            case 'disk':
             case 'hidden':
                 $this->_state['filter'][$key] = $value;
                 break;
@@ -567,113 +581,123 @@ class Query
         if (empty(self::$allowed_filters)) {
             self::$allowed_filters = array(
                 'song' => array(
-                    'add_lt',
                     'add_gt',
-                    'update_lt',
-                    'update_gt',
-                    'exact_match',
+                    'add_lt',
+                    'album',
+                    'album_disk',
                     'alpha_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'starts_with',
-                    'tag',
+                    'artist',
                     'catalog',
                     'catalog_enabled',
-                    'composer',
-                    'enabled'
-                ),
-                'album' => array(
-                    'add_lt',
-                    'add_gt',
-                    'update_lt',
-                    'update_gt',
-                    'starts_with',
+                    'disk',
+                    'enabled',
                     'exact_match',
-                    'alpha_match',
-                    'regex_match',
-                    'regex_not_match',
-                    'catalog',
-                    'catalog_enabled'
-                ),
-                'artist' => array(
-                    'add_lt',
-                    'add_gt',
-                    'update_lt',
-                    'update_gt',
-                    'exact_match',
-                    'alpha_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with',
                     'tag',
-                    'catalog',
-                    'catalog_enabled'
+                    'unplayed',
+                    'update_gt',
+                    'update_lt'
                 ),
-                'live_stream' => array(
-                    'exact_match',
+                'album' => array(
+                    'add_gt',
+                    'add_lt',
                     'alpha_match',
+                    'artist',
+                    'catalog',
+                    'catalog_enabled',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with',
-                    'catalog_enabled'
+                    'tag',
+                    'update_gt',
+                    'update_lt'
+                ),
+                'artist' => array(
+                    'add_gt',
+                    'add_lt',
+                    'album_artist',
+                    'alpha_match',
+                    'catalog',
+                    'catalog_enabled',
+                    'exact_match',
+                    'regex_match',
+                    'regex_not_match',
+                    'starts_with',
+                    'tag',
+                    'update_gt',
+                    'update_lt',
+                ),
+                'live_stream' => array(
+                    'alpha_match',
+                    'catalog_enabled',
+                    'exact_match',
+                    'regex_match',
+                    'regex_not_match',
+                    'starts_with'
                 ),
                 'playlist' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
+                    'playlist_type',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'smartplaylist' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
+                    'playlist_type',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'tag' => array(
-                    'tag',
-                    'object_type',
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
+                    'hidden',
                     'regex_match',
-                    'regex_not_match'
+                    'regex_not_match',
+                    'tag'
                 ),
                 'video' => array(
-                    'starts_with',
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
-                    'regex_not_match'
+                    'regex_not_match',
+                    'starts_with',
+                    'tag'
                 ),
                 'license' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'tvshow' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with',
-                    'year_lt',
+                    'year_eq',
                     'year_gt',
-                    'year_eq'
+                    'year_lt'
                 ),
                 'tvshow_season' => array(
-                    'season_lt',
-                    'season_lg',
-                    'season_eq'
+                    'season_eq',
+                    'season_gt',
+                    'season_lt'
                 ),
                 'user' => array(
                     'starts_with'
                 ),
                 'label' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
@@ -683,23 +707,23 @@ class Query
                     'regex_match',
                     'regex_not_match',
                     'starts_with',
-                    'user',
-                    'to_user'
+                    'to_user',
+                    'user'
                 ),
                 'follower' => array(
-                    'user',
                     'to_user',
+                    'user'
                 ),
                 'podcast' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
                 ),
                 'podcast_episode' => array(
-                    'exact_match',
                     'alpha_match',
+                    'exact_match',
                     'regex_match',
                     'regex_not_match',
                     'starts_with'
@@ -733,6 +757,7 @@ class Query
             case 'song':
             case 'catalog':
             case 'album':
+            case 'album_disk':
             case 'artist':
             case 'tag':
             case 'tag_hidden':
@@ -1039,7 +1064,11 @@ class Query
             switch ($this->get_type()) {
                 case 'album':
                     $this->set_select("`album`.`id`");
-                    $sql = "SELECT MIN(%%SELECT%%) AS `id` FROM `album` ";
+                    $sql = "SELECT %%SELECT%% AS `id` FROM `album` ";
+                    break;
+                case 'album_disk':
+                    $this->set_select("`album_disk`.`id`");
+                    $sql = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
                     break;
                 case 'artist':
                     $this->set_select("`artist`.`id`");
@@ -1324,9 +1353,7 @@ class Query
      */
     public function get_sql($limit = true)
     {
-        $sql = $this->get_base_sql();
-        //debug_event(self::class, 'get_sql query: ' . $sql, 5);
-
+        $sql        = $this->get_base_sql();
         $filter_sql = "";
         $join_sql   = "";
         $having_sql = "";
@@ -1341,11 +1368,7 @@ class Query
         $limit_sql = $limit ? $this->get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        // filter albums when you have grouped disks!
-        if ($this->get_type() == 'album' && !$is_custom && AmpConfig::get('album_group')) {
-            $album_artist = (array_key_exists('sort', $this->_state) && array_key_exists('album_artist', $this->_state['sort'])) ? " `artist`.`name`," : '';
-            $final_sql .= " GROUP BY" . $album_artist . " `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ";
-        } elseif (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
+        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$is_custom) {
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
@@ -1438,6 +1461,13 @@ class Query
                         break;
                     case 'album':
                         $filter_sql = " `song`.`album` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'album_disk':
+                        $this->set_join_and('LEFT', '`album_disk`', '`album_disk`.`album_id`', '`song`.`album`', '`album_disk`.`disk`', '`song`.`disk`', 100);
+                        $filter_sql = " `album_disk`.`id` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'disk':
+                        $filter_sql = " `song`.`disk` = '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'artist':
                         $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
@@ -1536,7 +1566,75 @@ class Query
                         break;
                 }
                 break;
+            case 'album_disk':
+                $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
+                switch ($filter) {
+                    case 'tag':
+                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
+                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+
+                        foreach ($value as $tag_id) {
+                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
+                        }
+                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
+                        break;
+                    case 'exact_match':
+                        $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'alpha_match':
+                        $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                        break;
+                    case 'regex_match':
+                        if (!empty($value)) {
+                            $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                        }
+                        break;
+                    case 'regex_not_match':
+                        if (!empty($value)) {
+                            $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                        }
+                        break;
+                    case 'starts_with':
+                        $this->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
+                        $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                        if ($this->catalog != 0) {
+                            $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
+                        }
+                        break;
+                    case 'artist':
+                        $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'add_lt':
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'add_gt':
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'update_lt':
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'update_gt':
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'catalog':
+                        if ($value != 0) {
+                            $filter_sql = " (`album_disk`.`catalog` = '$value') AND ";
+                        }
+                        break;
+                    case 'catalog_enabled':
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
+                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                        break;
+                    default:
+                        break;
+                }
+                break;
             case 'artist':
+                //debug_event(self::class, "get_sql: " . print_r($this->_state['filter'], true), 5);
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
@@ -1587,13 +1685,27 @@ class Query
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'catalog':
+                        $type = '\'artist\'';
+                        if ($this->get_filter('album_artist')) {
+                            $type = '\'album_artist\'';
+                        }
+                        if ($this->get_filter('song_artist')) {
+                            $type = '\'song_artist\'';
+                        }
                         if ($value != 0) {
-                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                             $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                        $type = '\'artist\'';
+                        if ($this->get_filter('album_artist')) {
+                            $type = '\'album_artist\'';
+                        }
+                        if ($this->get_filter('song_artist')) {
+                            $type = '\'song_artist\'';
+                        }
+                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
@@ -1769,6 +1881,9 @@ class Query
                             $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                         }
                         break;
+                    case 'starts_with':
+                        $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                        break;
                     default:
                         break;
                 } // end filter
@@ -1799,6 +1914,9 @@ class Query
                         break;
                     case 'year_eq':
                         $filter_sql = " `tvshow`.`year` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'starts_with':
+                        $filter_sql = " `tvshow`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     default:
                         break;
@@ -2008,10 +2126,37 @@ class Query
             case 'album':
                 switch ($field) {
                     case 'name':
-                        $sql = "`album`.`name` $order, `album`.`disk`";
-                        if (AmpConfig::get('album_group')) {
-                            $sql = "`album`.`name`";
-                        }
+                        $sql = "`album`.`name`";
+                        break;
+                    case 'generic_artist':
+                        $sql = "`artist`.`name`";
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`artist`', 'COALESCE(`album`.`album_artist`, `song`.`artist`)',
+                            '`artist`.`id`', 100);
+                        break;
+                    case 'album_artist':
+                        $sql = "`artist`.`name`";
+                        $this->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                        break;
+                    case 'artist':
+                        $sql = "`artist`.`name`";
+                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                        $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
+                        break;
+                    case 'year':
+                    case 'original_year':
+                    case 'song_count':
+                    case 'total_count':
+                    case 'release_type':
+                        $sql = "`album`.`$field`";
+                        break;
+                } // end switch
+                break;
+            case 'album_disk':
+                $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
+                switch ($field) {
+                    case 'name':
+                        $sql = "`album`.`name`, `album_disk`.`disk`";
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";

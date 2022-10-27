@@ -412,7 +412,7 @@ class TvShow extends database_object implements library_item
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
+                Stats::migrate('tvshow', $this->id, (int)$tvshow_id, 0);
                 Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
                 //Recommendation::migrate('tvshow', $this->id);
                 Share::migrate('tvshow', $this->id, (int)$tvshow_id);

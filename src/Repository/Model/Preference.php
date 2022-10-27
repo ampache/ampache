@@ -285,6 +285,7 @@ class Preference extends database_object
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
+        $access100 = Access::check('interface', 100);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
@@ -298,14 +299,14 @@ class Preference extends database_object
         }
         $params = array($value, $pref_id);
 
-        if ($applytoall && Access::check('interface', 100)) {
+        if ($applytoall && $access100) {
             $user_check = "";
         } else {
             $user_check = "AND `user` = ?";
             $params[]   = $user_id;
         }
 
-        if ($applytodefault && Access::check('interface', 100)) {
+        if ($applytodefault && $access100) {
             $sql = "UPDATE `preference` SET `value` = ? WHERE `id`= ?";
             Dba::write($sql, $params);
         }

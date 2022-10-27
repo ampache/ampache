@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
@@ -53,6 +54,7 @@ final class ObjectTypeToClassNameMapper
 {
     private const OBJECT_TYPE_MAPPING = [
         'album' => Album::class,
+        'album_disk' => AlbumDisk::class,
         'song' => Song::class,
         'playlist' => Playlist::class,
         'artist' => Artist::class,

@@ -44,8 +44,9 @@ final class Slideshow implements SlideshowInterface
      */
     public function getCurrentSlideshow(): array
     {
-        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
-        $images = [];
+        $user_id = Core::get_global('user')->id ?? -1;
+        $songs   = Song::get_recently_played($user_id);
+        $images  = [];
         if ($songs !== []) {
             $last_song = $this->modelFactory->createSong((int) $songs[0]['object_id']);
             $last_song->format();

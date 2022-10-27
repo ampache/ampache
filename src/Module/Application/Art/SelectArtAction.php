@@ -67,8 +67,6 @@ final class SelectArtAction extends AbstractArtAction
             throw new AccessDeniedException();
         }
 
-        $object_id = $item->id;
-
         $burl = '';
         if (isset($_GET['burl'])) {
             $burl = base64_decode(Core::get_get('burl'));
@@ -96,19 +94,8 @@ final class SelectArtAction extends AbstractArtAction
             return null;
         }
 
-        // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
-        if ($object_type == 'album') {
-            $class_name   = ObjectTypeToClassNameMapper::map($object_type);
-            $album        = new $class_name($object_id);
-            $album_groups = $album->get_group_disks_ids();
-            foreach ($album_groups as $a_id) {
-                $art = $this->modelFactory->createArt($a_id, $object_type);
-                $art->insert($image, $mime);
-            }
-        } else {
-            $art = $this->modelFactory->createArt($object_id, $object_type);
-            $art->insert($image, $mime);
-        }
+        $art = $this->modelFactory->createArt($item->getId(), $object_type);
+        $art->insert($image, $mime);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

@@ -80,7 +80,7 @@ final class UploadArtAction extends AbstractArtAction
 
         // If we got something back insert it
         if ($image_data !== '') {
-            $art = $this->modelFactory->createArt($item->id, $object_type);
+            $art = $this->modelFactory->createArt($item->getId(), $object_type);
             if ($art->insert($image_data, $_FILES['file']['type'])) {
                 $this->ui->showContinue(
                     T_('No Problem'),

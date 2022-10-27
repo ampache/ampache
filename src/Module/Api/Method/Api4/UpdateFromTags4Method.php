@@ -69,13 +69,7 @@ final class UpdateFromTags4Method
             return false;
         }
         // update your object
-        if ($type == 'album') {
-            foreach ($item->album_suite as $album_id) {
-                Catalog::update_single_item($type, $album_id, true);
-            }
-        } else {
-            Catalog::update_single_item($type, $object_id, true);
-        }
+        Catalog::update_single_item($type, $object_id, true);
 
         Api4::message('success', 'Updated tags for: ' . (string) $object_id . ' (' . $type . ')', null, $input['api_format']);
 

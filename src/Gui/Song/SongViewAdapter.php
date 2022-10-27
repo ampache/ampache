@@ -351,10 +351,15 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Title')]         = scrub_out($this->song->title);
         $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
         $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
-        $songprops[T_('Album')]         = $this->song->f_album_link;
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+            $songprops[T_('Album')] = $this->song->get_f_album_link();
+        } else {
+            $songprops[T_('Album')] = $this->song->get_f_album_disk_link();
+        }
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Track')]         = $this->song->track;
+        $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
@@ -470,7 +475,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getAlbumLink(): string
     {
-        return $this->song->f_album_link;
+        return $this->song->get_f_album_link();
+    }
+
+    public function getAlbumDiskLink(): string
+    {
+        return $this->song->get_f_album_disk_link();
     }
 
     public function getYear(): int

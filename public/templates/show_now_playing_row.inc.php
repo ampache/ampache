@@ -33,6 +33,8 @@ use Ampache\Module\Api\Ajax;
 /** @var Ampache\Repository\Model\User $np_user */
 /** @var string $web_path */
 /** @var string $agent */
+
+$showAlbum = AmpConfig::get('album_group');
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
@@ -50,11 +52,11 @@ use Ampache\Module\Api\Ajax;
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_left">
         <label><?php echo T_('Song'); ?></label>
-        <?php echo $media->f_link; ?>
+        <?php echo $media->get_f_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Album'); ?></label>
-        <?php echo $media->f_album_link; ?>
+        <?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
