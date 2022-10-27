@@ -2,9 +2,17 @@
 
 ## Ampache 5.5.4-develop
 
+### Added
+
+* Database 550004
+  * Add `song_artist` and `album_artist` maps to catalog_map
+
 ### Fixed
 
+* Not filtering song_artist on album_artist browses
 * Don't use catalog_filter and rating_filter without a valid user
+* Uploaded/Manual Album Artist maps on tag update
+* Delete artist's from the catalog_map that don't have a song or album for that catalog
 * Search
   * SQL for Artist `catalog` searches
 
