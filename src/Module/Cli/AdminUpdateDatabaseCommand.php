@@ -27,6 +27,8 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 
 final class AdminUpdateDatabaseCommand extends Command
@@ -47,21 +49,33 @@ final class AdminUpdateDatabaseCommand extends Command
 
     public function execute(): void
     {
+        $updated    = false;
         $interactor = $this->io();
         $execute    = $this->values()['execute'] === true;
+
         /* HINT: Ampache version string (e.g. 5.4.0-release, develop) */
         $interactor->info(
             sprintf(T_('Ampache version: %s'), AmpConfig::get('version')),
             true
         );
-        /* HINT: config version string (e.g. 62) */
         $interactor->info(
+        /* HINT: config version string (e.g. 62) */
             sprintf(T_('Config version: %s'), AmpConfig::get('int_config_version')),
             true
         );
-        /* HINT: db version string (e.g. 520006) */
+
+        // Check for a valid connection first
+        if (!Dba::check_database()) {
+            $interactor->info(
+                T_('Database Connection') . ": " . T_('Error') . "\n",
+                true
+            );
+
+            return;
+        }
+        /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
-            sprintf(T_('Database version: %s'), Update::get_version()),
+            sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())) . "\n",
             true
         );
 
@@ -85,22 +99,36 @@ final class AdminUpdateDatabaseCommand extends Command
         }
 
         if (Update::need_update() && $execute) {
+            $updated = true;
             Update::run_update();
         }
 
         if (Update::need_update()) {
             $interactor->info(
-                T_('The following updates need to be performed:'),
+                "\n" . T_('The following updates need to be performed:'),
                 true
             );
         }
 
         $result = Update::display_update();
         if ($result === []) {
-            $interactor->info(
-                T_('No update needed'),
-                true
-            );
+            if ($updated) {
+                // tell the user that the database was updated and the version
+                $interactor->info(
+                    T_('Updated'),
+                    true
+                );
+                /* HINT: db version string (e.g. 5.2.0 Build: 006) */
+                $interactor->info(
+                    sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
+                    true
+                );
+            } else {
+                $interactor->info(
+                    T_('No update needed'),
+                    true
+                );
+            }
         } else {
             foreach ($result as $updateInfo) {
                 $interactor->info(
@@ -108,7 +136,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
                 $interactor->info(
-                    $updateInfo['description'],
+                    "\n" . str_replace(array("<b>", "</b>"), "", (str_replace(array("<br />"), "\n", $updateInfo['description']))),
                     true
                 );
             }
