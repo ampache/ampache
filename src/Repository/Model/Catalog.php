@@ -4126,15 +4126,22 @@ abstract class Catalog extends database_object
                 AmpConfig::set_by_array(['write_tags' => $write_tags], true);
         }
 
-        // Remove any orphaned artists/albums/etc.
+        // clean up after the action
         debug_event(__CLASS__, 'Run Garbage collection', 5);
         static::getCatalogGarbageCollector()->collect();
-        self::clean_empty_albums();
-        Album::update_album_artist();
-        self::clean_duplicate_artists();
-        self::update_mapping('artist');
-        self::update_mapping('album');
-        self::update_counts();
+        $catalog_media_type = $catalog->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            Catalog::clean_empty_albums();
+            Album::update_album_artist();
+            Catalog::update_mapping('artist');
+            Catalog::update_mapping('album');
+        } elseif ($catalog_media_type == 'podcast') {
+            Catalog::update_mapping('podcast');
+            Catalog::update_mapping('podcast_edpisode');
+        } elseif (!in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            Catalog::update_mapping('video');
+        }
+        Catalog::update_counts();
     }
 
     /**
