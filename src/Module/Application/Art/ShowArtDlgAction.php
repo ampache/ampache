@@ -58,7 +58,7 @@ final class ShowArtDlgAction extends AbstractArtAction
             $burl = base64_decode(Core::get_get('burl'));
         }
 
-        $object_id   = $item->id;
+        $object_id   = $item->getId();
 
         $this->ui->showHeader();
 
