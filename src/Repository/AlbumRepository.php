@@ -194,39 +194,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
     }
 
     /**
-     * gets the album ids with the same musicbrainz identifier
-     *
-     * @return int[]
-     */
-    public function getAlbumSuite(Album $album): array
-    {
-        $results = array();
-
-        $where         = " WHERE `song`.`album` = ? ";
-        $params        = array($album->id);
-        $catalog_where = "";
-        $catalog_join  = "";
-
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
-            $catalog_where .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id);
-        }
-
-        if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= "AND `catalog`.`enabled` = '1'";
-            $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-        }
-        $sql        = "SELECT DISTINCT `song`.`album`, `song`.`disk` FROM `song` $catalog_join $where $catalog_where GROUP BY `song`.`album`, `song`.`disk` ORDER BY `disk` ASC";
-        $db_results = Dba::read($sql, $params);
-        //debug_event(__CLASS__, "getAlbumSuite: " . $sql . ' ' . print_r($params, true), 5);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['disk'];
-        }
-
-        return $results;
-    }
-
-    /**
      * Cleans out unused albums
      */
     public function collectGarbage(): void

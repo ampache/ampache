@@ -82,11 +82,6 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
         return $this->album->getId();
     }
 
-    public function getAlbumSuiteIds(): string
-    {
-        return (string)$this->album->getId();
-    }
-
     public function getRating(): string
     {
         return Rating::show($this->album->getId(), 'album');

@@ -100,23 +100,6 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetAlbumSuiteIdsReturnsAlbumSuiteIds(): void
-    {
-        $id                 = 666;
-        $albumSuiteSingle   = [1];
-        $albumSuiteMultiple = '666';
-
-        $this->album->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($id);
-
-        $this->assertSame(
-            $albumSuiteMultiple,
-            $this->subject->getAlbumSuiteIds()
-        );
-    }
-
     public function testGetAverageRatingReturnsValue(): void
     {
         $albumId       = 666;
