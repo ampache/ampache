@@ -624,7 +624,7 @@ abstract class Catalog extends database_object
 
         $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $catalog_id) {
-            $cn      = Catalog::get_catalog_name($catalog_id);
+            $cn      = self::get_catalog_name($catalog_id);
             $enabled = $catalogs[$cn];
             $sql .= "($filter_id, $catalog_id, $enabled),";
         }
@@ -4131,17 +4131,17 @@ abstract class Catalog extends database_object
         static::getCatalogGarbageCollector()->collect();
         $catalog_media_type = $catalog->get_gather_type();
         if ($catalog_media_type == 'music') {
-            Catalog::clean_empty_albums();
+            self::clean_empty_albums();
             Album::update_album_artist();
-            Catalog::update_mapping('artist');
-            Catalog::update_mapping('album');
+            self::update_mapping('artist');
+            self::update_mapping('album');
         } elseif ($catalog_media_type == 'podcast') {
-            Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_episode');
+            self::update_mapping('podcast');
+            self::update_mapping('podcast_episode');
         } elseif (!in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-            Catalog::update_mapping('video');
+            self::update_mapping('video');
         }
-        Catalog::update_counts();
+        self::update_counts();
     }
 
     /**
