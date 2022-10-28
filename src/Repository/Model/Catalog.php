@@ -4129,7 +4129,7 @@ abstract class Catalog extends database_object
             Catalog::update_mapping('album');
         } elseif ($catalog_media_type == 'podcast') {
             Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_edpisode');
+            Catalog::update_mapping('podcast_episode');
         } elseif (!in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             Catalog::update_mapping('video');
         }
