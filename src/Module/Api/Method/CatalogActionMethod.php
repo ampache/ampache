@@ -102,7 +102,7 @@ final class CatalogActionMethod
             } elseif ($catalog_media_type == 'podcast') {
                 Catalog::update_mapping('podcast');
                 Catalog::update_mapping('podcast_episode');
-            } elseif (!in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
                 Catalog::update_mapping('video');
             }
             Catalog::update_counts();
