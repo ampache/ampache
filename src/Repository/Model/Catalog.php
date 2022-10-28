@@ -4140,7 +4140,7 @@ abstract class Catalog extends database_object
             } elseif ($catalog_media_type == 'podcast') {
                 self::update_mapping('podcast');
                 self::update_mapping('podcast_episode');
-            } elseif (!in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
                 self::update_mapping('video');
             }
             self::update_counts();
