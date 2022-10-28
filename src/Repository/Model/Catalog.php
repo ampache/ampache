@@ -3128,6 +3128,21 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_gather_type
+     * @return string
+     */
+    public function get_gather_type()
+    {
+        $sql        = "SELECT `gather_types` FROM `catalog` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row['gather_types'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_table_from_type
      * @param string $gather_type
      * @return string
