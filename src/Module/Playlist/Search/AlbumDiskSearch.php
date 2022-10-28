@@ -82,7 +82,7 @@ final class AlbumDiskSearch implements SearchInterface
                     break;
                 case 'time':
                     $input        = $input * 60;
-                    $where[]      = "`album`.`time` $operator_sql ?";
+                    $where[]      = "`album_disk`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'rating':
@@ -226,11 +226,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[]      = "(`album`.`total_count` $operator_sql ?)";
+                    $where[]      = "(`album_disk`.`total_count` $operator_sql ?)";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`album`.`song_count` $operator_sql ?)";
+                    $where[]      = "(`album_disk`.`song_count` $operator_sql ?)";
                     $parameters[] = $input;
                     break;
                 case 'other_user':
