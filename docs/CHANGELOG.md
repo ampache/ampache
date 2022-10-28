@@ -7,6 +7,10 @@
 * Database 550004
   * Add `song_artist` and `album_artist` maps to catalog_map
 
+### Changed
+
+* Update catalog map tables based on the catalog action
+
 ### Fixed
 
 * Not filtering song_artist on album_artist browses
@@ -15,6 +19,8 @@
 * Delete artist's from the catalog_map that don't have a song or album for that catalog
 * Search
   * SQL for Artist `catalog` searches
+* CLI
+  * Don't try to update a database when the connection fails
 
 ## API 5.5.4-develop
 
