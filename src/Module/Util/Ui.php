@@ -916,6 +916,7 @@ class Ui implements UiInterface
                 $is_3 = '';
                 $is_4 = '';
                 $is_5 = '';
+                $is_6 = '';
                 if ($value == 0) {
                     $is_0 = 'selected="selected"';
                 } elseif ($value == 3) {
@@ -924,12 +925,15 @@ class Ui implements UiInterface
                     $is_4 = 'selected="selected"';
                 } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
+                } elseif ($value == 6) {
+                    $is_6 = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
                 echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
                 echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
                 echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
+                echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'ratingmatch_stars':

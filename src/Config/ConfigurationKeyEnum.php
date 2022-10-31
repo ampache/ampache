@@ -58,6 +58,7 @@ final class ConfigurationKeyEnum
     public const API_ENABLE_3                          = 'api_enable_3';
     public const API_ENABLE_4                          = 'api_enable_4';
     public const API_ENABLE_5                          = 'api_enable_5';
+    public const API_ENABLE_6                          = 'api_enable_6';
     public const API_FORCE_VERSION                     = 'api_force_version';
     public const API_HIDDEN_PLAYLISTS                  = 'api_hidden_playlists';
     public const ART_ZIP_ADD                           = 'art_zip_add';

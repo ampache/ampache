@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -62,6 +63,19 @@ final class XmlOutput implements ApiOutputInterface
         return Xml4_Data::error(
             $code,
             $message
+        );
+    }
+
+    /**
+     * At the moment, this method just acts a proxy
+     */
+    public function error5(int $code, string $message, string $action, string $type): string
+    {
+        return Xml5_Data::error(
+            $code,
+            $message,
+            $action,
+            $type
         );
     }
 

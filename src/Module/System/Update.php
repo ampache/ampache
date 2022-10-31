@@ -813,6 +813,9 @@ class Update
         $update_string = "* Add `song_artist` and `album_artist` maps to catalog_map<br />* This is a duplicate of `update_550004` But may have been skipped depending on your site's version history";
         $version[]     = array('version' => '600012', 'description' => $update_string);
 
+        $update_string = "* Add ui option 'api_enable_6' to enable/disable API6";
+        $version[]     = array('version' => '600013', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4996,6 +4999,23 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         Catalog::update_mapping('artist');
         Catalog::update_mapping('album');
+
+        return $retval;
+    }
+
+    /**
+     * update_600013
+     *
+     * Add ui option 'api_enable_6' to enable/disable API6
+     */
+    public static function update_600013(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

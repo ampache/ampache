@@ -51,6 +51,16 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * This generates an error message
+     */
+    public function error5(
+        int $code,
+        string $message,
+        string $action,
+        string $type
+    ): string;
+
+    /**
      * @param integer[] $albums
      * @param array $include
      * @param integer|null $user_id

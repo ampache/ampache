@@ -107,8 +107,11 @@ final class ApiHandler implements ApiHandlerInterface
             if ($api_version == 4 && !Preference::get_by_user($userId, 'api_enable_4')) {
                 $api_version = 5;
             }
-            // if you haven't enabled any api versions then don't keep going
             if ($api_version == 5 && !Preference::get_by_user($userId, 'api_enable_5')) {
+                $api_version = 6;
+            }
+            // if you haven't enabled any api versions then don't keep going
+            if ($api_version == 6 && !Preference::get_by_user($userId, 'api_enable_6')) {
                 $this->logger->warning(
                     'No API version available; check your options!',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -128,7 +131,7 @@ final class ApiHandler implements ApiHandlerInterface
         }
         // If you call api3 from json you don't get anything so change back to 5
         if ($api_format == 'json' && $api_version == 3) {
-            $api_version = 5;
+            $api_version = 6;
         }
         // send the version to API calls (this is used to determine return data for api4/api5)
         $input['api_version'] = $api_version;
@@ -167,6 +170,17 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 5:
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                T_('Access Denied'),
+                                $action,
+                                'system'
+                            )
+                        )
+                    );
+                case 6:
                 default:
                     return $response->withBody(
                         $this->streamFactory->createStream(
@@ -216,6 +230,17 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 5:
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::INVALID_HANDSHAKE,
+                                T_('Session Expired'),
+                                $action,
+                                'account'
+                            )
+                        )
+                    );
+                case 6:
                 default:
                     return $response->withBody(
                         $this->streamFactory->createStream(
@@ -257,6 +282,17 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 5:
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                                T_('Unauthorized access attempt to API - ACL Error'),
+                                $action,
+                                'account'
+                            )
+                        )
+                    );
+                case 6:
                 default:
                     return $response->withBody(
                         $this->streamFactory->createStream(
@@ -316,6 +352,23 @@ final class ApiHandler implements ApiHandlerInterface
                 }
                 break;
             case 5:
+                $handlerClassName = Api::METHOD_LIST[$action] ?? null;
+                if ($handlerClassName === null) {
+                    ob_end_clean();
+
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::MISSING,
+                                T_('Invalid Request'),
+                                $action,
+                                'system'
+                            )
+                        )
+                    );
+                }
+                break;
+            case 6:
             default:
                 $handlerClassName = Api::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
@@ -332,7 +385,6 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 }
-                break;
         }
 
         try {
@@ -391,6 +443,17 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 5:
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                $e->getCode(),
+                                $e->getMessage(),
+                                $action,
+                                $e->getType()
+                            )
+                        )
+                    );
+                case 6:
                 default:
                     return $response->withBody(
                         $this->streamFactory->createStream(
@@ -432,6 +495,17 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 5:
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error5(
+                                ErrorCodeEnum::GENERIC_ERROR,
+                                'Generic error',
+                                $action,
+                                'system'
+                            )
+                        )
+                    );
+                case 6:
                 default:
                     return $response->withBody(
                         $this->streamFactory->createStream(
