@@ -753,7 +753,7 @@ class Album extends database_object implements library_item
      */
     public function get_album_disk_ids()
     {
-        $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ?;";
+        $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? ORDER BY `disk`;";
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {

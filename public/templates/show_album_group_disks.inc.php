@@ -234,8 +234,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php
 define('TABLE_RENDERED', 1);
 foreach ($album->get_album_disk_ids() as $albumDiskId) {
-    $album_disk        = new AlbumDisk($album->get_album_disk_id($albumDiskId));
-    $sub_title         = scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";
+    $album_disk = new AlbumDisk($albumDiskId);
+    $sub_title  = scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";
     if ($directplay_limit > 0) {
         $show_playlist_add = ($album_disk->song_count <= $directplay_limit);
         if ($show_direct_play) {

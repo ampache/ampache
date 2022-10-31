@@ -87,9 +87,20 @@ final class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         // allow single disks to not be shown as multi's
-        } else {
+        } elseif ($album->disk_count == 1) {
             $this->ui->show(
                 'show_album.inc.php',
+                [
+                    'album' => $album,
+                    'isAlbumEditable' => $this->isEditable(
+                        $gatekeeper,
+                        $album
+                    ),
+                ]
+            );
+        } else {
+            $this->ui->show(
+                'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
                     'isAlbumEditable' => $this->isEditable(
