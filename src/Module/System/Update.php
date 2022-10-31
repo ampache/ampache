@@ -4968,6 +4968,10 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
+        $sql = "TRUNCATE `cache_object_count`;";
+        Dba::write($sql);
+        $sql = "TRUNCATE `cache_object_count_run`;";
+        Dba::write($sql);
         $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
         $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
