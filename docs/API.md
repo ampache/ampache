@@ -15,18 +15,22 @@ pass offset as an additional parameter.
 If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
 All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
 
+## News
+
+API6 development has started but don't be alarmed! API5 is stable, not changing and like API3 and API4 will continue to be supported.
+
+The goals of API6 are simply to extend on top of API5 and remove what's no longer needed. API5 docs have moved to the [archive](https://ampache.org/api/api-5) and API6 will become the default.
+
 ## Archived Version Documentation
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
+* API 6.0 Documentation **TBC** (Ampache Develop+)
 * [API 5.5 Documentation](https://ampache.org/api/api-5)
-* [API 5.1 Documentation](https://ampache.org/api/versions/api-5.1)
-* [API 5.0 Documentation](https://ampache.org/api/versions/api-5.0)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
-* [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
-* [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
-* [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
 * [API 3.9 Documentation](https://ampache.org/api/api-3)
+
+Ampache supports the last major release of each API version. You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development
 
 ## Changelog API develop
 
