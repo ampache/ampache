@@ -352,7 +352,7 @@ final class ApiHandler implements ApiHandlerInterface
                 }
                 break;
             case 5:
-                $handlerClassName = Api::METHOD_LIST[$action] ?? null;
+                $handlerClassName = Api5::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
 
