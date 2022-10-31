@@ -25,13 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\System\Session;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Albums5Method
@@ -39,18 +41,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 final class Albums5Method
 {
     public const ACTION = 'albums';
-
-    private StreamFactoryInterface $streamFactory;
-
-    private ModelFactoryInterface $modelFactory;
-
-    public function __construct(
-        StreamFactoryInterface $streamFactory,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->streamFactory = $streamFactory;
-        $this->modelFactory  = $modelFactory;
-    }
 
     /**
      * MINIMUM_API_VERSION=380001
@@ -73,13 +63,10 @@ final class Albums5Method
      *
      * @throws ResultEmptyException
      */
-    public function handle(
-        GatekeeperInterface $gatekeeper,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-        array $input
-    ): ResponseInterface {
-        $browse = $this->modelFactory->createBrowse(null, false);
+
+    public static function album(array $input): bool
+    {
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
@@ -94,27 +81,25 @@ final class Albums5Method
                 T_('No Results')
             );
         }
+        ob_end_clean();
+        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
 
-        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
+                echo Json5_Data::albums($albums, $include, $user->id);
+                break;
+            default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
+                echo Xml5_Data::albums($albums, $include, $user->id);
+        }
 
-        $result = $output->albums(
-            $albums,
-            $include,
-            $gatekeeper->getUser()->getId(),
-            true,
-            true,
-            (int) $input['limit'],
-            (int) $input['offset']
-        );
-
-        return $response->withBody(
-            $this->streamFactory->createStream(
-                $result
-            )
-        );
+        return true;
     }
 }

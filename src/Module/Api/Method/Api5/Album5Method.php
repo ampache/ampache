@@ -25,13 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Json5_Data;
+use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\Album;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Album5Method
@@ -39,18 +42,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 final class Album5Method
 {
     public const ACTION = 'album';
-
-    private ModelFactoryInterface $modelFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    public function __construct(
-        ModelFactoryInterface $modelFactory,
-        StreamFactoryInterface $streamFactory
-    ) {
-        $this->modelFactory  = $modelFactory;
-        $this->streamFactory = $streamFactory;
-    }
 
     /**
      * album
@@ -70,12 +61,8 @@ final class Album5Method
      * @throws ResultEmptyException
      * @throws RequestParamMissingException
      */
-    public function handle(
-        GatekeeperInterface $gatekeeper,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-        array $input
-    ): ResponseInterface {
+    public static function album(array $input): bool
+    {
         $objectId = $input['filter'] ?? null;
 
         if ($objectId === null) {
@@ -84,29 +71,31 @@ final class Album5Method
             );
         }
 
-        $album = $this->modelFactory->createAlbum((int) $objectId);
+        $album = new Album((int) $objectId);
 
         if ($album->isNew()) {
             throw new ResultEmptyException((string) $objectId);
         }
 
+        ob_end_clean();
+        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         }
 
-        $result = $output->albums(
-            [$album->getId()],
-            $include,
-            $gatekeeper->getUser()->getId(),
-            true,
-            false
-        );
+        switch ($input['api_format']) {
+            case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
+                echo Json5_Data::albums(array($album), $include, $user->id);
+                break;
+            default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
+                echo Xml5_Data::albums(array($album), $include, $user->id);
+        }
 
-        return $response->withBody(
-            $this->streamFactory->createStream(
-                $result
-            )
-        );
+        return true;
     }
 }
