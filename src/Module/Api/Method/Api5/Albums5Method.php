@@ -56,7 +56,7 @@ final class Albums5Method
      * @return boolean
      */
 
-    public static function album(array $input): bool
+    public static function albums(array $input): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
