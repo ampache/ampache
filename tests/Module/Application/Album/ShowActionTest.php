@@ -173,7 +173,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_album.inc.php',
+                'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
@@ -320,7 +320,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_album.inc.php',
+                'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
