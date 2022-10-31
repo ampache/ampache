@@ -25,15 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\System\Session;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Method\Exception\ResultEmptyException;
-use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Albums5Method
@@ -47,9 +44,6 @@ final class Albums5Method
      *
      * This returns albums based on the provided search filters
      *
-     * @param GatekeeperInterface $gatekeeper
-     * @param ResponseInterface $response
-     * @param ApiOutputInterface $output
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -59,9 +53,7 @@ final class Albums5Method
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
      *
-     * @return ResponseInterface
-     *
-     * @throws ResultEmptyException
+     * @return boolean
      */
 
     public static function album(array $input): bool
@@ -77,9 +69,9 @@ final class Albums5Method
 
         $albums = $browse->get_objects();
         if ($albums === []) {
-            throw new ResultEmptyException(
-                T_('No Results')
-            );
+            Api5::empty('album', $input['api_format']);
+
+            return false;
         }
         ob_end_clean();
         $user    = User::get_from_username(Session::username($input['auth']));
