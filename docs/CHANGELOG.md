@@ -2,34 +2,51 @@
 
 ## Ampache develop
 
+**NOTE** For database update 600005; please consider using the CLI update command (php bin/cli admin:updateDatabase -e)
+
+A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been setup for Admins to follow the changes happening in preparation for Ampache6
+
 ### Added
 
-* Database 600002
+* Database 600012
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
-* Config version 63
+  * Add `total_skip` to podcast table
+  * Add `disk` to song table<br />* Create album_disk table and migrate user ratings & flags
+  * Migrate multi-disk albums to single album id's
+  * Add `disk_count` to album table
+  * Fill album_disk table update count tables
+  * Rename `artist`.`album_group_count` => `album_disk_count`
+  * Drop `disk` from the `album` table
+  * Rename `user_data` album keys
+  * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
+  * Add `song_artist` and `album_artist` maps to catalog_map
+* Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
-* search
-  * add song_genre to album and artist searches
-  * add possible_duplicate_album to song search
-  * add mbid_artist to album search
-  * alias possible_duplicate_album => possible_duplicate for album search
-  * alias album_genre => genre for album search
-  * alias mbid_album => mbid for album search
-  * alias mbid_artist => mbid for artist search
-  * alias song_genre => genre for song search
+  * Add `album_disk` to allow_zip_types
+* Search
+  * Add `album_disk` as a search type (uses album rules)
+  * Add `song_genre` to album and artist searches
+  * Add `possible_duplicate_album` to song search
+  * Add `mbid_artist` to album search
+  * Alias `possible_duplicate_album` => `possible_duplicate` for album search
+  * Alias `album_genre` => `genre` for album search
+  * Alias `mbid_album` => `mbid` for album search
+  * Alias `mbid_artist` => `mbid` for artist search
+  * Alias `song_genre` => `genre` for song search
 * webplayer
   * Enable restart on democratic or random play
   * Allow removing played tracks on next
 
 ### Changed
 
+* Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Scrutinizer moved to php8.1
+* Download url parameter order matching "client, action, cache"
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
-* Download url parameter order matching "client, action, cache"
 
 ### Removed
 
@@ -39,8 +56,14 @@
 
 * Work around for possible release string errors (future releasese will drop "-release")
 * Ignore case in genre comparison
+* Search
+  * SQL for Artist `catalog` searches
 
 ## API develop
+
+### Changed
+
+* Don't send AlbumDisk objects to the API
 
 ### Fixed
 

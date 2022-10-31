@@ -119,6 +119,7 @@ class Userflag extends database_object
         $types = array(
             'song',
             'album',
+            'album_disk',
             'artist',
             'video',
             'tvshow',
@@ -201,13 +202,6 @@ class Userflag extends database_object
         if ($user_id === 0) {
             return false;
         }
-        if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $album       = new Album($this->id);
-            $album_array = $album->get_group_disks_ids();
-            self::set_flag_for_group($flagged, $album_array, $user_id);
-
-            return true;
-        }
         debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
 
         if (!$flagged) {
@@ -259,35 +253,6 @@ class Userflag extends database_object
     }
 
     /**
-     * set_flag_for_group
-     * This function sets the user flag for an album group.
-     * @param boolean $flagged
-     * @param array $album_array
-     * @param integer $user_id
-     * @return boolean
-     */
-    public static function set_flag_for_group($flagged, $album_array, $user_id)
-    {
-        foreach ($album_array as $album_id) {
-            debug_event(self::class, "Setting userflag for Album $album_id to $flagged", 4);
-            if (!$flagged) {
-                $sql = "DELETE FROM `user_flag` WHERE `object_id` = " . $album_id . " AND `object_type` = 'album' AND `user` = " . $user_id;
-                Dba::write($sql);
-            } else {
-                $sql    = "INSERT IGNORE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
-                $params = array($album_id, 'album', $user_id, time());
-                Dba::write($sql, $params);
-
-                static::getUserActivityPoster()->post((int) $user_id, 'userflag', 'album', (int) $album_id, time());
-            }
-
-            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, array($flagged));
-        }
-
-        return true;
-    } // set_flag_for_group
-
-    /**
      * get_latest_sql
      * Get the latest sql
      * @param string $type
@@ -296,11 +261,8 @@ class Userflag extends database_object
      */
     public static function get_latest_sql($type, $user_id = null)
     {
-        $user_id           = (int)($user_id);
-        $allow_group_disks = AmpConfig::get('album_group') && $type == 'album';
-        $sql               = ($allow_group_disks)
-            ? "SELECT MIN(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, 'album' AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_id` = `album`.`id`"
-            : "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
+        $user_id = (int)($user_id);
+        $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
@@ -310,9 +272,7 @@ class Userflag extends database_object
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
         }
-        $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY `count` DESC, `date` DESC "
-            : " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
+        $sql .= " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql;

@@ -28,7 +28,7 @@ use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
 
 /** @var string $message */
-/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
+/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
 
 $has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
@@ -41,7 +41,7 @@ $allow_download = $_REQUEST['allow_download'] ?? false;
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->f_link ?? '' ?></td>
+    <td><?php echo $object->get_f_link() ?? '' ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>

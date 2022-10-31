@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Browse\AlbumAction;
+use Ampache\Module\Application\Browse\AlbumDiskAction;
 use Ampache\Module\Application\Browse\AlbumArtistAction;
 use Ampache\Module\Application\Browse\ArtistAction;
 use Ampache\Module\Application\Browse\BroadcastAction;
@@ -58,6 +59,7 @@ $dic->get(ApplicationRunner::class)->run(
         TagAction::REQUEST_KEY => TagAction::class,
         FileAction::REQUEST_KEY => FileAction::class,
         AlbumAction::REQUEST_KEY => AlbumAction::class,
+        AlbumDiskAction::REQUEST_KEY => AlbumDiskAction::class,
         AlbumArtistAction::REQUEST_KEY => AlbumArtistAction::class,
         ArtistAction::REQUEST_KEY => ArtistAction::class,
         SongAction::REQUEST_KEY => SongAction::class,

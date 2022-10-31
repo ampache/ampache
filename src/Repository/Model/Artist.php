@@ -171,12 +171,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * @var integer $album_count
      */
-    private $album_count;
+    public $album_count;
 
     /**
-     * @var integer $album_group_count
+     * @var integer $album_disk_count
      */
-    private $album_group_count;
+    public $album_disk_count;
 
     /**
      * @var integer $song_count
@@ -213,12 +213,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
         } // foreach info
 
         // make sure the int values are cast to integers
-        $this->total_count       = (int)$this->total_count;
-        $this->time              = (int)$this->time;
-        $this->album_count       = (int)$this->album_count;
-        $this->album_group_count = (int)$this->album_group_count;
-        $this->song_count        = (int)$this->song_count;
-        $this->catalog_id        = (int)$catalog_init;
+        $this->total_count      = (int)$this->total_count;
+        $this->time             = (int)$this->time;
+        $this->album_count      = (int)$this->album_count;
+        $this->album_disk_count = (int)$this->album_disk_count;
+        $this->song_count       = (int)$this->song_count;
+        $this->catalog_id       = (int)$catalog_init;
         $this->get_fullname();
 
         return true;
@@ -361,8 +361,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql        = "SELECT DISTINCT COUNT(`song`.`id`) AS `song_count` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song'";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
+        if (empty($results)) {
+            return 0;
+        }
 
-        return (int)($results['song_count'] ?? 0);
+        return (int)$results['song_count'];
     }
 
     /**
@@ -383,13 +386,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * get_album_group_count
+     * get_album_disk_count
      *
      * Get count for an artist's albums.
      * @param integer $artist_id
      * @return integer
      */
-    public static function get_album_group_count($artist_id)
+    public static function get_album_disk_count($artist_id)
     {
         $params     = array($artist_id);
         $sql        = "SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_count` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
@@ -409,10 +412,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public static function get_id_arrays($catalogs = array())
     {
         $results       = array();
-        $group_column  = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
         // if you have no catalogs set, just grab it all
         if (!empty($catalogs)) {
-            $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` = ? ORDER BY `artist`.`name`";
+            $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` = ? ORDER BY `artist`.`name`";
             foreach ($catalogs as $catalog_id) {
                 $db_results = Dba::read($sql, array($catalog_id));
                 while ($row = Dba::fetch_assoc($db_results, false)) {
@@ -420,7 +422,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 }
             }
         } else {
-            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
+            $sql        = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count` FROM `artist` ORDER BY `artist`.`name`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $results[] = $row;
@@ -439,8 +441,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function get_id_array($artist_id)
     {
-        $group_column = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, $group_column AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
+        $sql          = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = (SELECT MIN(`catalog_map`.`catalog_id`) FROM `catalog_map` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id`) WHERE `artist`.`id` = ? ORDER BY `artist`.`name`";
         $db_results   = Dba::read($sql, array($artist_id));
         $row          = Dba::fetch_assoc($db_results, false);
 
@@ -483,7 +484,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
             return true;
         }
         $this->songs  = $this->song_count;
-        $this->albums = (AmpConfig::get('album_group')) ? $this->album_group_count : $this->album_count;
+        $this->albums = (AmpConfig::get('album_group'))
+            ? $this->album_count
+            : $this->album_disk_count;
+
         // set link and f_link
         $this->get_f_link();
 
@@ -648,15 +652,16 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function get_childrens()
     {
         $medias = array();
-        $albums = $this->getAlbumRepository()->getByArtist($this->id);
+        $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
+        $type   = 'album';
         foreach ($albums as $album_id) {
             $medias[] = array(
-                'object_type' => 'album',
+                'object_type' => $type,
                 'object_id' => $album_id
             );
         }
 
-        return array('album' => $medias);
+        return array($type => $medias);
     }
 
     /**
@@ -1016,23 +1021,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 $time  = time();
                 $songs = $this->getSongRepository()->getByArtist($this->id);
                 foreach ($songs as $song_id) {
-                    Song::update_artist($artist_id, $song_id, $this->id);
+                    Song::update_artist($artist_id, $song_id, $this->id, false);
                     Song::update_utime($song_id, $time);
-                    Stats::migrate('artist', $this->id, $artist_id, $song_id);
                 }
+                self::update_artist_counts();
                 $updated    = true;
                 $current_id = $artist_id;
-                Useractivity::migrate('artist', $this->id, $artist_id);
-                Recommendation::migrate('artist', $this->id);
-                Share::migrate('artist', $this->id, $artist_id);
-                Shoutbox::migrate('artist', $this->id, $artist_id);
-                Tag::migrate('artist', $this->id, $artist_id);
-                Userflag::migrate('artist', $this->id, $artist_id);
-                Label::migrate('artist', $this->id, $artist_id);
-                Rating::migrate('artist', $this->id, $artist_id);
-                Art::duplicate('artist', $this->id, $artist_id);
-                Wanted::migrate('artist', $this->id, $artist_id);
-                Catalog::migrate_map('artist', $this->id, $artist_id);
             } // end if it changed
 
             // clear out the old data
@@ -1156,9 +1150,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
         Dba::write($sql);
         // artist.album_count
         $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT `album`.`id`) AS `album_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_count` = `album`.`album_count` WHERE `artist`.`album_count` != `album`.`album_count` AND `artist`.`id` = `album`.`artist_id`;";
-        Dba::write($sql);
-        // artist.album_group_count
-        $sql = "UPDATE `artist`, (SELECT COUNT(DISTINCT CONCAT(COALESCE(`album`.`prefix`, ''), `album`.`name`, COALESCE(`album`.`album_artist`, ''), COALESCE(`album`.`mbid`, ''), COALESCE(`album`.`year`, ''))) AS `album_group_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `album` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `album` SET `artist`.`album_group_count` = `album`.`album_group_count` WHERE `artist`.`album_group_count` != `album`.`album_group_count` AND `artist`.`id` = `album`.`artist_id`;";
         Dba::write($sql);
         // artist.song_count
         $sql = "UPDATE `artist`, (SELECT COUNT(`song`.`id`) AS `song_count`, `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `catalog`.`enabled` = '1' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`song_count` = `song`.`song_count` WHERE `artist`.`song_count` != `song`.`song_count` AND `artist`.`id` = `song`.`artist_id`;";

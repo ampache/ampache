@@ -139,8 +139,6 @@ class ShowActionTest extends MockeryTestCase
 
         $albumId = 42;
 
-        $album->album_suite = [1, 2, 3];
-
         $this->privilegeChecker->shouldReceive('check')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
@@ -293,8 +291,6 @@ class ShowActionTest extends MockeryTestCase
 
         $albumId = 42;
 
-        $album->album_suite = [1];
-
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -324,7 +320,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_album.inc.php',
+                'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,

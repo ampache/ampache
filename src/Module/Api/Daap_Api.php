@@ -541,8 +541,7 @@ class Daap_Api
                         }
                         break;
                     case 'daap.songdiscnumber':
-                        $album = new Album($song->album);
-                        $output .= self::tlv($tag, $album->disk);
+                        $output .= self::tlv($tag, $song->disk);
                         break;
                     case 'daap.songformat':
                         $output .= self::tlv($tag, $song->type);

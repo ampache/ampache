@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=1);
+declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
@@ -34,24 +34,24 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateGroupFromTagsAction implements ApplicationActionInterface
+final class UpdateDiskFromTagsAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_group_from_tags';
-
-    private ConfigContainerInterface $configContainer;
+    public const REQUEST_KEY = 'update_disk_from_tags';
 
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
-        ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,29 +61,25 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $albumId = (int) $request->getQueryParams()['album_id'] ?? 0;
-        if ($albumId < 1) {
-            echo T_('You have requested an object that does not exist');
-        } else {
-            $album = $this->modelFactory->createAlbum($albumId);
-            $album->format();
+        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
 
-            $this->ui->showHeader();
-            $this->ui->show(
-                'show_update_item_group.inc.php',
-                [
-                    'object_id' => $albumId,
-                    'catalog_id' => $album->get_catalogs(),
-                    'type' => 'album',
-                    'objects' => $album->album_suite,
-                    'target_url' => sprintf(
-                        '%s/albums.php?action=show&amp;album=%d',
-                        $this->configContainer->getWebPath(),
-                        $albumId
-                    )
-                ]
-            );
-        }
+        $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
+        $albumDisk->format();
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_update_items.inc.php',
+            [
+                'object_id' => $albumDiskId,
+                'catalog_id' => $albumDisk->get_catalogs(),
+                'type' => 'album',
+                'target_url' => sprintf(
+                    '%s/albums.php?action=show_disk&amp;album_disk=%d',
+                    $this->configContainer->getWebPath(),
+                    $albumDiskId
+                )
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

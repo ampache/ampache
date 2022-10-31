@@ -49,7 +49,7 @@ class AlbumSongsMethod
      *
      * @param array $input
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
+     * exact  = (integer) 0,1, if true don't group songs from different disks //optional //TODO REMOVE
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -70,22 +70,8 @@ class AlbumSongsMethod
 
         ob_end_clean();
         // songs for all disks
-        $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        if (AmpConfig::get('album_group') && !$exact) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $disc     = new Album($discid);
-                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            }
-        } else {
-            // songs for just this disk
-            $songs = static::getSongRepository()->getByAlbum($album->id);
-        }
+        $songs = static::getSongRepository()->getByAlbum($album->id);
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);
 

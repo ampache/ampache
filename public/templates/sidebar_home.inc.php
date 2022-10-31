@@ -49,6 +49,9 @@ $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
 $access50        = Access::check('interface', 50);
 $access25        = ($access50 || Access::check('interface', 25));
+$showAlbum       = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk';
 // expanded by default
 $state_home_browse   = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
     ? 'collapsed'
@@ -88,7 +91,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         } ?>
         <ul class="sb3" id="sb_home_browse">
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
-            <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo $t_albums; ?></a></li>
+            <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $showAlbum; ?>"><?php echo $t_albums; ?></a></li>
             <?php if ($showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php } ?>
@@ -168,7 +171,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         </h4>
         <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
-          <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo $t_albums; ?></a></li>
+          <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=<?php echo $showAlbum; ?>"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
           <?php if ($allowLabel) { ?>
               <li id="sb_home_search_label"><a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo $t_labels; ?></a></li>

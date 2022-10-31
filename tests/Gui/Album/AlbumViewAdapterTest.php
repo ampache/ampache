@@ -100,34 +100,6 @@ class AlbumViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetAlbumSuiteIdsReturnsAlbumSuiteIds(): void
-    {
-        $id                 = 666;
-        $albumSuiteSingle   = [1];
-        $albumSuiteMultiple = [1,2,3];
-
-        // single disc test
-        $this->album->album_suite = $albumSuiteSingle;
-
-        $this->album->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($id);
-
-        $this->assertEquals(
-            $id,
-            $this->subject->getAlbumSuiteIds()
-        );
-
-        // multiple disc test
-        $this->album->album_suite = $albumSuiteMultiple;
-
-        $this->assertSame(
-            implode(',', $albumSuiteMultiple),
-            $this->subject->getAlbumSuiteIds()
-        );
-    }
-
     public function testGetAverageRatingReturnsValue(): void
     {
         $albumId       = 666;

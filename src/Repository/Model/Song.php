@@ -61,6 +61,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $album;
     /**
+     * @var integer $disk
+     */
+    public $album_disk;
+    /**
      * @var integer $artist
      */
     public $artist;
@@ -263,7 +267,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_track;
     /**
-     * @var string $disk
+     * @var int $disk
      */
     public $disk;
     /**
@@ -290,6 +294,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @var string $f_album_link
      */
     public $f_album_link;
+    /**
+     * @var string $f_album_disk_link
+     */
+    public string $f_album_disk_link;
     /**
      * @var string $f_artist_link
      */
@@ -499,18 +507,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $artist_id = (int)($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($catalog, $album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number);
+            $album_id = Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number);
         } else {
             $album_id = (int)($results['album_id']);
         }
         $insert_time = time();
 
-        $sql = "INSERT INTO `song` (`catalog`, `file`, `album`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `song` (`catalog`, `file`, `album`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $db_results = Dba::write($sql, array(
             $catalog,
             $file,
             $album_id,
+            $disk,
             $artist_id,
             $title,
             $bitrate,
@@ -538,7 +547,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_id = (int)Dba::insert_id();
         $artists = array((int)$artist_id, (int)$albumartist_id);
 
-        // map the catalog and artists
+        // create the album_disk
+        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
+        Dba::write($sql, array($song_id, $disk, $catalog));
+        // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
         if ((int)$artist_id > 0) {
             Artist::add_artist_map($artist_id, 'song', $song_id);
@@ -720,7 +732,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`total_count`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
@@ -990,7 +1002,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $sql .= 'ORDER BY `time`, `bitrate`, `size`';
 
             if ($search_type == 'album') {
-                $sql = "SELECT `id` FROM `song` LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL ORDER BY `album`, `track`";
+                $sql = "SELECT `id` FROM `song` LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) HAVING `Counting` > 1) AS `dupe_search` ON `song`.`album` = `dupe_search`.`dupe_id1` LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) HAVING `Counting` > 1) AS `dupe_search2` ON `song`.`album` = `dupe_search2`.`dupe_id2` WHERE `dupe_search`.`dupe_id1` IS NOT NULL OR `dupe_search2`.`dupe_id2` IS NOT NULL ORDER BY `album`, `track`";
             }
 
             $db_results = Dba::read($sql);
@@ -1004,7 +1016,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
-     * get_album_name
+     * get_album_fullname
      * gets the name of $this->album, allows passing of id
      * @param integer $album_id
      * @param bool $simple
@@ -1018,9 +1030,24 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $album = (!$album_id)
             ? new Album($this->album)
             : new Album($album_id);
+        $this->f_album_full = $album->get_fullname($simple);
 
-        return $album->get_fullname($simple);
-    } // get_album_name
+        return $this->f_album_full;
+    } // get_album_fullname
+
+    /**
+     * get_album_disk_fullname
+     * gets the name of $this->album, allows passing of id
+     * @param integer $album_id
+     * @param bool $simple
+     * @return string
+     */
+    public function get_album_disk_fullname()
+    {
+        $albumDisk = new AlbumDisk($this->get_album_disk());
+
+        return $albumDisk->get_fullname();
+    } // get_album_disk_fullname
 
     /**
      * get_album_catalog_number
@@ -1071,24 +1098,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_album_barcode
 
     /**
-     * get_album_disk
-     * gets the disk of $this->album, allows passing of id
-     * @param integer $album_id
-     * @return string
-     */
-    public function get_album_disk($album_id = null)
-    {
-        if ($album_id) {
-            return Album::get_disk($this->album);
-        }
-        if (!isset($this->disk)) {
-            $this->disk = Album::get_disk($this->album);
-        }
-
-        return $this->disk;
-    } // get_album_disk
-
-    /**
      * get_artist_name
      * gets the name of $this->artist, allows passing of id
      * @param int $artist_id
@@ -1125,6 +1134,27 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return self::get_artist_fullname($this->albumartist);
+    } // get_album_artist_fullname
+
+    /**
+     * get_album_disk
+     * gets album_disk of the object
+     * @return int
+     */
+    public function get_album_disk()
+    {
+        if (isset($this->album_disk)) {
+            return $this->album_disk;
+        }
+        $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
+        $db_results = Dba::read($sql, array($this->album, $this->disk));
+        $results    = Dba::fetch_assoc($db_results);
+        if (empty($results)) {
+            return null;
+        }
+        $this->album_disk = (int)$results['id'];
+
+        return $this->album_disk;
     } // get_album_artist_fullname
 
     /**
@@ -1191,7 +1221,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type, $song->disk);
+        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
         $skip_array   = array(
             'id',
@@ -1393,9 +1423,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * update_song
-     * this is the main updater for a song it actually
-     * calls a whole bunch of mini functions to update
-     * each little part of the song... lastly it updates
+     * this is the main updater for a song and updates
      * the "update_time" of the song
      * @param integer $song_id
      * @param Song $new_song
@@ -1404,8 +1432,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist,
+        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist,
                                 $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
                                 (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
@@ -1594,56 +1622,47 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * update_artist
      * updates the artist field
-     * @param integer $new_artist
-     * @param integer $song_id
-     * @param integer $old_artist
+     * @param int $new_artist
+     * @param int $song_id
+     * @param int $old_artist
+     * @param bool $update_counts
+     * @return bool
      */
-    public static function update_artist($new_artist, $song_id, $old_artist)
+    public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true)
     {
-        self::_update_item('artist', $new_artist, $song_id, 50);
+        if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
+            self::migrate_artist($new_artist, $song_id, $old_artist);
+            if ($update_counts) {
+                Artist::update_artist_counts();
+            }
 
-        // migrate stats for the old artist
-        Stats::migrate('artist', $old_artist, $new_artist, $song_id);
-        Useractivity::migrate('artist', $old_artist, $new_artist);
-        Recommendation::migrate('artist', $old_artist);
-        Share::migrate('artist', $old_artist, $new_artist);
-        Shoutbox::migrate('artist', $old_artist, $new_artist);
-        Tag::migrate('artist', $old_artist, $new_artist);
-        Userflag::migrate('artist', $old_artist, $new_artist);
-        Rating::migrate('artist', $old_artist, $new_artist);
-        Art::duplicate('artist', $old_artist, $new_artist);
-        Wanted::migrate('artist', $old_artist, $new_artist);
-        Catalog::migrate_map('artist', $old_artist, $new_artist);
-        Artist::add_artist_map($new_artist, 'song', $song_id);
-        Artist::remove_artist_map($old_artist, 'song', $song_id);
-        Artist::update_artist_counts();
+            return true;
+        }
+
+        return false;
     } // update_artist
 
     /**
      * update_album
      * updates the album field
-     * @param integer $new_album
-     * @param integer $song_id
-     * @param integer $old_album
+     * @param int $new_album
+     * @param int $song_id
+     * @param int $old_album
+     * @param bool $update_counts
+     * @return bool
      */
-    public static function update_album($new_album, $song_id, $old_album)
+    public static function update_album($new_album, $song_id, $old_album, $update_counts = true)
     {
-        self::_update_item('album', $new_album, $song_id, 50, true);
+        if (self::_update_item('album', $new_album, $song_id, 50, true) !== false) {
+            self::migrate_album($new_album, $song_id, $old_album);
+            if ($update_counts) {
+                Album::update_album_counts();
+            }
 
-        // migrate stats for the old album
-        Stats::migrate('album', $old_album, $new_album, $song_id);
-        Useractivity::migrate('album', $old_album, $new_album);
-        //Recommendation::migrate('album', $old_album);
-        Share::migrate('album', $old_album, $new_album);
-        Shoutbox::migrate('album', $old_album, $new_album);
-        Tag::migrate('album', $old_album, $new_album);
-        Userflag::migrate('album', $old_album, $new_album);
-        Rating::migrate('album', $old_album, $new_album);
-        Art::duplicate('album', $old_album, $new_album);
-        Catalog::migrate_map('album', $old_album, $new_album);
-        Album::add_album_map($new_album, 'song', $song_id);
-        Album::remove_album_map($old_album, 'song', $song_id);
-        Album::update_album_counts();
+            return true;
+        }
+
+        return false;
     } // update_album
 
     /**
@@ -1698,9 +1717,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     private static function _update_item($field, $value, $song_id, $level, $check_owner = false)
     {
-        if ($check_owner) {
+        if ($check_owner && !empty(Core::get_global('user'))) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == Core::get_global('user')->id) {
+            if (isset($item->id) && $item->get_user_owner() == Core::get_global('user')->id) {
                 $level = 25;
             }
         }
@@ -1774,8 +1793,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         $this->albumartist = Album::get_album_artist($this->album);
 
-        $this->get_album_disk();
-
         // Format the album name
         $this->f_album_full = $this->get_album_fullname();
         $this->f_album      = $this->f_album_full;
@@ -1794,8 +1811,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->get_f_link();
         $this->get_f_artist_link();
         $this->get_f_albumartist_link();
-        $web_path            = AmpConfig::get('web_path');
-        $this->f_album_link  = "<a href=\"" . $web_path . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->f_album_full) . "\"> " . scrub_out($this->f_album) . "</a>";
+        $this->get_f_album_link();
 
         // Format the Bitrate
         $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
@@ -1814,6 +1830,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // Format the size
         $this->f_size = Ui::format_bytes($this->size);
 
+        $web_path       = AmpConfig::get('web_path');
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         $this->f_file = $this->f_artist . ' - ';
@@ -1969,6 +1986,38 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $this->f_albumartist_link;
+    }
+
+    /**
+     * Get item get_f_album_link.
+     * @return string
+     */
+    public function get_f_album_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_album_link)) {
+            $this->f_album_link = '';
+            $web_path           = AmpConfig::get('web_path');
+            $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
+        }
+
+        return $this->f_album_link;
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     * @return string
+     */
+    public function get_f_album_disk_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_album_disk_link)) {
+            $this->f_album_disk_link = '';
+            $web_path                = AmpConfig::get('web_path');
+            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&amp;album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
+        }
+
+        return $this->f_album_disk_link;
     }
 
     /**
@@ -2262,19 +2311,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
-        if ($catalog_filter && $valid && (int)$user_id > 0) {
+        if ($catalog_filter && $valid) {
             $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
         }
         if ($valid && !$catalog_filter) {
             // If user is not empty, we're looking directly to user personal info (admin view)
             $sql .= "AND `object_count`.`user`=" . (int)$user_id . " ";
-        } else {
-            if (!Access::check('interface', 100) && !empty(Core::get_global('user'))) {
-                // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
-                $current_user = (int) Core::get_global('user')->id;
-                if ($current_user > 0) {
-                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
-                }
+        } elseif (!Access::check('interface', 100) && $valid) {
+            // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
+            $current_user = (int) Core::get_global('user')->id;
+            if ($current_user > 0) {
+                $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
             }
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit;
@@ -2508,6 +2555,96 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $deleted;
     } // get_deleted
+
+    /**
+     * Migrate an artist data to a new object
+     * @param int $new_artist
+     * @param int $song_id
+     * @param int $old_artist
+     */
+    public static function migrate_artist($new_artist, $song_id, $old_artist)
+    {
+        // migrate stats for the old artist
+        Stats::migrate('artist', $old_artist, $new_artist, $song_id);
+        Useractivity::migrate('artist', $old_artist, $new_artist);
+        Recommendation::migrate('artist', $old_artist);
+        Share::migrate('artist', $old_artist, $new_artist);
+        Shoutbox::migrate('artist', $old_artist, $new_artist);
+        Tag::migrate('artist', $old_artist, $new_artist);
+        Userflag::migrate('artist', $old_artist, $new_artist);
+        Rating::migrate('artist', $old_artist, $new_artist);
+        Art::duplicate('artist', $old_artist, $new_artist);
+        Wanted::migrate('artist', $old_artist, $new_artist);
+        Catalog::migrate_map('artist', $old_artist, $new_artist);
+        // update mapping tables
+        $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
+        if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+            return false;
+        }
+        $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
+        if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+            return false;
+        }
+        $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        if (Dba::write($sql, array($new_artist, 'artist', $old_artist)) === false) {
+            return false;
+        }
+        // delete leftovers duplicate maps
+        $sql = "DELETE FROM `album_map` WHERE `object_id` = ?";
+        Dba::write($sql, array($old_artist));
+        $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?";
+        Dba::write($sql, array($old_artist));
+        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
+        Dba::write($sql, array('artist', $old_artist));
+    }
+
+    /**
+     * Migrate an album data to a new object
+     * @param int $new_album
+     * @param int $song_id
+     * @param int $old_album
+     */
+    public static function migrate_album($new_album, $song_id, $old_album)
+    {
+        // migrate stats for the old album
+        Stats::migrate('album', $old_album, $new_album, $song_id);
+        Useractivity::migrate('album', $old_album, $new_album);
+        //Recommendation::migrate('album', $old_album);
+        Share::migrate('album', $old_album, $new_album);
+        Shoutbox::migrate('album', $old_album, $new_album);
+        Tag::migrate('album', $old_album, $new_album);
+        Userflag::migrate('album', $old_album, $new_album);
+        Rating::migrate('album', $old_album, $new_album);
+        Art::duplicate('album', $old_album, $new_album);
+        Catalog::migrate_map('album', $old_album, $new_album);
+
+        // update mapping tables
+        $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?";
+        if (Dba::write($sql, array($new_album, $old_album)) === false) {
+            return false;
+        }
+        $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
+        if (Dba::write($sql, array($new_album, $old_album, $song_id)) === false) {
+            return false;
+        }
+        $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        if (Dba::write($sql, array($new_album, 'album', $old_album)) === false) {
+            return false;
+        }
+        $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        if (Dba::write($sql, array($new_album, 'album', $old_album)) === false) {
+            return false;
+        }
+        // delete leftovers duplicate maps
+        $sql = "DELETE FROM `album_disk` WHERE `album_id` = ?";
+        Dba::write($sql, array($old_album));
+        $sql = "DELETE FROM `album_map` WHERE `album_id` = ?";
+        Dba::write($sql, array($old_album));
+        $sql = "DELETE FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
+        Dba::write($sql, array('album', $old_album));
+        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
+        Dba::write($sql, array('album', $old_album));
+    }
 
     /**
      * remove

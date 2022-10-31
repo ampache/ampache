@@ -20,11 +20,13 @@
  *
  */
 
-namespace Ampache\Gui\Album;
+namespace Ampache\Gui\AlbumDisk;
 
-interface AlbumViewAdapterInterface
+interface AlbumDiskViewAdapterInterface
 {
     public function getId(): int;
+
+    public function getAlbumId(): int;
 
     public function getRating(): string;
 

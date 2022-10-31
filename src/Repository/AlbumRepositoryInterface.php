@@ -46,12 +46,12 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * gets songs from this album group
+     * gets songs from this album_disk id
      *
      * @return int[] Song ids
      */
-    public function getSongsGrouped(
-        array $albumIdList
+    public function getSongsByAlbumDisk(
+        int $albumId
     ): array;
 
     /**
@@ -68,8 +68,8 @@ interface AlbumRepositoryInterface
      *
      * @return int[] Song ids
      */
-    public function getRandomSongsGrouped(
-        array $albumIdList
+    public function getRandomSongsByAlbumDisk(
+        int $albumDiskId
     ): array;
 
     /**
@@ -78,15 +78,6 @@ interface AlbumRepositoryInterface
     public function delete(
         int $albumId
     ): bool;
-
-    /**
-     * gets the album ids with the same musicbrainz identifier
-     *
-     * @return int[]
-     */
-    public function getAlbumSuite(
-        Album $album
-    ): array;
 
     /**
      * Cleans out unused albums
@@ -120,10 +111,35 @@ interface AlbumRepositoryInterface
 
     /**
      * gets the album ids that this artist is a part of
+     * Return Album or AlbumDisk based on album_group preference
      *
      * @return int[]
      */
     public function getByArtist(
+        int $artistId,
+        ?int $catalog = null,
+        bool $group_release_type = false
+    ): array;
+
+    /**
+     * gets the album ids that this artist is a part of
+     * Return Album only
+     *
+     * @return int[]
+     */
+    public function getAlbumByArtist(
+        int $artistId,
+        ?int $catalog = null,
+        bool $group_release_type = false
+    ): array;
+
+    /**
+     * gets the album disk ids that this artist is a part of
+     * Return AlbumDisk only
+     *
+     * @return int[]
+     */
+    public function getAlbumDiskByArtist(
         int $artistId,
         ?int $catalog = null,
         bool $group_release_type = false

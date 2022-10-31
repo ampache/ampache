@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 63
+config_version = 64
 
 ;#########################################################
 ; Auto Update                                            #
@@ -375,9 +375,9 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.
-; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
+; POSSIBLE VALUES: artist, album, album_disk, playlist, search, tmp_playlist
 ; DEFAULT: none
-;allow_zip_types = "album"
+;allow_zip_types = "album, album_disk"
 
 ; Art Zip Add
 ; This settings allows/disallows to include Album Art to the Zip 

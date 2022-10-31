@@ -22,10 +22,11 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Gui\Album;
+namespace Ampache\Gui\AlbumDisk;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -43,7 +44,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-final class AlbumViewAdapter implements AlbumViewAdapterInterface
+final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 {
     private ConfigContainerInterface $configContainer;
 
@@ -57,7 +58,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     private Browse $browse;
 
-    private Album $album;
+    private AlbumDisk $albumDisk;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
@@ -66,7 +67,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
         FunctionCheckerInterface $functionChecker,
         GuiGatekeeperInterface $gatekeeper,
         Browse $browse,
-        Album $album
+        AlbumDisk $albumDisk
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -74,24 +75,29 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
         $this->functionChecker = $functionChecker;
         $this->gatekeeper      = $gatekeeper;
         $this->browse          = $browse;
-        $this->album           = $album;
+        $this->albumDisk       = $albumDisk;
     }
 
     public function getId(): int
     {
-        return $this->album->getId();
+        return $this->albumDisk->getId();
+    }
+
+    public function getAlbumId(): int
+    {
+        return $this->albumDisk->getAlbumId();
     }
 
     public function getRating(): string
     {
-        return Rating::show($this->album->getId(), 'album');
+        return Rating::show($this->albumDisk->getId(), 'album_disk');
     }
 
     public function getAverageRating(): string
     {
         $rating = $this->modelFactory->createRating(
-            $this->album->getId(),
-            'album'
+            $this->albumDisk->getId(),
+            'album_disk'
         );
 
         return (string) $rating->get_average_rating();
@@ -99,13 +105,13 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getUserFlags(): string
     {
-        return Userflag::show($this->album->getId(), 'album');
+        return Userflag::show($this->albumDisk->getId(), 'album_disk');
     }
 
     public function getArt(): string
     {
-        $albumId = $this->album->getId();
-        $name    = '[' . $this->album->get_album_artist_fullname() . '] ' . scrub_out($this->album->get_fullname());
+        $albumId = $this->albumDisk->getAlbumId();
+        $name    = '[' . $this->albumDisk->get_album_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
@@ -124,10 +130,10 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getDirectplayButton(): string
     {
-        $albumId = $this->album->getId();
+        $albumId = $this->albumDisk->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId,
+            '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId,
             'play',
             T_('Play'),
             'play_album_' . $albumId
@@ -136,10 +142,10 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAutoplayNextButton(): string
     {
-        $albumId = $this->album->getId();
+        $albumId = $this->albumDisk->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&playnext=true',
+            '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId . '&playnext=true',
             'play_next',
             T_('Play next'),
             'nextplay_album_' . $albumId
@@ -148,10 +154,10 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAppendNextButton(): string
     {
-        $albumId = $this->album->getId();
+        $albumId = $this->albumDisk->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
+            '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId . '&append=true',
             'play_add',
             T_('Play last'),
             'addplay_album_' . $albumId
@@ -160,10 +166,10 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAddToTemporaryPlaylistButton(): string
     {
-        $albumId = $this->album->getId();
+        $albumId = $this->albumDisk->getId();
 
         return Ajax::button(
-            '?action=basket&type=album&id=' . $albumId,
+            '?action=basket&type=album_disk&id=' . $albumId,
             'add',
             T_('Add to Temporary Playlist'),
             'add_album_' . $albumId
@@ -172,13 +178,13 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getRandomToTemporaryPlaylistButton(): string
     {
-        $albumId = $this->album->getId();
+        $albumId = $this->albumDisk->getId();
 
         return Ajax::button(
-            '?action=basket&type=album_random&id=' . $albumId,
+            '?action=basket&type=album_disk_random&id=' . $albumId,
             'random',
             T_('Random to Temporary Playlist'),
-            'random_album_' . $albumId
+            'random_album_disk_' . $albumId
         );
     }
 
@@ -194,9 +200,9 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getPostShoutUrl(): string
     {
         return sprintf(
-            '%s/shout.php?action=show_add_shout&type=album&id=%d',
+            '%s/shout.php?action=show_add_shout&type=album_disk&id=%d',
             $this->configContainer->getWebPath(),
-            $this->album->getId()
+            $this->albumDisk->getId()
         );
     }
 
@@ -213,22 +219,22 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getShareUi(): string
     {
-        return Share::display_ui('album', $this->album->getId(), false);
+        return Share::display_ui('album_disk', $this->albumDisk->getId(), false);
     }
 
     public function canBatchDownload(): bool
     {
         return $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('album');
+            $this->zipHandler->isZipable('album_disk');
     }
 
     public function getBatchDownloadUrl(): string
     {
         return sprintf(
-            '%s/batch.php?action=album&id=%s',
+            '%s/batch.php?action=album_disk&id=%s',
             $this->configContainer->getWebPath(),
-            $this->album->id
+            $this->albumDisk->getId()
         );
     }
 
@@ -258,7 +264,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
             '%s/albums.php?action=%s&album_id=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
-            $this->album->getId()
+            $this->albumDisk->getAlbumId()
         );
     }
 
@@ -269,7 +275,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function canBeDeleted(): bool
     {
-        return Catalog::can_remove($this->album);
+        return Catalog::can_remove($this->modelFactory->createAlbum($this->albumDisk->getAlbumId()));
     }
 
     public function getAddToPlaylistIcon(): string
@@ -279,22 +285,22 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getPlayedTimes(): int
     {
-        return $this->album->total_count;
+        return $this->albumDisk->total_count;
     }
 
     public function getAlbumUrl(): string
     {
-        return $this->album->get_link();
+        return $this->albumDisk->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return $this->album->get_f_link();
+        return $this->albumDisk->get_f_link();
     }
 
     public function getArtistLink(): string
     {
-        return !empty($this->album->f_album_artist_link) ? $this->album->f_album_artist_link : $this->album->f_artist_link;
+        return !empty($this->albumDisk->get_f_album_artist_link()) ? $this->albumDisk->get_f_album_artist_link() : $this->albumDisk->get_f_artist_link();
     }
 
     public function canShowYear(): bool
@@ -304,18 +310,18 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getDisplayYear(): int
     {
-        return ($this->configContainer->get('use_original_year') && $this->album->original_year)
-            ? $this->album->original_year
-            : $this->album->year;
+        return ($this->configContainer->get('use_original_year') && $this->albumDisk->original_year)
+            ? $this->albumDisk->original_year
+            : $this->albumDisk->year;
     }
 
     public function getGenre(): string
     {
-        return $this->album->f_tags;
+        return $this->albumDisk->f_tags;
     }
 
     public function getSongCount(): int
     {
-        return $this->album->song_count;
+        return $this->albumDisk->song_count;
     }
 }

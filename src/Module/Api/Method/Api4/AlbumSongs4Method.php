@@ -65,16 +65,7 @@ class AlbumSongs4Method
 
         if (isset($album->id)) {
             // songs for all disks
-            if (AmpConfig::get('album_group')) {
-                $disc_ids = $album->get_group_disks_ids();
-                $allsongs = static::getAlbumRepository()->getSongsGrouped($disc_ids);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            } else {
-                // songs for just this disk
-                $songs = static::getAlbumRepository()->getSongs($album->id);
-            }
+            $songs = static::getAlbumRepository()->getSongs($album->id);
         }
         if (!empty($songs)) {
             switch ($input['api_format']) {

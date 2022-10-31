@@ -27,10 +27,10 @@ namespace Ampache\Module\Playlist\Search;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Search;
 
-final class AlbumSearch implements SearchInterface
+final class AlbumDiskSearch implements SearchInterface
 {
     /**
-     * Handles the generation of the SQL for album searches.
+     * Handles the generation of the SQL for albumDisk searches.
      * @param Search $search
      * @return array
      */
@@ -63,7 +63,7 @@ final class AlbumSearch implements SearchInterface
             }
             $input        = $search->filter_data($rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
-            $group[]      = "`album`.`id`";
+            $group[]      = "`album_disk`.`id`";
             switch ($rule[0]) {
                 case 'title':
                     $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?)";
@@ -82,7 +82,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'time':
                     $input        = $input * 60;
-                    $where[]      = "`album`.`time` $operator_sql ?";
+                    $where[]      = "`album_disk`.`time` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'rating':
@@ -226,11 +226,11 @@ final class AlbumSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[]      = "(`album`.`total_count` $operator_sql ?)";
+                    $where[]      = "(`album_disk`.`total_count` $operator_sql ?)";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`album`.`song_count` $operator_sql ?)";
+                    $where[]      = "(`album_disk`.`song_count` $operator_sql ?)";
                     $parameters[] = $input;
                     break;
                 case 'other_user':
@@ -382,6 +382,9 @@ final class AlbumSearch implements SearchInterface
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
+        // always join the album table
+        $table['0_album'] = "LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id`";
+
         if (array_key_exists('album_map', $join)) {
             $table['0_album_map'] = "LEFT JOIN `album_map` ON `album`.`id` = `album_map`.`album_id`";
             $table['artist']      = "LEFT JOIN `artist` ON `artist`.`id` = `album_map`.`object_id`";
@@ -418,7 +421,7 @@ final class AlbumSearch implements SearchInterface
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT `album`.`id` AS `id` FROM `album`',
+            'base' => 'SELECT `album_disk`.`id` AS `id` FROM `album_disk`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

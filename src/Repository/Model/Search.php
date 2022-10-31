@@ -25,6 +25,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Playlist\Search\AlbumDiskSearch;
 use Ampache\Module\Playlist\Search\AlbumSearch;
 use Ampache\Module\Playlist\Search\ArtistSearch;
 use Ampache\Module\Playlist\Search\LabelSearch;
@@ -47,7 +48,7 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array('song', 'album', 'song_artist', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
+    public const VALID_TYPES     = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
 
@@ -111,7 +112,12 @@ class Search extends playlist_object
             case 'album':
                 $this->_set_types_album();
                 $this->searchType = new AlbumSearch();
-                $this->order_by   = (AmpConfig::get('album_group')) ? '`album`.`name`' : '`album`.`name`, `album`.`disk`';
+                $this->order_by   = '`album`.`name`';
+                break;
+            case 'album_disk':
+                $this->_set_types_album();
+                $this->searchType = new AlbumDiskSearch();
+                $this->order_by   = '`album`.`name`';
                 break;
             case 'artist':
             case 'album_artist':
@@ -1029,10 +1035,11 @@ class Search extends playlist_object
 
         // Verify the type
         $search_type = strtolower($data['type'] ?? '');
-        //Search::VALID_TYPES = array('song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
+        //Search::VALID_TYPES = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
             case 'song':
             case 'album':
+            case 'album_disk':
             case 'song_artist':
             case 'album_artist':
             case 'artist':
@@ -1306,7 +1313,7 @@ class Search extends playlist_object
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
             if (empty($sqltbl['where_sql'])) {
                 $sql .= " WHERE ";
@@ -1414,6 +1421,7 @@ class Search extends playlist_object
                 }
                 break;
             case 'album':
+            case 'album_disk':
                 switch ($name) {
                     case 'name':
                     case 'album_title':

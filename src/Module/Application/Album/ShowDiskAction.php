@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -39,9 +39,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final class ShowDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const REQUEST_KEY = 'show_disk';
 
     private ModelFactoryInterface $modelFactory;
 
@@ -75,37 +75,25 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $albumId = (int) ($request->getQueryParams()['album'] ?? 0);
+        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
 
-        $album = $this->modelFactory->createAlbum($albumId);
-        $album->format();
+        $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
+        $albumDisk->format();
 
-        if ($album->isNew()) {
+        if ($albumDisk->isNew()) {
             $this->logger->warning(
-                'Requested an album that does not exist',
+                'Requested an album_disk that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
-        // allow single disks to not be shown as multi's
-        } elseif ($album->disk_count == 1) {
-            $this->ui->show(
-                'show_album.inc.php',
-                [
-                    'album' => $album,
-                    'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper,
-                        $album
-                    ),
-                ]
-            );
         } else {
             $this->ui->show(
-                'show_album_group_disks.inc.php',
+                'show_album_disk.inc.php',
                 [
-                    'album' => $album,
+                    'albumDisk' => $albumDisk,
                     'isAlbumEditable' => $this->isEditable(
                         $gatekeeper,
-                        $album
+                        $albumDisk
                     ),
                 ]
             );
@@ -120,7 +108,7 @@ final class ShowAction implements ApplicationActionInterface
 
     private function isEditable(
         GuiGatekeeperInterface $gatekeeper,
-        Album $album
+        AlbumDisk $albumDisk
     ): bool {
         if (
             $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
@@ -128,7 +116,7 @@ final class ShowAction implements ApplicationActionInterface
             return true;
         }
 
-        if (!$album->album_artist) {
+        if (!$albumDisk->album_artist) {
             return false;
         }
 
@@ -136,6 +124,6 @@ final class ShowAction implements ApplicationActionInterface
             return false;
         }
 
-        return $album->get_user_owner() === $gatekeeper->getUserId();
+        return $albumDisk->get_user_owner() === $gatekeeper->getUserId();
     }
 }

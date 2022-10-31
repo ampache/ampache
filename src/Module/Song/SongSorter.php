@@ -184,7 +184,7 @@ final class SongSorter implements SongSorterInterface
         } elseif ($album_object->artist_count != 1) {
             $artist = $various_artist;
         }
-        $disk           = $album_object->disk ?? '%d';
+        $disk           = $song->disk ?? '%d';
         $catalog_number = $this->sort_clean_name($album_object->catalog_number) ?? '%C';
         $barcode        = $this->sort_clean_name($album_object->barcode) ?? '%b';
         $original_year  = $album_object->original_year ?? '%Y';

@@ -368,11 +368,8 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client      = static::getUserRepository()->findByApiKey(trim($token));
-        $counts      = Catalog::get_server_counts($client->id);
-        $album_count = (Preference::get('album_group', $client->id))
-            ? (int)$counts['album_group']
-            : (int)$counts['album'];
+        $client    = static::getUserRepository()->findByApiKey(trim($token));
+        $counts    = Catalog::get_server_counts($client->id);
         $playlists = (AmpConfig::get('hide_search', false))
             ? ((int)$counts['playlist'])
             : ((int)$counts['playlist'] + (int)$counts['search']);
@@ -385,13 +382,13 @@ class Api
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
             'songs' => (int)$counts['song'],
-            'albums' => $album_count,
+            'albums' => (int)$counts['album'],
             'artists' => (int)$counts['artist'],
             'genres' => (int)$counts['tag'],
             'playlists' => (int)$counts['playlist'],
             'searches' => (int)$counts['search'],
             'playlists_searches' => $playlists,
-            'users' => ((int)$counts['user'] + (int)$counts['user']),
+            'users' => ((int)$counts['user']),
             'catalogs' => (int)$counts['catalog'],
             'videos' => (int)$counts['video'],
             'podcasts' => (int)$counts['podcast'],

@@ -320,9 +320,9 @@ class Json4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getByArtist($artist_id), array(), $user_id, false);
+                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), array(), $user_id, false);
             } else {
-                $albums = ($artist->albums ?? 0);
+                $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user_id, false);
@@ -334,7 +334,7 @@ class Json4_Data
                 "id" => (string) $artist->id,
                 "name" => $artist->get_fullname(),
                 "albums" => $albums,
-                "albumcount" => (int) $artist->albums,
+                "albumcount" => (int)$artist->album_count ?? 0,
                 "songs" => $songs,
                 "songcount" => (int) $artist->songs,
                 "tag" => self::tags_array($artist->tags),
@@ -382,7 +382,6 @@ class Json4_Data
             $album = new Album($album_id);
             $album->format();
 
-            $disk   = $album->disk;
             $rating = new Rating($album_id, 'album');
             $flag   = new Userflag($album_id, 'album');
 
@@ -419,17 +418,12 @@ class Json4_Data
                 $songs = $album->song_count;
             }
 
-            // count multiple disks
-            if ($album->allow_group_disks) {
-                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
-            }
-
             $theArray['time']          = (int) $album->total_duration;
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
             $theArray['type']          = $album->release_type;
-            $theArray['disk']          = (int) $disk;
+            $theArray['disk']          = (int) $album->disk_count;
             $theArray['tag']           = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
@@ -797,8 +791,8 @@ class Json4_Data
                 )
             );
 
-            $ourSong['disk']                  = (int) $song->disk;
-            $ourSong['track']                 = (int) $song->track;
+            $ourSong['disk']                  = $song->disk;
+            $ourSong['track']                 = $song->track;
             $ourSong['filename']              = $song->file;
             $ourSong['tag']                   = self::tags_array($song->tags);
             $ourSong['playlisttrack']         = $playlist_track;
