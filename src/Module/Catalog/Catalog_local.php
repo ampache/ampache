@@ -587,8 +587,8 @@ class Catalog_local extends Catalog
 
         $catalog_media_type = $this->get_gather_type();
         if ($catalog_media_type == 'music') {
-            $media_type  = 'song';
-            $media_class = Song::class;
+            $media_type  = 'album';
+            $media_class = Album::class;
         } elseif ($catalog_media_type == 'podcast') {
             $media_type  = 'podcast_episode';
             $media_class = Podcast_Episode::class;
@@ -657,7 +657,7 @@ class Catalog_local extends Catalog
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
-            /** @var Album|Video $class_name */
+            /** @var Song|Podcast_Episode|Album|Video $class_name */
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
