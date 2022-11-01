@@ -83,8 +83,9 @@ final class ArtistSearch implements SearchInterface
                     $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
-                case 'yearformed':
                 case 'placeformed':
+                case 'summary':
+                case 'yearformed':
                     $where[]      = "`artist`.`$rule[0]` $operator_sql ?";
                     $parameters[] = $input;
                     break;
@@ -264,12 +265,17 @@ final class ArtistSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[]      = "(`artist`.`total_count` $operator_sql ?)";
+                    $where[]      = "`artist`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
-                case 'summary':
-                    $where[]      = "`artist`.`summary` $operator_sql ?";
-                    $parameters   = array_merge($parameters, array($input));
+                case 'song_count':
+                    $where[]      = "`artist`.`song_count` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'album_count':
+                    $group_column = ($showAlbum) ? '`artist`.`album_count`' : '`artist`.`album_disk_count`';
+                    $where[]      = "$group_column $operator_sql ?";
+                    $parameters[] = $input;
                     break;
                 case 'album':
                     $where[]       = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `artist_map`.`artist_id` IS NOT NULL";
@@ -280,15 +286,6 @@ final class ArtistSearch implements SearchInterface
                     $where[]      = "`song`.`title` $operator_sql ?";
                     $parameters   = array_merge($parameters, array($input));
                     $join['song'] = true;
-                    break;
-                case 'album_count':
-                    $group_column = ($showAlbum) ? '`artist`.`album_count`' : '`artist`.`album_disk_count`';
-                    $where[]      = "$group_column $operator_sql ?";
-                    $parameters[] = $input;
-                    break;
-                case 'song_count':
-                    $where[]      = "`artist`.`song_count` $operator_sql ?";
-                    $parameters[] = $input;
                     break;
                 case 'other_user':
                     $other_userid = $input;

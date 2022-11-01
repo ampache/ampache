@@ -69,10 +69,13 @@ final class AlbumDiskSearch implements SearchInterface
                     $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?)";
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
+                case 'catalog':
                 case 'year':
                 case 'release_type':
                 case 'release_status':
-                case 'catalog':
+                case 'barcode':
+                case 'catalog_number':
+                case 'subtitle':
                     $where[]      = "`album`.`" . $rule[0] . "` $operator_sql ?";
                     $parameters[] = $input;
                     break;
@@ -226,11 +229,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'played_times':
-                    $where[]      = "(`album_disk`.`total_count` $operator_sql ?)";
+                    $where[]      = "`album_disk`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
-                    $where[]      = "(`album_disk`.`song_count` $operator_sql ?)";
+                    $where[]      = "`album_disk`.`song_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'other_user':
