@@ -8,7 +8,7 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
 
 ### Added
 
-* Database 600012
+* Database 600014
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -21,6 +21,8 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
   * Rename `user_data` album keys
   * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
   * Add `song_artist` and `album_artist` maps to catalog_map
+  * Add ui option `api_enable_6` to enable/disable API6
+  * Add `subtitle` to the album table
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
@@ -30,6 +32,8 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
   * Add `song_genre` to album and artist searches
   * Add `possible_duplicate_album` to song search
   * Add `mbid_artist` to album search
+  * Add `barcode` to album search
+  * Add `catalog_number` to album search
   * Alias `possible_duplicate_album` => `possible_duplicate` for album search
   * Alias `album_genre` => `genre` for album search
   * Alias `mbid_album` => `mbid` for album search
@@ -45,6 +49,7 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Scrutinizer moved to php8.1
 * Download url parameter order matching "client, action, cache"
+* Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
 
@@ -61,17 +66,29 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
 
 ## API develop
 
+### Added
+
+* API6 (Based on API5)
+* advanced_search
+  * Add `barcode` to album search
+  * Add `catalog_number` to album search
+
 ### Changed
 
 * Don't send AlbumDisk objects to the API
+* Album::check() add barcode, catalog number and subtitle for comparison checks
 
 ### Fixed
 
-* Api::songs set_filter call without browse parameter may have lost info
+* Api5::songs set_filter call without browse parameter may have lost info
 * Api4::songs set_filter call without browse parameter may have lost info
-* Api::get_indexes set album_artist filter correctly
+* Api5::get_indexes set album_artist filter correctly
 * Api4::get_indexes set album_artist filter correctly
-* Api::artists set album_artist filter correctly
+* Api5::artists set album_artist filter correctly
+
+### Removed
+
+* Api6::album_songs remove exact as a parameter
 
 ## Ampache 5.5.3-release
 

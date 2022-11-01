@@ -585,28 +585,35 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type  = 'song';
+            $media_class = Song::class;
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type  = 'podcast_episode';
+            $media_class = Podcast_Episode::class;
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type  = 'video';
+            $media_class = Video::class;
+        }
+
         $stats         = self::get_server_counts(0);
         $number        = 0;
         $total_updated = 0;
         $this->count   = 0;
-
-        /** @var Album|Video|Podcast_Episode $media_type */
-        foreach (array(Video::class, Album::class, Podcast_Episode::class) as $media_type) {
-            $type  = ObjectTypeToClassNameMapper::reverseMap($media_type);
-            $total = $stats[$type];
-            if ($total == 0) {
-                continue;
+        $total         = $stats[$media_type];
+        if ($total == 0) {
+            return array('total' => $number, 'updated' => $total_updated);
+        }
+        $number = $number + $total;
+        $chunks = (int)floor($total / 1000);
+        foreach (range(0, $chunks) as $chunk) {
+            // Try to be nice about memory usage
+            if (isset($media_class) && $chunk > 0) {
+                $media_class::clear_cache();
             }
-            $number = $number + $total;
-            $chunks = (int)floor($total / 1000);
-            foreach (range(0, $chunks) as $chunk) {
-                // Try to be nice about memory usage
-                if ($chunk > 0) {
-                    $media_type::clear_cache();
-                }
-                debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $type . " on chunk $chunk", 5);
-                $total_updated += $this->_verify_chunk($type, $chunk, 1000);
-            }
+            debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $media_type . " on chunk $chunk", 5);
+            $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
         }
 
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
@@ -700,36 +707,42 @@ class Catalog_local extends Catalog
 
             return 0;
         }
-
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type = 'song';
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type = 'podcast_episode';
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type = 'video';
+        }
         $dead_total  = 0;
         $stats       = self::get_server_counts(0);
         $this->count = 0;
-        foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type];
-            if ($total == 0) {
-                continue;
-            }
-            $chunks = floor($total / 10000);
-            $dead   = array();
-            foreach (range(0, $chunks) as $chunk) {
-                debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk", 5);
-                $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-            }
+        $total       = $stats[$media_type];
+        if ($total == 0) {
+            return $dead_total;
+        }
+        $chunks = floor($total / 10000);
+        $dead   = array();
+        foreach (range(0, $chunks) as $chunk) {
+            debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk", 5);
+            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+        }
 
-            $dead_count = count($dead);
-            // Check for unmounted path
-            if (!file_exists($this->path)) {
-                if ($dead_count >= $total) {
-                    debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
-                    AmpError::add('general', T_('All files would be removed. Doing nothing'));
-                    continue;
-                }
+        $dead_count = count($dead);
+        // Check for unmounted path
+        if (!file_exists($this->path)) {
+            if ($dead_count >= $total) {
+                debug_event('local.catalog', 'All files would be removed. Doing nothing.', 1);
+                AmpError::add('general', T_('All files would be removed. Doing nothing'));
+
+                return $dead_total;
             }
-            if ($dead_count) {
-                $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
-                Dba::write($sql);
-            }
+        }
+        if ($dead_count) {
+            $dead_total += $dead_count;
+            $sql = "DELETE FROM `$media_type` WHERE `id` IN (" . implode(',', $dead) . ")";
+            Dba::write($sql);
         }
 
         Metadata::garbage_collection();
@@ -1138,20 +1151,26 @@ class Catalog_local extends Catalog
 
             return array();
         }
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type = 'song';
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type = 'podcast_episode';
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type = 'video';
+        }
 
         $missing     = array();
         $stats       = self::get_server_counts(0);
         $this->count = 0;
-        foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type];
-            if ($total == 0) {
-                continue;
-            }
-            $chunks = floor($total / 10000);
-            foreach (range(0, $chunks) as $chunk) {
-                debug_event('local.catalog', "catalog " . $this->id . " Starting check " . $media_type . " on chunk $chunk", 5);
-                $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
-            }
+        $total       = $stats[$media_type];
+        if ($total == 0) {
+            return $missing;
+        }
+        $chunks = floor($total / 10000);
+        foreach (range(0, $chunks) as $chunk) {
+            debug_event('local.catalog', "catalog " . $this->id . " Starting check " . $media_type . " on chunk $chunk", 5);
+            $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
         }
 
         return $missing;
