@@ -94,6 +94,12 @@ class Search extends playlist_object
                     ? json_decode((string)$value, true)
                     : $value;
             }
+            // make sure saved rules match the correct names
+            $rule_count = 0;
+            foreach ($this->rules as $rule) {
+                $this->rules[$rule_count][0] = $this->_get_rule_name($rule[0]);
+                $rule_count++;
+            }
         }
         $this->date  = time();
         $this->stars = array(
