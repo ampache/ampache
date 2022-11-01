@@ -612,7 +612,7 @@ class Catalog_local extends Catalog
             if (isset($media_class) && $chunk > 0) {
                 $media_class::clear_cache();
             }
-            debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $media_type . " on chunk $chunk", 5);
+            debug_event('local.catalog', "catalog " . $this->id . " starting verify " . $media_type . " on chunk $chunk/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
         }
 
@@ -725,7 +725,7 @@ class Catalog_local extends Catalog
         $chunks = floor($total / 10000);
         $dead   = array();
         foreach (range(0, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk", 5);
+            debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
         }
 
@@ -1169,7 +1169,7 @@ class Catalog_local extends Catalog
         }
         $chunks = floor($total / 10000);
         foreach (range(0, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->id . " Starting check " . $media_type . " on chunk $chunk", 5);
+            debug_event('local.catalog', "catalog " . $this->id . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
         }
 
