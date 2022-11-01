@@ -816,6 +816,9 @@ class Update
         $update_string = "* Add ui option 'api_enable_6' to enable/disable API6";
         $version[]     = array('version' => '600013', 'description' => $update_string);
 
+        $update_string = "* Add `subtitle` to the album table";
+        $version[]     = array('version' => '600014', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5012,6 +5015,21 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600014
+     *
+     * Add `subtitle` to the album table
+     */
+    public static function update_600014(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $sql       = "ALTER TABLE `album` ADD `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }

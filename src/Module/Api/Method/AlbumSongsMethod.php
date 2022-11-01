@@ -49,7 +49,6 @@ class AlbumSongsMethod
      *
      * @param array $input
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional //TODO REMOVE
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean

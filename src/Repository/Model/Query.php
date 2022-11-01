@@ -87,28 +87,36 @@ class Query
             'random'
         ),
         'album' => array(
-            'name',
-            'year',
-            'original_year',
-            'artist',
             'album_artist',
+            'artist',
+            'barcode',
+            'catalog_number',
             'generic_artist',
-            'song_count',
-            'total_count',
+            'name',
+            'original_year',
+            'random',
+            'release_status',
             'release_type',
-            'random'
+            'song_count',
+            'subtitle',
+            'total_count',
+            'year'
         ),
         'album_disk' => array(
-            'name',
-            'year',
-            'original_year',
-            'artist',
             'album_artist',
+            'artist',
+            'barcode',
+            'catalog_number',
             'generic_artist',
-            'song_count',
-            'total_count',
+            'name',
+            'original_year',
+            'random',
+            'release_status',
             'release_type',
-            'random'
+            'song_count',
+            'subtitle',
+            'total_count',
+            'year'
         ),
         'artist' => array(
             'name',
@@ -2148,6 +2156,10 @@ class Query
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
+                    case 'release_status':
+                    case 'barcode':
+                    case 'catalog_number':
+                    case 'subtitle':
                         $sql = "`album`.`$field`";
                         break;
                 } // end switch
@@ -2178,6 +2190,10 @@ class Query
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
+                    case 'release_status':
+                    case 'barcode':
+                    case 'catalog_number':
+                    case 'subtitle':
                         $sql = "`album`.`$field`";
                         break;
                 } // end switch
