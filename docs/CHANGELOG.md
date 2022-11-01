@@ -19,6 +19,7 @@
 * Delete artist's from the catalog_map that don't have a song or album for that catalog
 * Search
   * SQL for Artist `catalog` searches
+  * Make sure saved rules match the correct names on load
 * CLI
   * Don't try to update a database when the connection fails
 
