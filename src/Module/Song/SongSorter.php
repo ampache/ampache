@@ -143,7 +143,7 @@ final class SongSorter implements SongSorterInterface
      * Get the directory for this file from the catalog and the song info using the sort_pattern
      * takes into account various artists and the alphabet_prefix
      * @param Interactor $interactor
-     * @param $song
+     * @param Song $song
      * @param $sort_pattern
      * @param $base
      * @param string $various_artist

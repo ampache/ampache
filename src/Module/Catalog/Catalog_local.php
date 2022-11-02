@@ -585,23 +585,26 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $catalog_media_type = $this->get_gather_type();
-        if ($catalog_media_type == 'music') {
-            $media_type  = 'album';
-            $media_class = Album::class;
-        } elseif ($catalog_media_type == 'podcast') {
-            $media_type  = 'podcast_episode';
-            $media_class = Podcast_Episode::class;
-        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-            $media_type  = 'video';
-            $media_class = Video::class;
-        }
-
         $stats         = self::get_server_counts(0);
         $number        = 0;
         $total_updated = 0;
         $this->count   = 0;
-        $total         = $stats[$media_type];
+        $total         = 0;
+
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type  = 'album';
+            $media_class = Album::class;
+            $total       = $stats[$media_type];
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type  = 'podcast_episode';
+            $media_class = Podcast_Episode::class;
+            $total       = $stats[$media_type];
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type  = 'video';
+            $media_class = Video::class;
+            $total       = $stats[$media_type];
+        }
         if ($total == 0) {
             return array('total' => $number, 'updated' => $total_updated);
         }
@@ -706,18 +709,22 @@ class Catalog_local extends Catalog
 
             return 0;
         }
-        $catalog_media_type = $this->get_gather_type();
-        if ($catalog_media_type == 'music') {
-            $media_type = 'song';
-        } elseif ($catalog_media_type == 'podcast') {
-            $media_type = 'podcast_episode';
-        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-            $media_type = 'video';
-        }
         $dead_total  = 0;
         $stats       = self::get_server_counts(0);
         $this->count = 0;
-        $total       = $stats[$media_type];
+        $total       = 0;
+
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type = 'song';
+            $total      = $stats[$media_type];
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type = 'podcast_episode';
+            $total      = $stats[$media_type];
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type = 'video';
+            $total      = $stats[$media_type];
+        }
         if ($total == 0) {
             return $dead_total;
         }
@@ -1150,19 +1157,22 @@ class Catalog_local extends Catalog
 
             return array();
         }
-        $catalog_media_type = $this->get_gather_type();
-        if ($catalog_media_type == 'music') {
-            $media_type = 'song';
-        } elseif ($catalog_media_type == 'podcast') {
-            $media_type = 'podcast_episode';
-        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-            $media_type = 'video';
-        }
-
         $missing     = array();
         $stats       = self::get_server_counts(0);
         $this->count = 0;
-        $total       = $stats[$media_type];
+        $total       = 0;
+
+        $catalog_media_type = $this->get_gather_type();
+        if ($catalog_media_type == 'music') {
+            $media_type = 'song';
+            $total      = $stats[$media_type];
+        } elseif ($catalog_media_type == 'podcast') {
+            $media_type = 'podcast_episode';
+            $total      = $stats[$media_type];
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            $media_type = 'video';
+            $total      = $stats[$media_type];
+        }
         if ($total == 0) {
             return $missing;
         }

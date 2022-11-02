@@ -61,7 +61,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $album;
     /**
-     * @var integer $disk
+     * @var integer $album_disk
      */
     public $album_disk;
     /**
