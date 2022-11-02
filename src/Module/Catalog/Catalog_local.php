@@ -649,7 +649,6 @@ class Catalog_local extends Catalog
                 break;
         }
         $db_results = Dba::read($sql);
-
         $class_name = ObjectTypeToClassNameMapper::map($tableName);
 
         if (AmpConfig::get('memory_cache') && $tableName !== 'podcast_episode') {
@@ -657,7 +656,7 @@ class Catalog_local extends Catalog
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
-            /** @var Song|Podcast_Episode|Album|Video $class_name */
+            /** @var Song|Album|Video $class_name */
             $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }

@@ -421,6 +421,8 @@ class Album extends database_object implements library_item
         if ($prefix) {
             $sql .= 'AND `album`.`prefix` = ? ';
             $params[] = $prefix;
+        } else {
+            $sql .= 'AND `album`.`prefix` IS NULL ';
         }
         if ($mbid) {
             $sql .= 'AND `album`.`mbid` = ? ';
@@ -437,30 +439,44 @@ class Album extends database_object implements library_item
         if ($album_artist) {
             $sql .= 'AND `album`.`album_artist` = ? ';
             $params[] = $album_artist;
+        } else {
+            $sql .= 'AND `album`.`album_artist` IS NULL ';
         }
         if ($release_type) {
             $sql .= 'AND `album`.`release_type` = ? ';
             $params[] = $release_type;
+        } else {
+            $sql .= 'AND `album`.`release_type` IS NULL ';
         }
         if ($release_status) {
             $sql .= 'AND `album`.`release_status` = ? ';
             $params[] = $release_status;
+        } else {
+            $sql .= 'AND `album`.`release_status` IS NULL ';
         }
         if ($original_year) {
             $sql .= 'AND `album`.`original_year` = ? ';
             $params[] = $original_year;
+        } else {
+            $sql .= 'AND `album`.`original_year` IS NULL ';
         }
         if ($barcode) {
             $sql .= 'AND `album`.`barcode` = ? ';
             $params[] = $barcode;
+        } else {
+            $sql .= 'AND `album`.`barcode` IS NULL ';
         }
         if ($catalog_number) {
             $sql .= 'AND `album`.`catalog_number` = ? ';
             $params[] = $catalog_number;
+        } else {
+            $sql .= 'AND `album`.`catalog_number` IS NULL ';
         }
         if ($subtitle) {
             $sql .= 'AND `album`.`subtitle` = ? ';
             $params[] = $subtitle;
+        } else {
+            $sql .= 'AND `album`.`subtitle` IS NULL ';
         }
         $sql .= 'AND `album`.`catalog` = ? ';
         $params[] = $catalog;
