@@ -28,6 +28,7 @@
 ### Fixed
 
 * User count in Api::ping and Api::handshake was doubled
+* Api3::stats method had incorrent recent parameters
 
 ## Ampache 5.5.3-release
 

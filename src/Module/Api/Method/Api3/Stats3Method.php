@@ -70,12 +70,12 @@ final class Stats3Method
                     if ($type == "recent") {
                         if (!empty($username)) {
                             if ($user !== null) {
-                                $albums = $user->get_recently_played($limit, 'album');
+                                $albums = $user->get_recently_played('album', $limit);
                             } else {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
-                            $albums = Stats::get_recent("album", $limit, $offset);
+                            $albums = Stats::get_recent('album', $limit, $offset);
                         }
                     } else {
                         if ($type == "flagged") {
