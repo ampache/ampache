@@ -165,16 +165,16 @@ final class SongSorter implements SongSorterInterface
         }
 
         // Create the filename that this file should have
-        $album  = $this->sort_clean_name($song->f_album_full, $windowsCompat) ?? '%A';
-        $artist = $this->sort_clean_name($song->f_artist_full, $windowsCompat) ?? '%a';
-        $track  = $this->sort_clean_name($song->track, $windowsCompat) ?? '%T';
+        $album  = $this->sort_clean_name($song->f_album_full, '%A', $windowsCompat);
+        $artist = $this->sort_clean_name($song->f_artist_full, '%a', $windowsCompat);
+        $track  = $this->sort_clean_name($song->track, '%T', $windowsCompat);
         if ((int) $track < 10) {
             $track = '0' . (string) $track;
         }
 
-        $title   = $this->sort_clean_name($song->title, $windowsCompat) ?? '%t';
-        $year    = $this->sort_clean_name($song->year, $windowsCompat) ?? '%y';
-        $comment = $this->sort_clean_name($song->comment, $windowsCompat) ?? '%c';
+        $title   = $this->sort_clean_name($song->title, '%t', $windowsCompat);
+        $year    = $this->sort_clean_name($song->year, '%y', $windowsCompat);
+        $comment = $this->sort_clean_name($song->comment, '%c', $windowsCompat);
 
         // Do the various check
         $album_object = new Album($song->album);
@@ -184,17 +184,20 @@ final class SongSorter implements SongSorterInterface
         } elseif ($album_object->artist_count != 1) {
             $artist = $various_artist;
         }
-        $disk           = $song->disk ?? '%d';
-        $catalog_number = $this->sort_clean_name($album_object->catalog_number) ?? '%C';
-        $barcode        = $this->sort_clean_name($album_object->barcode) ?? '%b';
-        $original_year  = $album_object->original_year ?? '%Y';
-        $genre          = (!empty($album_object->tags)) ? Tag::get_display($album_object->tags) : '%b';
-        $release_type   = $album_object->release_type ?? '%r';
-        $release_status = $album_object->release_status ?? '%R';
+        $disk           = $this->sort_clean_name($song->disk, '%d');
+        $catalog_number = $this->sort_clean_name($album_object->catalog_number, '%C');
+        $barcode        = $this->sort_clean_name($album_object->barcode, '%b');
+        $original_year  = $this->sort_clean_name($album_object->original_year, '%Y');
+        $release_type   = $this->sort_clean_name($album_object->release_type, '%r');
+        $release_status = $this->sort_clean_name($album_object->release_status, '%R');
+        $subtitle       = $this->sort_clean_name($album_object->subtitle, '%s');
+        $genre          = (!empty($album_object->tags))
+            ? Tag::get_display($album_object->tags)
+            : '%b';
 
         // Replace everything we can find
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $disk, $genre, $barcode);
+        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         // Remove non A-Z0-9 chars
@@ -225,20 +228,21 @@ final class SongSorter implements SongSorterInterface
     /**
      * This is run on every individual element of the search before it is put together
      * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
-     * @param string $string
+     * @param string|int $string
+     * @param string $return
      * @param bool $windowsCompat
-     * @return string|string[]|null
+     * @return string
      */
-    public function sort_clean_name($string, $windowsCompat = false)
+    public function sort_clean_name($string, $return = '', $windowsCompat = false)
     {
         if (empty($string)) {
-            return $string;
+            return $return;
         }
         $string = ($windowsCompat)
-            ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', $string)
-            : str_replace(['/', '\\'], '_', $string);
+            ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', (string)$string)
+            : str_replace(['/', '\\'], '_', (string)$string);
 
-        return $string;
+        return (string)$string;
     }
 
     /**
@@ -273,7 +277,7 @@ final class SongSorter implements SongSorterInterface
         unset($data[0]);
 
         foreach ($data as $dir) {
-            $dir = $this->sort_clean_name($dir, $windowsCompat);
+            $dir = $this->sort_clean_name($dir, '', $windowsCompat);
             $path .= '/' . $dir;
 
             // We need to check for the existence of this directory
@@ -340,13 +344,8 @@ final class SongSorter implements SongSorterInterface
             // Look for the folder art and copy that as well
             if ($old_dir != $directory) {
                 // don't move things into the same dir
-                if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), ";")) {
-                    $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
-                    $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
-                } else {
-                    $folder_art  = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'), $windowsCompat);
-                    $old_art     = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'), $windowsCompat);
-                }
+                $folder_art = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename', 'folder.jpg'), '', $windowsCompat);
+                $old_art    = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename', 'folder.jpg'), '', $windowsCompat);
                 // copy art that exists
                 if (file_exists($old_art)) {
                     if (copy($old_art, $folder_art) === false) {
