@@ -35,18 +35,6 @@
         this.cssSelector = $.extend({}, this._cssSelector, cssSelector); // Object: Containing the css selectors for jPlayer and its cssSelectorAncestor
         this.options = $.extend(true, {
             keyBindings: {
-                next: {
-                    key: 221, // ]
-                    fn: function() {
-                        self.next();
-                    }
-                },
-                previous: {
-                    key: 219, // [
-                    fn: function() {
-                        self.previous();
-                    }
-                },
                 shuffle: {
                     key: 83, // s
                     fn: function() {
