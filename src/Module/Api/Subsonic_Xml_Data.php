@@ -314,7 +314,7 @@ class Subsonic_Xml_Data
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', (string)self::_checkName($child['f_name']));
         $xchild->addAttribute('artist', (string)self::_checkName($child['f_name']));
-        if ($child['has_art']) {
+        if (array_key_exists('has_art', $child) && !empty($child['has_art'])) {
             $xchild->addAttribute('coverArt', 'ar-' . $sub_id);
         }
     }
@@ -330,7 +330,7 @@ class Subsonic_Xml_Data
         $xartist = $xml->addChild('artist');
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', (string)self::_checkName($artist['f_name']));
-        if ($artist['has_art']) {
+        if (array_key_exists('has_art', $artist) && !empty($artist['has_art'])) {
             $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
         }
         $xartist->addAttribute('albumCount', (string)$artist['album_count']);
