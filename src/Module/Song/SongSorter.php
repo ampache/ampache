@@ -25,17 +25,37 @@ declare(strict_types=0);
 namespace Ampache\Module\Song;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Album;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\SongRepositoryInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->logger          = $logger;
+        $this->modelFactory    = $modelFactory;
+    }
+
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
@@ -72,62 +92,76 @@ final class SongSorter implements SongSorterInterface
                 sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
                 true
             );
-            $songs = $catalog->get_songs();
 
-            // Foreach through each file and find it a home!
-            foreach ($songs as $song) {
-                if ($limit > 0 && $move_count == $limit) {
-                    /* HINT: filename (File path) */
-                    $interactor->info(
+            $stats  = Catalog::get_server_counts(0);
+            $total  = $stats['song'];
+            $chunks = (int)floor($total / 10000);
+            foreach (range(0, $chunks) as $chunk) {
+                /* HINT: Catalog Block: 4/120 */
+                $interactor->info(
+                    sprintf(T_('Catalog Block: %s'), $chunk . '/' . $chunks),
+                    true
+                );
+                $songs = $catalog->get_songs($chunk, 1000);
+                // Foreach through each file and find it a home!
+                foreach ($songs as $song) {
+                    if ($limit > 0 && $move_count == $limit) {
+                        /* HINT: filename (File path) */
+                        $interactor->info(
                         sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
                         true
                     );
 
-                    return;
-                }
-                // Check for file existence
-                if (!file_exists($song->file)) {
-                    debug_event('sort_files', 'Missing: ' . $song->file, 1);
-                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
-                    $interactor->info(
+                        return;
+                    }
+                    // Check for file existence
+                    if (!file_exists($song->file)) {
+
+                        $this->logger->critical(
+                            sprintf('Missing: %s', $song->file),
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
+                        /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                        $interactor->info(
                         sprintf(T_('Missing: %s'), $song->file),
                         true
                     );
-                    continue;
-                }
-                $song->format();
-                // sort_find_home will replace the % with the correct values.
-                $directory = ($filesOnly)
+                        continue;
+                    }
+                    $song->format();
+                    // sort_find_home will replace the % with the correct values.
+                    $directory = ($filesOnly)
                     ? dirname($song->file)
                     : $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist, $windowsCompat);
-                $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
-                if ($directory === false || $filename === false) {
-                    $fullpath = $song->file;
-                } else {
-                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
-                }
+                    $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
+                    if ($directory === false || $filename === false) {
+                        $fullpath = $song->file;
+                    } else {
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    }
 
-                /* We need to actually do the moving (fake it if we are testing)
-                 * Don't try to move it, if it's already the same friggin thing!
-                 */
-                if ($song->file != $fullpath && strlen($fullpath)) {
-                    $interactor->info(
+                    /* We need to actually do the moving (fake it if we are testing)
+                     * Don't try to move it, if it's already the same friggin thing!
+                     */
+                    if ($song->file != $fullpath && strlen($fullpath)) {
+                        $interactor->info(
                         T_("Examine File..."),
                         true
                     );
-                    /* HINT: filename (File path) */
-                    $interactor->info(
+                        /* HINT: filename (File path) */
+                        $interactor->info(
                         sprintf(T_('Source: %s'), $song->file),
                         true
                     );
-                    /* HINT: filename (File path) */
-                    $interactor->info(
+                        /* HINT: filename (File path) */
+                        $interactor->info(
                         sprintf(T_('Destin: %s'), $fullpath),
                         true
                     );
-                    flush();
-                    if ($this->sort_move_file($interactor, $song, $fullpath, $dryRun, $windowsCompat)) {
-                        $move_count++;
+                        flush();
+                        if ($this->sort_move_file($interactor, $song, $fullpath, $dryRun, $windowsCompat)) {
+                            $move_count++;
+                        }
                     }
                 }
             }
@@ -177,7 +211,7 @@ final class SongSorter implements SongSorterInterface
         $comment = $this->sort_clean_name($song->comment, '%c', $windowsCompat);
 
         // Do the various check
-        $album_object = new Album($song->album);
+        $album_object = $this->modelFactory->createAlbum($song->album);
         $album_object->format();
         if ($album_object->get_album_artist_fullname() != "") {
             $artist = $album_object->f_album_artist_name;
@@ -289,7 +323,10 @@ final class SongSorter implements SongSorterInterface
                         true
                     );
                 } else {
-                    debug_event('sort_files', "Creating $path directory", 4);
+                    $this->logger->notice(
+                        sprintf('Creating %s directory', $path),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                     $results = mkdir($path);
                     if (!$results) {
                         /* HINT: Directory (File path) */
@@ -314,7 +351,10 @@ final class SongSorter implements SongSorterInterface
             flush();
         } else {
             if (file_exists($fullname)) {
-                debug_event('sort_files', 'Error: $fullname already exists', 1);
+                $this->logger->critical(
+                    sprintf('Error: %s already exists', $fullname),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname),
@@ -339,13 +379,17 @@ final class SongSorter implements SongSorterInterface
 
                 return false;
             }
-            debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
+            $this->logger->critical(
+                'Copied ' . $song->file . ' to ' . $fullname,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             // Look for the folder art and copy that as well
             if ($old_dir != $directory) {
                 // don't move things into the same dir
-                $folder_art = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename', 'folder.jpg'), '', $windowsCompat);
-                $old_art    = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename', 'folder.jpg'), '', $windowsCompat);
+                $preferred  = $this->sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat);
+                $folder_art = $directory . DIRECTORY_SEPARATOR . $preferred;
+                $old_art    = $old_dir . DIRECTORY_SEPARATOR . $preferred;
                 // copy art that exists
                 if (file_exists($old_art)) {
                     if (copy($old_art, $folder_art) === false) {
@@ -353,7 +397,10 @@ final class SongSorter implements SongSorterInterface
 
                         throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
                     }
-                    debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
+                    $this->logger->critical(
+                        'Copied ' . $old_art . ' to ' . $folder_art,
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                 }
             }
             // Check the filesize

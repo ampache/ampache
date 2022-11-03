@@ -2121,12 +2121,18 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs()
+    public function get_songs($offset = 0, $limit = 0)
     {
         $songs   = array();
         $results = array();
+        if ($offset > 0) {
+            $limit = $offset . ', ' . $limit;
+        }
 
         $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1' ORDER BY `album`";
+        if ($offset > 0 || $limit > 0) {
+            $sql .= " LIMIT $limit";
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
