@@ -61,6 +61,8 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
 
 * Work around for possible release string errors (future releasese will drop "-release")
 * Ignore case in genre comparison
+* Hide Upload links if you can't access the catalog
+* recently played for non-user calls
 * Search
   * SQL for Artist `catalog` searches
 

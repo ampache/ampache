@@ -2315,9 +2315,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($catalog_filter) {
                 $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
             }
-            $sql .= (!Access::check('interface', 100))
-                ? "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$user_id') "
-                : "AND `object_count`.`user`=" . (int)$user_id . " ";
+            if (!Access::check('interface', 100)) {
+                $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$user_id') ";
+            }
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit;
         //debug_event(self::class, 'get_recently_played ' . $sql, 5);
