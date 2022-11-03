@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
@@ -36,10 +37,10 @@ use Ampache\Module\Util\Ui;
 /** @var string $t_favorites */
 /** @var string $t_upload */
 /** @var string $t_logout */
-/** @var bool $is_session */
 /** @var bool $access25 */
 /** @var bool $allow_upload */
 
+$is_session = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 ?>
 <ul id="sidebar-light">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
