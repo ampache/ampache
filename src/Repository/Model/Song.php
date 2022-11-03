@@ -729,7 +729,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $song_id = $this->id;
 
-        if (isset($this->disk) && parent::is_cached('song', $song_id)) {
+        if (!isset($this->disk) && parent::is_cached('song', $song_id)) {
             return parent::get_from_cache('song', $song_id);
         }
 
