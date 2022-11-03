@@ -1298,13 +1298,13 @@ class User extends database_object
      * @param boolean $newest
      * @return array
      */
-    public function get_recently_played($type, $count, $offset = 0, $newest = true)
+    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream')
     {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
 
-        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
-        $db_results = Dba::read($sql, array($type, $this->id));
+        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
+        $db_results = Dba::read($sql, array($type, $this->id, $count_type));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

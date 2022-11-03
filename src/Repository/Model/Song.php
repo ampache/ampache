@@ -2306,24 +2306,18 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $catalog_filter       = AmpConfig::get('catalog_filter');
 
         $results = array();
-        $valid   = ((int)$user_id > 0);
         $limit   = AmpConfig::get('popular_threshold', 10);
         $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` WHERE `object_type` = 'song' AND `count_type` = '$count_type' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
-        if ($catalog_filter && $valid) {
-            $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
-        }
-        if ($valid && !$catalog_filter) {
-            // If user is not empty, we're looking directly to user personal info (admin view)
-            $sql .= "AND `object_count`.`user`=" . (int)$user_id . " ";
-        } elseif (!Access::check('interface', 100) && $valid) {
-            // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
-            $current_user = (int) Core::get_global('user')->id;
-            if ($current_user > 0) {
-                $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
+        if ((int)$user_id > 0) {
+            if ($catalog_filter) {
+                $sql .= "AND" . Catalog::get_user_filter('object_count_song', $user_id) . " ";
             }
+            $sql .= (!Access::check('interface', 100))
+                ? "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$user_id') "
+                : "AND `object_count`.`user`=" . (int)$user_id . " ";
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit;
         //debug_event(self::class, 'get_recently_played ' . $sql, 5);

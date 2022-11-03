@@ -159,18 +159,17 @@ if (AmpConfig::get('sociable')) {
             }
         }
             $ajax_page = 'stats';
-            $user_id   = $client->id ?? -1;
-            $data      = Song::get_recently_played($user_id);
+            $limit     = AmpConfig::get('popular_threshold', 10);
+            $data      = $client->get_recently_played('song', $limit);
             Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
         <div id="recently_skipped" class="tab_content">
             <?php
-            $user_id = $client->id ?? -1;
-            $data    = Song::get_recently_played($user_id, 'skip');
-            Song::build_cache(array_keys($data));
-            $user_id   = $client->id;
             $ajax_page = 'stats';
+            $limit     = AmpConfig::get('popular_threshold', 10);
+            $data      = $client->get_recently_played('song', $limit, 0, true, 'skip');
+            Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
         <?php if (AmpConfig::get('allow_upload')) { ?>
