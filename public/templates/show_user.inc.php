@@ -160,7 +160,7 @@ if (AmpConfig::get('sociable')) {
         }
             $ajax_page = 'stats';
             $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = $client->get_recently_played('song', $limit);
+            $data      = Song::get_recently_played_by_user($client->getId());
             Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
@@ -168,7 +168,7 @@ if (AmpConfig::get('sociable')) {
             <?php
             $ajax_page = 'stats';
             $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = $client->get_recently_played('song', $limit, 0, true, 'skip');
+            $data      = Song::get_recently_played_by_user($client->getId(), 'skip');
             Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
