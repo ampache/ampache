@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -31,9 +30,9 @@ use Ampache\Module\Util\Ui;
 /** require@ public/templates/header.inc.php */
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
+/** @var bool $is_session */
 
 $web_path         = AmpConfig::get('web_path');
-$is_session       = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";

@@ -21,11 +21,25 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
 /** require@ public/templates/header.inc.php */
+/** @var string $web_path */
+/** @var string $t_artists */
+/** @var string $t_albums */
+/** @var string $t_playlists */
+/** @var string $t_smartlists */
+/** @var string $t_genres */
+/** @var string $t_radioStations */
+/** @var string $t_radio */
+/** @var string $t_favorites */
+/** @var string $t_upload */
+/** @var string $t_logout */
+/** @var bool $is_session */
+/** @var bool $access25 */
+/** @var bool $allow_upload */
+
 ?>
 <ul id="sidebar-light">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
@@ -36,10 +50,10 @@ use Ampache\Module\Util\Ui;
     <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
     <?php } ?>
-    <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
+    <?php if (AmpConfig::get('ratings') && $access25) { ?>
     <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php } ?>
-    <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
+    <?php if ($allow_upload) { ?>
     <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>
     <?php } ?>
     <?php if ($is_session) { ?>

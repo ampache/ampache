@@ -579,6 +579,25 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * check_filter_access
+     * Check that a user can access the requested catalog
+     * @return bool
+     */
+    public static function check_filter_access($catalog_id, $user_id)
+    {
+        if (!AmpConfig::get('catalog_filter')) {
+            return true;
+        }
+        $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `catalog_id` = ? AND `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1";
+        $db_results = Dba::read($sql, array($catalog_id, $user_id));
+        if (Dba::num_rows($db_results)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * add_catalog_filter_group_map
      * Adds appropriate rows when a catalog is added.
      * @return PDOStatement|boolean

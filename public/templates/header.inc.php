@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -43,10 +44,12 @@ $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
 $location          = get_location();
 $_SESSION['login'] = false;
+$is_session        = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$current_user      = Core::get_global('user');
+$allow_upload      = AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0);
 $cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
-$current_user      = Core::get_global('user');
 // strings for the main page and templates
 $t_home      = T_('Home');
 $t_play      = T_('Play');
@@ -388,7 +391,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 <div id="headerbox">
                     <?php Ui::show_box_top('', 'box box_headerbox');
                         require_once Ui::find_template('show_search_bar.inc.php');
-                    if (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0) {
+                    if ($is_session) {
                         require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user->id; ?>"><?php echo $current_user->fullname; ?></a>
@@ -449,7 +452,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                     </a>
                 </div>
                 <?php } ?>
-                <?php if (AmpConfig::get('allow_upload') && $access25 && AmpConfig::get('upload_catalog') > 0) { ?>
+                <?php if ($allow_upload) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
@@ -530,7 +533,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                                 Plugin::show_update_available();
                                 echo '<br />';
                             }
-                            $count_temp_playlist = (!empty($current_user)) ? count($current_user->playlist->get_items()) : 0;
+                            $count_temp_playlist = (!empty($current_user))
+                                ? count($current_user->playlist->get_items())
+                                : 0;
 
                             if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
