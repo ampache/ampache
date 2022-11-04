@@ -18,6 +18,7 @@
 * Don't use catalog_filter and rating_filter without a valid user
 * Uploaded/Manual Album Artist maps on tag update
 * Delete artist's from the catalog_map that don't have a song or album for that catalog
+* Set correct transcode `bitrate` and `mime` for songs on play_url calls
 * Subsonic
   * Art for artist index arrays was missing
 * Search
@@ -32,6 +33,7 @@
 
 * User count in Api::ping and Api::handshake was doubled
 * Api3::stats method had incorrent recent parameters
+* Ensure the output `bitrate` and `mime` are set for song objects
 
 ## Ampache 5.5.3-release
 
