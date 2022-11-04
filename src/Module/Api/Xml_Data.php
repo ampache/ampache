@@ -1302,9 +1302,11 @@ class Xml_Data
             if ($media->addition_time) {
                 $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
             }
-            $description = $media->get_description();
-            if (!empty($description)) {
-                $xitem->addChild("description", htmlentities($description));
+            if ($media instanceof Artist || $libitem instanceof Podcast) {
+                $description = $media->get_description();
+                if (!empty($description)) {
+                    $xitem->addChild("description", htmlentities($description));
+                }
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
