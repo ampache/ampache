@@ -91,7 +91,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
     <?php if (AmpConfig::get('use_rss')) {
         ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
     } ?>
