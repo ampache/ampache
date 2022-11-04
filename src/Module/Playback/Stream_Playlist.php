@@ -265,7 +265,14 @@ class Stream_Playlist
                     }
                 }
             } else {
-                $url['url'] = $object->play_url($additional_params);
+                if (in_array($type, array('song', 'podcast_episode', 'democratic', 'video'))) {
+                    $user       = Core::get_global('user');
+                    $url['url'] = $object->play_url($additional_params, '', false, $user->id, $user->streamtoken);
+                } elseif ($type == 'democratic') {
+                    $url['url'] = $object->play_url();
+                } else {
+                    $url['url'] = $object->play_url($additional_params);
+                }
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
