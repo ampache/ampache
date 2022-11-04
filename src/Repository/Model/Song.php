@@ -2264,9 +2264,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // if you transcode the media mime will change
         if (empty($additional_params) && !strpos($additional_params, 'action=download')) {
-            $this->type    = Stream::get_transcode_format($this->type, null, $player);
-            $this->mime    = self::type_to_mime($this->type);
-            $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
+            $transcode_type = Stream::get_transcode_format($this->type, null, $player);
+            if ($this->type !== $transcode_type) {
+                $this->type    = $transcode_type;
+                $this->mime    = self::type_to_mime($this->type);
+                $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
+            }
         }
 
         $this->format();
