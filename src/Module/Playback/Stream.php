@@ -621,7 +621,9 @@ class Stream
     public static function get_base_url($local = false, $streamToken = null)
     {
         $session_string = '';
-        $session_id     = ($streamToken) ?? self::get_session();
+        $session_id     = (!empty($streamToken))
+            ? $streamToken:
+            self::get_session();
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_string = 'ssid=' . $session_id . '&';
         }
