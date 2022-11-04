@@ -310,7 +310,7 @@ class Xml3_Data
      * @param    bool     $full_xml  whether to return a full XML document or just the node
      * @return    string    return xml
      */
-    public static function artists($artists, $include = [], $user = null, $full_xml = true)
+    public static function artists($artists, $include, $user, $full_xml = true)
     {
         if (null == $include) {
             $include = array();
@@ -371,7 +371,7 @@ class Xml3_Data
      * @param    bool     $full_xml  whether to return a full XML document or just the node
      * @return    string    return xml
      */
-    public static function albums($albums, $include = [], $user = null, $full_xml = true)
+    public static function albums($albums, $include, $user, $full_xml = true)
     {
         if (null == $include) {
             $include = array();

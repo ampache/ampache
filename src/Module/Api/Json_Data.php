@@ -377,7 +377,7 @@ class Json_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
-    public static function artists($artists, $include = [], $user = null, $encode = true, $object = true)
+    public static function artists($artists, $include, $user, $encode = true, $object = true)
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -449,7 +449,7 @@ class Json_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums($albums, $include = [], $user = null, $encode = true, $object = true)
+    public static function albums($albums, $include, $user, $encode = true, $object = true)
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);

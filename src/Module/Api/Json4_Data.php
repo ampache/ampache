@@ -295,7 +295,7 @@ class Json4_Data
      * @param bool $encode
      * @return array|string return JSON
      */
-    public static function artists($artists, $include = [], $user = null, $encode = true)
+    public static function artists($artists, $include, $user, $encode = true)
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -369,7 +369,7 @@ class Json4_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function albums($albums, $include = [], $user = null, $encode = true)
+    public static function albums($albums, $include, $user, $encode = true)
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);

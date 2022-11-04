@@ -599,7 +599,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function artists($artists, $include = [], $user = null, $full_xml = true)
+    public static function artists($artists, $include, $user, $full_xml = true)
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -647,7 +647,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function albums($albums, $include = [], $user = null, $full_xml = true)
+    public static function albums($albums, $include, $user, $full_xml = true)
     {
         if ($include == null || $include == '') {
             $include = array();
