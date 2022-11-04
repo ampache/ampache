@@ -553,7 +553,9 @@ final class PlayAction implements ApplicationActionInterface
 
         // Format the media name
         $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($is_download && !$transcode_to) ? false : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
+        $transcode_to = ($is_download && !$transcode_to)
+            ? false
+            : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
 

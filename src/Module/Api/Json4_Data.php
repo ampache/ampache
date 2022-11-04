@@ -770,9 +770,10 @@ class Json4_Data
             }
 
             $song->format();
-            $rating  = new Rating($song_id, 'song');
-            $flag    = new Userflag($song_id, 'song');
-            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $rating   = new Rating($song_id, 'song');
+            $flag     = new Userflag($song_id, 'song');
+            $art_url  = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $play_url = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $playlist_track++;
 
             $ourSong = array(
@@ -802,7 +803,7 @@ class Json4_Data
             $ourSong['rate']                  = (int) $song->rate;
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $song->mime;
-            $ourSong['url']                   = $song->play_url('', 'api', false, $user->getId(), $user->streamtoken);
+            $ourSong['url']                   = $play_url;
             $ourSong['size']                  = (int) $song->size;
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->album_mbid;
@@ -909,8 +910,9 @@ class Json4_Data
             $song      = new $className($data['object_id']);
             $song->format();
 
-            $rating  = new Rating($song->id, 'song');
-            $art_url = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $rating   = new Rating($song->id, 'song');
+            $art_url  = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $play_url = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
             array_push($JSON, array(
                 "id" => (string) $song->id,
@@ -921,7 +923,7 @@ class Json4_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => $song->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $play_url,
                 "size" => (int) $song->size,
                 "art" => $art_url,
                 "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
