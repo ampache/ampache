@@ -1265,7 +1265,7 @@ class Xml_Data
         $xml->addAttribute("version", "2.0");
         $xchannel = $xml->addChild("channel");
         $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
-        //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->get_link()));
+        //$xlink = $xchannel->addChild("atom:link", htmlspecialchars($libitem->get_link()));
         $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
         if (Art::has_db($libitem->id, $libitem_type)) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
@@ -1273,7 +1273,7 @@ class Xml_Data
         }
         $summary = $libitem->get_description();
         if (!empty($summary)) {
-            $summary = htmlentities($summary);
+            $summary = htmlspecialchars($summary);
             $xchannel->addChild("description", $summary);
             $xchannel->addChild("xmlns:itunes:summary", $summary);
         }
@@ -1293,19 +1293,19 @@ class Xml_Data
             $media      = new $className($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
-            $xitem->addChild("title", htmlentities($media->get_fullname()));
+            $xitem->addChild("title", htmlspecialchars($media->get_fullname()));
             if ($media->f_artist_full) {
                 $xitem->addChild("xmlns:itunes:author", $media->f_artist_full);
             }
-            //$xmlink = $xitem->addChild("link", htmlentities($media->get_link()));
-            $xitem->addChild("guid", htmlentities($media->get_link()));
+            //$xmlink = $xitem->addChild("link", htmlspecialchars($media->get_link()));
+            $xitem->addChild("guid", htmlspecialchars($media->get_link()));
             if ($media->addition_time) {
                 $xitem->addChild("pubDate", date("r", (int)$media->addition_time));
             }
             if ($media instanceof Artist || $libitem instanceof Podcast) {
                 $description = $media->get_description();
                 if (!empty($description)) {
-                    $xitem->addChild("description", htmlentities($description));
+                    $xitem->addChild("description", htmlspecialchars($description));
                 }
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
