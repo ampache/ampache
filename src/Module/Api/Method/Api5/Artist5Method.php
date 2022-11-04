@@ -71,10 +71,10 @@ final class Artist5Method
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists(array($object_id), $include, $user->id, true, false);
+                echo Json5_Data::artists(array($object_id), $include, $user, true, false);
                 break;
             default:
-                echo Xml5_Data::artists(array($object_id), $include, $user->id);
+                echo Xml5_Data::artists(array($object_id), $include, $user);
         }
 
         return true;

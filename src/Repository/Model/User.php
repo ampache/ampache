@@ -106,6 +106,10 @@ class User extends database_object
      * @var string $rsstoken
      */
     public $rsstoken;
+    /**
+     * @var string $streamtoken
+     */
+    public $streamtoken;
 
     // Constructed variables
     /**
@@ -1460,6 +1464,18 @@ class User extends database_object
     {
         $art = new Art($this->id, 'user');
         $art->reset();
+    }
+
+    public function delete_streamtoken()
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `user` = ?;";
+        Dba::write($sql, array($this->id));
+    }
+
+    public function delete_apikey()
+    {
+        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `user` = ?;";
+        Dba::write($sql, array($this->id));
     }
 
     /**

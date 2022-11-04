@@ -120,12 +120,12 @@ final class GetIndexes4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::indexes($objects, $type, $user->id, $include);
+                echo Json4_Data::indexes($objects, $type, $user, $include);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::indexes($objects, $type, $user->id, true, $include);
+                echo Xml4_Data::indexes($objects, $type, $user, true, $include);
         }
 
         return true;

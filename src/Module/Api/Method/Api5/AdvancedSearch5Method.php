@@ -100,59 +100,59 @@ final class AdvancedSearch5Method
             case 'json':
                 switch ($type) {
                     case 'album':
-                        echo Json5_Data::albums($results, array(), $user->id);
+                        echo Json5_Data::albums($results, array(), $user);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json5_Data::artists($results, array(), $user->id);
+                        echo Json5_Data::artists($results, array(), $user);
                         break;
                     case 'label':
                         echo Json5_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Json5_Data::playlists($results, $user->id);
+                        echo Json5_Data::playlists($results, $user);
                         break;
                     case 'podcast':
-                        echo Json5_Data::podcasts($results, $user->id);
+                        echo Json5_Data::podcasts($results, $user);
                         break;
                     case 'podcast_episode':
-                        echo Json5_Data::podcast_episodes($results, $user->id);
+                        echo Json5_Data::podcast_episodes($results, $user);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json5_Data::genres($results, $user->id);
+                        echo Json5_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Json5_Data::users($results);
                         break;
                     case 'video':
-                        echo Json5_Data::videos($results, $user->id);
+                        echo Json5_Data::videos($results, $user);
                         break;
                     default:
-                        echo Json5_Data::songs($results, $user->id);
+                        echo Json5_Data::songs($results, $user);
                         break;
                 }
                 break;
             default:
                 switch ($type) {
                     case 'album':
-                        echo Xml5_Data::albums($results, array(), $user->id);
+                        echo Xml5_Data::albums($results, array(), $user);
                         break;
                     case 'artist':
-                        echo Xml5_Data::artists($results, array(), $user->id);
+                        echo Xml5_Data::artists($results, array(), $user);
                         break;
                     case 'label':
                         echo Xml5_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Xml5_Data::playlists($results, $user->id);
+                        echo Xml5_Data::playlists($results, $user);
                         break;
                     case 'podcast':
-                        echo Xml5_Data::podcasts($results, $user->id);
+                        echo Xml5_Data::podcasts($results, $user);
                         break;
                     case 'podcast_episode':
-                        echo Xml5_Data::podcast_episodes($results, $user->id);
+                        echo Xml5_Data::podcast_episodes($results, $user);
                         break;
                     case 'genre':
                     case 'tag':
@@ -162,10 +162,10 @@ final class AdvancedSearch5Method
                         echo Xml5_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml5_Data::videos($results, $user->id);
+                        echo Xml5_Data::videos($results, $user);
                         break;
                     default:
-                        echo Xml5_Data::songs($results, $user->id);
+                        echo Xml5_Data::songs($results, $user);
                         break;
                 }
         }

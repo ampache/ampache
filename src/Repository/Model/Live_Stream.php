@@ -392,7 +392,7 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $force_http
      * @return string
      */
-    public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = '')
     {
         return $this->url . $additional_params;
     } // play_url

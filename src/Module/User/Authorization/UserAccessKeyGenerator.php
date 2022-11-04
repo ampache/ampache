@@ -88,4 +88,33 @@ final class UserAccessKeyGenerator implements UserAccessKeyGeneratorInterface
             );
         }
     }
+
+    /**
+     * Generates and saves a new Stream token for the given user
+     */
+    public function generateStreamToken(
+        User $user
+    ): void {
+        try {
+            $streamtoken = bin2hex(random_bytes(20));
+            $userId      = $user->getId();
+            $userName    = $user->username;
+
+            $this->userRepository->updateStreamToken(
+                $userId,
+                $userName,
+                $streamtoken
+            );
+
+            $this->logger->notice(
+                sprintf('Updating streamtoken for %d', $userId),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+        } catch (Exception $error) {
+            $this->logger->error(
+                sprintf('Could not generate random_bytes: %s', $error->getMessage()),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+        }
+    }
 }

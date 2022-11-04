@@ -6,9 +6,13 @@
 
 A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been setup for Admins to follow the changes happening in preparation for Ampache6
 
+You can now use a permanent session token for streaming. (check out the wiki!)
+
 ### Added
 
-* Database 600014
+* Add `streamtoken` to user objects, allowing permanent stream links
+* Allow deleting a user API key
+* Database 600015
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -23,6 +27,7 @@ A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been
   * Add `song_artist` and `album_artist` maps to catalog_map
   * Add ui option `api_enable_6` to enable/disable API6
   * Add `subtitle` to the album table
+  * Add `streamtoken` to user table allowing permalink music stream access
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults

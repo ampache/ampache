@@ -212,7 +212,7 @@ final class Session implements SessionInterface
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
-        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?;';
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
@@ -515,6 +515,21 @@ final class Session implements SessionInterface
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
 
         return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
+     * update_agent
+     *
+     * This takes a SID and update associated agent.
+     * @param string $sid
+     * @param string $agent
+     * @return PDOStatement|boolean
+     */
+    public static function update_agent($sid, $agent)
+    {
+        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id`= ?';
+
+        return Dba::write($sql, array($agent, $sid));
     }
 
     /**

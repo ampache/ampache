@@ -615,13 +615,15 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param boolean $local
+     * @param string $streamToken
      * @return string
      */
-    public static function get_base_url($local = false)
+    public static function get_base_url($local = false, $streamToken = null)
     {
         $session_string = '';
+        $session_id     = ($streamToken) ?? self::get_session();
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::get_session() . '&';
+            $session_string = 'ssid=' . $session_id . '&';
         }
 
         if ($local) {

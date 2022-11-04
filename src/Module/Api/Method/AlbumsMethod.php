@@ -105,7 +105,7 @@ final class AlbumsMethod implements MethodInterface
         $result = $output->albums(
             $albums,
             $include,
-            $gatekeeper->getUser()->getId(),
+            $gatekeeper->getUser(),
             true,
             true,
             (int) $input['limit'],

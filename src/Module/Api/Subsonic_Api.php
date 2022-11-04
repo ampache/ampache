@@ -1301,7 +1301,6 @@ class Subsonic_Api
         $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
         $username      = $input['u'];
         $user          = User::get_from_username($username);
-        $user_id       = $user->id;
         $client        = scrub_in($input['c'] ?? 'Subsonic');
 
         $params = '&client=' . rawurlencode($client);
@@ -1324,10 +1323,10 @@ class Subsonic_Api
                 $params .= '&action=download&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
 
         // return an error on missing files
@@ -1350,16 +1349,16 @@ class Subsonic_Api
     public static function download($input)
     {
         $fileid  = self::_check_parameter($input, 'id', true);
-        $user_id = User::get_from_username($input['u'])->id;
+        $user    = User::get_from_username($input['u']);
         $client  = scrub_in($input['c'] ?? 'Subsonic');
         $params  = '&client=' . rawurlencode($client) . '&action=download&cache=1';
         $url     = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -2117,7 +2116,7 @@ class Subsonic_Api
 
                             if (Subsonic_Xml_Data::_isSong($song_id)) {
                                 $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
-                                $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id);
+                                $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
                             }
 
                             if ($url !== null) {

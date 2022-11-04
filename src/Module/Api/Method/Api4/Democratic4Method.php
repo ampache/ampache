@@ -121,7 +121,7 @@ final class Democratic4Method
                 }
                 break;
             case 'play':
-                $url       = $democratic->play_url();
+                $url       = $democratic->play_url($user);
                 $xml_array = array('url' => $url);
                 switch ($input['api_format']) {
                     case 'json':

@@ -65,10 +65,10 @@ final class UrlToSong5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs(array($url_data['id']), $user->id, true, false);
+                echo Json5_Data::songs(array($url_data['id']), $user, true, false);
                 break;
             default:
-                echo Xml5_Data::songs(array($url_data['id']), $user->id);
+                echo Xml5_Data::songs(array($url_data['id']), $user);
         }
 
         return true;

@@ -70,10 +70,10 @@ final class Video5Method
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::videos(array($object_id), $user->id, false);
+                echo Json5_Data::videos(array($object_id), $user, false);
                 break;
             default:
-                echo Xml5_Data::videos(array($object_id), $user->id);
+                echo Xml5_Data::videos(array($object_id), $user);
         }
 
         return true;

@@ -81,10 +81,10 @@ final class PodcastCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($podcast), $user->id, false, false);
+                echo Json5_Data::podcasts(array($podcast), $user, false, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($podcast), $user->id);
+                echo Xml5_Data::podcasts(array($podcast), $user);
         }
 
         return true;

@@ -185,11 +185,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $this->get_f_link();
 
         if ($details) {
-            $podcast = new Podcast($this->podcast);
-            $podcast->format();
-            $this->f_podcast      = $podcast->get_fullname();
-            $this->f_podcast_link = $podcast->f_link;
-            $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
+            $this->get_f_podcast();
+            $this->get_f_podcast_link();
+            $this->f_file = $this->get_f_podcast() . ' - ' . $this->f_file;
         }
         if (AmpConfig::get('show_played_times')) {
             $this->total_count = (int) $this->total_count;
@@ -221,7 +219,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         $keywords['podcast'] = array(
             'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_podcast
+            'value' => $this->get_f_podcast()
         );
         $keywords['title'] = array(
             'important' => true,
@@ -271,6 +269,35 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * get_f_podcast
+     *
+     * @return string
+     */
+    public function get_f_podcast()
+    {
+        if (!isset($this->f_podcast)) {
+            $podcast         = new Podcast($this->podcast);
+            $this->f_podcast = $podcast->get_fullname();
+        }
+
+        return $this->f_podcast;
+    }
+    /**
+     * get_f_podcast_link
+     *
+     * @return string
+     */
+    public function get_f_podcast_link()
+    {
+        if (!isset($this->f_podcast_link)) {
+            $podcast              = new Podcast($this->podcast);
+            $this->f_podcast_link = $podcast->get_f_link();
+        }
+
+        return $this->f_podcast_link;
     }
 
     /**
@@ -488,7 +515,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public function get_stream_name()
     {
-        return $this->f_podcast . " - " . $this->get_fullname();
+        return $this->get_f_podcast() . " - " . $this->get_fullname();
     }
 
     /**
@@ -514,7 +541,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param int|string $uid
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = false)
     {
         if (!$this->id) {
             return '';
@@ -530,12 +557,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
         $type = $this->type;
 
-        $this->format();
         $media_name = $this->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . '&format=raw' . $additional_params;
+        $url = Stream::get_base_url($local, $streamToken) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . '&format=raw' . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }

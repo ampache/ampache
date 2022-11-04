@@ -246,10 +246,15 @@ class Democratic extends Tmp_Playlist
     /**
      * play_url
      * This returns the special play URL for democratic play, only open to ADMINs
+     * @param User|null $user
+     * @return string
      */
-    public function play_url()
+    public function play_url($user = null)
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_Url::format($link);
     } // play_url

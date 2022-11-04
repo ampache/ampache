@@ -31,6 +31,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -106,9 +107,9 @@ class AlbumsMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $userId  = 666;
         $result  = 'some-result';
         $include = [123, 456];
         $limit   = 42;
@@ -133,16 +134,16 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([$album]);
 
-        $gatekeeper->shouldReceive('getUser->getId')
+        $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
-            ->andReturn($userId);
+            ->andReturn($user);
 
         $output->shouldReceive('albums')
             ->with(
                 [$album],
                 $include,
-                $userId,
+                $user,
                 true,
                 true,
                 $limit,

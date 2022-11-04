@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Output;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {
@@ -80,7 +81,7 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param integer[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param User|null $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -91,7 +92,7 @@ final class JsonOutput implements ApiOutputInterface
     public function albums(
         array $albums,
         array $include = [],
-        ?int $user_id = null,
+        ?User $user = null,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,
@@ -100,6 +101,6 @@ final class JsonOutput implements ApiOutputInterface
         Json_Data::set_offset($offset);
         Json_Data::set_limit($limit);
 
-        return Json_Data::albums($albums, $include, $user_id, $encode, $asObject);
+        return Json_Data::albums($albums, $include, $user, $encode, $asObject);
     }
 }

@@ -819,6 +819,9 @@ class Update
         $update_string = "* Add `subtitle` to the album table";
         $version[]     = array('version' => '600014', 'description' => $update_string);
 
+        $update_string = "* Add `streamtoken` to user table allowing permalink music stream access";
+        $version[]     = array('version' => '600015', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5029,6 +5032,20 @@ class Update
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $sql       = "ALTER TABLE `album` ADD `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600015
+     *
+     * Add `streamtoken` to user table allowing permalink music stream access
+     */
+    public static function update_600015(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `user` ADD `streamtoken` VARCHAR(255) NULL AFTER `rsstoken`;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

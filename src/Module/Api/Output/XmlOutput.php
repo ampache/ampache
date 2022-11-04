@@ -28,6 +28,7 @@ use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
 {
@@ -84,7 +85,7 @@ final class XmlOutput implements ApiOutputInterface
      *
      * @param integer[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param User|null $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -95,7 +96,7 @@ final class XmlOutput implements ApiOutputInterface
     public function albums(
         array $albums,
         array $include = [],
-        ?int $user_id = null,
+        ?User $user = null,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,
@@ -104,6 +105,6 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_offset($offset);
         Xml_Data::set_limit($limit);
 
-        return Xml_Data::albums($albums, $include, $user_id, $encode);
+        return Xml_Data::albums($albums, $include, $user, $encode);
     }
 }

@@ -75,12 +75,12 @@ final class ArtistAlbums5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::albums($albums, array(), $user->id);
+                echo Json5_Data::albums($albums, array(), $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::albums($albums, array(), $user->id);
+                echo Xml5_Data::albums($albums, array(), $user);
         }
 
         return true;

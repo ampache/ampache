@@ -47,6 +47,6 @@ final class Song3Method
         $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo Xml3_Data::songs(array($uid), $user->id);
+        echo Xml3_Data::songs(array($uid), $user);
     } // song
 }

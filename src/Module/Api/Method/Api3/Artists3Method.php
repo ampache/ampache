@@ -67,6 +67,6 @@ final class Artists3Method
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($artists, $include, $user->id);
+        echo Xml3_Data::artists($artists, $include, $user);
     } // artists
 }

@@ -30,6 +30,8 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var int[] $data */
+
 global $dic;
 
 $ajax_page = $ajax_page ?? 'stats';

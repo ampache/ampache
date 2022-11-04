@@ -116,7 +116,6 @@ final class SongSorter implements SongSorterInterface
                     }
                     // Check for file existence
                     if (!file_exists($song->file)) {
-
                         $this->logger->critical(
                             sprintf('Missing: %s', $song->file),
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]

@@ -55,7 +55,7 @@ final class ShowGenerateRsstokenAction extends AbstractUserAction
         } else {
             $this->ui->showConfirmation(
                 T_('Are You Sure?'),
-                T_('This will replace your existing RSS token. Feeds with the old token might not work properly'),
+                T_('This will replace your existing token. Links with the old token might not work properly'),
                 sprintf(
                     'admin/users.php?action=%s&user_id=%d',
                     GenerateRsstokenAction::REQUEST_KEY,

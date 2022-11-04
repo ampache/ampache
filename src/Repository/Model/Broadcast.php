@@ -453,7 +453,7 @@ class Broadcast extends database_object implements library_item
      * @param boolean $local
      * @return integer
      */
-    public function play_url($additional_params = '', $player = null, $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false)
     {
         unset($additional_params, $player, $local);
 

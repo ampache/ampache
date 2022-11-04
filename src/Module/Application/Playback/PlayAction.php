@@ -206,7 +206,6 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // First things first, if we don't have a uid/oid stop here
-        // Added $session_id here as user may not be specified but then ssid may be and will be checked later
         if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
             debug_event('play/index', 'No object OID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
@@ -227,7 +226,29 @@ final class PlayAction implements ApplicationActionInterface
         $user      = null;
         $user_auth = false;
         // If explicit user authentication was passed
-        if (!empty($apikey)) {
+        if (!empty($session_id)) {
+            $user = $this->userRepository->findByStreamToken(trim($session_id));
+            if ($user) {
+                $user_auth = true;
+                $agent     = (!empty($client))
+                    ? $client
+                    : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
+                // this is a permastream link so create a session
+                if (!Session::exists('stream', $session_id)) {
+                    Session::create(array(
+                            'sid' => $session_id,
+                            'username' => $user->username,
+                            'value' => '',
+                            'type' => 'stream',
+                            'agent' => ''
+                        )
+                    );
+                } else {
+                    Session::update_agent($session_id, $agent);
+                    Session::extend($session_id, 'stream');
+                }
+            }
+        } elseif (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user) {
                 $user_auth = true;
@@ -398,7 +419,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
 
                 // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url());
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken));
 
                 return null;
             }
@@ -438,7 +459,7 @@ final class PlayAction implements ApplicationActionInterface
                     }
 
                     // play the song instead of going through all the crap
-                    header('Location: ' . $media->play_url());
+                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken));
 
                     return null;
                 }

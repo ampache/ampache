@@ -51,9 +51,9 @@ final class Ping5Method
     public static function ping(array $input)
     {
         // set the version to the old string for old api clients
-        $version      = (isset($input['version'])) ? $input['version'] : Api5::$version;
+        $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version = (int)substr($version, 0, 1);
+        $data_version  = (int)substr($version, 0, 1);
 
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api5::$version, 'compatible' => '350001');
 

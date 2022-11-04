@@ -2249,7 +2249,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param int|string $uid
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = false)
     {
         if (!$this->id) {
             return '';
@@ -2271,7 +2271,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        $url = Stream::get_base_url($local, $streamToken) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }

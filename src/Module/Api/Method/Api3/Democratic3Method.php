@@ -87,7 +87,7 @@ final class Democratic3Method
                 echo Xml3_Data::democratic($objects, $user);
                 break;
             case 'play':
-                $url       = $democratic->play_url();
+                $url       = $democratic->play_url($user);
                 $xml_array = array('url' => $url);
                 echo Xml3_Data::keyed_array($xml_array);
                 break;

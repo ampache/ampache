@@ -91,12 +91,12 @@ final class ArtistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::artists($artists, $include, $user->id);
+                echo Json_Data::artists($artists, $include, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::artists($artists, $include, $user->id);
+                echo Xml_Data::artists($artists, $include, $user);
         }
 
         return true;

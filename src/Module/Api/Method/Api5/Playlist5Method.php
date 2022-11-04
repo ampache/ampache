@@ -68,7 +68,7 @@ final class Playlist5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user) && !Access::check('interface', 100, $user))) {
             Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -77,10 +77,10 @@ final class Playlist5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::playlists(array($object_id), $user->getId(), false, false);
+                echo Json5_Data::playlists(array($object_id), $user, false, false);
                 break;
             default:
-                echo Xml5_Data::playlists(array($object_id), $user->getId());
+                echo Xml5_Data::playlists(array($object_id), $user);
         }
 
         return true;

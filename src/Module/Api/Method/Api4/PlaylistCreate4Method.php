@@ -59,7 +59,6 @@ final class PlaylistCreate4Method
         $name    = $input['name'];
         $type    = $input['type'];
         $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
         if ($type != 'private') {
             $type = 'public';
         }
@@ -68,10 +67,10 @@ final class PlaylistCreate4Method
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists(array($uid), $user_id);
+                echo Json4_Data::playlists(array($uid), $user);
                 break;
             default:
-                echo Xml4_Data::playlists(array($uid), $user_id);
+                echo Xml4_Data::playlists(array($uid), $user);
         }
 
         return true;

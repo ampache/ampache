@@ -58,6 +58,6 @@ final class SearchSongs3Method
         $user    = User::get_from_username(Session::username($input['auth']));
         $results = Search::run($array);
 
-        echo Xml3_Data::songs($results, $user->id);
+        echo Xml3_Data::songs($results, $user);
     } // search_songs
 }

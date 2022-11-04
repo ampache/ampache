@@ -58,7 +58,7 @@ final class Download4Method
         $type     = $input['type'];
         $format   = $input['format'];
         $original = $format && $format != 'raw';
-        $user_id  = User::get_from_username(Session::username($input['auth']))->id;
+        $user     = User::get_from_username(Session::username($input['auth']));
 
         $url    = '';
         $params = '&client=api&action=download&cache=1';
@@ -70,11 +70,11 @@ final class Download4Method
         }
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
