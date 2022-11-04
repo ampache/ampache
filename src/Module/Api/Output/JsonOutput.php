@@ -81,7 +81,7 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param integer[] $albums
      * @param array $include
-     * @param User|null $user
+     * @param User $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -91,8 +91,8 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function albums(
         array $albums,
-        array $include = [],
-        ?User $user = null,
+        array $include,
+        User $user,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,

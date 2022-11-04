@@ -394,7 +394,7 @@ class Xml_Data
      * @param  boolean $include include episodes from podcasts or tracks in a playlist
      * @return string  return xml
      */
-    public static function indexes($objects, $object_type, $user = null, $full_xml = true, $include = false)
+    public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false)
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -833,7 +833,7 @@ class Xml_Data
      * @param  boolean   $episodes include the episodes of the podcast // optional
      * @return string    return xml
      */
-    public static function podcasts($podcasts, $user = null, $episodes = false)
+    public static function podcasts($podcasts, $user, $episodes = false)
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -869,7 +869,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function podcast_episodes($podcast_episodes, $user = null, $full_xml = true)
+    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true)
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -898,7 +898,7 @@ class Xml_Data
      * @param boolean   $full_xml
      * @return string   return xml
      */
-    public static function songs($songs, $user = null, $full_xml = true)
+    public static function songs($songs, $user, $full_xml = true)
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -985,7 +985,7 @@ class Xml_Data
      * @param  User  $user
      * @return string   return xml
      */
-    public static function democratic($object_ids = array(), $user = null)
+    public static function democratic($object_ids, $user)
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';

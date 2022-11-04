@@ -65,7 +65,7 @@ interface ApiOutputInterface
     /**
      * @param integer[] $albums
      * @param array $include
-     * @param User|null $user_id
+     * @param User $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -75,8 +75,8 @@ interface ApiOutputInterface
      */
     public function albums(
         array $albums,
-        array $include = [],
-        ?User $user_id = null,
+        array $include,
+        User $user,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,

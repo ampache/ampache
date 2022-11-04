@@ -186,7 +186,7 @@ class Json4_Data
      * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
      */
-    public static function indexes($objects, $object_type, $user = null, $include = false)
+    public static function indexes($objects, $object_type, $user, $include = false)
     {
         // here is where we call the object type
         switch ($object_type) {
@@ -452,7 +452,7 @@ class Json4_Data
      * @param  boolean $songs
      * @return string  JSON Object "playlist"
      */
-    public static function playlists($playlists, $user = null, $songs = false)
+    public static function playlists($playlists, $user, $songs = false)
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -631,7 +631,7 @@ class Json4_Data
      * @param boolean $episodes include the episodes of the podcast
      * @return string return JSON
      */
-    public static function podcasts($podcasts, $user = null, $episodes = false)
+    public static function podcasts($podcasts, $user, $episodes = false)
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -694,7 +694,7 @@ class Json4_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $user = null, $encode = true, $object = true)
+    public static function podcast_episodes($podcast_episodes, $user, $encode = true, $object = true)
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -748,7 +748,7 @@ class Json4_Data
      * @param bool $encode
      * @return array|string
      */
-    public static function songs($songs, $user = null, $encode = true)
+    public static function songs($songs, $user, $encode = true)
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -897,7 +897,7 @@ class Json4_Data
      * @param User $user
      * @return string    return JSON
      */
-    public static function democratic($object_ids = array(), $user = null)
+    public static function democratic($object_ids, $user)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();

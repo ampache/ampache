@@ -457,7 +457,7 @@ class Xml3_Data
      *
      * This returns an xml document from an array of song ids
      */
-    public static function songs($songs, $user = null, $playlist_data = '', $full_xml = true)
+    public static function songs($songs, $user, $playlist_data = '', $full_xml = true)
     {
         $string = "<total_count>" . count($songs) . "</total_count>\n";
 
@@ -545,7 +545,7 @@ class Xml3_Data
      * @param    User $user
      * @return   string  return xml
      */
-    public static function democratic($object_ids = array(), $user = null)
+    public static function democratic($object_ids, $user)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
