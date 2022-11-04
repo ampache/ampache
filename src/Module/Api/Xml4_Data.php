@@ -544,7 +544,7 @@ class Xml4_Data
                 $songs = ($artist->songs ?? 0);
             }
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count ?? 0 . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . ($artist->songs ?? 0) . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user->getId()) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->getId()) ?: null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count ?? 0 . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . ($artist->songs ?? 0) . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->id, false) ? 0 : 1) . "</flag>\n\t<preciserating>" . ($rating->get_user_rating($user->getId()) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->getId()) ?: null) . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -623,7 +623,7 @@ class Xml4_Data
      * @param  User    $user
      * @return string  return xml
      */
-    public static function playlists($playlists, $user = null)
+    public static function playlists($playlists, $user)
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -848,7 +848,7 @@ class Xml4_Data
      * @param User  $user
      * @return   string   return xml
      */
-    public static function videos($videos, $user = null)
+    public static function videos($videos, $user)
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -1063,7 +1063,7 @@ class Xml4_Data
      * @param User $user
      * @return string|false
      */
-    public static function podcast(library_item $libitem, $user = null)
+    public static function podcast(library_item $libitem, $user)
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
         $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");

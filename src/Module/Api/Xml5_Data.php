@@ -706,7 +706,7 @@ class Xml5_Data
      * @param  User    $user
      * @return string  return xml
      */
-    public static function playlists($playlists, $user = null)
+    public static function playlists($playlists, $user)
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -955,7 +955,7 @@ class Xml5_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function videos($videos, $user = null)
+    public static function videos($videos, $user)
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -1259,7 +1259,7 @@ class Xml5_Data
      * @param User          $user
      * @return string|false
      */
-    public static function podcast(library_item $libitem, $user = null)
+    public static function podcast(library_item $libitem, $user)
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><rss />');
         $xml->addAttribute("xmlns:xmlns:atom", "http://www.w3.org/2005/Atom");

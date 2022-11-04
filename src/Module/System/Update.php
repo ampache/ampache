@@ -4958,7 +4958,6 @@ class Update
         // album_group is now the default state
         $sql    = "UPDATE IGNORE `user_data` SET `key` = 'album' WHERE `key` = 'album_group';";
         $retval &= (Dba::write($sql) !== false);
-        //
         $sql    = "DELETE FROM `user_data` WHERE `key` = 'album_group';";
         Dba::write($sql);
 
