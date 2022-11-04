@@ -49,6 +49,7 @@ class Stream_Playlist
     public $id;
     public $urls = array();
     public $user;
+    public $streamtoken;
     public $title;
 
     /**
@@ -70,8 +71,9 @@ class Stream_Playlist
 
                 return false;
             }
-
-            $this->user = (int)(Core::get_global('user')->id);
+            $user              = Core::get_global('user');
+            $this->user        = $user->id;
+            $this->streamtoken = $user->streamtoken;
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
@@ -401,7 +403,7 @@ class Stream_Playlist
         if ($redirect) {
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
-            header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
+            header('Location: ' . Stream::get_base_url(false, $this->streamtoken) . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
 
             return false;
         }
