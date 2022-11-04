@@ -265,10 +265,12 @@ class Stream_Playlist
                     }
                 }
             } else {
-                if (in_array($type, array('song', 'podcast_episode', 'democratic', 'video'))) {
+                if (in_array($type, array('song', 'podcast_episode', 'video'))) {
                     $user       = Core::get_global('user');
+                    /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $object */
                     $url['url'] = $object->play_url($additional_params, '', false, $user->id, $user->streamtoken);
                 } elseif ($type == 'democratic') {
+                    /** @var Democratic $object */
                     $url['url'] = $object->play_url();
                 } else {
                     $url['url'] = $object->play_url($additional_params);
