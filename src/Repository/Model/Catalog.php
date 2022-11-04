@@ -1485,7 +1485,7 @@ abstract class Catalog extends database_object
     /**
      * get_artist_arrays
      *
-     * Get each array of [id, full_name, name] for artists in an array of catalog id's
+     * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param array $catalogs
      * @return array
      */
