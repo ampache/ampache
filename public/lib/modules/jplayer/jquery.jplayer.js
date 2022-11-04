@@ -616,12 +616,13 @@
                     }
                 },
                 fullScreen: {
-                    //key: 70, // f
-                    //fn: function(f) {
-                    //    if(f.status.video || f.options.audioFullScreen) {
-                    //        f._setOption("fullScreen", !f.options.fullScreen);
-                    //    }
-                    //}
+                    // IGNORE fullscreen requests
+                    // key: 70, // f
+                    // fn: function(f) {
+                    //     if(f.status.video || f.options.audioFullScreen) {
+                    //         f._setOption("fullScreen", !f.options.fullScreen);
+                    //     }
+                    // }
                 },
                 muted: {
                     key: 77, // m
@@ -647,6 +648,13 @@
                         f._loop(!f.options.loop);
                     }
                 },
+                // Set in jplayer.playlist.js
+                // shuffle: {
+                //     key: 83, // s
+                //     fn: function() {
+                //         self.shuffle();
+                //     }
+                // },
                 next: {
                         key: 78, // n
                         fn: function() {
