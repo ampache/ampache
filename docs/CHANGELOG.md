@@ -34,6 +34,8 @@
 * User count in Api::ping and Api::handshake was doubled
 * Api3::stats method had incorrent recent parameters
 * Ensure the output `bitrate` and `mime` are set for song objects
+* RSS Feed generation with bad characters
+* Don't spam the artist description for each song
 
 ## Ampache 5.5.3-release
 
