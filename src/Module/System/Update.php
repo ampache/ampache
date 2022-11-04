@@ -4953,11 +4953,14 @@ class Update
     {
         $retval = true;
         // album was the ungrouped disks so rename those first
-        $sql    = "UPDATE `user_data` SET `key` = 'album_disk' WHERE `key` = 'album';";
+        $sql    = "UPDATE IGNORE `user_data` SET `key` = 'album_disk' WHERE `key` = 'album';";
         $retval &= (Dba::write($sql) !== false);
         // album_group is now the default state
-        $sql    = "UPDATE `user_data` SET `key` = 'album' WHERE `key` = 'album_group';";
+        $sql    = "UPDATE IGNORE `user_data` SET `key` = 'album' WHERE `key` = 'album_group';";
         $retval &= (Dba::write($sql) !== false);
+        //
+        $sql    = "DELETE FROM `user_data` WHERE `key` = 'album_group';";
+        Dba::write($sql);
 
         return $retval;
     }
