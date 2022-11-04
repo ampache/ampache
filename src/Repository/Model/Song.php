@@ -2263,8 +2263,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $uid = -1;
         }
         $type = (!empty($additional_params) && strpos($additional_params, 'action=download'))
-            ? Stream::get_transcode_format($this->type, null, $player)
-            : $this->type;
+            ? $this->type
+            : Stream::get_transcode_format($this->type, null, $player);
 
         $this->format();
         $media_name = $this->get_stream_name() . "." . $type;
