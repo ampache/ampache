@@ -68,6 +68,7 @@ class AlbumsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
+        $user       = $this->mock(User::class);
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -87,6 +88,11 @@ class AlbumsMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn([]);
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->subject->handle(
             $gatekeeper,

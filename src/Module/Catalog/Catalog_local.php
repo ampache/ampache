@@ -605,7 +605,7 @@ class Catalog_local extends Catalog
             $media_class = Video::class;
             $total       = $stats[$media_type];
         }
-        if ($total == 0) {
+        if ($total == 0 || !isset($media_type)) {
             return array('total' => $number, 'updated' => $total_updated);
         }
         $number = $number + $total;
@@ -725,7 +725,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
             $total      = $stats[$media_type];
         }
-        if ($total == 0) {
+        if ($total == 0 || !isset($media_type)) {
             return $dead_total;
         }
         $chunks = floor($total / 10000);
@@ -1173,7 +1173,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
             $total      = $stats[$media_type];
         }
-        if ($total == 0) {
+        if ($total == 0 || !isset($media_type)) {
             return $missing;
         }
         $chunks = floor($total / 10000);

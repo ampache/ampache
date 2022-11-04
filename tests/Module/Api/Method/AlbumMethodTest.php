@@ -76,6 +76,7 @@ class AlbumMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
         $albumId = 666;
 
@@ -88,6 +89,11 @@ class AlbumMethodTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
