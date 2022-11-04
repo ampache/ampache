@@ -1249,9 +1249,7 @@ class Xml_Data
         } // end switch on type
 
         return $footer;
-    }
-
-    // _footer
+    } // _footer
 
     /**
      * podcast
@@ -1296,8 +1294,8 @@ class Xml_Data
             $media->format();
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));
-            if ($media->f_artist) {
-                $xitem->addChild("xmlns:itunes:author", $media->f_artist);
+            if ($media->f_artist_full) {
+                $xitem->addChild("xmlns:itunes:author", $media->f_artist_full);
             }
             //$xmlink = $xitem->addChild("link", htmlentities($media->get_link()));
             $xitem->addChild("guid", htmlentities($media->get_link()));

@@ -73,6 +73,7 @@ class AmpacheRss
     public function get_xml($params = null)
     {
         if ($this->type === "podcast") {
+            $user = static::getUserRepository()->getByRssToken($this->rsstoken);
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
@@ -82,7 +83,7 @@ class AmpacheRss
                     if ($libitem->id) {
                         $libitem->format();
 
-                        return Xml_Data::podcast($libitem);
+                        return Xml_Data::podcast($libitem, $user);
                     }
                 }
             }
