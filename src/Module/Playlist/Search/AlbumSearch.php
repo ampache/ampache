@@ -372,10 +372,10 @@ final class AlbumSearch implements SearchInterface
                     $table['dupe_search2'] = "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`year`, `album`.`release_type`, `album`.`release_status` HAVING `Counting` > 1) AS `dupe_search2` ON `album`.`id` = `dupe_search2`.`dupe_id2`";
                     break;
                 case 'duplicate_mbid_group':
-                    $where[] = "`mbid_group` IN (SELECT `mbid_group` FROM `album` GROUP BY `album`.`mbid_group` HAVING COUNT(`mbid_group`) > 1)";
+                    $where[] = "`album`.`mbid_group` IN (SELECT `mbid_group` FROM `album` GROUP BY `album`.`mbid_group` HAVING COUNT(`mbid_group`) > 1)";
                     break;
                 case 'duplicate_tracks':
-                    $where[] = "`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
                     break;
                 default:
                     break;
