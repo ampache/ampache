@@ -561,11 +561,6 @@ class AmpacheHttpq extends localplay_controller
         $options      = self::get_instance();
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
-        // Test our connection by retrieving the version
-        if ($this->_httpq->version() !== null) {
-            return true;
-        }
-
-        return false;
+        return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
     } // connect
 }

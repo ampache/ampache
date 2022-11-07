@@ -106,12 +106,7 @@ class HttpQPlayer
         $args    = array();
         $results = $this->sendCommand('getversion', $args);
 
-        // a return of 0 is a bad value
-        if ($results == '0') {
-            $results = false;
-        }
-
-        return $results;
+        return ($results !== '0'); // a return of 0 is a bad value
     } // version
 
     /**

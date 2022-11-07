@@ -589,13 +589,9 @@ class AmpacheVlc extends localplay_controller
     {
         $options    = self::get_instance();
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
-
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         // Not yet working all values returned are true for beta testing purpose
-        if ($this->_vlc->version() !== null) {
-            return true;
-        }
 
-        return false;
+        return ($this->_vlc->version() !== false);
     } // connect
 }
