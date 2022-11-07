@@ -273,6 +273,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     Catalog::update_mapping('video');
                 }
                 Catalog::update_counts();
+                Catalog::garbage_collect_mapping();
+                Catalog::garbage_collect_filters();
             }
         }
         if ($optimizeDatabase === true) {

@@ -95,8 +95,5 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
-
-        Catalog::garbage_collect_mapping();
-        Catalog::garbage_collect_filters();
     }
 }
