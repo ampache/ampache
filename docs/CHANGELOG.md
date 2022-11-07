@@ -12,7 +12,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
-* Database 600015
+* Database 600016
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -28,6 +28,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add ui option `api_enable_6` to enable/disable API6
   * Add `subtitle` to the album table
   * Add `streamtoken` to user table allowing permalink music stream access
+  * Add `object_type_IDX` to artist_map table
+  * Add `object_type_IDX` to catalog_map table
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
