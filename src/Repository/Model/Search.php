@@ -1289,6 +1289,39 @@ class Search extends playlist_object
     }
 
     /**
+     * get_subsearch
+     *
+     * get SQL for an item subsearch
+     * @return array
+     */
+    public function get_subsearch($table)
+    {
+        $sqltbl = $this->to_sql();
+        $sql    = 'SELECT DISTINCT(`$table`.`id`) FROM `$table` ' . $sqltbl['table_sql'];
+        if (!empty($sqltbl['where_sql'])) {
+            $sql .= ' WHERE ' . $sqltbl['where_sql'];
+        }
+        if (!empty($sqltbl['group_sql'])) {
+            $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
+        }
+        if (!empty($sqltbl['having_sql'])) {
+            $sql .= ' HAVING ' . $sqltbl['having_sql'];
+        }
+
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
+        // FIXME 'This version of MariaDB doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery''
+        //if ($this->limit > 0) {
+        //    $sql .= " LIMIT " . (string)($this->limit);
+        //}
+        //debug_event(self::class, 'SQL get_subsearch: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
+
+        return array(
+            'sql' => $sql,
+            'parameters' => $sqltbl['parameters']
+        );
+    }
+
+    /**
      * set_last
      *
      * @param integer $count
