@@ -1108,6 +1108,7 @@ class Json_Data
                 "auth" => $user->apikey,
                 "email" => $user->email,
                 "access" => (int) $user->access,
+                "streamtoken" => $user->streamtoken,
                 "fullname_public" => (int) $user->fullname_public,
                 "validation" => $user->validation,
                 "disabled" => (int) $user->disabled,
