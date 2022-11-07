@@ -58,6 +58,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
+                <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
                 <?php if ($allow_video) { ?>
                     <strong><?php echo T_('TV Shows'); ?>:</strong><br />
