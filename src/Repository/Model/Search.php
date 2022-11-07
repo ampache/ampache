@@ -1297,7 +1297,7 @@ class Search extends playlist_object
     public function get_subsearch($table)
     {
         $sqltbl = $this->to_sql();
-        $sql    = 'SELECT DISTINCT(`$table`.`id`) FROM `$table` ' . $sqltbl['table_sql'];
+        $sql    = "SELECT DISTINCT(`$table`.`id`) FROM `$table` " . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
