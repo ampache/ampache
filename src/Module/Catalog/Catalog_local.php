@@ -542,8 +542,9 @@ class Catalog_local extends Catalog
                     } // end if import worked
                 } // end foreach playlist files
             }
-
-            if ($options['gather_art']) {
+            // only gather art if you've added new stuff
+            if ($this->count > 0 && $options['gather_art']) {
+                debug_event(__CLASS__, 'gather_art after adding', 4);
                 $catalog_id = $this->id;
                 if (!defined('SSE_OUTPUT')) {
                     require Ui::find_template('show_gather_art.inc.php');
@@ -552,17 +553,18 @@ class Catalog_local extends Catalog
                 $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
-        // update the counts too
-        Album::update_album_counts();
-        Artist::update_artist_counts();
+        if ($this->count > 0) {
+            // update the counts too
+            Album::update_album_counts();
+            Artist::update_artist_counts();
 
-        /* Update the Catalog last_update */
-        $this->update_last_add();
+            /* Update the Catalog last_update */
+            $this->update_last_add();
+        }
 
         $current_time = time();
-
-        $time_diff = ($current_time - $start_time) ?: 0;
-        $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
+        $time_diff    = ($current_time - $start_time) ?: 0;
+        $rate         = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
         if ($rate < 1) {
             $rate = T_('N/A');
         }

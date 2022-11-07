@@ -56,24 +56,24 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName
     ): void {
-        $io     = $this->app()->io();
-        $values = $this->values();
-        $dryRun = $values['execute'] === false;
+        $interactor = $this->app()->io();
+        $values     = $this->values();
+        $dryRun     = $values['execute'] === false;
 
         if ($dryRun === true) {
-            $io->info(
+            $interactor->info(
                 T_('Running in Test Mode. Use -x to execute'),
                 true
             );
         } else {
-            $io->warn(
+            $interactor->warn(
                 T_('Running in Write Mode. Make sure you\'ve tested first!'),
                 true
             );
         }
 
         $this->songSorter->sort(
-            $io,
+            $interactor,
             $dryRun,
             $values['files'],
             $values['limit'],

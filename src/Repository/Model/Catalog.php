@@ -3298,6 +3298,8 @@ abstract class Catalog extends database_object
 
         $verified = $this->verify_catalog_proc();
 
+        debug_event(__CLASS__, 'verify finished, ' . $verified['updated'] . ' updated', 4);
+
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }

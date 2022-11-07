@@ -453,7 +453,7 @@ class HttpQPlayer
      * request to the HttpQ server and getting the response
      * @param $cmd
      * @param $args
-     * @return mixed|null
+     * @return string|bool
      */
     private function sendCommand($cmd, $args)
     {
@@ -462,7 +462,7 @@ class HttpQPlayer
         if (!$fsock) {
             debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);
 
-            return null;
+            return false;
         }
 
         // Define the base message

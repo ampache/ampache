@@ -314,7 +314,7 @@ class mpd
      * @param $command
      * @param $arguments
      * @param boolean $refresh_info
-     * @return boolean|string
+     * @return string|bool
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
@@ -415,7 +415,7 @@ class mpd
      * SendCommandQueue
      *
      * Sends all commands in the Command Queue to the MPD server.
-     * @return boolean|string
+     * @return string|bool
      */
     public function SendCommandQueue()
     {
