@@ -453,7 +453,7 @@ final class SongSearch implements SearchInterface
                     $join['album']               = true;
                     break;
                 case 'duplicate_tracks':
-                    $where[] = "`song`.`id` IN (SELECT MIN(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1 UNION SELECT MAX(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    $where[] = "`song`.`id` IN (SELECT MAX(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
                     break;
                 case 'orphaned_album':
                     $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
