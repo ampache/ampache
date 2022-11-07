@@ -41,6 +41,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `mbid_artist` to album search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
+  * Add `duplicate_tracks` to album and song search (MIN & MAX id for song search)
   * Alias `possible_duplicate_album` => `possible_duplicate` for album search
   * Alias `album_genre` => `genre` for album search
   * Alias `mbid_album` => `mbid` for album search

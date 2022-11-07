@@ -374,6 +374,9 @@ final class AlbumSearch implements SearchInterface
                 case 'duplicate_mbid_group':
                     $where[] = "`mbid_group` IN (SELECT `mbid_group` FROM `album` GROUP BY `album`.`mbid_group` HAVING COUNT(`mbid_group`) > 1)";
                     break;
+                case 'duplicate_tracks':
+                    $where[] = "`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    break;
                 default:
                     break;
             } // switch on ruletype album

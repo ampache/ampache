@@ -845,6 +845,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();

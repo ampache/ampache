@@ -452,6 +452,9 @@ final class SongSearch implements SearchInterface
                     $table['dupe_album_search2'] = "LEFT JOIN (SELECT `album_artist`, MAX(`id`) AS `dupe_album_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `album`.`year`, `album`.`release_type`, `album`.`release_status` HAVING `Counting` > 1) AS `dupe_album_search2` ON `album`.`id` = `dupe_album_search2`.`dupe_album_id2`";
                     $join['album']               = true;
                     break;
+                case 'duplicate_tracks':
+                    $where[] = "`id` IN (SELECT MIN(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1 UNION SELECT MAX(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    break;
                 case 'orphaned_album':
                     $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
                     break;
