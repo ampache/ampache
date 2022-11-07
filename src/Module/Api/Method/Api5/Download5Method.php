@@ -60,6 +60,7 @@ final class Download5Method
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
         $format    = $input['format'];
+        $original  = $format && $format != 'raw';
         $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
