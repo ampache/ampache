@@ -57,6 +57,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Scrutinizer moved to php8.1
 * Download url parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
+* Search
+  * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
 
