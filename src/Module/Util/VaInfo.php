@@ -1112,7 +1112,8 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'subtitle':
+                case 'releasecomment':
+                case 'discsubtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1248,7 +1249,8 @@ final class VaInfo implements VaInfoInterface
                 case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'subtitle':
+                case 'releasecomment':
+                case 'discsubtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1385,7 +1387,8 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'subtitle':
+                case 'releasecomment':
+                case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1626,7 +1629,8 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'subtitle':
+                case 'releasecomment':
+                case 'discsubtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1704,9 +1708,8 @@ final class VaInfo implements VaInfoInterface
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
-                case '_releasecomment':
                 case 'releasecomment':
-                case 'subtitle':
+                case 'setsubtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
