@@ -61,7 +61,6 @@ class Json4_Data
     // This is added so that we don't pop any webservers
     private static $limit  = 5000;
     private static $offset = 0;
-    private static $type   = '';
 
     /**
      * constructor
@@ -158,14 +157,14 @@ class Json4_Data
                 }
             }
 
-            foreach ($atags as $id => $data) {
+            foreach ($atags as $tag_id => $data) {
                 if ($simple) {
                     array_push($JSON, array(
                         "name" => $data['name']
                     ));
                 } else {
                     array_push($JSON, array(
-                        "id" => (string) $id,
+                        "id" => (string) $tag_id,
                         "name" => $data['name']
                     ));
                 }

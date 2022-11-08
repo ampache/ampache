@@ -159,8 +159,7 @@ class Repository
      */
     public function remove(DatabaseObject $object)
     {
-        $id = $object->getId();
-        $this->deleteRecord($id);
+        $this->deleteRecord($object->getId());
     }
 
     /**

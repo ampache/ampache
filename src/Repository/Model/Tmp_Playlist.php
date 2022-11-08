@@ -178,12 +178,9 @@ class Tmp_Playlist extends database_object
      */
     public function get_next_object()
     {
-        $id = Dba::escape($this->id);
-
-        $sql        = "SELECT `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist`='$id' ORDER BY `id` LIMIT 1";
-        $db_results = Dba::read($sql);
-
-        $results = Dba::fetch_assoc($db_results);
+        $sql        = "SELECT `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id` LIMIT 1";
+        $db_results = Dba::read($sql, array($this->id));
+        $results    = Dba::fetch_assoc($db_results);
 
         return $results['object_id'];
     } // get_next_object
@@ -195,10 +192,8 @@ class Tmp_Playlist extends database_object
      */
     public function count_items()
     {
-        $id = Dba::escape($this->id);
-
-        $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist`='$id'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
         $row        = Dba::fetch_row($db_results);
 
         return $row[0] ?? 0;

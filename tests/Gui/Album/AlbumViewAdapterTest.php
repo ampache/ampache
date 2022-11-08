@@ -87,15 +87,15 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
     public function testGetIdReturnsAlbumId(): void
     {
-        $id = 666;
+        $AlbumId = 666;
 
         $this->album->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($id);
+            ->andReturn($AlbumId);
 
         $this->assertSame(
-            $id,
+            $AlbumId,
             $this->subject->getId()
         );
     }

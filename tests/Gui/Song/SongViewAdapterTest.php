@@ -69,15 +69,15 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetIdReturnsSongId(): void
     {
-        $id = 666;
+        $AlbumId = 666;
 
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($id);
+            ->andReturn($AlbumId);
 
         $this->assertSame(
-            $id,
+            $AlbumId,
             $this->subject->getId()
         );
     }

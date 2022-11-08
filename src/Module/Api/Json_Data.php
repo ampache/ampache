@@ -175,9 +175,9 @@ class Json_Data
                 }
             }
 
-            foreach ($atags as $id => $data) {
+            foreach ($atags as $tag_id => $data) {
                 array_push($JSON, array(
-                    "id" => (string) $id,
+                    "id" => (string) $tag_id,
                     "name" => $data['name']
                 ));
             }

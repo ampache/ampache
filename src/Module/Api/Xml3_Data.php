@@ -202,8 +202,8 @@ class Xml3_Data
                 }
             }
 
-            foreach ($atags as $id => $data) {
-                $string .= "\t<tag id=\"" . $id . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
+            foreach ($atags as $tag_id => $data) {
+                $string .= "\t<tag id=\"" . $tag_id . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
             }
         }
 

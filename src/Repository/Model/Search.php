@@ -1241,7 +1241,7 @@ class Search extends playlist_object
      */
     public function format($details = true)
     {
-        parent::format();
+        parent::format($details);
     }
 
     /**

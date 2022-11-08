@@ -641,7 +641,7 @@ class Stream_Playlist
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
                 $url_data = Stream_Url::parse($url->url);
-                $id       = $url_data['id'];
+                $url_id   = $url_data['id'];
 
                 unset($url_data['id']);
                 unset($url_data['ssid']);
@@ -656,7 +656,7 @@ class Stream_Playlist
 
                 $className = ObjectTypeToClassNameMapper::map($type);
 
-                $item = new $className($id);
+                $item = new $className($url_id);
                 $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;

@@ -466,13 +466,13 @@ abstract class Catalog extends database_object
         return $results;
     }
 
-    public static function get_catalog_filter_name($id = 0)
+    public static function get_catalog_filter_name($group_id = 0)
     {
         $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($group_id));
         $row        = Dba::fetch_assoc($db_results);
 
-        return $row['name'];
+        return $row['name'] ?? '';
     }
 
     public static function get_catalog_filter_by_name($filter_name)
