@@ -245,14 +245,12 @@ class mpd
 
                 return false;
             }
-        } else {
-            if (!$this->RefreshInfo()) {
-                // no read access, might as well be disconnected
-                $this->connected = false;
-                $this->_error('construct', 'Password required to access server');
+        } elseif (!$this->RefreshInfo()) {
+            // no read access, might as well be disconnected
+            $this->connected = false;
+            $this->_error('construct', 'Password required to access server');
 
-                return false;
-            }
+            return false;
         }
 
         return true;

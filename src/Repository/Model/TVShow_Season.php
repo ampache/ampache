@@ -318,11 +318,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         if (Art::has_db($this->id, 'tvshow_season')) {
             $tvshow_id = $this->id;
             $type      = 'tvshow_season';
-        } else {
-            if (Art::has_db($this->tvshow, 'tvshow') || $force) {
-                $tvshow_id = $this->tvshow;
-                $type      = 'tvshow';
-            }
+        } elseif (Art::has_db($this->tvshow, 'tvshow') || $force) {
+            $tvshow_id = $this->tvshow;
+            $type      = 'tvshow';
         }
 
         if ($tvshow_id !== null && $type !== null) {

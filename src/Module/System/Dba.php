@@ -105,16 +105,14 @@ class Dba
             debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
-        } else {
-            if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
-                self::$_error = json_encode($stmt->errorInfo());
-                debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
-                debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
-                self::finish($stmt);
-                self::disconnect();
+        } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+            self::$_error = json_encode($stmt->errorInfo());
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
+            debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            self::finish($stmt);
+            self::disconnect();
 
-                return false;
-            }
+            return false;
         }
 
         return $stmt;

@@ -277,10 +277,8 @@ class Upnp_Api
                     debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
                 }
             }
-        } else {
-            if (self::SSDP_DEBUG) {
-                debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
-            }
+        } elseif (self::SSDP_DEBUG) {
+            debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
         }
     }
 

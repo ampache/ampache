@@ -215,10 +215,8 @@ class Browse extends Query
         // simple browse because we've got too much here
         if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
-        } else {
-            if (!count($object_ids)) {
-                $this->set_total(0);
-            }
+        } elseif (!count($object_ids)) {
+            $this->set_total(0);
         }
 
         // Load any additional object we need for this
@@ -451,10 +449,8 @@ class Browse extends Query
             echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
-        } else {
-            if (!$this->is_use_pages()) {
-                $this->show_next_link($argument);
-            }
+        } elseif (!$this->is_use_pages()) {
+            $this->show_next_link($argument);
         }
         Ajax::end_container();
     } // show_object

@@ -382,11 +382,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         if (Art::has_db($this->id, 'podcast_episode')) {
             $episode_id = $this->id;
             $type       = 'podcast_episode';
-        } else {
-            if (Art::has_db($this->podcast, 'podcast') || $force) {
-                $episode_id = $this->podcast;
-                $type       = 'podcast';
-            }
+        } elseif (Art::has_db($this->podcast, 'podcast') || $force) {
+            $episode_id = $this->podcast;
+            $type       = 'podcast';
         }
 
         if ($episode_id !== null && $type !== null) {
