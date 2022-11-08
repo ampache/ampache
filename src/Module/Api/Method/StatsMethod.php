@@ -95,17 +95,20 @@ final class StatsMethod
         }
 
         // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
+        $user = User::get_from_username(Session::username($input['auth']));
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {
-            $user    = User::get_from_username($input['username']);
-            $user_id = $user;
+            $user = User::get_from_username($input['username']);
         } elseif (array_key_exists('user_id', $input)) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+            $user = new User((int)$input['user_id']);
         }
+        if (!$user->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), 'user'), '4710', self::ACTION, 'type', $input['api_format']);
 
+            return false;
+        }
+        $user_id = $user->id;
         $results = array();
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
