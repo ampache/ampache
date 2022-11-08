@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -193,10 +192,10 @@ class Api5
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::success($message, $return_data);
+                echo Json5_Data::success($message, $return_data);
                 break;
             default:
-                echo Xml_Data::success($message, $return_data);
+                echo Xml5_Data::success($message, $return_data);
         }
     } // message
 
@@ -213,10 +212,10 @@ class Api5
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::error($error_code, $message, $method, $error_type);
+                echo Json5_Data::error($error_code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml_Data::error($error_code, $message, $method, $error_type);
+                echo Xml5_Data::error($error_code, $message, $method, $error_type);
         }
     } // error
 
@@ -230,10 +229,10 @@ class Api5
     {
         switch ($format) {
             case 'json':
-                echo Json_Data::empty($empty_type);
+                echo Json5_Data::empty($empty_type);
                 break;
             default:
-                echo Xml_Data::empty();
+                echo Xml5_Data::empty();
         }
     } // empty
 
