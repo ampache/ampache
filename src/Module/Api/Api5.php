@@ -168,20 +168,6 @@ class Api5
     public static $version_numeric = '553000'; // AMPACHE_VERSION
 
     /**
-     * @var Browse $browse
-     */
-    public static $browse = null;
-
-    public static function getBrowse(): Browse
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-
-        return self::$browse;
-    }
-
-    /**
      * message
      * call the correct success message depending on format
      * @param string $message
@@ -255,7 +241,7 @@ class Api5
         }
 
         if ($browse === null) {
-            $browse = self::getBrowse();
+            $browse = Api::getBrowse();
         }
 
         switch ($filter) {
