@@ -89,14 +89,12 @@ final class GetArt5Method
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
             }
-        } elseif ($type == 'playlist') {
-            if (!Art::has_db($object_id, $type)) {
-                $playlist  = new Playlist($object_id);
-                $listitems = $playlist->get_items();
-                $item      = $listitems[array_rand($listitems)];
-                $song      = new Song($item['object_id']);
-                $art       = new Art($song->album, 'album');
-            }
+        } elseif ($type == 'playlist' &&!Art::has_db($object_id, $type)) {
+            $playlist  = new Playlist($object_id);
+            $listitems = $playlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $song      = new Song($item['object_id']);
+            $art       = new Art($song->album, 'album');
         }
 
         if ($art->has_db_info($fallback)) {
