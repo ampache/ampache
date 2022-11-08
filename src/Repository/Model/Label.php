@@ -99,9 +99,13 @@ class Label extends database_object implements library_item
      */
     public $f_link;
     /**
-     * @var integer $artists
+     * @var array $artists
      */
     public $artists;
+    /**
+     * @var integer $artists
+     */
+    public $artist_count;
 
     /**
      * __construct
@@ -146,7 +150,7 @@ class Label extends database_object implements library_item
     {
         unset($details);
         $this->get_f_link();
-        $this->artists = count($this->get_artists());
+        $this->get_artist_count();
     }
 
     /**
@@ -394,14 +398,30 @@ class Label extends database_object implements library_item
      */
     public function get_artists()
     {
-        $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['artist'];
+        if (!isset($this->artists)) {
+            $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
+            $db_results = Dba::read($sql, array($this->id));
+            $results    = array();
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[] = (int)$row['artist'];
+            }
+            $this->artists = $results;
         }
 
-        return $results;
+        return $this->artists;
+    }
+
+    /**
+     * get_artist_count
+     * @return int
+     */
+    public function get_artist_count()
+    {
+        if (!isset($this->artist_count)) {
+            $this->artist_count = count($this->get_artists());
+        }
+
+        return $this->artist_count;
     }
 
     /**

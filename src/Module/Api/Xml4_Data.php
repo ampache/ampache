@@ -367,7 +367,7 @@ class Xml4_Data
                     } else {
                         $artist = new Artist($object_id);
                         if (!isset($artist->id)) {
-                            continue;
+                            break;
                         }
                         $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";

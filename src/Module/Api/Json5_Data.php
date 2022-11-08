@@ -314,7 +314,7 @@ class Json5_Data
             array_push($JSON, array(
                 "id" => (string) $label_id,
                 "name" => $label->get_fullname(),
-                "artists" => $label->artists,
+                "artists" => $label->artist_count,
                 "summary" => $label->summary,
                 "external_link" => $label->get_link(),
                 "address" => $label->address,
