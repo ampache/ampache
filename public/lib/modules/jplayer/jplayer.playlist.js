@@ -231,7 +231,7 @@
             // After addAfter() and remove() functions, new items need their webPlayer indexes reset
             // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
             var isAdjusted = false;
-            var current_item = this.current
+            var current_item = this.current;
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 var htmlIndex = parseInt($(playlistRow).attr("name"),10);
                 if (htmlIndex !== i) {
@@ -536,7 +536,7 @@
             // scan is used when you rearrange items in the webplayer playlist (show_html5_player.inc.php)
             var self = this;
             var isAdjusted = false;
-            var current_item = self.current
+            var current_item = self.current;
             var playlist_before = self.playlist;
             var playlist_after = [];
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
@@ -576,7 +576,7 @@
         },
         setCurrent: function(index) {
             if (index < 0) {
-                index = 0
+                index = 0;
             }
             console.log("setCurrent " + index);
             if (index >= 0 && this.current !== index) {
@@ -665,7 +665,7 @@
                         final_list.push(media);
                     });
                     // sorted!
-                    self.playlist = final_list
+                    self.playlist = final_list;
                     self.current = 0;
                     self.shuffling = false;
                     self._refresh(true);

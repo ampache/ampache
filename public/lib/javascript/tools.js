@@ -426,8 +426,6 @@ function geolocate_user_callback(position) {
 function geolocate_user() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(geolocate_user_callback);
-    } else {
-        console.error("This browser does not support geolocation");
     }
 }
 
