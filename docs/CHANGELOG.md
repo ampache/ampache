@@ -20,6 +20,7 @@
 * Delete artist's from the catalog_map that don't have a song or album for that catalog
 * Set correct transcode `bitrate` and `mime` for songs on play_url calls
 * Save Track Order when viewing all the items
+* Use cache_target for cached song cleanup (was hardcoded to mp3)
 * Subsonic
   * Art for artist index arrays was missing
 * Search
