@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 
 $web_path = AmpConfig::get('web_path'); ?>
-<?php Ui::show_box_top(T_('Manage Catalog Filters'), 'box box_manage_filter'); ?>
+<?php Ui::show_box_top(T_('Show Catalog Filters'), 'box box_manage_filter'); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
