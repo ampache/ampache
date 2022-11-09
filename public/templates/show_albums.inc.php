@@ -71,6 +71,7 @@ $artist_link = ($group_release) ? $artist_text :  Ajax::text('?page=browse&actio
 $songs_link  = ($group_release) ? $songs_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', $songs_text, 'album_sort_song_count');
 $year_link   = ($group_release) ? $year_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . $year_sort, $year_text, 'album_sort_year');
 $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'album_sort_total_count');
+$rating_link = ($group_release) ? $rating_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'album_sort_rating');
 ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
@@ -97,7 +98,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
 } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
-                <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+                <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
                 <?php
     } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>

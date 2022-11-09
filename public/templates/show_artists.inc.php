@@ -78,7 +78,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
-                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+                <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=rating', T_('Rating'), 'artist_sort_rating'); ?></th>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>

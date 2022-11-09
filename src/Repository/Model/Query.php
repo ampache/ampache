@@ -84,7 +84,8 @@ class Query
             'total_skip',
             'album',
             'artist',
-            'random'
+            'random',
+            'rating'
         ),
         'album' => array(
             'album_artist',
@@ -100,7 +101,8 @@ class Query
             'song_count',
             'subtitle',
             'total_count',
-            'year'
+            'year',
+            'rating'
         ),
         'album_disk' => array(
             'album_artist',
@@ -116,7 +118,8 @@ class Query
             'song_count',
             'subtitle',
             'total_count',
-            'year'
+            'year',
+            'rating'
         ),
         'artist' => array(
             'name',
@@ -126,7 +129,8 @@ class Query
             'song_count',
             'album_count',
             'total_count',
-            'random'
+            'random',
+            'rating'
         ),
         'playlist' => array(
             'name',
@@ -907,6 +911,24 @@ class Query
     public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority)
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2";
+    } // set_join_and
+
+    /**
+     * set_join_and
+     * This sets the joins for the current browse object and a second option as well
+     * @param string $type
+     * @param string $table
+     * @param string $source1
+     * @param string $dest1
+     * @param string $source2
+     * @param string $dest2
+     * @param string $source3
+     * @param string $dest3
+     * @param integer $priority
+     */
+    public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority)
+    {
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2 AND $source3 = $dest3";
     } // set_join_and
 
     /**
@@ -2127,6 +2149,10 @@ class Query
                         $sql = "`$field`.`name`";
                         $this->set_join('LEFT', "`$field`", "`$field`.`id`", "`song`.`$field`", 100);
                         break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (int)$this->user_id, 100);
+                        break;
                     default:
                         break;
                 } // end switch
@@ -2150,6 +2176,10 @@ class Query
                         $sql = "`artist`.`name`";
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                     case 'year':
                     case 'original_year':
@@ -2185,6 +2215,10 @@ class Query
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
                         $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                         break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
+                        break;
                     case 'year':
                     case 'original_year':
                     case 'song_count':
@@ -2207,6 +2241,10 @@ class Query
                     case 'album_count':
                     case 'total_count':
                         $sql = "`artist`.`$field`";
+                        break;
+                    case 'rating':
+                        $sql = "`rating`.`rating`";
+                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
                 } // end switch
                 break;
