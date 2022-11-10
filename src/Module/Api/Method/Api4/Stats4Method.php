@@ -103,7 +103,7 @@ final class Stats4Method
                 break;
             case 'frequent':
                 debug_event(self::class, 'stats frequent', 4);
-                $threshold = AmpConfig::get('stats_threshold');
+                $threshold = AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':

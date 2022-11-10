@@ -98,7 +98,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_ids      = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
                 $browse          = new Browse();
                 $hide_columns    = array('cel_artist');
-                $limit_threshold = AmpConfig::get('stats_threshold');
+                $limit_threshold = AmpConfig::get('stats_threshold', 7);
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -157,7 +157,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
                     $artist = new Artist($this->requestParser->getFromRequest('artist'));
                     $artist->format();
-                    $limit_threshold = AmpConfig::get('stats_threshold');
+                    $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = array();
                     $missing_objects = array();
                     if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
@@ -192,7 +192,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_ids      = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
                 $browse          = new Browse();
                 $hide_columns    = array();
-                $limit_threshold = AmpConfig::get('stats_threshold');
+                $limit_threshold = AmpConfig::get('stats_threshold', 7);
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
                 $results['similar_songs'] = ob_get_clean();

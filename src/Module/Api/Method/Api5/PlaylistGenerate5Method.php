@@ -90,7 +90,7 @@ final class PlaylistGenerate5Method
 
             // not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
-            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
+            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold', 7);
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {

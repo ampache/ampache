@@ -43,7 +43,7 @@ $hide_genres     = AmpConfig::get('hide_genres');
 $thcount         = 7;
 $is_table        = $browse->is_grid_view();
 $limit_threshold = (!isset($limit_threshold))
-    ? AmpConfig::get('stats_threshold')
+    ? AmpConfig::get('stats_threshold', 7)
     : $limit_threshold;
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);

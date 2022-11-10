@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var string $object_type */
 
-$threshold      = AmpConfig::get('stats_threshold');
+$threshold      = AmpConfig::get('stats_threshold', 7);
 $limit          = (int)AmpConfig::get('popular_threshold', 10);
 $catalog_filter = AmpConfig::get('catalog_filter');
 $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
