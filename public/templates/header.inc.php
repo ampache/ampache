@@ -42,7 +42,6 @@ $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
-$location          = get_location();
 $_SESSION['login'] = false;
 $is_session        = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $current_user      = Core::get_global('user');
@@ -89,7 +88,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo $site_title; ?> - <?php echo $location['title']; ?></title>
+        <title><?php echo $site_title; ?></title>
 
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
@@ -131,6 +130,34 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsWebPath = "<?php echo $web_path; ?>";
             var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
             var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')) ?>";
+            var jsHomeTitle = "<?php echo addslashes(T_('Home')); ?>";
+            var jsUploadTitle = "<?php echo addslashes(T_('Upload')); ?>";
+            var jsLocalplayTitle = "<?php echo addslashes(T_('Localplay')); ?>";
+            var jsRandomTitle = "<?php echo addslashes(T_('Random Play')); ?>";
+            var jsPlaylistTitle = "<?php echo addslashes(T_('Playlist')); ?>";
+            var jsSmartPlaylistTitle = "<?php echo addslashes(T_('Smart Playlist')); ?>";
+            var jsSearchTitle = "<?php echo addslashes(T_('Search')); ?>";
+            var jsPreferencesTitle = "<?php echo addslashes(T_('Preferences')); ?>";
+            var jsAdminCatalogTitle = "<?php echo addslashes(T_('Catalogs')); ?>";
+            var jsAdminUserTitle = "<?php echo addslashes(T_('User Tools')); ?>";
+            var jsAdminMailTitle = "<?php echo addslashes(T_('E-mail Users')); ?>";
+            var jsAdminManageAccessTitle = "<?php echo addslashes(T_('Access Control')); ?>";
+            var jsAdminPreferencesTitle = "<?php echo addslashes(T_('Server Config')); ?>";
+            var jsAdminManageModulesTitle = "<?php echo addslashes(T_('Modules')); ?>";
+            var jsAdminLicenseTitle = "<?php echo addslashes(T_('Media Licenses')); ?>";
+            var jsAdminFilterTitle = "<?php echo addslashes(T_('Catalog Filters')); ?>";
+            var jsBrowseMusicTitle = "<?php echo addslashes(T_('Browse')); ?>";
+            var jsAlbumsTitle = "<?php echo addslashes(T_('Albums')); ?>";
+            var jsArtistsTitle = "<?php echo addslashes(T_('Artists')); ?>";
+            var jsStatisticsTitle = "<?php echo addslashes(T_('Statistics')); ?>";
+            var jsSongTitle = "<?php echo addslashes(T_('Song')); ?>";
+            var jsDemocraticTitle = "<?php echo addslashes(T_('Democratic')); ?>";
+            var jsLabelsTitle = "<?php echo addslashes(T_('Labels')); ?>";
+            var jsDashboardTitle = "<?php echo addslashes(T_('Dashboards')); ?>";
+            var jsPodcastTitle = "<?php echo addslashes(T_('Podcast')); ?>";
+            var jsPodcastEpisodeTitle = "<?php echo addslashes(T_('Podcast Episode')); ?>";
+            var jsRadioTitle = "<?php echo addslashes(T_('Radio Stations')); ?>";
+            var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
             var jsSaveTitle = "<?php echo addslashes(T_('Save')) ?>";
             var jsCancelTitle = "<?php echo addslashes(T_('Cancel')) ?>";
         </script>
@@ -159,12 +186,66 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 return btoa(window.location.href.substring(jsWebPath.length + 1));
             }
             $(document).ajaxSuccess(function() {
-                var title = window.location.hash.replace(/[#$&=_]/g, ' ');
-                title = title.replace(/\?/gi, ' / ');
-                title = title.replace(/\b(?:index|action|type|tab|.php|\[\]|[a-z]* id|[0-9]*)\b/gi, ' ');
+                var title = window.location.hash.replace(/[#$&=_]/g, '');
+                title = title.replace(/\?.*/gi, '');
+                title = title.replace(/\b(?:action|type|tab|.php|\[\]|[a-z]* id|[0-9]*)\b/gi, '');
                 title = title.trim();
-                if (title !== '') {
-                    document.title = title + ' | ' + jsSiteTitle;
+                if (title === 'index') {
+                    document.title = jsSiteTitle + ' | ' + jsHomeTitle;
+                } else if (title === 'browse') {
+                    document.title = jsSiteTitle + ' | ' + jsBrowseMusicTitle;
+                } else if (title === 'albums') {
+                    document.title = jsSiteTitle + ' | ' + jsAlbumsTitle;
+                } else if (title === 'artists') {
+                    document.title = jsSiteTitle + ' | ' + jsArtistsTitle;
+                } else if (title === 'song') {
+                    document.title = jsSiteTitle + ' | ' + jsSongTitle;
+                } else if (title === 'democratic') {
+                    document.title = jsSiteTitle + ' | ' + jsDemocraticTitle;
+                } else if (title === 'labels') {
+                    document.title = jsSiteTitle + ' | ' + jsLabelsTitle;
+                } else if (title === 'mashup') {
+                    document.title = jsSiteTitle + ' | ' + jsDashboardTitle;
+                } else if (title === 'podcast') {
+                    document.title = jsSiteTitle + ' | ' + jsPodcastTitle;
+                } else if (title === 'podcast_episode') {
+                    document.title = jsSiteTitle + ' | ' + jsPodcastEpisodeTitle;
+                } else if (title === 'radio') {
+                    document.title = jsSiteTitle + ' | ' + jsRadioTitle;
+                } else if (title === 'video' || title === 'tvshow_seasons' || title === 'tvshows') {
+                    document.title = jsSiteTitle + ' | ' + jsVideoTitle;
+                } else if (title === 'localplay') {
+                    document.title = jsSiteTitle + ' | ' + jsLocalplayTitle;
+                } else if (title === 'random') {
+                    document.title = jsSiteTitle + ' | ' + jsRandomTitle;
+                } else if (title === 'playlist') {
+                    document.title = jsSiteTitle + ' | ' + jsPlaylistTitle;
+                } else if (title === 'smartplaylist') {
+                    document.title = jsSiteTitle + ' | ' + jsSmartPlaylistTitle;
+                } else if (title === 'search') {
+                    document.title = jsSiteTitle + ' | ' + jsSearchTitle;
+                } else if (title === 'preferences') {
+                    document.title = jsSiteTitle + ' | ' + jsPreferencesTitle;
+                } else if (title === 'stats') {
+                    document.title = jsSiteTitle + ' | ' + jsStatisticsTitle;
+                } else if (title === 'upload') {
+                    document.title = jsSiteTitle + ' | ' + jsUploadTitle;
+                } else if (title === 'admin/catalog' || title === 'admin/index') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminCatalogTitle;
+                } else if (title === 'admin/users') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminUserTitle;
+                } else if (title === 'admin/mail') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminMailTitle;
+                } else if (title === 'admin/access') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminManageAccessTitle;
+                } else if (title === 'admin/preferences' || title === 'admin/system') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminPreferencesTitle;
+                } else if (title === 'admin/modules') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminManageModulesTitle;
+                } else if (title === 'admin/filter') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminFilterTitle;
+                } else if (title === 'admin/license') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminLicenseTitle;
                 } else {
                     document.title = jsSiteTitle;
                 }
