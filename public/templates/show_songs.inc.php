@@ -37,12 +37,14 @@ use Ampache\Module\Util\Ui;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 /** @var string $limit_threshold */
-
-$web_path     = AmpConfig::get('web_path');
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres  = AmpConfig::get('hide_genres');
-$thcount      = 7;
-$is_table     = $browse->is_grid_view();
+$web_path        = AmpConfig::get('web_path');
+$show_ratings    = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres     = AmpConfig::get('hide_genres');
+$thcount         = 7;
+$is_table        = $browse->is_grid_view();
+$limit_threshold = (!isset($limit_threshold))
+    ? AmpConfig::get('stats_threshold')
+    : $limit_threshold;
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);

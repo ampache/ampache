@@ -55,8 +55,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog   = Catalog::create_from_id($row['id']);
-            $artist_id = 0;
-            $album_id  = 0;
             ob_flush();
             if (!$catalog) {
                 $interactor->error(
@@ -86,8 +84,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $type      = 'song';
                     $file_id   = Catalog::get_id_from_file($filePath, $type);
                     $media     = new Song($file_id);
-                    $artist_id = $media->artist;
-                    $album_id  = $media->album;
                     break;
             }
             $file_test = is_file($filePath);
