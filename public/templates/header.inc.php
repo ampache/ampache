@@ -147,8 +147,8 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsAdminLicenseTitle = "<?php echo addslashes(T_('Media Licenses')); ?>";
             var jsAdminFilterTitle = "<?php echo addslashes(T_('Catalog Filters')); ?>";
             var jsBrowseMusicTitle = "<?php echo addslashes(T_('Browse')); ?>";
-            var jsAlbumsTitle = "<?php echo addslashes(T_('Albums')); ?>";
-            var jsArtistsTitle = "<?php echo addslashes(T_('Artists')); ?>";
+            var jsAlbumTitle = "<?php echo addslashes(T_('Album')); ?>";
+            var jsArtistTitle = "<?php echo addslashes(T_('Artist')); ?>";
             var jsStatisticsTitle = "<?php echo addslashes(T_('Statistics')); ?>";
             var jsSongTitle = "<?php echo addslashes(T_('Song')); ?>";
             var jsDemocraticTitle = "<?php echo addslashes(T_('Democratic')); ?>";
@@ -195,9 +195,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 } else if (title === 'browse') {
                     document.title = jsSiteTitle + ' | ' + jsBrowseMusicTitle;
                 } else if (title === 'albums') {
-                    document.title = jsSiteTitle + ' | ' + jsAlbumsTitle;
+                    document.title = jsSiteTitle + ' | ' + jsAlbumTitle;
                 } else if (title === 'artists') {
-                    document.title = jsSiteTitle + ' | ' + jsArtistsTitle;
+                    document.title = jsSiteTitle + ' | ' + jsArtistTitle;
                 } else if (title === 'song') {
                     document.title = jsSiteTitle + ' | ' + jsSongTitle;
                 } else if (title === 'democratic') {
