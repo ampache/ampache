@@ -4,7 +4,7 @@
 
 ### Added
 
-* Database 550004
+* Database 550005
   * Add `song_artist` and `album_artist` maps to catalog_map
 
 ### Changed
