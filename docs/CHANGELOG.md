@@ -62,6 +62,7 @@
 * Subsonic
   * Error if you didn't have data when using get_user_data
   * Response data might fall back to mp3 and not match the output format
+  * Incorrect `playqueue_date` call for user playqueue
 * webplayer
   * Reordering the list could lose track of items
   * Remove single item from list could create a weird list

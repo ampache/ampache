@@ -805,7 +805,7 @@ class Subsonic_Xml_Data
         $items     = $PlayQueue->get_items();
         if (!empty($items)) {
             $current    = $PlayQueue->get_current_object();
-            $changed    = User::get_user_data($user_id, 'playqueue_date')['playqueue_date'] ?? '';
+            $changed    = User::get_user_data($user_id, 'playqueue_time')['playqueue_time'] ?? '';
             $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_client'] ?? '';
             $xplayqueue = $xml->addChild('playQueue');
             $xplayqueue->addAttribute('current', self::_getSongId($current['object_id']));
