@@ -826,7 +826,7 @@ class Update
         $version[]     = array('version' => '600016', 'description' => $update_string);
 
         $update_string = "* Drop `user_playlist` table and recreate it";
-        $version[]     = array('version' => '600017', 'description' => $update_string);
+        $version[]     = array('version' => '600018', 'description' => $update_string);
 
         return $version;
     }
