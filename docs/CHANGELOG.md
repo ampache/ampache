@@ -12,7 +12,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
-* Database 600016
+* Database 600017
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -30,6 +30,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `streamtoken` to user table allowing permalink music stream access
   * Add `object_type_IDX` to artist_map table
   * Add `object_type_IDX` to catalog_map table
+  * Drop `user_playlist` table and recreate it
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
@@ -58,6 +59,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Scrutinizer moved to php8.1
 * Download url parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
+* Rework user_playlists (used for Now Playing & Play Queue operations)
+* Workaround time for dsub playqueue by converting to UTC
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer

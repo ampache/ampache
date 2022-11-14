@@ -2540,11 +2540,8 @@ class Subsonic_Api
     {
         $username = $input['u'];
         $user     = User::get_from_username($username);
-        $client   = scrub_in($input['c'] ?? 'Subsonic');
         $user_id  = $user->id;
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplayqueue');
-        User::set_user_data($user_id, 'playqueue_time', time());
-        User::set_user_data($user_id, 'playqueue_client', $client);
 
         Subsonic_Xml_Data::addPlayQueue($response, $user_id, $username);
         self::_apiOutput($input, $response);
@@ -2589,12 +2586,12 @@ class Subsonic_Api
                         $media->set_played((int)$user_id, $client, array(), $time);
                     }
                 }
-                $playQueue = new User_Playlist($user_id);
+                $playQueue = new User_Playlist($user_id, $client);
                 $sub_ids   = (is_array($input['id']))
                     ? $input['id']
                     : array($input['id']);
                 $playlist  = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
-                $playQueue->set_items($playlist, $type, $media->id, $position, $time, $client);
+                $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'saveplayqueue');

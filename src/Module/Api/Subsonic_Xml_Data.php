@@ -52,6 +52,8 @@ use Ampache\Repository\Model\User_Playlist;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
+use DateTime;
+use DateTimeZone;
 use SimpleXMLElement;
 
 /**
@@ -791,17 +793,18 @@ class Subsonic_Xml_Data
      */
     public static function addPlayQueue($xml, $user_id, $username)
     {
-        $PlayQueue = new User_Playlist($user_id);
-        $items     = $PlayQueue->get_items();
+        $playQueue = new User_Playlist($user_id);
+        $items     = $playQueue->get_items();
         if (!empty($items)) {
-            $current    = $PlayQueue->get_current_object();
-            $changed    = User::get_user_data($user_id, 'playqueue_time')['playqueue_time'] ?? '';
-            $changedBy  = User::get_user_data($user_id, 'playqueue_client')['playqueue_client'] ?? '';
+            $current    = $playQueue->get_current_object();
+            $date       = new DateTime($playQueue->time ?? '');
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $changedBy  = $playQueue->client ?? '';
             $xplayqueue = $xml->addChild('playQueue');
             $xplayqueue->addAttribute('current', self::_getSongId($current['object_id']));
             $xplayqueue->addAttribute('position', (string)$current['current_time'] * 1000);
             $xplayqueue->addAttribute('username', (string)$username);
-            $xplayqueue->addAttribute('changed', date("c", (int)$changed));
+            $xplayqueue->addAttribute('changed', $date->format("c"));
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);
 
             if ($items) {
@@ -1579,11 +1582,14 @@ class Subsonic_Xml_Data
     public static function _getAmpacheIdArrays($object_ids)
     {
         $ampidarrays = array();
+        $track       = 1;
         foreach ($object_ids as $object_id) {
             $ampidarrays[] = array(
                 'object_id' => self::_getAmpacheId($object_id),
-                'object_type' => self::_getAmpacheType($object_id)
+                'object_type' => self::_getAmpacheType($object_id),
+                'track' => $track
             );
+            $track++;
         }
 
         return $ampidarrays;
