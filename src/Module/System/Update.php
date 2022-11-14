@@ -5077,11 +5077,15 @@ class Update
     }
 
     /**
-     * update_600017
+     * update_600017 skipped.
+     */
+
+    /**
+     * update_600018
      *
      * Drop `user_playlist` table and recreate it
      */
-    public static function update_600017(): bool
+    public static function update_600018(): bool
     {
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
