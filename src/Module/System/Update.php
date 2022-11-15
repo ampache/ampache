@@ -3675,7 +3675,7 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `catalog_map` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `catalog_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `unique_catalog_map` (`object_id`, `object_type`, `catalog_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         // fill the data
-        $tables = ['album', 'song', 'video', 'podcast_episode'];
+        $tables = ['song', 'album', 'video', 'podcast_episode'];
         foreach ($tables as $type) {
             $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;";
             $retval &= (Dba::write($sql) !== false);
@@ -4701,7 +4701,7 @@ class Update
         $retval = true;
 
         // delete bad maps if they exist
-        $tables = ['album', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'];
+        $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
         foreach ($tables as $type) {
             $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;";
             Dba::write($sql);
@@ -4996,7 +4996,7 @@ class Update
         $retval = true;
 
         // delete bad maps if they exist
-        $tables = ['album', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'];
+        $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
         foreach ($tables as $type) {
             $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;";
             Dba::write($sql);
