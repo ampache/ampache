@@ -196,6 +196,7 @@ final class Session implements SessionInterface
 
         // Destroy our cookie!
         setcookie($session_name, '', $cookie_options);
+        setcookie($session_name, '', -1);
         setcookie($session_name . '_user', '', $cookie_options);
         setcookie($session_name . '_lang', '', $cookie_options);
 
