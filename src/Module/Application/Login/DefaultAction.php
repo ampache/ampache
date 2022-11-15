@@ -96,6 +96,10 @@ final class DefaultAction implements ApplicationActionInterface
                         'Location',
                         $this->configContainer->get('web_path')
                     );
+            } elseif (array_key_exists($name, $_COOKIE)) {
+                // now auth so unset this cookie
+                setcookie($name, '', -1, (string)AmpConfig::get('cookie_path'));
+                setcookie($name, '', -1);
             }
         }
 
