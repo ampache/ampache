@@ -268,7 +268,7 @@ class Stream_Playlist
                 if (in_array($type, array('song', 'podcast_episode', 'video'))) {
                     $user       = Core::get_global('user');
                     /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $object */
-                    $url['url'] = $object->play_url($additional_params, '', false, $user->id, $user->streamtoken);
+                    $url['url'] = $object->play_url($additional_params, '', false, $user->id ?? false, $user->streamtoken ?? false);
                 } elseif ($type == 'democratic') {
                     /** @var Democratic $object */
                     $url['url'] = $object->play_url();

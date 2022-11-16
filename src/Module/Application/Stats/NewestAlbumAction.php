@@ -70,10 +70,10 @@ final class NewestAlbumAction implements ApplicationActionInterface
 
         $user = Core::get_global('user');
 
-        $objects = Stats::get_newest('song', $limit, 0, 0, $user->id);
+        $objects = Stats::get_newest('album', $limit, 0, 0, $user->id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
-        $browse->set_type('song');
+        $browse->set_type('album');
         $browse->show_objects($objects);
         $browse->store();
 
