@@ -36,14 +36,10 @@ final class GraphAction extends AbstractGraphRendererAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        UiInterface $ui
     ) {
         $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

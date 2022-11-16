@@ -43,6 +43,8 @@ final class NewestArtistAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
