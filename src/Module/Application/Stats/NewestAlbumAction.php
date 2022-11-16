@@ -55,11 +55,7 @@ final class NewestAlbumAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $browse       = $this->modelFactory->createBrowse();
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $browse->set_type('newest');
-        $browse->set_threshold($thresh_value);
-        $browse->set_simple_browse(true);
 
         $this->ui->showHeader();
 
@@ -73,6 +69,7 @@ final class NewestAlbumAction implements ApplicationActionInterface
         $user = Core::get_global('user');
 
         $browse = $this->modelFactory->createBrowse();
+        $browse->set_threshold($thresh_value);
         $browse->set_type(
             'album',
             Stats::get_newest_sql('album', 0, $user->id)
