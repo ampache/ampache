@@ -53,7 +53,7 @@ class User_Playlist extends database_object
         }
 
         $this->user   = (int)$user_id;
-        $this->client = substr($client ?? self::get_latest(), 0, 254);
+        $this->client = substr($client ?? $this->get_latest(), 0, 254);
 
         return true;
     } // __construct
@@ -130,6 +130,23 @@ class User_Playlist extends database_object
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['count'];
+    } // get_count
+
+    /**
+     * get_time
+     * This returns a count of the total number of tracks that are in this playlist
+     * @return int
+     */
+    public function get_time()
+    {
+        $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
+        $db_results = Dba::read($sql, array($this->user, $this->client));
+        $results    = Dba::fetch_assoc($db_results);
+        if (!$results) {
+            return time();
+        }
+
+        return (int)$results['time'];
     } // get_count
 
     /**
