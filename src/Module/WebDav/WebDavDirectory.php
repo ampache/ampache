@@ -43,7 +43,6 @@ class WebDavDirectory extends DAV\Collection
     public function __construct(library_item $libitem)
     {
         $this->libitem = $libitem;
-        $this->libitem->format();
     }
 
     /**

@@ -42,7 +42,6 @@ class WebDavFile extends DAV\File
     public function __construct(Media $libitem)
     {
         $this->libitem = $libitem;
-        $this->libitem->format();
     }
 
     /**
@@ -51,7 +50,9 @@ class WebDavFile extends DAV\File
      */
     public function getName()
     {
-        return $this->libitem->f_file;
+        $nameinfo = pathinfo($this->libitem->file);
+
+        return (string)$nameinfo['filename'] . '.' . $nameinfo['extension'];
     }
 
     /**
