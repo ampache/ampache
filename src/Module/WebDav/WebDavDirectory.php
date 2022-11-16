@@ -52,7 +52,7 @@ class WebDavDirectory extends DAV\Collection
      */
     public function getChildren()
     {
-        debug_event(self::class, 'Directory getChildren', 5);
+        //debug_event(self::class, 'Directory getChildren', 5);
         $children = array();
         $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
@@ -75,15 +75,8 @@ class WebDavDirectory extends DAV\Collection
      */
     public function getChild($name)
     {
-        // Clean song name
-        if (get_class($this->libitem) === Album::class) {
-            $splitname = explode('-', (string)$name, 3);
-            $name      = trim((string)$splitname[count($splitname) - 1]);
-            $nameinfo  = pathinfo($name);
-            $name      = $nameinfo['filename'];
-        }
-        debug_event(self::class, 'Directory getChild: ' . $name, 5);
-        $matches = $this->libitem->search_childrens($name);
+        //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
+        $matches = $this->libitem->get_children(unhtmlentities($name));
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
@@ -120,7 +113,7 @@ class WebDavDirectory extends DAV\Collection
      */
     public function childExists($name)
     {
-        $matches = $this->libitem->search_childrens($name);
+        $matches = $this->libitem->get_children($name);
 
         return (count($matches) > 0);
     }

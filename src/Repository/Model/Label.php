@@ -288,11 +288,11 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * search_childrens
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
         $search                    = array();
         $search['type']            = "artist";

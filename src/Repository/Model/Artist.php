@@ -665,27 +665,19 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * Search for item childrens.
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        $search                    = array();
-        $search['type']            = "album";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "title";
-        $search['rule_1_input']    = $this->name;
-        $search['rule_1_operator'] = 4;
-        $search['rule_1']          = "artist";
-        $albums                    = Search::run($search);
-
-        $childrens = array();
-        foreach ($albums as $album_id) {
+        $childrens  = array();
+        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
+        $db_results = Dba::read($sql, array($this->id, $name, $name));
+        while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(
                 'object_type' => 'album',
-                'object_id' => $album_id
+                'object_id' => $row['id']
             );
         }
 

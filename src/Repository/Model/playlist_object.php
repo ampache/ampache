@@ -227,12 +227,13 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
+        debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
         return array();
     }

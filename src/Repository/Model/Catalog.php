@@ -1570,10 +1570,10 @@ abstract class Catalog extends database_object
      */
     public static function get_artists($catalogs = null, $size = 0, $offset = 0)
     {
-        $sql_where = "";
+        $sql_where = "WHERE `artist`.`album_count` > 0";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $sql_where = " AND `song`.`catalog` IN $catlist";
         }
 
         $sql_limit = "";
@@ -1660,29 +1660,27 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get all artists or artist children of a catalog id (Used for WebDav)
      * @param string $name
      * @param integer $catalog_id
      * @return array
      */
-    public static function search_childrens($name, $catalog_id = 0)
+    public static function get_children($name, $catalog_id = 0)
     {
-        $search                    = array();
-        $search['type']            = "artist";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "name";
-        if ($catalog_id > 0) {
-            $search['rule_1_input']    = $catalog_id;
-            $search['rule_1_operator'] = 0;
-            $search['rule_1']          = "catalog";
-        }
-        $artists = Search::run($search);
-
         $childrens = array();
-        foreach ($artists as $artist_id) {
+        $sql       = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
+        if ((int)$catalog_id > 0) {
+            $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
+        }
+        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
+        if ((int)$catalog_id > 0) {
+            $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
+        }
+        $db_results = Dba::read($sql, array($name, $name));
+        while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(
                 'object_type' => 'artist',
-                'object_id' => $artist_id
+                'object_id' => $row['id']
             );
         }
 

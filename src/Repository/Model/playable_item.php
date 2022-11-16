@@ -76,12 +76,11 @@ interface playable_item
     public function get_childrens();
 
     /**
-     * search_childrens
-     *
-     * Search for direct childrens. Return an array of `object_type`, `object_id` childrens matching the criteria.
+     * Search for direct children of an object
      * @param string $name
+     * @return array
      */
-    public function search_childrens($name);
+    public function get_children($name);
 
     /**
      * get_medias

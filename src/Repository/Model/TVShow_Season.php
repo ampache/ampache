@@ -236,12 +236,13 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }

@@ -934,30 +934,19 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Search for item childrens.
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        $search                    = array();
-        $search['type']            = "song";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "title";
-        $search['rule_1_input']    = $this->name;
-        $search['rule_1_operator'] = 4;
-        $search['rule_1']          = "album";
-        $search['rule_2_input']    = $this->get_album_artist_name();
-        $search['rule_2_operator'] = 4;
-        $search['rule_2']          = "artist";
-        $songs                     = Search::run($search);
-
-        $childrens = array();
-        foreach ($songs as $song_id) {
+        $childrens  = array();
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE song.album = ? AND `song`.`file` LIKE ?;";
+        $db_results = Dba::read($sql, array($this->id, "%" . $name));
+        while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(
                 'object_type' => 'song',
-                'object_id' => $song_id
+                'object_id' => $row['id']
             );
         }
 
