@@ -35,9 +35,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class NewestPodcastEpisodeAction implements ApplicationActionInterface
+final class NewestAlbumArtistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest_podcast_episode';
+    public const REQUEST_KEY = 'newest_album_artist';
 
     private UiInterface $ui;
 
@@ -71,8 +71,8 @@ final class NewestPodcastEpisodeAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type(
-            'podcast_episode',
-            Stats::get_newest_sql('podcast_episode', 0, $user->id)
+            'album_artist',
+            Stats::get_newest_sql('album_artist', 0, $user->id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();

@@ -27,6 +27,8 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Stats\GraphAction;
 use Ampache\Module\Application\Stats\HighestAction;
 use Ampache\Module\Application\Stats\NewestAlbumAction;
+use Ampache\Module\Application\Stats\NewestAlbumDiskAction;
+use Ampache\Module\Application\Stats\NewestAlbumArtistAction;
 use Ampache\Module\Application\Stats\NewestArtistAction;
 use Ampache\Module\Application\Stats\NewestPlaylistAction;
 use Ampache\Module\Application\Stats\NewestPodcastEpisodeAction;
@@ -51,6 +53,8 @@ $dic->get(ApplicationRunner::class)->run(
     [
         ShowUserAction::REQUEST_KEY => ShowUserAction::class,
         NewestAlbumAction::REQUEST_KEY => NewestAlbumAction::class,
+        NewestAlbumDiskAction::REQUEST_KEY => NewestAlbumDiskAction::class,
+        NewestAlbumArtistAction::REQUEST_KEY => NewestAlbumArtistAction::class,
         NewestArtistAction::REQUEST_KEY => NewestArtistAction::class,
         NewestPlaylistAction::REQUEST_KEY => NewestPlaylistAction::class,
         NewestPodcastEpisodeAction::REQUEST_KEY => NewestPodcastEpisodeAction::class,

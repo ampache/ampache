@@ -50,7 +50,6 @@ $showAlbum       = AmpConfig::get('album_group'); ?>
         <a class="category <?php echo ($filter_str == 'album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_album_artist"><?php echo T_('Album Artists'); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('podcast')) { ?>
-        <a class="category <?php echo ($filter_str == 'podcast') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_podcast"><?php echo T_('Podcasts'); ?></a>
         <a class="category <?php echo ($filter_str == 'podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php }
     if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>

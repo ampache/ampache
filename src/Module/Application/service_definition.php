@@ -48,6 +48,8 @@ return [
     Artist\ShowMissingAction::class => autowire(Artist\ShowMissingAction::class),
     Stats\ShowUserAction::class => autowire(Stats\ShowUserAction::class),
     Stats\NewestAlbumAction::class => autowire(Stats\NewestAlbumAction::class),
+    Stats\NewestAlbumDiskAction::class => autowire(Stats\NewestAlbumDiskAction::class),
+    Stats\NewestAlbumArtistAction::class => autowire(Stats\NewestAlbumArtistAction::class),
     Stats\NewestArtistAction::class => autowire(Stats\NewestArtistAction::class),
     Stats\NewestPlaylistAction::class => autowire(Stats\NewestPlaylistAction::class),
     Stats\NewestPodcastEpisodeAction::class => autowire(Stats\NewestPodcastEpisodeAction::class),
