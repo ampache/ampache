@@ -511,10 +511,10 @@ class Art extends database_object
         $height = (int)($dimensions['height']);
 
         if ($width > 0 && $height > 0) {
-            $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : 0;
-            $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : 0;
-            $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : 0;
-            $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : 0;
+            $minw = AmpConfig::get('album_art_min_width', 0);
+            $maxw = AmpConfig::get('album_art_max_width', 0);
+            $minh = AmpConfig::get('album_art_min_height', 0);
+            $maxh = AmpConfig::get('album_art_max_height', 0);
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {

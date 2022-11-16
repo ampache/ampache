@@ -452,7 +452,7 @@ class Query
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
-        $this->set_offset(AmpConfig::get('offset_limit') ? AmpConfig::get('offset_limit') : '25');
+        $this->set_offset(AmpConfig::get('offset_limit', 25));
     } // reset
 
     /**

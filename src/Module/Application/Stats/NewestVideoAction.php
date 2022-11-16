@@ -64,6 +64,7 @@ final class NewestVideoAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
 
@@ -80,14 +81,11 @@ final class NewestVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $browse = $this->modelFactory->createBrowse();
+            $objects = Stats::get_newest('video', $limit, 0, 0, $user->id);
+            $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
-            $browse->set_type(
-                'video',
-                Stats::get_newest_sql('video', 0, $user->id)
-            );
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
+            $browse->set_type('video');
+            $browse->show_objects($objects);
             $browse->store();
         }
 

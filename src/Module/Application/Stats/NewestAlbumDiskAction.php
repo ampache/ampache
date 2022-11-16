@@ -56,6 +56,7 @@ final class NewestAlbumDiskAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
 
@@ -68,14 +69,11 @@ final class NewestAlbumDiskAction implements ApplicationActionInterface
         $this->ui->showBoxTop(T_('Information'));
         $user = Core::get_global('user');
 
-        $browse = $this->modelFactory->createBrowse();
+        $objects = Stats::get_newest('album_disk', $limit, 0, 0, $user->id);
+        $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'album_disk',
-            Stats::get_newest_sql('album_disk', 0, $user->id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
+        $browse->set_type('album_disk');
+        $browse->show_objects($objects);
         $browse->store();
 
         $this->ui->showBoxBottom();
