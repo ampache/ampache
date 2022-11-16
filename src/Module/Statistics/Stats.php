@@ -826,7 +826,9 @@ class Stats
     {
         switch ($type) {
             case 'artist':
+            case 'album_artist':
             case 'album':
+            case 'album_disk':
             case 'tag':
             case 'song':
             case 'video':
@@ -878,6 +880,10 @@ class Stats
             $base_type = 'album';
             $sql       = "SELECT DISTINCT(`album`.`id`) AS `id`, `album`.`addition_time` AS `real_atime` FROM `album` ";
             $sql_type  = "`album`.`id`";
+        } elseif ($type === 'album_disk') {
+            $base_type = 'album';
+            $sql       = "SELECT DISTINCT(`album_disk`.`id`) AS `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` ";
+            $sql_type  = "`album_disk`.`id`";
         } elseif ($type === 'video') {
             $base_type = 'video';
             $sql       = "SELECT DISTINCT(`video`.`id`) AS `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
@@ -886,6 +892,12 @@ class Stats
             $sql         = "SELECT DISTINCT(`song`.`artist`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
             $sql_type    = "`song`.`artist`";
             $filter_type = 'song_artist';
+        } elseif ($type === 'album_artist') {
+            $base_type   = 'album';
+            $sql         = "SELECT DISTINCT(`album`.`album_artist`) AS `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` ";
+            $sql_type    = "`album`.`album_artist`";
+            $filter_type = 'artist';
+            $type        = 'artist';
         } elseif ($type === 'podcast') {
             $base_type = 'podcast';
             $sql       = "SELECT DISTINCT(`podcast`.`id`) AS `id`, MIN(`podcast`.`lastsync`) AS `real_atime` FROM `podcast` ";
