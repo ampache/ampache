@@ -28,17 +28,18 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Video;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShareAction implements ApplicationActionInterface
+final class NewestVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'share';
+    public const REQUEST_KEY = 'newest_video';
 
     private UiInterface $ui;
 
@@ -46,61 +47,55 @@ final class ShareAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        VideoRepositoryInterface $videoRepository
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type('newest');
+        $browse->set_simple_browse(true);
+
         $this->ui->showHeader();
 
+        $this->ui->show('show_newest_form.inc.php');
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $this->ui->showBoxTop(T_('Shares'));
+        $this->ui->showBoxTop(T_('Information'));
+        $user = Core::get_global('user');
 
-        $text = <<<TEXT
-        <div id="information_actions">
-            <ul>
-                <li>
-                    <a href="%s/share.php?action=clean">%s %s</a>
-                </li>
-            </ul>
-        </div>
-        TEXT;
-
-        printf(
-            $text,
-            $this->configContainer->getWebPath(),
-            Ui::get_icon('clean', T_('Clean')),
-            T_('Clean Expired Shared Objects')
-        );
-        $user       = Core::get_global('user');
-        $object_ids = ($user->id)
-            ? Share::get_share_list($user)
-            : array();
-        if ($user->id && !empty($object_ids)) {
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
+            $this->videoRepository->getItemCount(Video::class)
+        ) {
             $browse = $this->modelFactory->createBrowse();
-            $browse->set_type('share');
-            $browse->set_static_content(true);
-            $browse->save_objects($object_ids);
-            $browse->show_objects($object_ids);
+            $browse->set_type(
+                'video',
+                Stats::get_newest_sql('video', 0, $user->id)
+            );
+            $browse->set_simple_browse(true);
+            $browse->show_objects();
             $browse->store();
-
-            $this->ui->showBoxBottom();
-
-            show_table_render(false, true);
-        } else {
-            echo T_('No records found');
         }
+
+        $this->ui->showBoxBottom();
+
+        show_table_render(false, true);
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

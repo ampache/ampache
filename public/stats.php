@@ -26,7 +26,12 @@ declare(strict_types=1);
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Stats\GraphAction;
 use Ampache\Module\Application\Stats\HighestAction;
-use Ampache\Module\Application\Stats\NewestAction;
+use Ampache\Module\Application\Stats\NewestAlbumAction;
+use Ampache\Module\Application\Stats\NewestArtistAction;
+use Ampache\Module\Application\Stats\NewestPlaylistAction;
+use Ampache\Module\Application\Stats\NewestPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\NewestSongAction;
+use Ampache\Module\Application\Stats\NewestVideoAction;
 use Ampache\Module\Application\Stats\PopularAction;
 use Ampache\Module\Application\Stats\RecentAction;
 use Ampache\Module\Application\Stats\ShareAction;
@@ -45,7 +50,12 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         ShowUserAction::REQUEST_KEY => ShowUserAction::class,
-        NewestAction::REQUEST_KEY => NewestAction::class,
+        NewestAlbumAction::REQUEST_KEY => NewestAlbumAction::class,
+        NewestArtistAction::REQUEST_KEY => NewestArtistAction::class,
+        NewestPlaylistAction::REQUEST_KEY => NewestPlaylistAction::class,
+        NewestPodcastEpisodeAction::REQUEST_KEY => NewestPodcastEpisodeAction::class,
+        NewestSongAction::REQUEST_KEY => NewestSongAction::class,
+        NewestVideoAction::REQUEST_KEY => NewestVideoAction::class,
         PopularAction::REQUEST_KEY => PopularAction::class,
         HighestAction::REQUEST_KEY => HighestAction::class,
         UserflagAction::REQUEST_KEY => UserflagAction::class,

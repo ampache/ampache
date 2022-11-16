@@ -24,47 +24,40 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class NewestAction implements ApplicationActionInterface
+final class NewestSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'newest';
+    public const REQUEST_KEY = 'newest_song';
 
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
 
-    private ConfigContainerInterface $configContainer;
-
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type('newest');
+        $browse->set_simple_browse(true);
+
         $this->ui->showHeader();
 
+        $this->ui->show('show_newest_form.inc.php');
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
@@ -75,40 +68,8 @@ final class NewestAction implements ApplicationActionInterface
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
-            'album',
-            Stats::get_newest_sql('album', 0, $user->id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'artist',
-            Stats::get_newest_sql('artist', 0, $user->id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
-        ) {
-            $browse = $this->modelFactory->createBrowse();
-            $browse->set_type(
-                'video',
-                Stats::get_newest_sql('video', 0, $user->id)
-            );
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
-            $browse->store();
-        }
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'playlist',
-            Stats::get_newest_sql('playlist', 0, $user->id)
+            'song',
+            Stats::get_newest_sql('song', 0, $user->id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();

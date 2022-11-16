@@ -220,7 +220,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         </h4>
         <ul class="sb3" id="sb_home_information">
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
-            <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo $t_newest; ?></a></li>
+            <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_song"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
