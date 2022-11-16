@@ -348,11 +348,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**

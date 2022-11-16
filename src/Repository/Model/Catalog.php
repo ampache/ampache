@@ -1136,7 +1136,7 @@ abstract class Catalog extends database_object
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(User::count(), $counts);
-        $counts['tags'] = self::count_tags();
+        $counts['tags'] = self::count_tags($catalog_id);
 
         $counts['formatted_size'] = Ui::format_bytes($counts['size']);
 
@@ -1215,19 +1215,21 @@ abstract class Catalog extends database_object
      * count_tags
      *
      * This returns the current number of unique tags in the database.
+     * @param integer|null $catalog_id
      * @return integer
      */
-    public static function count_tags()
+    public static function count_tags($catalog_id = null)
     {
-        // FIXME: Ignores catalog_id
-        $sql        = "SELECT COUNT(`id`) FROM `tag`";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return 0;
+        if ($catalog_id) {
+            $sql        = "SELECT COUNT(DISTINCT `tag`.`id`) FROM `tag` LEFT JOIN `tag_map` on `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `catalog_map` ON `tag_map`.`object_id` = `catalog_map`.`object_id` AND  `tag_map`.`object_type` = `catalog_map`.`object_type` WHERE `is_hidden` = 0 AND `catalog_map`.`catalog_id` = ?;";
+            $db_results = Dba::read($sql, array($catalog_id));
+        } else {
+            $sql        = "SELECT COUNT(`id`) FROM `tag` WHERE `is_hidden` = 0;";
+            $db_results = Dba::read($sql);
         }
+        $row = Dba::fetch_row($db_results);
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**
@@ -1450,11 +1452,8 @@ abstract class Catalog extends database_object
         }
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return 0;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**
