@@ -127,7 +127,7 @@ class Random
         $results = array();
 
         if (empty($limit)) {
-            $limit = AmpConfig::get('offset_limit', 25);
+            $limit = AmpConfig::get('offset_limit', 50);
         }
         if (empty($user)) {
             $user = Core::get_global('user');

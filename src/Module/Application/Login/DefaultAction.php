@@ -136,7 +136,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';
-                    $auth['info']['offset_limit'] = 25;
+                    $auth['info']['offset_limit'] = 50;
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string)$_POST['username'];
