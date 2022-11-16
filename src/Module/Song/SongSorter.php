@@ -326,8 +326,7 @@ final class SongSorter implements SongSorterInterface
                         sprintf('Creating %s directory', $path),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
-                    $results = mkdir($path);
-                    if (!$results) {
+                    if (!mkdir($path)) {
                         /* HINT: Directory (File path) */
                         $interactor->info(
                             sprintf(T_("There was a problem creating this directory: %s"), $path),
@@ -368,8 +367,7 @@ final class SongSorter implements SongSorterInterface
                 true
             );
 
-            $results = copy($song->file, $fullname);
-            if (!$results) {
+            if (!copy($song->file, $fullname)) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
@@ -417,9 +415,7 @@ final class SongSorter implements SongSorterInterface
                 return false;
             } // end if sum's don't match
 
-            // If we've made it this far it should be safe
-            $results = unlink($song->file);
-            if (!$results) {
+            if (!unlink($song->file)) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to delete "%s"'), $song->file),

@@ -128,9 +128,7 @@ class Tmp_Playlist extends database_object
         $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username` = ? ORDER BY `session`.`expire` DESC";
         $db_results = Dba::read($sql, array($username));
         $results    = Dba::fetch_assoc($db_results);
-
-        // user doesn't have an active play queue
-        if (!$results) {
+        if (empty($results)) {
             return false;
         }
 

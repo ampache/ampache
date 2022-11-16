@@ -317,7 +317,7 @@ class Democratic extends Tmp_Playlist
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `object_type` = ? AND `tmp_playlist` = ? AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_type, $this->tmp_playlist, $object_id));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
 
@@ -412,6 +412,7 @@ class Democratic extends Tmp_Playlist
         if (!$results = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
+            $results       = array();
             $results['id'] = Dba::insert_id();
         }
 

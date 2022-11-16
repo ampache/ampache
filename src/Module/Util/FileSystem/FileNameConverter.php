@@ -242,9 +242,7 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $results = unlink($full_file);
-
-        if (!$results) {
+        if (!unlink($full_file)) {
             $interactor->error(
                 sprintf(T_('There was an error trying to delete "%s"'), $full_file),
                 true

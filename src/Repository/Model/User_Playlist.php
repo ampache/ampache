@@ -142,7 +142,7 @@ class User_Playlist extends database_object
         $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, array($this->user, $this->client));
         $results    = Dba::fetch_assoc($db_results);
-        if (!$results) {
+        if (empty($results)) {
             return time();
         }
 
