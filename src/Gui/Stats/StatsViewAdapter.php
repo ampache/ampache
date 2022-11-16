@@ -60,6 +60,16 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST);
     }
 
+    public function displayAlbum(): bool
+    {
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+    }
+
+    public function displayAlbumDisk(): bool
+    {
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false);
+    }
+
     public function getCatalogStats(): CatalogStatsInterface
     {
         return $this->guiFactory->createCatalogStats(Catalog::get_stats());

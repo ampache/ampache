@@ -30,6 +30,8 @@ interface CatalogStatsInterface
 
     public function getAlbumCount(): int;
 
+    public function getAlbumDiskCount(): int;
+
     public function getArtistCount(): int;
 
     public function getSongCount(): int;
