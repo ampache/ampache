@@ -74,7 +74,6 @@ final class NewestVideoAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $this->ui->showBoxTop(T_('Information'));
         $user = Core::get_global('user');
 
         if (
