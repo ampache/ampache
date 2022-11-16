@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -43,16 +45,20 @@ final class NewestPodcastEpisodeAction implements ApplicationActionInterface
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $browse = $this->modelFactory->createBrowse();
+        $browse       = $this->modelFactory->createBrowse();
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
         $browse->set_type('newest');
+        $browse->set_threshold($thresh_value);
         $browse->set_simple_browse(true);
 
         $this->ui->showHeader();
