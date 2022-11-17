@@ -58,25 +58,22 @@ final class NewestPlaylistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
-
         $this->ui->show('show_newest_form.inc.php');
+
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user = Core::get_global('user');
-
-        $browse = $this->modelFactory->createBrowse();
+        $user    = Core::get_global('user');
+        $objects = Stats::get_newest('playlist', $limit, 0, 0, $user->id);
+        $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'playlist',
-            Stats::get_newest_sql('playlist', 0, $user->id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
+        $browse->set_type('playlist');
+        $browse->show_objects($objects);
         $browse->store();
 
         $this->ui->showBoxBottom();

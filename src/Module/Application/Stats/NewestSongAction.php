@@ -61,15 +61,14 @@ final class NewestSongAction implements ApplicationActionInterface
         $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
-
         $this->ui->show('show_newest_form.inc.php');
+
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user = Core::get_global('user');
-
+        $user    = Core::get_global('user');
         $objects = Stats::get_newest('song', $limit, 0, 0, $user->id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
