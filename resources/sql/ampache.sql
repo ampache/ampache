@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Aug 22, 2022 at 01:53 PM
+-- Generation Time: Nov 17, 2022 at 01:56 PM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.1.8
+-- PHP Version: 8.1.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache550`
+-- Database: `ampache554`
 --
 
 -- --------------------------------------------------------
@@ -1434,7 +1434,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '550004'),
+('db_version', '550005'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
