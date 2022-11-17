@@ -37,10 +37,10 @@ $showAlbum       = AmpConfig::get('album_group'); ?>
 
 <div class="category_options">
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a>
-    <?php if ($showAlbum || $filter_str == 'album') { ?>
+    <?php if (($showAlbum && $filter_str == 'album_disk') || $filter_str == 'album') { ?>
         <a class="category <?php echo ($filter_str == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a>
     <?php } ?>
-    <?php if (!$showAlbum || $filter_str == 'album_disk') { ?>
+    <?php if ((!$showAlbum && !$filter_str == 'album') || $filter_str == 'album_disk') { ?>
         <a class="category <?php echo ($filter_str == 'album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=album_disk"><?php echo T_('Albums'); ?></a>
     <?php } ?>
     <?php if ($showArtist || $filter_str == 'artist') { ?>
