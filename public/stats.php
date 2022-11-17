@@ -35,7 +35,14 @@ use Ampache\Module\Application\Stats\NewestPodcastEpisodeAction;
 use Ampache\Module\Application\Stats\NewestSongAction;
 use Ampache\Module\Application\Stats\NewestVideoAction;
 use Ampache\Module\Application\Stats\PopularAction;
-use Ampache\Module\Application\Stats\RecentAction;
+use Ampache\Module\Application\Stats\RecentAlbumAction;
+use Ampache\Module\Application\Stats\RecentAlbumArtistAction;
+use Ampache\Module\Application\Stats\RecentAlbumDiskAction;
+use Ampache\Module\Application\Stats\RecentArtistAction;
+use Ampache\Module\Application\Stats\RecentPlaylistAction;
+use Ampache\Module\Application\Stats\RecentPodcastEpisodeAction;
+use Ampache\Module\Application\Stats\RecentSongAction;
+use Ampache\Module\Application\Stats\RecentVideoAction;
 use Ampache\Module\Application\Stats\ShareAction;
 use Ampache\Module\Application\Stats\ShowAction;
 use Ampache\Module\Application\Stats\ShowUserAction;
@@ -63,7 +70,14 @@ $dic->get(ApplicationRunner::class)->run(
         PopularAction::REQUEST_KEY => PopularAction::class,
         HighestAction::REQUEST_KEY => HighestAction::class,
         UserflagAction::REQUEST_KEY => UserflagAction::class,
-        RecentAction::REQUEST_KEY => RecentAction::class,
+        RecentAlbumAction::REQUEST_KEY => RecentAlbumAction::class,
+        RecentAlbumArtistAction::REQUEST_KEY => RecentAlbumArtistAction::class,
+        RecentAlbumDiskAction::REQUEST_KEY => RecentAlbumDiskAction::class,
+        RecentArtistAction::REQUEST_KEY => RecentArtistAction::class,
+        RecentPlaylistAction::REQUEST_KEY => RecentPlaylistAction::class,
+        RecentPodcastEpisodeAction::REQUEST_KEY => RecentPodcastEpisodeAction::class,
+        RecentSongAction::REQUEST_KEY => RecentSongAction::class,
+        RecentVideoAction::REQUEST_KEY => RecentVideoAction::class,
         WantedAction::REQUEST_KEY => WantedAction::class,
         ShareAction::REQUEST_KEY => ShareAction::class,
         UploadAction::REQUEST_KEY => UploadAction::class,

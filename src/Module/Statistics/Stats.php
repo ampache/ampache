@@ -655,10 +655,10 @@ class Stats
                     $sql .= "AND `date` >= '" . $date . "'";
                 }
             }
-            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album', 'video'))) {
+            if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
-            if (AmpConfig::get('catalog_filter') && in_array($type, array('song', 'artist', 'album', 'podcast_episode', 'video')) && $user_id > 0) {
+            if (AmpConfig::get('catalog_filter') && in_array($type, array('artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video')) && $user_id > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $user_id);
             }
             $rating_filter = AmpConfig::get_rating_filter();
@@ -727,10 +727,10 @@ class Stats
         $catalog_filter    = (AmpConfig::get('catalog_filter'));
 
         $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = '" . $type . "'" . $user_sql;
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        if ($catalog_filter && in_array($type, array('video', 'artist', 'album', 'song')) && $user_id > 0) {
+        if ($catalog_filter && in_array($type, array('video', 'artist', 'album', 'album_disk', 'song')) && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $user_id);
         }
         $rating_filter = AmpConfig::get_rating_filter();

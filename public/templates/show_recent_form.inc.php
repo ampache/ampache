@@ -36,23 +36,23 @@ $showAlbum       = AmpConfig::get('album_group'); ?>
 <h3 class="box-title"><?php echo T_('Newest'); ?></h3>
 
 <div class="category_options">
-    <a class="category <?php echo ($filter_str == 'newest_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_song"><?php echo T_('Songs'); ?></a>
-    <?php if ($showAlbum || $filter_str == 'newest_album') { ?>
-        <a class="category <?php echo ($filter_str == 'newest_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_album"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($filter_str == 'recent_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_song"><?php echo T_('Songs'); ?></a>
+    <?php if ($showAlbum || $filter_str == 'recent_album') { ?>
+        <a class="category <?php echo ($filter_str == 'recent_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_album"><?php echo T_('Albums'); ?></a>
     <?php } ?>
-    <?php if (!$showAlbum || $filter_str == 'newest_album_disk') { ?>
-        <a class="category <?php echo ($filter_str == 'newest_album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_album_disk"><?php echo T_('Albums'); ?></a>
+    <?php if (!$showAlbum || $filter_str == 'recent_album_disk') { ?>
+        <a class="category <?php echo ($filter_str == 'recent_album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_album_disk"><?php echo T_('Albums'); ?></a>
     <?php } ?>
-    <?php if ($showArtist || $filter_str == 'newest_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'newest_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_artist"><?php echo T_('Artists'); ?></a>
+    <?php if ($showArtist || $filter_str == 'recent_artist') { ?>
+        <a class="category <?php echo ($filter_str == 'recent_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
-    <?php if ($showAlbumArtist || !$showArtist || $filter_str == 'newest_album_artist') { ?>
-        <a class="category <?php echo ($filter_str == 'newest_album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_album_artist"><?php echo T_('Album Artists'); ?></a>
+    <?php if ($showAlbumArtist || !$showArtist || $filter_str == 'recent_album_artist') { ?>
+        <a class="category <?php echo ($filter_str == 'recent_album_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_album_artist"><?php echo T_('Album Artists'); ?></a>
     <?php } ?>
     <?php if (AmpConfig::get('podcast')) { ?>
-        <a class="category <?php echo ($filter_str == 'newest_podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
+        <a class="category <?php echo ($filter_str == 'recent_podcast_episode') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_podcast_episode"><?php echo T_('Podcast Episodes'); ?></a>
     <?php }
     if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($filter_str == 'newest_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=newest_video"><?php echo T_('Videos'); ?></a>
+        <a class="category <?php echo ($filter_str == 'recent_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
 </div>

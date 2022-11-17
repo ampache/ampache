@@ -253,7 +253,7 @@ class Rating extends database_object
         $type = Stats::validate_type($type);
         $sql  = "SELECT MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
         $sql .= " WHERE `object_type` = '$type'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {

@@ -219,7 +219,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php echo Ui::get_icon('all', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
         </h4>
         <ul class="sb3" id="sb_home_information">
-            <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo $t_recent; ?></a></li>
+            <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_album"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_album"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
             <?php if (User::is_registered()) { ?>

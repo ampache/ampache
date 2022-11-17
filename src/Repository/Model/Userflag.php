@@ -266,7 +266,7 @@ class Userflag extends database_object
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {

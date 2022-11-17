@@ -37,9 +37,9 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class RecentAction implements ApplicationActionInterface
+final class RecentSongAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'recent';
+    public const REQUEST_KEY = 'recent_song';
 
     private UiInterface $ui;
 
@@ -47,81 +47,34 @@ final class RecentAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+
         $this->ui->showHeader();
+        $this->ui->show('show_recent_form.inc.php');
 
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $this->ui->showBoxTop(T_('Information'));
-
-        $user_id = (int) Core::get_request('user_id');
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'album',
-            Stats::get_recent_sql('album', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'artist',
-            Stats::get_recent_sql('artist', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'song',
-            Stats::get_recent_sql('song', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
-        ) {
-            $browse = $this->modelFactory->createBrowse();
-            $browse->set_type(
-                'video',
-                Stats::get_recent_sql('video', $user_id)
-            );
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
-            $browse->store();
-        }
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'playlist',
-            Stats::get_recent_sql('playlist', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
+        $objects = Stats::get_recent('song', $limit, 0, 0);
+        $browse  = $this->modelFactory->createBrowse();
+        $browse->set_threshold($thresh_value);
+        $browse->set_type('song');
+        $browse->show_objects($objects);
         $browse->store();
 
         $this->ui->showBoxBottom();
