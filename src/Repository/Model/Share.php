@@ -466,6 +466,7 @@ class Share extends database_object
 
         switch ($this->object_type) {
             case 'album':
+            case 'album_disk':
             case 'playlist':
                 $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
                 $object     = new $class_name($this->object_id);
