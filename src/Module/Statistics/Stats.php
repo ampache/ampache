@@ -730,10 +730,13 @@ class Stats
         if ($input_type == 'album_disk') {
             $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = 'album'" . $user_sql;
         }
+        if ($input_type == 'album_artist') {
+            $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = 'artist'" . $user_sql;
+        }
         if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        if ($catalog_filter && in_array($type, array('video', 'artist', 'album', 'album_disk', 'song')) && $user_id > 0) {
+        if ($catalog_filter && in_array($type, array('video', 'artist', 'album_artist', 'album', 'album_disk', 'song')) && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $user_id);
         }
         $rating_filter = AmpConfig::get_rating_filter();

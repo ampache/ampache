@@ -801,11 +801,13 @@ abstract class Catalog extends database_object
     public static function get_enable_filter($type, $catalog_id)
     {
         $sql = "";
-        if ($type == "song" || $type == "album" || $type == "artist") {
+        if ($type == "song" || $type == "album" || $type == "artist" || $type == "album_artist") {
             if ($type == "song") {
                 $type = "id";
             }
             $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+        } elseif ($type == "album_disk") {
+            $sql = "(SELECT COUNT(`album_disk`.`id`) FROM `album_disk` LEFT JOIN `album` AS `album_dis` ON `album_dis`.`id` = `album_disk`.`album_id` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `album_dis`.`catalog` WHERE `album_dis`.`id` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `album_disk`.`id`) > 0";
         } elseif ($type == "video") {
             $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }

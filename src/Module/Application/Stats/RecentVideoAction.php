@@ -78,7 +78,7 @@ final class RecentVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $objects = Stats::get_recent('video', $limit, 0, 0);
+            $objects = Stats::get_recent('video', $limit);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');

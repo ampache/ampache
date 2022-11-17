@@ -70,7 +70,7 @@ final class RecentPlaylistAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $objects = Stats::get_recent('playlist', $limit, 0, 0);
+        $objects = Stats::get_recent('playlist', $limit);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('playlist');
