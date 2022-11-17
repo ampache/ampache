@@ -58,6 +58,7 @@ return [
     Stats\PopularAction::class => autowire(Stats\PopularAction::class),
     Stats\HighestAction::class => autowire(Stats\HighestAction::class),
     Stats\UserflagAction::class => autowire(Stats\UserflagAction::class),
+    Stats\RecentAction::class => autowire(Stats\RecentAction::class),
     Stats\RecentAlbumAction::class => autowire(Stats\RecentAlbumAction::class),
     Stats\RecentAlbumArtistAction::class => autowire(Stats\RecentAlbumArtistAction::class),
     Stats\RecentAlbumDiskAction::class => autowire(Stats\RecentAlbumDiskAction::class),
