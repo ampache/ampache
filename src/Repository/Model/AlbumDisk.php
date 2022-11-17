@@ -324,6 +324,9 @@ class AlbumDisk extends database_object implements library_item
     public function format($details = true, $limit_threshold = '')
     {
         $web_path = AmpConfig::get('web_path');
+        if (!isset($this->album)) {
+            $this->album = new Album($this->album_id);
+        }
 
         $this->f_release_type = $this->album->f_release_type;
         $this->album_artists  = $this->album->get_album_artists();

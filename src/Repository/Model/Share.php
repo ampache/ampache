@@ -163,6 +163,10 @@ class Share extends database_object
                 $album = new Album($object_id);
                 $album->format();
                 $description = $album->get_fullname() . ' (' . $album->get_album_artist_fullname() . ')';
+            } elseif ($object_type == 'album_disk') {
+                $albumdisk = new AlbumDisk($object_id);
+                $albumdisk->format();
+                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_album_artist_fullname() . ')';
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
