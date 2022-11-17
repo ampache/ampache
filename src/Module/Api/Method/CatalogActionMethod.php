@@ -93,10 +93,18 @@ final class CatalogActionMethod
                     break;
             }
             // clean up after the action
-            Catalog::clean_empty_albums();
-            Album::update_album_artist();
-            Catalog::update_mapping('artist');
-            Catalog::update_mapping('album');
+            $catalog_media_type = $catalog->get_gather_type();
+            if ($catalog_media_type == 'music') {
+                Catalog::clean_empty_albums();
+                Album::update_album_artist();
+                Catalog::update_mapping('artist');
+                Catalog::update_mapping('album');
+            } elseif ($catalog_media_type == 'podcast') {
+                Catalog::update_mapping('podcast');
+                Catalog::update_mapping('podcast_episode');
+            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+                Catalog::update_mapping('video');
+            }
             Catalog::update_counts();
 
             Api::message('successfully started: ' . $task, $input['api_format']);

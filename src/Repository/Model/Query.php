@@ -1601,13 +1601,27 @@ class Query
                         $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                         break;
                     case 'catalog':
+                        $type = '\'artist\'';
+                        if ($this->get_filter('album_artist')) {
+                            $type = '\'album_artist\'';
+                        }
+                        if ($this->get_filter('song_artist')) {
+                            $type = '\'song_artist\'';
+                        }
                         if ($value != 0) {
-                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                             $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
                         }
                         break;
                     case 'catalog_enabled':
-                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', '\'artist\'', 100);
+                        $type = '\'artist\'';
+                        if ($this->get_filter('album_artist')) {
+                            $type = '\'album_artist\'';
+                        }
+                        if ($this->get_filter('song_artist')) {
+                            $type = '\'song_artist\'';
+                        }
+                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;

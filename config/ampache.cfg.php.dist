@@ -624,7 +624,7 @@ playlist_art = "true"
 ;  http://www.pchart.net/license
 ; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
 ; You can enable c-chart with the following command
-;  composer require szymach/c-pchart "2.*"
+;  composer require szymach/c-pchart "3.*"
 ; DEFAULT: "false"
 ;statistical_graphs = "true"
 
@@ -1226,6 +1226,9 @@ send_full_stream = "webplayer"
 ;cache_path = "/tmp"
 
 ; Default audio output format
+; This is what you want your cached format to be.
+; This should match your 'encode_target' in Transcode Settings
+; POSSIBLE VALUES: mp3 opus ogg
 ; DEFAULT: none
 ;cache_target = "mp3"
 

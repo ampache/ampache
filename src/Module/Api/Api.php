@@ -161,12 +161,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.5.3'; // AMPACHE_VERSION
+    public static $version = '5.5.4'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '553000'; // AMPACHE_VERSION
+    public static $version_numeric = '554000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -391,7 +391,7 @@ class Api
             'playlists' => (int)$counts['playlist'],
             'searches' => (int)$counts['search'],
             'playlists_searches' => $playlists,
-            'users' => ((int)$counts['user'] + (int)$counts['user']),
+            'users' => (int)$counts['user'],
             'catalogs' => (int)$counts['catalog'],
             'videos' => (int)$counts['video'],
             'podcasts' => (int)$counts['podcast'],

@@ -84,6 +84,12 @@ class Search extends playlist_object
                     ? json_decode((string)$value, true)
                     : $value;
             }
+            // make sure saved rules match the correct names
+            $rule_count = 0;
+            foreach ($this->rules as $rule) {
+                $this->rules[$rule_count][0] = $this->_get_rule_name($rule[0]);
+                $rule_count++;
+            }
         }
         $this->date = time();
 
@@ -1260,7 +1266,7 @@ class Search extends playlist_object
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user'))) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
             if (empty($sqltbl['where_sql'])) {
                 $sql .= " WHERE ";
@@ -1324,7 +1330,7 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      * @param string $name
-     * @return string|false
+     * @return string
      */
     private function _get_rule_name($name)
     {
@@ -2397,7 +2403,7 @@ class Search extends playlist_object
                     $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
-                    $where[]         = "`catalog_se`.`catalog_id` $sql_match_operator ?";
+                    $where[]         = "`catalog_se`.`id` $sql_match_operator ?";
                     $parameters[]    = $input;
                     $join['catalog'] = true;
                     break;

@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## Ampache 5.5.4-develop
+
+### Added
+
+* Database 550005
+  * Add `song_artist` and `album_artist` maps to catalog_map
+
+### Changed
+
+* Update catalog map tables based on the catalog action
+* Force `b` and `n` for back, next in webplayer (was overwritten with `[` and `]`)
+
+### Fixed
+
+* Not filtering song_artist on album_artist browses
+* Don't use catalog_filter and rating_filter without a valid user
+* Uploaded/Manual Album Artist maps on tag update
+* Delete artist's from the catalog_map that don't have a song or album for that catalog
+* Set correct transcode `bitrate` and `mime` for songs on play_url calls
+* Save Track Order when viewing all the items
+* Use cache_target for cached song cleanup (was hardcoded to mp3)
+* Subsonic
+  * Art for artist index arrays was missing
+* Search
+  * SQL for Artist `catalog` searches
+  * Make sure saved rules match the correct names on load
+* CLI
+  * Don't try to update a database when the connection fails
+
+## API 5.5.4-develop
+
+### Fixed
+
+* User count in Api::ping and Api::handshake was doubled
+* Api3::stats method had incorrent recent parameters
+* Ensure the output `bitrate` and `mime` are set for song objects
+* RSS Feed generation with bad characters
+* Don't spam the artist description for each song
+
 ## Ampache 5.5.3-release
 
 ### Changed
@@ -20,9 +59,10 @@
 * Null artist->id on wanted pages
 * Search
   * Album 'other_user' favorite searches
-* SubSonic
+* Subsonic
   * Error if you didn't have data when using get_user_data
   * Response data might fall back to mp3 and not match the output format
+  * Incorrect `playqueue_date` call for user playqueue
 * webplayer
   * Reordering the list could lose track of items
   * Remove single item from list could create a weird list
@@ -199,7 +239,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
   * Added aliases for some of the confusing search types
-* SubSonic
+* Subsonic
   * Checking parameters might return the error AND the empty response
 
 ## API 5.5.0
@@ -356,7 +396,7 @@ This will likely be the last 5.x API release. API6 will be a continuation of API
 * Searching for albums with '# Played' with grouping enabled with album_map
 * Adding a new xbmc localplay
 * Catalog type filter in get_top_sql
-* SubSonic
+* Subsonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
   * getPlayQueue doesn't change back to miliseconds from seconds
@@ -390,7 +430,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Updated the translation gathering process a little
 * Organized the play/skip counting into it's own function
 * Update artist from tags needs to update albums first
-* SubSonic
+* Subsonic
   * Only search for song title instead of everything
   * Add starred to directory elements
 
@@ -401,7 +441,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Migrating to a new album would leave old album maps
 * Artist search query with mapping was very slow
 * Database column check not included in 5.3.1 correctly
-* SubSonic
+* Subsonic
   * Get recently played
   * Fixed up search queries using "" (wrapping in quotes means exact search)
 
@@ -1234,7 +1274,7 @@ This version of the API is the first semantic version. "5.0.0"
 ### Changed
 
 * Simplify flagging/rating multi-disk albums
-* SubSonic
+* Subsonic
   * just send getmusicfolders music folders
   * When calling createPlaylist, assume that the list needs to be empty first
 
@@ -1242,7 +1282,7 @@ This version of the API is the first semantic version. "5.0.0"
 
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
-* SubSonic
+* Subsonic
   * Clients might send you a file path of Artist art instead of the id
   * Strings don't need json conversion checks
   * Send the cover art id for playlists

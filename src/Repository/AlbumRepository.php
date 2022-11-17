@@ -94,7 +94,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
         $sql .= "ORDER BY `song`.`track`, `song`.`title`";
@@ -135,7 +135,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
         $sql .= 'ORDER BY RAND()';
@@ -234,7 +234,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $catalog_where = "";
         $catalog_join  = "";
 
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $catalog_where .= " AND" . Catalog::get_user_filter('album', $user_id);
         }
 
@@ -356,7 +356,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $catalog_where .= " AND `catalog`.`enabled` = '1'";
         }
-        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user'))) {
+        if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $catalog_where .= " AND" . Catalog::get_user_filter('album', Core::get_global('user')->id);
         }
         $original_year     = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";

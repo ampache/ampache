@@ -78,7 +78,10 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         if (array_key_exists('order', $_GET)) {
             $songs = explode(";", $_GET['order']);
-            $track = ((int)$_GET['offset']) + 1;
+            $track = ((int)$_GET['offset'] ?? 0) + 1;
+            if ($track < 1) {
+                $track = 1;
+            }
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     $playlist->update_track_number((int) $song_id, $track);
