@@ -1030,12 +1030,12 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_child_ids
+     * get_songs
      *
      * Get each song id for the album
      * @return int[]
      */
-    public function get_child_ids()
+    public function get_songs()
     {
         $results = array();
         $params  = array($this->id);

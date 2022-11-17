@@ -683,12 +683,12 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * get_child_ids
+     * get_songs
      *
      * Get each song id for the album_disk
      * @return int[]
      */
-    public function get_child_ids()
+    public function get_songs()
     {
         $results = array();
         $params  = array($this->album_id, $this->disk);

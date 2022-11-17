@@ -449,12 +449,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * get_child_ids
+     * get_songs
      *
      * Get each album id for the artist
      * @return int[]
      */
-    public function get_child_ids()
+    public function get_songs()
     {
         $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));

@@ -2319,7 +2319,7 @@ abstract class Catalog extends database_object
         // artist
         if ($libitem instanceof Artist) {
             // make sure albums are updated before the artist
-            foreach ($libitem->get_child_ids() as $album_id) {
+            foreach ($libitem->get_songs() as $album_id) {
                 $album_tags = self::getSongTags('album', $album_id);
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
