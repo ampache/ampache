@@ -727,6 +727,9 @@ class Stats
         $catalog_filter    = (AmpConfig::get('catalog_filter'));
 
         $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = '" . $type . "'" . $user_sql;
+        if ($input_type == 'album_disk') {
+            $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = 'album'" . $user_sql;
+        }
         if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
