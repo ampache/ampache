@@ -33,7 +33,7 @@ $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');
 $showAlbum       = AmpConfig::get('album_group'); ?>
 
-<h3 class="box-title"><?php echo T_('Newest'); ?></h3>
+<h3 class="box-title"><?php echo T_('Recent'); ?></h3>
 
 <div class="category_options">
     <a class="category <?php echo ($filter_str == 'recent_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_song"><?php echo T_('Songs'); ?></a>
