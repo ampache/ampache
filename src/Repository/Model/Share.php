@@ -430,7 +430,7 @@ class Share extends database_object
                 /** @var Album|AlbumDisk|Playlist $object */
                 $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
                 $object     = new $class_name($this->object_id);
-                $songs      = ($object) ? $object->get_songs() : array();
+                $songs      = (isset($object->id)) ? $object->get_songs() : array();
                 foreach ($songs as $songid) {
                     $isShare = ($media_id == $songid);
                     if ($isShare) {
@@ -461,7 +461,7 @@ class Share extends database_object
                 /** @var Album|AlbumDisk|Playlist $object */
                 $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
                 $object     = new $class_name($this->object_id);
-                $songs      = ($object) ? $object->get_medias('song') : array();
+                $songs      = (isset($object->id)) ? $object->get_medias('song') : array();
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
