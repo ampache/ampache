@@ -634,7 +634,8 @@ class Stats
                 ? "`podcast_episode`.`podcast`"
                 : "MIN(`object_id`)";
             // Select Top objects counting by # of rows for you only
-            $sql = "SELECT $select_sql AS `id`, COUNT(*) AS `count`";
+            $sql   = "SELECT $select_sql AS `id`, COUNT(*) AS `count`";
+            $group = '`object_count`.`object_id`';
             // Add additional columns to use the select query as insert values directly
             if ($addAdditionalColumns) {
                 $sql .= ($is_podcast)
@@ -643,8 +644,14 @@ class Stats
             }
             $sql .= " FROM `object_count`";
             if ($is_podcast) {
-                $type = 'podcast_episode';
+                $group = '`podcast_episode`.`podcast`';
+                $type  = 'podcast_episode';
                 $sql .= " LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'podcast_episode'";
+            }
+            if ($input_type == 'album_disk') {
+                $sql   = "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`";
+                $group = '`album_disk`.`id`';
+                $type  = 'song';
             }
             if ($user_id !== null) {
                 $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . (string)$user_id;
@@ -664,10 +671,7 @@ class Stats
             if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
                 $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
             }
-            $sql .= " AND `count_type` = '" . $count_type . "'";
-            $sql .= ($is_podcast)
-                ? " GROUP BY `podcast_episode`.`podcast`, `object_count`.`object_type`, `object_count`.`count_type`"
-                : " GROUP BY `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`count_type`";
+            $sql .= " AND `count_type` = '" . $count_type . "' GROUP BY $group, `object_count`.`object_type`, `object_count`.`count_type`";
         }
         if ($random) {
             $sql .= " ORDER BY RAND() DESC ";
