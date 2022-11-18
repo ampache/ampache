@@ -38,6 +38,7 @@
 * Ensure the output `bitrate` and `mime` are set for song objects
 * RSS Feed generation with bad characters
 * Don't spam the artist description for each song
+* Show better Trending Dashboard section
 
 ## Ampache 5.5.3-release
 
@@ -47,6 +48,7 @@
 * Localplay status and instance_fields function cleanup
 * Update some docker files to match current images
 * Allow adding streams to playlists (including rightbar)
+* Shuffle the top 100 albums for Popular Dashboard section
 * webplayer
   * Another code rework, remove the old 'original' list
   * Shuffle is an action instead of a state of the playlist
