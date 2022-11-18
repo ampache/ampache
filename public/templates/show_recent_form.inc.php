@@ -31,18 +31,15 @@ $web_path        = AmpConfig::get('web_path');
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
 $showAlbumArtist = AmpConfig::get('show_album_artist');
 $showArtist      = AmpConfig::get('show_artist');
-$showAlbum       = AmpConfig::get('album_group'); ?>
+$albumString     = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk'; ?>
 
 <h3 class="box-title"><?php echo T_('Recent'); ?></h3>
 
 <div class="category_options">
     <a class="category <?php echo ($filter_str == 'recent_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_song"><?php echo T_('Songs'); ?></a>
-    <?php if (($showAlbum || !$filter_str == 'recent_album_disk') || $filter_str == 'recent_album') { ?>
-        <a class="category <?php echo ($filter_str == 'recent_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_album"><?php echo T_('Albums'); ?></a>
-    <?php } ?>
-    <?php if ((!$showAlbum || !$filter_str == 'recent_album') || $filter_str == 'recent_album_disk') { ?>
-        <a class="category <?php echo ($filter_str == 'recent_album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_album_disk"><?php echo T_('Albums'); ?></a>
-    <?php } ?>
+    <a class="category <?php echo ($filter_str == 'newest_album_disk' || $filter_str == 'newest_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=recent_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'recent_artist') { ?>
         <a class="category <?php echo ($filter_str == 'recent_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
