@@ -49,7 +49,7 @@ $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
 $access50        = Access::check('interface', 50);
 $access25        = ($access50 || Access::check('interface', 25));
-$showAlbum       = (AmpConfig::get('album_group'))
+$albumString       = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 // expanded by default
@@ -91,7 +91,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         } ?>
         <ul class="sb3" id="sb_home_browse">
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
-            <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $showAlbum; ?>"><?php echo $t_albums; ?></a></li>
+            <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
             <?php if ($showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php } ?>
@@ -127,7 +127,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php echo Ui::get_icon('all', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
         </h4>
         <ul class="sb3" id="sb_home_dashboard">
-            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $showAlbum; ?>"><?php echo $t_albums ?></a></li>
+            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums ?></a></li>
             <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
             <?php if ($access25) { ?>
             <li id="sb_home_dashboard_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
@@ -171,7 +171,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         </h4>
         <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
-          <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=<?php echo $showAlbum; ?>"><?php echo $t_albums; ?></a></li>
+          <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
           <?php if ($allowLabel) { ?>
               <li id="sb_home_search_label"><a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo $t_labels; ?></a></li>
@@ -219,8 +219,8 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php echo Ui::get_icon('all', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
         </h4>
         <ul class="sb3" id="sb_home_information">
-            <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $showAlbum; ?>"><?php echo $t_recent; ?></a></li>
-            <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_<?php echo $showAlbum; ?>"><?php echo $t_newest; ?></a></li>
+            <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo $t_recent; ?></a></li>
+            <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_<?php echo $albumString; ?>"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>

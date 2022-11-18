@@ -41,7 +41,7 @@ $limit100        = ($limit == 100) ? 'selected="selected"' : '';
 $limit250        = ($limit == 250) ? 'selected="selected"' : '';
 $limit500        = ($limit == 500) ? 'selected="selected"' : '';
 $random          = $_REQUEST['random'] ?? 0;
-$showAlbum       = (AmpConfig::get('album_group'))
+$albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 $browse_id       = (isset($browse))
@@ -61,7 +61,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 
 <div class="category_options">
     <a class="category <?php echo ($currentType == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($currentType == 'album' || $currentType == 'album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=<?php echo $showAlbum; ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($currentType == 'album' || $currentType == 'album_disk') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <a class="category <?php echo ($currentType == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a>
     <?php if (AmpConfig::get('label')) { ?>
         <a class="category <?php echo ($currentType == 'label') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/search.php?type=label"><?php echo T_('Labels'); ?></a>

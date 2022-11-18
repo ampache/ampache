@@ -10,14 +10,14 @@ global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
-$showAlbum       = (AmpConfig::get('album_group'))
+$albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk'; ?>
 
 <h3 class="box-title"><?php echo T_('Dashboards'); ?></h3>
 
 <div class="category_options">
-    <a class="category <?php echo ($filter_str == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $showAlbum; ?>">
+    <a class="category <?php echo ($filter_str == 'album_disk' || $filter_str == 'album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>">
         <?php echo T_('Albums'); ?>
     </a>
     <a class="category <?php echo ($filter_str == 'artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/mashup.php?action=artist">
