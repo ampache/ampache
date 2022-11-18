@@ -39,7 +39,7 @@ $albumString     = (AmpConfig::get('album_group'))
 
 <div class="category_options">
     <a class="category <?php echo ($filter_str == 'recent_song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_song"><?php echo T_('Songs'); ?></a>
-    <a class="category <?php echo ($filter_str == 'newest_album_disk' || $filter_str == 'newest_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/browse.php?action=recent_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
+    <a class="category <?php echo ($filter_str == 'recent_album_disk' || $filter_str == 'recent_album') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'recent_artist') { ?>
         <a class="category <?php echo ($filter_str == 'recent_artist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=recent_artist"><?php echo T_('Artists'); ?></a>
     <?php } ?>
