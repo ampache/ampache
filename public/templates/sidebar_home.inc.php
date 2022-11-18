@@ -127,7 +127,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php echo Ui::get_icon('all', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
         </h4>
         <ul class="sb3" id="sb_home_dashboard">
-            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums ?></a></li>
+            <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $showAlbum; ?>"><?php echo $t_albums ?></a></li>
             <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists ?></a></li>
             <?php if ($access25) { ?>
             <li id="sb_home_dashboard_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists ?></a></li>
