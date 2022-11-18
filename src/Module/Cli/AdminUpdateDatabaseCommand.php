@@ -27,7 +27,6 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 

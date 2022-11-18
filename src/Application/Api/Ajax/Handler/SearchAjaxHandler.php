@@ -37,7 +37,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {

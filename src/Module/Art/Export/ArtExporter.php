@@ -25,9 +25,7 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Art\Export;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Log\LoggerInterface;

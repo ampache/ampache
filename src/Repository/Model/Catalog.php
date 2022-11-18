@@ -53,7 +53,6 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use PDOStatement;
 use RecursiveDirectoryIterator;

@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Cache;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;

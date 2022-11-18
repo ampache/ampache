@@ -34,7 +34,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 

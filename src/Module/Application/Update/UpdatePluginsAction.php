@@ -25,20 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Update;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Teapot\StatusCode;
 
 final class UpdatePluginsAction implements ApplicationActionInterface

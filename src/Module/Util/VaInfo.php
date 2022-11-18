@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;

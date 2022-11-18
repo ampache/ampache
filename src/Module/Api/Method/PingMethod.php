@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
 /**

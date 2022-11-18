@@ -25,8 +25,6 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 

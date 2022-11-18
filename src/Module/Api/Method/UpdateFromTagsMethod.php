@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class UpdateFromTagsMethod

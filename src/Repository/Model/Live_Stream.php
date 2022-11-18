@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use PDOStatement;
 
 /**
  * Radio Class

@@ -26,7 +26,6 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;

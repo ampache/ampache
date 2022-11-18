@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Statistics\Stats;
 
 class Ampachelistenbrainz
 {

@@ -21,8 +21,6 @@
 
 namespace Ampache\Module\Album\Export\Writer;
 
-use Ampache\Repository\Model\Album;
-
 interface MetadataWriterInterface
 {
     public function write(

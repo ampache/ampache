@@ -24,7 +24,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -34,10 +33,8 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use DOMDocument;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;

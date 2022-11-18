@@ -25,10 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Album;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;

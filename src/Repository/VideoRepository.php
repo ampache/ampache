@@ -25,10 +25,6 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Clip;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
-use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 

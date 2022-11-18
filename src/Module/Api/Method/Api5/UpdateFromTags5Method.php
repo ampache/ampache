@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api5;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class UpdateFromTags5Method

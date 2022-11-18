@@ -36,7 +36,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss

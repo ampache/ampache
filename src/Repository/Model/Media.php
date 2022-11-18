@@ -23,8 +23,6 @@
 
 namespace Ampache\Repository\Model;
 
-use PDOStatement;
-
 /**
  * media Interface
  *

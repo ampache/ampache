@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
-use Ampache\Module\Statistics\Stats;
 
 class AmpacheLastfm
 {

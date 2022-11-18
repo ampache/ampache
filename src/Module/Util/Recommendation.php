@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 
