@@ -37,7 +37,7 @@ $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
 
 require_once Ui::find_template('show_mashup_browse_form.inc.php');
 Ui::show_box_top(T_('Trending'));
-$object_ids = Stats::get_top($object_type, $limit, $threshold, 0, $user_id);
+$object_ids = Stats::get_top($object_type, $limit, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -59,7 +59,7 @@ if ($object_type == 'podcast_episode') {
 } else {
     echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">" . Ui::show_box_top(T_('Popular')) . "</a>";
 }
-$object_ids = array_slice(Stats::get_top($object_type, $limit, $threshold, 0, $user_id), 0, 100);
+$object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user_id);
 shuffle($object_ids);
 $object_ids = array_slice($object_ids, 0, $limit);
 $browse     = new Browse();
