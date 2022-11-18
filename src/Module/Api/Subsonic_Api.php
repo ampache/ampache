@@ -2099,7 +2099,7 @@ class Subsonic_Api
                     break;
                 case 'set':
                     $localplay->delete_all();
-                // Intentional break fall-through
+                    // Intentional break fall-through
                 case 'add':
                     $user = User::get_from_username($input['u']);
                     if ($object_id) {

@@ -289,6 +289,7 @@ final class SongSorter implements SongSorterInterface
      * @param Song $song
      * @param $fullname
      * @param $test_mode
+     * @param bool $windowsCompat
      * @return bool
      */
     private function sort_move_file(

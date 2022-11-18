@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Catalog;
 final class AlbumRepository implements AlbumRepositoryInterface
 {
     /**
-     * This returns a number of random album
+     * This returns a number of random albums
      *
      * @return int[] Album ids
      */
@@ -63,6 +63,53 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $rating_filter,
                 $userId
             );
+        }
+        $sql .= sprintf(
+            'ORDER BY RAND() LIMIT %d',
+            $count
+        );
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * This returns a number of random album_disks
+     *
+     * @return int[] AlbumDisk ids
+     */
+    public function getRandomAlbumDisk(
+        int $userId,
+        ?int $count = 1
+    ): array {
+        $results = [];
+
+        if (!$count) {
+            $count = 1;
+        }
+
+        $sql  = "SELECT DISTINCT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` ";
+        $join = 'WHERE';
+
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` $join `catalog`.`enabled` = '1' ";
+            $join = 'AND';
+        }
+        if (AmpConfig::get('catalog_filter') && $userId > 0) {
+            $sql .= $join . Catalog::get_user_filter('album', $userId);
+            $join = 'AND';
+        }
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
+            $sql .= $join . sprintf(
+                    " `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
+                    $rating_filter,
+                    $userId
+                );
         }
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',

@@ -24,11 +24,21 @@ namespace Ampache\Repository;
 interface AlbumRepositoryInterface
 {
     /**
-     * This returns a number of random albums.
+     * This returns a number of random albums
      *
      * @return int[]
      */
     public function getRandom(
+        int $userId,
+        ?int $count = 1
+    ): array;
+
+    /**
+     * This returns a number of random album_disks
+     *
+     * @return int[]
+     */
+    public function getRandomAlbumDisk(
         int $userId,
         ?int $count = 1
     ): array;
@@ -48,7 +58,7 @@ interface AlbumRepositoryInterface
      * @return int[] Song ids
      */
     public function getSongsByAlbumDisk(
-        int $albumId
+        int $albumDiskId
     ): array;
 
     /**

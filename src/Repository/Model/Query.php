@@ -833,19 +833,20 @@ class Query
         $this->reset_join();
 
         if ($sort == 'random') {
-            $this->_state['sort']        = array();
-            $this->_state['sort'][$sort] = $order;
-        } elseif (!empty($order)) {
-            $order                       = ($order == 'DESC') ? 'DESC' : 'ASC';
-            $this->_state['sort']        = array();
-            $this->_state['sort'][$sort] = $order;
+            // don't sort random
+        } elseif (!$sort == 'random' && !empty($order)) {
+            $order = ($order == 'DESC')
+                ? 'DESC'
+                : 'ASC';
         } else {
             // if the sort already exists you want the reverse
-            $state                       = $this->_state['sort'][$sort] ?? 'DESC';
-            $order                       = ($state == 'ASC') ? 'DESC' : 'ASC';
-            $this->_state['sort']        = array();
-            $this->_state['sort'][$sort] = $order;
+            $state = $this->_state['sort'][$sort] ?? 'DESC';
+            $order = ($state == 'ASC')
+                ? 'DESC'
+                : 'ASC';
         }
+        $this->_state['sort']        = array();
+        $this->_state['sort'][$sort] = $order;
 
         $this->resort_objects();
 

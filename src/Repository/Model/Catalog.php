@@ -423,7 +423,7 @@ abstract class Catalog extends database_object
      * get_catalog_filters
      * This returns the filters, sorting by name or by id as indicated by $sort
      * $sort = field to sort on (id or name)
-     * @return string[]
+     * @return array
      */
     public static function get_catalog_filters($sort = 'name')
     {
@@ -674,18 +674,11 @@ abstract class Catalog extends database_object
             $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
             $db_results = Dba::read($sql, array($filter_id, $catalog_id));
             $enabled    = $catalogs[$catalog_id];
-            if (Dba::num_rows($db_results)) {
-                // update the values
-                $sql     = "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?";
-                if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
-                    return false;
-                }
-            } else {
-                // missing group map? add it in
-                $sql = "INSERT INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
-                if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
-                    return false;
-                }
+            $sql        = (Dba::num_rows($db_results))
+                ? "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?"
+                : "INSERT INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
+            if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+                return false;
             }
         }
         self::garbage_collect_filters();

@@ -78,7 +78,7 @@ class HttpQPlayer
      * $url     URL of the song
      * @param string $name
      * @param string $url
-     * @return mixed|null
+     * @return bool|string
      */
     public function add($name, $url)
     {
@@ -231,7 +231,7 @@ class HttpQPlayer
      * repeat
      * This toggles the repeat state of HttpQ
      * @param $value
-     * @return mixed|null
+     * @return bool|string
      */
     public function repeat($value)
     {
@@ -249,7 +249,7 @@ class HttpQPlayer
      * random
      * this toggles the random state of HttpQ
      * @param $value
-     * @return mixed|null
+     * @return bool|string
      */
     public function random($value)
     {
@@ -267,7 +267,7 @@ class HttpQPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return mixed|null
+     * @return bool|string
      */
     public function delete_pos($track)
     {

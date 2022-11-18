@@ -205,7 +205,6 @@ class User_Playlist extends database_object
      * @param int $current_id
      * @param int $current_time
      * @param int $time
-     * @param string $client
      */
     public function set_items($playlist, $current_type, $current_id, $current_time, $time)
     {

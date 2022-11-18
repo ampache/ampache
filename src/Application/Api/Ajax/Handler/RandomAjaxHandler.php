@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
@@ -89,18 +90,18 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'album_disk':
-                $album_id = $this->albumRepository->getRandom(
+                $albumDisk_id = $this->albumRepository->getRandomAlbumDisk(
                     Core::get_global('user')->id ?? -1,
                     null
                 );
 
-                if (empty($album_id)) {
+                if (empty($albumDisk_id)) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
 
-                $album = new Album($album_id[0]);
-                $songs = $this->songRepository->getByAlbum($album->id);
+                $albumDisk = new AlbumDisk($albumDisk_id[0]);
+                $songs     = $this->songRepository->getByAlbumDisk($albumDisk->id);
 
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');

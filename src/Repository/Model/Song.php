@@ -1038,8 +1038,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * get_album_disk_fullname
      * gets the name of $this->album, allows passing of id
-     * @param integer $album_id
-     * @param bool $simple
      * @return string
      */
     public function get_album_disk_fullname()

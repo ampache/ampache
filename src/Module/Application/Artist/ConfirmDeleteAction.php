@@ -72,7 +72,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
@@ -102,6 +102,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }
