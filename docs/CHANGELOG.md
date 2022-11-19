@@ -14,6 +14,7 @@
 
 ### Fixed
 
+* Missing tables on a fresh install
 * Not filtering song_artist on album_artist browses
 * Don't use catalog_filter and rating_filter without a valid user
 * Uploaded/Manual Album Artist maps on tag update
