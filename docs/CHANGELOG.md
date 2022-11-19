@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.4-develop
+## Ampache 5.5.4-release
 
 ### Added
 
@@ -30,7 +30,7 @@
 * CLI
   * Don't try to update a database when the connection fails
 
-## API 5.5.4-develop
+## API 5.5.4
 
 ### Fixed
 
