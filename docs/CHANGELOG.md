@@ -105,6 +105,47 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Api6::album_songs remove exact as a parameter
 
+## Ampache 5.5.4-release
+
+### Added
+
+* Database 550005
+  * Add `song_artist` and `album_artist` maps to catalog_map
+
+### Changed
+
+* Update catalog map tables based on the catalog action
+* Force `b` and `n` for back, next in webplayer (was overwritten with `[` and `]`)
+
+### Fixed
+
+* Missing tables on a fresh install
+* Not filtering song_artist on album_artist browses
+* Don't use catalog_filter and rating_filter without a valid user
+* Uploaded/Manual Album Artist maps on tag update
+* Delete artist's from the catalog_map that don't have a song or album for that catalog
+* Set correct transcode `bitrate` and `mime` for songs on play_url calls
+* Save Track Order when viewing all the items
+* Use cache_target for cached song cleanup (was hardcoded to mp3)
+* Subsonic
+  * Art for artist index arrays was missing
+* Search
+  * SQL for Artist `catalog` searches
+  * Make sure saved rules match the correct names on load
+* CLI
+  * Don't try to update a database when the connection fails
+
+## API 5.5.4
+
+### Fixed
+
+* User count in Api::ping and Api::handshake was doubled
+* Api3::stats method had incorrect recent parameters
+* Ensure the output `bitrate` and `mime` are set for song objects
+* RSS Feed generation with bad characters
+* Don't spam the artist description for each song
+* Show better Trending Dashboard section
+
 ## Ampache 5.5.3-release
 
 ### Changed

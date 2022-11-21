@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Aug 22, 2022 at 01:53 PM
+-- Generation Time: Nov 19, 2022 at 05:49 PM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.1.8
+-- PHP Version: 8.1.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache550`
+-- Database: `ampache554`
 --
 
 -- --------------------------------------------------------
@@ -266,6 +266,34 @@ CREATE TABLE IF NOT EXISTS `catalog` (
   `gather_types` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catalog_filter_group`
+--
+
+DROP TABLE IF EXISTS `catalog_filter_group`;
+CREATE TABLE IF NOT EXISTS `catalog_filter_group` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catalog_filter_group_map`
+--
+
+DROP TABLE IF EXISTS `catalog_filter_group_map`;
+CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (
+  `group_id` int(11) UNSIGNED NOT NULL,
+  `catalog_id` int(11) UNSIGNED NOT NULL,
+  `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  UNIQUE KEY `group_id` (`group_id`,`catalog_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1434,7 +1462,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '550004'),
+('db_version', '550005'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------

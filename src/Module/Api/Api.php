@@ -387,7 +387,7 @@ class Api
             'playlists' => (int)$counts['playlist'],
             'searches' => (int)$counts['search'],
             'playlists_searches' => $playlists,
-            'users' => ((int)$counts['user']),
+            'users' => (int)$counts['user'],
             'catalogs' => (int)$counts['catalog'],
             'videos' => (int)$counts['video'],
             'podcasts' => (int)$counts['podcast'],
