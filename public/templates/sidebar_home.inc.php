@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
@@ -49,7 +50,8 @@ $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
 $access50        = Access::check('interface', 50);
 $access25        = ($access50 || Access::check('interface', 25));
-$albumString       = (AmpConfig::get('album_group'))
+$allow_upload    = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0);
+$albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 // expanded by default
