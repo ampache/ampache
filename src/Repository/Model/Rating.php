@@ -293,7 +293,7 @@ class Rating extends database_object
         // Select Top objects counting by # of rows
         $sql = self::get_highest_sql($input_type, $user_id);
         $sql .= " LIMIT $limit";
-        debug_event(self::class, 'get_highest ' . $sql, 5);
+        //debug_event(self::class, 'get_highest ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
