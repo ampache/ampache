@@ -40,6 +40,15 @@ use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
 {
+    private const RSS_TYPES = array(
+        'now_playing',
+        'recently_played',
+        'latest_album',
+        'latest_artist',
+        'latest_shout',
+        'podcast'
+    );
+
     /**
      * @var string $type
      */
@@ -52,13 +61,13 @@ class AmpacheRss
 
     /**
      * Constructor
-     * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param string $type
+     * This takes a flagged id and then pulls in the information for said flag entry
+     * @param string $rsstype
      * @param string $rsstoken
      */
-    public function __construct($type, $rsstoken = "")
+    public function __construct($rsstype, $rsstoken = "")
     {
-        $this->type     = self::validate_type($type);
+        $this->type     = self::validate_type($rsstype);
         $this->rsstoken = $rsstoken;
     } // constructor
 
@@ -141,25 +150,16 @@ class AmpacheRss
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
-     * @param string $type
+     * @param string $rsstype
      * @return string
      */
-    public static function validate_type($type)
+    public static function validate_type($rsstype)
     {
-        $valid_types = array(
-            'now_playing',
-            'recently_played',
-            'latest_album',
-            'latest_artist',
-            'latest_shout',
-            'podcast'
-        );
-
-        if (!in_array($type, $valid_types)) {
+        if (!in_array($rsstype, self::RSS_TYPES)) {
             return 'now_playing';
         }
 
-        return $type;
+        return $rsstype;
     } // validate_type
 
     /**
