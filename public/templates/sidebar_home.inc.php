@@ -223,11 +223,11 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
         <ul class="sb3" id="sb_home_information">
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_<?php echo $albumString; ?>"><?php echo $t_newest; ?></a></li>
-            <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular"><?php echo $t_popular; ?></a></li>
+            <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo $t_popular; ?></a></li>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
-                <li id="sb_home_information_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest"><?php echo $t_topRated ?></a></li>
-                <li id="sb_home_information_userFlag"><a href="<?php echo $web_path?>/stats.php?action=userflag"><?php echo $t_favorites ?></a></li>
+                <li id="sb_home_information_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo $t_topRated ?></a></li>
+                <li id="sb_home_information_userFlag"><a href="<?php echo $web_path?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo $t_favorites ?></a></li>
                 <?php } ?>
                 <?php if (AmpConfig::get('wanted')) { ?>
                 <li id="sb_home_information_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo $t_wanted ?></a></li>

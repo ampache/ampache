@@ -648,18 +648,27 @@ class Stats
                 $type  = 'podcast_episode';
                 $sql .= " LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'podcast_episode'";
             }
+            if ($input_type == 'album_artist' || $input_type == 'song_artist') {
+                $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `object_count`.`object_id` AND `object_count`.`object_type` = 'artist'";
+            }
             if ($input_type == 'album_disk') {
                 $sql   = "SELECT `album_disk`.`id` AS `id`, COUNT(*) AS `count` FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` AND `object_type` = 'song' LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `song`.`disk` = `album_disk`.`disk`";
                 $group = '`album_disk`.`id`';
                 $type  = 'song';
             }
             if ($user_id !== null) {
-                $sql .= " WHERE `object_type` = '" . $type . "' AND `user` = " . (string)$user_id;
+                $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' AND `object_count`.`user` = " . (string)$user_id;
             } else {
-                $sql .= " WHERE `object_type` = '" . $type . "' ";
+                $sql .= " WHERE `object_count`.`object_type` = '" . $type . "' ";
                 if ($threshold > 0) {
-                    $sql .= "AND `date` >= '" . $date . "'";
+                    $sql .= "AND `object_count`.`date` >= '" . $date . "'";
                 }
+            }
+            if ($input_type == 'album_artist') {
+                $sql .= " AND `artist`.`album_count` > 0";
+            }
+            if ($input_type == 'song_artist') {
+                $sql .= " AND `artist`.`song_count` > 0";
             }
             if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
@@ -687,7 +696,7 @@ class Stats
      * get_top
      * This returns the top X for type Y from the
      * last stats_threshold days
-     * @param string $type
+     * @param string $input_type
      * @param integer $count
      * @param integer $threshold
      * @param integer $offset
@@ -695,10 +704,10 @@ class Stats
      * @param boolean $random
      * @return array
      */
-    public static function get_top($type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
+    public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
     {
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
-        $sql   = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
+        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user_id, $random);
 
         if ($limit) {
             $sql .= "LIMIT $limit";
@@ -783,8 +792,7 @@ class Stats
         }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
-        $type = self::validate_type($input_type);
-        $sql  = self::get_recent_sql($type, null, $newest);
+        $sql = self::get_recent_sql($input_type, null, $newest);
         $sql .= "LIMIT $limit";
 
         $db_results = Dba::read($sql);
@@ -838,7 +846,6 @@ class Stats
     {
         switch ($type) {
             case 'artist':
-            case 'album_artist':
             case 'album':
             case 'album_disk':
             case 'tag':
@@ -853,6 +860,9 @@ class Stats
             case 'podcast_episode':
             case 'live_stream':
                 return $type;
+            case 'album_artist':
+            case 'song_artist':
+                return 'artist';
             case 'genre':
                 return 'tag';
             default:
@@ -956,14 +966,14 @@ class Stats
      * get_newest
      * This returns an array of the newest artists/albums/whatever
      * in this Ampache instance
-     * @param string $type
+     * @param string $input_type
      * @param integer $count
      * @param integer $offset
      * @param integer $catalog
      * @param integer $user_id
      * @return integer[]
      */
-    public static function get_newest($type, $count = 0, $offset = 0, $catalog = 0, $user_id = null)
+    public static function get_newest($input_type, $count = 0, $offset = 0, $catalog = 0, $user_id = null)
     {
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -974,7 +984,7 @@ class Stats
             $limit = $offset . ', ' . $count;
         }
 
-        $sql = self::get_newest_sql($type, $catalog, $user_id);
+        $sql = self::get_newest_sql($input_type, $catalog, $user_id);
         $sql .= "LIMIT $limit";
         $db_results = Dba::read($sql);
 

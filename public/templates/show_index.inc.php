@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <div id="browse_header">
-<?php require_once Ui::find_template('show_browse_form.inc.php'); ?>
+<?php require_once Ui::find_template('show_form_browse.inc.php'); ?>
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');

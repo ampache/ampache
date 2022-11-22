@@ -35,7 +35,7 @@ $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
     ? Core::get_global('user')->id
     : null;
 
-require_once Ui::find_template('show_mashup_browse_form.inc.php');
+require_once Ui::find_template('show_form_mashup.inc.php');
 Ui::show_box_top(T_('Trending'));
 $object_ids = Stats::get_top($object_type, $limit, $threshold);
 $browse     = new Browse();

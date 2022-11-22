@@ -828,6 +828,9 @@ class Update
         $update_string = "* Drop `user_playlist` table and recreate it";
         $version[]     = array('version' => '600018', 'description' => $update_string);
 
+        $update_string = "* During migration some album_disk data may be missing it's object type";
+        $version[]     = array('version' => '600019', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4784,6 +4787,11 @@ class Update
         Dba::write($sql);
         $sql = "CREATE TABLE IF NOT EXISTS `album_disk` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `album_id` int(11) UNSIGNED NOT NULL, `disk` int(11) UNSIGNED NOT NULL, `disk_count` int(11) unsigned DEFAULT 0 NOT NULL, `time` bigint(20) UNSIGNED DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `song_count` smallint(5) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY `unique_album_disk` (`album_id`, `disk`, `catalog`), INDEX `id_index` (`id`), INDEX `album_id_type_index` (`album_id`, `disk`), INDEX `id_disk_index` (`id`, `disk`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
+        // make sure ratings and counts will be entered
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
         // fill the data
         $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog` FROM `song`;";
         $retval &= (Dba::write($sql) !== false);
@@ -5095,6 +5103,32 @@ class Update
         Dba::write($sql);
         $sql = "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song', 'live_stream', 'video', 'podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600019
+     *
+     * During migration some album_disk data may be missing it's object type
+     */
+    public static function update_600019(): bool
+    {
+        $retval = true;
+        $sql    = "UPDATE IGNORE `rating` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "DELETE FROM `rating` WHERE `object_type` = '';";
+        Dba::write($sql);
+        $sql    = "UPDATE IGNORE `object_count` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "DELETE FROM `object_count` WHERE `object_type` = '';";
+        Dba::write($sql);
+        // rating (id, `user`, object_type, object_id, rating)
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
+        // user_flag (id, `user`, object_id, object_type, `date`)
+        $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
 
         return $retval;
     }

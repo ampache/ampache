@@ -47,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        require_once Ui::find_template('show_search_form.inc.php');
+        require_once Ui::find_template('show_form_search.inc.php');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
