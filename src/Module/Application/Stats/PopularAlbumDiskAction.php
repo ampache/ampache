@@ -65,7 +65,7 @@ final class PopularAlbumDiskAction implements ApplicationActionInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
         $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
-        $user_id      = Core::get_global('user')->id;
+        $user_id      = Core::get_global('user')->id ?? 0;
 
         $this->ui->showHeader();
         $this->ui->show('show_form_popular.inc.php');

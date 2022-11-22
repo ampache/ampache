@@ -65,6 +65,7 @@ final class PopularAlbumAction implements ApplicationActionInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
         $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+        $user_id      = Core::get_global('user')->id ?? 0;
 
         $this->ui->showHeader();
         $this->ui->show('show_form_popular.inc.php');
@@ -74,12 +75,6 @@ final class PopularAlbumAction implements ApplicationActionInterface
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
-
-        $thresh_value   = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $catalog_filter = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER);
-        $user_id        = ($catalog_filter)
-            ? Core::get_global('user')->id
-            : null;
 
         $objects = Stats::get_top('album', $limit, $thresh_value, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
