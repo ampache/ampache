@@ -46,7 +46,7 @@ $ui = $dic->get(UiInterface::class);
 
 ?>
 <?php $ui->show(
-        'show_genre_browse_form.inc.php',
+        'show_form_genre.inc.php',
     [
         'type' => 'tag_hidden'
     ]

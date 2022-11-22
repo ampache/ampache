@@ -57,7 +57,7 @@ final class BroadcastAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $this->ui->show('show_browse_form.inc.php');
+        $this->ui->show('show_form_browse.inc.php');
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

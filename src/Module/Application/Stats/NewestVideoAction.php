@@ -67,7 +67,7 @@ final class NewestVideoAction implements ApplicationActionInterface
         $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
-        $this->ui->show('show_newest_form.inc.php');
+        $this->ui->show('show_form_newest.inc.php');
 
         define('TABLE_RENDERED', 1);
 

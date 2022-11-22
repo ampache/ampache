@@ -341,7 +341,7 @@ final class SongSearch implements SearchInterface
                             : "";
                     } else {
                         $unrated = ($operator_sql == 'unrated');
-                        $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $other_userid)" : "`rating_" . $my_type . "_" . $other_userid . "`.$operator_sql AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
+                        $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '$my_type' AND `rating`.`user` = $other_userid)" : "`rating_" . $my_type . "_" . $other_userid . "`.$operator_sql AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
                         // rating once per user
                         if (!array_key_exists('rating', $table)) {
                             $table['rating'] = '';

@@ -75,7 +75,7 @@ final class SearchAction implements ApplicationActionInterface
 
         if ($rule_1 != 'missing_artist') {
             $browse = $this->modelFactory->createBrowse();
-            require_once Ui::find_template('show_search_form.inc.php');
+            require_once Ui::find_template('show_form_search.inc.php');
             require_once Ui::find_template('show_search_options.inc.php');
             $results = Search::run($_REQUEST);
             $browse->set_type($searchType);

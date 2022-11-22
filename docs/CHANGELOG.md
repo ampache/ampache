@@ -12,7 +12,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
-* Database 600018
+* Database 600019
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -127,6 +127,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Set correct transcode `bitrate` and `mime` for songs on play_url calls
 * Save Track Order when viewing all the items
 * Use cache_target for cached song cleanup (was hardcoded to mp3)
+* RSS Feed generation with bad characters
+* Don't spam the artist description for each song
+* Show better Trending Dashboard section
 * Subsonic
   * Art for artist index arrays was missing
 * Search
@@ -142,9 +145,6 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * User count in Api::ping and Api::handshake was doubled
 * Api3::stats method had incorrect recent parameters
 * Ensure the output `bitrate` and `mime` are set for song objects
-* RSS Feed generation with bad characters
-* Don't spam the artist description for each song
-* Show better Trending Dashboard section
 
 ## Ampache 5.5.3-release
 
