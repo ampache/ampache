@@ -12,7 +12,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
-* Database 600018
+* Database 600019
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
