@@ -619,7 +619,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE $tag_sql `tag_map`.`object_type` = ?";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
         $sql .= $limit_sql;
@@ -658,7 +658,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
         $sql .= $limit_sql;

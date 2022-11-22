@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -253,22 +254,32 @@ class Userflag extends database_object
     /**
      * get_latest_sql
      * Get the latest sql
-     * @param string $type
+     * @param string $input_type
      * @param string $user_id
      * @return string
      */
-    public static function get_latest_sql($type, $user_id = null)
+    public static function get_latest_sql($input_type, $user_id = null)
     {
+        $type    = Stats::validate_type($input_type);
         $user_id = (int)($user_id);
         $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
+        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
+            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
+        }
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
+        }
+        if ($input_type == 'album_artist') {
+            $sql .= " AND `artist`.`album_count` > 0";
+        }
+        if ($input_type == 'song_artist') {
+            $sql .= " AND `artist`.`song_count` > 0";
         }
         $sql .= " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);

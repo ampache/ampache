@@ -22,61 +22,75 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Application\Browse;
+namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ArtistAction implements ApplicationActionInterface
+final class PopularAlbumAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'artist';
-
-    private ModelFactoryInterface $modelFactory;
+    public const REQUEST_KEY = 'popular_album';
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     private ConfigContainerInterface $configContainer;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer,
+        VideoRepositoryInterface $videoRepository
     ) {
-        $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(static::REQUEST_KEY);
-        $browse->set_simple_browse(true);
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
+        $this->ui->show('show_form_popular.inc.php');
+        $this->ui->showHeader();
 
-        $this->ui->show('show_form_browse.inc.php');
+        define('TABLE_RENDERED', 1);
 
-        // Browser is able to save page on current session. Only applied to main menus.
-        $browse->set_update_session(true);
+        // Temporary workaround to avoid sorting on custom base requests
+        define('NO_BROWSE_SORTING', true);
 
-        $browse->set_filter('catalog', $_SESSION['catalog']);
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
-        $browse->set_sort('name', 'ASC');
-        $browse->update_browse_from_session();
-        $browse->show_objects();
+        $thresh_value   = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $catalog_filter = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER);
+        $user_id        = ($catalog_filter)
+            ? Core::get_global('user')->id
+            : null;
 
+        $objects = Stats::get_top('album', $limit, $thresh_value, 0, $user_id);
+        $browse  = $this->modelFactory->createBrowse();
+        $browse->set_threshold($thresh_value);
+        $browse->set_type('album');
+        $browse->show_objects($objects);
         $browse->store();
+
+        $this->ui->showBoxBottom();
+
+        show_table_render(false, true);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

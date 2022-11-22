@@ -37,9 +37,9 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class PopularAction implements ApplicationActionInterface
+final class PopularVideoAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'popular';
+    public const REQUEST_KEY = 'popular_video';
 
     private UiInterface $ui;
 
@@ -63,6 +63,12 @@ final class PopularAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+        $user_id      = Core::get_global('user')->id;
+
+        $this->ui->showHeader();
+        $this->ui->show('show_form_popular.inc.php');
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
@@ -70,73 +76,17 @@ final class PopularAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $this->ui->showBoxTop(T_('Information'));
-
-        $thresh_value   = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $catalog_filter = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER);
-        $user_id        = ($catalog_filter)
-            ? Core::get_global('user')->id
-            : null;
-
-        /**
-         * We limit threshold for all items otherwise the counter will not be the same that the top_sql query.
-         * Example: Item '1234' => 3 counts during period with 'get_top_sql'.
-         * Without threshold, 'show_objects' would return the total which could be 24 during all time)
-         */
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'album',
-            Stats::get_top_sql('album', $thresh_value, 'stream', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'artist',
-            Stats::get_top_sql('artist', $thresh_value, 'stream', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'song',
-            Stats::get_top_sql('song', $thresh_value, 'stream', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $browse = $this->modelFactory->createBrowse();
-            $browse->set_type(
-                'video',
-                Stats::get_top_sql('video', $thresh_value, 'stream', $user_id)
-            );
-            $browse->set_simple_browse(true);
-            $browse->show_objects(null);
+            $objects = Stats::get_top('video', $limit, $thresh_value, 0, $user_id);
+            $browse  = $this->modelFactory->createBrowse();
+            $browse->set_threshold($thresh_value);
+            $browse->set_type('video');
+            $browse->show_objects($objects);
             $browse->store();
         }
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
-        $browse->set_type(
-            'playlist',
-            Stats::get_top_sql('playlist', $thresh_value, 'stream', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
 
         $this->ui->showBoxBottom();
 

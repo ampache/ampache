@@ -22,61 +22,69 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Application\Browse;
+namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ArtistAction implements ApplicationActionInterface
+final class HighestAlbumDiskAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'artist';
-
-    private ModelFactoryInterface $modelFactory;
+    public const REQUEST_KEY = 'highest_album_disk';
 
     private UiInterface $ui;
+
+    private ModelFactoryInterface $modelFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui,
+        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        session_start();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(static::REQUEST_KEY);
-        $browse->set_simple_browse(true);
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
+        $this->ui->show('show_form_highest.inc.php');
+        $this->ui->showHeader();
 
-        $this->ui->show('show_form_browse.inc.php');
+        define('TABLE_RENDERED', 1);
 
-        // Browser is able to save page on current session. Only applied to main menus.
-        $browse->set_update_session(true);
+        // Temporary workaround to avoid sorting on custom base requests
+        define('NO_BROWSE_SORTING', true);
 
-        $browse->set_filter('catalog', $_SESSION['catalog']);
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
-        $browse->set_sort('name', 'ASC');
-        $browse->update_browse_from_session();
-        $browse->show_objects();
+        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
+            ? Core::get_global('user')->id
+            : null;
 
+        $objects = Rating::get_highest('album_disk', $limit, 0, $user_id);
+        $browse  = $this->modelFactory->createBrowse();
+        $browse->set_threshold($thresh_value);
+        $browse->set_type('album_disk');
+        $browse->show_objects($objects);
         $browse->store();
+
+        $this->ui->showBoxBottom();
+
+        show_table_render(false, true);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

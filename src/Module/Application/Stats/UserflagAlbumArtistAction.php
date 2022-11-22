@@ -28,7 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -37,9 +37,9 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class HighestAction implements ApplicationActionInterface
+final class UserflagAlbumArtistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'highest';
+    public const REQUEST_KEY = 'userflag_album_artist';
 
     private UiInterface $ui;
 
@@ -63,56 +63,26 @@ final class HighestAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
+        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+
+        $this->ui->showHeader();
+        $this->ui->show('show_form_userflag.inc.php');
         $this->ui->showHeader();
 
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
+        $user    = Core::get_global('user');
+        $user_id = $user->id ?? 0;
 
-        $this->ui->showBoxTop(T_('Information'));
-        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
-            ? Core::get_global('user')->id
-            : null;
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'song',
-            Rating::get_highest_sql('song', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
+        $objects = Userflag::get_latest('album_artist', $user_id, $limit);
+        $browse  = $this->modelFactory->createBrowse();
+        $browse->set_threshold($thresh_value);
+        $browse->set_type('album_artist');
+        $browse->show_objects($objects);
         $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'album',
-            Rating::get_highest_sql('album', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'artist',
-            Rating::get_highest_sql('artist', $user_id)
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount(Video::class)
-        ) {
-            $sql    = Rating::get_highest_sql('video', $user_id);
-            $browse = $this->modelFactory->createBrowse();
-            $browse->set_type('video', $sql);
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
-            $browse->store();
-        }
 
         $this->ui->showBoxBottom();
 
