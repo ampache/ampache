@@ -52,5 +52,5 @@ $albumString     = (AmpConfig::get('album_group'))
     if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <a class="category <?php echo ($filter_str == 'popular_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_video"><?php echo T_('Videos'); ?></a>
     <?php } ?>
-    <a class="category <?php echo ($filter_str == 'popular_video') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_video"><?php echo T_('Playlists'); ?></a>
+    <a class="category <?php echo ($filter_str == 'popular_playlist') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/stats.php?action=popular_playlist"><?php echo T_('Playlists'); ?></a>
 </div>
