@@ -183,21 +183,8 @@ final class ShowAction implements ApplicationActionInterface
 
             $art = new Art($object_id, $type, $kind);
             $art->has_db_info();
+
             $etag = $art->id;
-
-            // That means the client has a cached version of the image
-            $reqheaders = getallheaders();
-            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
-                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
-                    $cetagf = explode('-', $reqheaders['If-None-Match']);
-                    $cetag  = $cetagf[0];
-                    // Same image than the cached one? Use the cache.
-                    if ($cetag == $etag) {
-                        return $response->withStatus(304);
-                    }
-                }
-            }
-
             if (!$art->raw_mime) {
                 $rootimg = sprintf(
                     '%s/../../../../public/%s/images/',
@@ -243,7 +230,10 @@ final class ShowAction implements ApplicationActionInterface
             if (!empty($etag)) {
                 $response = $response->withHeader(
                     'ETag',
-                    $etag
+                    '"' . $etag . '"'
+                )->withHeader(
+                    'Expires',
+                    gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60 * 24 * 7)) // 7 day
                 )->withHeader(
                     'Cache-Control',
                     'private'
@@ -251,6 +241,18 @@ final class ShowAction implements ApplicationActionInterface
                     'Last-Modified',
                     gmdate('D, d M Y H:i:s \G\M\T', time())
                 );
+            }
+
+            // That means the client has a cached version of the image
+            $reqheaders = getallheaders();
+            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
+                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
+                    $cetag  = str_replace('"','', $reqheaders['If-None-Match']);
+                    // Same image than the cached one? Use the cache.
+                    if ($cetag == $etag) {
+                        return $response->withStatus(304);
+                    }
+                }
             }
 
             $headers = $this->horde_browser->getDownloadHeaders($filename, $mime, true);
