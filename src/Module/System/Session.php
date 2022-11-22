@@ -380,6 +380,11 @@ final class Session implements SessionInterface
             debug_event(self::class, 'auth_remember session found', 5);
         }
 
+        // Can't do cookie is the session is already started
+        if ( session_status() === PHP_SESSION_ACTIVE ){
+            return true;
+        }
+
         $cookie_options = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
@@ -732,7 +737,7 @@ final class Session implements SessionInterface
         if (empty(Core::get_global('user'))) {
             if ($user instanceof User && $user->id > 0) {
                 $GLOBALS['user'] = $user;
-            } elseif (isset($_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
+            } elseif (isset($_SESSION) && isset($_SESSION['userdata']) && array_key_exists('username', $_SESSION['userdata'])) {
                 $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
             }
         }
