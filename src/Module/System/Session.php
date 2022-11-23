@@ -381,7 +381,7 @@ final class Session implements SessionInterface
         }
 
         // Can't do cookie is the session is already started
-        if ( session_status() === PHP_SESSION_ACTIVE ){
+        if (session_status() === PHP_SESSION_ACTIVE) {
             return true;
         }
 
