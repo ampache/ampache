@@ -270,7 +270,7 @@ final class PlayAction implements ApplicationActionInterface
         // We try to avoid the generic 'Ampache User' as much as possible
         if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
             Session::check();
-            $user = (array_key_exists('username', $_SESSION['userdata']))
+            $user = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : new User(-1);
         }
