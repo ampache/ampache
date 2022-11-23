@@ -737,7 +737,7 @@ final class Session implements SessionInterface
         if (empty(Core::get_global('user'))) {
             if ($user instanceof User && $user->id > 0) {
                 $GLOBALS['user'] = $user;
-            } elseif (isset($_SESSION) && isset($_SESSION['userdata']) && array_key_exists('username', $_SESSION['userdata'])) {
+            } elseif (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                 $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
             }
         }
