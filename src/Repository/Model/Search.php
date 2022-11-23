@@ -680,7 +680,7 @@ class Search extends playlist_object
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
-            $catalogs[$catid] = $catalog->f_name;
+            $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
@@ -772,7 +772,7 @@ class Search extends playlist_object
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
-            $catalogs[$catid] = $catalog->f_name;
+            $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
@@ -853,7 +853,7 @@ class Search extends playlist_object
         foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
-            $catalogs[$catid] = $catalog->f_name;
+            $catalogs[$catid] = $catalog->name;
         }
         if (!empty($catalogs)) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
