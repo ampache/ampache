@@ -98,6 +98,7 @@ final class CatalogAction4Method
                 Album::update_album_artist();
                 Catalog::update_mapping('artist');
                 Catalog::update_mapping('album');
+                Catalog::update_mapping('album_disk');
             } elseif ($catalog_media_type == 'podcast') {
                 Catalog::update_mapping('podcast');
                 Catalog::update_mapping('podcast_episode');

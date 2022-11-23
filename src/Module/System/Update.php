@@ -5017,6 +5017,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         Catalog::update_mapping('artist');
         Catalog::update_mapping('album');
+        Catalog::update_mapping('album_disk');
 
         return $retval;
     }

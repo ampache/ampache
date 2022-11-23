@@ -3829,7 +3829,7 @@ abstract class Catalog extends database_object
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' GROUP BY `song`.`catalog`, 'playlist', `playlist`.`id`;";
             Dba::write($sql);
         } else {
-            // 'album', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'
+            // 'album', 'album_disk', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
             Dba::write($sql);
         }
@@ -4166,6 +4166,7 @@ abstract class Catalog extends database_object
                 Album::update_album_artist();
                 self::update_mapping('artist');
                 self::update_mapping('album');
+                self::update_mapping('album_disk');
             } elseif ($catalog_media_type == 'podcast') {
                 self::update_mapping('podcast');
                 self::update_mapping('podcast_episode');

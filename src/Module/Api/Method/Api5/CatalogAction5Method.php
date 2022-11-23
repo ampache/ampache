@@ -96,6 +96,7 @@ final class CatalogAction5Method
             Album::update_album_artist();
             Catalog::update_mapping('artist');
             Catalog::update_mapping('album');
+            Catalog::update_mapping('album_disk');
             Catalog::update_counts();
 
             Api5::message('successfully started: ' . $task, $input['api_format']);
