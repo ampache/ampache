@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Ampache 5.5.5-release
+
+This release fixes up all the issues I created with the bad release files as well as an art search issue I missed until after the release.
+
+### Fixed
+
+* Set etag for image cache
+* Spotify art collector
+* Double scrub string in catalog search rules
+
+## API 5.5.5
+
+**NO CHANGE**
+
 ## Ampache 5.5.4-release
 
 ### Added
@@ -22,6 +36,9 @@
 * Set correct transcode `bitrate` and `mime` for songs on play_url calls
 * Save Track Order when viewing all the items
 * Use cache_target for cached song cleanup (was hardcoded to mp3)
+* RSS Feed generation with bad characters
+* Don't spam the artist description for each song
+* Show better Trending Dashboard section
 * Subsonic
   * Art for artist index arrays was missing
 * Search
@@ -35,11 +52,8 @@
 ### Fixed
 
 * User count in Api::ping and Api::handshake was doubled
-* Api3::stats method had incorrent recent parameters
+* Api3::stats method had incorrect recent parameters
 * Ensure the output `bitrate` and `mime` are set for song objects
-* RSS Feed generation with bad characters
-* Don't spam the artist description for each song
-* Show better Trending Dashboard section
 
 ## Ampache 5.5.3-release
 
