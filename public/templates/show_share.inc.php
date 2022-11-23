@@ -26,8 +26,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Share $share */
 
-$embed = $_REQUEST['embed'] ?? false;
-
+$embed    = $_REQUEST['embed'] ?? false;
 $isShare  = true;
 $playlist = $share->create_fake_playlist();
 

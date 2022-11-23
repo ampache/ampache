@@ -13,6 +13,7 @@ global $dic;
 
 /** @var bool $isVideo  */
 /** @var bool $isRadio */
+/** @var bool $isShare */
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
 /** @var Ampache\Module\Playback\Stream_Playlist $playlist */
@@ -357,6 +358,11 @@ if ($embed) {
     $areaClass .= " jp-area-embed";
 }
 
+// hide that awful art section for shares
+$shareStyle = ($isShare)
+    ? "display: none;"
+    : '';
+
 if (!$isVideo) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio"; ?>
@@ -378,7 +384,7 @@ if (!$isVideo) {
 <div class="jp-area<?php echo $areaClass; ?>">
     <div id="jp_container_1" class="<?php echo $containerClass; ?>">
         <div class="jp-type-playlist" style="background: #191919"">
-            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $playerClass; ?>"></div>
+            <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $playerClass; ?>" style="<?php echo $shareStyle; ?>"></div>
             <div class="jp-gui">
                 <?php if ($isVideo) { ?>
                     <div class="jp-video-play">
