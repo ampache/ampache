@@ -53,7 +53,8 @@ $restscreen = addslashes(T_('Restore Screen'));
 $shuffleon  = addslashes(T_('Shuffle'));
 $shuffleoff = addslashes(T_('Shuffle Off'));
 $repeaton   = addslashes(T_('Repeat'));
-$repeatoff  = addslashes(T_('Repeat Off')); ?>
+$repeatoff  = addslashes(T_('Repeat Off'));
+$showalbum  = addslashes(T_('Show Album')); ?>
 <script>
     // The web player identifier. We currently use current date milliseconds as unique identifier.
     var jpuqid = (new Date()).getMilliseconds();
@@ -213,8 +214,8 @@ $repeatoff  = addslashes(T_('Repeat Off')); ?>
                         echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
                         echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
                         echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . addslashes(T_('Show Lyrics')) . "</a>' : '';";
-                        echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . addslashes(T_('Show Album')) . "\">" . Ui::get_icon('album', addslashes(T_('Show Album'))) . "</a> |' : '';";
-                        echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . addslashes(T_('Show Album')) . "\">" . Ui::get_icon('album', addslashes(T_('Show Album'))) . "</a> |' : '';";
+                        echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
+                        echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
                         if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', 25))) {
                             echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                         }

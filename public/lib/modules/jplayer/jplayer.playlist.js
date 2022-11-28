@@ -255,10 +255,18 @@
             }
             attrClass += "\" ";
 
-            var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length + "\" " +
-                "data-poster=\"" + media.poster + "\" data-media_id=\"" + media.media_id + "\" data-album_id=\"" + media.album_id + "\" data-artist_id=\"" + media.artist_id + "\" " +
-                "data-replaygain_track_gain=\"" + media.replaygain_track_gain + "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak + "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain + "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak + "\" " +
-                "data-r128_track_gain=\"" + media.r128_track_gain + "\" data-r128_album_gain=\"" + media.r128_album_gain + "\"" +
+            var listItem = "<li" + attrClass + " name=\"" + $(jplaylist.cssSelector.playlist + " ul li").length +
+                "\" data-poster=\"" + media.poster +
+                "\" data-media_id=\"" + media.media_id +
+                "\" data-album_id=\"" + media.album_id +
+                "\" data-albumdisk_id=\"" + media.albumdisk_id +
+                "\" data-artist_id=\"" + media.artist_id +
+                "\" data-replaygain_track_gain=\"" + media.replaygain_track_gain +
+                "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak +
+                "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain +
+                "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak +
+                "\" data-r128_track_gain=\"" + media.r128_track_gain +
+                "\" data-r128_album_gain=\"" + media.r128_album_gain + "\"" +
                 "><div>";
 
             // Create image
