@@ -170,7 +170,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
 
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
-                $item_id = $item->getId();
+                $item_id = $item->id;
                 $result  = $this->spotifyWebAPI->{$getType}($item_id);
 
                 foreach ($result->images as $image) {
