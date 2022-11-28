@@ -150,7 +150,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button_with_text('?action=basket&type=album_disk_random&id=' . $albumDisk->id, 'random', $randtotemp, 'play_random_' . $albumDisk->id); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_playlist_' . $albumDisk->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $albumDisk->id ?>')">
+            <a id="<?php echo 'add_playlist_' . $albumDisk->id ?>" onclick="showPlaylistDialog(event, 'album_disk', '<?php echo $albumDisk->id ?>')">
                 <?php echo Ui::get_icon('playlist_add', $addtoexist); ?>
                 <?php echo $addtoexist ?>
             </a>
