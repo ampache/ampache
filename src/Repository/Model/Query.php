@@ -2229,7 +2229,7 @@ class Query
                     case 'barcode':
                     case 'catalog_number':
                     case 'subtitle':
-                        $sql = "`album`.`$field`";
+                        $sql = "`album`.`$field`, `album`.`name`, `album_disk`.`disk`";
                         break;
                 } // end switch
                 break;
