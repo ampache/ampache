@@ -299,10 +299,14 @@ class WebPlayer
         //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
             if ($url_data['type'] == 'song') {
+                $json['artist_id'] = $media->artist;
+                if (AmpConfig::get('album_group')) {
+                    $json['album_id'] = $media->album;
+                } else {
+                    $json['albumdisk_id'] = $media->get_album_disk();
+                }
                 // get replaygain from the song_data table
                 $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
-                $json['artist_id']             = $media->artist;
-                $json['album_id']              = $media->album;
                 $json['replaygain_track_gain'] = $media->replaygain_track_gain;
                 $json['replaygain_track_peak'] = $media->replaygain_track_peak;
                 $json['replaygain_album_gain'] = $media->replaygain_album_gain;
