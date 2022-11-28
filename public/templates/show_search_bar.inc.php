@@ -38,7 +38,11 @@ $t_search = T_('Search'); ?>
         <select name="rule_1" id="searchStringRule">
             <option value="anywhere"><?php echo T_('Anywhere')?></option>
             <option value="title"><?php echo T_('Songs')?></option>
-            <option value="album"><?php echo $t_albums?></option>
+            <?php if (AmpConfig::get('album_group')) { ?>
+                <option value="album"><?php echo $t_albums?></option>
+            <?php } else { ?>
+                <option value="album_disk"><?php echo $t_albums?></option>
+            <?php } ?>
             <option value="artist"><?php echo $t_artists?></option>
             <option value="playlist"><?php echo $t_playlists?></option>
             <?php if (AmpConfig::get('label')) { ?>

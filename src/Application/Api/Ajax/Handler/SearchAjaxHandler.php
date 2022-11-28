@@ -25,10 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
@@ -40,11 +43,15 @@ use Ampache\Module\Wanted\MissingArtistFinderInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
+    private ConfigContainerInterface $configContainer;
+
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
+        ConfigContainerInterface $configContainer,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
+        $this->configContainer     = $configContainer;
         $this->missingArtistFinder = $missingArtistFinder;
     }
 
@@ -55,11 +62,11 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'search':
-                $web_path = AmpConfig::get('web_path');
-                $search   = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
-                $target   = $_REQUEST['target'] ?? '';
-                $limit    = $_REQUEST['limit'] ?? 5;
-                $results  = array();
+                $web_path    = AmpConfig::get('web_path');
+                $album_group = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+                $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
+                $target      = $_REQUEST['target'] ?? '';
+                $limit       = $_REQUEST['limit'] ?? 5;
 
                 if ($target == 'anywhere' || $target == 'artist') {
                     $searchreq = array(
@@ -89,7 +96,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
-                if ($target == 'anywhere' || $target == 'album') {
+                if (($target == 'anywhere' && $album_group) || $target == 'album') {
                     $searchreq = array(
                         'limit' => $limit,
                         'type' => 'album',
@@ -113,6 +120,34 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_album_artist_fullname()),
                             'image' => Art::url($album->id, 'album', null, 10),
+                        );
+                    }
+                }
+
+                if (($target == 'anywhere' && !$album_group) || $target == 'album_disk') {
+                    $searchreq = array(
+                        'limit' => $limit,
+                        'type' => 'album_disk',
+                        'rule_1_input' => $search,
+                        'rule_1_operator' => '2', // Starts with...
+                        'rule_1' => 'title',
+                    );
+                    $sres = Search::run($searchreq);
+                    // Limit not reached, new search with another operator
+                    if (count($sres) < $limit) {
+                        $searchreq['limit']           = $limit - count($sres);
+                        $searchreq['rule_1_operator'] = '0';
+                        $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
+                    }
+                    foreach ($sres as $albumdiskid) {
+                        $albumdisk = new AlbumDisk($albumdiskid);
+                        $results[] = array(
+                            'type' => T_('Albums'),
+                            'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
+                            'label' => scrub_out($albumdisk->get_fullname()),
+                            'value' => scrub_out($albumdisk->get_fullname()),
+                            'rels' => scrub_out($albumdisk->get_album_artist_fullname()),
+                            'image' => Art::url($albumdisk->album_id, 'album', null, 10),
                         );
                     }
                 }
