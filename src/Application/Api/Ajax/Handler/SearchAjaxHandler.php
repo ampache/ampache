@@ -63,7 +63,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
         switch ($_REQUEST['action']) {
             case 'search':
                 $web_path    = AmpConfig::get('web_path');
-                $album_group = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
                 $limit       = $_REQUEST['limit'] ?? 5;
