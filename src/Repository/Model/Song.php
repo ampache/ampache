@@ -1220,7 +1220,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
+        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'album_disk', 'time');
         $skip_array   = array(
             'id',
             'tag_id',

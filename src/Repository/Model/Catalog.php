@@ -2230,9 +2230,9 @@ abstract class Catalog extends database_object
         // Because single items are large numbers of things too
         set_time_limit(0);
 
-        $songs   = array();
-        $result  = $object_id;
-        $libitem = 0;
+        $return_id = $object_id;
+        $songs     = array();
+        $libitem   = 0;
 
         switch ($type) {
             case 'album':
@@ -2282,9 +2282,16 @@ abstract class Catalog extends database_object
             $maps   = ($maps === true) || ($diff && array_key_exists('maps', $info));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
-                if ($diff && array_key_exists($type, $info['element'])) {
-                    $element = explode(' --> ', (string)$info['element'][$type]);
-                    $result  = (int)$element[1];
+                if ($diff) {
+                    // album or artist may change id
+                    if (array_key_exists($type, $info['element'])) {
+                        $element   = explode(' --> ', (string)$info['element'][$type]);
+                        $return_id = (int)$element[1];
+                    }
+                    // when the album changes it's very likely that your album_disk id will change
+                    if ($type == 'album_disk' && array_key_exists('album', $info['element'])) {
+                        $return_id = $song->get_album_disk();
+                    }
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
@@ -2343,7 +2350,7 @@ abstract class Catalog extends database_object
         }
 
         return array(
-            'object_id' => $result,
+            'object_id' => $return_id,
             'change' => ($album || $artist || $maps || $tags)
         );
     } // update_single_item
@@ -2768,7 +2775,12 @@ abstract class Catalog extends database_object
 
             // If you've migrated the album/artist you need to migrate their data here
             self::migrate('artist', $song->artist, $new_song->artist, $song->id);
-            self::migrate('album', $song->album, $new_song->album, $song->id);
+            if ($song->album !== $new_song->album) {
+                self::migrate('album', $song->album, $new_song->album, $song->id);
+                // maps to the album_disk changed?
+                $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
+                Dba::write($sql, array($song->id, $new_song->disk, $song->catalog));
+            }
 
             if ($song->tags != $new_song->tags) {
                 // we do still care if there are no tags on your object
