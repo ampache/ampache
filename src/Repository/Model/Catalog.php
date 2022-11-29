@@ -2777,7 +2777,7 @@ abstract class Catalog extends database_object
             self::migrate('artist', $song->artist, $new_song->artist, $song->id);
             if (self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE `album_disk` SET `album_id` = ? WHERE `id` = ?";
-                Dba::write($sql, array());
+                Dba::write($sql, array($new_song->album, $song->get_album_disk()));
             }
 
             if ($song->tags != $new_song->tags) {
