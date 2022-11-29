@@ -2775,11 +2775,9 @@ abstract class Catalog extends database_object
 
             // If you've migrated the album/artist you need to migrate their data here
             self::migrate('artist', $song->artist, $new_song->artist, $song->id);
-            if ($song->album !== $new_song->album) {
-                self::migrate('album', $song->album, $new_song->album, $song->id);
-                // maps to the album_disk changed?
-                $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
-                Dba::write($sql, array($song->id, $new_song->disk, $song->catalog));
+            if (self::migrate('album', $song->album, $new_song->album, $song->id)) {
+                $sql = "UPDATE `album_disk` SET `album_id` = ? WHERE `id` = ?";
+                Dba::write($sql, array());
             }
 
             if ($song->tags != $new_song->tags) {
