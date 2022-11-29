@@ -76,10 +76,11 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
 <?php if ($allow_upload) { ?>
             <li>
     <h4 class="header">
-        <span class="sidebar-header-title"><?php echo $t_upload; ?></span>
+        <span class="sidebar-header-title"><?php echo $t_uploads; ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_upload', 'header-img ' . ((isset($_COOKIE['sb_preference_upload'])) ? $_COOKIE['sb_preference_upload'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_preference_upload">
+    <li id="sb_preference_upload_browse"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_browse ?></a></li>
     <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
     </li>
 </ul>
