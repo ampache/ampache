@@ -43,6 +43,7 @@ use Ampache\Repository\Model\User;
 /** @var bool $allow_upload */
 
 $is_session   = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$current_user = $current_user ?? Core::get_global('user');
 $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0);
 ?>
 <ul id="sidebar-light">
