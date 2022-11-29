@@ -385,9 +385,8 @@ class Art extends database_object
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
             foreach ($songs as $song_id) {
-                $song   = new Song($song_id);
-                $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $song        = new Song($song_id);
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );

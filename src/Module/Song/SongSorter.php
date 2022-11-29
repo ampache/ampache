@@ -127,11 +127,36 @@ final class SongSorter implements SongSorterInterface
                         continue;
                     }
                     $song->format();
+
+                    $interactor->info(
+                        T_("Examine File..."),
+                        true
+                    );
+                    /* HINT: filename (File path) */
+                    $interactor->info(
+                        sprintf(T_('Source: %s'), $song->file),
+                        true
+                    );
+
                     // sort_find_home will replace the % with the correct values.
                     $directory = ($filesOnly)
-                    ? dirname($song->file)
-                    : $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist, $windowsCompat);
-                    $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
+                        ? dirname($song->file)
+                        : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist, $windowsCompat);
+                    if ($directory === false) {
+                        /* HINT: $sort_pattern after replacing %x values */
+                        $interactor->info(
+                            sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->sort_pattern),
+                            true
+                        );
+                    }
+                    $filename = $catalog->sort_find_home($song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
+                    if ($filename === false) {
+                        /* HINT: $sort_pattern after replacing %x values */
+                        $interactor->info(
+                            sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->rename_pattern),
+                            true
+                        );
+                    }
                     if ($directory === false || $filename === false) {
                         $fullpath = $song->file;
                     } else {
@@ -142,15 +167,6 @@ final class SongSorter implements SongSorterInterface
                      * Don't try to move it, if it's already the same friggin thing!
                      */
                     if ($song->file != $fullpath && strlen($fullpath)) {
-                        $interactor->info(
-                        T_("Examine File..."),
-                        true
-                    );
-                        /* HINT: filename (File path) */
-                        $interactor->info(
-                        sprintf(T_('Source: %s'), $song->file),
-                        true
-                    );
                         /* HINT: filename (File path) */
                         $interactor->info(
                         sprintf(T_('Destin: %s'), $fullpath),
@@ -169,112 +185,6 @@ final class SongSorter implements SongSorterInterface
                 true
             );
         }
-    }
-
-    /**
-     * Get the directory for this file from the catalog and the song info using the sort_pattern
-     * takes into account various artists and the alphabet_prefix
-     * @param Interactor $interactor
-     * @param Song $song
-     * @param $sort_pattern
-     * @param $base
-     * @param string $various_artist
-     * @param bool $windowsCompat
-     * @return false|string
-     */
-    private function sort_find_home(
-        Interactor $interactor,
-        $song,
-        $sort_pattern,
-        $base = null,
-        $various_artist = "Various Artists",
-        $windowsCompat = false
-    ) {
-        $home = '';
-        if ($base) {
-            $home = rtrim($base, "\/");
-            $home = rtrim($home, "\\");
-        }
-
-        // Create the filename that this file should have
-        $album  = $this->sort_clean_name($song->f_album_full, '%A', $windowsCompat);
-        $artist = $this->sort_clean_name($song->f_artist_full, '%a', $windowsCompat);
-        $track  = $this->sort_clean_name($song->track, '%T', $windowsCompat);
-        if ((int) $track < 10) {
-            $track = '0' . (string) $track;
-        }
-
-        $title   = $this->sort_clean_name($song->title, '%t', $windowsCompat);
-        $year    = $this->sort_clean_name($song->year, '%y', $windowsCompat);
-        $comment = $this->sort_clean_name($song->comment, '%c', $windowsCompat);
-
-        // Do the various check
-        $album_object = $this->modelFactory->createAlbum($song->album);
-        $album_object->format();
-        if ($album_object->get_album_artist_fullname() != "") {
-            $artist = $album_object->f_album_artist_name;
-        } elseif ($album_object->artist_count != 1) {
-            $artist = $various_artist;
-        }
-        $disk           = $this->sort_clean_name($song->disk, '%d');
-        $catalog_number = $this->sort_clean_name($album_object->catalog_number, '%C');
-        $barcode        = $this->sort_clean_name($album_object->barcode, '%b');
-        $original_year  = $this->sort_clean_name($album_object->original_year, '%Y');
-        $release_type   = $this->sort_clean_name($album_object->release_type, '%r');
-        $release_status = $this->sort_clean_name($album_object->release_status, '%R');
-        $subtitle       = $this->sort_clean_name($album_object->subtitle, '%s');
-        $genre          = (!empty($album_object->tags))
-            ? Tag::get_display($album_object->tags)
-            : '%b';
-
-        // Replace everything we can find
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
-        $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
-
-        // Remove non A-Z0-9 chars
-        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
-
-        // Replace non-critical search patterns
-        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
-        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
-        $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
-
-        $home .= "/$sort_pattern";
-        // dont send a mismatched file!
-        foreach ($replace_array as $replace_string) {
-            if (strpos($sort_pattern, $replace_string) !== false) {
-                /* HINT: $sort_pattern after replacing %x values */
-                $interactor->info(
-                    sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern),
-                    true
-                );
-
-                return false;
-            }
-        }
-
-        return $home;
-    }
-
-    /**
-     * This is run on every individual element of the search before it is put together
-     * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
-     * @param string|int $string
-     * @param string $return
-     * @param bool $windowsCompat
-     * @return string
-     */
-    public function sort_clean_name($string, $return = '', $windowsCompat = false)
-    {
-        if (empty($string)) {
-            return $return;
-        }
-        $string = ($windowsCompat)
-            ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', (string)$string)
-            : str_replace(['/', '\\'], '_', (string)$string);
-
-        return (string)$string;
     }
 
     /**
@@ -310,7 +220,7 @@ final class SongSorter implements SongSorterInterface
         unset($data[0]);
 
         foreach ($data as $dir) {
-            $dir = $this->sort_clean_name($dir, '', $windowsCompat);
+            $dir = Catalog::sort_clean_name($dir, '', $windowsCompat);
             $path .= '/' . $dir;
 
             // We need to check for the existence of this directory
@@ -384,7 +294,7 @@ final class SongSorter implements SongSorterInterface
             // Look for the folder art and copy that as well
             if ($old_dir != $directory) {
                 // don't move things into the same dir
-                $preferred  = $this->sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat);
+                $preferred  = Catalog::sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat);
                 $folder_art = $directory . DIRECTORY_SEPARATOR . $preferred;
                 $old_art    = $old_dir . DIRECTORY_SEPARATOR . $preferred;
                 // copy art that exists

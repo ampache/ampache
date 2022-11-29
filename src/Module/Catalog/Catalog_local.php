@@ -36,6 +36,7 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -919,49 +920,69 @@ class Catalog_local extends Catalog
             }
         }
 
-        $is_duplicate = false;
-        if (count($this->get_gather_types('music')) > 0) {
-            if (AmpConfig::get('catalog_check_duplicate')) {
-                if (Song::find($results)) {
-                    debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
-                    $is_duplicate = true;
+        $song_id = Song::insert($results);
+        if ($song_id) {
+            $is_duplicate = false;
+            if (count($this->get_gather_types('music')) > 0) {
+                if (AmpConfig::get('catalog_check_duplicate')) {
+                    if (Song::find($results)) {
+                        debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
+                        $is_duplicate = true;
+                    }
                 }
-            }
 
-            if (array_key_exists('move_match_pattern', $options)) {
-                $patres = VaInfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
-                if ($patres['artist'] != $results['artist'] || $patres['album'] != $results['album'] || $patres['track'] != $results['track'] || $patres['title'] != $results['title']) {
-                    $pattern = $this->sort_pattern . DIRECTORY_SEPARATOR . $this->rename_pattern;
-                    // Remove first left directories from filename to match pattern
-                    $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
-                    $filepart = explode(DIRECTORY_SEPARATOR, $file);
-                    if (count($filepart) > $cntslash) {
-                        $mvfile  = implode(DIRECTORY_SEPARATOR, array_slice($filepart, 0, count($filepart) - $cntslash));
-                        preg_match_all('/\%\w/', $pattern, $elements);
-                        foreach ($elements[0] as $key => $value) {
-                            $key     = translate_pattern_code($value);
-                            $pattern = str_replace($value, $results[$key], $pattern);
+                if (array_key_exists('move_match_pattern', $options)) {
+                    debug_event(self::class, 'Move uploaded file ' . $song_id . ' according to pattern', 5);
+                    $song = new Song($song_id);
+                    $root = $this->path;
+                    debug_event(self::class, 'Source: ' . $song->file, 5);
+                    if (AmpConfig::get('upload_subdir') && $song->user_upload) {
+                        $root .= DIRECTORY_SEPARATOR . User::get_username($song->user_upload);
+                        if (!Core::is_readable($root)) {
+                            debug_event(self::class, 'Target user directory `' . $root . "` doesn't exist. Creating it...", 5);
+                            mkdir($root);
                         }
-                        $mvfile .= DIRECTORY_SEPARATOR . $pattern . '.' . pathinfo($file, PATHINFO_EXTENSION);
-                        debug_event('local.catalog',
-                            'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
+                    }
+                    // sort_find_home will replace the % with the correct values.
+                    $directory = $this->sort_find_home($song, $this->sort_pattern, $root);
+                    $filename  = $this->sort_find_home($song, $this->rename_pattern);
+                    if ($directory === false || $filename === false) {
+                        $fullpath = $song->file;
+                    } else {
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                    }
 
-                        $mvdir = pathinfo($mvfile, PATHINFO_DIRNAME);
-                        if (!is_dir($mvdir)) {
-                            mkdir($mvdir, 0777, true);
+                    // don't move over existing files
+                    if (!is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
+                        debug_event(self::class, 'Destin: ' . $fullpath, 5);
+                        $info      = pathinfo($fullpath);
+                        $directory = $info['dirname'];
+                        $file      = $info['basename'];
+
+                        if (!Core::is_readable($directory)) {
+                            debug_event(self::class, 'mkdir: ' . $directory, 5);
+                            mkdir($directory, 0755, true);
                         }
-                        if (rename($file, $mvfile)) {
-                            $results['file'] = $mvfile;
+
+                        // Now that we've got the correct directory structure let's try to copy it
+                        copy($song->file, $fullpath);
+
+                        // Check the filesize
+                        $new_sum = Core::get_filesize($fullpath);
+                        $old_sum = Core::get_filesize($song->file);
+
+                        if ($new_sum != $old_sum || $new_sum == 0) {
+                            unlink($fullpath); // delete the copied file on failure
                         } else {
-                            debug_event('local.catalog', 'File rename failed', 3);
+                            debug_event(self::class, 'song path updated: ' . $fullpath, 5);
+                            unlink($song->file); // delete the original on success
+                            // Update the catalog
+                            $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
+                            Dba::write($sql, array($fullpath, $song->id));
                         }
                     }
                 }
             }
-        }
-
-        $song_id = Song::insert($results);
-        if ($song_id) {
             // If song rating tag exists and is well formed (array user=>rating), add it
             if (array_key_exists('rating', $results) && is_array($results['rating'])) {
                 // For each user's ratings, call the function

@@ -2770,7 +2770,7 @@ abstract class Catalog extends database_object
             // If you've migrated the album/artist you need to migrate their data here
             self::migrate('artist', $song->artist, $new_song->artist, $song->id);
             if (self::migrate('album', $song->album, $new_song->album, $song->id)) {
-                $sql = "UPDATE `album_disk` SET `album_id` = ? WHERE `id` = ?";
+                $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
             }
 
@@ -3790,8 +3790,8 @@ abstract class Catalog extends database_object
                     $xml['key']                  = $results['id'];
                     $xml['dict']['Track ID']     = (int)($results['id']);
                     $xml['dict']['Name']         = $song->title;
-                    $xml['dict']['Artist']       = $song->f_artist_full;
-                    $xml['dict']['Album']        = $song->f_album_full;
+                    $xml['dict']['Artist']       = $song->get_artist_fullname();
+                    $xml['dict']['Album']        = $song->get_album_fullname();
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
@@ -3811,7 +3811,7 @@ abstract class Catalog extends database_object
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $song = new Song($results['id']);
                     $song->format();
-                    echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
+                    echo '"' . $song->id . '","' . $song->title . '","' . $song->get_artist_fullname() . '","' . $song->get_album_fullname() . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
                 }
                 break;
         } // end switch
@@ -4179,6 +4179,105 @@ abstract class Catalog extends database_object
             }
             self::update_counts();
         }
+    }
+
+    /**
+     * Get the directory for this file from the catalog and the song info using the sort_pattern
+     * takes into account various artists and the alphabet_prefix
+     * @param Song $song
+     * @param $sort_pattern
+     * @param $base
+     * @param string $various_artist
+     * @param bool $windowsCompat
+     * @return false|string
+     */
+    public function sort_find_home(
+                   $song,
+                   $sort_pattern,
+                   $base = null,
+                   $various_artist = "Various Artists",
+                   $windowsCompat = false
+    ) {
+        $home = '';
+        if ($base) {
+            $home = rtrim($base, "\/");
+            $home = rtrim($home, "\\");
+        }
+
+        // Create the filename that this file should have
+        $album  = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
+        $artist = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
+        $track  = self::sort_clean_name($song->track, '%T', $windowsCompat);
+        if ((int) $track < 10) {
+            $track = '0' . (string) $track;
+        }
+
+        $title   = self::sort_clean_name($song->title, '%t', $windowsCompat);
+        $year    = self::sort_clean_name($song->year, '%y', $windowsCompat);
+        $comment = self::sort_clean_name($song->comment, '%c', $windowsCompat);
+
+        // Do the various check
+        $album_object = new Album($song->album);
+        $album_object->format();
+        if ($album_object->get_album_artist_fullname() != "") {
+            $artist = $album_object->f_album_artist_name;
+        } elseif ($album_object->artist_count != 1) {
+            $artist = $various_artist;
+        }
+        $disk           = self::sort_clean_name($song->disk, '%d');
+        $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
+        $barcode        = self::sort_clean_name($album_object->barcode, '%b');
+        $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
+        $release_type   = self::sort_clean_name($album_object->release_type, '%r');
+        $release_status = self::sort_clean_name($album_object->release_status, '%R');
+        $subtitle       = self::sort_clean_name($album_object->subtitle, '%s');
+        $genre          = (!empty($album_object->tags))
+            ? Tag::get_display($album_object->tags)
+            : '%b';
+
+        // Replace everything we can find
+        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
+        $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
+
+        // Remove non A-Z0-9 chars
+        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
+
+        // Replace non-critical search patterns
+        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
+        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
+        $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
+
+        $home .= "/$sort_pattern";
+
+        // don't send a mismatched file!
+        foreach ($replace_array as $replace_string) {
+            if (strpos($sort_pattern, $replace_string) !== false) {
+                return false;
+            }
+        }
+
+        return $home;
+    }
+
+    /**
+     * This is run on every individual element of the search before it is put together
+     * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
+     * @param string|int $string
+     * @param string $return
+     * @param bool $windowsCompat
+     * @return string
+     */
+    public static function sort_clean_name($string, $return = '', $windowsCompat = false)
+    {
+        if (empty($string)) {
+            return $return;
+        }
+        $string = ($windowsCompat)
+            ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', (string)$string)
+            : str_replace(['/', '\\'], '_', (string)$string);
+
+        return (string)$string;
     }
 
     /**

@@ -480,8 +480,8 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['time']          = $song->time;
         $meta['title']         = $song->title;
         $meta['comment']       = $song->comment;
-        $meta['album']         = $song->f_album_full;
-        $meta['artist']        = $song->f_artist_full;
+        $meta['album']         = $song->get_album_fullname();
+        $meta['artist']        = $song->get_artist_fullname();
         $meta['band']          = $song->f_albumartist_full;
         $meta['composer']      = $song->composer;
         $meta['publisher']     = $song->f_publisher;
