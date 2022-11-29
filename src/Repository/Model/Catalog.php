@@ -4191,13 +4191,7 @@ abstract class Catalog extends database_object
      * @param bool $windowsCompat
      * @return false|string
      */
-    public function sort_find_home(
-                   $song,
-                   $sort_pattern,
-                   $base = null,
-                   $various_artist = "Various Artists",
-                   $windowsCompat = false
-    ) {
+    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false) {
         $home = '';
         if ($base) {
             $home = rtrim($base, "\/");

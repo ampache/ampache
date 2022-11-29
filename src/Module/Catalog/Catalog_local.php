@@ -949,7 +949,7 @@ class Catalog_local extends Catalog
                     if ($directory === false || $filename === false) {
                         $fullpath = $song->file;
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION) ?? '');
                     }
 
                     // don't move over existing files
