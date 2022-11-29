@@ -2282,16 +2282,9 @@ abstract class Catalog extends database_object
             $maps   = ($maps === true) || ($diff && array_key_exists('maps', $info));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
-                if ($diff) {
-                    // album or artist may change id
-                    if (array_key_exists($type, $info['element'])) {
-                        $element   = explode(' --> ', (string)$info['element'][$type]);
-                        $return_id = (int)$element[1];
-                    }
-                    // when the album changes it's very likely that your album_disk id will change
-                    if ($type == 'album_disk' && array_key_exists('album', $info['element'])) {
-                        $return_id = $song->get_album_disk();
-                    }
+                if ($diff && array_key_exists($type, $info['element'])) {
+                    $element   = explode(' --> ', (string)$info['element'][$type]);
+                    $return_id = (int)$element[1];
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
