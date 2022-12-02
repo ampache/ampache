@@ -30,25 +30,32 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 
-$is_admin = ($preferences['title'] !== 'System' && (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin'))) ?>
+$show_apply = ($preferences['title'] !== 'System');
+$is_admin   = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
-    <?php if ($is_admin) { ?>
+    <?php if ($is_admin) {
+    if ($show_apply) { ?>
   <col id="col_applytoall" />
-  <col id="col_level" />
     <?php } ?>
+  <col id="col_level" />
+    <?php
+} ?>
 </colgroup>
 <thead>
     <tr class="th-top">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) { ?>
+        <?php if ($is_admin) {
+        if ($show_apply) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
-        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php } ?>
+        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
+        <?php
+    } ?>
     </tr>
 </thead>
 <tbody>
@@ -68,16 +75,18 @@ $is_admin = ($preferences['title'] !== 'System' && (Access::check('interface', 1
             <td class="cel_value">
                 <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
-            <?php if ($is_admin) { ?>
+            <?php if ($is_admin) {
+            if ($show_apply) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
+            <?php } ?>
                 <td class="cel_level">
                     <?php $name         = 'on_' . (string)$pref['level'];
-                    $on_5               = '';
-                    $on_25              = '';
-                    $on_50              = '';
-                    $on_75              = '';
-                    $on_100             = '';
-                    switch ($name) {
+            $on_5                       = '';
+            $on_25                      = '';
+            $on_50                      = '';
+            $on_75                      = '';
+            $on_100                     = '';
+            switch ($name) {
                         case 'on_5':
                             $on_5 = 'selected="selected"';
                             break;
@@ -103,7 +112,8 @@ $is_admin = ($preferences['title'] !== 'System' && (Access::check('interface', 1
                     </select>
                     <?php unset(${$name}); ?>
                 </td>
-            <?php } ?>
+            <?php
+        } ?>
         </tr>
     <?php
     } // End foreach ($preferences['prefs'] as $pref)?>
@@ -112,10 +122,13 @@ $is_admin = ($preferences['title'] !== 'System' && (Access::check('interface', 1
     <tr class="th-bottom">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) { ?>
+        <?php if ($is_admin) {
+        if ($show_apply) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
-        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php } ?>
+        <th class="cel_level"><?php echo T_('Access Level'); ?></th>
+        <?php
+    } ?>
     </tr>
 </tfoot>
 </table>
