@@ -1201,8 +1201,8 @@ class User extends database_object
             /* Check for duplicates */
             if (isset($results[$pref_id])) {
                 $row['value'] = Dba::escape($row['value']);
-                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND `value`='" . Dba::escape($row['value']) . "'";
-                Dba::write($sql);
+                $sql          = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference`= ? AND `value` = ?";
+                Dba::write($sql, array($user_id, $row['preference'], $row['value']));
             } else {
                 // if its set
                 $results[$pref_id] = 1;
@@ -1239,8 +1239,8 @@ class User extends database_object
                     $row['value'] = $zero_results[$key];
                 }
                 $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES ('$user_id', '$key', '$value')";
-                Dba::write($sql);
+                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES (?, ?, ?)";
+                Dba::write($sql, array($user_id, $key, $value));
             }
         } // while preferences
     } // fix_preferences
