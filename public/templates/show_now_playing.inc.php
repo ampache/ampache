@@ -40,7 +40,6 @@ if (count($results)) {
     Ui::show_box_top(T_('Now Playing') . $link);
 
     foreach ($results as $item) {
-        debug_event('show_now_playing.inc', print_r($item, true), 5);
         $media   = $item['media'];
         $np_user = $item['client'];
         $np_user->format();
