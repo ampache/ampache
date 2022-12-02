@@ -536,7 +536,7 @@ class Stream
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            if (Catalog::has_access($media->catalog, $media->id)) {
+            if (Catalog::has_access($media->catalog, (int)$row['user'])) {
                 $media->format();
                 $client = new User($row['user']);
                 $client->format();
