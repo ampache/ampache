@@ -30,7 +30,7 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 
-$is_system = ($preferences['title'] !== 'System');
+$is_system = ($preferences['title'] === 'System');
 $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
@@ -38,7 +38,7 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
   <col id="col_preference" />
   <col id="col_value" />
     <?php if ($is_admin) {
-    if ($is_system) { ?>
+    if (!$is_system) { ?>
   <col id="col_applytoall" />
     <?php } ?>
   <col id="col_level" />
@@ -50,7 +50,7 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
-        if ($is_system) { ?>
+        if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <?php } ?>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
@@ -76,7 +76,7 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
                 <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) {
-            if ($is_system) { ?>
+            if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
             <?php } ?>
                 <td class="cel_level">
@@ -104,7 +104,7 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
                             break;
                     } ?>
                     <select name="level_<?php echo $pref['name']; ?>">
-                        <?php if ($is_system) { ?>
+                        <?php if (!$is_system) { ?>
                         <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                         <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
                         <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
@@ -125,7 +125,7 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
-        if ($is_system) { ?>
+        if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <?php } ?>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
