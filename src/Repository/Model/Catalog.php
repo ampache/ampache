@@ -1335,26 +1335,24 @@ abstract class Catalog extends database_object
      * get_uploads_sql
      *
      * @param string $type
-     * @param integer|null $user_id
+     * @param integer $user_id
      * @return string
      */
-    public static function get_uploads_sql($type, $user_id = null)
+    public static function get_uploads_sql($type, $user_id = 0)
     {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
-        }
-
+        $sql       = '';
+        $where_sql = ($user_id > 0)
+            ? "WHERE `song`.`user_upload` = '" . $user_id . "'"
+            : "WHERE `song`.`user_upload` IS NOT NULL";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id` AS `id` FROM `song` WHERE `song`.`user_upload` = '" . $user_id . "'";
+                $sql = "SELECT `song`.`id` AS `id` FROM `song`";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `album`.`id`";
+                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql GROUP BY `album`.`id`";
                 break;
             case 'artist':
-            default:
-                $sql = "SELECT `artist`.`id` AS `id` FROM `artist` JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `artist`.`id`";
+                $sql = "SELECT `artist`.`id` AS `id` FROM `artist` JOIN `song` ON `song`.`artist` = `artist`.`id` $where_sql GROUP BY `artist`.`id`";
                 break;
         }
 
@@ -4192,7 +4190,8 @@ abstract class Catalog extends database_object
      * @param bool $windowsCompat
      * @return false|string
      */
-    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false) {
+    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false)
+    {
         $home = '';
         if ($base) {
             $home = rtrim($base, "\/");

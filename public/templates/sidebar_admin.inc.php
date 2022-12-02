@@ -63,12 +63,15 @@ use Ampache\Module\Util\Ui;
       <ul class="sb3" id="sb_admin_users">
         <li id="sb_admin_users_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
         <li id="sb_admin_users_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
-        <?php
-          if (Mailer::is_mail_enabled()) { ?>
+        <?php if (Mailer::is_mail_enabled()) { ?>
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
         <?php
           }
-        if (AmpConfig::get('sociable')) { ?>
+        if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_admin_users_Uploads"><a href="<?php echo $web_path; ?>/admin/uploads.php"><?php echo T_('Browse Uploads'); ?></a></li>
+        <?php
+          }
+            if (AmpConfig::get('sociable')) { ?>
           <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
         <?php } ?>
         <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>
