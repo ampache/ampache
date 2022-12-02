@@ -32,9 +32,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php
-$browse = new Browse();
+/* @var string $object_type */
+/* @var Ampache\Repository\Model\TVShow $tvshow */
+/* @var array $object_ids */
+
+$web_path = AmpConfig::get('web_path');
+$browse   = new Browse();
 $browse->set_type($object_type);
 
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
