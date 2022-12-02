@@ -71,7 +71,6 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
     <ul class="sb3" id="sb_preference_playlist">
 <li id="sb_preference_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
-</ul>
 <?php } ?>
 <?php if ($allow_upload) { ?>
             <li>
@@ -83,9 +82,11 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
     <li id="sb_preference_upload_browse"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_browse ?></a></li>
     <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
     </li>
+    </ul>
 </ul>
-       <?php } ?>
-<?php if (!AmpConfig::get('simple_user_mode')) { ?>
+       <?php }
+       if (!AmpConfig::get('simple_user_mode')) { ?>
+    <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_help', 'header-img ' . ((isset($_COOKIE['sb_preference_help'])) ? $_COOKIE['sb_preference_help'] : 'expanded')); ?>
@@ -96,6 +97,7 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
             <li id="sb_preference_help_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
         <?php } ?>
+        </li>
     </ul>
 <?php } ?>
 </ul>
