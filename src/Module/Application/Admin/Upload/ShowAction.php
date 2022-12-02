@@ -55,6 +55,7 @@ final class ShowAction extends AbstractUploadAction
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
+        $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Uploads'));
 
         $browse = $this->modelFactory->createBrowse();
