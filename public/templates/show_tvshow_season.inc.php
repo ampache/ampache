@@ -32,6 +32,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
+/* @var string $object_type */
+/* @var Ampache\Repository\Model\TVShow_Season $season */
+/* @var array $object_ids */
+
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
 $browse = new Browse();
