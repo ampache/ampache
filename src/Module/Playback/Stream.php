@@ -530,15 +530,16 @@ class Stream
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
+        //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            if (Catalog::has_access($media->catalog, $media->id)) {
-                $media->format();
+            if (Catalog::has_access($media->catalog, $row['user'])) {
                 $client = new User($row['user']);
+                $media->format();
                 $client->format();
                 $results[] = array(
                     'media' => $media,
