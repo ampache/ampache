@@ -29,7 +29,7 @@ use Ampache\Module\Util\UiInterface;
 
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
-print_r($preferences);
+
 $is_admin = ($preferences['title'] !== 'System' && (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin'))) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
