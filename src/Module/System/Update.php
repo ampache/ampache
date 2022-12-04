@@ -831,6 +831,9 @@ class Update
         $update_string = "* During migration some album_disk data may be missing it's object type";
         $version[]     = array('version' => '600019', 'description' => $update_string);
 
+        $update_string = "* Set system preferences to Admin (100)<br />* These options are only available to Admin users anyway";
+        $version[]     = array('version' => '600020', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1532,7 +1535,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -1938,7 +1941,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_catalog', '-1', 'Uploads catalog destination', 75, 'integer', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_catalog', '-1', 'Uploads catalog destination', 100, 'integer', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '-1')";
@@ -1948,22 +1951,22 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_subdir', '1', 'Upload: create a subdirectory per user (recommended)', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_user_artist', '0', 'Upload: consider the user sender as the track\'s artist', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 75, 'string', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_script', '', 'Upload: run the following script after upload (current directory = upload target directory)', 100, 'string', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_edit', '1', 'Upload: allow users to edit uploaded songs', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -2474,7 +2477,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 75, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 100, 'boolean', 'system')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
@@ -3288,7 +3291,7 @@ class Update
     {
         $retval = true;
 
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 75, 'boolean', 'system', 'catalog')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
@@ -5132,5 +5135,16 @@ class Update
         Dba::write($sql);
 
         return $retval;
+    }
+
+    /**
+     * update_600020
+     *
+     * Set system preferences to 100.
+     * These options are only available to Admin users anyway
+     */
+    public static function update_600020(): bool
+    {
+        return (Dba::write("UPDATE `preference` SET `level` = 100 WHERE `catagory` = 'system';") !== false);
     }
 } // end update.class

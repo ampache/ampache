@@ -706,7 +706,7 @@ class Preference extends database_object
             "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
             "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
             "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 75, 'boolean', 'system', 'update'), " .
+            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'), " .
             "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
             "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
             "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
@@ -721,12 +721,12 @@ class Preference extends database_object
             "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
             "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
             "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'), " .
-            "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " .
-            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " .
-            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 75, 'boolean', 'system', 'upload'), " .
+            "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'), " .
+            "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'), " .
+            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'), " .
+            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'), " .
             "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " .
+            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'), " .
             "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
             "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
             "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
@@ -744,7 +744,7 @@ class Preference extends database_object
             "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
             "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
             "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'), " .
+            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'), " .
             "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
             "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
             "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
@@ -765,7 +765,7 @@ class Preference extends database_object
             "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
             "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
             "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 75, 'boolean', 'system', 'catalog'), " .
+            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'), " .
             "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
             "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'), " .
             "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'), " .
@@ -783,7 +783,7 @@ class Preference extends database_object
             "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
             "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
             "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 75, 'boolean', 'system', NULL);";
+            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
         Dba::write($sql);
     } // set_defaults
 

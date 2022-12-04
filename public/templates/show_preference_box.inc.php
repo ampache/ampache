@@ -40,9 +40,8 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
     <?php if ($is_admin) {
     if (!$is_system) { ?>
   <col id="col_applytoall" />
-    <?php } ?>
   <col id="col_level" />
-    <?php
+    <?php }
 } ?>
 </colgroup>
 <thead>
@@ -50,12 +49,11 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
         <?php if ($is_admin) {
-        if (!$is_system) { ?>
+    if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
-        <?php } ?>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php
-    } ?>
+        <?php }
+} ?>
     </tr>
 </thead>
 <tbody>
@@ -78,7 +76,6 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
             <?php if ($is_admin) {
             if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
-            <?php } ?>
                 <td class="cel_level">
                     <?php $name = 'on_' . (string)$pref['level'];
             $on_5               = '';
@@ -102,22 +99,17 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
                 case 'on_100':
                     $on_100 = 'selected="selected"';
                     break;
-            }
-            if ($is_system) {
-                $on_100 = 'selected="selected"';
             } ?>
                     <select name="level_<?php echo $pref['name']; ?>">
-                        <?php if (!$is_system) { ?>
                         <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                         <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
                         <option value="50" <?php echo $on_50; ?>><?php echo T_('Content Manager'); ?></option>
                         <option value="75" <?php echo $on_75; ?>><?php echo T_('Catalog Manager'); ?></option>
-                        <?php } ?>
                         <option value="100" <?php echo $on_100; ?>><?php echo T_('Admin'); ?></option>
                     </select>
                     <?php unset(${$name}); ?>
                 </td>
-            <?php
+            <?php }
         } ?>
         </tr>
     <?php
@@ -130,8 +122,8 @@ $is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_R
         <?php if ($is_admin) {
         if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
-        <?php } ?>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
+        <?php } ?>
         <?php
     } ?>
     </tr>
