@@ -69,7 +69,7 @@ final class ShowAction implements ApplicationActionInterface
                 'no-cache'
             );
 
-        if (array_key_exists('iframe', $_SESSION) && array_key_exists('target', $_SESSION['iframe'])) {
+        if (isset($_SESSION) && array_key_exists('iframe', $_SESSION) && array_key_exists('target', $_SESSION['iframe'])) {
             $target = $_SESSION['iframe']['target'];
             unset($_SESSION['iframe']['target']);
 
