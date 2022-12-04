@@ -64,6 +64,7 @@ final class AlbumDiskSearch implements SearchInterface
             $input        = $search->filter_data($rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
             $group[]      = "`album_disk`.`id`";
+            $group[]      = "`album`.`name`";
             switch ($rule[0]) {
                 case 'title':
                     $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?)";
@@ -424,7 +425,7 @@ final class AlbumDiskSearch implements SearchInterface
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT `album_disk`.`id` AS `id` FROM `album_disk`',
+            'base' => 'SELECT `album_disk`.`id` AS `id`, `album`.`name` FROM `album_disk`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
