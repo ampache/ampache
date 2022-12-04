@@ -45,7 +45,9 @@ use Ampache\Repository\Model\User;
 $is_session   = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $current_user = $current_user ?? Core::get_global('user');
 $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0);
-?>
+$albumString  = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk'; ?>
 <ul id="sidebar-light">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists ?></a></li>
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums ?></a></li>
@@ -56,7 +58,7 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
     <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio ?></a></li>
     <?php } ?>
     <?php if (AmpConfig::get('ratings') && $access25) { ?>
-    <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?><br /><?php echo $t_favorites ?></a></li>
     <?php } ?>
     <?php if ($allow_upload) { ?>
     <li><a href="<?php echo $web_path; ?>/upload.php"><?php echo Ui::get_image('topmenu-upload', $t_upload); ?><br /><?php echo $t_upload ?></a></li>

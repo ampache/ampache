@@ -58,7 +58,9 @@ $t_playlists = T_('Playlists');
 $t_genres    = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
-
+$albumString = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk';
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
@@ -527,7 +529,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
                 <?php if (AmpConfig::get('ratings') && $access25) { ?>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
+                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
                         <span><?php echo $t_favorites ?></span>
                     </a>
