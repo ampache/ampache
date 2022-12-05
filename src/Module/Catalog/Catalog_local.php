@@ -731,11 +731,15 @@ class Catalog_local extends Catalog
         if ($total == 0 || !isset($media_type)) {
             return $dead_total;
         }
-        $chunks = floor($total / 10000);
         $dead   = array();
-        foreach (range(0, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $chunk/$chunks", 5);
+        $chunks = floor($total / 10000);
+        $chunk  = $chunks;
+        $count  = 1;
+        while ($chunk > 0) {
+            debug_event('local.catalog', "catalog " . $this->id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
+            $chunk--;
+            $count++;
         }
 
         $dead_count = count($dead);
