@@ -863,7 +863,7 @@ class Json_Data
                 "rating" => $rating->get_user_rating(),
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$episode->total_count,
-                "played" => $episode->played]);
+                "played" => (string)$episode->played]);
         }
         if (!$encode) {
             return $JSON;
