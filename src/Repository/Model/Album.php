@@ -349,11 +349,13 @@ class Album extends database_object implements library_item
         }
         $results = array();
         if (!$this->album_artist && $this->artist_count == 1) {
-            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
+            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name`, `artist`.`prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);
             // overwrite so you can get something
-            $this->album_artist = $results['artist_id'] ?? null;
+            $this->album_artist  = $results['artist_id'] ?? null;
+            $this->artist_prefix = $results['prefix'] ?? null;
+            $this->artist_name   = $results['name'] ?? null;
         }
         $this->has_art();
 
@@ -657,6 +659,25 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * Get item prefix, basename and name by the album id.
+     * @return array
+     */
+    public static function get_name_array_by_id($album_id)
+    {
+        $sql        = "SELECT `album`.`prefix`, `album`.`name`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `f_name` FROM `album` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($album_id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row;
+        }
+
+        return array(
+            "prefix" => '',
+            "name" => '',
+            "f_name" => ''
+        );
+    }
+
+    /**
      * Get item link.
      * @return string
      */
@@ -749,9 +770,13 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_artist_name)) {
             if ($this->artist_count == '1') {
-                $artist              = new Artist($this->album_artist);
-                $this->f_artist_name = trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name));
+                $name_array          = Artist::get_name_array_by_id($this->album_artist);
+                $this->artist_prefix = $name_array['prefix'];
+                $this->artist_name   = $name_array['name'];
+                $this->f_artist_name = $name_array['f_name'];
             } else {
+                $this->artist_prefix = '';
+                $this->artist_name   = '';
                 $this->f_artist_name = T_('Various');
             }
         }
@@ -842,8 +867,13 @@ class Album extends database_object implements library_item
     {
         if (!isset($this->f_album_artist_name)) {
             if ($this->album_artist) {
-                $this->f_album_artist_name = Artist::get_fullname_by_id($this->album_artist);
+                $name_array                = Artist::get_name_array_by_id($this->album_artist);
+                $this->artist_prefix       = $name_array['prefix'];
+                $this->artist_name         = $name_array['name'];
+                $this->f_album_artist_name = $name_array['f_name'];
             } else {
+                $this->artist_prefix       = '';
+                $this->artist_name         = '';
                 $this->f_album_artist_name = '';
             }
         }

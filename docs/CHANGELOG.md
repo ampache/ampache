@@ -12,11 +12,13 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
-* Database 600019
+* Allow Admin users to browse all user uploads
+* Database 600020
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
-  * Add `disk` to song table<br />* Create album_disk table and migrate user ratings & flags
+  * Add `disk` to song table
+  * Create album_disk table and migrate user ratings & flags
   * Migrate multi-disk albums to single album id's
   * Add `disk_count` to album table
   * Fill album_disk table update count tables
@@ -61,6 +63,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
+* An upload_catalog should only be a music catalog
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
@@ -69,13 +72,14 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Removed
 
 * Travic CI config file
+* For System preferences 'Apply to All' and 'Access Level' have no effect
 
 ### Fixed
 
 * Work around for possible release string errors (future releasese will drop "-release")
 * Ignore case in genre comparison
 * Hide Upload links if you can't access the catalog
-* recently played for non-user calls
+* Recently played for non-user calls
 * Search
   * SQL for Artist `catalog` searches
 
@@ -84,6 +88,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
+  * Add `prefix` (Prefix for Full Name) to album & artist responses
+  * Add `basename` (Name without prefix) to album & artist responses
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
@@ -92,6 +98,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Don't send AlbumDisk objects to the API
 * Album::check() add barcode, catalog number and subtitle for comparison checks
+* XML responses
+  * id is the only attribute and everything else is an element
+  * Name was not set as an attribute OR an element so now it's always an element
 
 ### Fixed
 
@@ -100,6 +109,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Api5::get_indexes set album_artist filter correctly
 * Api4::get_indexes set album_artist filter correctly
 * Api5::artists set album_artist filter correctly
+* Api6 JSON
+  * Share and Bookmark object id's were not strings
 
 ### Removed
 
