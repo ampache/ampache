@@ -94,7 +94,7 @@ final class Handshake4Method
         }
 
         // Log this attempt
-        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: " . $client->username . " ($user_id)", 1);
+        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: " . ($client->username ?? '') . " ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;

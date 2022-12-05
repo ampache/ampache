@@ -346,7 +346,7 @@ class Xml3_Data
                     : $artist->album_disk_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user->id, '', false);
+                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, '', false);
             } else {
                 $songs = ($artist->songs ?: 0);
             }
@@ -405,7 +405,7 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user->id, '', false);
+                $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;
             }
