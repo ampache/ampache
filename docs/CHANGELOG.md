@@ -58,7 +58,6 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
-* Scrutinizer moved to php8.1
 * Download url parameter order matching "client, action, cache"
 * Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
 * Rework user_playlists (used for Now Playing & Play Queue operations)
