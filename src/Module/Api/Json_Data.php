@@ -1268,7 +1268,7 @@ class Json_Data
                         "delete_time" => $row['delete_time'],
                         "title" => $row['title'],
                         "file" => $row['file'],
-                        "catalog" => $row['catalog'],
+                        "catalog" => (string)$row['catalog'],
                         "total_count" => $row['total_count'],
                         "total_skip" => $row['total_skip'],
                         "update_time" => $row['update_time'],
@@ -1284,7 +1284,7 @@ class Json_Data
                         "delete_time" => $row['delete_time'],
                         "title" => $row['title'],
                         "file" => $row['file'],
-                        "catalog" => $row['catalog'],
+                        "catalog" => (string)$row['catalog'],
                         "total_count" => $row['total_count'],
                         "total_skip" => $row['total_skip'],
                         "podcast" => (string)$row['podcast']
@@ -1298,7 +1298,7 @@ class Json_Data
                         "delete_time" => $row['delete_time'],
                         "title" => $row['title'],
                         "file" => $row['file'],
-                        "catalog" => $row['catalog'],
+                        "catalog" => (string)$row['catalog'],
                         "total_count" => $row['total_count'],
                         "total_skip" => $row['total_skip']
                     );
