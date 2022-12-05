@@ -253,7 +253,7 @@ class Json_Data
                 "name" => $live_stream->get_fullname(),
                 "url" => $live_stream->url,
                 "codec" => $live_stream->codec,
-                "catalog" => $live_stream->catalog,
+                "catalog" => (string)$live_stream->catalog,
                 "site_url" => $live_stream->site_url
             ));
         } // end foreach
@@ -321,7 +321,7 @@ class Json_Data
                 "category" => $label->category,
                 "email" => $label->email,
                 "website" => $label->website,
-                "user" => $label->user,
+                "user" => (string)$label->user,
             ));
         } // end foreach
         $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
@@ -856,7 +856,7 @@ class Json_Data
                 "size" => (int)$episode->size,
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
-                "catalog" => $episode->catalog,
+                "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
                 "preciserating" => $rating->get_user_rating(),
