@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Session;
@@ -57,7 +56,7 @@ final class Songs4Method
      */
     public static function songs(array $input)
     {
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('song');
         $browse->set_sort('title', 'ASC');
@@ -67,7 +66,7 @@ final class Songs4Method
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
         // Filter out disabled songs
-        Api::set_filter('enabled', '1');
+        Api::set_filter('enabled', '1', $browse);
 
         $songs = $browse->get_objects();
         $user  = User::get_from_username(Session::username($input['auth']));
@@ -77,12 +76,12 @@ final class Songs4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::songs($songs, $user->id);
+                echo Json4_Data::songs($songs, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::songs($songs, $user->id);
+                echo Xml4_Data::songs($songs, $user);
         }
     } // songs
 }

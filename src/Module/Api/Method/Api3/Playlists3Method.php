@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 
 /**
@@ -43,7 +42,7 @@ final class Playlists3Method
      */
     public static function playlists(array $input)
     {
-        $browse = Api3::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('playlist');
         $browse->set_sort('name', 'ASC');

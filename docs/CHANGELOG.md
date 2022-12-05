@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## Ampache 5.5.6-develop
+
+This release imports the API code cleanup from Ampache Develop which has fixed a lot of data issues.
+
+There will probably not be another big change to Ampache 5 as work has moved to Ampache6 but there will be more bugfix releases if needed.
+
+### Fixed
+
+* Spotify art collector (**AGAIN**)
+* get_now_playing `has_access` check
+* Malformed HTML for regular users in preferences sidebar
+
+## API 5.5.6
+
+Fix various runtime errors and incorrect parameters for responses.
+
+### Changed
+
+* API browses all point to the Api class
+* Use `FILTER_VALIDATE_IP` on ping calls
+
+### Fixed
+
+* Api5::songs set_filter call without browse parameter may have lost info
+* Api4::songs set_filter call without browse parameter may have lost info
+* Api5::get_indexes set album_artist filter correctly
+* Api4::get_indexes set album_artist filter correctly
+* Api5::artists set album_artist filter correctly
+* Api3 calls to songs with user ID instead of user object
+* Api4::timeline incorrect JSON attribute `data` instead of `date`
+* Api4::catalogs JSON had incorrect data for `last_add` and missing `enabled`
+
 ## Ampache 5.5.5-release
 
 This release fixes up all the issues I created with the bad release files as well as an art search issue I missed until after the release.

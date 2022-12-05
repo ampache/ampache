@@ -71,12 +71,12 @@ final class SearchSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($results, $user->id);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($results, $user->id);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

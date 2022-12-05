@@ -60,7 +60,7 @@ final class Podcasts4Method
 
             return false;
         }
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
@@ -73,19 +73,18 @@ final class Podcasts4Method
         $podcasts = $browse->get_objects();
         $episodes = $input['include'] == 'episodes';
         $user     = User::get_from_username(Session::username($input['auth']));
-        $user_id  = $user->id;
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcasts($podcasts, $user_id, $episodes);
+                echo Json4_Data::podcasts($podcasts, $user, $episodes);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcasts($podcasts, $user_id, $episodes);
+                echo Xml4_Data::podcasts($podcasts, $user, $episodes);
         }
 
         return true;

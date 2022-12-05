@@ -69,7 +69,7 @@ final class PlaylistMethod
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user) && !Access::check('interface', 100, $user))) {
             Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -78,10 +78,10 @@ final class PlaylistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists(array($object_id), $user->getId(), false, false);
+                echo Json_Data::playlists(array($object_id), $user, false, false);
                 break;
             default:
-                echo Xml_Data::playlists(array($object_id), $user->getId());
+                echo Xml_Data::playlists(array($object_id), $user);
         }
 
         return true;

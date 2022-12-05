@@ -59,10 +59,10 @@ final class Song4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs(array((int) $song_id), $user->id);
+                echo Json4_Data::songs(array((int) $song_id), $user);
                 break;
             default:
-                echo Xml4_Data::songs(array((int) $song_id), $user->id);
+                echo Xml4_Data::songs(array((int) $song_id), $user);
         }
 
         return true;

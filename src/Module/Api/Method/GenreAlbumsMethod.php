@@ -67,12 +67,12 @@ final class GenreAlbumsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::albums($albums, array(), $user->id);
+                echo Json_Data::albums($albums, array(), $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::albums($albums, array(), $user->id);
+                echo Xml_Data::albums($albums, array(), $user);
         }
 
         return true;

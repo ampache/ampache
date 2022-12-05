@@ -49,6 +49,6 @@ final class Artist3Method
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
-        echo Xml3_Data::artists(array($uid), $include, $user->id);
+        echo Xml3_Data::artists(array($uid), $include, $user);
     } // artist
 }

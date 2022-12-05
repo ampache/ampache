@@ -99,7 +99,7 @@ final class AlbumMethod implements MethodInterface
         $result = $output->albums(
             [$album->getId()],
             $include,
-            $gatekeeper->getUser()->getId(),
+            $gatekeeper->getUser(),
             true,
             false
         );

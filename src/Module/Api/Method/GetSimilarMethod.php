@@ -91,12 +91,12 @@ final class GetSimilarMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::indexes($objects, $type, $user->id);
+                echo Json_Data::indexes($objects, $type, $user);
                 break;
             default:
-                XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? 0);
-                echo XML_Data::indexes($objects, $type, $user->id);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::indexes($objects, $type, $user);
         }
 
         return true;

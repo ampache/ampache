@@ -40,11 +40,11 @@ $current_user = $current_user ?? Core::get_global('user');
 $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0); ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
-        echo "<li>";
-        Ajax::start_container('browse_filters');
-        Ajax::end_container();
-        echo "</li>";
-    } ?>
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+} ?>
     <li>
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_preferences; ?></span>
@@ -52,13 +52,13 @@ $allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && 
         </h4>
         <ul class="sb3" id="sb_preference_prefs">
             <?php foreach ($categories as $name) {
-                if ($name == 'system') {
-                    continue;
-                }
-                $f_name = ucfirst($name); ?>
+    if ($name == 'system') {
+        continue;
+    }
+    $f_name = ucfirst($name); ?>
                 <li id="sb_preference_prefs_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
                 <?php
-            } ?>
+} ?>
             <li id="sb_preference_prefs_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
         </ul>
     </li>
