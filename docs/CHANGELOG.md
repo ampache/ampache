@@ -64,6 +64,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
+* Album::check() add barcode, catalog number and subtitle for comparison checks
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
@@ -97,21 +98,12 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Changed
 
 * Don't send AlbumDisk objects to the API
-* Album::check() add barcode, catalog number and subtitle for comparison checks
 * XML responses
   * id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
 
 ### Fixed
 
-* Api5::songs set_filter call without browse parameter may have lost info
-* Api4::songs set_filter call without browse parameter may have lost info
-* Api5::get_indexes set album_artist filter correctly
-* Api4::get_indexes set album_artist filter correctly
-* Api5::artists set album_artist filter correctly
-* Api3 calls to songs with user ID instead of user object
-* Api4::timeline incorrect JSON attribute `data` instead of `date`
-* Api4::catalogs JSON had incorrect data for `last_add` and missing `enabled`
 * Api6 JSON
   * Share and Bookmark object id's were not strings
 

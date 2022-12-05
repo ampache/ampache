@@ -198,8 +198,8 @@ final class StatsMethod
                         echo Json_Data::songs($results, $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
                         echo Xml_Data::songs($results, $user);
                 }
                 break;
@@ -211,8 +211,8 @@ final class StatsMethod
                         echo Json_Data::artists($results, array(), $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
                         echo Xml_Data::artists($results, array(), $user);
                 }
                 break;
@@ -224,8 +224,8 @@ final class StatsMethod
                         echo Json_Data::albums($results, array(), $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
                         echo Xml_Data::albums($results, array(), $user);
                 }
                 break;
@@ -237,8 +237,8 @@ final class StatsMethod
                         echo Json_Data::playlists($results, $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
                         echo Xml_Data::playlists($results, $user);
                 }
                 break;
@@ -264,9 +264,9 @@ final class StatsMethod
                         echo Json_Data::podcasts($results, $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
-                        echo XML_Data::podcasts($results, $user);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
+                        echo Xml_Data::podcasts($results, $user);
                 }
                 break;
             case 'podcast_episode':
@@ -277,9 +277,9 @@ final class StatsMethod
                         echo Json_Data::podcast_episodes($results, $user);
                         break;
                     default:
-                        XML_Data::set_offset($offset);
-                        XML_Data::set_limit($limit);
-                        echo XML_Data::podcast_episodes($results, $user);
+                        Xml_Data::set_offset($offset);
+                        Xml_Data::set_limit($limit);
+                        echo Xml_Data::podcast_episodes($results, $user);
                 }
                 break;
         }

@@ -103,9 +103,9 @@ class Xml5_Data
     /**
      * set_type
      *
-     * This sets the type of XML_Data we are working on
+     * This sets the type of Xml_Data we are working on
      *
-     * @param  string  $type XML_Data type
+     * @param  string  $type Xml_Data type
      * @return boolean
      */
     public static function set_type($type)

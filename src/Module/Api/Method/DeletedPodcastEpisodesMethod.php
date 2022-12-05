@@ -72,9 +72,9 @@ final class DeletedPodcastEpisodesMethod
                 echo Json_Data::deleted('podcast_episode', $items);
                 break;
             default:
-                XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? 0);
-                echo XML_Data::deleted('podcast_episode', $items);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::deleted('podcast_episode', $items);
         }
 
         return true;

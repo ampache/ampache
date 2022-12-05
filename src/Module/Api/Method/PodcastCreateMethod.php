@@ -85,7 +85,7 @@ final class PodcastCreateMethod
                 echo Json_Data::podcasts(array($podcast), $user, false, false);
                 break;
             default:
-                echo XML_Data::podcasts(array($podcast), $user);
+                echo Xml_Data::podcasts(array($podcast), $user);
         }
 
         return true;

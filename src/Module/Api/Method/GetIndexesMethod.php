@@ -135,9 +135,9 @@ final class GetIndexesMethod
                 echo Json_Data::indexes($objects, $type, $user, $include);
                 break;
             default:
-                XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? 0);
-                echo XML_Data::indexes($objects, $type, $user, true, $include);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::indexes($objects, $type, $user, true, $include);
         }
 
         return true;

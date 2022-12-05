@@ -178,7 +178,7 @@ final class PlaylistGenerateMethod
                         echo Json_Data::indexes($song_ids, 'song', $user);
                         break;
                     default:
-                        echo XML_Data::indexes($song_ids, 'song', $user);
+                        echo Xml_Data::indexes($song_ids, 'song', $user);
                 }
                 break;
             case 'song':

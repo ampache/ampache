@@ -41,7 +41,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 
 /**
- * XML_Data Class
+ * Xml_Data Class
  *
  * This class takes care of all of the xml document stuff in Ampache these
  * are all static calls
@@ -100,9 +100,9 @@ class Xml3_Data
     /**
      * set_type
      *
-     * This sets the type of XML_Data we are working on
+     * This sets the type of Xml_Data we are working on
      *
-     * @param    string    $type    XML_Data type
+     * @param    string    $type    Xml_Data type
      * @return    void
      */
     public static function set_type($type)
@@ -738,4 +738,4 @@ class Xml3_Data
 
         return $dic->get(AlbumRepositoryInterface::class);
     }
-} // XML_Data
+} // Xml3_Data

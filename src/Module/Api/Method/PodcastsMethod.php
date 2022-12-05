@@ -88,9 +88,9 @@ final class PodcastsMethod
                 echo Json_Data::podcasts($podcasts, $user, $episodes);
                 break;
             default:
-                XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? 0);
-                echo XML_Data::podcasts($podcasts, $user, $episodes);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::podcasts($podcasts, $user, $episodes);
         }
 
         return true;

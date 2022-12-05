@@ -51,7 +51,7 @@ use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 
 /**
- * XML_Data Class
+ * Xml_Data Class
  *
  * This class takes care of all of the xml document stuff in Ampache these
  * are all static calls
@@ -108,9 +108,9 @@ class Xml4_Data
     /**
      * set_type
      *
-     * This sets the type of XML_Data we are working on
+     * This sets the type of Xml_Data we are working on
      *
-     * @param    string    $type    XML_Data type
+     * @param    string    $type    Xml_Data type
      * @return    boolean
      */
     public static function set_type($type)

@@ -78,7 +78,7 @@ final class PodcastEpisodeMethod
                 echo Json_Data::podcast_episodes(array($object_id), $user, true, false);
                 break;
             default:
-                echo XML_Data::podcast_episodes(array($object_id), $user);
+                echo Xml_Data::podcast_episodes(array($object_id), $user);
         }
 
         return true;
