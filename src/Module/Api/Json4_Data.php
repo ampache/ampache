@@ -608,13 +608,14 @@ class Json4_Data
                 "name" => $catalog_name,
                 "type" => $catalog_type,
                 "gather_types" => $catalog_gather_types,
-                "last_add" => $catalog_enabled,
-                "allow_download" => $catalog_last_add,
+                "enabled" => $catalog_enabled,
+                "last_add" => $catalog_last_add,
                 "last_clean" => $catalog_last_clean,
                 "last_update" => $catalog_last_update,
                 "path" => $catalog_path,
                 "rename_pattern" => $catalog_rename_pattern,
-                "sort_pattern" => $catalog_sort_pattern]);
+                "sort_pattern" => $catalog_sort_pattern
+            ]);
         } // end foreach
 
         return json_encode($allCatalogs, JSON_PRETTY_PRINT);
