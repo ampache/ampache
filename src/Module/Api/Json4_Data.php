@@ -1063,7 +1063,7 @@ class Json4_Data
             ));
             $ourArray = array(
                 "id" => (string) $activity_id,
-                "data" => $activity->activity_date,
+                "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
                 "object_id" => (string)$activity->object_id,
                 "action" => $activity->action,

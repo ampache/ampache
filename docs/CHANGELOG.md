@@ -110,6 +110,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Api4::get_indexes set album_artist filter correctly
 * Api5::artists set album_artist filter correctly
 * Api3 calls to songs with user ID instead of user object
+* Api4::timeline incorrect JSON attribute `data` instead of `date`
 * Api6 JSON
   * Share and Bookmark object id's were not strings
 
