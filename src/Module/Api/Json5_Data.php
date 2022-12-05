@@ -253,7 +253,7 @@ class Json5_Data
                 "name" => $live_stream->get_fullname(),
                 "url" => $live_stream->url,
                 "codec" => $live_stream->codec,
-                "catalog" => $live_stream->catalog,
+                "catalog" => (string)$live_stream->catalog,
                 "site_url" => $live_stream->site_url
             ));
         } // end foreach
@@ -321,7 +321,7 @@ class Json5_Data
                 "category" => $label->category,
                 "email" => $label->email,
                 "website" => $label->website,
-                "user" => $label->user,
+                "user" => (string)$label->user,
             ));
         } // end foreach
         $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
@@ -652,7 +652,7 @@ class Json5_Data
                 "creation_date" => $share_creation_date,
                 "lastvisit_date" => $share_lastvisit_date,
                 "object_type" => $share_object_type,
-                "object_id" => $share_object_id,
+                "object_id" => (string)$share_object_id,
                 "expire_days" => $share_expire_days,
                 "max_counter" => $share_max_counter,
                 "counter" => $share_counter,
@@ -696,7 +696,7 @@ class Json5_Data
                 "id" => (string) $bookmark_id,
                 "owner" => $bookmark_user,
                 "object_type" => $bookmark_object_type,
-                "object_id" => $bookmark_object_id,
+                "object_id" => (string)$bookmark_object_id,
                 "position" => $bookmark_position,
                 "client" => $bookmark_comment,
                 "creation_date" => $bookmark_creation_date,
@@ -863,14 +863,14 @@ class Json5_Data
                 "size" => (int)$episode->size,
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
-                "catalog" => $episode->catalog,
+                "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
                 "preciserating" => $rating->get_user_rating(),
                 "rating" => $rating->get_user_rating(),
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int) $episode->total_count,
-                "played" => $episode->played]);
+                "played" => (string)$episode->played]);
         }
         if (!$encode) {
             return $JSON;
@@ -1211,7 +1211,7 @@ class Json5_Data
                 "id" => (string) $activity_id,
                 "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
-                "object_id" => $activity->object_id,
+                "object_id" => (string)$activity->object_id,
                 "action" => $activity->action,
                 "user" => array(
                     "id" => (string) $activity->user,

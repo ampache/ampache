@@ -562,7 +562,7 @@ class Json4_Data
                 "creation_date" => $share_creation_date,
                 "lastvisit_date" => $share_lastvisit_date,
                 "object_type" => $share_object_type,
-                "object_id" => $share_object_id,
+                "object_id" => (string)$share_object_id,
                 "expire_days" => $share_expire_days,
                 "max_counter" => $share_max_counter,
                 "counter" => $share_counter,
@@ -721,13 +721,13 @@ class Json4_Data
                 "filename" => $episode->f_file,
                 "public_url" => $episode->link,
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
-                "catalog" => $episode->catalog,
+                "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
                 "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
                 "rating" => ($rating->get_user_rating($user->getId()) ?: null),
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
-                "played" => $episode->played]);
+                "played" => (string)$episode->played]);
         }
         if (!$encode) {
             return $JSON;
@@ -1065,7 +1065,7 @@ class Json4_Data
                 "id" => (string) $activity_id,
                 "data" => $activity->activity_date,
                 "object_type" => $activity->object_type,
-                "object_id" => $activity->object_id,
+                "object_id" => (string)$activity->object_id,
                 "action" => $activity->action,
                 "user" => $user_array
             );
