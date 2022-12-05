@@ -6,6 +6,10 @@ This release imports the API code cleanup from Ampache Develop which has fixed a
 
 There will probably not be another big change to Ampache 5 as work has moved to Ampache6 but there will be more bugfix releases if needed.
 
+### Changed
+
+* Scrutinizer moved to php8.1
+
 ### Fixed
 
 * Spotify art collector (**AGAIN**)
