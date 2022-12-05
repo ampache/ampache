@@ -679,7 +679,7 @@ class Xml_Data
                 ? $album->original_year
                 : $album->year;
 
-            $string= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
+            $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
 
             $album_artist = Artist::get_name_array_by_id($album->album_artist);
             $string .= "\t<artist id=\"" . $album->album_artist . "\">\n\t<name><![CDATA[" . $album_artist['f_name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['name'] . "]]></basename>\n</artist>\n";
