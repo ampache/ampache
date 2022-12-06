@@ -585,11 +585,9 @@ class Dba
     /**
      * optimize_tables
      *
-     * This runs an optimize on the tables and updates the stats to improve
-     * join speed.
-     * This can be slow, but is a good idea to do from time to time. We do
-     * it in case the dba isn't doing it... which we're going to assume they
-     * aren't.
+     * This runs an optimize on the tables and updates the stats to improve join speed.
+     * This can be slow, but is a good idea to do from time to time.
+     * We do it in case the dba isn't doing it... which we're going to assume they aren't.
      */
     public static function optimize_tables()
     {
@@ -597,10 +595,11 @@ class Dba
         $db_results = self::read($sql);
 
         while ($row = self::fetch_row($db_results)) {
-            $sql = "OPTIMIZE TABLE `" . $row[0] . "`";
+            debug_event(__CLASS__, 'optimize_tables ' . $row[0], 5);
+            $sql = "OPTIMIZE TABLE `" . $row[0] . "`;";
             self::write($sql);
 
-            $sql = "ANALYZE TABLE `" . $row[0] . "`";
+            $sql = "ANALYZE TABLE `" . $row[0] . "`;";
             self::write($sql);
         }
     }

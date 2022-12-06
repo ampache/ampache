@@ -4088,7 +4088,6 @@ abstract class Catalog extends database_object
                             $catalog->clean_catalog();
                         }
                     } // end foreach catalogs
-                    Dba::optimize_tables();
                     Artist::update_artist_counts();
                     Album::update_album_counts();
                 }
