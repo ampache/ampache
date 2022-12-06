@@ -140,7 +140,8 @@
                 autoPlay: false,
                 removePlayed: false, // remove tracks before the current playlist item
                 removeCount: 0, // shift the index back to keep x items BEFORE the current index
-                shuffleOnLoop: false, // i don't really have a good answer for what this option is
+                loopBack:  false, // repeat a finished playlist from the start
+                shuffleOnLoop: false, // I don't really have a good answer for what this option is
                 enableRemoveControls: false,
                 displayTime: "slow",
                 addTime: "fast",
@@ -609,7 +610,7 @@
             }
             // remove leftovers if needed
             startIndex = index - this.options.playlistOptions.removeCount;
-            if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0) {
+            if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0 && !this.options.loopBack) {
                 console.log("index " + index);
                 console.log("startIndex " + startIndex);
                 this.removeBefore(startIndex);
@@ -627,13 +628,13 @@
                 // repeat the track
                 this.play(this.current);
             } else {
-                if (index > 0) {
+                if (index > 0 || (index === 0 && this.options.loopBack)) {
                     // play the next track if there is one
                     this.play(index);
                 } else {
-                    // The index will be zero if it just looped round so just check for removal
+                    // The index will be zero if it just looped round so check for removal
                     startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
-                    if (index === 0 && this.options.playlistOptions.removePlayed) {
+                    if (index === 0 && this.options.playlistOptions.removePlayed && !this.options.loopBack) {
                         console.log("startIndex " + startIndex);
                         this.removeBefore(startIndex);
                     }
@@ -687,6 +688,10 @@
                 console.log(self.playlist);
                 console.log("-----------");
             }
+        },
+        toggleLoop: function(bool) {
+            console.log("toggleLoop");
+            this.options.loopBack = bool;
         },
         blur: function(that) {
             if ($(this.cssSelector.jPlayer).jPlayer("option", "autoBlur")) {

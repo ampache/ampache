@@ -13,6 +13,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
 * Allow Admin users to browse all user uploads
+* webplayer
+  * Add a button next to the playlist to allow looping after the last song
+  * If you enable playlist loop do not remove previous tracks
 * Database 600020
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
@@ -68,6 +71,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
+  * Added an option `loopBack` which restarts the playlist after finishing
 
 ### Removed
 
@@ -80,6 +84,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Ignore case in genre comparison
 * Hide Upload links if you can't access the catalog
 * Recently played for non-user calls
+* webplayer
+  * Visible shadow hightlight and replaygain button for light theme
 * Search
   * SQL for Artist `catalog` searches
 

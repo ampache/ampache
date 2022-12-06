@@ -54,7 +54,10 @@ $shuffleon  = addslashes(T_('Shuffle'));
 $shuffleoff = addslashes(T_('Shuffle Off'));
 $repeaton   = addslashes(T_('Repeat'));
 $repeatoff  = addslashes(T_('Repeat Off'));
-$showalbum  = addslashes(T_('Show Album')); ?>
+$showalbum  = addslashes(T_('Show Album'));
+$replaygain = (AmpConfig::get('theme_color') == 'light')
+    ? 'replaygain_dark'
+    : 'replaygain'; ?>
 <script>
     // The web player identifier. We currently use current date milliseconds as unique identifier.
     var jpuqid = (new Date()).getMilliseconds();
@@ -82,6 +85,7 @@ $showalbum  = addslashes(T_('Show Album')); ?>
                 autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
                 removePlayed: <?php echo ($removePlayed) ? 'true' : 'false'; ?>, // remove tracks before the current playlist item
                 removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
+                loopBack:  false, // repeat a finished playlist from the start
                 shuffleOnLoop: false,
                 enableRemoveControls: true,
                 displayTime: 'slow',
@@ -495,6 +499,9 @@ if (!$isVideo) {
                         <div id="expandplaylistbtn" class="action_button">
                             <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))) ?></a>
                         </div>
+                        <div id="playlistloopbtn" class="action_button">
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))) ?></a>
+                        </div>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
                                 <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))) ?></a>
@@ -503,7 +510,7 @@ if (!$isVideo) {
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))) ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', addslashes(T_('ReplayGain'))) ?></a>
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))) ?></a>
                             </div>
                             <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
                                 <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))) ?></a>

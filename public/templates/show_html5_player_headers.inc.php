@@ -16,8 +16,11 @@ $webplayer_debug  = (AmpConfig::get('webplayer_debug'))
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
-$iframed  = $iframed ?? false;
-$isShare  = $isShare ?? false;
+$iframed   = $iframed ?? false;
+$isShare   = $isShare ?? false;
+$highlight = (AmpConfig::get('theme_color') == 'light')
+    ? 'blue'
+    : 'orange';
 
 if ($iframed || $isShare) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
@@ -89,6 +92,11 @@ if ($iframed || $isShare) { ?>
         var jpmedia = convertMediaToJPMedia(media);
         jplaylist.addAfter(jpmedia, jplaylist.current);
     }
+
+    function playlistLoop(bool)
+    {
+        jplaylist.toggleLoop(bool);
+    }
 </script>
 <script>
     function ExitPlayer()
@@ -118,10 +126,12 @@ if ($iframed || $isShare) { ?>
             $(".jp-playlist").css('top', '-255%');
             $(".jp-playlist").css('opacity', '1');
             $(".jp-playlist").css('height', '350%');
+            $('#expandplaylistbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
         } else {
             $(".jp-playlist").css('top', '0px');
             $(".jp-playlist").css('opacity', '0.9');
             $(".jp-playlist").css('height', '95%');
+            $('#expandplaylistbtn').css('box-shadow', '');
         }
     }
 </script>
@@ -321,10 +331,29 @@ if ($iframed) { ?>
                 ApplyReplayGain();
 
                 if (replaygainEnabled) {
-                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
+                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
                 } else {
                     $('#replaygainbtn').css('box-shadow', '');
                 }
+            }
+        }
+
+        var loopEnabled = false;
+
+        function TogglePlaylistLoop()
+        {
+            if (loopEnabled === false) {
+                playlistLoop(true);
+                loopEnabled = true;
+            } else {
+                playlistLoop(false);
+                loopEnabled = false;
+            }
+
+            if (loopEnabled) {
+                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
+            } else {
+                $('#playlistloopbtn').css('box-shadow', '');
             }
         }
 
