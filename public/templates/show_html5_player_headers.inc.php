@@ -133,12 +133,10 @@ if ($iframed || $isShare) { ?>
             $(".jp-playlist").css('top', '-255%');
             $(".jp-playlist").css('opacity', '1');
             $(".jp-playlist").css('height', '350%');
-            $('#expandplaylistbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
         } else {
             $(".jp-playlist").css('top', '0px');
             $(".jp-playlist").css('opacity', '0.9');
             $(".jp-playlist").css('height', '95%');
-            $('#expandplaylistbtn').css('box-shadow', '');
         }
     }
 </script>
