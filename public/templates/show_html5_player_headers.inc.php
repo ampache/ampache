@@ -212,6 +212,7 @@ if ($iframed) { ?>
         {
             if (isVisualizerEnabled()) {
                 $('#uberviz').css('visibility', 'hidden');
+                $('#vizfullbtn').css('visibility', 'hidden');
                 $('#equalizerbtn').css('visibility', 'hidden');
                 $('#equalizer').css('visibility', 'hidden');
                 $('#header').css('background-color', vizPrevHeaderColor);
@@ -230,6 +231,7 @@ if ($iframed) { ?>
 
                 if (vizInitialized) {
                     $('#uberviz').css('visibility', 'visible');
+                    $('#vizfullbtn').css('visibility', 'visible');
                     $('#equalizerbtn').css('visibility', 'visible');
                     vizPrevHeaderColor = $('#header').css('background-color');
                     $('#header').css('background-color', 'transparent');
