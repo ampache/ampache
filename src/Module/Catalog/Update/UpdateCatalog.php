@@ -68,6 +68,11 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             'parse_playlist' => $importPlaylists
         ];
 
+        // don't look at catalogs without an action
+        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification) {
+            $catalogType = '';
+            $catalogName = '';
+        }
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
         $external   = false;
 
