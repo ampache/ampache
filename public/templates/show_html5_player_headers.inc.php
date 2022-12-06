@@ -18,9 +18,16 @@ $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     : "path: '/', samesite: 'Strict'";
 $iframed   = $iframed ?? false;
 $isShare   = $isShare ?? false;
-$highlight = (AmpConfig::get('theme_color') == 'light')
+$isLight   = (AmpConfig::get('theme_color') == 'light');
+$highlight = $isLight
     ? 'blue'
     : 'orange';
+$jpinterface = ($isLight)
+    ? '#f8f8f8'
+    : '#191919';
+$jpplaylist = ($isLight)
+    ? '#d4d4d4'
+    : '#202020';
 
 if ($iframed || $isShare) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
@@ -217,8 +224,8 @@ if ($iframed) { ?>
                 $('#equalizer').css('visibility', 'hidden');
                 $('#header').css('background-color', vizPrevHeaderColor);
                 $('#webplayer').css('background-color', vizPrevPlayerColor);
-                $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-                $('.jp-playlist').css('background-color', 'rgb(20, 20, 20)');
+                $('.jp-interface').css('background-color', '<?php echo $jpinterface; ?>');
+                $('.jp-playlist').css('background-color', '<?php echo $jpplaylist; ?>');
             } else {
                 // Resource not yet initialized? Do it.
                 if (!vizInitialized) {
