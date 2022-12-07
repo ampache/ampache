@@ -53,7 +53,7 @@ $use_wanted        = AmpConfig::get('wanted');
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 if ($directplay_limit > 0) {
-    $show_playlist_add = ($artist->songs <= $directplay_limit);
+    $show_playlist_add = ($artist->song_count <= $directplay_limit);
     if ($show_direct_play) {
         $show_direct_play = $show_playlist_add;
     }

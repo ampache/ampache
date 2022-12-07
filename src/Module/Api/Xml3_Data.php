@@ -348,7 +348,7 @@ class Xml3_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, '', false);
             } else {
-                $songs = ($artist->songs ?: 0);
+                $songs = $artist->song_count;
             }
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";

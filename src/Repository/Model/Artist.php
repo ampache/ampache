@@ -180,7 +180,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * @var integer $song_count
      */
-    private $song_count;
+    public $song_count;
 
     /**
      * @var array $_mapcache
@@ -482,7 +482,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if (!$this->id) {
             return true;
         }
-        $this->songs  = $this->song_count;
+        $this->songs  = $this->song_count ?? 0;
         $this->albums = (AmpConfig::get('album_group'))
             ? $this->album_count
             : $this->album_disk_count;

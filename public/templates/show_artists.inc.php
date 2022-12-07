@@ -102,7 +102,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->songs <= $directplay_limit);
+                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
                 if ($show_direct_play) {
                     $show_direct_play = $show_playlist_add;
                 }

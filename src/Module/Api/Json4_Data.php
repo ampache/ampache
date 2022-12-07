@@ -327,16 +327,16 @@ class Json4_Data
             if (in_array("songs", $include)) {
                 $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false);
             } else {
-                $songs = ($artist->songs ?? 0);
+                $songs = $artist->song_count;
             }
 
             array_push($JSON, array(
                 "id" => (string) $artist->id,
                 "name" => $artist->get_fullname(),
                 "albums" => $albums,
-                "albumcount" => (int)$artist->album_count ?? 0,
+                "albumcount" => $artist->album_count,
                 "songs" => $songs,
-                "songcount" => (int) $artist->songs,
+                "songcount" => $artist->song_count,
                 "tag" => self::tags_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
