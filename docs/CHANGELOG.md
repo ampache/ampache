@@ -32,6 +32,7 @@ Fix various runtime errors and incorrect parameters for responses.
   * `songs` set_filter call without browse parameter may have lost info
   * `get_indexes` set album_artist filter correctly
   * `artists` set album_artist filter correctly
+  * `share_create` undefined filter check
 * Api4
   * `songs` set_filter call without browse parameter may have lost info
   * `get_indexes` set album_artist filter correctly
@@ -39,6 +40,12 @@ Fix various runtime errors and incorrect parameters for responses.
   * `catalogs` JSON had incorrect data for `last_add` and missing `enabled`
   * `albums` return an empty response with a bad artist id
   * `download` url parameter order matching "client, action, cache"
+  * `catalogs` undefined filter check
+  * `podcast` undefined filter check
+  * `podcast_edit` undefined filter check
+  * `podcasts` undefined filter check
+  * `share_create` undefined filter check
+  * `share_edit` undefined filter check
 * Api3
   * `album_songs` return an empty response with a bad album id
   * `artist_albums` return an empty response with a bad artist id

@@ -65,7 +65,7 @@ final class Podcast4Method
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             $user     = User::get_from_username(Session::username($input['auth']));
-            $episodes = $input['include'] == 'episodes';
+            $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
             ob_end_clean();
             switch ($input['api_format']) {
