@@ -331,8 +331,9 @@ class Xml3_Data
             }
             $artist->format();
 
-            $rating     = new Rating($artist_id, 'artist');
-            $tag_string = self::tags_string($artist->tags);
+            $rating      = new Rating($artist_id, 'artist');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $tag_string  = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out($_REQUEST['auth']);
@@ -349,7 +350,7 @@ class Xml3_Data
                 $songs = ($artist->songs ?: 0);
             }
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?: 0) . "</preciserating>\n\t<rating>" . ($user_rating ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -387,7 +388,8 @@ class Xml3_Data
             $album = new Album($album_id);
             $album->format();
 
-            $rating = new Rating($album_id, 'album');
+            $rating      = new Rating($album_id, 'album');
+            $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -408,7 +410,7 @@ class Xml3_Data
                 $songs = $album->song_count;
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk . "</disk>\n" . self::tags_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $rating->get_user_rating() . "</preciserating>\n\t<rating>" . $rating->get_user_rating() . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
+            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk . "</disk>\n" . self::tags_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -480,6 +482,7 @@ class Xml3_Data
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating                = new Rating($song_id, 'song');
+            $user_rating           = $rating->get_user_rating($user->getId());
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
             $play_url              = $song->play_url('', 'api', false, $user->id);
 
@@ -487,7 +490,7 @@ class Xml3_Data
             if ($song->albumartist) {
                 $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_fullname() . "]]></albumartist>\n";
             }
-            $string .= $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<track>" . $song->track . "</track>\n" . $playlist_track_string . "\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<bitrate>" . $song->bitrate . "</bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode>" . $song->mode . "</mode>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid>" . $song->mbid . "</mbid>\n\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
+            $string .= $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n\t<track>" . $song->track . "</track>\n" . $playlist_track_string . "\t<time>" . $song->time . "</time>\n\t<year>" . $song->year . "</year>\n\t<bitrate>" . $song->bitrate . "</bitrate>\n\t<rate>" . $song->rate . "</rate>\n\t<mode>" . $song->mode . "</mode>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<mbid>" . $song->mbid . "</mbid>\n\t<album_mbid>" . $song->album_mbid . "</album_mbid>\n\t<artist_mbid>" . $song->artist_mbid . "</artist_mbid>\n\t<albumartist_mbid>" . $song->albumartist_mbid . "</albumartist_mbid>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?: 0) . "</preciserating>\n\t<rating>" . ($user_rating ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<composer><![CDATA[" . $song->composer . "]]></composer>\n\t<channels>" . $song->channels . "</channels>\n\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
 
             $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n\t<language>" . $song->language . "</language>\n\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
             foreach ($song->tags as $tag) {
@@ -558,12 +561,13 @@ class Xml3_Data
             $song->genre   = $tag->id;
             $song->f_genre = $tag->name;
 
-            $tag_string = self::tags_string($song->tags);
-            $rating     = new Rating($song->id, 'song');
-            $art_url    = Art::url($song->album, 'album', $_REQUEST['auth']);
-            $play_url   = $song->play_url('', 'api', false, $user->id);
+            $tag_string  = self::tags_string($song->tags);
+            $rating      = new Rating($song->id, 'song');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $play_url    = $song->play_url('', 'api', false, $user->id);
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?: null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?: null) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $song->mime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
