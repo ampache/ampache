@@ -58,6 +58,7 @@ $t_genres          = T_('Genres');
 $t_uploads         = T_('Uploads');
 $t_dashboards      = T_('Dashboards');
 $t_podcastEpisodes = T_('Podcast Episodes');
+$t_playlist        = T_('Playlist');
 $t_playlists       = T_('Playlists');
 $t_smartPlaylists  = T_('Smart Playlists');
 $t_smartlists      = T_('Smartlists');

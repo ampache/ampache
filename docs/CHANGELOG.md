@@ -37,6 +37,7 @@ Fix various runtime errors and incorrect parameters for responses.
   * `timeline` incorrect JSON attribute `data` instead of `date`
   * `catalogs` JSON had incorrect data for `last_add` and missing `enabled`
   * `albums` return an empty response with a bad artist id
+  * `download` url parameter order matching "client, action, cache"
 * Api3
   * `album_songs` return an empty response with a bad album id
   * `artist_albums` return an empty response with a bad artist id
