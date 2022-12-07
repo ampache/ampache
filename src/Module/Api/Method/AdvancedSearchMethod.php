@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
@@ -101,72 +101,72 @@ final class AdvancedSearchMethod
             case 'json':
                 switch ($type) {
                     case 'album':
-                        echo Json_Data::albums($results, array(), $user->id);
+                        echo Json_Data::albums($results, array(), $user);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists($results, array(), $user->id);
+                        echo Json_Data::artists($results, array(), $user);
                         break;
                     case 'label':
                         echo Json_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results, $user->id);
+                        echo Json_Data::playlists($results, $user);
                         break;
                     case 'podcast':
-                        echo Json_Data::podcasts($results, $user->id);
+                        echo Json_Data::podcasts($results, $user);
                         break;
                     case 'podcast_episode':
-                        echo Json_Data::podcast_episodes($results, $user->id);
+                        echo Json_Data::podcast_episodes($results, $user);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json_Data::genres($results, $user->id);
+                        echo Json_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Json_Data::users($results);
                         break;
                     case 'video':
-                        echo Json_Data::videos($results, $user->id);
+                        echo Json_Data::videos($results, $user);
                         break;
                     default:
-                        echo Json_Data::songs($results, $user->id);
+                        echo Json_Data::songs($results, $user);
                         break;
                 }
                 break;
             default:
                 switch ($type) {
                     case 'album':
-                        echo Xml_Data::albums($results, array(), $user->id);
+                        echo Xml_Data::albums($results, array(), $user);
                         break;
                     case 'artist':
-                        echo Xml_Data::artists($results, array(), $user->id);
+                        echo Xml_Data::artists($results, array(), $user);
                         break;
                     case 'label':
                         echo Xml_Data::labels($results);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results, $user->id);
+                        echo Xml_Data::playlists($results, $user);
                         break;
                     case 'podcast':
-                        echo Xml_Data::podcasts($results, $user->id);
+                        echo Xml_Data::podcasts($results, $user);
                         break;
                     case 'podcast_episode':
-                        echo Xml_Data::podcast_episodes($results, $user->id);
+                        echo Xml_Data::podcast_episodes($results, $user);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results, $user->id);
+                        echo Xml_Data::genres($results);
                         break;
                     case 'user':
                         echo Xml_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml_Data::videos($results, $user->id);
+                        echo Xml_Data::videos($results, $user);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user->id);
+                        echo Xml_Data::songs($results, $user);
                         break;
                 }
         }

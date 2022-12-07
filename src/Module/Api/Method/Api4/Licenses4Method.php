@@ -59,7 +59,7 @@ final class Licenses4Method
             return false;
         }
 
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');

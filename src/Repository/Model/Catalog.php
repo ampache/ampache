@@ -2295,8 +2295,8 @@ abstract class Catalog extends database_object
         }
         // artist
         if ($libitem instanceof Artist) {
-            // make sure albums are updated before the artist
-            foreach ($libitem->get_child_ids() as $album_id) {
+            // make sure albums are updated before the artist (include if you're just a song artist too)
+            foreach (static::getAlbumRepository()->getByArtist($object_id) as $album_id) {
                 $album_tags = self::getSongTags('album', $album_id);
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }

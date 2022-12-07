@@ -58,6 +58,6 @@ final class PlaylistSongs3Method
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($songs, $user->id, $items);
+        echo Xml3_Data::songs($songs, $user, $items);
     } // playlist_songs
 }

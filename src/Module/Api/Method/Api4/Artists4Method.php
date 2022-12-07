@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Session;
@@ -57,7 +56,7 @@ final class Artists4Method
      */
     public static function artists(array $input)
     {
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
@@ -79,12 +78,12 @@ final class Artists4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::artists($artists, $include, $user->id);
+                echo Json4_Data::artists($artists, $include, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::artists($artists, $include, $user->id);
+                echo Xml4_Data::artists($artists, $include, $user);
         }
     } // artists
 }

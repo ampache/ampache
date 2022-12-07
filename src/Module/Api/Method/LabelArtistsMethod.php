@@ -78,10 +78,10 @@ final class LabelArtistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::artists($artists, $include, $user->id);
+                echo Json_Data::artists($artists, $include, $user);
                 break;
             default:
-                echo Xml_Data::artists($artists, $include, $user->id);
+                echo Xml_Data::artists($artists, $include, $user);
         }
 
         return true;

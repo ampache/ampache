@@ -59,13 +59,13 @@ final class AdvancedSearch3Method
 
         switch ($type) {
             case 'artist':
-                echo Xml3_Data::artists($results, array(), $user->id);
+                echo Xml3_Data::artists($results, array(), $user);
                 break;
             case 'album':
-                echo Xml3_Data::albums($results, array(), $user->id);
+                echo Xml3_Data::albums($results, array(), $user);
                 break;
             default:
-                echo Xml3_Data::songs($results, $user->id);
+                echo Xml3_Data::songs($results, $user);
                 break;
         }
     } // advanced_search
