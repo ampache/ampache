@@ -68,7 +68,7 @@ final class Playlist5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user) && !Access::check('interface', 100, $user))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
