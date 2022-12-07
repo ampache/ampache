@@ -116,10 +116,12 @@ final class LastFmCollectorModule implements CollectorModuleInterface
 
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results  = pathinfo($url);
-                $mime     = 'image/' . $results['extension'];
-                $images[] = ['url' => $url, 'mime' => $mime, 'title' => 'LastFM'];
-                if ($limit && count($images) >= $limit) {
-                    return $images;
+                if (array_key_exists('extension', $results) && !empty($results['extension'])) {
+                    $mime = 'image/' . $results['extension'];
+                    $images[] = ['url' => $url, 'mime' => $mime, 'title' => 'LastFM'];
+                    if ($limit && count($images) >= $limit) {
+                        return $images;
+                    }
                 }
             } // end foreach
         } catch (Exception $error) {
