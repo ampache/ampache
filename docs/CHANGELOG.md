@@ -15,6 +15,7 @@ There will probably not be another big change to Ampache 5 as work has moved to 
 * Spotify art collector (**AGAIN**)
 * get_now_playing `has_access` check
 * Malformed HTML for regular users in preferences sidebar
+* Missing translation on preferences sidebar
 * Default catalog_filter group could be missing on a new install
 * Gather genre tags when not an array
 
