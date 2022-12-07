@@ -69,23 +69,23 @@ final class ShareCreate5Method
         }
 
         $object_id   = $input['filter'];
-        $type        = $input['type'];
+        $object_type = $input['type'];
         $description = $input['description'] ?? null;
         $expire_days = Share::get_expiry($input['expires'] ?? null);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist'))) {
+        if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
 
         $share = array();
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
             $item = new $className($object_id);
             if (!$item->id) {
@@ -100,7 +100,7 @@ final class ShareCreate5Method
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
             $share[] = Share::create_share(
-                $type,
+                $object_type,
                 $object_id,
                 true,
                 $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
