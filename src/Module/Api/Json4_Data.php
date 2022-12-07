@@ -311,8 +311,9 @@ class Json4_Data
             }
             $artist->format();
 
-            $rating     = new Rating($artist_id, 'artist');
-            $flag       = new Userflag($artist_id, 'artist');
+            $rating      = new Rating($artist_id, 'artist');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($artist_id, 'artist');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
@@ -339,8 +340,8 @@ class Json4_Data
                 "tag" => self::tags_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating() ?: null),
-                "rating" => ($rating->get_user_rating() ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
@@ -381,8 +382,9 @@ class Json4_Data
             $album = new Album($album_id);
             $album->format();
 
-            $rating = new Rating($album_id, 'album');
-            $flag   = new Userflag($album_id, 'album');
+            $rating      = new Rating($album_id, 'album');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($album_id, 'album');
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -426,8 +428,8 @@ class Json4_Data
             $theArray['tag']           = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
-            $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
-            $theArray['rating']        = ($rating->get_user_rating() ?: null);
+            $theArray['preciserating'] = $user_rating;
+            $theArray['rating']        = $user_rating;
             $theArray['averagerating'] = ($rating->get_average_rating() ?: null);
             $theArray['mbid']          = $album->mbid;
 
@@ -500,8 +502,9 @@ class Json4_Data
             } else {
                 $items = ($playitem_total ?: 0);
             }
-            $rating  = new Rating($playlist_id, $object_type);
-            $flag    = new Userflag($playlist_id, $object_type);
+            $rating      = new Rating($playlist_id, $object_type);
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($playlist_id, $object_type);
 
             // Build this element
             array_push($JSON, [
@@ -512,8 +515,8 @@ class Json4_Data
                 "type" => $playlist_type,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
-                "rating" => ($rating->get_user_rating($user->getId()) ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => (string) ($rating->get_average_rating() ?: null)]
             );
         } // end foreach
@@ -642,6 +645,7 @@ class Json4_Data
             $podcast = new Podcast($podcast_id);
             $podcast->format();
             $rating              = new Rating($podcast_id, 'podcast');
+            $user_rating         = $rating->get_user_rating($user->getId());
             $flag                = new Userflag($podcast_id, 'podcast');
             $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->get_fullname();
@@ -674,8 +678,8 @@ class Json4_Data
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
-                "rating" => ($rating->get_user_rating($user->getId()) ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "podcast_episode" => $podcast_episodes]);
         } // end foreach
@@ -703,9 +707,10 @@ class Json4_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
-            $rating  = new Rating($episode_id, 'podcast_episode');
-            $flag    = new Userflag($episode_id, 'podcast_episode');
-            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
+            $rating      = new Rating($episode_id, 'podcast_episode');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($episode_id, 'podcast_episode');
+            $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
                 "name" => $episode->get_fullname(),
@@ -725,8 +730,8 @@ class Json4_Data
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
-                "rating" => ($rating->get_user_rating($user->getId()) ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "played" => (string)$episode->played]);
         }
@@ -770,10 +775,11 @@ class Json4_Data
             }
 
             $song->format();
-            $rating   = new Rating($song_id, 'song');
-            $flag     = new Userflag($song_id, 'song');
-            $art_url  = Art::url($song->album, 'album', $_REQUEST['auth']);
-            $play_url = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $rating      = new Rating($song_id, 'song');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($song_id, 'song');
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $playlist_track++;
 
             $ourSong = array(
@@ -811,8 +817,8 @@ class Json4_Data
             $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
             $ourSong['art']                   = $art_url;
             $ourSong['flag']                  = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
-            $ourSong['preciserating']         = ($rating->get_user_rating() ?: null);
-            $ourSong['rating']                = ($rating->get_user_rating() ?: null);
+            $ourSong['preciserating']         = $user_rating;
+            $ourSong['rating']                = $user_rating;
             $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
             $ourSong['playcount']             = (int) $song->played;
             $ourSong['catalog']               = (int) $song->catalog;
@@ -864,9 +870,10 @@ class Json4_Data
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
-            $rating  = new Rating($video_id, 'video');
-            $flag    = new Userflag($video_id, 'video');
-            $art_url = Art::url($video_id, 'video', Core::get_request('auth'));
+            $rating      = new Rating($video_id, 'video');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($video_id, 'video');
+            $art_url     = Art::url($video_id, 'video', Core::get_request('auth'));
             array_push($JSON, array(
                 "id" => (string) $video->id,
                 "title" => $video->title,
@@ -878,8 +885,8 @@ class Json4_Data
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
-                "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
-                "rating" => ($rating->get_user_rating($user->getId()) ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => (string) ($rating->get_average_rating() ?: null)
             ));
         } // end foreach
@@ -910,9 +917,10 @@ class Json4_Data
             $song      = new $className($data['object_id']);
             $song->format();
 
-            $rating   = new Rating($song->id, 'song');
-            $art_url  = Art::url($song->album, 'album', $_REQUEST['auth']);
-            $play_url = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $rating      = new Rating($song->id, 'song');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
             array_push($JSON, array(
                 "id" => (string) $song->id,
@@ -926,8 +934,8 @@ class Json4_Data
                 "url" => $play_url,
                 "size" => (int) $song->size,
                 "art" => $art_url,
-                "preciserating" => ($rating->get_user_rating($user->getId()) ?: null),
-                "rating" => ($rating->get_user_rating($user->getId()) ?: null),
+                "preciserating" => $user_rating,
+                "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "vote" => $democratic->get_vote($row_id),
                 "genre" => self::tags_array($song->tags, true)
