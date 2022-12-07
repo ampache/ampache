@@ -510,7 +510,6 @@ This returns the songs of a specified album
 | Input    | Type    | Description                                               | Optional |
 |----------|---------|-----------------------------------------------------------|---------:|
 | 'filter' | string  | UID of Album, returns song JSON                           |       NO |
-| 'exact'  | boolean | `0`, `1` (if true don't group songs from different disks) |      YES |
 | 'offset' | integer | Return results starting from this index position          |      YES |
 | 'limit'  | integer | Maximum number of results to return                       |      YES |
 

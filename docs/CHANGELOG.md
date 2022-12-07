@@ -96,6 +96,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * API6 (Based on API5)
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
+  * Cast bool fields to `true` and `false` instead of "1" & "0"
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
