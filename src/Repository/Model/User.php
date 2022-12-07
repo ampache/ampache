@@ -1180,6 +1180,23 @@ class User extends database_object
      */
     public static function fix_preferences($user_id)
     {
+        // Check default group (autoincrement starts at 1 so force it to be 0)
+        $sql        = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            // reinsert missing default group
+            $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
+            Dba::write($sql);
+            $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
+            Dba::write($sql);
+            $sql        = "SELECT MAX(`id`) AS `filter_count` FROM `catalog_filter_group`;";
+            $db_results = Dba::read($sql);
+            $row        = Dba::fetch_assoc($db_results);
+            $increment  = (int)($row['filter_count'] ?? 0) + 1;
+            $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = ?;";
+            Dba::write($sql, array($increment));
+        }
+
         /* Get All Preferences for the current user */
         $sql          = "SELECT * FROM `user_preference` WHERE `user` = ?";
         $db_results   = Dba::read($sql, array($user_id));
