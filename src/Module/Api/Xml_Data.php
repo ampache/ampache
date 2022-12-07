@@ -694,6 +694,11 @@ class Xml_Data
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
                 : '';
 
+            // count multiple disks
+            if ($album->allow_group_disks) {
+                $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
+            }
+
             $string .= "\t<time>" . $album->total_duration . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $disk . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId(), false) ? 0 : 1) . "</flag>\n\t<preciserating>" . $rating->get_user_rating($user->getId()) . "</preciserating>\n\t<rating>" . $rating->get_user_rating($user->getId()) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         } // end foreach
 
