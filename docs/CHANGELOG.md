@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.6-develop
+## Ampache 5.5.6-release
 
 This release imports the API code cleanup from Ampache Develop which has fixed a lot of data issues.
 
@@ -27,14 +27,20 @@ Fix various runtime errors and incorrect parameters for responses.
 
 ### Fixed
 
-* Api5::songs set_filter call without browse parameter may have lost info
-* Api4::songs set_filter call without browse parameter may have lost info
-* Api5::get_indexes set album_artist filter correctly
-* Api4::get_indexes set album_artist filter correctly
-* Api5::artists set album_artist filter correctly
-* Api3 calls to songs with user ID instead of user object
-* Api4::timeline incorrect JSON attribute `data` instead of `date`
-* Api4::catalogs JSON had incorrect data for `last_add` and missing `enabled`
+* Api5
+  * `songs` set_filter call without browse parameter may have lost info
+  * `get_indexes` set album_artist filter correctly
+  * `artists` set album_artist filter correctly
+* Api4
+  * `songs` set_filter call without browse parameter may have lost info
+  * `get_indexes` set album_artist filter correctly
+  * `timeline` incorrect JSON attribute `data` instead of `date`
+  * `catalogs` JSON had incorrect data for `last_add` and missing `enabled`
+  * `albums` return an empty response with a bad artist id
+* Api3
+  * `album_songs` return an empty response with a bad album id
+  * `artist_albums` return an empty response with a bad artist id
+  * Calls to `songs` with user ID instead of user object
 
 ## Ampache 5.5.5-release
 
