@@ -1178,38 +1178,44 @@ class User extends database_object
      */
     public static function fix_preferences($user_id)
     {
-        $user_id = Dba::escape($user_id);
-
-        // Delete that system pref that's not a user pref...
-        if ($user_id > 0) {
-            // TODO, remove before next release. ('custom_login_logo' needs to be here a while at least so 5.0.0+1)
-            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` IN ('custom_login_background', 'custom_login_logo')) AND `user` = $user_id";
+        // Check default group (autoincrement starts at 1 so force it to be 0)
+        $sql        = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
+        $db_results = Dba::read($sql);
+        if (!$db_results) {
+            // reinsert missing default group
+            $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
             Dba::write($sql);
+            $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
+            Dba::write($sql);
+            $sql        = "SELECT MAX(`id`) AS `filter_count` FROM `catalog_filter_group`;";
+            $db_results = Dba::read($sql);
+            $row        = Dba::fetch_assoc($db_results);
+            $increment  = (int)($row['filter_count'] ?? 0) + 1;
+            $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = ?;";
+            Dba::write($sql, array($increment));
         }
 
         /* Get All Preferences for the current user */
-        $sql        = "SELECT * FROM `user_preference` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($user_id));
-
+        $sql          = "SELECT * FROM `user_preference` WHERE `user` = ?";
+        $db_results   = Dba::read($sql, array($user_id));
         $results      = array();
         $zero_results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $pref_id = $row['preference'];
-            /* Check for duplicates */
+            // Check for duplicates
             if (isset($results[$pref_id])) {
-                $row['value'] = Dba::escape($row['value']);
-                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND `value`='" . Dba::escape($row['value']) . "'";
-                Dba::write($sql);
+                $sql = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference`= ? AND `value` = ?;";
+                Dba::write($sql, array($user_id, $row['preference'], $row['value']));
             } else {
                 // if its set
                 $results[$pref_id] = 1;
             }
         } // end while
 
-        /* If we aren't the -1 user before we continue grab the -1 users values */
+        // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
         if ($user_id != '-1') {
-            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system' AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo') ";
+            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` NOT IN ('plugins', 'system');";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1223,22 +1229,20 @@ class User extends database_object
 
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
-            $sql .= " WHERE catagory !='system'";
-            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo')";
+            $sql .= " WHERE catagory !='system';";
         }
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $key = $row['id'];
 
-            /* Check if this preference is set */
+            // Check if this preference is set
             if (!isset($results[$key])) {
                 if (isset($zero_results[$key])) {
                     $row['value'] = $zero_results[$key];
                 }
-                $value = Dba::escape($row['value']);
-                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES ('$user_id', '$key', '$value')";
-                Dba::write($sql);
+                $sql   = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES (?, ?, ?)";
+                Dba::write($sql, array($user_id, $key, $row['value']));
             }
         } // while preferences
     } // fix_preferences
