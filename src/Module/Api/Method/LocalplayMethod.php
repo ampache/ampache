@@ -134,6 +134,10 @@ final class LocalplayMethod
                 break;
             case 'status':
                 $status = $localplay->status();
+                if ($input['api_format'] == 'json') {
+                    $status['repeat'] = (bool)$status['repeat'];
+                    $status['random'] = (bool)$status['random'];
+                }
                 break;
             default:
                 // They are doing it wrong

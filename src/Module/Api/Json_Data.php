@@ -419,7 +419,7 @@ class Json_Data
                 "songcount" => $artist->song_count,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
@@ -504,7 +504,7 @@ class Json_Data
             $ourArray['type']          = $album->release_type;
             $ourArray['genre']         = self::genre_array($album->tags);
             $ourArray['art']           = $art_url;
-            $ourArray['flag']          = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
+            $ourArray['flag']          = (!$flag->get_flag($user->getId(), false) ? false : true);
             $ourArray['preciserating'] = $user_rating;
             $ourArray['rating']        = $user_rating;
             $ourArray['averagerating'] = $rating->get_average_rating();
@@ -594,7 +594,7 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating()
@@ -626,8 +626,8 @@ class Json_Data
             $share                = new Share($share_id);
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
-            $share_allow_stream   = (int)$share->allow_stream;
-            $share_allow_download = (int)$share->allow_download;
+            $share_allow_stream   = (bool)$share->allow_stream;
+            $share_allow_download = (bool)$share->allow_download;
             $share_creation_date  = $share->creation_date;
             $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
@@ -725,7 +725,7 @@ class Json_Data
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
-            $catalog_enabled        = (int)$catalog->enabled;
+            $catalog_enabled        = (bool)$catalog->enabled;
             $catalog_last_add       = $catalog->last_add;
             $catalog_last_clean     = $catalog->last_clean;
             $catalog_last_update    = $catalog->last_update;
@@ -806,7 +806,7 @@ class Json_Data
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
@@ -863,7 +863,7 @@ class Json_Data
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
@@ -964,7 +964,7 @@ class Json_Data
             $ourArray['artist_mbid']           = $song->artist_mbid;
             $ourArray['albumartist_mbid']      = $song->albumartist_mbid;
             $ourArray['art']                   = $art_url;
-            $ourArray['flag']                  = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
+            $ourArray['flag']                  = (!$flag->get_flag($user->getId(), false) ? false : true);
             $ourArray['preciserating']         = $user_rating;
             $ourArray['rating']                = $user_rating;
             $ourArray['averagerating']         = $rating->get_average_rating();
@@ -1037,7 +1037,7 @@ class Json_Data
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? 0 : 1),
+                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
@@ -1137,7 +1137,7 @@ class Json_Data
                 "streamtoken" => $user->streamtoken,
                 "fullname_public" => (int)$user->fullname_public,
                 "validation" => $user->validation,
-                "disabled" => (int)$user->disabled,
+                "disabled" => (bool)$user->disabled,
                 "create_date" => (int)$user->create_date,
                 "last_seen" => (int)$user->last_seen,
                 "website" => $user->website,
