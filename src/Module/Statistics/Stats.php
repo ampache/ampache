@@ -837,7 +837,7 @@ class Stats
                 : "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$user_id') ";
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit;
-        debug_event(self::class, 'get_recently_played ' . $sql, 5);
+        //debug_event(self::class, 'get_recently_played ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
