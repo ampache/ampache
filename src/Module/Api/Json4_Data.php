@@ -548,7 +548,7 @@ class Json4_Data
             $share_creation_date  = $share->creation_date;
             $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
-            $share_object_id      = $share->object_id;
+            $share_object_id      = (string)$share->object_id;
             $share_expire_days    = $share->expire_days;
             $share_max_counter    = $share->max_counter;
             $share_counter        = $share->counter;
@@ -565,7 +565,7 @@ class Json4_Data
                 "creation_date" => $share_creation_date,
                 "lastvisit_date" => $share_lastvisit_date,
                 "object_type" => $share_object_type,
-                "object_id" => (string)$share_object_id,
+                "object_id" => $share_object_id,
                 "expire_days" => $share_expire_days,
                 "max_counter" => $share_max_counter,
                 "counter" => $share_counter,

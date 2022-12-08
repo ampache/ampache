@@ -80,10 +80,8 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
      */
     public function getCatalogDetails(): array
     {
+        $result   = [];
         $catalogs = Catalog::get_catalogs();
-
-        $result = [];
-
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog) {

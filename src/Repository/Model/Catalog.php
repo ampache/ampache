@@ -1058,6 +1058,10 @@ abstract class Catalog extends database_object
             $params[] = $filter_type;
             $join     = 'AND';
         }
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "$join `enabled` = 1 ";
+            $join = 'AND';
+        }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= $join . self::get_user_filter('catalog', $user_id);
         }

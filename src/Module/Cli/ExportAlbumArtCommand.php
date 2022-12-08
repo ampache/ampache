@@ -65,17 +65,15 @@ final class ExportAlbumArtCommand extends Command
     public function execute(
         string $type
     ): void {
-        $interactor = $this->app()->io();
-
+        $interactor         = $this->app()->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
-
-        $catalogs = Catalog::get_catalogs();
 
         $interactor->info(
             T_('Start Album Art Dump'),
             true
         );
 
+        $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
 

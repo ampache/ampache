@@ -631,7 +631,7 @@ class Json_Data
             $share_creation_date  = $share->creation_date;
             $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
-            $share_object_id      = $share->object_id;
+            $share_object_id      = (string)$share->object_id;
             $share_expire_days    = (int)$share->expire_days;
             $share_max_counter    = (int)$share->max_counter;
             $share_counter        = (int)$share->counter;
@@ -648,7 +648,7 @@ class Json_Data
                 "creation_date" => $share_creation_date,
                 "lastvisit_date" => $share_lastvisit_date,
                 "object_type" => $share_object_type,
-                "object_id" => (string)$share_object_id,
+                "object_id" => $share_object_id,
                 "expire_days" => $share_expire_days,
                 "max_counter" => $share_max_counter,
                 "counter" => $share_counter,
@@ -682,7 +682,7 @@ class Json_Data
             $bookmark               = new Bookmark($bookmark_id);
             $bookmark_user          = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
-            $bookmark_object_id     = $bookmark->object_id;
+            $bookmark_object_id     = (string)$bookmark->object_id;
             $bookmark_position      = $bookmark->position;
             $bookmark_comment       = $bookmark->comment;
             $bookmark_creation_date = $bookmark->creation_date;
@@ -692,7 +692,7 @@ class Json_Data
                 "id" => (string)$bookmark_id,
                 "owner" => $bookmark_user,
                 "object_type" => $bookmark_object_type,
-                "object_id" => (string)$bookmark_object_id,
+                "object_id" => $bookmark_object_id,
                 "position" => $bookmark_position,
                 "client" => $bookmark_comment,
                 "creation_date" => $bookmark_creation_date,
