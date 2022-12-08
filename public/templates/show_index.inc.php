@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
@@ -71,7 +72,7 @@ if (isset($user->id)) {
 <div id="recently_played">
     <?php
         $user_id   = Core::get_global('user')->id ?? -1;
-        $data      = Song::get_recently_played($user_id);
+        $data      = Stats::get_recently_played($user_id, 'stream', 'song');
         $ajax_page = 'index';
         Song::build_cache(array_keys($data));
         require_once Ui::find_template('show_recently_played.inc.php'); ?>

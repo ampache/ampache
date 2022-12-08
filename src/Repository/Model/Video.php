@@ -423,6 +423,34 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
+     * get_f_artist_link
+     *
+     * @return string
+     */
+    public function get_f_artist_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     * @return string
+     */
+    public function get_f_album_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     * @return string
+     */
+    public function get_f_album_disk_link()
+    {
+        return '';
+    }
+
+    /**
      * Get parent item description.
      * @return array|null
      */

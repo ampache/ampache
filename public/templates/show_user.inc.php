@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -160,7 +161,7 @@ if (AmpConfig::get('sociable')) {
         }
             $ajax_page = 'stats';
             $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = Song::get_recently_played_by_user($client->getId());
+            $data      = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
             Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
@@ -168,7 +169,7 @@ if (AmpConfig::get('sociable')) {
             <?php
             $ajax_page = 'stats';
             $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = Song::get_recently_played_by_user($client->getId(), 'skip');
+            $data      = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
             Song::build_cache(array_keys($data));
             require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
