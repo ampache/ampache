@@ -108,7 +108,7 @@ $web_path = AmpConfig::get('web_path');
     </dd>
 <?php
     $songprops[T_('Title')]                  = $episode->get_fullname();
-    $songprops[T_('Description')]            = $episode->f_description;
+    $songprops[T_('Description')]            = $episode->description;
     $songprops[T_('Category')]               = $episode->f_category;
     $songprops[T_('Author')]                 = $episode->f_author;
     $songprops[T_('Publication Date')]       = $episode->f_pubdate;
