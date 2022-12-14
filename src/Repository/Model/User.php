@@ -354,7 +354,6 @@ class User extends database_object
         return $catalogs;
     } // get_catalogs
 
-
     /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
@@ -364,7 +363,6 @@ class User extends database_object
     {
         return self::get_user_catalogs($this->id);
     } // get_catalogs
-
 
     /**
      * get_preferences
@@ -1440,8 +1438,11 @@ class User extends database_object
             $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
-            $image_data     = Art::get_from_source($upload, 'user');
+            if (!in_array(strtolower($path_info['extension']), Art::VALID_TYPES)) {
+                return false;
+            }
 
+            $image_data = Art::get_from_source($upload, 'user');
             if ($image_data !== '') {
                 return $this->update_avatar($image_data, $upload['mime']);
             }

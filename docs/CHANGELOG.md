@@ -18,6 +18,8 @@ There will probably not be another big change to Ampache 5 as work has moved to 
 * Missing translation on preferences sidebar
 * Default catalog_filter group could be missing on a new install
 * Gather genre tags when not an array
+* Display webp images
+* Check for a valid image extensions when uploading art
 
 ## API 5.5.6
 

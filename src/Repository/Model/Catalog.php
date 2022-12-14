@@ -3821,6 +3821,7 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
     }
+
     /**
      * Delete catalog filters that might have gone missing
      */
