@@ -46,8 +46,8 @@ use Ampache\Module\Util\Ui;
     </div>
 </div>
 <div id="item_summary">
-    <?php if (array_key_exists('summary', $biography) && !empty(trim($biography['summary']))) { ?>
-        <?php echo nl2br($biography['summary']); ?>
+    <?php if (array_key_exists('summary', $biography) && !empty($biography['summary'])) { ?>
+        <?php echo nl2br(trim($biography['summary'])); ?>
         <?php
     }?>
 </div>

@@ -1062,7 +1062,7 @@ class Query
         $filtered = array();
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if ($this->logic_filter($data['id'])) {
+            if (array_key_exists('id', $data) && $this->logic_filter($data['id'])) {
                 $filtered[] = $data['id'];
             }
         } // end while
@@ -1262,6 +1262,8 @@ class Query
             // Add catalog enabled filter
             switch ($this->get_type()) {
                 case "video":
+                    $dis = Catalog::get_enable_filter('video', '`' . $this->get_type() . '`.`id`');
+                    break;
                 case "song":
                     $dis = Catalog::get_enable_filter('song', '`' . $this->get_type() . '`.`id`');
                     break;

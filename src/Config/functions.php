@@ -971,10 +971,10 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     $params = array();
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ?";
+        $sql .= "WHERE `gather_types` = ? ";
         $params[] = $filter_type;
     }
-    $sql .= "ORDER BY `name`";
+    $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
     $results    = array();
     while ($row = Dba::fetch_assoc($db_results)) {

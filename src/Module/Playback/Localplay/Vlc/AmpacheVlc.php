@@ -517,7 +517,7 @@ class AmpacheVlc extends localplay_controller
                         // if it's a http stream not in ampacha's database just show the url'
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
-                        // it's a file get the last output after  and show that, hard to take every output possible in account
+                        // it's a file get the last output after and show that, hard to take every output possible in account
                         $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));

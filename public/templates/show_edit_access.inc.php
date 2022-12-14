@@ -45,7 +45,7 @@ $all          = T_('All'); ?>
             <td><?php echo T_('Level') . ':'; ?></td>
             <td colspan="3">
                 <?php $name = 'level_' . $access->getLevel(); ${$name} = 'checked="checked"'; ?>
-                <input type="radio" name="level" value="5"  <?php echo $level_5;  ?>><?php echo T_('View'); ?>
+                <input type="radio" name="level" value="5" <?php echo $level_5; ?>><?php echo T_('View'); ?>
                 <input type="radio" name="level" value="25" <?php echo $level_25; ?>><?php echo T_('Read'); ?>
                 <input type="radio" name="level" value="50" <?php echo $level_50; ?>><?php echo T_('Read/Write'); ?>
                 <input type="radio" name="level" value="75" <?php echo $level_75; ?>><?php echo $all; ?>

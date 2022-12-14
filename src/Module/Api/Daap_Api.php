@@ -258,7 +258,7 @@ class Daap_Api
         if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
             $db_results = Dba::read($sql, array(
                 Core::get_get('session-id')
             ));
@@ -309,7 +309,7 @@ class Daap_Api
     {
         self::check_auth();
 
-        $sql = "DELETE FROM `daap_session` WHERE `id` = ?";
+        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
         Dba::write($sql, array(
             $input['session-id']
         ));
