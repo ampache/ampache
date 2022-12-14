@@ -112,7 +112,7 @@ $subtitles = $video->get_subtitles();
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo addslashes(T_('Video Edit')) ?>', '')">
