@@ -829,7 +829,7 @@ class Stats
         $results = array();
         $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
         // check for valid catalogs
-        $sql .= " AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs()) . ") ";
+        $sql .= " AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ";
 
         if ((int)$user_id > 0 && !$access100) {
             $sql .= ($user_only)
@@ -937,9 +937,8 @@ class Stats
 
             return $sql;
         }
-        $base_type         = 'song';
-        $join              = 'WHERE';
-        $filter_type       = $type;
+        $base_type   = 'song';
+        $filter_type = $type;
         // everything else
         if ($type === 'song') {
             $sql      = "SELECT DISTINCT(`song`.`id`) AS `id`, `song`.`addition_time` AS `real_atime` FROM `song` ";
@@ -979,24 +978,15 @@ class Stats
             $sql      = "SELECT MIN(`$type`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
             $sql_type = "`song`.`" . $type . "`";
         }
-        // join catalogs
-        $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= $join . " `catalog`.`enabled` = '1' ";
-            $join = ' AND';
-        }
-        if ($catalog_filter && $user_id > 0) {
-            $sql .= $join . Catalog::get_user_filter($filter_type, $user_id) . " ";
-            $join = ' AND';
-        }
-        if ($catalog > 0) {
-            $sql .= $join . " `catalog` = '" . (string)scrub_in($catalog) . "' ";
-            $join = ' AND';
-        }
+        // join valid catalogs or a specific one
+        $sql .= ($catalog > 0)
+            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . (string)scrub_in($catalog) . "' "
+            : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ";
+
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)Core::get_global('user')->id;
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
-            $sql .= $join . " " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
+            $sql .= "AND " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
         }
         if ($type === 'song' || $type == 'album' || $base_type === 'video') {
             $sql .= "GROUP BY $sql_type, `real_atime` ORDER BY `real_atime` DESC ";

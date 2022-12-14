@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -45,17 +44,7 @@ final class VideoRepository implements VideoRepositoryInterface
             $count = 1;
         }
 
-        $sql   = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ";
-        $where = "WHERE `video`.`enabled` = '1' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-            $where .= "AND `catalog`.`enabled` = '1' ";
-        }
-
-        $sql .= $where;
-        if (AmpConfig::get('catalog_filter') && $userId > 0) {
-            $sql .= " AND" . Catalog::get_user_filter('video', $userId);
-        }
+        $sql = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
         $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
 

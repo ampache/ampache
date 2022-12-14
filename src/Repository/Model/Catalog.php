@@ -838,10 +838,10 @@ abstract class Catalog extends database_object
                 $sql  = " `album`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "label":
-                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist'  AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `label_asso`.`label`) ";
+                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `label_asso`.`label`) ";
                 break;
             case "playlist":
-                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song'  AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `playlist_data`.`playlist`) ";
+                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song' AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `playlist_data`.`playlist`) ";
                 break;
             case "share":
                 $sql = " `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)   GROUP BY `share`.`object_id`, `share`.`object_type`) ";
@@ -1350,13 +1350,13 @@ abstract class Catalog extends database_object
             : "WHERE `song`.`user_upload` IS NOT NULL";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
+                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql GROUP BY `album`.`id`";
+                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
             case 'artist':
-                $sql = "SELECT `artist`.`id` AS `id` FROM `artist` JOIN `song` ON `song`.`artist` = `artist`.`id` $where_sql GROUP BY `artist`.`id`";
+                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
         }
 

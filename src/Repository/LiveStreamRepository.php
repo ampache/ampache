@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 
@@ -34,7 +34,8 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
      */
     public function getAll(): array
     {
-        $sql        = "SELECT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`catalog_id` = `live_stream`.`catalog` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs()) . ");";
+        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $sql        = "SELECT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`catalog_id` = `live_stream`.`catalog` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ");";
         $db_results = Dba::read($sql);
         $radios     = [];
 
