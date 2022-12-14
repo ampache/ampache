@@ -85,16 +85,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $artist_filename    = $this->configContainer->get('artist_art_preferred_filename');
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
-        // Array of valid extensions
-        $image_extensions = [
-            'bmp',
-            'gif',
-            'jp2',
-            'jpeg',
-            'jpg',
-            'png'
-        ];
-
         $dirs = array();
         if ($art->type == 'album') {
             $media = new Album($art->uid);
@@ -154,7 +144,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $extension = $extension['extension'] ?? '';
 
                 // Make sure it looks like an image file
-                if (!in_array($extension, $image_extensions)) {
+                if (!in_array($extension, Art::VALID_TYPES)) {
                     continue;
                 }
 

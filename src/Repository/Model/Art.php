@@ -49,6 +49,7 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
+    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
 
     /**
      * @var integer $id
@@ -402,8 +403,12 @@ class Art extends database_object
                 /* is the file flac or mp3? */
                 $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = array('data' => $source, 'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                $new_pic       = array(
+                    'data' => $source,
+                    'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid,
+                    'description' => $description
+                );
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][]    = $new_pic;
@@ -413,8 +418,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = array('data' => $apics[0]['data'], 'description' => $apics[0]['description'],
-                                    'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']);
+                                $ndata['attached_picture'][] = array(
+                                    'data' => $apics[0]['data'],
+                                    'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'],
+                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                );
                             }
                             break;
                         case 2:
@@ -427,8 +436,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
-                                'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
+                                $ndata['attached_picture'][$apicsId]  = array(
+                                    'data' => $apics[$apicsId]['data'],
+                                    'mime' => $apics[$apicsId][$apic_mimetype],
+                                    'picturetypeid' => $apics[$apicsId][$apic_typeid],
+                                    'description' => $apics[$apicsId]['description']
+                                );
                             }
 
                             break;

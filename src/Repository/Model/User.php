@@ -1456,8 +1456,11 @@ class User extends database_object
             $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
-            $image_data     = Art::get_from_source($upload, 'user');
+            if (!in_array(strtolower($path_info['extension']), Art::VALID_TYPES)) {
+                return false;
+            }
 
+            $image_data = Art::get_from_source($upload, 'user');
             if ($image_data !== '') {
                 return $this->update_avatar($image_data, $upload['mime']);
             }
