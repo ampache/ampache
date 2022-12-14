@@ -924,6 +924,10 @@ class Art extends database_object
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
                 break;
+            case 'webp':
+                imagewebp($thumbnail);
+                $mime_type = image_type_to_mime_type(IMAGETYPE_WEBP);
+                break;
             default:
                 $mime_type = null;
         } // resized
