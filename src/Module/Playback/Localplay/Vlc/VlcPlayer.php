@@ -292,7 +292,6 @@ class VlcPlayer
         return $results;
     } // fullstate
 
-
     /**
      * volume_up
      * This increases the volume of VLC, set to +20 can be changed to your preference

@@ -354,7 +354,6 @@ class User extends database_object
         return $catalogs;
     } // get_catalogs
 
-
     /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
@@ -364,7 +363,6 @@ class User extends database_object
     {
         return self::get_user_catalogs($this->id);
     } // get_catalogs
-
 
     /**
      * get_preferences
@@ -1179,9 +1177,11 @@ class User extends database_object
     public static function fix_preferences($user_id)
     {
         // Check default group (autoincrement starts at 1 so force it to be 0)
-        $sql        = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
+        $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
         $db_results = Dba::read($sql);
-        if (!$db_results) {
+        $row        = Dba::fetch_assoc($db_results);
+        if (!array_key_exists('id', $row) || ($row['id'] ?? '') != 0) {
+            debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
             // reinsert missing default group
             $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
             Dba::write($sql);
@@ -1191,8 +1191,8 @@ class User extends database_object
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_assoc($db_results);
             $increment  = (int)($row['filter_count'] ?? 0) + 1;
-            $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = ?;";
-            Dba::write($sql, array($increment));
+            $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = $increment;";
+            Dba::write($sql);
         }
 
         /* Get All Preferences for the current user */
@@ -1438,8 +1438,11 @@ class User extends database_object
             $path_info      = pathinfo($_FILES['avatar']['name']);
             $upload['file'] = $_FILES['avatar']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
-            $image_data     = Art::get_from_source($upload, 'user');
+            if (!in_array(strtolower($path_info['extension']), Art::VALID_TYPES)) {
+                return false;
+            }
 
+            $image_data = Art::get_from_source($upload, 'user');
             if ($image_data !== '') {
                 return $this->update_avatar($image_data, $upload['mime']);
             }

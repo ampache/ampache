@@ -35,7 +35,6 @@ class UPnPDevice
         "eventURLs" => array()
     );
 
-
     /**
      * UPnPDevice constructor.
      * @param $descriptionUrl

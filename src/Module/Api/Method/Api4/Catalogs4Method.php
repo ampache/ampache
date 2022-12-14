@@ -49,7 +49,7 @@ final class Catalogs4Method
     public static function catalogs(array $input)
     {
         // filter for specific catalog types
-        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
 
         ob_end_clean();

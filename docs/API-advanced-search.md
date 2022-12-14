@@ -93,6 +93,8 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | placeformed              | Place Formed                            | text              |                                artist                                 |
 | release_type             | Release Type                            | text              |                                 album                                 |
 | release_status           | Release Status                          | text              |                                 album                                 |
+| barcode                  | Barcode                                 | text              |                                 album                                 |
+| catalog_number           | Catalog Number                          | text              |                                 album                                 |
 | myrating                 | My Rating                               | numeric           |                          song, album, artist                          |
 | rating                   | Rating (Average)                        | numeric           |                          song, album, artist                          |
 | songrating               | My Rating (Song)                        | numeric           |                             album, artist                             |

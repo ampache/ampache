@@ -15,6 +15,11 @@ There will probably not be another big change to Ampache 5 as work has moved to 
 * Spotify art collector (**AGAIN**)
 * get_now_playing `has_access` check
 * Malformed HTML for regular users in preferences sidebar
+* Missing translation on preferences sidebar
+* Default catalog_filter group could be missing on a new install
+* Gather genre tags when not an array
+* Display webp images
+* Check for a valid image extensions when uploading art
 
 ## API 5.5.6
 
@@ -31,6 +36,7 @@ Fix various runtime errors and incorrect parameters for responses.
   * `songs` set_filter call without browse parameter may have lost info
   * `get_indexes` set album_artist filter correctly
   * `artists` set album_artist filter correctly
+  * `share_create` undefined filter check
 * Api4
   * `songs` set_filter call without browse parameter may have lost info
   * `get_indexes` set album_artist filter correctly
@@ -38,6 +44,12 @@ Fix various runtime errors and incorrect parameters for responses.
   * `catalogs` JSON had incorrect data for `last_add` and missing `enabled`
   * `albums` return an empty response with a bad artist id
   * `download` url parameter order matching "client, action, cache"
+  * `catalogs` undefined filter check
+  * `podcast` undefined filter check
+  * `podcast_edit` undefined filter check
+  * `podcasts` undefined filter check
+  * `share_create` undefined filter check
+  * `share_edit` undefined filter check
 * Api3
   * `album_songs` return an empty response with a bad album id
   * `artist_albums` return an empty response with a bad artist id

@@ -370,7 +370,7 @@ class Api
         // Now we need to quickly get the totals
         $client      = static::getUserRepository()->findByApiKey(trim($token));
         $counts      = Catalog::get_server_counts($client->id);
-        $album_count = (Preference::get('album_group', $client->id))
+        $album_count = (array_key_exists('album_group', $counts) && Preference::get('album_group', $client->id))
             ? (int)$counts['album_group']
             : (int)$counts['album'];
         $playlists = (AmpConfig::get('hide_search', false))

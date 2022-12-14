@@ -71,7 +71,7 @@ final class Podcasts4Method
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $podcasts = $browse->get_objects();
-        $episodes = $input['include'] == 'episodes';
+        $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
         $user     = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();

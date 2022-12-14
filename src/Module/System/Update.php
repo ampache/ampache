@@ -2368,8 +2368,6 @@ class Update
         return $retval;
     }
 
-
-
     /**
      * update_370028
      *

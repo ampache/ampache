@@ -2464,6 +2464,9 @@ abstract class Catalog extends database_object
         // genre is used in the tag and tag_map tables
         $tag_array = array();
         if (!empty($results['genre'])) {
+            if (!is_array($results['genre'])) {
+                $results['genre'] = array($results['genre']);
+            }
             // check if this thing has been renamed into something else
             foreach ($results['genre'] as $tagName) {
                 $merged = Tag::construct_from_name($tagName);
@@ -3818,6 +3821,7 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
     }
+
     /**
      * Delete catalog filters that might have gone missing
      */
