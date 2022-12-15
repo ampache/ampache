@@ -1329,7 +1329,7 @@ class Xml_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media->play_url('', 'api', false, $user->getId());
+                $surl  = $media->play_url('', 'api', false, $user->getId(), $user->streamtoken);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string)$media->mime);
                 $xencl->addAttribute("length", (string)$media->size);
