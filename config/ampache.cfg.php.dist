@@ -568,14 +568,16 @@ sociable = "true"
 
 ; Album Art Store on Disk
 ; This defines if arts should be stored on disk instead of database.
+; You must also set a local_metadata_dir below. This folder should be
+; a local folder that is not accessible from a browser.
 ; DEFAULT: "false"
 ;album_art_store_disk = "true"
 
 ; Local Metadata Directory
-; This define a local metadata directory with write access where to store
-; heavy data if enabled (album arts, ...)
+; This define a local metadata directory OUTSIDE the web path with write access.
+; This is used to store heavy data if enabled (album art, waveforms, etc)
 ; DEFAULT: none
-;local_metadata_dir = "/metadata"
+;local_metadata_dir = "/var/www/metadata"
 
 ; Maximal upload size
 ; Specify the maximal allowed upload size for images, in bytes.
@@ -584,8 +586,8 @@ sociable = "true"
 
 ; Album Art Minimum Width
 ; Specify the minimum width for arts (in pixel).
-; DEFAULT: none
-;album_art_min_width = 100
+; DEFAULT: 30
+album_art_min_width = 30
 
 ; Album Art Maximum Width
 ; Specify the maximum width for arts (in pixel).
@@ -594,8 +596,8 @@ sociable = "true"
 
 ; Album Art Minimum Height
 ; Specify the minimum height for arts (in pixel).
-; DEFAULT: none
-;album_art_min_height = 100
+; DEFAULT: 30
+album_art_min_height = 30
 
 ; Album Art Maximum Height
 ; Specify the maximum height for arts (in pixel).
