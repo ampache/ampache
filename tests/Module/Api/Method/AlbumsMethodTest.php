@@ -31,6 +31,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -67,6 +68,7 @@ class AlbumsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
+        $user       = $this->mock(User::class);
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -82,6 +84,12 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_sort')
             ->with('name', 'ASC')
             ->once();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
             ->once()
@@ -105,12 +113,12 @@ class AlbumsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
-        $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $userId  = 666;
+        $albums  = [666];
         $result  = 'some-result';
-        $include = [123, 456];
+        $include = ['songs'];
         $limit   = 42;
         $offset  = 33;
 
@@ -128,21 +136,22 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_sort')
             ->with('name', 'ASC')
             ->once();
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
             ->once()
-            ->andReturn([$album]);
-
-        $gatekeeper->shouldReceive('getUser->getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
+            ->andReturn($albums);
 
         $output->shouldReceive('albums')
             ->with(
-                [$album],
+                $albums,
                 $include,
-                $userId,
+                $user,
                 true,
                 true,
                 $limit,

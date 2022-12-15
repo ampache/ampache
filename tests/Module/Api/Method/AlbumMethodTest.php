@@ -31,6 +31,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -74,9 +75,15 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
 
         $albumId = 666;
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -99,6 +106,7 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
         $stream     = $this->mock(StreamInterface::class);
 
@@ -106,6 +114,11 @@ class AlbumMethodTest extends MockeryTestCase
         $userId  = 42;
         $include = [3];
         $result  = 'some-result';
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -121,16 +134,11 @@ class AlbumMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($albumId);
 
-        $gatekeeper->shouldReceive('getUser->getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
         $output->shouldReceive('albums')
             ->with(
                 [$albumId],
                 $include,
-                $userId,
+                $user,
                 true,
                 false
             )

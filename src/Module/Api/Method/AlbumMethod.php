@@ -85,12 +85,11 @@ final class AlbumMethod implements MethodInterface
             );
         }
 
+        $user  = $gatekeeper->getUser();
         $album = $this->modelFactory->createAlbum((int) $objectId);
-
-        if ($album->isNew()) {
+        if ($album->isNew() || !$user) {
             throw new ResultEmptyException((string) $objectId);
         }
-
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
@@ -99,7 +98,7 @@ final class AlbumMethod implements MethodInterface
         $result = $output->albums(
             [$album->getId()],
             $include,
-            $gatekeeper->getUser(),
+            $user,
             true,
             false
         );
