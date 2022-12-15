@@ -72,10 +72,10 @@ final class LicenseSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs($song_ids, $user->id);
+                echo Json_Data::songs($song_ids, $user);
                 break;
             default:
-                echo Xml_Data::songs($song_ids, $user->id);
+                echo Xml_Data::songs($song_ids, $user);
         }
 
         return true;

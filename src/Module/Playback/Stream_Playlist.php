@@ -760,7 +760,6 @@ class Stream_Playlist
         return false;
     } // create_download
 
-
     /**
      * create_ram
      *this functions creates a RAM file for use by Real Player

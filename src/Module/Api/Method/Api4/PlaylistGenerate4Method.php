@@ -82,7 +82,7 @@ final class PlaylistGenerate4Method
 
             // not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
-            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
+            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold', 7);
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
@@ -157,12 +157,12 @@ final class PlaylistGenerate4Method
                     case 'json':
                         Json4_Data::set_offset($input['offset'] ?? 0);
                         Json4_Data::set_limit($input['limit'] ?? 0);
-                        echo Json4_Data::indexes($song_ids, 'song', $user->id);
+                        echo Json4_Data::indexes($song_ids, 'song', $user);
                     break;
                     default:
                         Xml4_Data::set_offset($input['offset'] ?? 0);
                         Xml4_Data::set_limit($input['limit'] ?? 0);
-                        echo Xml4_Data::indexes($song_ids, 'song', $user->id);
+                        echo Xml4_Data::indexes($song_ids, 'song', $user);
                 }
                 break;
             case 'song':
@@ -171,12 +171,12 @@ final class PlaylistGenerate4Method
                     case 'json':
                         Json4_Data::set_offset($input['offset'] ?? 0);
                         Json4_Data::set_limit($input['limit'] ?? 0);
-                        echo Json4_Data::songs($song_ids, $user->id);
+                        echo Json4_Data::songs($song_ids, $user);
                     break;
                     default:
                         Xml4_Data::set_offset($input['offset'] ?? 0);
                         Xml4_Data::set_limit($input['limit'] ?? 0);
-                        echo Xml4_Data::songs($song_ids, $user->id);
+                        echo Xml4_Data::songs($song_ids, $user);
                 }
         }
     } // playlist_generate

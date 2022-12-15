@@ -63,7 +63,6 @@ final class PodcastEpisodes4Method
             return false;
         }
         $user       = User::get_from_username(Session::username($input['auth']));
-        $user_id    = $user->id;
         $podcast_id = (int) scrub_in($input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcast = new Podcast($podcast_id);
@@ -74,12 +73,12 @@ final class PodcastEpisodes4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcast_episodes($items, $user_id, true, false);
+                echo Json4_Data::podcast_episodes($items, $user, true, false);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcast_episodes($items, $user_id);
+                echo Xml4_Data::podcast_episodes($items, $user);
         }
 
         return true;

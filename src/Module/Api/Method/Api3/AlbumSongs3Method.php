@@ -44,16 +44,19 @@ class AlbumSongs3Method
      */
     public static function album_songs(array $input)
     {
-        $album = new Album($input['filter']);
-        $songs = static::getAlbumRepository()->getSongs($album->id);
         $user  = User::get_from_username(Session::username($input['auth']));
+        $album = new Album($input['filter']);
+        $songs = array();
+        if (isset($album->id)) {
+            $songs = static::getAlbumRepository()->getSongs($album->id);
+        }
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::songs($songs, $user->id);
+        echo Xml3_Data::songs($songs, $user);
     } // album_songs
 
     /**

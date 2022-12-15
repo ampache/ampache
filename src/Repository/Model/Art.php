@@ -49,6 +49,7 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
+    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
 
     /**
      * @var integer $id
@@ -403,8 +404,12 @@ class Art extends database_object
                 /* is the file flac or mp3? */
                 $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = array('data' => $source, 'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                $new_pic       = array(
+                    'data' => $source,
+                    'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid,
+                    'description' => $description
+                );
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][]    = $new_pic;
@@ -414,8 +419,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = array('data' => $apics[0]['data'], 'description' => $apics[0]['description'],
-                                    'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']);
+                                $ndata['attached_picture'][] = array(
+                                    'data' => $apics[0]['data'],
+                                    'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'],
+                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                );
                             }
                             break;
                         case 2:
@@ -428,8 +437,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
-                                'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
+                                $ndata['attached_picture'][$apicsId]  = array(
+                                    'data' => $apics[$apicsId]['data'],
+                                    'mime' => $apics[$apicsId][$apic_mimetype],
+                                    'picturetypeid' => $apics[$apicsId][$apic_typeid],
+                                    'description' => $apics[$apicsId]['description']
+                                );
                             }
 
                             break;
@@ -511,10 +524,10 @@ class Art extends database_object
         $height = (int)($dimensions['height']);
 
         if ($width > 0 && $height > 0) {
-            $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : 0;
-            $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : 0;
-            $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : 0;
-            $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : 0;
+            $minw = AmpConfig::get('album_art_min_width', 0);
+            $maxw = AmpConfig::get('album_art_max_width', 0);
+            $minh = AmpConfig::get('album_art_min_height', 0);
+            $maxh = AmpConfig::get('album_art_max_height', 0);
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {
@@ -627,9 +640,8 @@ class Art extends database_object
 
     /**
      * read_from_images
-     * @param string $name
      */
-    private static function read_from_images($name = 'blankalbum.png')
+    private static function read_from_images()
     {
         $path = __DIR__ . '/../../../public/images/blankalbum.png';
         if (!Core::is_readable($path)) {
@@ -925,6 +937,10 @@ class Art extends database_object
             case 'png':
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
+                break;
+            case 'webp':
+                imagewebp($thumbnail);
+                $mime_type = image_type_to_mime_type(IMAGETYPE_WEBP);
                 break;
             default:
                 $mime_type = null;
@@ -1498,7 +1514,7 @@ class Art extends database_object
             $class_name  = ObjectTypeToClassNameMapper::map($object_type);
             $libitem     = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
-            if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
+            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

@@ -60,7 +60,7 @@ final class Stream4Method
         }
         $fileid  = $input['id'];
         $type    = $input['type'];
-        $user_id = User::get_from_username(Session::username($input['auth']))->id;
+        $user    = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
@@ -85,11 +85,11 @@ final class Stream4Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if ($type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

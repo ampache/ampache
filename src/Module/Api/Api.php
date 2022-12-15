@@ -161,12 +161,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.5.5'; // AMPACHE_VERSION
+    public static $version = '5.5.6'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '555000'; // AMPACHE_VERSION
+    public static $version_numeric = '556000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -370,7 +370,7 @@ class Api
         // Now we need to quickly get the totals
         $client      = static::getUserRepository()->findByApiKey(trim($token));
         $counts      = Catalog::get_server_counts($client->id);
-        $album_count = (Preference::get('album_group', $client->id))
+        $album_count = (array_key_exists('album_group', $counts) && Preference::get('album_group', $client->id))
             ? (int)$counts['album_group']
             : (int)$counts['album'];
         $playlists = (AmpConfig::get('hide_search', false))

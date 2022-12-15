@@ -61,17 +61,16 @@ final class PodcastEpisode4Method
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
-        $user_id   = $user->id;
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::podcast_episodes(array($object_id), $user_id);
+                    echo Json4_Data::podcast_episodes(array($object_id), $user);
                     break;
                 default:
-                    echo Xml4_Data::podcast_episodes(array($object_id), $user_id);
+                    echo Xml4_Data::podcast_episodes(array($object_id), $user);
             }
         } else {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);

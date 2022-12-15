@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 
@@ -57,7 +56,7 @@ final class GoodbyeMethod
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
             Dba::write($sql, array($input['auth']));
 
-            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api::message($input['auth'], $input['api_format']);
 

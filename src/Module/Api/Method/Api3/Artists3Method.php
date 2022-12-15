@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -46,7 +45,7 @@ final class Artists3Method
      */
     public static function artists(array $input)
     {
-        $browse = Api3::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
@@ -68,6 +67,6 @@ final class Artists3Method
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($artists, $include, $user->id);
+        echo Xml3_Data::artists($artists, $include, $user);
     } // artists
 }

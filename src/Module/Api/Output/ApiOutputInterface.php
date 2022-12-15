@@ -22,6 +22,8 @@
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Repository\Model\User;
+
 interface ApiOutputInterface
 {
     /**
@@ -64,7 +66,7 @@ interface ApiOutputInterface
     public function albums(
         array $albums,
         array $include = [],
-        ?int $user_id = null,
+        ?User $user = null,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,

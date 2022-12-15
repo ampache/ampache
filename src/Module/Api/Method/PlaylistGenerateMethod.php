@@ -91,7 +91,7 @@ final class PlaylistGenerateMethod
 
             // not played for a while or played recently
             $array['rule_' . $rule_count]               = 'last_play';
-            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold');
+            $array['rule_' . $rule_count . '_input']    = AmpConfig::get('stats_threshold', 7);
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
@@ -175,20 +175,20 @@ final class PlaylistGenerateMethod
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::indexes($song_ids, 'song', $user->id);
+                        echo Json_Data::indexes($song_ids, 'song', $user);
                         break;
                     default:
-                        echo XML_Data::indexes($song_ids, 'song', $user->id);
+                        echo Xml_Data::indexes($song_ids, 'song', $user);
                 }
                 break;
             case 'song':
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::songs($song_ids, $user->id);
+                        echo Json_Data::songs($song_ids, $user);
                         break;
                     default:
-                        echo Xml_Data::songs($song_ids, $user->id);
+                        echo Xml_Data::songs($song_ids, $user);
                 }
         }
 
