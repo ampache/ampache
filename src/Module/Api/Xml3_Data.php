@@ -331,8 +331,9 @@ class Xml3_Data
             }
             $artist->format();
 
-            $rating     = new Rating($artist_id, 'artist');
-            $tag_string = self::tags_string($artist->tags);
+            $rating      = new Rating($artist_id, 'artist');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $tag_string  = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out($_REQUEST['auth']);
@@ -351,7 +352,7 @@ class Xml3_Data
                 $songs = $artist->song_count;
             }
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating() ?: 0) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating() ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?: 0) . "</preciserating>\n\t<rating>" . ($user_rating ?: 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?: 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
 
         return Xml_Data::output_xml($string, $full_xml);
@@ -389,7 +390,8 @@ class Xml3_Data
             $album = new Album($album_id);
             $album->format();
 
-            $rating = new Rating($album_id, 'album');
+            $rating      = new Rating($album_id, 'album');
+            $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
@@ -482,6 +484,7 @@ class Xml3_Data
             $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
             $tag_string            = self::tags_string(Tag::get_top_tags('song', $song_id));
             $rating                = new Rating($song_id, 'song');
+            $user_rating           = $rating->get_user_rating($user->getId());
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth']);
             $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 

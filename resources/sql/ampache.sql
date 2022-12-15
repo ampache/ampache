@@ -18,7 +18,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Nov 19, 2022 at 05:49 PM
+-- Generation Time: Dec 08, 2022 at 08:40 AM
 -- Server version: 10.5.15-MariaDB-0+deb11u1
 -- PHP Version: 8.1.11
 
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache554`
+-- Database: `ampache556`
 --
 
 -- --------------------------------------------------------

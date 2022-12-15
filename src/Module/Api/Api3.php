@@ -90,7 +90,7 @@ class Api3
     /**
      *  @var string $version
      */
-    public static $version = '390001';
+    public static $version = '390001'; // AMPACHE_VERSION
 
     /**
      * constructor

@@ -187,7 +187,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `search` MODIFY COLUMN `logic_operator` varchar(3) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `session` MODIFY COLUMN `id` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");
+        Dba::write("ALTER TABLE `session` MODIFY COLUMN `id` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `session` MODIFY COLUMN `username` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `session` MODIFY COLUMN `type` varchar(16) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `session` MODIFY COLUMN `agent` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");

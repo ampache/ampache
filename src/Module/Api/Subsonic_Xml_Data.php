@@ -57,9 +57,9 @@ use DateTimeZone;
 use SimpleXMLElement;
 
 /**
- * XML_Data Class
+ * Subsonic_Xml_Data Class
  *
- * This class takes care of all of the xml document stuff in Ampache
+ * This class takes care of all of the xml document stuff for SubSonic Responses
  */
 class Subsonic_Xml_Data
 {

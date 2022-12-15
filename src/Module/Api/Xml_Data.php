@@ -51,12 +51,12 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
-use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
+use SimpleXMLElement;
 
 /**
  * Xml_Data Class
@@ -1329,7 +1329,7 @@ class Xml_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media->play_url('', 'api', false, $user->getId(), $user->streamtoken);
+                $surl  = $media->play_url('', 'api', false, $user->getId());
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string)$media->mime);
                 $xencl->addAttribute("length", (string)$media->size);
