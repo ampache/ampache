@@ -1193,6 +1193,9 @@ class User extends database_object
             $increment  = (int)($row['filter_count'] ?? 0) + 1;
             $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = $increment;";
             Dba::write($sql);
+            // Make sure all current catalogs are in the default group
+            $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog`;";
+            Dba::write($sql);
         }
 
         /* Get All Preferences for the current user */
