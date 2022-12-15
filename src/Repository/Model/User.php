@@ -1197,6 +1197,9 @@ class User extends database_object
             $increment  = (int)($row['filter_count'] ?? 0) + 1;
             $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = $increment;";
             Dba::write($sql);
+            // Make sure all current catalogs are in the default group
+            $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog`;";
+            Dba::write($sql);
         }
 
         /* Get All Preferences for the current user */
@@ -1209,7 +1212,7 @@ class User extends database_object
             $pref_id = $row['preference'];
             // Check for duplicates
             if (isset($results[$pref_id])) {
-                $sql          = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference`= ? AND `value` = ?";
+                $sql = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference`= ? AND `value` = ?;";
                 Dba::write($sql, array($user_id, $row['preference'], $row['value']));
             } else {
                 // if its set
