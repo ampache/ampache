@@ -95,12 +95,12 @@ use Ampache\Module\Api\Ajax;
                 <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
-                <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
-            </tr>
-            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Comment') ?></td>
                 <td><input type="text" name="subtitle" value="<?php echo $libitem->subtitle; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
+                <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Barcode') ?></td>
