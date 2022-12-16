@@ -109,12 +109,12 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
-                if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
+                if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-                } elseif ((int) Core::get_request('catalog_key') == 0) {
+                } else {
                     $browse->set_filter('catalog', null);
-                    unset($_SESSION['catalog']);
+                    $_SESSION['catalog'] = null;
                 }
 
                 ob_start();
@@ -175,7 +175,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'page':
-                $browse->set_start($_REQUEST['start']);
+                $browse->set_start((int)$_REQUEST['start']);
                 ob_start();
                 $browse->show_objects(null, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();

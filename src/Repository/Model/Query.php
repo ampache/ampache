@@ -539,7 +539,7 @@ class Query
      */
     public function get_offset()
     {
-        return $this->_state['offset'];
+        return $this->_state['offset'] ?? 0;
     } // get_offset
 
     /**
@@ -1337,11 +1337,13 @@ class Query
      */
     private function get_limit_sql()
     {
-        if (!$this->is_simple() || $this->get_start() < 0) {
+        $start  = $this->get_start();
+        $offset = $this->get_offset();
+        if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
 
-        return ' LIMIT ' . (string)($this->get_start()) . ', ' . (string)($this->get_offset());
+        return ' LIMIT ' . (string)($this->get_start()) . ', ' . (string)($offset);
     } // get_limit_sql
 
     /**
