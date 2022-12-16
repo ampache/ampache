@@ -1495,7 +1495,9 @@ class Query
                         }
                         break;
                     case 'unplayed':
-                        $filter_sql = " `song`.`played`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `song`.`played`='0' AND ";
+                        }
                         break;
                     case 'album':
                         $filter_sql = " `song`.`album` = '" . Dba::escape($value) . "' AND ";
@@ -1601,7 +1603,9 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'unplayed':
-                        $filter_sql = " `album`.`total_count`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `album`.`total_count`='0' AND ";
+                        }
                         break;
                     default:
                         break;
@@ -1671,7 +1675,9 @@ class Query
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
                     case 'unplayed':
-                        $filter_sql = " `album_disk`.`total_count`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `album_disk`.`total_count`='0' AND ";
+                        }
                         break;
                     default:
                         break;
@@ -1757,7 +1763,9 @@ class Query
                         $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
                         break;
                     case 'unplayed':
-                        $filter_sql = " `artist`.`total_count`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `artist`.`total_count`='0' AND ";
+                        }
                         break;
                     default:
                         break;
@@ -2078,7 +2086,9 @@ class Query
                         $filter_sql = " `podcast`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'unplayed':
-                        $filter_sql = " `podcast`.`total_count`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `podcast`.`total_count`='0' AND ";
+                        }
                         break;
                     default:
                         break;
@@ -2106,7 +2116,9 @@ class Query
                         $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'unplayed':
-                        $filter_sql = " `podcast_episode`.`played`='0' AND ";
+                        if ((int)$value == 1) {
+                            $filter_sql = " `podcast_episode`.`played`='0' AND ";
+                        }
                         break;
                     default:
                         break;
