@@ -98,9 +98,9 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 // Check 'value' with isset because it can null
                 //(user type a "start with" word and deletes it)
-                if (array_key_exists('key', $_REQUEST) && $_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) || isset($_REQUEST['value']))) {
+                if ((array_key_exists('key', $_REQUEST) && $_REQUEST['key']) && (array_key_exists('value', $_REQUEST) && isset($_REQUEST['value']))) {
                     // Set any new filters we've just added
-                    $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                    $browse->set_filter($_REQUEST['key'], $_REQUEST['value']);
                     $browse->set_catalog($_SESSION['catalog']);
                 }
 
