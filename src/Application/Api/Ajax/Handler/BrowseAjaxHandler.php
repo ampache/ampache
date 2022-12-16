@@ -99,9 +99,11 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 // Check 'value' with isset because it can null
                 //(user type a "start with" word and deletes it)
                 if ((array_key_exists('key', $_REQUEST) && $_REQUEST['key']) && (array_key_exists('value', $_REQUEST) && isset($_REQUEST['value']))) {
-                    // Set any new filters we've just added
-                    $browse->set_filter($_REQUEST['key'], $_REQUEST['value']);
-                    $browse->set_catalog($_SESSION['catalog']);
+                    $value = $_REQUEST['value'];
+                    if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
+                        $value = 0;
+                    }
+                    $browse->set_filter($_REQUEST['key'], $value);
                 }
 
                 if (array_key_exists('sort', $_REQUEST) && $_REQUEST['sort']) {
@@ -116,6 +118,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_filter('catalog', null);
                     $_SESSION['catalog'] = null;
                 }
+                $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
                 $browse->show_objects(null, $argument);
