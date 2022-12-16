@@ -384,7 +384,6 @@ class Query
             case 'min_count':
             case 'unplayed':
             case 'rated':
-                break;
             case 'add_lt':
             case 'add_gt':
             case 'update_lt':
@@ -624,6 +623,7 @@ class Query
                     'regex_not_match',
                     'starts_with',
                     'tag',
+                    'unplayed',
                     'update_gt',
                     'update_lt'
                 ),
@@ -639,6 +639,7 @@ class Query
                     'regex_not_match',
                     'starts_with',
                     'tag',
+                    'unplayed',
                     'update_gt',
                     'update_lt',
                 ),
@@ -731,14 +732,16 @@ class Query
                     'exact_match',
                     'regex_match',
                     'regex_not_match',
-                    'starts_with'
+                    'starts_with',
+                    'unplayed'
                 ),
                 'podcast_episode' => array(
                     'alpha_match',
                     'exact_match',
                     'regex_match',
                     'regex_not_match',
-                    'starts_with'
+                    'starts_with',
+                    'unplayed'
                 )
             );
 
@@ -1566,7 +1569,7 @@ class Query
                         $this->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                         $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         if ($this->catalog != 0) {
-                            $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
+                            $filter_sql .= "`album`.`catalog` = '" . $this->catalog . "' AND ";
                         }
                         break;
                     case 'artist':
@@ -1596,6 +1599,9 @@ class Query
                     case 'catalog_enabled':
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                        break;
+                    case 'unplayed':
+                        $filter_sql = " `album`.`total_count`='0' AND ";
                         break;
                     default:
                         break;
@@ -1663,6 +1669,9 @@ class Query
                     case 'catalog_enabled':
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                        break;
+                    case 'unplayed':
+                        $filter_sql = " `album_disk`.`total_count`='0' AND ";
                         break;
                     default:
                         break;
@@ -1746,6 +1755,9 @@ class Query
                         break;
                     case 'album_artist':
                         $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
+                        break;
+                    case 'unplayed':
+                        $filter_sql = " `artist`.`total_count`='0' AND ";
                         break;
                     default:
                         break;
@@ -2065,6 +2077,9 @@ class Query
                     case 'starts_with':
                         $filter_sql = " `podcast`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
+                    case 'unplayed':
+                        $filter_sql = " `podcast`.`total_count`='0' AND ";
+                        break;
                     default:
                         break;
                 } // end filter
@@ -2089,6 +2104,9 @@ class Query
                         break;
                     case 'starts_with':
                         $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                        break;
+                    case 'unplayed':
+                        $filter_sql = " `podcast_episode`.`played`='0' AND ";
                         break;
                     default:
                         break;
