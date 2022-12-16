@@ -57,6 +57,7 @@ if (!Core::is_session_started()) {
     <?php if (in_array('unplayed', $allowed_filters)) { ?>
         <input id="unplayedCB" type="checkbox" <?php echo $string = ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
         <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
+        <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1', '')); ?>
     <?php } ?>
     <?php if (in_array('playlist_type', $allowed_filters)) { ?>
         <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? 'checked="checked"' : ''; ?>/>
