@@ -26,16 +26,14 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
-<?php echo AmpError::display('general');
+Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access');
+echo AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All');
 
-/** @var string $add_type */
-?>
+/** @var string $add_type */ ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata">
         <tr>

@@ -23,8 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Create Playlist')); ?>
+Ui::show_box_top(T_('Create Playlist')); ?>
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php">
     <table class="tabledata">
         <tr>

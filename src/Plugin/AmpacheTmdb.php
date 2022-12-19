@@ -231,7 +231,7 @@ class AmpacheTmdb
     {
         debug_event('tmdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 
     /**

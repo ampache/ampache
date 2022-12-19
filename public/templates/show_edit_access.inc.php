@@ -27,8 +27,8 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var AccessListItemInterface $access */
-?>
-<?php Ui::show_box_top(T_('Edit Access Control List')); ?>
+
+Ui::show_box_top(T_('Edit Access Control List')); ?>
 <?php echo AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');

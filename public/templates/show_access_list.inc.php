@@ -26,8 +26,8 @@ use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access $access */
-?>
-<?php Ui::show_box_top(T_('Access Control'), 'box box_access_control');
+
+Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');

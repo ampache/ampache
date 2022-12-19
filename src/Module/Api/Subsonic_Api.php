@@ -693,10 +693,10 @@ class Subsonic_Api
             $response  = Subsonic_Xml_Data::addSubsonicResponse($elementName);
             switch ($elementName) {
                 case 'artistInfo':
-                    Subsonic_Xml_Data::addArtistInfo($response, $info, $similars, $elementName);
+                    Subsonic_Xml_Data::addArtistInfo($response, $info, $similars);
                     break;
                 case 'artistInfo2':
-                    Subsonic_Xml_Data::addArtistInfo2($response, $info, $similars, $elementName);
+                    Subsonic_Xml_Data::addArtistInfo2($response, $info, $similars);
                     break;
             }
         } else {
@@ -864,10 +864,10 @@ class Subsonic_Api
             if (!$errorOccured) {
                 switch ($elementName) {
                     case 'albumList':
-                        Subsonic_Xml_Data::addAlbumList($response, $albums, $elementName);
+                        Subsonic_Xml_Data::addAlbumList($response, $albums);
                         break;
                     case 'albumList2':
-                        Subsonic_Xml_Data::addAlbumList2($response, $albums, $elementName);
+                        Subsonic_Xml_Data::addAlbumList2($response, $albums);
                         break;
                 }
             }

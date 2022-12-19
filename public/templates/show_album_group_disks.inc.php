@@ -73,8 +73,8 @@ $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 $can_shout  = AmpConfig::get('sociable');
 $can_share  = AmpConfig::get('share');
-?>
-<?php Ui::show_box_top($title, 'info-box'); ?>
+
+Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_album_name); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>

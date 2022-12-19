@@ -43,8 +43,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Playlist $playlist */
 /** @var array $object_ids */
-?>
-<?php
+
 ob_start();
 require Ui::find_template('show_playlist_title.inc.php');
 $title    = ob_get_contents();

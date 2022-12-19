@@ -24,8 +24,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 /** @var array $fields */
-?>
-<?php Ui::show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
+
+Ui::show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=add_instance">
 <table class="tabledata">
 <?php foreach ($fields as $key => $field) { ?>

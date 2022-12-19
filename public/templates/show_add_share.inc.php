@@ -33,8 +33,8 @@ use Ampache\Module\Util\Ui;
 $has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
-?>
-<?php Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
+
+Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
 <input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />

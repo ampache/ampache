@@ -197,6 +197,6 @@ class AmpacheOmdb
      */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 }

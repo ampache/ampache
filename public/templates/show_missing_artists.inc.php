@@ -23,8 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
+Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

@@ -24,8 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
+Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">
 <tr>
     <?php foreach ($fields as $key => $field) { ?>

@@ -34,11 +34,11 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 /** @var string $fullname */
-?>
-<?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
-<?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
-    debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 
+/* HINT: Username FullName */
+Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
+if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
+    debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php $ui->showPreferenceBox(($preferences[$_REQUEST['tab']] ?? [])); ?>
 <div class="formValidation">

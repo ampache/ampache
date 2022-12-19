@@ -25,8 +25,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
+Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
 <table class="tabledata">
 <tr>

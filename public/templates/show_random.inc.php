@@ -46,8 +46,8 @@ if (!$random_type) {
 $browse_type = ($random_type == 'video')
     ? 'video'
     : 'song';
-?>
-<?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
+
+Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
 
 <div class="category_options">

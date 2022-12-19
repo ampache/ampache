@@ -44,8 +44,7 @@ $tag_types = array(
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
-?>
-<?php $ui->show(
+$ui->show(
         'show_form_genre.inc.php',
     [
         'type' => $browse_type

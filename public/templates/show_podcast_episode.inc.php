@@ -34,10 +34,9 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
 $web_path = AmpConfig::get('web_path');
-?>
-<?php Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
-<dl class="media_details">
 
+Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+<dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
         <dt><?php echo T_('Rating'); ?></dt>

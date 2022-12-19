@@ -25,8 +25,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
+Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=add_label">
 <table class="tabledata">
 <tr>

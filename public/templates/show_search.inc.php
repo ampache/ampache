@@ -30,8 +30,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $playlist */
 /** @var array $object_ids */
-?>
-<?php
+
 ob_start();
 require Ui::find_template('show_search_title.inc.php');
 $title    = ob_get_contents();

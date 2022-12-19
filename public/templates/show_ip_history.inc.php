@@ -25,8 +25,8 @@ use Ampache\Module\Util\Ui;
 
 /** @var \Ampache\Repository\Model\User $working_user */
 /** @var array $history */
-?>
-<?php /* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
+
+/* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
 <ul>
 <li>
