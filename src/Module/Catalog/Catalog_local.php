@@ -282,8 +282,7 @@ class Catalog_local extends Catalog
 
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
-            /* Skip to next if we've got . or .. */
-            if (substr($file, 0, 1) == '.') {
+            if ('.' === $file || '..' === $file) {
                 continue;
             }
             // reduce the crazy log info
