@@ -1059,7 +1059,11 @@ class Subsonic_Api
         $query    = $original;
         if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
             $query    = substr($original, 1, -1);
-            $operator = 4; // equals
+            // query is non-optional, but some clients send empty queries to fetch
+            // all items. Fall back on default contains in such cases.
+            if (strlen($query) > 0) {
+                $operator = 4; // equals
+            }
         }
         if (substr($original, 0, 1) == '"' && substr($original, -2, 2) == '"*') {
             $query    = substr($original, 1, -2);
