@@ -97,6 +97,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
+  * Add `bitrate` to Democratic objects
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
