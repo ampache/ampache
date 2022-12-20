@@ -123,10 +123,10 @@ use Ampache\Module\Api\Ajax;
                             /* @var Metadata $metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
-                                echo '<tr>'
-                                . '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>'
-                                . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>'
-                                . '</tr>';
+                                echo '<tr>' .
+                                '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
+                                '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
+                                '</tr>';
                             }
                         } ?>
                     </table>

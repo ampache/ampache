@@ -1000,8 +1000,8 @@ class Xml5_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
-            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
             /** @var Song $song */
+            $className  = ObjectTypeToClassNameMapper::map($data['object_type']);
             $song       = new $className($data['object_id']);
             $song->format();
 

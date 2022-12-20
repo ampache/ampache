@@ -951,9 +951,11 @@ class Json_Data
             $ourArray['time']                  = (int)$song->time;
             $ourArray['year']                  = (int)$song->year;
             $ourArray['bitrate']               = $songBitrate;
+            $ourArray['stream_bitrate']        = $song->bitrate;
             $ourArray['rate']                  = (int)$song->rate;
             $ourArray['mode']                  = $song->mode;
             $ourArray['mime']                  = $songMime;
+            $ourArray['stream_mime']           = $song->mime;
             $ourArray['url']                   = $play_url;
             $ourArray['size']                  = (int)$song->size;
             $ourArray['mbid']                  = $song->mbid;
