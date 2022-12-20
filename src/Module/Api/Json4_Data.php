@@ -784,6 +784,8 @@ class Json4_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song_id, 'song');
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $songMime    = $song->mime;
+            $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id);
             $playlist_track++;
 
@@ -810,10 +812,10 @@ class Json4_Data
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = (int) $song->year;
-            $ourSong['bitrate']               = (int) $song->bitrate;
+            $ourSong['bitrate']               = (int) $songBitrate;
             $ourSong['rate']                  = (int) $song->rate;
             $ourSong['mode']                  = $song->mode;
-            $ourSong['mime']                  = $song->mime;
+            $ourSong['mime']                  = $songMime;
             $ourSong['url']                   = $play_url;
             $ourSong['size']                  = (int) $song->size;
             $ourSong['mbid']                  = $song->mbid;
@@ -925,6 +927,7 @@ class Json4_Data
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth']);
+            $songMime    = $song->mime;
             $play_url    = $song->play_url('', 'api', false, $user->id);
 
             array_push($JSON, array(
@@ -935,7 +938,7 @@ class Json4_Data
                 "tag" => self::tags_array($song->tags),
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
-                "mime" => $song->mime,
+                "mime" => $songMime,
                 "url" => $play_url,
                 "size" => (int) $song->size,
                 "art" => $art_url,
