@@ -142,10 +142,10 @@ class Wanted extends database_object
         } catch (Exception $error) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
-            return null;
+            return array();
         }
 
-        $wartist   = array();
+        $wartist = array();
         if (!$artist) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
