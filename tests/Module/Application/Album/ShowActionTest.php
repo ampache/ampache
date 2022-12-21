@@ -34,7 +34,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -53,9 +52,6 @@ class ShowActionTest extends MockeryTestCase
     /** @var PrivilegeCheckerInterface|MockInterface|null */
     private MockInterface $privilegeChecker;
 
-    /** @var AlbumRepositoryInterface|MockInterface|null */
-    private MockInterface $albumRepository;
-
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
@@ -67,7 +63,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui               = $this->mock(UiInterface::class);
         $this->logger           = $this->mock(LoggerInterface::class);
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-        $this->albumRepository  = $this->mock(AlbumRepositoryInterface::class);
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new ShowAction(
@@ -75,7 +70,6 @@ class ShowActionTest extends MockeryTestCase
             $this->ui,
             $this->logger,
             $this->privilegeChecker,
-            $this->albumRepository,
             $this->configContainer
         );
     }
