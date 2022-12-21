@@ -592,14 +592,12 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
 
-        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $filter_id) {
-            $sql .= "" . (int)$filter_id . ", " . (int)$catalog_id . ", 0),";
+            $enabled = ($filter_id == 0) ? 1 : 0; // always enable for the DEFAULT group
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (?, ?, ?);";
+            $params  = array((int)$filter_id, (int)$catalog_id, $enabled);
+            Dba::write($sql, $params);
         }
-        // Remove last comma to avoid SQL error
-        $sql = substr($sql, 0, -1);
-
-        return Dba::write($sql);
     }
 
     /**
