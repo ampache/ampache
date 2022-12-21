@@ -126,28 +126,28 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-    <?php if ($show_direct_play) {
+<?php if ($show_direct_play) {
         $play       = T_('Play');
         $playnext   = T_('Play next');
         $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
-        <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+    <?php if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
                 <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
             </li>
-        <?php }
+    <?php }
         if (Stream_Playlist::check_autoplay_append()) { ?>
             <li>
                 <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
             </li>
-        <?php }
+    <?php }
     }
-    if ($show_playlist_add) {
-        $addtotemp  = T_('Add to Temporary Playlist');
-        $randtotemp = T_('Random to Temporary Playlist');
-        $addtoexist = T_('Add to playlist'); ?>
+if ($show_playlist_add) {
+    $addtotemp  = T_('Add to Temporary Playlist');
+    $randtotemp = T_('Random to Temporary Playlist');
+    $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -157,90 +157,90 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
                 <?php echo Ui::get_icon('playlist_add', $addtoexist);
-        echo $addtoexist ?>
+    echo $addtoexist ?>
             </a>
         </li>
-    <?php
-    }
-    if (AmpConfig::get('use_rss')) { ?>
+<?php
+}
+if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
-    <?php }
-    if (!AmpConfig::get('use_auth') || $access25) {
-        if (AmpConfig::get('sociable')) {
-            $postshout = T_('Post Shout'); ?>
+<?php }
+if (!AmpConfig::get('use_auth') || $access25) {
+    if (AmpConfig::get('sociable')) {
+        $postshout = T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout);
-            echo $postshout; ?>
+        echo $postshout; ?>
                 </a>
             </li>
-        <?php
-        }
+    <?php
     }
-    if ($access25) {
-        if (AmpConfig::get('share')) { ?>
+}
+if ($access25) {
+    if (AmpConfig::get('share')) { ?>
             <li>
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
-        <?php }
-    }
-    if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || $access50) {
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+    <?php }
+}
+if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || $access50) {
+    if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs'));
                     echo T_('Graphs'); ?>
                 </a>
             </li>
-        <?php } ?>
+    <?php } ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
-        echo T_('Update from tags'); ?>
+    echo T_('Update from tags'); ?>
             </a>
         </li>
-    <?php
-    }
-        if ($isAlbumEditable) {
-            $t_upload = T_('Upload');
-            if (AmpConfig::get('allow_upload') && $album->album_artist > 0) { ?>
+<?php
+}
+if ($isAlbumEditable) {
+    $t_upload = T_('Upload');
+    if (AmpConfig::get('allow_upload') && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload);
                         echo $t_upload; ?>
                     </a>
                 </li>
-            <?php } ?>
+    <?php } ?>
             <li>
                 <a id="<?php echo 'edit_album_' . $album->id ?>" onclick="showEditDialog('album_row', '<?php echo $album->id ?>', '<?php echo 'edit_album_' . $album->id ?>', '<?php echo addslashes(T_('Album Edit')) ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit'));
-            echo T_('Edit Album'); ?>
+    echo T_('Edit Album'); ?>
                 </a>
             </li>
-            <?php
-        }
-        if ($zip_album) {
-            $download   = T_('Download'); ?>
+<?php
+}
+if ($zip_album) {
+    $download   = T_('Download'); ?>
             <li>
                 <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('batch_download', $download);
-            echo $download; ?>
+    echo $download; ?>
                 </a>
             </li>
             <?php
-        }
-        if (Catalog::can_remove($album)) {
-            $delete = T_('Delete'); ?>
+}
+if (Catalog::can_remove($album)) {
+    $delete = T_('Delete'); ?>
             <li>
                 <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('delete', $delete);
-            echo $delete; ?>
+    echo $delete; ?>
                 </a>
             </li>
-            <?php
-        } ?>
+<?php
+} ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

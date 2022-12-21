@@ -79,10 +79,10 @@ if ($browse->is_show_header()) {
 <table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="album">
     <thead>
         <tr class="th-top">
-        <div class="libitem_menu">
-            <th class="cel_play essential"></th>
-            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-</div>
+            <div class="libitem_menu">
+                <th class="cel_play essential"></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
+            </div>
             <th class="<?php echo $cel_album; ?> essential persist"><?php echo $album_link; ?></th>
             <th class="cel_add essential"></th>
             <th class="<?php echo $cel_artist; ?> essential"><?php echo $artist_link; ?></th>
@@ -90,37 +90,37 @@ if ($browse->is_show_header()) {
             <th class="cel_year essential"><?php echo $year_link; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
-            <?php } ?>
-            <?php if (!$hide_genres) {
+            <?php }
+if (!$hide_genres) {
     ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo $genres_text; ?></th>
             <?php
+}
+if ($show_ratings) {
+    ++$thcount; ?>
+            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+<?php
 } ?>
-            <?php if ($show_ratings) {
-        ++$thcount; ?>
-                <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-                <?php
-    } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>
         </tr>
     </thead>
     <tbody>
-        <?php global $dic;
-        $talFactory = $dic->get(TalFactoryInterface::class);
-        $guiFactory = $dic->get(GuiFactoryInterface::class);
-        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+<?php global $dic;
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-            Userflag::build_cache('album', $object_ids);
-        }
-        /* Foreach through the albums */
-        foreach ($object_ids as $album_disk_id) {
-            $libitem = new AlbumDisk($album_disk_id);
-            $libitem->format(true, $limit_threshold);
-            if ($directplay_limit > 0) {
-                $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
-            } ?>
+if (AmpConfig::get('ratings')) {
+    Rating::build_cache('album', $object_ids);
+    Userflag::build_cache('album', $object_ids);
+}
+/* Foreach through the albums */
+foreach ($object_ids as $album_disk_id) {
+    $libitem = new AlbumDisk($album_disk_id);
+    $libitem->format(true, $limit_threshold);
+    if ($directplay_limit > 0) {
+        $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
+    } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
                     ->setContext('USER_IS_REGISTERED', User::is_registered())
@@ -138,16 +138,15 @@ if ($browse->is_show_header()) {
                     ->setContext('CLASS_COUNTER', $cel_counter)
                     ->setTemplate('album_disk_row.xhtml')
                     ->render();
-
-            echo $content; ?>
+    echo $content; ?>
         </tr>
         <?php
-        }?>
-        <?php if (!count($object_ids)) { ?>
+}?>
+<?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Album found'); ?></span></td>
         </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -160,19 +159,18 @@ if ($browse->is_show_header()) {
             <th class="cel_year"><?php echo $year_text; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
-            <?php } ?>
-            <?php if (!$hide_genres) { ?>
+            <?php }
+if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo $genres_text; ?></th>
-            <?php } ?>
-            <?php if ($show_ratings) { ?>
-                <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-                <?php } ?>
+<?php }
+if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+<?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
     <tfoot>
 </table>
-
-<?php show_table_render(); ?>
-<?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+<?php show_table_render();
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
