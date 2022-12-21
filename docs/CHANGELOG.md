@@ -96,7 +96,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * API6 (Based on API5)
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
-  * Cast bool fields to `true` and `false` instead of "1" & "0"
+  * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `bitrate` to Democratic objects
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
