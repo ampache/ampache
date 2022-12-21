@@ -96,7 +96,7 @@ class Update
         $engine     = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         $tables     = array(
             'image' => "CREATE TABLE IF NOT EXISTS `image` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `image` mediumblob DEFAULT NULL, `width` int(4) UNSIGNED DEFAULT 0, `height` int(4) UNSIGNED DEFAULT 0, `mime` varchar(64) COLLATE $collation DEFAULT NULL, `size` varchar(64) COLLATE $collation DEFAULT NULL, `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `kind` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
-            'tmp_browse' => "CREATE TABLE IF NOT EXISTS `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) COLLATE $collation NOT NULL, `data` longtext COLLATE $collation NOT NULL, `object_data` longtext COLLATE $collation DEFAULT NULL, PRIMARY KEY (`sid`, `id`)) ENGINE=MyISAM DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'tmp_browse' => "CREATE TABLE IF NOT EXISTS `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) COLLATE utf8_unicode_ci NOT NULL, `data` longtext COLLATE utf8_unicode_ci NOT NULL, `object_data` longtext COLLATE utf8_unicode_ci DEFAULT NULL, PRIMARY KEY (`sid`, `id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
             'share' => "CREATE TABLE IF NOT EXISTS `share` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `allow_stream` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `allow_download` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `expire_days` int(4) UNSIGNED NOT NULL DEFAULT 0, `max_counter` int(4) UNSIGNED NOT NULL DEFAULT 0, `secret` varchar(20) COLLATE $collation DEFAULT NULL, `counter` int(4) UNSIGNED NOT NULL DEFAULT 0, `creation_date` int(11) UNSIGNED NOT NULL DEFAULT 0, `lastvisit_date` int(11) UNSIGNED NOT NULL DEFAULT 0, `public_url` varchar(255) COLLATE $collation DEFAULT NULL, `description` varchar(255) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
             'broadcast' => "CREATE TABLE IF NOT EXISTS `broadcast` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `name` varchar(64) COLLATE $collation DEFAULT NULL, `description` varchar(256) COLLATE $collation DEFAULT NULL, `is_private` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `song` int(11) UNSIGNED NOT NULL DEFAULT 0, `started` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `listeners` int(11) UNSIGNED NOT NULL DEFAULT 0, `key` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
             'player_control' => "CREATE TABLE IF NOT EXISTS `player_control` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) UNSIGNED NOT NULL, `cmd` varchar(32) COLLATE $collation DEFAULT NULL, `value` varchar(256) COLLATE $collation DEFAULT NULL, `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `send_date` int(11) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
@@ -1062,12 +1062,9 @@ class Update
     public static function update_360005(): bool
     {
         $retval  = true;
-        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        $sql = "DROP TABLE IF EXISTS `tmp_browse`";
+        $sql     = "DROP TABLE IF EXISTS `tmp_browse`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET $charset NOT NULL default '', `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`, `id`)) ENGINE=$engine DEFAULT CHARSET=utf8";
+        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1083,7 +1080,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private', 'public') CHARACTER SET $charset DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;") !== false);
+        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private', 'public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;") !== false);
     }
 
     /**
@@ -2157,7 +2154,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `song` ADD `composer` varchar(256) CHARACTER SET $charset NULL, ADD `channels` MEDIUMINT NULL";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` ENUM('abr', 'vbr', 'cbr') NULL DEFAULT 'cbr'";
+        $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` enum('abr', 'vbr', 'cbr') NULL DEFAULT 'cbr'";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
@@ -3302,7 +3299,7 @@ class Update
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         foreach ($tables as $table) {
-            $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (`object_id` int(11) unsigned NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL, `count` int(11) unsigned NOT NULL DEFAULT '0', `threshold` int(11) unsigned NOT NULL DEFAULT '0', `count_type` varchar(16) NOT NULL, PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (`object_id` int(11) unsigned NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL, `count` int(11) unsigned NOT NULL DEFAULT '0', `threshold` int(11) unsigned NOT NULL DEFAULT '0', `count_type` varchar(16) NOT NULL, PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
             $retval &= (Dba::write($sql) !== false);
         }
 
@@ -3728,7 +3725,7 @@ class Update
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-        $sql       = "CREATE TABLE IF NOT EXISTS `user_playlist` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song', 'live_stream', 'video', 'podcast_episode') CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT '0', `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`),KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $sql       = "CREATE TABLE IF NOT EXISTS `user_playlist` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song', 'live_stream', 'video', 'podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT '0', `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`),KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE IF NOT EXISTS `user_data` (`user` int(11) DEFAULT NULL, `key` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `value` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, KEY `user` (`user`), KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
@@ -3952,7 +3949,7 @@ class Update
     public static function update_510000(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode');";
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
