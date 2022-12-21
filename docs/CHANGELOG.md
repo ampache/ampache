@@ -98,6 +98,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `basename` (Name without prefix) to album & artist responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `bitrate` to Democratic objects
+  * Add `format` to Song and Democratic objects
+  * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
