@@ -2272,10 +2272,9 @@ class Update
     public static function update_370018(): bool
     {
         $retval  = true;
-        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`), FOREIGN KEY (`merged_to`) REFERENCES `tag` (`tag_id`), PRIMARY KEY (`tag_id`, `merged_to`)) ENGINE=$engine";
+        $sql     = "DROP TABLE IF EXISTS `tag_merge`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL";
         $retval &= (Dba::write($sql) !== false);
