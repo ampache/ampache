@@ -34,7 +34,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -51,8 +50,6 @@ final class ShowAction implements ApplicationActionInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -60,14 +57,12 @@ final class ShowAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        AlbumRepositoryInterface $albumRepository,
         ConfigContainerInterface $configContainer
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
-        $this->albumRepository  = $albumRepository;
         $this->configContainer  = $configContainer;
     }
 
