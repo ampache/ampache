@@ -640,27 +640,21 @@ final class Session implements SessionInterface
      */
     public static function create_cookie()
     {
+        $cookie_options = [
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Lax'
+        ];
         if (isset($_SESSION)) {
-            $cookie_options = [
-                'expires' => (int)AmpConfig::get('cookie_life'),
-                'path' => (string)AmpConfig::get('cookie_path'),
-                'domain' => (string)AmpConfig::get('cookie_domain'),
-                'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Lax'
-            ];
             setcookie(session_name(), session_id(), $cookie_options);
         } else {
-            $cookie_options = [
-                'lifetime' => (int)AmpConfig::get('cookie_life'),
-                'path' => (string)AmpConfig::get('cookie_path'),
-                'domain' => (string)AmpConfig::get('cookie_domain'),
-                'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Lax'
-            ];
             session_set_cookie_params($cookie_options);
         }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
+        session_set_cookie_params($cookie_options);
 
         /* Start the session */
         self::ungimp_ie();
