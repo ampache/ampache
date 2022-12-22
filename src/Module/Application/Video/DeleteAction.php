@@ -54,9 +54,9 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $videoId = (int) $request->getQueryParams()['video_id'] ?? 0;
+
+        $this->ui->showHeader();
         if ($videoId < 1) {
             echo T_('You have requested an object that does not exist');
         } else {

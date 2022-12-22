@@ -55,9 +55,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
-
-        $response = null;
+        $this->ui->showHeader();
 
         $this->logger->debug(
             'Set track numbers called.',
@@ -92,6 +90,6 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

@@ -50,8 +50,6 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
@@ -61,6 +59,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Label will be deleted'),

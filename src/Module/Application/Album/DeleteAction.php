@@ -50,18 +50,16 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $response = null;
-
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $albumId = $request->getQueryParams()['album_id'] ?? 0;
+
+        $this->ui->showHeader();
         if ($albumId < 1) {
             echo T_('You have requested an object that does not exist');
         } else {
@@ -80,6 +78,6 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

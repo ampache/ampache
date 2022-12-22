@@ -64,10 +64,10 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $object_id = Core::get_request('id');
         $broadcast = $this->modelFactory->createBroadcast((int) $object_id);
+
+        $this->ui->showHeader();
         if ($broadcast->delete()) {
             $next_url = sprintf(
                 '%s/browse.php?action=broadcast',

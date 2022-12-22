@@ -52,9 +52,9 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $tvshow_season_id = (int) $request->getQueryParams()['tvshow_season_id'] ?? 0;
+
+        $this->ui->showHeader();
         if ($tvshow_season_id < 1) {
             echo T_('You have requested an object that does not exist');
         } else {
