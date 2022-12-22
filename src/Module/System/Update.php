@@ -2276,10 +2276,19 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
-        $retval &= (Dba::write($sql) !== false);
+        $sql        = "DESCRIBE `tag`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($row['Field'] == 'merged_to') {
+                $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL";
+                $retval &= (Dba::write($sql) !== false);
+                if ($retval) {
+                    // don't drop until you've confirmed a merge
+                    $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
+                    $retval &= (Dba::write($sql) !== false);
+                }
+            }
+        }
         $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
         $retval &= (Dba::write($sql) !== false);
 
