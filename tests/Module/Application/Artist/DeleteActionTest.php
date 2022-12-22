@@ -58,6 +58,11 @@ class DeleteActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -68,10 +73,6 @@ class DeleteActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
