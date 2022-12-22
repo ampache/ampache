@@ -1061,8 +1061,8 @@ class Update
      */
     public static function update_360005(): bool
     {
-        $retval  = true;
-        $sql     = "DROP TABLE IF EXISTS `tmp_browse`";
+        $retval = true;
+        $sql    = "DROP TABLE IF EXISTS `tmp_browse`";
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;";
         $retval &= (Dba::write($sql) !== false);
@@ -1080,7 +1080,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private', 'public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;") !== false);
+        return (Dba::write("CREATE TABLE `search` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) NOT NULL, `type` enum('private','public') CHARACTER SET utf8 DEFAULT NULL, `rules` mediumtext NOT NULL, `name` varchar(255) CHARACTER SET $charset DEFAULT NULL, `logic_operator` varchar(3) CHARACTER SET $charset DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=4 DEFAULT CHARSET=$charset;") !== false);
     }
 
     /**
@@ -1127,7 +1127,7 @@ class Update
      */
     public static function update_360009(): bool
     {
-        return (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(64);") !== false);
+        return (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(64);") !== false);
     }
 
     /**
@@ -1138,7 +1138,7 @@ class Update
      */
     public static function update_360010(): bool
     {
-        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` VARCHAR(36);") !== false);
+        return (Dba::write("ALTER TABLE `artist` CHANGE `mbid` `mbid` varchar(36);") !== false);
     }
 
     /**
@@ -1159,7 +1159,7 @@ class Update
      */
     public static function update_360012(): bool
     {
-        return (Dba::write("ALTER TABLE `session` CHANGE `type` `type` VARCHAR(16) DEFAULT NULL;") !== false);
+        return (Dba::write("ALTER TABLE `session` CHANGE `type` `type` varchar(16) DEFAULT NULL;") !== false);
     }
 
     /**
@@ -1184,9 +1184,9 @@ class Update
     {
         $retval = true;
 
-        $retval &= (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` VARCHAR(256);") !== false);
-        $retval &= (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` VARCHAR(256);") !== false);
-        $retval &= (Dba::write("ALTER TABLE `session` CHANGE `id` `id` VARCHAR(256) NOT NULL;") !== false);
+        $retval &= (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` varchar(256);") !== false);
+        $retval &= (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(256);") !== false);
+        $retval &= (Dba::write("ALTER TABLE `session` CHANGE `id` `id` varchar(256) NOT NULL;") !== false);
 
         return $retval;
     }
@@ -1288,9 +1288,9 @@ class Update
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::write($sql);
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` varchar(255) COLLATE $collation NOT NULL, `username` varchar(255) COLLATE $collation NOT NULL, `password` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::write($sql);
 
         $sql        = "SELECT `id`, `catalog_type`, `path`, `remote_username`, `remote_password` FROM `catalog`";
@@ -1348,9 +1348,9 @@ class Update
     {
         $retval = true;
 
-        $sql = "ALTER TABLE `live_stream` ADD `codec` VARCHAR(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
+        $sql = "ALTER TABLE `live_stream` ADD `codec` varchar(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `stream_playlist` ADD `codec` VARCHAR(32) NULL AFTER `time`";
+        $sql = "ALTER TABLE `stream_playlist` ADD `codec` varchar(32) NULL AFTER `time`";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -1419,7 +1419,7 @@ class Update
      */
     public static function update_360026(): bool
     {
-        return (Dba::write("ALTER TABLE `object_count` ADD `agent` VARCHAR(255) NULL AFTER `user`;") !== false);
+        return (Dba::write("ALTER TABLE `object_count` ADD `agent` varchar(255) NULL AFTER `user`;") !== false);
     }
 
     /**
@@ -1556,7 +1556,7 @@ class Update
 
         $sql = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `user_shout` ADD `data` VARCHAR(256) NULL AFTER `object_type`";
+        $sql = "ALTER TABLE `user_shout` ADD `data` varchar(256) NULL AFTER `object_type`";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -2104,7 +2104,7 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "ALTER TABLE `image` ADD `kind` VARCHAR(32) NULL DEFAULT 'default' AFTER `object_id`";
+        $sql = "ALTER TABLE `image` ADD `kind` varchar(32) NULL DEFAULT 'default' AFTER `object_id`";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -2154,7 +2154,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql = "ALTER TABLE `song` ADD `composer` varchar(256) CHARACTER SET $charset NULL, ADD `channels` MEDIUMINT NULL";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` enum('abr', 'vbr', 'cbr') NULL DEFAULT 'cbr'";
+        $sql = "ALTER TABLE `video` ADD `channels` MEDIUMINT NULL, ADD `bitrate` MEDIUMINT(8) NULL, ADD `video_bitrate` MEDIUMINT(8) NULL, ADD `display_x` MEDIUMINT(8) NULL, ADD `display_y` MEDIUMINT(8) NULL, ADD `frame_rate` FLOAT NULL, ADD `mode` enum('abr','vbr','cbr') NULL DEFAULT 'cbr'";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface')";
         $retval &= (Dba::write($sql) !== false);
@@ -2271,8 +2271,8 @@ class Update
      */
     public static function update_370018(): bool
     {
-        $retval  = true;
-        $sql     = "DROP TABLE IF EXISTS `tag_merge`;";
+        $retval = true;
+        $sql    = "DROP TABLE IF EXISTS `tag_merge`;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $retval &= (Dba::write($sql) !== false);
@@ -2349,7 +2349,7 @@ class Update
      */
     public static function update_370021(): bool
     {
-        return (Dba::write("ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist', 'album', 'song', 'stream', 'video', 'playlist', 'tvshow', 'tvshow_season') NULL;") !== false);
+        return (Dba::write("ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season') NULL;") !== false);
     }
 
     /**
@@ -2361,9 +2361,9 @@ class Update
     {
         $retval = true;
 
-        $sql    = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $sql    = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` varchar(255) NULL";
         $retval &= (Dba::write($sql) !== false);
-        $sql    = "ALTER TABLE `object_count` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` VARCHAR(255) NULL";
+        $sql    = "ALTER TABLE `object_count` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` varchar(255) NULL";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('geolocation', '0', 'Allow geolocation', 25, 'integer', 'options')";
         $retval &= (Dba::write($sql) !== false);
@@ -2399,7 +2399,7 @@ class Update
      */
     public static function update_370024(): bool
     {
-        return (Dba::write("ALTER TABLE `object_count` ADD COLUMN `count_type` VARCHAR(16) NOT NULL DEFAULT 'stream';") !== false);
+        return (Dba::write("ALTER TABLE `object_count` ADD COLUMN `count_type` varchar(16) NOT NULL DEFAULT 'stream';") !== false);
     }
 
     /**
@@ -2409,7 +2409,7 @@ class Update
      */
     public static function update_370025(): bool
     {
-        return (Dba::write("ALTER TABLE `user` ADD COLUMN `state` VARCHAR(64) NULL, ADD COLUMN `city` VARCHAR(64) NULL;") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD COLUMN `state` varchar(64) NULL, ADD COLUMN `city` varchar(64) NULL;") !== false);
     }
 
     /**
@@ -2654,7 +2654,7 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        return (Dba::write("CREATE TABLE `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` VARCHAR(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;") !== false);
+        return (Dba::write("CREATE TABLE `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;") !== false);
     }
 
     /**
@@ -2712,7 +2712,7 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
-        $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` ENUM ('artist', 'album', 'song', 'stream', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode') NULL";
+        $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -2878,16 +2878,16 @@ class Update
     {
         $retval = true;
 
-        $sql = "ALTER TABLE session MODIFY username VARCHAR(255)";
+        $sql = "ALTER TABLE session MODIFY username varchar(255)";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE session_remember MODIFY username VARCHAR(255)";
+        $sql = "ALTER TABLE session_remember MODIFY username varchar(255)";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE user MODIFY username VARCHAR(255)";
+        $sql = "ALTER TABLE user MODIFY username varchar(255)";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE user MODIFY fullname VARCHAR(255)";
+        $sql = "ALTER TABLE user MODIFY fullname varchar(255)";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -2934,13 +2934,13 @@ class Update
     {
         $retval = true;
 
-        $sql = "ALTER TABLE `podcast` MODIFY `copyright` VARCHAR(255)";
+        $sql = "ALTER TABLE `podcast` MODIFY `copyright` varchar(255)";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE `user_activity` ADD COLUMN `name_track` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `name_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $sql = "ALTER TABLE `user_activity` ADD COLUMN `name_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_album` varchar(255) NULL DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` VARCHAR(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` VARCHAR(255) NULL DEFAULT NULL;";
+        $sql = "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` varchar(255) NULL DEFAULT NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         $sql = "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES (-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);";
@@ -3072,7 +3072,7 @@ class Update
         $sql    = "UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;";
         $retval &= (Dba::write($sql) !== false);
 
-        $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL, ADD `barcode` VARCHAR(64) NULL, ADD `catalog_number` VARCHAR(64) NULL;";
+        $sql = "ALTER TABLE `album` ADD `original_year` INT(4) NULL, ADD `barcode` varchar(64) NULL, ADD `catalog_number` varchar(64) NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         $sql = "ALTER TABLE `song_data` DROP `catalog_number`";
@@ -3381,7 +3381,7 @@ class Update
     public static function update_400012(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+        $sql    = "ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -3739,7 +3739,7 @@ class Update
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-        $sql       = "CREATE TABLE IF NOT EXISTS `user_playlist` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song', 'live_stream', 'video', 'podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT '0', `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`),KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $sql       = "CREATE TABLE IF NOT EXISTS `user_playlist` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT '0', `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`),KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         $sql = "CREATE TABLE IF NOT EXISTS `user_data` (`user` int(11) DEFAULT NULL, `key` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `value` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, KEY `user` (`user`), KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
@@ -4389,7 +4389,7 @@ class Update
             }
         }
         if (!$rsstoken) {
-            $sql = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+            $sql = "ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;";
             $retval &= (Dba::write($sql) !== false);
         }
         $sql = "ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
@@ -5075,7 +5075,7 @@ class Update
      */
     public static function update_600015(): bool
     {
-        return (Dba::write("ALTER TABLE `user` ADD `streamtoken` VARCHAR(255) NULL AFTER `rsstoken`;") !== false);
+        return (Dba::write("ALTER TABLE `user` ADD `streamtoken` varchar(255) NULL AFTER `rsstoken`;") !== false);
     }
 
     /**
@@ -5116,7 +5116,7 @@ class Update
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         $sql       = "DROP TABLE IF EXISTS `user_playlist`";
         Dba::write($sql);
-        $sql = "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song', 'live_stream', 'video', 'podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $sql = "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
