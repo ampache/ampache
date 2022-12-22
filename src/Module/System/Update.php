@@ -2278,6 +2278,7 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $sql        = "DESCRIBE `tag`";
         $db_results = Dba::read($sql);
+        $is_hidden  = false;
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['Field'] == 'merged_to') {
                 $sql = "INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL";
@@ -2288,9 +2289,14 @@ class Update
                     $retval &= (Dba::write($sql) !== false);
                 }
             }
+            if ($row['Field'] == 'is_hidden') {
+                $is_hidden = true;
+            }
         }
-        $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
-        $retval &= (Dba::write($sql) !== false);
+        if (!$is_hidden) {
+            $sql = "ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0";
+            $retval &= (Dba::write($sql) !== false);
+        }
 
         return $retval;
     }
