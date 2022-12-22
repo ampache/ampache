@@ -49,6 +49,6 @@ final class UrlToSong3Method
         $url_data = Stream_URL::parse($input['url']);
         $user     = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        echo Xml3_Data::songs(array($url_data['id']), $user);
+        echo Xml3_Data::songs(array((int)$url_data['id']), $user);
     }
 }

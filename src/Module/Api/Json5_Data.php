@@ -890,10 +890,10 @@ class Json5_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param  integer[]    $songs
-     * @param  User         $user
-     * @param  boolean      $encode
-     * @param  boolean      $object (whether to return as a named object array or regular array)
+     * @param  int[]   $songs
+     * @param  User    $user
+     * @param  boolean $encode
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
     public static function songs($songs, $user, $encode = true, $object = true)

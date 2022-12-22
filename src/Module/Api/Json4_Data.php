@@ -748,7 +748,7 @@ class Json4_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param $songs
+     * @param int[] $songs
      * @param User $user
      * @param bool $encode
      * @return array|string

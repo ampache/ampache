@@ -790,8 +790,8 @@ class Xml4_Data
      * songs
      *
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
-     * @param integer[] $songs
-     * @param  User $user
+     * @param int[] $songs
+     * @param User $user
      * @param boolean $full_xml
      * @return string return xml
      */

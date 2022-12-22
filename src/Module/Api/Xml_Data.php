@@ -896,10 +896,10 @@ class Xml_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param integer[] $songs
-     * @param  User     $user
-     * @param boolean   $full_xml
-     * @return string   return xml
+     * @param int[]   $songs
+     * @param  User   $user
+     * @param boolean $full_xml
+     * @return string return xml
      */
     public static function songs($songs, $user, $full_xml = true)
     {
