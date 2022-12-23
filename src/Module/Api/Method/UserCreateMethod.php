@@ -46,12 +46,12 @@ final class UserCreateMethod
      * Requires the username, password and email.
      *
      * @param array $input
-     * username             = (string) $username
-     * fullname             = (string) $fullname //optional
-     * password             = (string) hash('sha256', $password))
-     * email                = (string) $email
-     * disable              = (integer) 0,1 //optional, default = 0
-     * catalog_filter_group = (integer) Catalog filter group for the new user //optional, default = 0
+     * username = (string) $username
+     * fullname = (string) $fullname //optional
+     * password = (string) hash('sha256', $password))
+     * email    = (string) $email
+     * disable  = (integer) 0,1 //optional, default = 0
+     * group    = (integer) Catalog filter group for the new user //optional, default = 0
      * @return boolean
      */
     public static function user_create(array $input): bool
@@ -68,7 +68,7 @@ final class UserCreateMethod
         $password             = $input['password'];
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
-        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $catalog_filter_group = $input['group'] ?? 0;
         $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {

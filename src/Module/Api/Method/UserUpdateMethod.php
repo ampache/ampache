@@ -50,16 +50,16 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * username             = (string) $username
-     * password             = (string) hash('sha256', $password)) //optional
-     * fullname             = (string) $fullname //optional
-     * email                = (string) $email //optional
-     * website              = (string) $website //optional
-     * state                = (string) $state //optional
-     * city                 = (string) $city //optional
-     * disable              = (integer) 0,1 true to disable, false to enable //optional
-     * catalog_filter_group = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate           = (integer) $maxbitrate //optional
+     * username   = (string) $username
+     * password   = (string) hash('sha256', $password)) //optional
+     * fullname   = (string) $fullname //optional
+     * email      = (string) $email //optional
+     * website    = (string) $website //optional
+     * state      = (string) $state //optional
+     * city       = (string) $city //optional
+     * disable    = (integer) 0,1 true to disable, false to enable //optional
+     * group      = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
     public static function user_update(array $input): bool
@@ -78,7 +78,7 @@ final class UserUpdateMethod
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
         $disable              = $input['disable'] ?? null;
-        $catalog_filter_group = $input['catalog_filter_group'] ?? null;
+        $catalog_filter_group = $input['group'] ?? null;
         $maxbitrate           = (int)($input['maxBitRate'] ?? 0);
 
         // identify the user to modify
