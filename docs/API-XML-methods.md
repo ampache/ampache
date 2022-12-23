@@ -1561,13 +1561,14 @@ Create a new user. (Requires the username, password and email.)
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input      | Type    | Description               | Optional |
-|------------|---------|---------------------------|---------:|
-| 'username' | string  | $username                 |       NO |
-| 'password' | string  | hash('sha256', $password) |       NO |
-| 'email'    | string  | e.g. user@gmail.com       |       NO |
-| 'fullname' | string  |                           |      YES |
-| 'disable'  | boolean | `0`, `1`                  |      YES |
+| Input                   | Type    | Description                       | Optional |
+|-------------------------|---------|-----------------------------------|---------:|
+| 'username'              | string  | $username                         |       NO |
+| 'password'              | string  | hash('sha256', $password)         |       NO |
+| 'email'                 | string  | e.g. user@gmail.com               |       NO |
+| 'fullname'              | string  |                                   |      YES |
+| 'disable'               | boolean | `0`, `1`                          |      YES |
+| 'catalog_filter_group'  | integer | Catalog filter group, default = 0 |      YES |
 
 * return
 

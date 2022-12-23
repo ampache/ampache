@@ -46,11 +46,12 @@ final class UserCreateMethod
      * Requires the username, password and email.
      *
      * @param array $input
-     * username = (string) $username
-     * fullname = (string) $fullname //optional
-     * password = (string) hash('sha256', $password))
-     * email    = (string) $email
-     * disable  = (integer) 0,1 //optional, default = 0
+     * username             = (string) $username
+     * fullname             = (string) $fullname //optional
+     * password             = (string) hash('sha256', $password))
+     * email                = (string) $email
+     * disable              = (integer) 0,1 //optional, default = 0
+     * catalog_filter_group = (integer) Catalog filter group for the new user //optional, default = 0
      * @return boolean
      */
     public static function user_create(array $input): bool
