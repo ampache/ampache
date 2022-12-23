@@ -634,8 +634,8 @@ class User extends database_object
 
     /**
      * update_catalog_filter_group
-     * updates their catalog filter
-     * @param $new_filter
+     * Set a new filter group catalog filter
+     * @param int $new_filter
      */
     public function update_catalog_filter_group($new_filter)
     {
