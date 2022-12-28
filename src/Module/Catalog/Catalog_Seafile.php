@@ -323,12 +323,17 @@ class Catalog_Seafile extends Catalog
         } else {
             debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
             try {
-                $results = $this->download_metadata($file);
+                $tempfilename = $this->seafile->download($file);
+                $results = $this->download_metadata($tempfilename, '', '', null, true);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
                 $added = Song::insert($results);
 
                 if ($added) {
+                    parent::gather_art([$added]);
+                    // Restore the Seafile virtual path
+                    $virtpath = $this->seafile->to_virtual_path($file);
+                    Dba::write("UPDATE song SET file = ? WHERE id = ?", [$virtpath, $added]);
                     $this->count++;
                 }
 
@@ -338,6 +343,8 @@ class Catalog_Seafile extends Catalog
                 debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+            } finally {
+                self::clean_tmp_file($tempfilename);
             }
         }
 
@@ -349,10 +356,11 @@ class Catalog_Seafile extends Catalog
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @param array $gather_types
+     * @param boolean $keep
      * @return array
      * @throws Exception
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
+    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false)
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -402,7 +410,9 @@ class Catalog_Seafile extends Catalog
             : $this->seafile->to_virtual_path($file);
 
         // remove the temp file
-        self::clean_tmp_file($tempfilename);
+        if (!$keep) {
+            self::clean_tmp_file($tempfilename);
+        }
 
         return $results;
     }
