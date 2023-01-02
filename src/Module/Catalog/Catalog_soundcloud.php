@@ -49,6 +49,7 @@ class Catalog_soundcloud extends Catalog
     private $type        = 'soundcloud';
     private $description = 'SoundCloud Remote Catalog';
 
+    private int $catalog_id;
     private string $authcode;
 
     /**

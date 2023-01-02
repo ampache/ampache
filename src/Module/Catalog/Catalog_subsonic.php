@@ -45,6 +45,8 @@ class Catalog_subsonic extends Catalog
     private $type        = 'subsonic';
     private $description = 'Subsonic Remote Catalog';
 
+    private int $catalog_id;
+
     /**
      * get_description
      * This returns the description of this catalog

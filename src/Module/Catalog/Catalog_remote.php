@@ -44,6 +44,8 @@ class Catalog_remote extends Catalog
     private $type        = 'remote';
     private $description = 'Ampache Remote Catalog';
 
+    private int $catalog_id;
+
     /**
      * get_description
      * This returns the description of this catalog
