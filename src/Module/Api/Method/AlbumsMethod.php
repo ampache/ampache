@@ -89,8 +89,9 @@ final class AlbumsMethod implements MethodInterface
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
+        $user   = $gatekeeper->getUser();
         $albums = $browse->get_objects();
-        if ($albums === []) {
+        if ($albums === [] || !$user) {
             throw new ResultEmptyException(
                 T_('No Results')
             );
@@ -105,7 +106,7 @@ final class AlbumsMethod implements MethodInterface
         $result = $output->albums(
             $albums,
             $include,
-            $gatekeeper->getUser(),
+            $user,
             true,
             true,
             (int) $input['limit'],
