@@ -28,7 +28,7 @@ use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-final class userKeyGenerator implements userKeyGeneratorInterface
+final class UserKeyGenerator implements UserKeyGeneratorInterface
 {
     private UserRepositoryInterface $userRepository;
 

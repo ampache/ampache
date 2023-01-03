@@ -29,7 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Authorization\userKeyGeneratorInterface;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,13 +44,13 @@ final class GenerateStreamtokenAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
-    private userKeyGeneratorInterface $userKeyGenerator;
+    private UserKeyGeneratorInterface $userKeyGenerator;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        userKeyGeneratorInterface $userKeyGenerator
+        UserKeyGeneratorInterface $userKeyGenerator
     ) {
         $this->ui               = $ui;
         $this->modelFactory     = $modelFactory;

@@ -35,7 +35,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\User\Authorization\userKeyGeneratorInterface;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
@@ -187,7 +187,7 @@ class AmpacheRss
         $user     = new User($user_id);
         if ($user->id > 0) {
             if (!$user->rsstoken) {
-                static::getuserKeyGenerator()->generateRssToken($user);
+                static::getUserKeyGenerator()->generateRssToken($user);
             }
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
@@ -424,10 +424,10 @@ class AmpacheRss
     /**
      * @deprecated Inject by constructor
      */
-    private static function getuserKeyGenerator(): userKeyGeneratorInterface
+    private static function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
-        return $dic->get(userKeyGeneratorInterface::class);
+        return $dic->get(UserKeyGeneratorInterface::class);
     }
 }

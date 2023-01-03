@@ -32,7 +32,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 
-class userKeyGeneratorTest extends MockeryTestCase
+class UserKeyGeneratorTest extends MockeryTestCase
 {
     /** @var UserRepositoryInterface|MockInterface|null */
     private MockInterface $userRepository;
@@ -40,14 +40,14 @@ class userKeyGeneratorTest extends MockeryTestCase
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
-    private ?userKeyGenerator $subject;
+    private ?UserKeyGenerator $subject;
 
     public function setUp(): void
     {
         $this->userRepository = $this->mock(UserRepositoryInterface::class);
         $this->logger         = $this->mock(LoggerInterface::class);
 
-        $this->subject = new userKeyGenerator(
+        $this->subject = new UserKeyGenerator(
             $this->userRepository,
             $this->logger
         );
@@ -81,7 +81,7 @@ class userKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('notice')
             ->with(
                 sprintf('Updating apikey for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => UserKeyGenerator::class]
             )
             ->once();
 
@@ -104,7 +104,7 @@ class userKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('notice')
             ->with(
                 sprintf('Updating rsstoken for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => UserKeyGenerator::class]
             )
             ->once();
 
@@ -133,7 +133,7 @@ class userKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('error')
             ->with(
                 sprintf('Could not generate random_bytes: %s', $errorMessage),
-                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => UserKeyGenerator::class]
             )
             ->once();
 
