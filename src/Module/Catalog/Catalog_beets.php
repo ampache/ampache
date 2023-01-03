@@ -41,7 +41,6 @@ class Catalog_beets extends Catalog
     protected $type        = 'beets';
     protected $description = 'Beets Catalog';
 
-    private int $catalog_id;
     protected $listCommand = 'ls';
 
     /**
@@ -157,7 +156,7 @@ class Catalog_beets extends Catalog
         $last_added = date("Y-m-d H:i:s", $this->last_add);
         $last_date  = new DateTime($last_added);
         if (date_diff($date, $last_date) < 0) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
+            debug_event(self::class, 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;
         }

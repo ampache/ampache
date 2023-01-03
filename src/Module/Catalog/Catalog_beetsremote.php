@@ -39,7 +39,6 @@ class Catalog_beetsremote extends Catalog
     protected $type        = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
 
-    private int $catalog_id;
     protected $listCommand = 'item/query';
 
     /**
