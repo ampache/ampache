@@ -24,12 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 
 class WebPlayer
 {
@@ -127,16 +130,15 @@ class WebPlayer
      */
     public static function get_media_object($urlinfo)
     {
-        $media = null;
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
-            $media      = new $class_name($urlinfo['id']);
+            return new $class_name($urlinfo['id']);
         }
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
+            return new Song_Preview($urlinfo['id']);
         }
 
-        return $media;
+        return null;
     } // get_media_object
 
     /**
@@ -298,6 +300,7 @@ class WebPlayer
 
         //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
+            /** @var Live_Stream|Podcast_Episode|Song|Song_Preview|Video $media */
             if ($url_data['type'] == 'song' && $media instanceof Song) {
                 $json['artist_id'] = $media->artist;
                 if (AmpConfig::get('album_group')) {

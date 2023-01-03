@@ -2377,7 +2377,7 @@ abstract class Catalog extends database_object
         //retrieve the file if needed
         $media = $catalog->prepare_media($media);
 
-        /** @var Song|Podcast_Episode|Video|Song_Preview $media */
+        /** @var Song|Podcast_Episode|Video $media */
         if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
             $array['error']  = true;
