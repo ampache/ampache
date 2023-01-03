@@ -35,4 +35,9 @@ interface userKeyGeneratorInterface
      * Generates and saves a new RSS token for the given user
      */
     public function generateRssToken(User $user): void;
+
+    /**
+     * Generates and saves a new Stream token for the given user
+     */
+    public function generateStreamToken(User $user): void;
 }
