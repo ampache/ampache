@@ -138,12 +138,11 @@ class Catalog_subsonic extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)($catalog_id);
-            $info     = $this->get_info($catalog_id);
-
+            $info = $this->get_info($catalog_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->catalog_id = (int)$catalog_id;
         }
     }
 
@@ -274,7 +273,7 @@ class Catalog_subsonic extends Catalog
                                 if ($this->check_remote_song($data)) {
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $data['path'], 5);
                                 } else {
-                                    $data['catalog'] = $this->id;
+                                    $data['catalog'] = $this->catalog_id;
                                     debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5);
                                     $song_Id = Song::insert($data);
                                     if (!$song_Id) {
@@ -352,7 +351,7 @@ class Catalog_subsonic extends Catalog
         $dead = 0;
 
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             $remove = false;
@@ -424,13 +423,13 @@ class Catalog_subsonic extends Catalog
         );
         $subsonic   = $this->createClient();
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = Catalog::get_cache_path($row['id'], $this->id);
+            $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id);
             $file_exists = ($target_file !== false && is_file($target_file));
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {
-                $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $target;
+                $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $target;
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
                     // check for the old path first

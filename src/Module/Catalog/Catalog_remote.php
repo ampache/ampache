@@ -137,12 +137,11 @@ class Catalog_remote extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)($catalog_id);
-            $info     = $this->get_info($catalog_id);
-
+            $info = $this->get_info($catalog_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->catalog_id = (int)$catalog_id;
         }
     }
 
@@ -285,7 +284,7 @@ class Catalog_remote extends Catalog
                     if ($this->check_remote_song($data['song'])) {
                         debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
                     } else {
-                        $data['song']['catalog'] = $this->id;
+                        $data['song']['catalog'] = $this->catalog_id;
                         $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
                         if (!Song::insert($data['song'])) {
                             debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
@@ -336,7 +335,7 @@ class Catalog_remote extends Catalog
 
         $dead       = 0;
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             try {
@@ -408,9 +407,9 @@ class Catalog_remote extends Catalog
         }
         $handshake  = $remote_handle->info();
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
+            $target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
             $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
             if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
                 debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
