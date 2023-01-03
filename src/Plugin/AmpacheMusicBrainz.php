@@ -226,6 +226,7 @@ class AmpacheMusicBrainz
             $data = array();
             switch ($object_type) {
                 case 'label':
+                    /** @var Label $object */
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
@@ -239,6 +240,7 @@ class AmpacheMusicBrainz
                     );
                     break;
                 case 'artist':
+                    /** @var Artist $object */
                     $placeFormed = (isset($results->{'begin-area'}->{'name'}) && isset($results->{'area'}->{'name'}))
                         ? $results->{'begin-area'}->{'name'} . ', ' . $results->{'area'}->{'name'}
                         : $results->{'begin-area'}->{'name'} ?? $object->placeformed;

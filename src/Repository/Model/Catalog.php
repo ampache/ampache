@@ -1207,7 +1207,7 @@ abstract class Catalog extends database_object
             return 0;
         }
 
-        /** @var Catalog $classname */
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_soundcloud|Catalog_subsonic $classname */
         if (!$classname::create_type($insert_id, $data)) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, array($insert_id));
@@ -2377,6 +2377,7 @@ abstract class Catalog extends database_object
         //retrieve the file if needed
         $media = $catalog->prepare_media($media);
 
+        /** @var Song|Podcast_Episode|Video|Song_Preview $media */
         if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
             $array['error']  = true;

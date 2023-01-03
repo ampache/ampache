@@ -499,8 +499,9 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
-        $mediaCatalogId = $media->catalog ?? null;
+        $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
         if ($mediaCatalogId) {
+            /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id)) {
                 debug_event('play/index', "Error: You are not allowed to play $media->file", 3);
@@ -529,7 +530,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
-            if ($type == "song_preview") {
+            if ($type == "song_preview" && $media instanceof Song_Preview) {
                 $media->stream();
             } else {
                 header('Location: ' . $media->file);
@@ -660,6 +661,7 @@ final class PlayAction implements ApplicationActionInterface
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
+                    /** @var Song|Video $media */
                     $media_bitrate = floor($media->bitrate / 1000);
                     //debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
                     if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
@@ -718,7 +720,7 @@ final class PlayAction implements ApplicationActionInterface
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
-            if ($cpaction) {
+            if ($cpaction && $media instanceof Song) {
                 $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
                 $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;

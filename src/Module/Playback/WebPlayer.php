@@ -298,7 +298,7 @@ class WebPlayer
 
         //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
-            if ($url_data['type'] == 'song') {
+            if ($url_data['type'] == 'song' && $media instanceof Song) {
                 $json['artist_id'] = $media->artist;
                 if (AmpConfig::get('album_group')) {
                     $json['album_id'] = $media->album;
