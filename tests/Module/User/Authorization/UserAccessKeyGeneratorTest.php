@@ -32,7 +32,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 
-class UserAccessKeyGeneratorTest extends MockeryTestCase
+class userKeyGeneratorTest extends MockeryTestCase
 {
     /** @var UserRepositoryInterface|MockInterface|null */
     private MockInterface $userRepository;
@@ -40,14 +40,14 @@ class UserAccessKeyGeneratorTest extends MockeryTestCase
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
-    private ?UserAccessKeyGenerator $subject;
+    private ?userKeyGenerator $subject;
 
     public function setUp(): void
     {
         $this->userRepository = $this->mock(UserRepositoryInterface::class);
         $this->logger         = $this->mock(LoggerInterface::class);
 
-        $this->subject = new UserAccessKeyGenerator(
+        $this->subject = new userKeyGenerator(
             $this->userRepository,
             $this->logger
         );
@@ -81,7 +81,7 @@ class UserAccessKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('notice')
             ->with(
                 sprintf('Updating apikey for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => UserAccessKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
             )
             ->once();
 
@@ -104,7 +104,7 @@ class UserAccessKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('notice')
             ->with(
                 sprintf('Updating rsstoken for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => UserAccessKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
             )
             ->once();
 
@@ -133,7 +133,7 @@ class UserAccessKeyGeneratorTest extends MockeryTestCase
         $this->logger->shouldReceive('error')
             ->with(
                 sprintf('Could not generate random_bytes: %s', $errorMessage),
-                [LegacyLogger::CONTEXT_TYPE => UserAccessKeyGenerator::class]
+                [LegacyLogger::CONTEXT_TYPE => userKeyGenerator::class]
             )
             ->once();
 

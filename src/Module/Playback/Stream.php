@@ -118,12 +118,12 @@ class Stream
         $has_player_target = false;
         if ($player) {
             // encode target for songs in webplayer/api
-            $player_setting_target = 'encode_player_' . $player . '_target';
+            $encode_target = 'encode_player_' . $player . '_target';
             if ($media_type != 'song') {
                 // encode target for video in webplayer/api
-                $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+                $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
-            $has_player_target = AmpConfig::get($player_setting_target);
+            $has_player_target = AmpConfig::get($encode_target);
         }
         $has_default_target = AmpConfig::get($setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);

@@ -66,12 +66,12 @@ final class ZipHandler implements ZipHandlerInterface
      */
     public function zip(string $name, array $media_files, bool $flat_path): void
     {
-        $art     = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-        $addart  = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $filter  = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $arc     = new ZipStream($filter . ".zip");
-        $pl      = '';
-        $options = [
+        $art      = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart   = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
+        $filter   = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $arc      = new ZipStream($filter . ".zip");
+        $playlist = '';
+        $options  = [
             'comment' => $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT),
         ];
 
@@ -82,7 +82,7 @@ final class ZipHandler implements ZipHandlerInterface
                     : dirname($file);
                 $artpath = $dirname . '/' . $art;
                 $folder  = explode('/', $dirname)[substr_count($dirname, "/")];
-                $pl .= $folder . "/" . basename($file) . "\n";
+                $playlist .= $folder . "/" . basename($file) . "\n";
                 try {
                     $arc->addFileFromPath($folder . '/' . basename($file), $file, $options);
                 } catch (Exception $e) {
@@ -103,8 +103,8 @@ final class ZipHandler implements ZipHandlerInterface
                 }
             }
         }
-        if (!empty($pl)) {
-            $arc->addFile($filter . ".m3u", $pl, $options);
+        if (!empty($playlist)) {
+            $arc->addFile($filter . ".m3u", $playlist, $options);
         }
         $this->logger->debug(
             'Sending Zip ' . $filter,

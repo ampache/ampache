@@ -24,7 +24,7 @@ namespace Ampache\Module\User\Authorization;
 
 use Ampache\Repository\Model\User;
 
-interface UserAccessKeyGeneratorInterface
+interface userKeyGeneratorInterface
 {
     /**
      * Generates and saves a new API key for the given user

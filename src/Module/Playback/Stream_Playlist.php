@@ -92,7 +92,7 @@ class Stream_Playlist
      */
     private function _add_url($url)
     {
-        debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
+        debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
         $fields       = array();
@@ -120,7 +120,7 @@ class Stream_Playlist
      */
     private function _add_urls($urls)
     {
-        debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
         $sql         = '';
         $fields      = array();
         $values      = array();
