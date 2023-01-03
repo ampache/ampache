@@ -1011,10 +1011,7 @@ class Xml_Data
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag           = new Tag($song->tags['0']);
-            $song->genre   = $tag->id;
-            $song->f_genre = $tag->name;
-
+            $tag         = new Tag($song->tags['0']);
             $song_album  = Album::get_name_array_by_id($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
             $tag_string  = self::genre_string($song->tags);
@@ -1029,7 +1026,7 @@ class Xml_Data
             $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
                 "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['f_name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['name'] . "]]></basename>\n</artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['f_name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['name'] . "]]></basename>\n</album>\n" .
-                "\t<genre id=\"" . $song->genre . "\"><name><![CDATA[" . $song->f_genre . "]]></name></genre>\n";
+                "\t<genre id=\"" . $tag->id . "\"><name><![CDATA[" . $tag->name . "]]></name></genre>\n";
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         } // end foreach
 
