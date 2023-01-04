@@ -9,7 +9,7 @@ global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
-$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk'; ?>
