@@ -55,7 +55,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     {
         if (!headers_sent()) {
             $cookie_options = [
-                'expires' => (int)(time() + 175 * CAPTCHA_TIMEOUT),
+                'lifetime' => (int)(time() + 175 * CAPTCHA_TIMEOUT),
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),

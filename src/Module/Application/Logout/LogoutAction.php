@@ -60,7 +60,7 @@ final class LogoutAction implements ApplicationActionInterface
         if (array_key_exists('session', $input) && Session::exists('interface', $input['session'])) {
             $sessionName    = $this->configContainer->get('session_name');
             $cookie_options = [
-                'expires' => -1,
+                'lifetime' => -1,
                 'path' => (string)$this->configContainer->get('cookie_path'),
                 'domain' => (string)$this->configContainer->get('cookie_domain'),
                 'secure' => make_bool($this->configContainer->get('cookie_secure')),
