@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Ampache 5.5.7-release
+
+This release fixes issues when updating your databases from **really** old versions (< 3.9.0)
+
+### Fixed
+
+* Stop filtering items beginning with a "." during catalog import
+* Don't show the filter box if there aren't any filters for the page
+* Fix up a lot of issues upgrading from really old servers
+* Don't add Album maps for null Album Artist's
+* Filter actions on the alphabet form and the graph pages correctly
+* Subsonic
+  * Allow empty search queries
+
+## API 5.5.7
+
+### Changed
+
+* Keep the original mime and bitrate on song objects instead of the transcoded value
+
 ## Ampache 5.5.6-release
 
 This release imports the API code cleanup from Ampache Develop which has fixed a lot of data issues.
