@@ -13,6 +13,7 @@ This release fixes issues when updating your databases from **really** old versi
 * Filter actions on the alphabet form and the graph pages correctly
 * session_set_cookie_params options array
 * Check for statistical_graph settings
+* Fetch Seafile cover art
 * Subsonic
   * Allow empty search queries
 
