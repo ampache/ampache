@@ -324,7 +324,7 @@ class Catalog_Seafile extends Catalog
             debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
             try {
                 $tempfilename = $this->seafile->download($file);
-                $results = $this->download_metadata($tempfilename, '', '', null, true);
+                $results      = $this->download_metadata($tempfilename, '', '', null, true);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
                 $added = Song::insert($results);
