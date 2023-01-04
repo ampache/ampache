@@ -76,7 +76,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         if (
-            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)||
+            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) ||
             !is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
         ) {
             $this->logger->warning(

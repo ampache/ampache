@@ -109,13 +109,13 @@ class AmpacheStreamTime
             $next_total = 0;
             foreach ($media_ids as $media_id) {
                 $class_name = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-                $media = new $class_name($media_id['object_id']);
+                $media      = new $class_name($media_id['object_id']);
                 $next_total += $media->time;
             }
 
-            $graph = new Graph();
-            $end_date = time();
-            $start_date = $end_date - ($this->time_days * 86400);
+            $graph         = new Graph();
+            $end_date      = time();
+            $start_date    = $end_date - ($this->time_days * 86400);
             $current_total = $graph->get_total_time($this->user_id, $start_date, $end_date);
             $next_total += $current_total;
             $max = $this->time_max * 60;

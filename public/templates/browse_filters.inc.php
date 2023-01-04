@@ -82,8 +82,8 @@ if (!empty($allowed_filters)) { ?>
                     <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
                     <select id="catalog_select" name="catalog_key">
                         <option value="0"><?php echo T_('All'); ?></option>
-                        <?php $results  = array();
-                        $catalogs               = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+                        <?php $results = array();
+                        $catalogs      = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
                         if (!empty($catalogs)) {
                             // Only show the catalogs this user is allowed to access
                             $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
