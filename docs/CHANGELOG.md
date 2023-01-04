@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.7-release
+## Ampache 5.5.7-develop
 
 This release fixes issues when updating your databases from **really** old versions (< 3.9.0)
 
@@ -11,6 +11,8 @@ This release fixes issues when updating your databases from **really** old versi
 * Fix up a lot of issues upgrading from really old servers
 * Don't add Album maps for null Album Artist's
 * Filter actions on the alphabet form and the graph pages correctly
+* session_set_cookie_params options array
+* Check for statistical_graph settings
 * Subsonic
   * Allow empty search queries
 
