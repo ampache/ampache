@@ -104,30 +104,29 @@ class AmpacheStreamBandwidth
             return true;
         }
         // if using free software only you can't use this plugin
-        if (!AmpConfig::get('statistical_graphs') || !is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            debug_event('streambandwidth.plugin', 'Access denied, statistical graph disabled.', 1);
+        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+            // Calculate all media size
+            $next_total = 0;
+            foreach ($media_ids as $media_id) {
+                $class_name = ObjectTypeToClassNameMapper::map($media_id['object_type']);
+                $media      = new $class_name($media_id['object_id']);
+                $next_total += $media->size;
+            }
 
-            return true;
+            $graph         = new Graph();
+            $end_date      = time();
+            $start_date    = $end_date - ($this->bandwidth_days * 86400);
+            $current_total = $graph->get_total_bandwidth($this->user_id, $start_date, $end_date);
+            $next_total += $current_total;
+            $max = $this->bandwidth_max * 1024 * 1024;
+
+            debug_event('streambandwidth.plugin', 'Next stream bandwidth will be ' . $next_total . ' / ' . $max, 3);
+
+            return ($next_total <= $max);
         }
+        debug_event('streambandwidth.plugin', 'Access denied, statistical graph disabled.', 1);
 
-        // Calculate all media size
-        $next_total = 0;
-        foreach ($media_ids as $media_id) {
-            $class_name = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-            $media      = new $class_name($media_id['object_id']);
-            $next_total += $media->size;
-        }
-
-        $graph         = new Graph();
-        $end_date      = time();
-        $start_date    = $end_date - ($this->bandwidth_days * 86400);
-        $current_total = $graph->get_total_bandwidth($this->user_id, $start_date, $end_date);
-        $next_total += $current_total;
-        $max = $this->bandwidth_max * 1024 * 1024;
-
-        debug_event('streambandwidth.plugin', 'Next stream bandwidth will be ' . $next_total . ' / ' . $max, 3);
-
-        return ($next_total <= $max);
+        return true;
     }
 
     /**
