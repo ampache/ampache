@@ -247,7 +247,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             ($owner !== null && $owner == $GLOBALS['user']->id) ||
             $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
         ) &&
-        ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) === false) &&
+        $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
         is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
     }
 
