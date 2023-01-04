@@ -552,7 +552,7 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['allow_video'] = '0';
 
                 $cookie_options = [
-                    'expires' => time() + (30 * 24 * 60 * 60),
+                    'lifetime' => time() + (30 * 24 * 60 * 60),
                     'path' => '/',
                     'samesite' => 'Strict'
                 ];
