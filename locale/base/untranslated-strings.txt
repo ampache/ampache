@@ -15,10 +15,6 @@ msgstr ""
 msgid "Total Users"
 msgstr ""
 
-#: ./untranslated-strings.txt:19
-msgid "Update Now!"
-msgstr ""
-
 #: ./untranslated-strings.txt:22
 msgid "httpQ Active Instance"
 msgstr ""
