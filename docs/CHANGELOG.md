@@ -16,7 +16,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600020
+* Database 600021
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -36,6 +36,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `object_type_IDX` to artist_map table
   * Add `object_type_IDX` to catalog_map table
   * Drop `user_playlist` table and recreate it
+  * Extend `time` column for the song table
+  * Extend `time` column for the stream_playlist table
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
