@@ -24,6 +24,24 @@ If you have further questions, please feel free to open an issue here or start a
 
 Thanks and happy localizing!
 
+## gather-messages.sh
+
+To update the repository, Ampache uses a gettext script called `gather-messages.sh`
+
+To use; cd to the base dir
+
+```
+cd locale/base
+```
+
+Then gather the new messages
+
+```
+gather-messages.sh -g
+```
+
+This will generate the pot file for upload to the repo. This is needed to allow Transifex users time to translate things.
+
 ## Transifex Client
 
 To configure and use translations you need to have access tothe project and an API token to use for the client.
