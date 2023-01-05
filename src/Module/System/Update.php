@@ -834,8 +834,11 @@ class Update
         $update_string = "* Set system preferences to Admin (100)<br />* These options are only available to Admin users anyway";
         $version[]     = array('version' => '600020', 'description' => $update_string);
 
-        $update_string = "* Extend `time` column for the song table<br />* Extend `time` column for the stream_playlist table";
+        $update_string = "* Extend `time` column for the song table";
         $version[]     = array('version' => '600021', 'description' => $update_string);
+
+        $update_string = "* Extend `time` column for the stream_playlist table";
+        $version[]     = array('version' => '600022', 'description' => $update_string);
 
         return $version;
     }
@@ -5165,14 +5168,26 @@ class Update
     /** update_600021
      *
      * Extend `time` column for the song table
-     * Extend `time` column for the stream_playlist table
      */
     public static function update_600021(): bool
     {
         $retval = true;
         $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) unsigned NULL;";
+
+        return $retval;
+    }
+
+    /** update_600022
+     *
+     * Extend `time` column for the stream_playlist table
+     */
+    public static function update_600022(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
