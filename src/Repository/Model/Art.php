@@ -329,7 +329,7 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . $rurl['extension'];
+        $mime  = "image/" . $rurl['extension'] ?? 'jpg';
         $this->insert($image, $mime);
     }
 
