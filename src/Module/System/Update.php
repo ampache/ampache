@@ -5172,7 +5172,7 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `stream_playlist` int(11) unsigned NULL;";
+        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) unsigned NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
