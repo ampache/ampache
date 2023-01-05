@@ -659,11 +659,14 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             if (empty($file)) {
                 // new file (pending)
                 $podcast = new Podcast($this->podcast);
-                $file    = $podcast->get_root_path();
-                if (!empty($file)) {
-                    $pinfo = pathinfo($this->source);
-                    $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
+                $path    = $podcast->get_root_path();
+                if (!empty($path)) {
+                    debug_event(self::class, 'get_root_path: Check your catalog directory and permissions', 1);
+
+                    return false;
                 }
+                $pinfo = pathinfo($this->source);
+                $file  = $path . DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
             }
             if (!empty($file)) {
                 if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
