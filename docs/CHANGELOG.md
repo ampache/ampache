@@ -13,6 +13,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
 * Allow Admin users to browse all user uploads
+* Add php8.2 to composer
+* Create Dockerfilephp82
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -86,6 +88,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Ignore case in genre comparison
 * Hide Upload links if you can't access the catalog
 * Recently played for non-user calls
+* Found a few dynamic properties on objects
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -96,6 +99,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
+  * user_create: Add `group` parameter to pick a catalog filter group
+  * user_update: Add `group` parameter to pick a catalog filter group
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
   * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"
