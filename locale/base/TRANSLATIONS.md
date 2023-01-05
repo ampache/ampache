@@ -23,3 +23,43 @@ Benifits to using the Transifex platform include:
 If you have further questions, please feel free to open an issue here or start a new thread on our GoogleGroups forum and ask for @Psy-Virus - The Translation Guy.
 
 Thanks and happy localizing!
+
+## Transifex Client
+
+To configure and use translations you need to have access tothe project and an API token to use for the client.
+
+https://developers.transifex.com/docs/cli
+
+### Basic Use
+
+You can install the latest Transifex CLI by executing:
+
+```
+curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+```
+
+Now migrate your old config if you had it installed previously
+
+```
+tx migrate
+```
+
+With the cli tool you can pull the changes to the messages with
+
+```
+tx pull
+```
+
+Here is an example of my migrated config file (~/.transifexrc) which allows me to pull the translations
+
+```
+[https://www.transifex.com]
+api_hostname  = https://api.transifex.com
+hostname      = https://www.transifex.com
+username      = api
+password      = 1/2345675623876238476103450278634925761291
+rest_hostname = https://rest.api.transifex.com
+token         = 1/2345675623876238476103450278634925761291
+```
+
+

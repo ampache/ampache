@@ -1,7 +1,8 @@
-.settings/
 .fleet/
-.vscode/
 .idea/
+.settings/
+.tx/config_*.bak
+.vscode/
 .buildpath
 .env
 .pc
