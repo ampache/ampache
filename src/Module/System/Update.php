@@ -5185,9 +5185,7 @@ class Update
     public static function update_600022(): bool
     {
         $retval = true;
-        $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
-        $retval &= (Dba::write($sql) !== false);
-        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
+        $sql    = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
