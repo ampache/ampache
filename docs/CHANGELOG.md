@@ -10,6 +10,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Added
 
+* Translations 2023-01
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key
 * Allow Admin users to browse all user uploads
@@ -18,7 +19,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600021
+* Database 600022
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
