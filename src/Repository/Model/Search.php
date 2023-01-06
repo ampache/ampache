@@ -631,11 +631,11 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
+        $playlists   = Playlist::get_playlist_array($this->user);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
-        $playlists = self::get_search_array($this->search_user->id ?? 0);
+        $playlists = self::get_search_array($this->user);
         if (!empty($playlists)) {
             $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -679,7 +679,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
@@ -756,7 +756,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
+        $playlists   = Playlist::get_playlist_array($this->user);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -770,7 +770,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
@@ -835,7 +835,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
+        $playlists   = Playlist::get_playlist_array($this->user);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -851,7 +851,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
