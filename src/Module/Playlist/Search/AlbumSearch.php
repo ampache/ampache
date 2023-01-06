@@ -300,7 +300,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'image_height':
                 case 'image_width':
-                    $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
+                    $looking       = ($rule[0] = 'image_width') ? 'width' : 'height';
                     $where[]       = "`image`.`$looking` $operator_sql ?";
                     $parameters[]  = $input;
                     $join['image'] = true;
