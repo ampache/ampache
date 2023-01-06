@@ -100,7 +100,7 @@ class Search extends playlist_object
                 $rule_count++;
             }
             // When loading a search use the owner ID for the search
-            if ($this->user > 1) {
+            if ($this->user > 0) {
                 $this->search_user = new User($this->user);
             }
         }
