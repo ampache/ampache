@@ -419,7 +419,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
 
                 // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 308);
 
                 return null;
             }
@@ -459,7 +459,7 @@ final class PlayAction implements ApplicationActionInterface
                     }
 
                     // play the song instead of going through all the crap
-                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 308);
 
                     return null;
                 }
@@ -533,7 +533,7 @@ final class PlayAction implements ApplicationActionInterface
             if ($type == "song_preview" && $media instanceof Song_Preview) {
                 $media->stream();
             } else {
-                header('Location: ' . $media->file, true, 303);
+                header('Location: ' . $media->file, true, 308);
 
                 return null;
             }
