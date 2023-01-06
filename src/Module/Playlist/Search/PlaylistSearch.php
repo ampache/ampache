@@ -38,7 +38,6 @@ final class PlaylistSearch implements SearchInterface
         Search $search
     ): array {
         $sql_logic_operator = $search->logic_operator;
-        $user_id            = $search->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -64,7 +63,7 @@ final class PlaylistSearch implements SearchInterface
             $input        = $search->filter_data($rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
-            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . ")";
+            $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search->search_user->id . ")";
 
             switch ($rule[0]) {
                 case 'title':
@@ -107,9 +106,9 @@ final class PlaylistSearch implements SearchInterface
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . "AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . "AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         ksort($table);

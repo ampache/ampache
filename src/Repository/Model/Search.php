@@ -64,7 +64,7 @@ class Search extends playlist_object
     public $rules     = array(); // rules used to run a search (User chooses rules from available types for that object)
     public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
 
-    public $search_user;
+    public $search_user; // user running the search
 
     private $searchType; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
     private $stars;
@@ -78,11 +78,10 @@ class Search extends playlist_object
      */
     public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
     {
-        if ($user !== null) {
-            $this->search_user = $user;
-        } else {
-            $this->search_user = Core::get_global('user');
-        }
+        $this->search_user = ($user !== null)
+            ? $user
+            : Core::get_global('user');
+
         //debug_event(self::class, "SearchID: $search_id; Search Type: $object_type\n" . print_r($this, true), 5);
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
@@ -99,6 +98,10 @@ class Search extends playlist_object
             foreach ($this->rules as $rule) {
                 $this->rules[$rule_count][0] = $this->_get_rule_name($rule[0]);
                 $rule_count++;
+            }
+            // When loading a search use the owner ID for the search
+            if ($this->user > 1) {
+                $this->search_user = new User($this->user);
             }
         }
         $this->date  = time();
@@ -570,7 +573,6 @@ class Search extends playlist_object
      */
     private function _set_types_song()
     {
-        $user_id = $this->search_user->id ?? 0;
         $this->_add_type_text('anywhere', T_('Any searchable text'));
 
         $t_song_data = T_('Song Data');
@@ -629,11 +631,11 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($user_id);
+        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
-        $playlists = self::get_search_array($user_id);
+        $playlists = self::get_search_array($this->search_user->id ?? 0);
         if (!empty($playlists)) {
             $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -677,7 +679,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
@@ -716,7 +718,6 @@ class Search extends playlist_object
      */
     private function _set_types_artist()
     {
-        $user_id       = $this->search_user->id ?? 0;
         $t_artist_data = T_('Artist Data');
         $this->_add_type_text('title', T_('Name'), $t_artist_data);
         $this->_add_type_text('album', T_('Album Title'), $t_artist_data);
@@ -755,7 +756,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($user_id);
+        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -769,7 +770,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
@@ -791,7 +792,6 @@ class Search extends playlist_object
      */
     private function _set_types_album()
     {
-        $user_id      = $this->search_user->id ?? 0;
         $t_album_data = T_('Album Data');
         $this->_add_type_text('title', T_('Title'), $t_album_data);
         $this->_add_type_text('artist', T_('Album Artist'), $t_album_data);
@@ -835,7 +835,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
 
         $t_playlists = T_('Playlists');
-        $playlists   = Playlist::get_playlist_array($user_id);
+        $playlists   = Playlist::get_playlist_array($this->search_user->id ?? 0);
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
@@ -851,7 +851,7 @@ class Search extends playlist_object
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $catalogs = array();
-        foreach (Catalog::get_catalogs('music', $user_id) as $catid) {
+        foreach (Catalog::get_catalogs('music', $this->search_user->id ?? 0) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->name;
@@ -1227,9 +1227,8 @@ class Search extends playlist_object
      */
     public function delete()
     {
-        $search_id = Dba::escape($this->id);
-        $sql       = "DELETE FROM `search` WHERE `id` = ?";
-        Dba::write($sql, array($search_id));
+        $sql = "DELETE FROM `search` WHERE `id` = ?";
+        Dba::write($sql, array($this->id));
         Catalog::count_table('search');
 
         return true;
@@ -1358,11 +1357,9 @@ class Search extends playlist_object
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
-            if (empty($sqltbl['where_sql'])) {
-                $sql .= " WHERE ";
-            } else {
-                $sql .= " AND ";
-            }
+            $sql .= (empty($sqltbl['where_sql']))
+                ? " WHERE "
+                : " AND ";
             $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
         }
         if (!empty($sqltbl['group_sql'])) {

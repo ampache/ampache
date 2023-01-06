@@ -38,7 +38,6 @@ final class AlbumDiskSearch implements SearchInterface
         Search $search
     ): array {
         $sql_logic_operator = $search->logic_operator;
-        $user_id            = $search->search_user->id ?? 0;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
@@ -96,14 +95,14 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_$user_id`.`user` = $user_id AND `favorite_album_$user_id`.`object_type` = 'album'";
+                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . "AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$user_id"))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = $user_id) AS `favorite_album_$user_id` ON `album`.`id` = `favorite_album_$user_id`.`object_id` AND `favorite_album_$user_id`.`object_type` = 'album'"
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search->search_user->id . ""))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_album_" . $search->search_user->id . "` ON `album`.`id` = `favorite_album_" . $search->search_user->id . "`.`object_id` AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'"
                         : "";
                     break;
                 case 'myrating':
@@ -124,20 +123,20 @@ final class AlbumDiskSearch implements SearchInterface
                         $operator_sql = '>=';
                     }
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "(`rating_" . $my_type . "_" . $user_id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $user_id . "`.`rating` IS NULL)";
+                        $where[]      = "(`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL)";
                         $parameters[] = $input;
                     } else {
-                        $where[]      = "`rating_" . $my_type . "_" . $user_id . "`.`rating` $operator_sql ?";
+                        $where[]      = "`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` $operator_sql ?";
                         $parameters[] = $input;
                     }
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
                         $table['rating'] = '';
                     }
-                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = $user_id AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_id` = $column"
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search->search_user->id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search->search_user->id . "AND `object_type`='$my_type') AS `rating_" . $my_type . "_" . $search->search_user->id . "` ON `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_id` = $column"
                         : "";
                     if ($my_type == 'artist') {
                         $join['album_map'] = true;
@@ -156,12 +155,12 @@ final class AlbumDiskSearch implements SearchInterface
                         $operator_sql = '>=';
                     }
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                        $where[] = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . "AND `object_type`='song')))";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $operator_sql ?))) OR `album`.`id` NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song')))";
+                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . "AND `object_type`='song' AND `rating` $operator_sql ?))) OR `album`.`id` NOT IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . "AND `object_type`='song')))";
                         $parameters[] = $input;
                     } else {
-                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='song' AND `rating` $operator_sql ?)))";
+                        $where[]      = "`album`.`id` IN (SELECT `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . "AND `object_type`='song' AND `rating` $operator_sql ?)))";
                         $parameters[] = $input;
                     }
                     break;
@@ -176,10 +175,10 @@ final class AlbumDiskSearch implements SearchInterface
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
                     }
-                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $user_id . "` ON `album`.`$column` = `myplayed_" . $my_type . "_" . $user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search->search_user->id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search->search_user->id . "` ON `album`.`$column` = `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`myplayed_" . $my_type . "_" . $user_id . "`.`object_id` $operator_sql";
+                    $where[] = "`myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` $operator_sql";
                     break;
                 case 'played':
                     $column       = 'id';
@@ -199,10 +198,10 @@ final class AlbumDiskSearch implements SearchInterface
                     if (!array_key_exists('last_play', $table)) {
                         $table['last_play'] = '';
                     }
-                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $user_id . "` ON `album`.`id` = `last_play_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $user_id . "`.`object_type` = '$my_type'"
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $search->search_user->id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search->search_user->id . "` ON `album`.`id` = `last_play_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[]      = "`last_play_" . $my_type . "_" . $user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
+                    $where[]      = "`last_play_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
                     $parameters[] = $input;
                     break;
                 case 'last_skip':
@@ -210,10 +209,10 @@ final class AlbumDiskSearch implements SearchInterface
                     if (!array_key_exists('last_skip', $table)) {
                         $table['last_skip'] = '';
                     }
-                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $search->search_user->id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search->search_user->id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = 'song'"
                         : "";
-                    $where[]      = "`last_skip_" . $my_type . "_" . $user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
+                    $where[]      = "`last_skip_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -222,10 +221,10 @@ final class AlbumDiskSearch implements SearchInterface
                     if (!array_key_exists('last_play_or_skip', $table)) {
                         $table['last_play_or_skip'] = '';
                     }
-                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $user_id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user`=$user_id GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $user_id . "`.`object_type` = 'song'"
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search->search_user->id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = 'song'"
                         : "";
-                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
+                    $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - (? * 86400))";
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -256,8 +255,8 @@ final class AlbumDiskSearch implements SearchInterface
                         if (!array_key_exists('rating', $table)) {
                             $table['rating'] = '';
                         }
-                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $user_id))
-                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $user_id . "` ON `rating_" . $my_type . "_" . $user_id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $user_id . "`.`object_id` = `$my_type`.`$column` AND `rating_" . $my_type . "_" . $user_id . "`.`user` = $user_id "
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search->search_user->id))
+                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search->search_user->id . "` ON `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_id` = `$my_type`.`$column` AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . ""
                             : "";
                     }
                     break;
@@ -407,13 +406,13 @@ final class AlbumDiskSearch implements SearchInterface
         }
         if ($join['catalog_map']) {
             if (!empty($where_sql)) {
-                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "(" . $where_sql . ") AND `catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . "AND `catalog_filter_group_map`.`enabled`=1)";
             } else {
-                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)";
+                $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search->search_user->id . "AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
         if (array_key_exists('count', $join)) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`user`='" . $user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `album`.`id`";
+            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`user`='" . $search->search_user->id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `album`.`id`";
         }
         if (array_key_exists('image', $join)) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";

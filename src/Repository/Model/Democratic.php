@@ -280,8 +280,7 @@ class Democratic extends Tmp_Playlist
             return $items[$offset]['object_id'];
         }
 
-        // If nothing was found and this is a voting playlist then get
-        // from base_playlist
+        // If nothing was found and this is a voting playlist then get from base_playlist
         if ($this->base_playlist) {
             $base_playlist = ($use_search)
                 ? new Search($this->base_playlist)

@@ -212,7 +212,7 @@ class Random
     public static function get_search($user, $search_id = 0)
     {
         $results = array();
-        $search  = new Search($search_id);
+        $search  = new Search($search_id, 'song', $user);
         if ($search->has_access($user->id)) {
             foreach ($search->get_random_items(1) as $songs) {
                 $results[] = (int)$songs['object_id'];
