@@ -469,8 +469,8 @@ class Json4_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int) $playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+            if ((int)$playlist_id === 0) {
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), $user);
                 if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
                     continue;
                 }

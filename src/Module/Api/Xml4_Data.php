@@ -392,7 +392,7 @@ class Xml4_Data
                     break;
                 case 'playlist':
                     if ((int) $object_id === 0) {
-                        $playlist = new Search((int) str_replace('smart_', '', (string) $object_id));
+                        $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
                         $playlist->format();
 
                         $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
@@ -638,8 +638,8 @@ class Xml4_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int) $playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+            if ((int)$playlist_id === 0) {
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
                 if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
                     continue;
                 }

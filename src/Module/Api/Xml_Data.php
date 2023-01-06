@@ -452,7 +452,7 @@ class Xml_Data
                     break;
                 case 'playlist':
                     if ((int)$object_id === 0) {
-                        $playlist       = new Search((int) str_replace('smart_', '', (string)$object_id));
+                        $playlist       = new Search((int) str_replace('smart_', '', (string)$object_id), 'song', $user);
                         $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                     } else {
@@ -726,7 +726,7 @@ class Xml_Data
              * playlist  = 1000000
              */
             if ((int)$playlist_id === 0) {
-                $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id));
+                $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id), 'song', $user);
                 if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
                     continue;
                 }

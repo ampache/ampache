@@ -1186,7 +1186,8 @@ class Subsonic_Api
         }
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylist');
         if (Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
-            $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song');
+            $user     = User::get_from_username((string)$input['u']);
+            $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song', $user);
             Subsonic_Xml_Data::addPlaylist($response, $playlist, true);
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
@@ -1276,7 +1277,8 @@ class Subsonic_Api
             return;
         }
         if (Subsonic_Xml_Data::_isSmartPlaylist($playlistId)) {
-            $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song');
+            $user     = User::get_from_username((string)$input['u']);
+            $playlist = new Search(Subsonic_Xml_Data::_getAmpacheId($playlistId), 'song', $user);
         } else {
             $playlist = new Playlist(Subsonic_Xml_Data::_getAmpacheId($playlistId));
         }
@@ -1476,7 +1478,8 @@ class Subsonic_Api
             $art = new Art(Subsonic_Xml_Data::_getAmpacheId($sub_id), "playlist");
         }
         if ($type == 'search') {
-            $playlist  = new Search(Subsonic_Xml_Data::_getAmpacheId($sub_id));
+            $user     = User::get_from_username((string)$input['u']);
+            $playlist  = new Search(Subsonic_Xml_Data::_getAmpacheId($sub_id), 'song', $user);
             $listitems = $playlist->get_items();
             $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
             $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
