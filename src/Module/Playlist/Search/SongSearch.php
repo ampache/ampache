@@ -362,7 +362,7 @@ final class SongSearch implements SearchInterface
                     break;
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
-                    $subsearch = new Search($input, 'song', $search->search_user->id);
+                    $subsearch = new Search($input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
                     if (count($results) > 0) {
                         $where[]      = "`song`.`id` $operator_sql IN (" . $results['sql'] . ")";

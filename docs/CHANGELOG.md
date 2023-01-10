@@ -2,7 +2,7 @@
 
 ## Ampache develop
 
-**NOTE** For database update 600005; please consider using the CLI update command (php bin/cli admin:updateDatabase -e)
+**NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
 A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been setup for Admins to follow the changes happening in preparation for Ampache6
 
@@ -72,6 +72,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
 * Album::check() add barcode, catalog number and subtitle for comparison checks
+* Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer

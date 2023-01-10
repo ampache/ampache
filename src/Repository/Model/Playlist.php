@@ -172,8 +172,7 @@ class Playlist extends playlist_object
     public static function get_playlist_array($user_id = null)
     {
         if (!$user_id) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = Core::get_global('user')->id ?? 0;
         }
         $key = 'playlistarray';
         if (parent::is_cached($key, $user_id)) {
