@@ -660,7 +660,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
                 // new file (pending)
                 $podcast = new Podcast($this->podcast);
                 $path    = $podcast->get_root_path();
-                if (!empty($path)) {
+                if (empty($path)) {
                     debug_event(self::class, 'get_root_path: Check your catalog directory and permissions', 1);
 
                     return false;
