@@ -93,7 +93,7 @@ abstract class playlist_object extends database_object implements library_item
         $this->f_name = (($this->user == Core::get_global('user')->id))
             ? scrub_out($this->name)
             : scrub_out($this->name . " (" . $this->username . ")");
-        $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        $this->get_f_type();
         $this->get_f_link();
     } // format
 
@@ -208,6 +208,20 @@ abstract class playlist_object extends database_object implements library_item
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * Get item type (public / private).
+     * @return string
+     */
+    public function get_f_type()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_type)) {
+            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        }
+
+        return $this->f_type;
     }
 
     /**

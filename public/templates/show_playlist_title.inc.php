@@ -20,4 +20,5 @@
  *
  */
 
-echo $playlist->f_type . ' ' . $playlist->name . ' (' . T_('Playlist') . ')';
+/** @var \Ampache\Repository\Model\Playlist $playlist */
+/* HINT: %1 Playlist Name, %2 Playlist Type */ echo sprintf(T_('%1$s (%2$s Playlist)'), $playlist->get_fullname(), $playlist->get_f_type());

@@ -297,7 +297,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getType(): string
     {
-        return $this->playlist->f_type;
+        return $this->playlist->get_f_type();
     }
 
     public function getMediaCount(): int

@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
 
-<?php /* HINT: %1 Playlist Type, %2 Playlist Name */ echo sprintf(T_('%1$s %2$s (Smart Playlist)'), $playlist->f_type, $playlist->name); ?>
+/** @var \Ampache\Repository\Model\Search $playlist */
+/* HINT: %1 Playlist Name, %2 Playlist Type */ echo sprintf(T_('%1$s (%2$s Smart Playlist)'), $playlist->get_fullname(), $playlist->get_f_type());
