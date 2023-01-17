@@ -504,6 +504,7 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
+     * @param int $user_id
      * @return array
      * <array{
      *  media: \Ampache\Repository\Model\library_item,
@@ -512,7 +513,7 @@ class Stream
      *  expire: int
      * }>
      */
-    public static function get_now_playing()
+    public static function get_now_playing($user_id = 0)
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
@@ -537,7 +538,7 @@ class Stream
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            if (Catalog::has_access($media->catalog, (int)$row['user'])) {
+            if (($user_id > 0 && (int)$row['user'] == $user_id) && Catalog::has_access($media->catalog, (int)$row['user'])) {
                 $client = new User($row['user']);
                 $media->format();
                 $client->format();
