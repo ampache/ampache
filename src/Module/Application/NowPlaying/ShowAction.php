@@ -119,32 +119,6 @@ final class ShowAction implements ApplicationActionInterface
         );
         $user_id = (int)Core::get_request('user_id');
         $results = Stream::get_now_playing($user_id);
-        if ($user_id > 0) {
-            if (empty($results)) {
-                $last_song = Stats::get_last_play(Core::get_request('user_id'));
-                $media     = $this->modelFactory->createSong((int) $last_song['object_id']);
-                $media->format();
-
-                $client = $this->modelFactory->createUser((int) $last_song['user']);
-                $client->format();
-
-                $results[] = [
-                    'media' => $media,
-                    'client' => $client,
-                    'agent' => $last_song['agent'],
-                    'expire' => ''
-                ];
-
-                $this->logger->debug(
-                    'no result; getting last song played instead: ' . $media->id,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-            }
-            // If the URL specifies a specific user, filter the results on that user
-            $results = array_filter($results, function ($item) {
-                return ($item['client']->id === Core::get_request('user_id'));
-            });
-        }
 
         require Ui::find_template('show_now_playing.inc.php');
 
