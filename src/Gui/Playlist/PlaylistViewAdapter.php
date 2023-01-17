@@ -285,6 +285,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return $this->playlist->get_f_link();
     }
 
+    public function getUsername(): string
+    {
+        return $this->playlist->username;
+    }
+
     public function getLastUpdate(): string
     {
         return $this->playlist->f_last_update;
