@@ -51,7 +51,7 @@ use Ampache\Module\Util\Ui;
             <th class="cel_type optional"><?php echo T_('Type'); ?></th>
             <th class="cel_random optional"><?php echo T_('Random'); ?></th>
             <th class="cel_limit optional"><?php echo T_('Item Limit'); ?></th>
-            <th class="cel_owner essential"><?php echo T_('Owner') ?></th>
+            <th class="cel_owner essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=username', T_('Owner'), 'playlist_sort_username'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
@@ -74,7 +74,7 @@ use Ampache\Module\Util\Ui;
     <tfoot>
         <tr class="th-bottom">
             <th class="cel_play"></th>
-            <th class="cel_playlist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name_bottom'); ?></th>
+            <th class="cel_playlist"></th>
             <th class="cel_add"></th>
             <th class="cel_type"></th>
             <th class="cel_random"></th>

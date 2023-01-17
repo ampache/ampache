@@ -59,7 +59,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php } ?>
-            <th class="cel_owner essential"><?php echo T_('Owner') ?></th>
+            <th class="cel_owner essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=username', T_('Owner'), 'playlist_sort_username'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>

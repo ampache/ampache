@@ -133,13 +133,16 @@ class Query
             'rating'
         ),
         'playlist' => array(
+            'last_update',
             'name',
+            'type',
             'user',
-            'last_update'
+            'username'
         ),
         'smartplaylist' => array(
             'name',
-            'user'
+            'user',
+            'username'
         ),
         'shoutbox' => array(
             'date',
@@ -2285,10 +2288,11 @@ class Query
                 break;
             case 'playlist':
                 switch ($field) {
-                    case 'type':
-                    case 'name':
-                    case 'user':
                     case 'last_update':
+                    case 'name':
+                    case 'type':
+                    case 'user':
+                    case 'username':
                         $sql = "`playlist`.`$field`";
                         break;
                 } // end switch
@@ -2298,6 +2302,7 @@ class Query
                     case 'type':
                     case 'name':
                     case 'user':
+                    case 'username':
                         $sql = "`search`.`$field`";
                         break;
                 } // end switch on $field
