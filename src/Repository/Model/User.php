@@ -30,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -445,34 +446,20 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
+        $items   = array();
         $count   = AmpConfig::get('popular_threshold', 10);
         $results = Stats::get_user($count, $type, $this->id, 1);
-
-        $items = array();
-
         foreach ($results as $row) {
-            // If its a song
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $data      = new $className($row['object_id']);
             if ($type == 'song') {
-                $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
-                $data->format();
-                $items[] = $data;
-            } elseif ($type == 'album') {
-                // If its an album
-                $data = new Album($row['object_id']);
-                $data->format();
-                $items[] = $data;
-            } elseif ($type == 'artist') {
-                // If its an artist
-                $data = new Artist($row['object_id']);
-                $data->format();
-                $data->f_name = $data->f_link;
-                $items[]      = $data;
-            } elseif (($type == 'genre' || $type == 'tag')) {
-                // If it's a genre
-                $data    = new Tag($row['object_id']);
-                $items[] = $data;
             }
+            $data->format();
+            if ($type == 'artist') {
+                $data->f_name = $data->f_link;
+            }
+            $items[] = $data;
         } // end foreach
 
         return $items;

@@ -71,6 +71,7 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'label' => Label::class,
         'podcast' => Podcast::class,
+        'genre' => Tag::class,
         'tag' => Tag::class,
         'tag_hidden' => Tag::class,
         'wanted' => Wanted::class,
