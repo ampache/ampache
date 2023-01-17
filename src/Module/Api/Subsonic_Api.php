@@ -1478,7 +1478,7 @@ class Subsonic_Api
             $art = new Art(Subsonic_Xml_Data::_getAmpacheId($sub_id), "playlist");
         }
         if ($type == 'search') {
-            $user     = User::get_from_username((string)$input['u']);
+            $user      = User::get_from_username((string)$input['u']);
             $playlist  = new Search(Subsonic_Xml_Data::_getAmpacheId($sub_id), 'song', $user);
             $listitems = $playlist->get_items();
             $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
