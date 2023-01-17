@@ -793,7 +793,7 @@ refresh_limit = "60"
 ; a stream or status page.
 ; If this value is not set, no CSS will be used. Custom CSS can
 ; still be applied in the other application, like OBS.
-; DEFAULT: Not enabled
+; DEFAULT: "templates/now-playing.css"
 ;now_playing_css_file = "templates/now-playing.css"
 
 ; Footer Statistics
