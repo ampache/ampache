@@ -118,12 +118,12 @@ class Stream
         $has_player_target = false;
         if ($player) {
             // encode target for songs in webplayer/api
-            $player_setting_target = 'encode_player_' . $player . '_target';
+            $encode_target = 'encode_player_' . $player . '_target';
             if ($media_type != 'song') {
                 // encode target for video in webplayer/api
-                $player_setting_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+                $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
             }
-            $has_player_target = AmpConfig::get($player_setting_target);
+            $has_player_target = AmpConfig::get($encode_target);
         }
         $has_default_target = AmpConfig::get($setting_target);
         $has_codec_target   = AmpConfig::get('encode_target_' . $source);
@@ -160,7 +160,7 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -504,6 +504,7 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
+     * @param int $user_id
      * @return array
      * <array{
      *  media: \Ampache\Repository\Model\library_item,
@@ -512,33 +513,34 @@ class Stream
      *  expire: int
      * }>
      */
-    public static function get_now_playing()
+    public static function get_now_playing($user_id = 0)
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
         if (AmpConfig::get('now_playing_per_user')) {
             $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
-        $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
+        $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
         if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
-                $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
+        //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            if (Catalog::has_access($media->catalog, (int)$row['user'])) {
-                $media->format();
+            if (($user_id === 0 || ($user_id > 0 && (int)$row['user'] == $user_id)) && Catalog::has_access($media->catalog, (int)$row['user'])) {
                 $client = new User($row['user']);
+                $media->format();
                 $client->format();
                 $results[] = array(
                     'media' => $media,
