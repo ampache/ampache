@@ -45,7 +45,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var array $object_ids */
 
 ob_start();
-require Ui::find_template('show_playlist_title.inc.php');
+echo $playlist->get_fullname();
 $title    = ob_get_contents();
 $web_path = AmpConfig::get('web_path');
 ob_end_clean();
