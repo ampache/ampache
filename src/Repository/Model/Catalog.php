@@ -498,6 +498,47 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * @return string
+     */
+    public function get_fullname()
+    {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->name;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link  = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * filter_user_count
      * Returns the number of users assigned to a particular filter.
      * @return int
@@ -1028,9 +1069,9 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $this->f_name        = scrub_out($this->name);
-        $this->link          = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
-        $this->f_link        = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
+        $this->get_fullname();
+        $this->get_link();
+        $this->get_f_link();
         $this->f_update      = $this->last_update ? get_datetime((int)$this->last_update) : T_('Never');
         $this->f_add         = $this->last_add ? get_datetime((int)$this->last_add) : T_('Never');
         $this->f_clean       = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');

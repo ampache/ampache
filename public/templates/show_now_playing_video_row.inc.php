@@ -48,7 +48,7 @@ $media->format(); ?>
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_video">
         <label><?php echo T_('Video'); ?></label>
-        <?php echo $media->f_link; ?>
+        <?php echo $media->get_f_link(); ?>
     </div>
 </div>
 

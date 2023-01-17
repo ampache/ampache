@@ -48,7 +48,7 @@ use Ampache\Module\Util\Ui;
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb); ?>
 </td>
-<td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
+<td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);

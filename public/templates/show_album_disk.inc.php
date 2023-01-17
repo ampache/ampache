@@ -108,10 +108,9 @@ if (AmpConfig::get('show_played_times')) { ?>
 <?php
 $owner_id = $albumDisk->get_user_owner();
 if (AmpConfig::get('sociable') && $owner_id > 0) {
-    $owner = new User($owner_id);
-    $owner->format(); ?>
+    $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
-    <?php echo T_('Uploaded by'); ?> <?php echo $owner->f_link; ?>
+    <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
 </div>
 <?php
 } ?>

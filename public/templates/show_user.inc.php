@@ -145,11 +145,11 @@ if (AmpConfig::get('sociable')) {
                     <tr>
                         <td>
                             <?php foreach ($object_ids as $object_data) {
+                    /** @var Ampache\Repository\Model\playable_item $object */
                     $type       = array_shift($object_data);
                     $class_name = ObjectTypeToClassNameMapper::map($type);
                     $object     = new $class_name(array_shift($object_data));
-                    $object->format();
-                    echo $object->f_link; ?>
+                    echo $object->get_f_link(); ?>
                                 <br />
                                 <?php
                 } ?>

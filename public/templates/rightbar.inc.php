@@ -130,11 +130,11 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type, $normal_array)) {
+            /** @var Ampache\Repository\Model\playable_item $object */
             $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(array_shift($object_data));
-            $object->format(); ?>
+            $object     = new $class_name(array_shift($object_data)); ?>
     <li>
-      <?php echo $object->f_link;
+      <?php echo $object->get_f_link();
             echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php

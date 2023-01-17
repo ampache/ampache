@@ -63,7 +63,7 @@ if ($is_mashup) {
     </td>
 <?php
         } ?>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
