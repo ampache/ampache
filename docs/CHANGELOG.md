@@ -16,6 +16,7 @@ This release fixes issues when updating your databases from **really** old versi
 * Fetch Seafile cover art
 * Album might get sent to the temp playlist and screw up on insert
 * A couple of issues with now_playing.php when enabled
+* RSS user lookup on now_playing
 * Subsonic
   * Allow empty search queries
 
