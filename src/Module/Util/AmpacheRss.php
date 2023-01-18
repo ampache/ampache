@@ -223,8 +223,9 @@ class AmpacheRss
             '%A' => 'album'
         );
         foreach ($data as $element) {
+            /** @var User $client */
             $song        = $element['media'];
-            $client      = $element['user'];
+            $client      = $element['client'];
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
@@ -237,7 +238,7 @@ class AmpacheRss
                 'title' => $title,
                 'link' => $song->get_link(),
                 'description' => $description,
-                'comments' => $client->f_name . ' - ' . $element['agent'],
+                'comments' => $client->get_fullname() . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
             );
             $results[] = $xml_array;
