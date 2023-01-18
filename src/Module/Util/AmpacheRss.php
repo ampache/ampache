@@ -224,7 +224,7 @@ class AmpacheRss
         );
         foreach ($data as $element) {
             $song        = $element['media'];
-            $client      = $element['user'];
+            $client      = $element['client'];
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
@@ -273,7 +273,6 @@ class AmpacheRss
         $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
         $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
-
 
         foreach ($data as $item) {
             $client = new User($item['user']);
