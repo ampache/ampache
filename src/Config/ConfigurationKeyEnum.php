@@ -183,6 +183,7 @@ final class ConfigurationKeyEnum
     public const TRANSCODE                             = 'transcode';
     public const UI_FIXED                              = 'ui_fixed';
     public const UNIQUE_PLAYLIST                       = 'unique_playlist';
+    public const UPLOAD_ACCESS_LEVEL                   = 'upload_access_level';
     public const UPLOAD_ALLOW_EDIT                     = 'upload_allow_edit';
     public const UPLOAD_ALLOW_REMOVE                   = 'upload_allow_remove';
     public const UPLOAD_CATALOG_PATTERN                = 'upload_catalog_pattern';

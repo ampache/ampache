@@ -967,20 +967,25 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'localplay_level':
-                $is_user    = '';
-                $is_admin   = '';
-                $is_manager = '';
+            case 'upload_access_level':
+                $is_user            = '';
+                $is_content_manager = '';
+                $is_catalog_manager = '';
+                $is_admin           = '';
                 if ($value == '25') {
                     $is_user = 'selected="selected"';
+                } elseif ($value == '50') {
+                    $is_content_manager = 'selected="selected"';
+                } elseif ($value == '75') {
+                    $is_catalog_manager = 'selected="selected"';
                 } elseif ($value == '100') {
                     $is_admin = 'selected="selected"';
-                } elseif ($value == '50') {
-                    $is_manager = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
                 echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
-                echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
+                echo "<option value=\"50\" $is_content_manager>" . T_('Content Manager') . "</option>\n";
+                echo "<option value=\"75\" $is_catalog_manager>" . T_('Catalog Manager') . "</option>\n";
                 echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
                 echo "</select>\n";
                 break;

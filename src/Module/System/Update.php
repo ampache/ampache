@@ -840,6 +840,9 @@ class Update
         $update_string = "* Extend `time` column for the stream_playlist table";
         $version[]     = array('version' => '600022', 'description' => $update_string);
 
+        $update_string = "* Add upload_access_level to restrict uploads to certain user groups";
+        $version[]     = array('version' => '600023', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5187,6 +5190,24 @@ class Update
         $retval = true;
         $sql    = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
         $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600023
+     *
+     * Add upload_access_level to restrict uploads to certain users
+     */
+    public static function update_600023(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '25')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

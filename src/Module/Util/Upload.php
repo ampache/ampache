@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
@@ -165,6 +166,21 @@ class Upload
 
         return null;
     } // check
+
+    /**
+     * can_upload
+     * check settings and permissions for uploads
+     * @param User|string|null $user
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public static function can_upload($user)
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        return AmpConfig::get('allow_upload') && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user->id ?? 0);
+    }
 
     /**
      * rerror

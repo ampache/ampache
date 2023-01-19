@@ -22,6 +22,8 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -67,7 +69,7 @@ use Ampache\Module\Util\Ui;
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
         <?php
           }
-        if (AmpConfig::get('allow_upload')) { ?>
+        if (Upload::can_upload(Core::get_global('user'))) { ?>
             <li id="sb_admin_users_Uploads"><a href="<?php echo $web_path; ?>/admin/uploads.php"><?php echo T_('Browse Uploads'); ?></a></li>
         <?php
           }

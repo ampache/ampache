@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -45,7 +46,7 @@ $htmllang          = str_replace("_", "-", $site_lang);
 $_SESSION['login'] = false;
 $is_session        = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $current_user      = Core::get_global('user');
-$allow_upload      = AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0);
+$allow_upload      = $access25 && Upload::can_upload($current_user);
 $cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
