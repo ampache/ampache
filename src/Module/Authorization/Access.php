@@ -90,8 +90,7 @@ class Access
     {
         /* Assign id for use in get_info() */
         $this->id = (int)$access_id;
-
-        $info = $this->has_info();
+        $info     = $this->has_info();
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

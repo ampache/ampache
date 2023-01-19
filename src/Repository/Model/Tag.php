@@ -60,7 +60,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         } // end foreach

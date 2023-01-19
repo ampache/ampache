@@ -52,7 +52,6 @@ class Movie extends Video
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

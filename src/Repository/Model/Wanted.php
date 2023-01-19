@@ -106,10 +106,7 @@ class Wanted extends database_object
      */
     public function __construct($wanted_id)
     {
-        /* Get the information from the db */
         $info = static::getWantedRepository()->getById((int) $wanted_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

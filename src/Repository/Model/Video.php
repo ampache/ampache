@@ -238,12 +238,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
             return false;
         }
 
-        // Load the data from the database
         $info = $this->get_info($video_id, 'video');
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

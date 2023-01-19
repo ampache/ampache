@@ -91,10 +91,7 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($broadcast_id)
     {
-        /* Get the information from the db */
         $info = $this->get_info($broadcast_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

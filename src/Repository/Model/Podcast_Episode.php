@@ -91,21 +91,18 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         $this->id = (int)$episode_id;
-
-        if ($info = $this->get_info($this->id)) {
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-            if (!empty($this->file)) {
-                $data          = pathinfo($this->file);
-                $this->type    = strtolower((string)$data['extension']);
-                $this->mime    = Song::type_to_mime($this->type);
-                $this->enabled = true;
-            }
-        } else {
-            $this->id = null;
-
+        $info     = $this->get_info($this->id);
+        if (empty($info)) {
             return false;
+        }
+        foreach ($info as $key => $value) {
+            $this->$key = $value;
+        }
+        if (!empty($this->file)) {
+            $data          = pathinfo($this->file);
+            $this->type    = strtolower((string)$data['extension']);
+            $this->mime    = Song::type_to_mime($this->type);
+            $this->enabled = true;
         }
 
         return true;

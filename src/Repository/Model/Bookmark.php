@@ -79,8 +79,6 @@ class Bookmark extends database_object
 
             $info = Dba::fetch_assoc($db_results);
         }
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

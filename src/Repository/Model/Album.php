@@ -275,13 +275,10 @@ class Album extends database_object implements library_item
      */
     public function __construct($album_id)
     {
-        /* Get the information from the db */
         $info = $this->get_info($album_id);
         if (empty($info)) {
             return false;
         }
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

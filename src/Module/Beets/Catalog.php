@@ -81,7 +81,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
-
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }

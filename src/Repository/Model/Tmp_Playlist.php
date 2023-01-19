@@ -63,7 +63,6 @@ class Tmp_Playlist extends database_object
 
         $this->id = (int)($playlist_id);
         $info     = $this->has_info();
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

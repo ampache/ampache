@@ -68,7 +68,6 @@ class Democratic extends Tmp_Playlist
         parent::__construct($democratic_id);
 
         $info = $this->get_info($democratic_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

@@ -49,7 +49,6 @@ class Clip extends Video
         parent::__construct($clip_id);
 
         $info = $this->get_info($clip_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

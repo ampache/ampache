@@ -117,7 +117,6 @@ class Label extends database_object implements library_item
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

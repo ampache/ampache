@@ -74,12 +74,10 @@ class Podcast extends database_object implements library_item
             return false;
         }
 
-        /* Get the information from the db */
         $info = $this->get_info($podcast_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // constructor

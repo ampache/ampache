@@ -64,10 +64,7 @@ class Share extends database_object
      */
     public function __construct($share_id)
     {
-        /* Get the information from the db */
         $info = $this->get_info($share_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

@@ -58,7 +58,6 @@ class Playlist extends playlist_object
     public function __construct($object_id)
     {
         $info = $this->get_info($object_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

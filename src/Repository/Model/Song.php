@@ -842,7 +842,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public function fill_ext_info($data_filter = '')
     {
         $info = $this->_get_ext_info($data_filter);
-
         if (!empty($info)) {
             foreach ($info as $key => $value) {
                 if ($key != 'song_id') {
