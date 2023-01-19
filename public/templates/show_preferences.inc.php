@@ -36,10 +36,11 @@ use Ampache\Module\Util\UiInterface;
 /** @var string $fullname */
 
 $tab = Core::get_request('tab');
-/* HINT: Username FullName */
-Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
-if (!empty($tab) && $tab !== 'account' && $tab !== 'modules') {
-    debug_event('show_preferences.inc', (string) $tab, 5); ?>
+if (!empty($tab)) {
+    /* HINT: Username FullName */
+    Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
+    if ($tab !== 'account' && $tab !== 'modules') {
+        debug_event('show_preferences.inc', (string) $tab, 5); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php $ui->showPreferenceBox(($preferences[$tab] ?? [])); ?>
 <div class="formValidation">
@@ -52,12 +53,13 @@ if (!empty($tab) && $tab !== 'account' && $tab !== 'modules') {
     <?php } ?>
 </div>
 <?php
-}  // end if not account
-if (!empty($tab) && $tab === 'account') {
-    $client   = Core::get_global('user');
-    $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
-    require Ui::find_template($template);
-} ?>
+    }  // end if not account
+    if ($tab === 'account') {
+        $client   = Core::get_global('user');
+        $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
+        require Ui::find_template($template);
+    }
+}?>
 </form>
 
 <?php Ui::show_box_bottom(); ?>
