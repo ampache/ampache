@@ -313,7 +313,7 @@ final class ArtistSearch implements SearchInterface
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $operator_sql DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
                     $where[]         = "`catalog_se`.`id` $operator_sql ?";

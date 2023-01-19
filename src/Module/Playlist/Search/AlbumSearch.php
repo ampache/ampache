@@ -267,7 +267,7 @@ final class AlbumSearch implements SearchInterface
                 case 'recent_added':
                     $key                       = md5($input . $operator_sql);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $operator_sql DESC LIMIT $input) AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'genre':
                     $where[]      = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";

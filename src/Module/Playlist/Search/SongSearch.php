@@ -384,17 +384,17 @@ final class SongSearch implements SearchInterface
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $operator_sql DESC LIMIT $input) AS `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $operator_sql);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $operator_sql DESC LIMIT $input) AS `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'recent_updated':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
-                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $operator_sql DESC LIMIT $input) AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
+                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $operator_sql DESC LIMIT " . (int)$input . ") AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
