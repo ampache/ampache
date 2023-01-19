@@ -1289,10 +1289,10 @@ abstract class Catalog extends database_object
         if ($user_id == -1) {
             // DEFAULT group only for System / Guest access
             $params = array($catalog_id);
-            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` = 0;";
+            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` = 0;";
         } else {
             $params = array($catalog_id, $user_id);
-            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
+            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
         }
         //debug_event(self::class, 'has_access ' . $sql . ' ' . print_r($params, true), 5);
 
