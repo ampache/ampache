@@ -1278,7 +1278,8 @@ class Query
                     break;
             }
         }
-        if (AmpConfig::get('catalog_filter') && $this->user_id > 0) {
+        $catalog_filter = AmpConfig::get('catalog_filter');
+        if ($catalog_filter && $this->user_id > 0) {
             $type = $this->get_type();
             // Add catalog user filter
             switch ($type) {
@@ -1286,6 +1287,8 @@ class Query
                 case 'artist':
                 case 'album':
                 case 'song':
+                case "song_artist":
+                case "song_album":
                 case 'podcast':
                 case 'podcast_episode':
                 case 'playlist':

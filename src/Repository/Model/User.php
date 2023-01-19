@@ -763,6 +763,7 @@ class User extends database_object
         while ($results  = Dba::fetch_assoc($db_results)) {
             $user_list[] = (int)$results['id'];
         }
+        // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
             $count_array   = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license', 'album_disk', 'items', 'time', 'size');
@@ -781,6 +782,7 @@ class User extends database_object
 
         $count_array = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($user_list as $user_id) {
+            $catalog_array = Catalog::get_catalogs('', $user_id);
             debug_event(self::class, 'Update counts for ' . $user_id, 5);
             // get counts per user (filtered catalogs aren't counted)
             foreach ($count_array as $table) {
@@ -798,10 +800,9 @@ class User extends database_object
             $time         = 0;
             $size         = 0;
             foreach ($media_tables as $table) {
-                $enabled_sql = ($catalog_disable && $table !== 'podcast_episode')
-                    ? " WHERE `$table`.`enabled`='1' AND"
-                    : ' WHERE';
-                $sql        = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
+                $sql        = ($catalog_disable && $table !== 'podcast_episode')
+                    ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
+                    : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
