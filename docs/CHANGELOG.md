@@ -19,7 +19,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600022
+* Database 600023
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -41,6 +41,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Drop `user_playlist` table and recreate it
   * Extend `time` column for the song table
   * Extend `time` column for the stream_playlist table
+  * Add `upload_access_level` to restrict uploads to certain user groups
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
@@ -73,6 +74,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * An upload_catalog should only be a music catalog
 * Album::check() add barcode, catalog number and subtitle for comparison checks
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
+* Add username column to playlist and search rows and allow sorting
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
