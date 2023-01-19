@@ -1220,7 +1220,7 @@ abstract class Catalog extends database_object
             return true;
         }
         $params = array($catalog_id, $user_id);
-        $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
+        $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
 
         $db_results = Dba::read($sql, $params);
         if (Dba::num_rows($db_results)) {
