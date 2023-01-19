@@ -1258,29 +1258,19 @@ class Query
             return '';
         }
 
-        $sql = "WHERE";
+        $type = $this->get_type();
+        $sql  = "WHERE";
 
         foreach ($this->_state['filter'] as $key => $value) {
             $sql .= $this->sql_filter($key, $value);
         }
 
-        if (AmpConfig::get('catalog_disable')) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             // Add catalog enabled filter
-            switch ($this->get_type()) {
-                case "video":
-                    $dis = Catalog::get_enable_filter('video', '`' . $this->get_type() . '`.`id`');
-                    break;
-                case "song":
-                    $dis = Catalog::get_enable_filter('song', '`' . $this->get_type() . '`.`id`');
-                    break;
-                case "tag":
-                    $dis = Catalog::get_enable_filter('tag', '`' . $this->get_type() . '`.`object_id`');
-                    break;
-            }
+            $dis = Catalog::get_enable_filter($type, '`' . $type . '`.`id`');
         }
         $catalog_filter = AmpConfig::get('catalog_filter');
         if ($catalog_filter && $this->user_id > 0) {
-            $type = $this->get_type();
             // Add catalog user filter
             switch ($type) {
                 case 'video':

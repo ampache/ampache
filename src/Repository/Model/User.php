@@ -182,9 +182,7 @@ class User extends database_object
         }
 
         $this->id = (int)($user_id);
-
-        $info = $this->has_info();
-
+        $info     = $this->has_info();
         foreach ($info as $key => $value) {
             // Let's not save the password in this object :S
             if ($key == 'password') {
@@ -245,9 +243,10 @@ class User extends database_object
         $data = array();
         // If the ID is -1 then
         if ($user_id == '-1') {
-            $data['username'] = 'System';
-            $data['fullname'] = 'Ampache User';
-            $data['access']   = '25';
+            $data['username']             = 'System';
+            $data['fullname']             = 'Ampache User';
+            $data['access']               = '25';
+            $data['catalog_filter_group'] = 0;
 
             return $data;
         }
