@@ -99,7 +99,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         if (Update::need_update() && $execute) {
             $interactor->info(
-                "\n" . T_('Update Now!'),
+                T_('Update Now!') . "\n",
                 true
             );
             $updated = true;
