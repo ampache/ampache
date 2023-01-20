@@ -804,6 +804,9 @@ class User extends database_object
             $time         = 0;
             $size         = 0;
             foreach ($media_tables as $table) {
+                if (empty($catalog_array)) {
+                    continue;
+                }
                 $sql        = ($catalog_disable && $table !== 'podcast_episode')
                     ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
                     : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
