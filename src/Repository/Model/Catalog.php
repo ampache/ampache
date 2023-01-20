@@ -1100,14 +1100,17 @@ abstract class Catalog extends database_object
             $sql .= "$join `enabled` = 1 ";
             $join = 'AND';
         }
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= $join . self::get_user_filter('catalog', $user_id);
-            $join = 'AND';
-        }
-        if ($user_id == -1) {
-            $sql .= "$join `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0)";
+        if (AmpConfig::get('catalog_filter')) {
+            if ($user_id > 0) {
+                $sql .= $join . self::get_user_filter('catalog', $user_id);
+                $join = 'AND';
+            }
+            if ($user_id == -1) {
+                $sql .= "$join `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0)";
+            }
         }
         $sql .= "ORDER BY `name`";
+        //debug_event(self::class, 'get_catalogs ' . $sql, 5);
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
