@@ -197,14 +197,14 @@ class WebPlayer
         $transcode = false;
 
         // Check transcode is required
-        $valid_types = Song::get_stream_types_for_type($file_type);
+        $valid_types = Stream::get_stream_types_for_type($file_type);
         if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
                     debug_event(__class__, "Forcing type to {{$force_type}}", 5);
                     // Transcode only if excepted type available
-                    $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                    $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                     if (!empty($transcode_settings)) {
                         $transcode = true;
                     }
@@ -213,7 +213,7 @@ class WebPlayer
                 // Transcode is not forced, transcode only if required
                 if (!$transcode) {
                     if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
-                        $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                        $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                         if (!empty($transcode_settings)) {
                             $transcode = true;
                         }

@@ -733,7 +733,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_to = Song::get_transcode_settings_for_media(
+            $transcode_to = Stream::get_transcode_settings_for_media(
                 (string) $media->type,
                 $transcode_to,
                 $player,

@@ -575,7 +575,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type, $player);
+        return Stream::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -636,7 +636,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
+        return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
 
     /**

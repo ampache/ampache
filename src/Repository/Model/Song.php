@@ -2298,87 +2298,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_stream_types($player = null)
     {
-        return self::get_stream_types_for_type($this->type, $player);
-    }
-
-    /**
-     * Get stream types for media type.
-     * @param string $type
-     * @param string $player
-     * @return array
-     */
-    public static function get_stream_types_for_type($type, $player = 'webplayer')
-    {
-        $types     = array();
-        $transcode = AmpConfig::get('transcode_' . $type);
-        if ($player !== '') {
-            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
-            if ($player_transcode) {
-                $transcode = $player_transcode;
-            }
-        }
-
-        if ($transcode != 'required') {
-            $types[] = 'native';
-        }
-        if (make_bool($transcode)) {
-            $types[] = 'transcode';
-        }
-
-        return $types;
-    }
-
-    /**
-     * Get transcode settings for media.
-     * It can be confusing but when waveforms are enabled it will transcode the file twice.
-     *
-     * @param string $source
-     * @param string $target
-     * @param string $player
-     * @param string $media_type
-     * @param array $options
-     * @return array
-     */
-    public static function get_transcode_settings_for_media(
-        $source,
-        $target = null,
-        $player = null,
-        $media_type = 'song',
-        $options = array()
-    ) {
-        $target = Stream::get_transcode_format($source, $target, $player, $media_type);
-        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
-        if (empty($cmd)) {
-            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
-
-            return array();
-        }
-
-        $args = '';
-        if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
-            $args .= ' ' . AmpConfig::get('encode_ss_frame');
-        }
-        if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
-            $args .= ' ' . AmpConfig::get('encode_ss_duration');
-        }
-        $args .= ' ' . AmpConfig::get('transcode_input');
-
-        if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
-            debug_event(self::class, 'Using subtitle ' . $options['subtitle'], 5);
-            $args .= ' ' . AmpConfig::get('encode_srt');
-        }
-
-        $argst = AmpConfig::get('encode_args_' . $target);
-        if (!$args) {
-            debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
-
-            return array();
-        }
-        $args .= ' ' . $argst;
-
-        debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
-
-        return array('format' => $target, 'command' => $cmd . $args);
+        return Stream::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -2390,7 +2310,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return self::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
+        return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
 
     /**
