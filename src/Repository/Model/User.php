@@ -252,7 +252,7 @@ class User extends database_object
             $data['fullname']             = 'Ampache User';
             $data['access']               = '25';
             $data['catalog_filter_group'] = 0;
-            $data['catalogs']             = User::get_user_catalogs(-1);
+            $data['catalogs']             = self::get_user_catalogs(-1);
 
             return $data;
         }
@@ -786,7 +786,7 @@ class User extends database_object
 
         $count_array = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($user_list as $user_id) {
-            $catalog_array = Catalog::get_catalogs('', $user_id);
+            $catalog_array = self::get_user_catalogs('', $user_id);
             debug_event(self::class, 'Update counts for ' . $user_id, 5);
             // get counts per user (filtered catalogs aren't counted)
             foreach ($count_array as $table) {
