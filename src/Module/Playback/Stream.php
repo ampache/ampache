@@ -105,6 +105,12 @@ class Stream
         $player = null,
         $media_type = 'song'
     ) {
+        // check if we've done this before
+        $format = self::get_output_cache($source, $target, $player, $media_type);
+        if (!empty($format)) {
+            return $format;
+        }
+        $input_target = $target;
         // default target for songs
         $setting_target = 'encode_target';
         // default target for video
@@ -147,6 +153,7 @@ class Stream
             $target = $source;
             debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
+        self::set_output_cache($target, $source, $input_target, $player, $media_type);
 
         return $target;
     }
@@ -245,7 +252,7 @@ class Stream
         $media_type = 'song',
         $options = array()
     ) {
-        $target = Stream::get_transcode_format($source, $target, $player, $media_type);
+        $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
@@ -280,6 +287,37 @@ class Stream
         return array('format' => $target, 'command' => $cmd . $args);
     }
 
+    /**
+     * get_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @return string
+     */
+    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (!empty(Core::get_global('transcode'))) {
+            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        }
+
+        return '';
+    }
+
+    /**
+     * set_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     */
+    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (Core::get_global('transcode') == '') {
+            $GLOBALS['transcode'] = array();
+        }
+        $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
+    }
     /**
      * start_transcode
      *
