@@ -56,7 +56,7 @@ final class CatalogsMethod
         // filter for specific catalog types
         $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $user     = User::get_from_username(Session::username($input['auth']));
-        $catalogs = Catalog::get_catalogs($filter, $user->id);
+        $catalogs = $user->get_catalogs($filter);
 
         if (empty($catalogs)) {
             Api::empty('catalog', $input['api_format']);

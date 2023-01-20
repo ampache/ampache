@@ -159,8 +159,8 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             } else {
                                 // Several users for the same website/openid? Allowed but stupid, try to get a match on username.
                                 // Should we make website field unique?
-                                foreach ($users as $userid) {
-                                    $user = new User($userid);
+                                foreach ($users as $user_id) {
+                                    $user = new User($user_id);
                                     if ($user->username == $result['username']) {
                                         $result['success']  = true;
                                         $result['username'] = $user->username;

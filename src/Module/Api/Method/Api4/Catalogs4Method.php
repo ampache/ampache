@@ -24,9 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Catalogs4Method
@@ -50,7 +52,8 @@ final class Catalogs4Method
     {
         // filter for specific catalog types
         $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = Catalog::get_catalogs($filter);
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $catalogs = $user->get_catalogs($filter);
 
         ob_end_clean();
         switch ($input['api_format']) {

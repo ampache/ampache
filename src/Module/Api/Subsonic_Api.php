@@ -450,7 +450,7 @@ class Subsonic_Api
     {
         $username = $input['u'];
         $user     = User::get_from_username($username);
-        $catalogs = Catalog::get_catalogs('music', $user->id);
+        $catalogs = $user->get_catalogs('music');
         $response = Subsonic_Xml_Data::addSubsonicResponse('getmusicfolders');
 
         Subsonic_Xml_Data::addMusicFolders($response, $catalogs);
@@ -477,7 +477,7 @@ class Subsonic_Api
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
-            $catalogs = Catalog::get_catalogs('music', $user->id);
+            $catalogs = $user->get_catalogs('music');
         }
 
         $lastmodified = 0;
@@ -1960,7 +1960,7 @@ class Subsonic_Api
         $user     = User::get_from_username((string)$username);
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $catalogs = Catalog::get_catalogs('podcast', $user->id);
+            $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
                 $data            = array();
                 $data['feed']    = $url;
