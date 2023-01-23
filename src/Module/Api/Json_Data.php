@@ -176,10 +176,10 @@ class Json_Data
             }
 
             foreach ($atags as $tag_id => $data) {
-                array_push($JSON, array(
+                $JSON[] = array(
                     "id" => (string)$tag_id,
                     "name" => $data['name']
-                ));
+                );
             }
         }
 
@@ -248,14 +248,14 @@ class Json_Data
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
             $live_stream->format();
-            array_push($JSON, array(
+            $JSON[] = array(
                 "id" => (string)$live_stream_id,
                 "name" => $live_stream->get_fullname(),
                 "url" => $live_stream->url,
                 "codec" => $live_stream->codec,
                 "catalog" => (string)$live_stream->catalog,
                 "site_url" => $live_stream->site_url
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("live_stream" => $JSON) : $JSON[0] ?? array();
 
@@ -280,12 +280,12 @@ class Json_Data
         $JSON = [];
         foreach ($licenses as $license_id) {
             $license = new License($license_id);
-            array_push($JSON, array(
+            $JSON[]  = array(
                 "id" => (string)$license_id,
                 "name" => $license->name,
                 "description" => $license->description,
                 "external_link" => $license->external_link
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
 
@@ -311,7 +311,7 @@ class Json_Data
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
             $label->format();
-            array_push($JSON, array(
+            $JSON[] = array(
                 "id" => (string)$label_id,
                 "name" => $label->get_fullname(),
                 "artists" => $label->artist_count,
@@ -322,7 +322,7 @@ class Json_Data
                 "email" => $label->email,
                 "website" => $label->website,
                 "user" => (string)$label->user,
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
 
@@ -348,7 +348,7 @@ class Json_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            array_push($JSON, array(
+            $JSON[] = array(
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
                 "albums" => (int)($counts['album'] ?? 0),
@@ -357,7 +357,7 @@ class Json_Data
                 "videos" => (int)($counts['video'] ?? 0),
                 "playlists" => (int)($counts['playlist'] ?? 0),
                 "live_streams" => (int)($counts['live_stream'] ?? 0)
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
 
@@ -382,10 +382,9 @@ class Json_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
+        Rating::build_cache('artist', $artists);
 
         $JSON = [];
-
-        Rating::build_cache('artist', $artists);
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
             if (!isset($artist->id)) {
@@ -408,7 +407,7 @@ class Json_Data
                 ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false)
                 : array();
 
-            array_push($JSON, array(
+            $JSON[] = array(
                 "id" => (string)$artist->id,
                 "name" => $artist->get_fullname(),
                 "prefix" => $artist->prefix,
@@ -427,7 +426,7 @@ class Json_Data
                 "time" => (int)$artist->time,
                 "yearformed" => (int)$artist->yearformed,
                 "placeformed" => $artist->placeformed
-            ));
+            );
         } // end foreach artists
 
         if ($encode) {
@@ -539,9 +538,8 @@ class Json_Data
         }
         $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
         $playlist_names     = array();
-        $JSON               = [];
 
-        // Foreach the playlist ids
+        $JSON = [];
         foreach ($playlists as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -575,7 +573,10 @@ class Json_Data
                 $trackcount     = 1;
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
-                    array_push($items, array("id" => (string)$objects['object_id'], "playlisttrack" => $trackcount));
+                    $items[] = array(
+                        "id" => (string)$objects['object_id'],
+                        "playlisttrack" => $trackcount
+                    );
                     $trackcount++;
                 }
             } else {
@@ -586,7 +587,7 @@ class Json_Data
             $flag        = new Userflag($playlist_id, $object_type);
 
             // Build this element
-            array_push($JSON, [
+            $JSON[] = [
                 "id" => (string)$playlist_id,
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
@@ -596,8 +597,7 @@ class Json_Data
                 "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating()
-                ]
-            );
+            ];
         } // end foreach
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
 
@@ -637,7 +637,7 @@ class Json_Data
             $share_public_url     = $share->public_url;
             $share_description    = $share->description;
             // Build this element
-            array_push($JSON, [
+            $JSON[] = [
                 "id" => (string)$share_id,
                 "name" => $share_name,
                 "owner" => $share_user,
@@ -653,7 +653,7 @@ class Json_Data
                 "secret" => $share_secret,
                 "public_url" => $share_public_url,
                 "description" => $share_description
-            ]);
+            ];
         } // end foreach
         $output = ($object) ? array("share" => $JSON) : $JSON[0] ?? array();
 
@@ -686,7 +686,7 @@ class Json_Data
             $bookmark_creation_date = $bookmark->creation_date;
             $bookmark_update_date   = $bookmark->update_date;
             // Build this element
-            array_push($JSON, [
+            $JSON[] = [
                 "id" => (string)$bookmark_id,
                 "owner" => $bookmark_user,
                 "object_type" => $bookmark_object_type,
@@ -694,7 +694,8 @@ class Json_Data
                 "position" => $bookmark_position,
                 "client" => $bookmark_comment,
                 "creation_date" => $bookmark_creation_date,
-                "update_date" => $bookmark_update_date]);
+                "update_date" => $bookmark_update_date
+            ];
         } // end foreach
         $output = ($object) ? array("bookmark" => $JSON) : $JSON[0] ?? array();
 
@@ -731,7 +732,7 @@ class Json_Data
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
-            array_push($JSON, [
+            $JSON[] = [
                 "id" => (string)$catalog_id,
                 "name" => $catalog_name,
                 "type" => $catalog_type,
@@ -743,7 +744,7 @@ class Json_Data
                 "path" => $catalog_path,
                 "rename_pattern" => $catalog_rename_pattern,
                 "sort_pattern" => $catalog_sort_pattern
-            ]);
+            ];
         } // end foreach
         $output = ($object) ? array("catalog" => $JSON) : $JSON[0] ?? array();
 
@@ -791,7 +792,7 @@ class Json_Data
                 $podcast_episodes = self::podcast_episodes($items, $user, false);
             }
             // Build this element
-            array_push($JSON, [
+            $JSON[] = [
                 "id" => (string)$podcast_id,
                 "name" => $podcast_name,
                 "description" => $podcast_description,
@@ -808,7 +809,7 @@ class Json_Data
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "podcast_episode" => $podcast_episodes
-            ]);
+            ];
         } // end foreach
         $output = ($object) ? array("podcast" => $JSON) : $JSON[0] ?? array();
 
@@ -839,7 +840,7 @@ class Json_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode_id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
-            array_push($JSON, [
+            $JSON[]      = [
                 "id" => (string)$episode_id,
                 "title" => $episode->get_fullname(),
                 "name" => $episode->get_fullname(),
@@ -864,7 +865,8 @@ class Json_Data
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$episode->total_count,
-                "played" => (string)$episode->played]);
+                "played" => (string)$episode->played
+            ];
         }
         if (!$encode) {
             return $JSON;
@@ -893,11 +895,9 @@ class Json_Data
 
         Song::build_cache($songs);
         Stream::set_session($_REQUEST['auth']);
-
-        $JSON           = [];
         $playlist_track = 0;
 
-        // Foreach the ids!
+        $JSON = [];
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
 
@@ -1029,7 +1029,7 @@ class Json_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($video_id, 'video');
             $art_url     = Art::url($video_id, 'video', Core::get_request('auth'));
-            array_push($JSON, array(
+            $JSON[]      = array(
                 "id" => (string)$video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
@@ -1043,7 +1043,7 @@ class Json_Data
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$video->total_count
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
 
@@ -1085,7 +1085,7 @@ class Json_Data
             $song_album  = Album::get_name_array_by_id($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
-            array_push($JSON, array(
+            $JSON[] = array(
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
                 "artist" => array(
@@ -1113,7 +1113,7 @@ class Json_Data
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "playcount" => (int)$song->total_count,
                 "vote" => $democratic->get_vote($row_id)
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
 
@@ -1183,11 +1183,11 @@ class Json_Data
     {
         $JSON = [];
         foreach ($users as $user_id) {
-            $user = new User($user_id);
-            array_push($JSON, array(
+            $user   = new User($user_id);
+            $JSON[] = array(
                 "id" => (string)$user_id,
                 "username" => $user->username
-            ));
+            );
         } // end foreach
         $output = ($object) ? array("user" => $JSON) : $JSON[0] ?? array();
 
