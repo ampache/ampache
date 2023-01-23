@@ -389,24 +389,24 @@ class Json4_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
 
-            $theArray = [];
+            $objArray = [];
 
-            $theArray["id"]   = (string) $album->id;
-            $theArray["name"] = $album->get_fullname();
+            $objArray["id"]   = (string) $album->id;
+            $objArray["name"] = $album->get_fullname();
 
             // Do a little check for artist stuff
             if ($album->get_album_artist_fullname() != "") {
-                $theArray['artist'] = array(
+                $objArray['artist'] = array(
                     "id" => (string) $album->album_artist,
                     "name" => $album->f_album_artist_name
                 );
             } elseif ($album->artist_count != 1) {
-                $theArray['artist'] = array(
+                $objArray['artist'] = array(
                     "id" => "0",
                     "name" => T_('Various')
                 );
             } else {
-                $theArray['artist'] = array(
+                $objArray['artist'] = array(
                     "id" => (string) $album->album_artist,
                     "name" => $album->get_album_artist_name()
                 );
@@ -419,21 +419,21 @@ class Json4_Data
                 $songs = $album->song_count;
             }
 
-            $theArray['time']          = (int) $album->total_duration;
-            $theArray['year']          = (int) $album->year;
-            $theArray['tracks']        = $songs;
-            $theArray['songcount']     = (int) $album->song_count;
-            $theArray['type']          = $album->release_type;
-            $theArray['disk']          = (int) $album->disk_count;
-            $theArray['tag']           = self::tags_array($album->tags);
-            $theArray['art']           = $art_url;
-            $theArray['flag']          = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
-            $theArray['preciserating'] = $user_rating;
-            $theArray['rating']        = $user_rating;
-            $theArray['averagerating'] = ($rating->get_average_rating() ?: null);
-            $theArray['mbid']          = $album->mbid;
+            $objArray['time']          = (int) $album->total_duration;
+            $objArray['year']          = (int) $album->year;
+            $objArray['tracks']        = $songs;
+            $objArray['songcount']     = (int) $album->song_count;
+            $objArray['type']          = $album->release_type;
+            $objArray['disk']          = (int) $album->disk_count;
+            $objArray['tag']           = self::tags_array($album->tags);
+            $objArray['art']           = $art_url;
+            $objArray['flag']          = (!$flag->get_flag($user->getId(), false) ? 0 : 1);
+            $objArray['preciserating'] = $user_rating;
+            $objArray['rating']        = $user_rating;
+            $objArray['averagerating'] = ($rating->get_average_rating() ?: null);
+            $objArray['mbid']          = $album->mbid;
 
-            array_push($JSON, $theArray);
+            array_push($JSON, $objArray);
         } // end foreach
 
         if ($encode) {
@@ -1042,13 +1042,13 @@ class Json4_Data
                 "id" => (string) $user->getId(),
                 "username" => $user->username
             ));
-            $ourArray = array(
+            $objArray = array(
                 "id" => (string) $shout_id,
                 "date" => $shout->date,
                 "text" => $shout->text,
                 "user" => $user_array
             );
-            array_push($JSON, $ourArray);
+            array_push($JSON, $objArray);
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
@@ -1074,7 +1074,7 @@ class Json4_Data
                 "id" => (string) $user->getId(),
                 "username" => $user->username
             ));
-            $ourArray = array(
+            $objArray = array(
                 "id" => (string) $activity_id,
                 "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
@@ -1083,7 +1083,7 @@ class Json4_Data
                 "user" => $user_array
             );
 
-            array_push($JSON['timeline'], $ourArray);
+            array_push($JSON['timeline'], $objArray);
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT);

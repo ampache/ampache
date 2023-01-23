@@ -476,16 +476,16 @@ class Json_Data
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
 
-            $ourArray = [];
+            $objArray = [];
 
-            $ourArray['id']       = (string)$album->id;
-            $ourArray['name']     = $album->get_fullname();
-            $ourArray['prefix']   = $album->prefix;
-            $ourArray['basename'] = $album->name;
-            $ourArray['artist']   = Artist::get_name_array_by_id($album->album_artist);
+            $objArray['id']       = (string)$album->id;
+            $objArray['name']     = $album->get_fullname();
+            $objArray['prefix']   = $album->prefix;
+            $objArray['basename'] = $album->name;
+            $objArray['artist']   = Artist::get_name_array_by_id($album->album_artist);
 
-            if (empty($ourArray['artist']['id']) && $album->artist_count > 1) {
-                $ourArray['artist'] = array(
+            if (empty($objArray['artist']['id']) && $album->artist_count > 1) {
+                $objArray['artist'] = array(
                     "id" => "0",
                     "name" => T_('Various')
                 );
@@ -496,20 +496,20 @@ class Json_Data
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
                 : array();
 
-            $ourArray['time']          = (int)$album->total_duration;
-            $ourArray['year']          = (int)$year;
-            $ourArray['tracks']        = $songs;
-            $ourArray['songcount']     = (int)$album->song_count;
-            $ourArray['diskcount']     = (int)$album->disk_count;
-            $ourArray['type']          = $album->release_type;
-            $ourArray['genre']         = self::genre_array($album->tags);
-            $ourArray['art']           = $art_url;
-            $ourArray['flag']          = (!$flag->get_flag($user->getId(), false) ? false : true);
-            $ourArray['rating']        = $user_rating;
-            $ourArray['averagerating'] = $rating->get_average_rating();
-            $ourArray['mbid']          = $album->mbid;
+            $objArray['time']          = (int)$album->total_duration;
+            $objArray['year']          = (int)$year;
+            $objArray['tracks']        = $songs;
+            $objArray['songcount']     = (int)$album->song_count;
+            $objArray['diskcount']     = (int)$album->disk_count;
+            $objArray['type']          = $album->release_type;
+            $objArray['genre']         = self::genre_array($album->tags);
+            $objArray['art']           = $art_url;
+            $objArray['flag']          = (!$flag->get_flag($user->getId(), false) ? false : true);
+            $objArray['rating']        = $user_rating;
+            $objArray['averagerating'] = $rating->get_average_rating();
+            $objArray['mbid']          = $album->mbid;
 
-            $JSON[] = $ourArray;
+            $JSON[] = $objArray;
         } // end foreach
 
         if ($encode) {
@@ -921,7 +921,7 @@ class Json_Data
                 : $song_artist;
             $playlist_track++;
 
-            $ourArray = array(
+            $objArray = array(
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
                 "name" => $song->get_fullname(),
@@ -945,55 +945,55 @@ class Json_Data
                 )
             );
 
-            $ourArray['disk']                  = (int)$song->disk;
-            $ourArray['track']                 = (int)$song->track;
-            $ourArray['filename']              = $song->file;
-            $ourArray['genre']                 = self::genre_array($song->tags);
-            $ourArray['playlisttrack']         = $playlist_track;
-            $ourArray['time']                  = (int)$song->time;
-            $ourArray['year']                  = (int)$song->year;
-            $ourArray['format']                = $songType;
-            $ourArray['stream_format']         = $song->type;
-            $ourArray['bitrate']               = $songBitrate;
-            $ourArray['stream_bitrate']        = $song->bitrate;
-            $ourArray['rate']                  = (int)$song->rate;
-            $ourArray['mode']                  = $song->mode;
-            $ourArray['mime']                  = $songMime;
-            $ourArray['stream_mime']           = $song->mime;
-            $ourArray['url']                   = $play_url;
-            $ourArray['size']                  = (int)$song->size;
-            $ourArray['mbid']                  = $song->mbid;
-            $ourArray['album_mbid']            = $song->album_mbid;
-            $ourArray['artist_mbid']           = $song->artist_mbid;
-            $ourArray['albumartist_mbid']      = $song->albumartist_mbid;
-            $ourArray['art']                   = $art_url;
-            $ourArray['flag']                  = (!$flag->get_flag($user->getId(), false) ? false : true);
-            $ourArray['rating']                = $user_rating;
-            $ourArray['averagerating']         = $rating->get_average_rating();
-            $ourArray['playcount']             = (int)$song->total_count;
-            $ourArray['catalog']               = (int)$song->catalog;
-            $ourArray['composer']              = $song->composer;
-            $ourArray['channels']              = $song->channels;
-            $ourArray['comment']               = $song->comment;
-            $ourArray['license']               = $song->f_license;
-            $ourArray['publisher']             = $song->label;
-            $ourArray['language']              = $song->language;
-            $ourArray['lyrics']                = $song->lyrics;
-            $ourArray['replaygain_album_gain'] = $song->replaygain_album_gain;
-            $ourArray['replaygain_album_peak'] = $song->replaygain_album_peak;
-            $ourArray['replaygain_track_gain'] = $song->replaygain_track_gain;
-            $ourArray['replaygain_track_peak'] = $song->replaygain_track_peak;
-            $ourArray['r128_album_gain']       = $song->r128_album_gain;
-            $ourArray['r128_track_gain']       = $song->r128_track_gain;
+            $objArray['disk']                  = (int)$song->disk;
+            $objArray['track']                 = (int)$song->track;
+            $objArray['filename']              = $song->file;
+            $objArray['genre']                 = self::genre_array($song->tags);
+            $objArray['playlisttrack']         = $playlist_track;
+            $objArray['time']                  = (int)$song->time;
+            $objArray['year']                  = (int)$song->year;
+            $objArray['format']                = $songType;
+            $objArray['stream_format']         = $song->type;
+            $objArray['bitrate']               = $songBitrate;
+            $objArray['stream_bitrate']        = $song->bitrate;
+            $objArray['rate']                  = (int)$song->rate;
+            $objArray['mode']                  = $song->mode;
+            $objArray['mime']                  = $songMime;
+            $objArray['stream_mime']           = $song->mime;
+            $objArray['url']                   = $play_url;
+            $objArray['size']                  = (int)$song->size;
+            $objArray['mbid']                  = $song->mbid;
+            $objArray['album_mbid']            = $song->album_mbid;
+            $objArray['artist_mbid']           = $song->artist_mbid;
+            $objArray['albumartist_mbid']      = $song->albumartist_mbid;
+            $objArray['art']                   = $art_url;
+            $objArray['flag']                  = (!$flag->get_flag($user->getId(), false) ? false : true);
+            $objArray['rating']                = $user_rating;
+            $objArray['averagerating']         = $rating->get_average_rating();
+            $objArray['playcount']             = (int)$song->total_count;
+            $objArray['catalog']               = (int)$song->catalog;
+            $objArray['composer']              = $song->composer;
+            $objArray['channels']              = $song->channels;
+            $objArray['comment']               = $song->comment;
+            $objArray['license']               = $song->f_license;
+            $objArray['publisher']             = $song->label;
+            $objArray['language']              = $song->language;
+            $objArray['lyrics']                = $song->lyrics;
+            $objArray['replaygain_album_gain'] = $song->replaygain_album_gain;
+            $objArray['replaygain_album_peak'] = $song->replaygain_album_peak;
+            $objArray['replaygain_track_gain'] = $song->replaygain_track_gain;
+            $objArray['replaygain_track_peak'] = $song->replaygain_track_peak;
+            $objArray['r128_album_gain']       = $song->r128_album_gain;
+            $objArray['r128_track_gain']       = $song->r128_track_gain;
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
                     $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
                         $metadata->getField()->getName());
-                    $ourArray[$meta_name] = $metadata->getData();
+                    $objArray[$meta_name] = $metadata->getData();
                 }
             }
-            $JSON[] = $ourArray;
+            $JSON[] = $objArray;
         } // end foreach
 
         if ($encode) {
@@ -1209,7 +1209,7 @@ class Json_Data
         foreach ($shouts as $shout_id) {
             $shout    = new Shoutbox($shout_id);
             $user     = new User($shout->user);
-            $ourArray = array(
+            $objArray = array(
                 "id" => (string)$shout_id,
                 "date" => $shout->date,
                 "text" => $shout->text,
@@ -1218,7 +1218,7 @@ class Json_Data
                     "username" => $user->username
                 )
             );
-            $JSON[] = $ourArray;
+            $JSON[] = $objArray;
         }
         $output = ($object) ? array("shout" => $JSON) : $JSON[0] ?? array();
 
@@ -1240,7 +1240,7 @@ class Json_Data
         foreach ($activities as $activity_id) {
             $activity = new Useractivity($activity_id);
             $user     = new User($activity->user);
-            $ourArray = array(
+            $objArray = array(
                 "id" => (string)$activity_id,
                 "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
@@ -1251,7 +1251,7 @@ class Json_Data
                     "username" => $user->username
                 )
             );
-            $JSON[] = $ourArray;
+            $JSON[] = $objArray;
         }
         $output = ($object) ? array("activity" => $JSON) : $JSON[0] ?? array();
 
@@ -1276,7 +1276,7 @@ class Json_Data
         foreach ($objects as $row) {
             switch ($object_type) {
                 case 'song':
-                    $ourArray = array(
+                    $objArray = array(
                         "id" => (string)$row['id'],
                         "addition_time" => $row['addition_time'],
                         "delete_time" => $row['delete_time'],
@@ -1289,10 +1289,10 @@ class Json_Data
                         "album" => (string)$row['album'],
                         "artist" => (string)$row['artist']
                     );
-                    $JSON[] = $ourArray;
+                    $JSON[] = $objArray;
                     break;
                 case 'podcast_episode':
-                    $ourArray = array(
+                    $objArray = array(
                         "id" => (string)$row['id'],
                         "addition_time" => $row['addition_time'],
                         "delete_time" => $row['delete_time'],
@@ -1303,10 +1303,10 @@ class Json_Data
                         "total_skip" => $row['total_skip'],
                         "podcast" => (string)$row['podcast']
                     );
-                    $JSON[] = $ourArray;
+                    $JSON[] = $objArray;
                     break;
                 case 'video':
-                    $ourArray = array(
+                    $objArray = array(
                         "id" => (string)$row['id'],
                         "addition_time" => $row['addition_time'],
                         "delete_time" => $row['delete_time'],
@@ -1316,7 +1316,7 @@ class Json_Data
                         "total_count" => $row['total_count'],
                         "total_skip" => $row['total_skip']
                     );
-                    $JSON[] = $ourArray;
+                    $JSON[] = $objArray;
             }
         }
         $output = array("deleted_" . $object_type => $JSON);
