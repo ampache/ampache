@@ -485,7 +485,7 @@ class Json_Data
             $ourArray['artist']   = Artist::get_name_array_by_id($album->album_artist);
 
             if (empty($ourArray['artist']['id']) && $album->artist_count > 1) {
-                $theArray['artist'] = array(
+                $ourArray['artist'] = array(
                     "id" => "0",
                     "name" => T_('Various')
                 );
