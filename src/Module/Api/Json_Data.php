@@ -478,17 +478,18 @@ class Json_Data
 
             $ourArray = [];
 
-            $ourArray["id"]       = (string)$album->id;
-            $ourArray["name"]     = $album->get_fullname();
-            $ourArray["prefix"]   = $album->prefix;
-            $ourArray["basename"] = $album->name;
-            $album_artist         = Artist::get_name_array_by_id($album->album_artist);
-            $ourArray['artist']   = array(
-                "id" => (string)$album->album_artist,
-                "name" => $album_artist['f_name'],
-                "prefix" => $album_artist['prefix'],
-                "basename" => $album_artist['name']
-            );
+            $ourArray['id']       = (string)$album->id;
+            $ourArray['name']     = $album->get_fullname();
+            $ourArray['prefix']   = $album->prefix;
+            $ourArray['basename'] = $album->name;
+            $ourArray['artist']   = Artist::get_name_array_by_id($album->album_artist);
+
+            if (empty($ourArray['artist']['id']) && $album->artist_count > 1) {
+                $theArray['artist'] = array(
+                    "id" => "0",
+                    "name" => T_('Various')
+                );
+            }
 
             // Handle includes
             $songs = (in_array("songs", $include))

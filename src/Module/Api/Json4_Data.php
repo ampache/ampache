@@ -403,7 +403,7 @@ class Json4_Data
             } elseif ($album->artist_count != 1) {
                 $theArray['artist'] = array(
                     "id" => "0",
-                    "name" => 'Various'
+                    "name" => T_('Various')
                 );
             } else {
                 $theArray['artist'] = array(

@@ -489,7 +489,7 @@ class Json5_Data
             } elseif ($album->artist_count != 1) {
                 $ourArray['artist'] = array(
                     "id" => "0",
-                    "name" => 'Various'
+                    "name" => T_('Various')
                 );
             } else {
                 $ourArray['artist'] = array(
