@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,9 +76,9 @@ final class PodcastEdit4Method
             return false;
         }
 
-        $feed        = filter_var($input['feed'], FILTER_VALIDATE_URL) ?? $podcast->feed;
+        $feed        = (array_key_exists('feed', $input) && filter_var($input['feed'], FILTER_VALIDATE_URL)) ? filter_var($input['feed'], FILTER_VALIDATE_URL) : $podcast->feed;
         $title       = (array_key_exists('title', $input)) ? scrub_in($input['title']) : $podcast->title;
-        $website     = filter_var($input['website'], FILTER_VALIDATE_URL) ?? $podcast->website;
+        $website     = (array_key_exists('website', $input) && filter_var($input['website'], FILTER_VALIDATE_URL)) ? filter_var($input['website'], FILTER_VALIDATE_URL) : $podcast->website;
         $description = (array_key_exists('description', $input)) ? scrub_in($input['description']) : $podcast->description;
         $generator   = (array_key_exists('generator', $input)) ? scrub_in($input['generator']) : $podcast->generator;
         $copyright   = (array_key_exists('copyright', $input)) ? scrub_in($input['copyright']) : $podcast->copyright;

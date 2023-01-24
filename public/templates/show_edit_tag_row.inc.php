@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,6 @@
 use Ampache\Repository\Model\Tag;
 
 /** @var Tag $libitem */
-
 ?>
 <div>
     <form method="post" id="edit_tag_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -31,6 +30,10 @@ use Ampache\Repository\Model\Tag;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Hidden') ?></td>
+                <td><input type="checkbox" <?php echo $string = ((int)$libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,13 +83,21 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Podcast Episode has been deleted'),
-                $this->configContainer->getWebPath()
+                sprintf(
+                    '%s/podcast.php?action=show&podcast=%s',
+                    $this->configContainer->getWebPath(),
+                    $episode->podcast
+                )
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Podcast Episode'),
-                $this->configContainer->getWebPath()
+                sprintf(
+                    '%s/podcast.php?action=show&podcast=%s',
+                    $this->configContainer->getWebPath(),
+                    $episode->podcast
+                )
             );
         }
 

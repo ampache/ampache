@@ -4,7 +4,7 @@ declare(strict_types=0);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * API Class
@@ -135,21 +132,7 @@ class Api4
     /**
      *  @var string $version
      */
-    public static $version = '443000';
-
-    /**
-     *  @var Browse $browse
-     */
-    private static $browse = null;
-
-    public static function getBrowse(): Browse
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-
-        return self::$browse;
-    }
+    public static $version = '443000'; // AMPACHE_VERSION
 
     /**
      * constructor
@@ -159,17 +142,6 @@ class Api4
     {
         // Rien a faire
     } // constructor
-
-    /**
-     * _auto_init
-     * Automatically called when this class is loaded.
-     */
-    public static function _auto_init()
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-    }
 
     /**
      * message

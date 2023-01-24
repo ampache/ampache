@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ final class Stats4Method
                 break;
             case 'frequent':
                 debug_event(self::class, 'stats frequent', 4);
-                $threshold = AmpConfig::get('stats_threshold');
+                $threshold = AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
@@ -152,28 +152,28 @@ final class Stats4Method
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::songs($results, $user->id);
+                    echo Json4_Data::songs($results, $user);
                 break;
                 default:
-                    echo Xml4_Data::songs($results, $user->id);
+                    echo Xml4_Data::songs($results, $user);
             }
         }
         if ($type === 'artist') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::artists($results, array(), $user->id);
+                    echo Json4_Data::artists($results, array(), $user);
                 break;
                 default:
-                    echo Xml4_Data::artists($results, array(), $user->id);
+                    echo Xml4_Data::artists($results, array(), $user);
             }
         }
         if ($type === 'album') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::albums($results, array(), $user->id);
+                    echo Json4_Data::albums($results, array(), $user);
                 break;
                 default:
-                    echo Xml4_Data::albums($results, array(), $user->id);
+                    echo Xml4_Data::albums($results, array(), $user);
             }
         }
 

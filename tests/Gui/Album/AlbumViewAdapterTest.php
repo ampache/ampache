@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -87,44 +87,16 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
     public function testGetIdReturnsAlbumId(): void
     {
-        $id = 666;
+        $AlbumId = 666;
 
         $this->album->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($id);
+            ->andReturn($AlbumId);
 
         $this->assertSame(
-            $id,
+            $AlbumId,
             $this->subject->getId()
-        );
-    }
-
-    public function testGetAlbumSuiteIdsReturnsAlbumSuiteIds(): void
-    {
-        $id                 = 666;
-        $albumSuiteSingle   = [1];
-        $albumSuiteMultiple = [1,2,3];
-
-        // single disc test
-        $this->album->album_suite = $albumSuiteSingle;
-
-        $this->album->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($id);
-
-        $this->assertEquals(
-            $id,
-            $this->subject->getAlbumSuiteIds()
-        );
-
-        // multiple disc test
-        $this->album->album_suite = $albumSuiteMultiple;
-
-        $this->assertSame(
-            implode(',', $albumSuiteMultiple),
-            $this->subject->getAlbumSuiteIds()
         );
     }
 
@@ -194,10 +166,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
         $albumId = 666;
         $webPath = 'some-path';
 
-        $this->album->shouldReceive('get_http_album_query_ids')
-            ->withArgs(['id'])
-            ->once()
-            ->andReturn($albumId);
+        $this->album->id = $albumId;
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
@@ -206,9 +175,9 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/batch.php?action=album&%s',
+                '%s/batch.php?action=album&id=%s',
                 $webPath,
-                $albumId
+                $this->album->id
             ),
             $this->subject->getBatchDownloadUrl()
         );
@@ -231,7 +200,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/album.php?action=%s&album_id=%d',
+                '%s/albums.php?action=%s&album_id=%d',
                 $webPath,
                 DeleteAction::REQUEST_KEY,
                 $albumId

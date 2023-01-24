@@ -2,7 +2,7 @@
 #
 # vim:set softtabstop=4 shiftwidth=4 expandtab:
 #
-# Copyright 2001 - 2020 Ampache.org
+# Copyright 2001 - 2022 Ampache.org
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License v2
@@ -68,7 +68,7 @@ generate_pot() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
+                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
     if [[ $? -eq 0 ]]; then
         #echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
         #cat $tdstxt >> $potfile
@@ -91,7 +91,7 @@ generate_pot_utds() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc | sort)
+                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
     if [[ $? -eq 0 ]]; then
 
         ampconf='../../config/ampache.cfg.php'
@@ -215,10 +215,10 @@ generate_pot_utds() {
 
         echo "Done for subcategory"
 
-        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
-        cat $tdstxt >> $potfile
         echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
         cat $xhtmltxt >> $potfile
+        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+        cat $tdstxt >> $potfile
         echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
     else
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"

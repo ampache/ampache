@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,10 +37,6 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Broadcast;
-use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -142,7 +137,9 @@ final class ShowAction implements ApplicationActionInterface
         /* Decide what size this image is */
         $thumb = filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = Art::get_thumb_size($thumb);
-        $kind  = filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?? 'default';
+        $kind  = (array_key_exists('kind', $_GET) && $_GET['kind'] == 'preview')
+            ? 'preview'
+            : 'default';
 
         $image       = '';
         $mime        = '';
@@ -150,18 +147,20 @@ final class ShowAction implements ApplicationActionInterface
         $etag        = '';
         $typeManaged = false;
         if (array_key_exists('type', $_GET)) {
-            switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
+            switch ($_GET['type']) {
                 case 'popup':
                     $typeManaged = true;
                     require_once Ui::find_template('show_big_art.inc.php');
                     break;
                 case 'session':
-                    // If we need to pull the data out of the session
                     Session::check();
-                    $filename    = scrub_in($_REQUEST['image_index']);
-                    $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
-                    $mime        = $_SESSION['form']['images'][$filename]['mime'];
-                    $typeManaged = true;
+                    // If we need to pull the data out of the session
+                    if (array_key_exists('form', $_SESSION)) {
+                        $filename    = scrub_in($_REQUEST['image_index']);
+                        $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
+                        $mime        = $_SESSION['form']['images'][$filename]['mime'];
+                        $typeManaged = true;
+                    }
                     break;
             }
         }
@@ -184,21 +183,8 @@ final class ShowAction implements ApplicationActionInterface
 
             $art = new Art($object_id, $type, $kind);
             $art->has_db_info();
+
             $etag = $art->id;
-
-            // That means the client has a cached version of the image
-            $reqheaders = getallheaders();
-            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
-                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
-                    $cetagf = explode('-', $reqheaders['If-None-Match']);
-                    $cetag  = $cetagf[0];
-                    // Same image than the cached one? Use the cache.
-                    if ($cetag == $etag) {
-                        return $response->withStatus(304);
-                    }
-                }
-            }
-
             if (!$art->raw_mime) {
                 $rootimg = sprintf(
                     '%s/../../../../public/%s/images/',
@@ -214,6 +200,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankmovie.png";
                         }
+                        $etag="EmptyMediaMovie";
                         break;
                     default:
                         $mime       = 'image/png';
@@ -221,6 +208,7 @@ final class ShowAction implements ApplicationActionInterface
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                             $defaultimg = $rootimg . "blankalbum.png";
                         }
+                        $etag="EmptyMediaAlbum";
                         break;
                 }
                 $image = file_get_contents($defaultimg);
@@ -244,7 +232,10 @@ final class ShowAction implements ApplicationActionInterface
             if (!empty($etag)) {
                 $response = $response->withHeader(
                     'ETag',
-                    $etag
+                    '"' . $etag . '"'
+                )->withHeader(
+                    'Expires',
+                    gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60 * 24 * 7)) // 7 day
                 )->withHeader(
                     'Cache-Control',
                     'private'
@@ -252,6 +243,18 @@ final class ShowAction implements ApplicationActionInterface
                     'Last-Modified',
                     gmdate('D, d M Y H:i:s \G\M\T', time())
                 );
+            }
+
+            // That means the client has a cached version of the image
+            $reqheaders = getallheaders();
+            if (is_array($reqheaders) && array_key_exists('If-Modified-Since', $reqheaders) && array_key_exists('If-None-Match', $reqheaders)) {
+                if (!array_key_exists('Cache-Control', $reqheaders) || (array_key_exists('Cache-Control', $reqheaders) && $reqheaders['Cache-Control'] != 'no-cache')) {
+                    $cetag  = str_replace('"','', $reqheaders['If-None-Match']);
+                    // Same image than the cached one? Use the cache.
+                    if ($cetag == $etag) {
+                        return $response->withStatus(304);
+                    }
+                }
             }
 
             $headers = $this->horde_browser->getDownloadHeaders($filename, $mime, true);

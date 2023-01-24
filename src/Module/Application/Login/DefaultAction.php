@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,6 +96,10 @@ final class DefaultAction implements ApplicationActionInterface
                         'Location',
                         $this->configContainer->get('web_path')
                     );
+            } elseif (array_key_exists($name, $_COOKIE)) {
+                // now auth so unset this cookie
+                setcookie($name, '', -1, (string)AmpConfig::get('cookie_path'));
+                setcookie($name, '', -1);
             }
         }
 
@@ -112,7 +116,7 @@ final class DefaultAction implements ApplicationActionInterface
                 throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',
-                        (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+                        Core::get_user_ip()
                     )
                 );
             }
@@ -132,11 +136,11 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';
-                    $auth['info']['offset_limit'] = 25;
+                    $auth['info']['offset_limit'] = 50;
                 } else {
                     if (Core::get_post('username') !== '') {
-                        $username = (string) scrub_in(Core::get_post('username'));
-                        $password = Core::get_post('password');
+                        $username = (string)$_POST['username'];
+                        $password = $_POST['password'] ?? '';
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {
                             $username = (string) Core::get_server('REMOTE_USER');
@@ -161,12 +165,7 @@ final class DefaultAction implements ApplicationActionInterface
                             sprintf(
                                 '%s From %s attempted to login and failed',
                                 scrub_out($username),
-                                filter_input(
-                                    INPUT_SERVER,
-                                    'REMOTE_ADDR',
-                                    FILTER_SANITIZE_STRING,
-                                    FILTER_FLAG_NO_ENCODE_QUOTES
-                                )
+                                Core::get_user_ip()
                             ),
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
@@ -193,10 +192,11 @@ final class DefaultAction implements ApplicationActionInterface
             }
         }
 
+        $user = null;
         if (!empty($username) && isset($auth)) {
             $user = User::get_from_username($username);
 
-            if ($user->disabled) {
+            if ($user instanceof User && $user->disabled) {
                 // if user disabled
                 $auth['success'] = false;
                 AmpError::add('general', T_('Account is disabled, please contact the administrator'));
@@ -207,7 +207,7 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif (AmpConfig::get('prevent_multiple_logins')) {
                 // if logged in multiple times
                 $session_ip = $user->is_logged_in();
-                $current_ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                $current_ip = Core::get_user_ip();
                 if ($current_ip && ($current_ip != $session_ip)) {
                     $auth['success'] = false;
                     AmpError::add('general', T_('User is already logged in'));
@@ -222,7 +222,7 @@ final class DefaultAction implements ApplicationActionInterface
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 }
-            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && ! $user->username) {
+            } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
                 $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
@@ -230,28 +230,42 @@ final class DefaultAction implements ApplicationActionInterface
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
                 $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
                 $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
+                $dfg      = array_key_exists('catalog_filter_group', $auth) ? $auth['catalog_filter_group'] : 0;
 
                 // Attempt to create the user
-                if (User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $state, $city) > 0) {
-                    $user = User::get_from_username($username);
+                $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $dfg, $state, $city);
+                if ($user_id > 0) {
+                    // tell me you're creating the user
+                    $this->logger->info(
+                        sprintf(
+                            'Created missing user %s',
+                            scrub_out($username)
+                        ),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    $user = new User($user_id);
 
                     if (array_key_exists('avatar', $auth)) {
                         $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
                     }
                 } else {
                     $auth['success'] = false;
+                    $this->logger->error(
+                        'Unable to create a local account',
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                     AmpError::add('general', T_('Unable to create a local account'));
                 }
             } // end if auto_create
 
             // This allows stealing passwords validated by external means such as LDAP
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && $auth['success'] && isset($password)) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && isset($auth) && $auth['success'] && isset($password)) {
                 $user->update_password($password);
             }
         }
 
         /* If the authentication was a success */
-        if (isset($auth) && $auth['success'] && isset($user)) {
+        if (isset($auth) && $auth['success'] && $user instanceof User) {
             // $auth->info are the fields specified in the config file
             //   to retrieve for each user
             Session::create($auth);
@@ -297,7 +311,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
             }
 
-            $GLOBALS['user'] = $user;
+            Session::createGlobalUser($user);
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&

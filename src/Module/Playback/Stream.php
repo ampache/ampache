@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -91,6 +91,74 @@ class Stream
     }
 
     /**
+     * Get transcode format for media based on config settings
+     *
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @return string
+     */
+    public static function get_transcode_format(
+        $source,
+        $target = null,
+        $player = null,
+        $media_type = 'song'
+    ) {
+        // check if we've done this before
+        $format = self::get_output_cache($source, $target, $player, $media_type);
+        if (!empty($format)) {
+            return $format;
+        }
+        $input_target = $target;
+        // default target for songs
+        $setting_target = 'encode_target';
+        // default target for video
+        if ($media_type != 'song') {
+            $setting_target = 'encode_' . $media_type . '_target';
+        }
+        if (!$player && in_array($media_type, array('song', 'podcast_episode'))) {
+            $player = 'webplayer';
+        }
+        // webplayer / api transcode actions
+        $has_player_target = false;
+        if ($player) {
+            // encode target for songs in webplayer/api
+            $encode_target = 'encode_player_' . $player . '_target';
+            if ($media_type != 'song') {
+                // encode target for video in webplayer/api
+                $encode_target = 'encode_' . $media_type . '_player_' . $player . '_target';
+            }
+            $has_player_target = AmpConfig::get($encode_target);
+        }
+        $has_default_target = AmpConfig::get($setting_target);
+        $has_codec_target   = AmpConfig::get('encode_target_' . $source);
+
+        // Fall backwards from the specific transcode formats to default
+        // TARGET > PLAYER > CODEC > DEFAULT
+        if ($target) {
+            return $target;
+        } elseif ($has_player_target) {
+            $target = $has_player_target;
+            debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+        } elseif ($has_codec_target) {
+            $target = $has_codec_target;
+            debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+        } elseif ($has_default_target) {
+            $target = $has_default_target;
+            debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+        }
+        // fall back to resampling if no default
+        if (!$target) {
+            $target = $source;
+            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
+        }
+        self::set_output_cache($target, $source, $input_target, $player, $media_type);
+
+        return $target;
+    }
+
+    /**
      * get_allowed_bitrate
      * @return integer
      */
@@ -99,7 +167,7 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', '128');
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -139,6 +207,117 @@ class Stream
         return (int)$bit_rate;
     }
 
+    /**
+     * Get stream types for media type.
+     * @param string $type
+     * @param string $player
+     * @return array
+     */
+    public static function get_stream_types_for_type($type, $player = 'webplayer')
+    {
+        $types     = array();
+        $transcode = AmpConfig::get('transcode_' . $type);
+        if ($player !== '') {
+            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
+            if ($player_transcode) {
+                $transcode = $player_transcode;
+            }
+        }
+
+        if ($transcode != 'required') {
+            $types[] = 'native';
+        }
+        if (make_bool($transcode)) {
+            $types[] = 'transcode';
+        }
+
+        return $types;
+    }
+
+    /**
+     * Get transcode settings for media.
+     * It can be confusing but when waveforms are enabled it will transcode the file twice.
+     *
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @param array $options
+     * @return array
+     */
+    public static function get_transcode_settings_for_media(
+        $source,
+        $target = null,
+        $player = null,
+        $media_type = 'song',
+        $options = array()
+    ) {
+        $target = self::get_transcode_format($source, $target, $player, $media_type);
+        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        if (empty($cmd)) {
+            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
+
+            return array();
+        }
+
+        $args = '';
+        if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
+            $args .= ' ' . AmpConfig::get('encode_ss_frame');
+        }
+        if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
+            $args .= ' ' . AmpConfig::get('encode_ss_duration');
+        }
+        $args .= ' ' . AmpConfig::get('transcode_input');
+
+        if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
+            debug_event(self::class, 'Using subtitle ' . $options['subtitle'], 5);
+            $args .= ' ' . AmpConfig::get('encode_srt');
+        }
+
+        $argst = AmpConfig::get('encode_args_' . $target);
+        if (!$args) {
+            debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
+
+            return array();
+        }
+        $args .= ' ' . $argst;
+
+        debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+
+        return array('format' => $target, 'command' => $cmd . $args);
+    }
+
+    /**
+     * get_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @return string
+     */
+    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (!empty(Core::get_global('transcode'))) {
+            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        }
+
+        return '';
+    }
+
+    /**
+     * set_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     */
+    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (Core::get_global('transcode') == '') {
+            $GLOBALS['transcode'] = array();
+        }
+        $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
+    }
     /**
      * start_transcode
      *
@@ -443,6 +622,7 @@ class Stream
      * get_now_playing
      *
      * This returns the Now Playing information
+     * @param int $user_id
      * @return array
      * <array{
      *  media: \Ampache\Repository\Model\library_item,
@@ -451,33 +631,34 @@ class Stream
      *  expire: int
      * }>
      */
-    public static function get_now_playing()
+    public static function get_now_playing($user_id = 0)
     {
         $sql = "SELECT `session`.`agent`, `np`.* FROM `now_playing` AS `np` LEFT JOIN `session` ON `session`.`id` = `np`.`id` ";
 
         if (AmpConfig::get('now_playing_per_user')) {
             $sql .= "INNER JOIN (SELECT MAX(`insertion`) AS `max_insertion`, `user` FROM `now_playing` GROUP BY `user`) `np2` ON `np`.`user` = `np2`.`user` AND `np`.`insertion` = `np2`.`max_insertion` ";
         }
-        $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
+        $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
         if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id && !empty(Core::get_global('user'))) {
                 $current_user = Core::get_global('user')->id;
-                $sql .= " AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
+        //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
             $media      = new $class_name($row['object_id']);
-            if (Catalog::has_access($media->catalog, $media->id)) {
-                $media->format();
+            if (($user_id === 0 || (int)$row['user'] == $user_id) && Catalog::has_access($media->catalog, (int)$row['user'])) {
                 $client = new User($row['user']);
+                $media->format();
                 $client->format();
                 $results[] = array(
                     'media' => $media,
@@ -554,13 +735,17 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param boolean $local
+     * @param string $streamToken
      * @return string
      */
-    public static function get_base_url($local = false)
+    public static function get_base_url($local = false, $streamToken = null)
     {
         $session_string = '';
+        $session_id     = (!empty($streamToken))
+            ? $streamToken:
+            self::get_session();
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::get_session() . '&';
+            $session_string = 'ssid=' . $session_id . '&';
         }
 
         if ($local) {

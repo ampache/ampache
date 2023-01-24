@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -313,7 +313,7 @@ class LocalPlay
      * There is an expected array format
      * @return array|false
      */
-    public function status()
+    public function status(): array
     {
         $data = $this->_player->status();
 
@@ -602,7 +602,7 @@ class LocalPlay
      * This loads the fields from the Localplay
      * player and returns them
      */
-    public function get_instance_fields()
+    public function get_instance_fields(): array
     {
         return $this->_player->instance_fields();
     } // get_instance_fields

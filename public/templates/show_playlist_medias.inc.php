@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
@@ -74,6 +73,7 @@ $count     = 1; ?>
     }
     $object_type = $object['object_type'];
     if (InterfaceImplementationChecker::is_library_item($object_type)) {
+        /** @var Ampache\Repository\Model\playable_item $libitem */
         $class_name = ObjectTypeToClassNameMapper::map($object_type);
         $libitem    = new $class_name($object['object_id']);
         $libitem->format();

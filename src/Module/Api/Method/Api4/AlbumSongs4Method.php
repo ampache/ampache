@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
@@ -57,23 +56,14 @@ class AlbumSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new Album($input['filter']);
+        $album = new Album((int)$input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
 
-        // songs for all disks
-        if (AmpConfig::get('album_group')) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $allsongs = static::getAlbumRepository()->getSongs($discid);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            }
-        } else {
-            // songs for just this disk
+        if (isset($album->id)) {
+            // songs for all disks
             $songs = static::getAlbumRepository()->getSongs($album->id);
         }
         if (!empty($songs)) {
@@ -81,12 +71,12 @@ class AlbumSongs4Method
                 case 'json':
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($songs, $user->id);
+                    echo Json4_Data::songs($songs, $user);
                     break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($songs, $user->id);
+                    echo Xml4_Data::songs($songs, $user);
             }
         }
 

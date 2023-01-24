@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results      = array();
-        $request_id   = $this->requestParser->getFromRequest('id');
+        $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
@@ -69,10 +69,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                switch ($request_type) {
-                    case 'delete':
-                        Core::get_global('user')->playlist->delete_track($request_id);
-                        break;
+                if ($request_type == 'delete') {
+                    Core::get_global('user')->playlist->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
@@ -120,14 +118,14 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
-                        case 'album_full':
-                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $request_id));
+                        case 'album_random':
+                            $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
-                        case 'album_random':
-                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $request_id));
+                        case 'album_disk_random':
+                            $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
@@ -190,7 +188,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'action_buttons':
                 $rating_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+                $rating_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
                 ob_start();
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
                     echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";

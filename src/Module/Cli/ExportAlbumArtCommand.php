@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -65,17 +65,15 @@ final class ExportAlbumArtCommand extends Command
     public function execute(
         string $type
     ): void {
-        $interactor = $this->app()->io();
-
+        $interactor         = $this->app()->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
-
-        $catalogs = Catalog::get_catalogs();
 
         $interactor->info(
             T_('Start Album Art Dump'),
             true
         );
 
+        $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
 

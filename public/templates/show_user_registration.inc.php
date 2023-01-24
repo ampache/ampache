@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -100,8 +100,7 @@ $_SESSION['login'] = true; ?>
                             <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
                             <?php echo AmpError::display('fullname'); ?>
                         </div>
-                    <?php
-                    } ?>
+                    <?php } ?>
 
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
@@ -116,8 +115,7 @@ $_SESSION['login'] = true; ?>
                             <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
                             <?php echo AmpError::display('website'); ?>
                         </div>
-                    <?php
-                    } ?>
+                    <?php } ?>
                     <?php if (in_array('state', $display_fields)) { ?>
                         <div class="registerfield <?php if (in_array('state', $mandatory_fields)) {
                         echo 'require';
@@ -126,8 +124,7 @@ $_SESSION['login'] = true; ?>
                             <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
                             <?php echo AmpError::display('state'); ?>
                         </div>
-                    <?php
-                    } ?>
+                    <?php } ?>
                     <?php if (in_array('city', $display_fields)) { ?>
                         <div class="registerfield <?php if (in_array('city', $mandatory_fields)) {
                         echo 'require';
@@ -136,8 +133,7 @@ $_SESSION['login'] = true; ?>
                             <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
                             <?php echo AmpError::display('city'); ?>
                         </div>
-                    <?php
-                    } ?>
+                    <?php } ?>
 
                     <div class="registerfield require">
                         <label for="password_1"><?php echo T_('Password'); ?>:</label>
@@ -159,8 +155,8 @@ $_SESSION['login'] = true; ?>
                             <div id="agreementCheckbox">
                                 <label for="accept_agreement"></span><?php echo T_('I Accept'); ?><span class=alert-danger> *</label>
                                 <input id="accept_agreement" type="checkbox" name="accept_agreement" />
-                            </div><?php
-                    } ?>
+                            </div>
+                            <?php } ?>
                         <div id="submit-registration-button">
                             <input type="hidden" name="action" value="add_user" />
                             <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />

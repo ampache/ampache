@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -53,9 +52,6 @@ class ShowActionTest extends MockeryTestCase
     /** @var PrivilegeCheckerInterface|MockInterface|null */
     private MockInterface $privilegeChecker;
 
-    /** @var AlbumRepositoryInterface|MockInterface|null */
-    private MockInterface $albumRepository;
-
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
@@ -67,7 +63,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui               = $this->mock(UiInterface::class);
         $this->logger           = $this->mock(LoggerInterface::class);
         $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
-        $this->albumRepository  = $this->mock(AlbumRepositoryInterface::class);
         $this->configContainer  = $this->mock(ConfigContainerInterface::class);
 
         $this->subject = new ShowAction(
@@ -75,7 +70,6 @@ class ShowActionTest extends MockeryTestCase
             $this->ui,
             $this->logger,
             $this->privilegeChecker,
-            $this->albumRepository,
             $this->configContainer
         );
     }
@@ -123,7 +117,7 @@ class ShowActionTest extends MockeryTestCase
             )
             ->once();
 
-        $this->expectOutputString('You have requested an Album that does not exist.');
+        $this->expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
@@ -135,10 +129,14 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
+        $isEditAble = true;
 
         $albumId = 42;
 
-        $album->album_suite = [1, 2, 3];
+        $this->privilegeChecker->shouldReceive('check')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -171,7 +169,8 @@ class ShowActionTest extends MockeryTestCase
             ->with(
                 'show_album_group_disks.inc.php',
                 [
-                    'album' => $album
+                    'album' => $album,
+                    'isAlbumEditable' => $isEditAble,
                 ]
             )
             ->once();
@@ -286,8 +285,6 @@ class ShowActionTest extends MockeryTestCase
 
         $albumId = 42;
 
-        $album->album_suite = [1];
-
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
@@ -317,7 +314,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_album.inc.php',
+                'show_album_group_disks.inc.php',
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,

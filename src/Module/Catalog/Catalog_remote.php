@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ namespace Ampache\Module\Catalog;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
@@ -44,6 +43,8 @@ class Catalog_remote extends Catalog
     private $version     = '000001';
     private $type        = 'remote';
     private $description = 'Ampache Remote Catalog';
+
+    private int $catalog_id;
 
     /**
      * get_description
@@ -136,12 +137,11 @@ class Catalog_remote extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)($catalog_id);
-            $info     = $this->get_info($catalog_id);
-
+            $info = $this->get_info($catalog_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->catalog_id = (int)$catalog_id;
         }
     }
 
@@ -251,13 +251,11 @@ class Catalog_remote extends Catalog
     /**
      * update_remote_catalog
      *
-     * Pulls the data from a remote catalog and adds any missing songs to the
-     * database.
-     * @param integer $type
+     * Pulls the data from a remote catalog and adds any missing songs to the database.
      * @return boolean
      * @throws Exception
      */
-    public function update_remote_catalog($type = 0)
+    public function update_remote_catalog()
     {
         set_time_limit(0);
 
@@ -269,8 +267,7 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found',
-            '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
+        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -282,28 +279,27 @@ class Catalog_remote extends Catalog
             $current += $step;
             try {
                 $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
+                // Iterate over the songs we retrieved and insert them
+                foreach ($songs as $data) {
+                    if ($this->check_remote_song($data['song'])) {
+                        debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
+                    } else {
+                        $data['song']['catalog'] = $this->catalog_id;
+                        $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
+                        if (!Song::insert($data['song'])) {
+                            debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
+                            /* HINT: Song Title */
+                            AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
+                            echo AmpError::display('general');
+                            flush();
+                        }
+                    }
+                }
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
                 AmpError::add('general', $error->getMessage());
                 echo AmpError::display('general');
                 flush();
-            }
-
-            // Iterate over the songs we retrieved and insert them
-            foreach ($songs as $data) {
-                if ($this->check_remote_song($data['song'])) {
-                    debug_event('remote.catalog', 'Skipping existing song ' . $data['song']['url'], 5);
-                } else {
-                    $data['song']['catalog'] = $this->id;
-                    $data['song']['file']    = preg_replace('/ssid=.*?&/', '', $data['song']['url']);
-                    if (!Song::insert($data['song'])) {
-                        debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
-                        /* HINT: Song Title */
-                        AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
-                        echo AmpError::display('general');
-                        flush();
-                    }
-                }
             }
         } // end while
 
@@ -332,35 +328,40 @@ class Catalog_remote extends Catalog
     {
         $remote_handle = $this->connect();
         if (!$remote_handle) {
-            debug_event('remote.catalog', 'Remote login failed', 1, 'ampache-catalog');
+            debug_event('remote.catalog', 'Remote login failed', 1);
 
             return 0;
         }
 
-        $dead = 0;
-
+        $dead       = 0;
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
+                if (count($song) == 1) {
+                    debug_event('remote.catalog', 'keeping song', 5);
+                } else {
+                    debug_event('remote.catalog', 'removing song', 5);
+                    $dead++;
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                }
             } catch (Exception $error) {
                 // FIXME: What to do, what to do
                 debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
             }
-
-            if (count($song) == 1) {
-                debug_event('remote.catalog', 'keeping song', 5, 'ampache-catalog');
-            } else {
-                debug_event('remote.catalog', 'removing song', 5, 'ampache-catalog');
-                $dead++;
-                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
-            }
         }
 
         return $dead;
+    }
+
+    /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        return array();
     }
 
     /**
@@ -375,7 +376,7 @@ class Catalog_remote extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {
@@ -406,9 +407,9 @@ class Catalog_remote extends Catalog
         }
         $handshake  = $remote_handle->info();
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $row['id'] . '.' . $row['extension'];
+            $target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
             $remote_url  = $row['file'] . '&ssid=' . $handshake['auth'] . '&format=' . $target . '&bitrate=' . $max_bitrate;
             if (!is_file($target_file) || (int)Core::get_filesize($target_file) == 0) {
                 debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);

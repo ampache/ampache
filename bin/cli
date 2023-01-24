@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Cli;
+use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -33,6 +34,9 @@ define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
+
+// set a global in case it's needed
+$GLOBALS['user'] = new User(-1);
 
 // Init App with name and version
 $app = new Ahc\Cli\Application(
@@ -44,7 +48,6 @@ $app->add($dic->get(Cli\ComputeCacheCommand::class));
 $app->add($dic->get(Cli\CronProcessCommand::class));
 $app->add($dic->get(Cli\CacheProcessCommand::class));
 $app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
-$app->add($dic->get(Cli\RunChannelCommand::class));
 $app->add($dic->get(Cli\PrintTagsCommand::class));
 $app->add($dic->get(Cli\SongCleanupCommand::class));
 $app->add($dic->get(Cli\SortFilesCommand::class));

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -51,8 +50,6 @@ final class ShowAction implements ApplicationActionInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
-    private AlbumRepositoryInterface $albumRepository;
-
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
@@ -60,14 +57,12 @@ final class ShowAction implements ApplicationActionInterface
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        AlbumRepositoryInterface $albumRepository,
         ConfigContainerInterface $configContainer
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
-        $this->albumRepository  = $albumRepository;
         $this->configContainer  = $configContainer;
     }
 
@@ -85,9 +80,9 @@ final class ShowAction implements ApplicationActionInterface
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_('You have requested an Album that does not exist.');
+            echo T_('You have requested an object that does not exist');
         // allow single disks to not be shown as multi's
-        } elseif (count($album->album_suite) <= 1) {
+        } elseif ($album->disk_count == 1) {
             $this->ui->show(
                 'show_album.inc.php',
                 [
@@ -102,7 +97,11 @@ final class ShowAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_album_group_disks.inc.php',
                 [
-                    'album' => $album
+                    'album' => $album,
+                    'isAlbumEditable' => $this->isEditable(
+                        $gatekeeper,
+                        $album
+                    ),
                 ]
             );
         }

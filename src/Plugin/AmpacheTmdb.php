@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -128,6 +128,7 @@ class AmpacheTmdb
             return null;
         }
 
+        $results = array();
         try {
             $token            = new ApiToken($this->api_key);
             $client           = new Client($token);
@@ -230,7 +231,7 @@ class AmpacheTmdb
     {
         debug_event('tmdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 
     /**

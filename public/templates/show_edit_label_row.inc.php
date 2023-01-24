@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Label $libitem */
 
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 
+/** @var Label $libitem */
 ?>
 <div>
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">

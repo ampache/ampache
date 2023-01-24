@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -277,10 +277,8 @@ class Upnp_Api
                     debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
                 }
             }
-        } else {
-            if (self::SSDP_DEBUG) {
-                debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
-            }
+        } elseif (self::SSDP_DEBUG) {
+            debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
         }
     }
 
@@ -823,7 +821,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
-                            $album_ids              = static::getAlbumRepository()->getByArtist($artist->id);
+                            $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
@@ -1389,13 +1387,13 @@ class Upnp_Api
 
         $tokens = self::gettokens($query);
         $size   = sizeof($tokens);
-        //   for ($i=0; $i<sizeof($tokens); $i++) {
-        //       echo $tokens[$i]."|";
-        //   }
-        //   echo "\n";
+        // for ($i=0; $i<sizeof($tokens); $i++) {
+        //     echo $tokens[$i]."|";
+        // }
+        // echo "\n";
 
         // Go through all the tokens and transform anything we recognize
-        //If any translation goes to NUL then must remove previous token provided it is AND or OR
+        // If any translation goes to NUL then must remove previous token provided it is AND or OR
         for ($i=0; $i < $size; $i++) {
             for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
@@ -1597,7 +1595,7 @@ class Upnp_Api
             'id' => 'amp://music/artists/' . $artist->id,
             'parentID' => $parent,
             'restricted' => 'false',
-            'childCount' => $artist->albums,
+            'childCount' => $artist->album_count,
             'dc:title' => self::_replaceSpecialSymbols($artist->get_fullname()),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',

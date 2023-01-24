@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -95,12 +95,13 @@ final class Session implements SessionInterface
 
             $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } elseif (!$useAuth) {
+            $auth                 = array();
             $auth['success']      = 1;
             $auth['username']     = '-1';
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
+            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '5';
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);
@@ -112,13 +113,13 @@ final class Session implements SessionInterface
             } else {
                 self::check();
                 if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                    $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+                    self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
                 } else {
                     $GLOBALS['user']           = new User('-1');
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
-                    $GLOBALS['user']->access   = (int) ($auth['access']);
+                    $GLOBALS['user']->access   = (int)$auth['access'];
                 }
                 $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
                 if (!$user_id && !$isDemoMode) {
@@ -134,9 +135,9 @@ final class Session implements SessionInterface
                 session_name($sessionName);
                 session_id(scrub_in((string) $_REQUEST['sid']));
                 session_start();
-                $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
+                self::createGlobalUser(new User($_SESSION['userdata']['uid']));
             } else {
-                $GLOBALS['user'] = new User();
+                $GLOBALS['user'] = '';
             }
         } // If NO_SESSION passed
 
@@ -195,6 +196,7 @@ final class Session implements SessionInterface
 
         // Destroy our cookie!
         setcookie($session_name, '', $cookie_options);
+        setcookie($session_name, '', -1);
         setcookie($session_name . '_user', '', $cookie_options);
         setcookie($session_name . '_lang', '', $cookie_options);
 
@@ -211,7 +213,7 @@ final class Session implements SessionInterface
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
-        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?;';
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
@@ -314,7 +316,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
+        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0';
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -378,7 +380,12 @@ final class Session implements SessionInterface
             debug_event(self::class, 'auth_remember session found', 5);
         }
 
-        $cookie_options = [
+        // Can't do cookie is the session is already started
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            return true;
+        }
+
+        $cookie_params = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
@@ -388,7 +395,7 @@ final class Session implements SessionInterface
 
         // Set up the cookie params before we start the session.
         // This is vital
-        session_set_cookie_params($cookie_options);
+        session_set_cookie_params($cookie_params);
         session_write_close();
 
         // Set name
@@ -439,6 +446,11 @@ final class Session implements SessionInterface
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
+                    $results = Dba::fetch_assoc($db_results);
+                    if ($results) {
+                        self::createGlobalUser(User::get_from_username($results['username']));
+                    }
+
                     return true;
                 }
                 break;
@@ -470,6 +482,10 @@ final class Session implements SessionInterface
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
             debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            $results = Dba::fetch_assoc($db_results);
+            if ($results) {
+                self::createGlobalUser(User::get_from_username($results['username']));
+            }
         }
 
         return $db_results;
@@ -505,6 +521,21 @@ final class Session implements SessionInterface
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
 
         return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
+     * update_agent
+     *
+     * This takes a SID and update associated agent.
+     * @param string $sid
+     * @param string $agent
+     * @return PDOStatement|boolean
+     */
+    public static function update_agent($sid, $agent)
+    {
+        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id`= ?';
+
+        return Dba::write($sql, array($agent, $sid));
     }
 
     /**
@@ -609,6 +640,13 @@ final class Session implements SessionInterface
      */
     public static function create_cookie()
     {
+        $cookie_params = [
+            'lifetime' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Lax'
+        ];
         if (isset($_SESSION)) {
             $cookie_options = [
                 'expires' => (int)AmpConfig::get('cookie_life'),
@@ -619,17 +657,11 @@ final class Session implements SessionInterface
             ];
             setcookie(session_name(), session_id(), $cookie_options);
         } else {
-            $cookie_options = [
-                'lifetime' => (int)AmpConfig::get('cookie_life'),
-                'path' => (string)AmpConfig::get('cookie_path'),
-                'domain' => (string)AmpConfig::get('cookie_domain'),
-                'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Lax'
-            ];
-            session_set_cookie_params($cookie_options);
+            session_set_cookie_params($cookie_params);
         }
         session_write_close();
         session_name(AmpConfig::get('session_name'));
+        session_set_cookie_params($cookie_params);
 
         /* Start the session */
         self::ungimp_ie();
@@ -698,6 +730,21 @@ final class Session implements SessionInterface
     }
 
     /**
+     * createGlobalUser
+     * Set up the global user
+     */
+    public static function createGlobalUser(?User $user)
+    {
+        if (empty(Core::get_global('user'))) {
+            if ($user instanceof User && $user->id > 0) {
+                $GLOBALS['user'] = $user;
+            } elseif (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
+                $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
+            }
+        }
+    }
+
+    /**
      * storeTokenForUser
      * @param string $username
      * @param string $token
@@ -735,7 +782,7 @@ final class Session implements SessionInterface
                 }
             }
             // make sure the global is set too
-            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+            self::createGlobalUser(User::get_from_username($_SESSION['userdata']['username']));
             // make sure the prefs are set too
             Preference::init();
         }
@@ -754,8 +801,7 @@ final class Session implements SessionInterface
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (isset($_SERVER['HTTPS']) && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
-                FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
+        if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') != 'on') {
             return true;
         }
 

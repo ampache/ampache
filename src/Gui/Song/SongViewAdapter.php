@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -260,9 +260,22 @@ final class SongViewAdapter implements SongViewAdapterInterface
         );
     }
 
+    public function getUpdateFromTagsUrl(): string
+    {
+        return sprintf(
+            '%s/song.php?action=update_from_tags&song_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
     public function getDisplayStatsIcon(): string
     {
         return Ui::get_icon('statistics', T_('Graphs'));
+    }
+    public function getRefreshIcon(): string
+    {
+        return Ui::get_icon('file_refresh', T_('Update from tags'));
     }
 
     public function isEditable(): bool
@@ -338,9 +351,15 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Title')]         = scrub_out($this->song->title);
         $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
         $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
-        $songprops[T_('Album')]         = $this->song->f_album_link;
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+            $songprops[T_('Album')] = $this->song->get_f_album_link();
+        } else {
+            $songprops[T_('Album')] = $this->song->get_f_album_disk_link();
+        }
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
+        $songprops[T_('Track')]         = $this->song->track;
+        $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
@@ -352,12 +371,17 @@ final class SongViewAdapter implements SongViewAdapterInterface
         } else {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
-        $songprops[T_('Comment')]       = scrub_out($this->song->comment);
-        $label_string                   = '';
-        foreach (array_map('trim', explode(';', $this->song->label)) as $label_name) {
-            $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
+        $songprops[T_('Comment')] = scrub_out($this->song->comment);
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+            $web_path     = $this->configContainer->getWebPath();
+            $label_string = '';
+            foreach (array_map('trim', explode(';', $this->song->label)) as $label_name) {
+                $label_string .= "<a href=\"" . $web_path . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+            }
+            $songprops[T_('Label')] = rtrim($label_string, ', ');
+        } else {
+            $songprops[T_('Label')] = scrub_out($this->song->label);
         }
-        $songprops[T_('Label')]          = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) ? $label_string : scrub_out($this->song->label);
         $songprops[T_('Song Language')]  = scrub_out($this->song->language);
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
@@ -451,7 +475,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getAlbumLink(): string
     {
-        return $this->song->f_album_link;
+        return $this->song->get_f_album_link();
+    }
+
+    public function getAlbumDiskLink(): string
+    {
+        return $this->song->get_f_album_disk_link();
     }
 
     public function getYear(): int

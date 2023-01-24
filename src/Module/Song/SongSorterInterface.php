@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,5 +26,13 @@ use Ahc\Cli\IO\Interactor;
 
 interface SongSorterInterface
 {
-    public function sort(Interactor $interactor, bool $dryRun = true, ?string $various_artist_override = null): void;
+    public function sort(
+        Interactor $interactor,
+        bool $dryRun = true,
+        bool $filesOnly = false,
+        int $limit = 0,
+        bool $windowsCompat = false,
+        ?string $various_artist_override = null,
+        ?string $catalogName = null
+    ): void;
 }

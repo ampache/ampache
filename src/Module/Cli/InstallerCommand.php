@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -107,7 +107,7 @@ final class InstallerCommand extends Command
         ), true);
 
         // Install the database
-        if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force, true)) {
+        if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force)) {
             $interactor->error(
                 T_('Database creation failed'),
                 true
@@ -132,7 +132,10 @@ final class InstallerCommand extends Command
                 T_('Config file creation failed'),
                 true
             );
-            $interactor->error(AmpError::get('general'), true);
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
         }
     }
 }

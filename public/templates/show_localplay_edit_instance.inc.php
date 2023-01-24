@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
+Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo (int) scrub_in(filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 <table class="tabledata">
 <?php foreach ($fields as $key => $field) { ?>
@@ -32,8 +31,7 @@ use Ampache\Module\Util\Ui;
     <td><?php echo $field['description']; ?></td>
     <td><input type="<?php echo $field['type']; ?>" name="<?php echo $key; ?>" value="<?php echo scrub_out($instance[$key]); ?>" /></td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Update Instance'); ?>" />

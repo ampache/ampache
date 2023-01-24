@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,11 +26,12 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path  = AmpConfig::get('web_path');
+$access100 = Access::check('interface', 100); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $web_path . "/admin/users.php"; ?>">
@@ -40,13 +41,13 @@ $web_path = AmpConfig::get('web_path');
         </tr>
         <tr>
             <td><?php echo T_('Username'); ?>:</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Full Name'); ?>:</td>
-            <td><input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+            <td><input type="text" name="fullname" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
     echo "checked";
 } ?> /> <?php echo T_('Public'); ?>
@@ -122,6 +123,25 @@ $web_path = AmpConfig::get('web_path');
                 </select>
             </td>
         </tr>
+
+<?php if (AmpConfig::get('catalog_filter')) { ?>
+        <tr>
+            <td><?php echo T_('Catalog Filter'); ?>:</td>
+            <td><?php
+
+    $filters  = Catalog::get_catalog_filters();
+    $options  = array();
+    foreach ($filters as $filter) {
+        $selected = "";
+        if ($filter['id'] == $client->catalog_filter_group) {
+            $selected = ' selected = "selected" ';
+        }
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
+    }
+    echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
+}?>
+            </td>
+        </tr>
         <tr>
             <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
@@ -144,7 +164,8 @@ $web_path = AmpConfig::get('web_path');
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
             </td>
             <td>
                 <span>
@@ -156,8 +177,24 @@ $web_path = AmpConfig::get('web_path');
         </tr>
         <tr>
             <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($client->streamtoken) {
+                    echo $client->streamtoken;
+                } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
@@ -169,7 +206,6 @@ $web_path = AmpConfig::get('web_path');
                 </span>
             </td>
         </tr>
-
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>

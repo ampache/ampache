@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,11 +34,12 @@ use Ampache\Module\Api\Ajax;
 /** @var string $web_path */
 /** @var string $agent */
 
+$showAlbum = AmpConfig::get('album_group');
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
         <?php
             echo scrub_out($np_user->fullname);
             if ($np_user->f_avatar_medium) {
@@ -51,11 +52,11 @@ use Ampache\Module\Api\Ajax;
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_left">
         <label><?php echo T_('Song'); ?></label>
-        <?php echo $media->f_link; ?>
+        <?php echo $media->get_f_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Album'); ?></label>
-        <?php echo $media->f_album_link; ?>
+        <?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>

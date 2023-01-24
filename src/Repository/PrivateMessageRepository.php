@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Exception\ItemNotFoundException;
 
@@ -49,7 +48,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
     public function getUnreadCount(
         int $userId
     ): int {
-        $sql    = "SELECT count(`id`) as amount FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'";
+        $sql    = "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'";
         $params = array($userId);
 
         $db_results = Dba::read($sql, $params);

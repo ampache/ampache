@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
 use PDOStatement;
-use Requests;
+use WpOrg\Requests;
 use RuntimeException;
 
 /**
@@ -49,6 +49,7 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
+    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
 
     /**
      * @var integer $id
@@ -103,7 +104,7 @@ class Art extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -182,10 +183,11 @@ class Art extends database_object
 
             return false;
         }
+        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
 
         // Check image size doesn't exceed the limit
-        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
-            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
+        if ($max_upload_size > 0 && strlen((string) $source) > $max_upload_size) {
+            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . $max_upload_size . ').', 1);
 
             return false;
         }
@@ -327,7 +329,7 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . $rurl['extension'];
+        $mime  = "image/" . $rurl['extension'] ?? 'jpg';
         $this->insert($image, $mime);
     }
 
@@ -384,9 +386,8 @@ class Art extends database_object
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
             foreach ($songs as $song_id) {
-                $song   = new Song($song_id);
-                $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $song        = new Song($song_id);
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
@@ -402,8 +403,12 @@ class Art extends database_object
                 /* is the file flac or mp3? */
                 $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = array('data' => $source, 'mime' => $mime,
-                    'picturetypeid' => $current_picturetypeid, 'description' => $description);
+                $new_pic       = array(
+                    'data' => $source,
+                    'mime' => $mime,
+                    'picturetypeid' => $current_picturetypeid,
+                    'description' => $description
+                );
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][]    = $new_pic;
@@ -413,8 +418,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = array('data' => $apics[0]['data'], 'description' => $apics[0]['description'],
-                                    'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']);
+                                $ndata['attached_picture'][] = array(
+                                    'data' => $apics[0]['data'],
+                                    'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'],
+                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                );
                             }
                             break;
                         case 2:
@@ -427,8 +436,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                              = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId]  = array('data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype],
-                                'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']);
+                                $ndata['attached_picture'][$apicsId]  = array(
+                                    'data' => $apics[$apicsId]['data'],
+                                    'mime' => $apics[$apicsId][$apic_mimetype],
+                                    'picturetypeid' => $apics[$apicsId][$apic_typeid],
+                                    'description' => $apics[$apicsId]['description']
+                                );
                             }
 
                             break;
@@ -510,10 +523,10 @@ class Art extends database_object
         $height = (int)($dimensions['height']);
 
         if ($width > 0 && $height > 0) {
-            $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : 0;
-            $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : 0;
-            $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : 0;
-            $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : 0;
+            $minw = AmpConfig::get('album_art_min_width', 0);
+            $maxw = AmpConfig::get('album_art_max_width', 0);
+            $minh = AmpConfig::get('album_art_min_height', 0);
+            $maxh = AmpConfig::get('album_art_max_height', 0);
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {
@@ -626,9 +639,8 @@ class Art extends database_object
 
     /**
      * read_from_images
-     * @param string $name
      */
-    private static function read_from_images($name = 'blankalbum.png')
+    private static function read_from_images()
     {
         $path = __DIR__ . '/../../../public/images/blankalbum.png';
         if (!Core::is_readable($path)) {
@@ -925,6 +937,10 @@ class Art extends database_object
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
                 break;
+            case 'webp':
+                imagewebp($thumbnail);
+                $mime_type = image_type_to_mime_type(IMAGETYPE_WEBP);
+                break;
             default:
                 $mime_type = null;
         } // resized
@@ -990,8 +1006,8 @@ class Art extends database_object
             $options = array();
             try {
                 $options['timeout'] = 10;
-                Requests::register_autoloader();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
+                Requests\Autoload::register();
+                $request = Requests\Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
@@ -1016,49 +1032,56 @@ class Art extends database_object
             $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
-            if (array_key_exists('format_name', $id3) && $id3['format_name'] == "WMA") {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
-            } elseif (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more then one
+            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
+                return $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+            }
+
+            if (isset($id3['id3v2']['APIC'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['id3v2']['APIC'] as $image) {
-                    if (!isset($image['picturetypeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['id3v2']['PIC'])) {
-                // Foreach in case they have more then one
+            }
+
+            if (isset($id3['id3v2']['PIC'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['id3v2']['PIC'] as $image) {
-                    if (!isset($image['picturetypeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['picturetypeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['flac']['PICTURE'])) {
-                // Foreach in case they have more then one
-                foreach ($id3['comments']['picture'] as $image) {
-                    if (!isset($image['typeid'])) {
-                        break;
-                    }
-                    $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
-                    if ($data['title'] == $title) {
-                        return $image['data'];
+            }
+
+            if (isset($id3['flac']['PICTURE'])) {
+                // Foreach in case they have more than one
+                foreach ($id3['flac']['PICTURE'] as $image) {
+                    if (isset($image['typeid']) && array_key_exists('data', $image)) {
+                        $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
+                        if ($data['title'] == $title) {
+                            return $image['data'];
+                        }
                     }
                 }
-            } elseif (isset($id3['comments']['picture'])) {
-                // Foreach in case they have more then one
+            }
+
+            if (isset($id3['comments']['picture'])) {
+                // Foreach in case they have more than one
                 foreach ($id3['comments']['picture'] as $image) {
-                    if (!isset($image['picturetype']) && !isset($image['description'])) {
-                        break;
+                    if (isset($image['picturetype']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == 'ID3 ' . $image['picturetype']) {
+                            return $image['data'];
+                        }
                     }
-                    if ((isset($image['picturetype']) && $data['title'] == 'ID3 ' . $image['picturetype']) || (isset($image['description']) && $data['title'] == 'ID3 ' . $image['description'])) {
-                        return $image['data'];
+                    if (isset($image['description']) && array_key_exists('data', $image)) {
+                        if ($data['title'] == 'ID3 ' . $image['description']) {
+                            return $image['data'];
+                        }
                     }
                 }
             }
@@ -1176,9 +1199,10 @@ class Art extends database_object
                 debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
+            $album_art_store_disk = AmpConfig::get('album_art_store_disk');
             // iterate over our types and delete the images
             foreach ($types as $type) {
-                if (AmpConfig::get('album_art_store_disk')) {
+                if ($album_art_store_disk) {
                     $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
                     $db_results = Dba::read($sql);
                     while ($row = Dba::fetch_row($db_results)) {
@@ -1489,7 +1513,7 @@ class Art extends database_object
             $class_name  = ObjectTypeToClassNameMapper::map($object_type);
             $libitem     = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
-            if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
+            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

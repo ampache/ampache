@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,6 +58,7 @@ final class UserUpdateMethod
      * state      = (string) $state //optional
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
+     * group      = (integer) Catalog filter group for the new user //optional, default = 0
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
@@ -69,15 +70,16 @@ final class UserUpdateMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
-        $username   = $input['username'];
-        $password   = $input['password'] ?? null;
-        $fullname   = $input['fullname'] ?? null;
-        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = $input['website'] ?? null;
-        $state      = $input['state'] ?? null;
-        $city       = $input['city'] ?? null;
-        $disable    = $input['disable'] ?? null;
-        $maxbitrate = $input['maxbitrate'] ?? null;
+        $username             = $input['username'];
+        $password             = $input['password'] ?? null;
+        $fullname             = $input['fullname'] ?? null;
+        $email                = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
+        $website              = $input['website'] ?? null;
+        $state                = $input['state'] ?? null;
+        $city                 = $input['city'] ?? null;
+        $disable              = $input['disable'] ?? null;
+        $catalog_filter_group = $input['group'] ?? null;
+        $maxbitrate           = (int)($input['maxBitRate'] ?? 0);
 
         // identify the user to modify
         $user    = User::get_from_username($username);
@@ -116,7 +118,10 @@ final class UserUpdateMethod
             } elseif ($disable === '0') {
                 $userStateToggler->enable($user);
             }
-            if ((int) $maxbitrate > 0) {
+            if ($catalog_filter_group !== null) {
+                $user->update_catalog_filter_group((int)$catalog_filter_group);
+            }
+            if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
             Api::message('successfully updated: ' . $username, $input['api_format']);

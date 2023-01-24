@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,7 @@ $tag_types = array(
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
+    'tag_hidden' => T_('Hidden'),
 );
 
 /** @var UiInterface $ui */
@@ -43,9 +44,8 @@ $tag_types = array(
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
-?>
-<?php $ui->show(
-        'show_genre_browse_form.inc.php',
+$ui->show(
+        'show_form_genre.inc.php',
     [
         'type' => $browse_type
     ]
@@ -70,25 +70,22 @@ $ui = $dic->get(UiInterface::class);
                 </li>
             </ul>
         </div>
-    <?php
-            } ?>
+    <?php } ?>
     </div>
-<?php
-        } ?>
+<?php } ?>
 
 <br /><br /><br />
 <?php
 if (isset($_GET['show_tag'])) {
-            $show_tag = (int) (Core::get_get('show_tag')); ?>
+    $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
     <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>
 });
 </script>
 <?php
-        } ?>
+} ?>
 <?php if (!count($object_ids)) { ?>
 <span class="fatalerror"><?php echo T_('Not Enough Data'); ?></span>
-<?php
-        } ?>
+<?php } ?>
 <?php Ajax::end_container(); ?>

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,10 +57,12 @@ final class PlayFavoriteAction extends AbstractStreamAction
             return null;
         }
 
+        $mediaIds  = [];
         $inputType = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $data      = Core::get_global('user')->get_favorites($inputType);
-        $mediaIds  = [];
+        /** @var \Ampache\Repository\Model\User $user */
+        $user = Core::get_global('user');
+        $data = $user->get_favorites($inputType) ?? array();
 
         switch ($inputType) {
             case 'artist':

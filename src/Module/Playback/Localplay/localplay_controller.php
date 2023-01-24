@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,7 +68,7 @@ abstract class localplay_controller
     /**
      * @return array
      */
-    abstract public function status();
+    abstract public function status(): array;
 
     // For display we need the following 'instance' functions
 
@@ -93,7 +93,7 @@ abstract class localplay_controller
 
     abstract public function get_instances();
 
-    abstract public function instance_fields();
+    abstract public function instance_fields(): array;
 
     /**
      * @param $uid
@@ -149,7 +149,7 @@ abstract class localplay_controller
 
         //beautiful urls need their own parsing as parse_url will find nothing.
         if (AmpConfig::get('stream_beautiful_url')) {
-            preg_match('/oid\/(.*?)\//', $url, $match);
+            preg_match('/oid[\=|\/](.*?)[\&|\/]/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'oid',

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,14 +90,12 @@ final class GetArtMethod
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
             }
-        } elseif ($type == 'playlist') {
-            if (!Art::has_db($object_id, $type)) {
-                $playlist  = new Playlist($object_id);
-                $listitems = $playlist->get_items();
-                $item      = $listitems[array_rand($listitems)];
-                $song      = new Song($item['object_id']);
-                $art       = new Art($song->album, 'album');
-            }
+        } elseif ($type == 'playlist' && !Art::has_db($object_id, $type)) {
+            $playlist  = new Playlist($object_id);
+            $listitems = $playlist->get_items();
+            $item      = $listitems[array_rand($listitems)];
+            $song      = new Song($item['object_id']);
+            $art       = new Art($song->album, 'album');
         }
 
         if ($art->has_db_info($fallback)) {

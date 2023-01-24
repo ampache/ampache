@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,12 +85,11 @@ final class AlbumMethod implements MethodInterface
             );
         }
 
+        $user  = $gatekeeper->getUser();
         $album = $this->modelFactory->createAlbum((int) $objectId);
-
-        if ($album->isNew()) {
+        if ($album->isNew() || !$user) {
             throw new ResultEmptyException((string) $objectId);
         }
-
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
@@ -99,7 +98,7 @@ final class AlbumMethod implements MethodInterface
         $result = $output->albums(
             [$album->getId()],
             $include,
-            $gatekeeper->getUser()->getId(),
+            $user,
             true,
             false
         );

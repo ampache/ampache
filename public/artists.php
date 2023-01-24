@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,6 +30,7 @@ use Ampache\Module\Application\Artist\ShowAction;
 use Ampache\Module\Application\Artist\ShowAllSongsAction;
 use Ampache\Module\Application\Artist\ShowMissingAction;
 use Ampache\Module\Application\Artist\ShowSongsAction;
+use Ampache\Module\Application\Artist\UpdateFromMusicBrainzAction;
 use Ampache\Module\Application\Artist\UpdateFromTagsAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -45,6 +46,7 @@ $dic->get(ApplicationRunner::class)->run(
         ShowAction::REQUEST_KEY => ShowAction::class,
         ShowAllSongsAction::REQUEST_KEY => ShowAllSongsAction::class,
         ShowSongsAction::REQUEST_KEY => ShowSongsAction::class,
+        UpdateFromMusicBrainzAction::REQUEST_KEY => UpdateFromMusicBrainzAction::class,
         UpdateFromTagsAction::REQUEST_KEY => UpdateFromTagsAction::class,
         ShowMissingAction::REQUEST_KEY => ShowMissingAction::class,
     ],

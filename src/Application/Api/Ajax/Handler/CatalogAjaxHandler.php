@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,8 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
+        $results = array();
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'flip_state':
@@ -44,21 +46,19 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
-                $new_enabled = $catalog->enabled ? '0' : '1';
+                $new_enabled = !$catalog->enabled;
                 Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = (int) $new_enabled;
-                $catalog->format();
+                $catalog->enabled = (int)$new_enabled;
 
                 // Return the new Ajax::button
                 $id  = 'button_flip_state_' . $catalog->id;
-                if ($catalog->enabled) {
+                if ($new_enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');
                 } else {
                     $button     = 'enable';
                     $buttontext = T_('Enable');
                 }
-                $results      = array();
                 $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
 
                 break;

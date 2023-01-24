@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use Ampache\Module\Util\Ui;
 /** @var TvShow $libitem */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -67,11 +66,9 @@ use Ampache\Module\Util\Ui;
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_tvshow_season">
                     <?php echo Userflag::show($libitem->id, 'tvshow_season'); ?>
                 </span>
-            <?php
-            } ?>
+            <?php } ?>
         </td>
-    <?php
-    } ?>
+    <?php } ?>
 <td class="cel_action">
 <?php
     if (Access::check('interface', 50)) { ?>
@@ -84,6 +81,5 @@ use Ampache\Module\Util\Ui;
     <a id="<?php echo 'delete_tvshow_season_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
-    <?php
-    } ?>
+    <?php } ?>
 </td>

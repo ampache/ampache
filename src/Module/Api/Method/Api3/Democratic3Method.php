@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -87,7 +87,7 @@ final class Democratic3Method
                 echo Xml3_Data::democratic($objects, $user);
                 break;
             case 'play':
-                $url       = $democratic->play_url();
+                $url       = $democratic->play_url($user);
                 $xml_array = array('url' => $url);
                 echo Xml3_Data::keyed_array($xml_array);
                 break;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,7 +86,7 @@ $cel_counter = "cel_counter"; ?>
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->songs <= $directplay_limit);
+                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
                 if ($show_direct_play) {
                     $show_direct_play = $show_playlist_add;
                 }
@@ -96,21 +96,19 @@ $cel_counter = "cel_counter"; ?>
         </tr>
         <?php
         } ?>
-        <?php
+        <?php $web_path = AmpConfig::get('web_path');
         /* Foreach through every missing artist that has been passed to us */
         foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
             <td></td>
-            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
+            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo $web_path; ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
         <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No similar artist found'); ?></span></td>
         </tr>
-        <?php
-        } ?>
+        <?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

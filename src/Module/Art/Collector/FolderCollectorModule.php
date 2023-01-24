@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,16 +85,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $artist_filename    = $this->configContainer->get('artist_art_preferred_filename');
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
-        // Array of valid extensions
-        $image_extensions = [
-            'bmp',
-            'gif',
-            'jp2',
-            'jpeg',
-            'jpg',
-            'png'
-        ];
-
         $dirs = array();
         if ($art->type == 'album') {
             $media = new Album($art->uid);
@@ -154,7 +144,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $extension = $extension['extension'] ?? '';
 
                 // Make sure it looks like an image file
-                if (!in_array($extension, $image_extensions)) {
+                if (!in_array($extension, Art::VALID_TYPES)) {
                     continue;
                 }
 

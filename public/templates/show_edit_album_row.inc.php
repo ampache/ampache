@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
  */
 
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -49,6 +50,12 @@ use Ampache\Module\Api\Ajax;
                         } ?>
                 </td>
             </tr>
+            <?php if (count($libitem->album_artists) > 1) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Additional Artists') ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+            </tr>
+            <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
@@ -88,6 +95,10 @@ use Ampache\Module\Api\Ajax;
                 <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Comment') ?></td>
+                <td><input type="text" name="subtitle" value="<?php echo $libitem->subtitle; ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
                 <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
             </tr>
@@ -101,7 +112,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('album', $libitem->id, 20)); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

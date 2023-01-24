@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
 
 namespace Ampache\Module\Song\Deletion;
 
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -28,9 +29,12 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class SongDeleter implements SongDeleterInterface
 {
+    private LoggerInterface $logger;
+
     private ShoutRepositoryInterface $shoutRepository;
 
     private SongRepositoryInterface $songRepository;
@@ -38,10 +42,12 @@ final class SongDeleter implements SongDeleterInterface
     private UserActivityRepositoryInterface $useractivityRepository;
 
     public function __construct(
+        LoggerInterface $logger,
         ShoutRepositoryInterface $shoutRepository,
         SongRepositoryInterface $songRepository,
         UserActivityRepositoryInterface $useractivityRepository
     ) {
+        $this->logger                 = $logger;
         $this->shoutRepository        = $shoutRepository;
         $this->songRepository         = $songRepository;
         $this->useractivityRepository = $useractivityRepository;
@@ -63,9 +69,13 @@ final class SongDeleter implements SongDeleterInterface
                 Rating::garbage_collection('song', $songId);
                 $this->shoutRepository->collectGarbage('song', $songId);
                 $this->useractivityRepository->collectGarbage('song', $songId);
+                $this->songRepository->collectGarbage($song);
             }
         } else {
-            debug_event(__CLASS__, 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);
+            $this->logger->critical(
+                'Cannot delete ' . $song->file . 'file. Please check permissions.',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
         }
 
         return $deleted;

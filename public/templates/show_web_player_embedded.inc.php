@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,14 +28,13 @@ function PlayerFrame()
 {
     var appendmedia = false;
     var playnext = false;
-    var $webplayer = $("#webplayer");
-    if ($webplayer.is(':visible')) {
+    var webplayer = $("#webplayer");
+    if (webplayer.is(':visible')) {
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
-<?php
-} ?>
-        $webplayer.show();
+<?php } ?>
+        webplayer.show();
         $("#webplayer-minimize").show();
     }
     return false;

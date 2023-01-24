@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,14 +57,14 @@ final class FindArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
             throw new AccessDeniedException();
         }
 
-        $object_id = $item->id;
+        $object_id = $item->getId();
 
         $burl = '';
         if (isset($_GET['burl'])) {
@@ -102,11 +102,6 @@ final class FindArtAction extends AbstractArtAction
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
         }
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
-
         $this->ui->showHeader();
 
         // If we've got an upload ignore the rest and just insert it
@@ -126,7 +121,7 @@ final class FindArtAction extends AbstractArtAction
                     );
                 } else {
                     $this->ui->showContinue(
-                        T_("There Was a Problem"),
+                        T_('There Was a Problem'),
                         T_('Art file failed to insert, check the dimensions are correct.'),
                         $burl
                     );

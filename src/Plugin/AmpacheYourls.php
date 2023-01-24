@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class AmpacheYourls
 {
@@ -62,7 +62,6 @@ class AmpacheYourls
      */
     public function install()
     {
-
         // Check and see if it's already installed (they've just hit refresh, those dorks)
         if (Preference::exists('yourls_domain')) {
             return false;

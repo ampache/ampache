@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 
 interface SongRepositoryInterface
 {
@@ -32,6 +33,13 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
+
+    /**
+     * gets the songs for an album for a single disk takes an optional limit
+     *
+     * @return int[]
+     */
+    public function getByAlbumDisk(int $albumDiskId, int $limit = 0): array;
 
     /**
      * gets the songs for a label, based on label name
@@ -87,4 +95,6 @@ interface SongRepositoryInterface
     public function getByLicense(int $licenseId): array;
 
     public function delete(int $songId): bool;
+
+    public function collectGarbage(Song $song): void;
 }

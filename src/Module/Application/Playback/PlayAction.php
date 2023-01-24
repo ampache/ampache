@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,11 +40,8 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
@@ -53,7 +50,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -68,21 +64,17 @@ final class PlayAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
-    private SongRepositoryInterface $songRepository;
-
     private UserRepositoryInterface $userRepository;
 
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
-        SongRepositoryInterface $songRepository,
         UserRepositoryInterface $userRepository
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
-        $this->songRepository        = $songRepository;
         $this->userRepository        = $userRepository;
     }
 
@@ -129,15 +121,15 @@ final class PlayAction implements ApplicationActionInterface
         $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
         $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $uid          = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+        $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
         $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
         $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
         $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
-        $original     = $format == 'raw';
-        $transcode_to = (!$original && $format != '') ? $format : null;
+        $original     = ($format == 'raw');
+        $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
         $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
         $record_stats = true;
         $use_auth     = AmpConfig::get('use_auth');
@@ -155,7 +147,7 @@ final class PlayAction implements ApplicationActionInterface
             $type = 'song';
         }
         // random play url can be multiple types but default to song if missing
-        if (empty($type) && $random !== '') {
+        if ($random !== '') {
             $type = 'song';
         }
         // if you don't specify, assume stream
@@ -163,12 +155,12 @@ final class PlayAction implements ApplicationActionInterface
             $action = 'stream';
         }
         // allow disabling stat recording from the play url
-        if (($action === 'download' || $cache === '1') || !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
             $action       = 'download';
             $record_stats = false;
         }
-
+        $is_download   = ($action == 'download' || $cache == '1');
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $resolution    = '';
@@ -200,7 +192,7 @@ final class PlayAction implements ApplicationActionInterface
         }
         $subtitle         = '';
         $send_full_stream = (string)AmpConfig::get('send_full_stream');
-        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream === $player);
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
 
         if (!$type) {
             $type = 'song';
@@ -214,103 +206,117 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // First things first, if we don't have a uid/oid stop here
-        // Added $session_id here as user may not be specified but then ssid may be and will be checked later
-        if (empty($uid) && empty($session_id) && (!$share_id && !$secret && !$random)) {
-            debug_event('play/index', 'No object UID specified, nothing to play', 2);
+        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+            debug_event('play/index', 'No object OID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 
             return null;
         }
 
         // Authenticate the user if specified
-        $username = Core::get_server('PHP_AUTH_USER');
+        $username = $_REQUEST['PHP_AUTH_USER'] ?? '';
         if (empty($username)) {
-            $username = filter_input(INPUT_GET, 'u', FILTER_SANITIZE_SPECIAL_CHARS);
+            $username = $_REQUEST['u'] ?? '';
         }
-        $password = Core::get_server('PHP_AUTH_PW');
+        $password = $_REQUEST['PHP_AUTH_PW'] ?? '';
         if (empty($password)) {
-            $password = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS);
+            $password = $_REQUEST['p'] ?? '';
         }
-        $apikey = filter_input(INPUT_GET, 'apikey', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        $user = null;
+        $apikey    = $_REQUEST['apikey'] ?? '';
+        $user      = null;
+        $user_auth = false;
         // If explicit user authentication was passed
-        $user_authenticated = false;
-        if (!empty($apikey)) {
+        if (!empty($session_id)) {
+            $user = $this->userRepository->findByStreamToken(trim($session_id));
+            if ($user) {
+                $user_auth = true;
+                $agent     = (!empty($client))
+                    ? $client
+                    : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
+                // this is a permastream link so create a session
+                if (!Session::exists('stream', $session_id)) {
+                    Session::create(array(
+                            'sid' => $session_id,
+                            'username' => $user->username,
+                            'value' => '',
+                            'type' => 'stream',
+                            'agent' => ''
+                        )
+                    );
+                } else {
+                    Session::update_agent($session_id, $agent);
+                    Session::extend($session_id, 'stream');
+                }
+            }
+        } elseif (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
-            if ($user != null) {
-                $GLOBALS['user'] = $user;
-                $uid             = $user->id;
-                Preference::init();
-                $user_authenticated = true;
+            if ($user) {
+                $user_auth = true;
             }
         } elseif (!empty($username) && !empty($password)) {
             $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
-                $user            = User::get_from_username($auth['username']);
-                $GLOBALS['user'] = $user;
-                $uid             = $user->id;
-                Preference::init();
-                $user_authenticated = true;
+                $user      = User::get_from_username($auth['username']);
+                $user_auth = true;
             }
         }
-
-        if (empty($uid) && (!$share_id && !$secret)) {
-            debug_event('play/index', 'No user specified', 2);
-            header('HTTP/1.1 400 No User Specified');
-
-            return null;
+        // try the session ID as well
+        if ($user == null) {
+            $user = User::get_from_username(Session::username($session_id));
         }
 
         $session_name = AmpConfig::get('session_name');
         // Identify the user according to it's web session
         // We try to avoid the generic 'Ampache User' as much as possible
-        if (array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
+        if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists('interface', $_COOKIE[$session_name])) {
             Session::check();
-            $user = (array_key_exists('username', $_SESSION['userdata']))
+            $user = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
                 : new User(-1);
-            $uid  = $user->id;
         }
+
+        // did you pass a specific user id? (uid)
+        $user_id = ($user instanceof User)
+            ? $user->id
+            : $user_id;
 
         if (!$share_id) {
             // No explicit authentication, use session
-            if (!$user_authenticated) {
-                $user = $GLOBALS['user'] = new User($uid);
-                Preference::init();
-
-                /* If the user has been disabled (true value) */
-                if (make_bool($user->disabled)) {
-                    debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
-                    header('HTTP/1.1 403 User disabled');
-
-                    return null;
-                }
-
-                // If require_session is set then we need to make sure we're legit
-                if ($use_auth && AmpConfig::get('require_session')) {
-                    if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
-                        debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
-                    } elseif (!Session::exists('stream', $session_id)) {
-                        // No valid session id given, try with cookie session from web interface
-                        $session_id = $_COOKIE[$session_name];
-                        if (!Session::exists('interface', $session_id)) {
-                            debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
-                            header('HTTP/1.1 403 Session Expired');
-
-                            return null;
-                        }
-                    }
-                    // Now that we've confirmed the session is valid extend it
-                    Session::extend($session_id, 'stream');
-                }
+            if (!$user instanceof User) {
+                $user = new User($user_id);
             }
 
-            /* Update the users last seen information */
+            // If the user has been disabled (true value)
+            if (make_bool($user->disabled)) {
+                debug_event('play/index', $user->username . " is currently disabled, stream access denied", 3);
+                header('HTTP/1.1 403 User disabled');
+
+                return null;
+            }
+
+            // If require_session is set then we need to make sure we're legit
+            if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
+                    debug_event('play/index', 'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 4);
+                } elseif (!Session::exists('stream', $session_id)) {
+                    // No valid session id given, try with cookie session from web interface
+                    $session_id = $_COOKIE[$session_name] ?? false;
+                    if (!Session::exists('interface', $session_id)) {
+                        debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
+                        header('HTTP/1.1 403 Session Expired');
+
+                        return null;
+                    }
+                }
+                // Now that we've confirmed the session is valid extend it
+                Session::extend($session_id, 'stream');
+            }
+
+            // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
-            $uid   = 0;
-            $share = new Share((int) $share_id);
+            $user_id = 0;
+            $share   = new Share((int) $share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
@@ -318,17 +324,25 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            if (!$this->is_shared_media($share, $object_id)) {
+            if (!$share->is_shared_media($object_id)) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;
             }
 
-            $user = $GLOBALS['user'] = new User($share->user);
-            Preference::init();
+            $user = new User($share->user);
         }
 
-        // If we are in demo mode.. die here
+        if (!($user instanceof User) && (!$share_id && !$secret)) {
+            debug_event('play/index', 'No user specified {' . print_r($user, true) . '}', 2);
+            header('HTTP/1.1 400 No User Specified');
+
+            return null;
+        }
+        Session::createGlobalUser($user);
+        Preference::init();
+
+        // If we are in demo mode; die here
         if (AmpConfig::get('demo_mode')) {
             throw new AccessDeniedException(
                 'Streaming Access Denied: Disable demo_mode in \'config/ampache.cfg.php\''
@@ -358,17 +372,17 @@ final class PlayAction implements ApplicationActionInterface
         if ($type == 'playlist' && isset($playlist_type)) {
             $playlist = new Stream_Playlist($object_id);
             // Some rudimentary security
-            if ($uid != $playlist->user) {
+            if ($user_id != $playlist->user) {
                 throw new AccessDeniedException();
             }
 
-            return $playlist->generate_playlist($playlist_type);
+            $playlist->generate_playlist($playlist_type);
+
+            return null;
         }
 
         /**
-         * If we've got a tmp playlist then get the
-         * current song, and do any other crazyness
-         * we need to
+         * If we've got a Democratic playlist then get the current song and redirect to that media files URL
          */
         if ($demo_id !== '') {
             $democratic = new Democratic($demo_id);
@@ -376,7 +390,7 @@ final class PlayAction implements ApplicationActionInterface
 
             // If there is a cooldown we need to make sure this song isn't a repeat
             if (!$democratic->cooldown) {
-                /* This takes into account votes etc and removes the */
+                // This takes into account votes, etc and removes the
                 $object_id = $democratic->get_next_object();
             } else {
                 // Pull history
@@ -391,25 +405,68 @@ final class PlayAction implements ApplicationActionInterface
                     }
                 } // while we've got the 'new' song in old the array
             } // end if we've got a cooldown
+            $media = new Song($object_id);
+            if ($media->id > 0) {
+                // Always remove the play from the list
+                $democratic->delete_from_oid($object_id, $type);
+
+                // If the media is disabled
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                    debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                    header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+
+                return null;
+            }
+            debug_event('play/index', "Error: DEMOCRATIC song could not be found", 3);
+            header('HTTP/1.1 404 File not found');
+
+            return null;
         } // if democratic ID passed
 
         /**
-         * if we are doing random let's pull the random object
+         * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random !== '') {
-            if ((int) Core::get_request('start') < 1) {
+            if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
+                // continue the current object
+                $object_id = $_SESSION['random']['last'];
+            } else {
+                // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
                     $rtype = $_REQUEST['random_type'];
                 } else {
                     $rtype = $type;
                 }
-                $object_id = Random::get_single_song($rtype, $user, $object_id);
-                if ($object_id) {
+                $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
+                if ($object_id > 0) {
                     // Save this one in case we do a seek
                     $_SESSION['random']['last'] = $object_id;
                 }
-            } else {
-                $object_id = $_SESSION['random']['last'];
+                $media = new Song($object_id);
+                if ($media->id > 0) {
+                    // If the media is disabled
+                    if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                        debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
+                        header('HTTP/1.1 404 File disabled');
+
+                        return null;
+                    }
+
+                    // play the song instead of going through all the crap
+                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+
+                    return null;
+                }
+                debug_event('play/index', "Error: RANDOM song could not be found", 3);
+                header('HTTP/1.1 404 File not found');
+
+                return null;
             }
         } // if random
 
@@ -442,19 +499,9 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
-        $mediaCatalogId = $media->catalog ?? null;
+        $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
         if ($mediaCatalogId) {
-            /* If the media is disabled */
-            if (isset($media->enabled) && !make_bool($media->enabled)) {
-                debug_event('play/index', "Error: " . $media->file . " is currently disabled, song skipped", 3);
-                // Check to see if this is a democratic playlist, if so remove it completely
-                if ($demo_id !== '' && isset($democratic)) {
-                    $democratic->delete_from_oid($object_id, $type);
-                }
-                header('HTTP/1.1 404 File disabled');
-
-                return null;
-            }
+            /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             if (!Catalog::has_access($mediaCatalogId, $user->id)) {
                 debug_event('play/index', "Error: You are not allowed to play $media->file", 3);
@@ -468,7 +515,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if (!empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
+            if (!$is_download && !empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
                 debug_event('play/index', 'Found pre-cached file {' . $file_target . '}', 5);
                 $cache_file   = true;
                 $original     = true;
@@ -483,37 +530,19 @@ final class PlayAction implements ApplicationActionInterface
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
-            if ($type == "song_preview") {
+            if ($type == "song_preview" && $media instanceof Song_Preview) {
                 $media->stream();
             } else {
-                header('Location: ' . $media->file);
+                header('Location: ' . $media->file, true, 303);
 
                 return null;
             }
-        }
-        if ($media == null) {
-            // Handle democratic removal
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
-            }
-
-            return null;
         }
         // load the cache file or the local file
         $stream_file = ($cache_file && $file_target) ? $file_target : $media->file;
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
-            // We need to make sure this isn't democratic play, if it is then remove the media from the vote list
-            if (!empty($tmp_playlist)) {
-                $tmp_playlist->delete_track($object_id);
-            }
-            // FIXME: why are these separate?
-            // Remove the media votes if this is a democratic song
-            if ($demo_id !== '' && isset($democratic)) {
-                $democratic->delete_from_oid($object_id, $type);
-            }
-
             debug_event('play/index', "Media " . $stream_file . " ($media->title) does not have a valid filename specified", 2);
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
 
@@ -524,29 +553,21 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name = $stream_name ?? $media->get_stream_name() . "." . $media->type;
+        $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
+        $transcode_to = ($is_download && !$transcode_to)
+            ? false
+            : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
 
-        $sessionkey = $session_id ?: Stream::get_session();
+        $sessionkey = $session_id ?? Stream::get_session();
         $agent      = (!empty($client))
             ? $client
             : Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);
 
         // If they are just trying to download make sure they have rights and then present them with the download file
-        if ($action == 'download' && !$original) {
-            if ($transcode_to) {
-                debug_event('play/index', 'Downloading transcoded file... ' . $transcode_to, 5);
-            }
-            if (!$share_id) {
-                if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
-                    debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
-                }
-            }
-            $record_stats = false;
-        } elseif ($action == 'download' && AmpConfig::get('download')) {
+        if ($is_download && !$transcode_to) {
             debug_event('play/index', 'Downloading raw file...', 4);
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
@@ -566,12 +587,12 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             if (!$share_id) {
-                if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
+                if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                    Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 }
             } else {
-                Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download', $time);
+                Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
             }
 
             // Check to see if we should be throttling because we can get away with it
@@ -602,7 +623,7 @@ final class PlayAction implements ApplicationActionInterface
         $force_downsample = false;
         if (AmpConfig::get('downsample_remote')) {
             if (!$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT)) {
-                debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
+                debug_event('play/index', 'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
                 $force_downsample = true;
             }
         }
@@ -615,7 +636,7 @@ final class PlayAction implements ApplicationActionInterface
             debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
         }
         // Determine whether to transcode
-        $transcode = false;
+        $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
@@ -640,6 +661,7 @@ final class PlayAction implements ApplicationActionInterface
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
+                    /** @var Song|Video $media */
                     $media_bitrate = floor($media->bitrate / 1000);
                     //debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
                     if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
@@ -698,7 +720,7 @@ final class PlayAction implements ApplicationActionInterface
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
-            if ($cpaction) {
+            if ($cpaction && $media instanceof Song) {
                 $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
                 $filepointer = $transcoder['handle'] ?? null;
                 $transcode   = true;
@@ -711,7 +733,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_to = Song::get_transcode_settings_for_media(
+            $transcode_to = Stream::get_transcode_settings_for_media(
                 (string) $media->type,
                 $transcode_to,
                 $player,
@@ -787,21 +809,21 @@ final class PlayAction implements ApplicationActionInterface
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
                 if (($action != 'download') && $record_stats) {
-                    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                    Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                        debug_event('play/index', 'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($uid, $agent, $location, $time) && $user->id && get_class($media) === Song::class) {
+                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }
                     }
                 } elseif (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
-                        Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
+                        debug_event('play/index', 'Registering download for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
+                        Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                     }
                 } elseif ($share_id) {
                     // shares are people too
@@ -832,12 +854,6 @@ final class PlayAction implements ApplicationActionInterface
                 }
                 fclose($transcoder['stderr']);
             }
-        }
-
-        // If this is a democratic playlist remove the entry.
-        // We do this regardless of play amount.
-        if ($demo_id && isset($democratic)) {
-            $democratic->delete_from_oid($object_id, $type);
         }
 
         // Close sql connection
@@ -903,40 +919,5 @@ final class PlayAction implements ApplicationActionInterface
         debug_event('play/index', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);
 
         return null;
-    }
-
-    private function is_shared_media(Share $share, $media_id): bool
-    {
-        $is_shared = false;
-        switch ($share->object_type) {
-            case 'album':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
-                $songs      = $this->songRepository->getByAlbum((int) $object->id);
-
-                foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
-                        break;
-                    }
-                }
-                break;
-            case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
-                $object     = new $class_name($share->object_id);
-                $songs      = $object->get_songs();
-                foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $is_shared = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
-                break;
-        }
-
-        return $is_shared;
     }
 }

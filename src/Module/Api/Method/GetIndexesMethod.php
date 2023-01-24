@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,7 +66,8 @@ final class GetIndexesMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
+        $album_artist = ((string)$input['type'] == 'album_artist');
+        $type         = ($album_artist) ? 'artist' : (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -98,17 +99,17 @@ final class GetIndexesMethod
         }
         $browse = Api::getBrowse();
         $browse->reset_filters();
-        $browse->set_type($type);
+        if ($album_artist) {
+            $browse->set_type('album_artist');
+        } else {
+            $browse->set_type($type);
+        }
         $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
-        // set the album_artist filter (if enabled)
-        if ((string) $input['type'] == 'album_artist') {
-            Api::set_filter('album_artist', true, $browse);
-        }
 
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);
@@ -131,12 +132,12 @@ final class GetIndexesMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::indexes($objects, $type, $user->id, $include);
+                echo Json_Data::indexes($objects, $type, $user, $include);
                 break;
             default:
-                XML_Data::set_offset($input['offset'] ?? 0);
-                XML_Data::set_limit($input['limit'] ?? 0);
-                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::indexes($objects, $type, $user, true, $include);
         }
 
         return true;

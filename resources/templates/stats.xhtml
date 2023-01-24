@@ -22,7 +22,12 @@
     <tr tal:define="CATALOG_STATS STATS/getCatalogStats">
         <td tal:content="CATALOG_STATS/getConnectedCount">CONNECTED COUNT</td>
         <td tal:content="CATALOG_STATS/getUserCount">USER COUNT</td>
-        <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
+        <tal:block tal:condition="STATS/displayAlbumDisk">
+            <td tal:content="CATALOG_STATS/getAlbumDiskCount">ALBUM COUNT</td>
+        </tal:block>
+        <tal:block tal:condition="STATS/displayAlbum">
+            <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
+        </tal:block>
         <td tal:content="CATALOG_STATS/getArtistCount">ARTIST COUNT</td>
         <td tal:content="CATALOG_STATS/getSongCount">SONG COUNT</td>
         <td tal:condition="STATS/displayVideo" tal:content="CATALOG_STATS/getVideoCount">VIDEO COUNT</td>
@@ -41,7 +46,6 @@
     <colgroup>
         <col id="col_catalog" />
         <col id="col_path" />
-        <col id="cel_filter" />
         <col id="col_lastverify" />
         <col id="col_lastadd" />
         <col id="col_lastclean" />
@@ -52,7 +56,6 @@
     <tr class="th-top">
         <th class="cel_catalog" i18n:translate="">Name</th>
         <th class="cel_path" i18n:translate="">Path</th>
-        <th class="cel_filter" i18n:translate="">Catalog User</th>
         <th class="cel_lastverify" i18n:translate="">Last Verify</th>
         <th class="cel_lastadd" i18n:translate="">Last Add</th>
         <th class="cel_lastclean" i18n:translate="">Last Clean</th>
@@ -64,7 +67,6 @@
     <tr tal:repeat="CATALOG STATS/getCatalogDetails">
         <td class="cel_catalog" tal:content="CATALOG/getName">CATALOG NAME</td>
         <td class="cel_path" tal:content="structure CATALOG/getFullInfo">FULL INFO</td>
-        <td class="cel_filter" tal:content="structure CATALOG/getFilterUser">FULL INFO</td>
         <td class="cel_lastverify" tal:content="structure CATALOG/getLastUpdateDate">LAST UPDATE DATE</td>
         <td class="cel_lastadd" tal:content="structure CATALOG/getLastAddDate">LAST ADD DATE</td>
         <td class="cel_lastclean" tal:content="structure CATALOG/getLastCleanDate">LAST CLEAN DATE</td>

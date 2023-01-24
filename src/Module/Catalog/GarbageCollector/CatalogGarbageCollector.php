@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ namespace Ampache\Module\Catalog\GarbageCollector;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
@@ -74,11 +73,11 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
     public function collect(): void
     {
         Song::garbage_collection();
+        Artist::garbage_collection();
         $this->albumRepository->collectGarbage();
         Video::garbage_collection();
         Podcast_Episode::garbage_collection();
         Wanted::garbage_collection();
-        Artist::garbage_collection();
         Art::garbage_collection();
         Stats::garbage_collection();
         Rating::garbage_collection();
@@ -95,7 +94,5 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
-
-        Catalog::garbage_collect_mapping();
     }
 }

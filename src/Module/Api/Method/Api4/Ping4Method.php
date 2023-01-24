@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
@@ -55,8 +54,7 @@ final class Ping4Method
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);
         $user         = User::get_from_username(Session::username($input['auth']));
-
-        $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api4::$version, 'compatible' => '350001');
+        $xmldata      = array('server' => AmpConfig::get('version'), 'version' => Api4::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
@@ -64,6 +62,7 @@ final class Ping4Method
             if (in_array($data_version, array(3, 4, 5))) {
                 Session::write($input['auth'], $data_version);
             }
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
             // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
             $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
             $db_results = Dba::read($sql);
@@ -90,10 +89,10 @@ final class Ping4Method
                 'licenses' => (int) $counts['license'],
                 'live_streams' => (int) $counts['live_stream'],
                 'labels' => (int) $counts['label']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, $countarray);
+            $xmldata = array_merge($xmldata, $countarray);
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

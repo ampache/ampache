@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,17 @@ use Ampache\Module\Util\Ui;
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
     $libitem->display_art($thumb); ?>
 </td>
-<td class="cel_streamname"><?php echo $libitem->f_link; ?></td>
+<td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
+<td class="cel_add">
+    <span class="cel_item_add">
+        <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
+        if (Access::check('interface', 25)) { ?>
+            <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream' ?>', '<?php echo $libitem->id ?>')">
+                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')) ?>
+            </a>
+        <?php } ?>
+    </span>
+</td>
 <td class="cel_siteurl"><?php echo $libitem->f_site_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">

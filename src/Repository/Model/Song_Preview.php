@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,7 +90,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -241,8 +241,8 @@ class Song_Preview extends database_object implements Media, playable_item
         // Format the title
         $this->f_name_full  = $this->title;
         $this->f_name       = $this->title;
-        $this->f_link       = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
         $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
+        $this->get_f_link();
 
         // Format the track (there isn't really anything to do here)
         $this->f_track = $this->track;
@@ -278,6 +278,20 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link       = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->f_artist) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->f_name) . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -295,12 +309,13 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -345,7 +360,9 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function play_url($additional_params = '', $player = '', $local = false)
     {
-        $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        $user_id = (!empty(Core::get_global('user')))
+            ? scrub_out(Core::get_global('user')->id)
+            : '-1';
         $type      = $this->type;
         $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
@@ -370,9 +387,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
     /**
      * get_stream_types
-     *
      * @param $player
-     * @return string[]
+     * @return array
      */
     public function get_stream_types($player = null)
     {
@@ -402,16 +418,16 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // Do nothing
-        unset($user, $agent, $location, $date);
+        unset($user_id, $agent, $location, $date);
 
         return false;
     }
@@ -460,5 +476,6 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function remove()
     {
+        return true;
     }
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,13 +25,16 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var string $data */
+/** @var  Ampache\Repository\Model\library_item $object */
+/** @var string $object_type */
 ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
-    if ($data) {
+    if (!empty($data)) {
         $boxtitle .= ' (' . $data . ')';
     }
     Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
@@ -47,8 +50,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
-<?php
-    } ?>
+<?php } ?>
 <tr>
     <td>
         <?php echo Core::form_register('add_shout'); ?>
@@ -61,8 +63,7 @@ $boxtitle = T_('Post to Shoutbox');
 </form>
 <?php Ui::show_box_bottom(); ?>
 </div>
-<?php
-} ?>
+<?php } ?>
 <div style="display: inline;">
 <?php
 $boxtitle = $object->get_fullname() . ' ' . T_('Shoutbox');

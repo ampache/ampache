@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $this->charset_directory_correct($interactor, $catalog->path, $force);
         }
 
-        $interactor->ok(T_('Finished checking file names for valid characters'), true);
+        $interactor->ok(
+            T_('Finished checking file names for valid characters'),
+            true
+        );
     }
 
     /**
@@ -159,7 +162,10 @@ final class FileNameConverter implements FileNameConverterInterface
                         $this->charset_rename_file($interactor, $full_file,$translated_filename);
                     } else {
                         $interactor->eol();
-                        $interactor->warn(T_('Not renaming...'), true);
+                        $interactor->warn(
+                            T_('Not renaming...'),
+                            true
+                        );
                     }
                 } else {
                     $this->charset_rename_file($interactor, $full_file,$translated_filename);
@@ -195,7 +201,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $path .= '/' . $dir;
 
             if (!is_dir($path)) {
-                $interactor->info(printf(T_('Making directory: %s'), $path), true);
+                $interactor->info(
+                    printf(T_('Making directory: %s'), $path),
+                    true
+                );
                 $results_mkdir = mkdir($path);
                 if (!$results_mkdir) {
                     /* HINT: filename (File path) */
@@ -233,9 +242,7 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $results = unlink($full_file);
-
-        if (!$results) {
+        if (!unlink($full_file)) {
             $interactor->error(
                 sprintf(T_('There was an error trying to delete "%s"'), $full_file),
                 true
@@ -244,7 +251,10 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $interactor->ok(T_('File moved...'), true);
+        $interactor->ok(
+            T_('File moved...'),
+            true
+        );
         $interactor->eol();
 
         return true;

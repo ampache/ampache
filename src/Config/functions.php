@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,17 +25,10 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -90,10 +83,10 @@ function scrub_in($input)
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
+ * (Not deprecated yet see Ui::scrubOut)
  * @param string|null $string
  * @return string
  *
- * @deprecated see Ui::scrubOut
  */
 function scrub_out($string)
 {
@@ -351,19 +344,22 @@ function is_rtl($locale)
  */
 function translate_pattern_code($code)
 {
-    $code_array = array('%A' => 'album',
-        '%a' => 'artist',
-        '%c' => 'comment',
-        '%C' => 'catalog_number',
-        '%T' => 'track',
-        '%d' => 'disk',
-        '%g' => 'genre',
-        '%t' => 'title',
-        '%y' => 'year',
-        '%Y' => 'original_year',
-        '%r' => 'release_type',
-        '%b' => 'barcode',
-        '%o' => 'zz_other');
+    $code_array = array(
+            '%A' => 'album',
+            '%a' => 'artist',
+            '%c' => 'comment',
+            '%C' => 'catalog_number',
+            '%T' => 'track',
+            '%d' => 'disk',
+            '%g' => 'genre',
+            '%t' => 'title',
+            '%y' => 'year',
+            '%Y' => 'original_year',
+            '%r' => 'release_type',
+            '%R' => 'release_status',
+            '%s' => 'subtitle',
+            '%b' => 'barcode',
+            '%o' => 'zz_other');
 
     if (isset($code_array[$code])) {
         return $code_array[$code];
@@ -450,7 +446,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
 
     // get your locale and set the date based on that, unless you have 'custom_datetime set'
     $locale = AmpConfig::get('lang', 'en_US');
-    $format = new IntlDateFormatter($locale, $date_type, $time_type, null, null, $pattern);
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, date_default_timezone_get(), null, $pattern);
 
     return $format->format($time);
 }
@@ -533,15 +529,6 @@ function check_config_writable()
     // file eixsts && is writable, or dir is writable
     return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php'))
         || (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
-}
-
-/**
- * @return boolean
- */
-function check_htaccess_channel_writable()
-{
-    return ((file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/channel/.htaccess') && is_writeable(__DIR__ . '/../../public/channel/')));
 }
 
 /**
@@ -658,7 +645,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
-    debug_event('log.lib', $log_line, $level, '', 'ampache');
+    debug_event('log.lib', $log_line, $level, 'ampache');
 }
 
 /**
@@ -675,7 +662,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  *
  * @deprecated Use LegacyLogger
  */
-function debug_event($type, $message, $level, $file = '', $username = '')
+function debug_event($type, $message, $level, $username = '')
 {
     if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;
@@ -736,7 +723,7 @@ function sse_worker($url)
  */
 function return_referer()
 {
-    $referer = $_SERVER['HTTP_REFERER'];
+    $referer = Core::get_server('HTTP_REFERER');
     if (substr($referer, -1) == '/') {
         $file = 'index.php';
     } else {
@@ -751,101 +738,6 @@ function return_referer()
 
     return $file;
 } // return_referer
-
-/**
- * get_location
- * This function gets the information about a person's current location.
- * This is used for A) sidebar highlighting & submenu showing and B) titlebar
- * information. It returns an array of information about what they are currently
- * doing.
- * Possible array elements
- * ['title']    Text name for the page
- * ['page']    actual page name
- * ['section']    name of the section we are in, admin, browse etc (submenu)
- */
-function get_location()
-{
-    $location = array();
-
-    if (strlen((string) $_SERVER['PHP_SELF'])) {
-        $source = $_SERVER['PHP_SELF'];
-    } else {
-        $source = $_SERVER['REQUEST_URI'];
-    }
-
-    /* Sanatize the $_SERVER['PHP_SELF'] variable */
-    $source           = str_replace(AmpConfig::get('raw_web_path'), "", $source);
-    $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/", "$1", $source);
-
-    switch ($location['page']) {
-        case 'index.php':
-            $location['title'] = T_('Home');
-            break;
-        case 'upload.php':
-            $location['title'] = T_('Upload');
-            break;
-        case 'localplay.php':
-            $location['title'] = T_('Localplay');
-            break;
-        case 'randomplay.php':
-            $location['title'] = T_('Random Play');
-            break;
-        case 'playlist.php':
-            $location['title'] = T_('Playlist');
-            break;
-        case 'search.php':
-            $location['title'] = T_('Search');
-            break;
-        case 'preferences.php':
-            $location['title'] = T_('Preferences');
-            break;
-        case 'admin/catalog.php':
-        case 'admin/index.php':
-            $location['title']   = T_('Admin-Catalog');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/users.php':
-            $location['title']   = T_('Admin-User Management');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/mail.php':
-            $location['title']   = T_('Admin-Mail Users');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/access.php':
-            $location['title']   = T_('Admin-Manage Access Lists');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/preferences.php':
-            $location['title']   = T_('Admin-Site Preferences');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/modules.php':
-            $location['title']   = T_('Admin-Manage Modules');
-            $location['section'] = 'admin';
-            break;
-        case 'browse.php':
-            $location['title']   = T_('Browse Music');
-            $location['section'] = 'browse';
-            break;
-        case 'albums.php':
-            $location['title']   = T_('Albums');
-            $location['section'] = 'browse';
-            break;
-        case 'artists.php':
-            $location['title']   = T_('Artists');
-            $location['section'] = 'browse';
-            break;
-        case 'stats.php':
-            $location['title'] = T_('Statistics');
-            break;
-        default:
-            $location['title'] = '';
-            break;
-    } // switch on raw page location
-
-    return $location;
-} // get_location
 
 /**
  * show_album_select
@@ -869,7 +761,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
-    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
+    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
     $params = array();
     if ($user !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
@@ -889,9 +781,6 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
         $album_name = trim((string) $row['prefix'] . " " . $row['name']);
-        if (!AmpConfig::get('album_group') && (int) $count > 1) {
-            $album_name .= " [" . T_('Disk') . " " . $row['disk'] . "]";
-        }
         if ($row['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }
@@ -932,7 +821,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
         $key = $name . "_select_c" . ++$artist_id_cnt;
     }
 
-    $sql    = "SELECT `id`, `name`, `prefix` FROM `artist` ";
+    $sql    = "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` ";
     $params = array();
     if ($user_id !== null) {
         $sql .= "WHERE `user` = ? ";
@@ -949,13 +838,11 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     }
 
     while ($row = Dba::fetch_assoc($db_results)) {
-        $selected    = '';
-        $artist_name = trim((string) $row['prefix'] . " " . $row['name']);
-        if ($row['id'] == $artist_id) {
-            $selected = "selected=\"selected\"";
-        }
+        $selected = ($row['id'] == $artist_id)
+            ? "selected=\"selected\""
+            : '';
 
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($artist_name) . "</option>\n";
+        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     if ($allow_add) {
@@ -1084,10 +971,10 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     $params = array();
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ?";
+        $sql .= "WHERE `gather_types` = ? ";
         $params[] = $filter_type;
     }
-    $sql .= "ORDER BY `name`";
+    $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
     $results    = array();
     while ($row = Dba::fetch_assoc($db_results)) {

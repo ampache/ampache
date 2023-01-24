@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ final class CatalogsMethod
         // filter for specific catalog types
         $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $user     = User::get_from_username(Session::username($input['auth']));
-        $catalogs = Catalog::get_catalogs($filter, $user->id);
+        $catalogs = $user->get_catalogs($filter);
 
         if (empty($catalogs)) {
             Api::empty('catalog', $input['api_format']);

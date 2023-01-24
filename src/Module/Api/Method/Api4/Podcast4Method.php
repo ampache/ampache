@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -65,16 +65,15 @@ final class Podcast4Method
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             $user     = User::get_from_username(Session::username($input['auth']));
-            $user_id  = $user->id;
-            $episodes = $input['include'] == 'episodes';
+            $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::podcasts(array($object_id), $user_id, $episodes);
+                    echo Json4_Data::podcasts(array($object_id), $user, $episodes);
                     break;
                 default:
-                    echo Xml4_Data::podcasts(array($object_id), $user_id, $episodes);
+                    echo Xml4_Data::podcasts(array($object_id), $user, $episodes);
             }
         } else {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);

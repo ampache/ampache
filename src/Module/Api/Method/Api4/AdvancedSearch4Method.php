@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,7 +61,7 @@ final class AdvancedSearch4Method
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
+     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
      * limit           = (integer))
      */
@@ -82,23 +82,25 @@ final class AdvancedSearch4Method
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
+                    case 'song_artist':
+                    case 'album_artist':
                     case 'artist':
-                        echo Json4_Data::artists($results, array(), $user->id);
+                        echo Json4_Data::artists($results, array(), $user);
                         break;
                     case 'album':
-                        echo Json4_Data::albums($results, array(), $user->id);
+                        echo Json4_Data::albums($results, array(), $user);
                         break;
                     case 'playlist':
-                        echo Json4_Data::playlists($results, $user->id);
+                        echo Json4_Data::playlists($results, $user);
                         break;
                     case 'user':
                         echo Json4_Data::users($results);
                         break;
                     case 'video':
-                        echo Json4_Data::videos($results, $user->id);
+                        echo Json4_Data::videos($results, $user);
                         break;
                     default:
-                        echo Json4_Data::songs($results, $user->id);
+                        echo Json4_Data::songs($results, $user);
                         break;
                 }
                 break;
@@ -107,22 +109,22 @@ final class AdvancedSearch4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
-                        echo Xml4_Data::artists($results, array(), $user->id);
+                        echo Xml4_Data::artists($results, array(), $user);
                         break;
                     case 'album':
-                        echo Xml4_Data::albums($results, array(), $user->id);
+                        echo Xml4_Data::albums($results, array(), $user);
                         break;
                     case 'playlist':
-                        echo Xml4_Data::playlists($results, $user->id);
+                        echo Xml4_Data::playlists($results, $user);
                         break;
                     case 'user':
                         echo Xml4_Data::users($results);
                         break;
                     case 'video':
-                        echo Xml4_Data::videos($results, $user->id);
+                        echo Xml4_Data::videos($results, $user);
                         break;
                     default:
-                        echo Xml4_Data::songs($results, $user->id);
+                        echo Xml4_Data::songs($results, $user);
                         break;
                 }
         }

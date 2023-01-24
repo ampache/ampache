@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,6 @@ use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
-
     /**
      * splits up a standard SQL dump file into distinct sql queries
      * @param string $sql
@@ -529,7 +528,6 @@ final class InstallationHelper implements InstallationHelperInterface
             'licensing' => 'false',
             'wanted' => 'false',
             'channel' => 'false',
-            'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
             'share' => 'false'
@@ -548,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $trconfig['ratings']                   = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
-                $trconfig['channel']                   = 'false';
                 $trconfig['live_stream']               = 'false';
 
                 $dbconfig['download']    = '0';

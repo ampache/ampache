@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,6 +49,6 @@ final class UrlToSong3Method
         $url_data = Stream_URL::parse($input['url']);
         $user     = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        echo Xml3_Data::songs(array($url_data['id']), $user->id);
+        echo Xml3_Data::songs(array((int)$url_data['id']), $user);
     }
 }

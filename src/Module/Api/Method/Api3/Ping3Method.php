@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
 /**
@@ -59,7 +58,7 @@ final class Ping3Method
             $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         echo Xml3_Data::keyed_array($xmldata);

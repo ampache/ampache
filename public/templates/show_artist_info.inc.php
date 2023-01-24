@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,12 +26,10 @@ use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
 /** @var array $biography */
-
 ?>
-
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
-    $thumb = (empty(trim($biography['summary']))) ? 32 : 2;
+    $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
     Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
 } ?>
     <div class="item_properties">
@@ -48,8 +46,8 @@ use Ampache\Module\Util\Ui;
     </div>
 </div>
 <div id="item_summary">
-    <?php if (array_key_exists('summary', $biography) && !empty(trim($biography['summary']))) { ?>
-        <?php echo nl2br($biography['summary']); ?>
+    <?php if (array_key_exists('summary', $biography) && !empty($biography['summary'])) { ?>
+        <?php echo nl2br(trim($biography['summary'])); ?>
         <?php
     }?>
 </div>

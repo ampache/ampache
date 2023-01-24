@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,12 +41,12 @@ class AmpacheMusicBrainz
     public $categories  = 'metadata';
     public $description = 'MusicBrainz metadata integration';
     public $url         = 'http://www.musicbrainz.org';
-    public $version     = '000002';
+    public $version     = '000003';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $overwrite_name;
+    public $overwrite_name;
 
     /**
      * Constructor
@@ -65,6 +65,8 @@ class AmpacheMusicBrainz
      */
     public function install()
     {
+        Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+
         return true;
     } // install
 
@@ -74,6 +76,8 @@ class AmpacheMusicBrainz
      */
     public function uninstall()
     {
+        Preference::delete('mb_overwrite_name');
+
         return true;
     } // uninstall
 
@@ -87,7 +91,8 @@ class AmpacheMusicBrainz
         if ($from_version == 0) {
             return false;
         }
-        if ($from_version < (int)$this->version) {
+        if (!Preference::exists('mb_overwrite_name')) {
+            // this wasn't installed correctly only upgraded so may be missing
             Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
         }
 
@@ -221,6 +226,7 @@ class AmpacheMusicBrainz
             $data = array();
             switch ($object_type) {
                 case 'label':
+                    /** @var Label $object */
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
@@ -234,12 +240,14 @@ class AmpacheMusicBrainz
                     );
                     break;
                 case 'artist':
+                    /** @var Artist $object */
                     $placeFormed = (isset($results->{'begin-area'}->{'name'}) && isset($results->{'area'}->{'name'}))
                         ? $results->{'begin-area'}->{'name'} . ', ' . $results->{'area'}->{'name'}
                         : $results->{'begin-area'}->{'name'} ?? $object->placeformed;
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
+                        'summary' => $object->summary,
                         'placeformed' => $placeFormed,
                         'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
                     );

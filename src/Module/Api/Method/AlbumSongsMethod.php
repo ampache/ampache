@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -49,7 +48,6 @@ class AlbumSongsMethod
      *
      * @param array $input
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -70,22 +68,8 @@ class AlbumSongsMethod
 
         ob_end_clean();
         // songs for all disks
-        $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        if (AmpConfig::get('album_group') && !$exact) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $disc     = new Album($discid);
-                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            }
-        } else {
-            // songs for just this disk
-            $songs = static::getSongRepository()->getByAlbum($album->id);
-        }
+        $songs = static::getSongRepository()->getByAlbum($album->id);
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);
 
@@ -97,12 +81,12 @@ class AlbumSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user->id);
+                echo Json_Data::songs($songs, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user->id);
+                echo Xml_Data::songs($songs, $user);
         }
 
         return true;

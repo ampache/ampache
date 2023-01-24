@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,11 +26,9 @@ namespace Ampache\Module\Application\NowPlaying;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
@@ -44,17 +42,13 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private LoggerInterface $logger;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         LoggerInterface $logger
     ) {
         $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
     }
 
@@ -65,14 +59,19 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
+            $this->logger->warning(
+                'Enable use_now_playing_embedded and disable demo mode for this feature',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
             return null;
         }
 
         Stream::garbage_collection();
 
         $css                    = '';
-        $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE);
         $refreshLimit           = '';
+        $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE) ?? "templates/now-playing.css";
         $nowPlayingRefreshLimit = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_REFRESH_LIMIT);
         $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG);
 
@@ -117,35 +116,8 @@ final class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-
-        $results = Stream::get_now_playing();
-
-        if (Core::get_request('user_id') !== '') {
-            if (empty($results)) {
-                $last_song = Stats::get_last_play(Core::get_request('user_id'));
-                $media     = $this->modelFactory->createSong((int) $last_song['object_id']);
-                $media->format();
-
-                $client = $this->modelFactory->createUser((int) $last_song['user']);
-                $client->format();
-
-                $results[] = [
-                    'media' => $media,
-                    'client' => $client,
-                    'agent' => $last_song['agent'],
-                    'expire' => ''
-                ];
-
-                $this->logger->debug(
-                    'no result; getting last song played instead: ' . $media->id,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-            }
-            // If the URL specifies a specific user, filter the results on that user
-            $results = array_filter($results, function ($item) {
-                return ($item['client']->id === Core::get_request('user_id'));
-            });
-        }
+        $user_id = (int)Core::get_request('user_id');
+        $results = Stream::get_now_playing($user_id);
 
         require Ui::find_template('show_now_playing.inc.php');
 

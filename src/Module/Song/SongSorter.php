@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,19 +25,44 @@ declare(strict_types=0);
 namespace Ampache\Module\Song;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Album;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->logger          = $logger;
+        $this->modelFactory    = $modelFactory;
+    }
+
     public function sort(
         Interactor $interactor,
         bool $dryRun = true,
-        ?string $various_artist_override = null
+        bool $filesOnly = false,
+        int $limit = 0,
+        bool $windowsCompat = false,
+        ?string $various_artist_override = null,
+        ?string $catalogName = null
     ): void {
         $various_artist = 'Various Artists';
 
@@ -49,11 +74,15 @@ final class SongSorter implements SongSorterInterface
 
             $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $various_artist_override));
         }
+        $move_count = 0;
 
-        /* First Clean the catalog to we don't try to write anything we shouldn't */
-
-        $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
-        $db_results = Dba::read($sql);
+        if (!empty($catalogName)) {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
+            $db_results = Dba::read($sql, array($catalogName));
+        } else {
+            $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local';";
+            $db_results = Dba::read($sql);
+        }
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
@@ -62,130 +91,100 @@ final class SongSorter implements SongSorterInterface
                 sprintf(T_('Starting Catalog: %s'), stripslashes($catalog->name)),
                 true
             );
-            $songs = $catalog->get_songs();
 
-            /* Foreach through each file and find it a home! */
-            foreach ($songs as $song) {
-                /* Find this poor song a home */
-                $song->format();
-                // sort_find_home will replace the % with the correct values.
-                $directory = $this->sort_find_home($interactor, $song, $catalog->sort_pattern, $catalog->path, $various_artist);
-                $filename  = $this->sort_find_home($interactor, $song, $catalog->rename_pattern, null, $various_artist);
-                if ($directory === false || $filename === false) {
-                    $fullpath = $song->file;
-                } else {
-                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . pathinfo($song->file, PATHINFO_EXTENSION);
-                }
+            $stats  = Catalog::get_server_counts(0);
+            $total  = $stats['song'];
+            $chunks = (int)floor($total / 10000);
+            foreach (range(0, $chunks) as $chunk) {
+                /* HINT: Catalog Block: 4/120 */
+                $interactor->info(
+                    sprintf(T_('Catalog Block: %s'), $chunk . '/' . $chunks),
+                    true
+                );
+                $songs = $catalog->get_songs($chunk, 1000);
+                // Foreach through each file and find it a home!
+                foreach ($songs as $song) {
+                    if ($limit > 0 && $move_count == $limit) {
+                        /* HINT: filename (File path) */
+                        $interactor->info(
+                        sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
+                        true
+                    );
 
-                /* We need to actually do the moving (fake it if we are testing)
-                 * Don't try to move it, if it's already the same friggin thing!
-                 */
-                if ($song->file != $fullpath && strlen($fullpath)) {
-                    $interactor->info(T_("Examine File..."), true);
+                        return;
+                    }
+                    // Check for file existence
+                    if (!file_exists($song->file)) {
+                        $this->logger->critical(
+                            sprintf('Missing: %s', $song->file),
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
+                        /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                        $interactor->info(
+                        sprintf(T_('Missing: %s'), $song->file),
+                        true
+                    );
+                        continue;
+                    }
+                    $song->format();
+
+                    $interactor->info(
+                        T_("Examine File..."),
+                        true
+                    );
                     /* HINT: filename (File path) */
-                    $interactor->info(sprintf(T_('Source: %s'), $song->file), true);
-                    /* HINT: filename (File path) */
-                    $interactor->info(sprintf(T_('Destin: %s'), $fullpath));
-                    flush();
-                    $this->sort_move_file($interactor, $song, $fullpath, $dryRun);
+                    $interactor->info(
+                        sprintf(T_('Source: %s'), $song->file),
+                        true
+                    );
+
+                    // sort_find_home will replace the % with the correct values.
+                    $directory = ($filesOnly)
+                        ? dirname($song->file)
+                        : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist, $windowsCompat);
+                    if ($directory === false) {
+                        /* HINT: $sort_pattern after replacing %x values */
+                        $interactor->info(
+                            sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->sort_pattern),
+                            true
+                        );
+                    }
+                    $filename = $catalog->sort_find_home($song, $catalog->rename_pattern, null, $various_artist, $windowsCompat);
+                    if ($filename === false) {
+                        /* HINT: $sort_pattern after replacing %x values */
+                        $interactor->info(
+                            sprintf(T_('The sort_pattern has left over variables. %s'), $catalog->rename_pattern),
+                            true
+                        );
+                    }
+                    if ($directory === false || $filename === false) {
+                        $fullpath = $song->file;
+                    } else {
+                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($song->file, PATHINFO_EXTENSION) ?? '');
+                    }
+
+                    /* We need to actually do the moving (fake it if we are testing)
+                     * Don't try to move it, if it's already the same friggin thing!
+                     */
+                    if ($song->file != $fullpath && strlen($fullpath)) {
+                        /* HINT: filename (File path) */
+                        $interactor->info(
+                        sprintf(T_('Destin: %s'), $fullpath),
+                        true
+                    );
+                        flush();
+                        if ($this->sort_move_file($interactor, $song, $fullpath, $dryRun, $windowsCompat)) {
+                            $move_count++;
+                        }
+                    }
                 }
             }
+            /* HINT: filename (File path) */
+            $interactor->info(
+                sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
+                true
+            );
         }
-    }
-
-    /**
-     * Get the directory for this file from the catalog and the song info using the sort_pattern
-     * takes into account various artists and the alphabet_prefix
-     * @param Interactor $interactor
-     * @param $song
-     * @param $sort_pattern
-     * @param $base
-     * @param string $various_artist
-     * @return false|string
-     */
-    private function sort_find_home(
-        Interactor $interactor,
-        $song,
-        $sort_pattern,
-        $base = null,
-        $various_artist = "Various Artists"
-    ) {
-        $home = '';
-        if ($base) {
-            $home = rtrim($base, "\/");
-            $home = rtrim($home, "\\");
-        }
-
-        /* Create the filename that this file should have */
-        $album  = $this->sort_clean_name($song->f_album_full) ?: '%A';
-        $artist = $this->sort_clean_name($song->f_artist_full) ?: '%a';
-        $track  = $this->sort_clean_name($song->track) ?: '%T';
-        if ((int) $track < 10 && (int) $track > 0) {
-            $track = '0' . (string) $track;
-        }
-
-        $title   = $this->sort_clean_name($song->title) ?: '%t';
-        $year    = $this->sort_clean_name($song->year) ?: '%y';
-        $comment = $this->sort_clean_name($song->comment) ?: '%c';
-
-        /* Do the various check */
-        $album_object = new Album($song->album);
-        $album_object->format();
-        if ($album_object->get_album_artist_fullname() != "") {
-            $artist = $album_object->f_album_artist_name;
-        } elseif ($album_object->artist_count != 1) {
-            $artist = $various_artist;
-        }
-        $disk           = $album_object->disk ?: '%d';
-        $catalog_number = $album_object->catalog_number ?: '%C';
-        $barcode        = $album_object->barcode ?: '%b';
-        $original_year  = $album_object->original_year ?: '%Y';
-        $genre          = implode("; ", $album_object->tags) ?: '%b';
-        $release_type   = $album_object->release_type ?: '%r';
-        $release_status = $album_object->release_status ?: '%R';
-
-        /* Replace everything we can find */
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $disk, $genre, $barcode);
-        $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
-
-        /* Remove non A-Z0-9 chars */
-        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
-
-        // Replace non-critical search patterns
-        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
-        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
-        $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
-
-        $home .= "/$sort_pattern";
-        // dont send a mismatched file!
-        if (strpos($sort_pattern, '%') !== false) {
-            /* HINT: $sort_pattern after replacing %x values */
-            $interactor->info(sprintf(T_('The sort_pattern has left over variables. %s'), $sort_pattern), true);
-
-            return false;
-        }
-
-        return $home;
-    }
-
-    /**
-     * We have to have some special rules here
-     * This is run on every individual element of the search
-     * Before it is put together, this removes / and \ and also
-     * once I figure it out, it'll clean other stuff
-     * @param  string$string
-     * @return string|string[]|null
-     */
-    public function sort_clean_name($string)
-    {
-
-        /* First remove any / or \ chars */
-        $string = preg_replace('/[\/\\\]/', '-', $string);
-        $string = str_replace(':', ' ', $string);
-        $string = preg_replace('/[\!\:\*]/', '_', $string);
-
-        return $string;
     }
 
     /**
@@ -197,16 +196,18 @@ final class SongSorter implements SongSorterInterface
      * and unlink.. This is a little unsafe, and as such it verifies the copy
      * worked by doing a filesize() before unlinking.
      * @param Interactor $interactor
-     * @param $song
+     * @param Song $song
      * @param $fullname
      * @param $test_mode
+     * @param bool $windowsCompat
      * @return bool
      */
     private function sort_move_file(
         Interactor $interactor,
-        $song,
+        Song $song,
         $fullname,
-        $test_mode
+        $test_mode,
+        $windowsCompat = false
     ) {
         $old_dir   = dirname($song->file);
         $info      = pathinfo($fullname);
@@ -215,22 +216,27 @@ final class SongSorter implements SongSorterInterface
         $data      = preg_split("/[\/\\\]/", $directory);
         $path      = '';
 
-        /* We not need the leading / */
+        // We not need the leading /
         unset($data[0]);
 
         foreach ($data as $dir) {
-            $dir = $this->sort_clean_name($dir);
+            $dir = Catalog::sort_clean_name($dir, '', $windowsCompat);
             $path .= '/' . $dir;
 
-            /* We need to check for the existence of this directory */
+            // We need to check for the existence of this directory
             if (!is_dir($path)) {
                 if ($test_mode) {
                     /* HINT: Directory (File path) */
-                    $interactor->info(sprintf(T_('Create directory "%s"'), $path), true);
+                    $interactor->info(
+                        sprintf(T_('Create directory "%s"'), $path),
+                        true
+                    );
                 } else {
-                    debug_event('sort_files', "Creating $path directory", 4);
-                    $results = mkdir($path);
-                    if (!$results) {
+                    $this->logger->notice(
+                        sprintf('Creating %s directory', $path),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    if (!mkdir($path)) {
                         /* HINT: Directory (File path) */
                         $interactor->info(
                             sprintf(T_("There was a problem creating this directory: %s"), $path),
@@ -243,45 +249,36 @@ final class SongSorter implements SongSorterInterface
             } // if it's not a dir
         } // foreach dir
 
-        /* Now that we've got the correct directory structure let's try to copy it */
+        // Now that we've got the correct directory structure let's try to copy it
         if ($test_mode) {
+            $sql = "UPDATE `song` SET `file` = " . Dba::escape($fullname) . " WHERE `id` = " . Dba::escape($song->id) . ";";
+            $interactor->info(
+                sprintf('SQL: %s', $sql),
+                true
+            );
+            flush();
+        } else {
+            if (file_exists($fullname)) {
+                $this->logger->critical(
+                    sprintf('Error: %s already exists', $fullname),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                /* HINT: filename (File path) */
+                $interactor->info(
+                    sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname),
+                    true
+                );
+
+                return false;
+            }
             // HINT: %1$s: file, %2$s: directory
             $interactor->info(
                 sprintf(T_('Copying "%1$s" to "%2$s"'), $file, $directory),
                 true
             );
-            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song) . "'";
-            $interactor->info(sprintf('SQL: %s', $sql), true);
-            flush();
-        } else {
-            /* Check for file existence */
-            if (file_exists($fullname)) {
-                debug_event('sort_files', 'Error: $fullname already exists', 1);
+
+            if (!copy($song->file, $fullname)) {
                 /* HINT: filename (File path) */
-                $interactor->info(sprintf(T_('Don\'t overwrite an existing file: "%s"'), $fullname));
-
-                return false;
-            }
-
-            $results = copy($song->file, $fullname);
-            debug_event('sort_files', 'Copied ' . $song->file . ' to ' . $fullname, 4);
-
-            /* Look for the folder art and copy that as well */
-            if (!AmpConfig::get('album_art_preferred_filename') || strstr(AmpConfig::get('album_art_preferred_filename'), "%")) {
-                $folder_art  = $directory . DIRECTORY_SEPARATOR . 'folder.jpg';
-                $old_art     = $old_dir . DIRECTORY_SEPARATOR . 'folder.jpg';
-            } else {
-                $folder_art  = $directory . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
-                $old_art     = $old_dir . DIRECTORY_SEPARATOR . $this->sort_clean_name(AmpConfig::get('album_art_preferred_filename'));
-            }
-
-            debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
-            if (copy($old_art, $folder_art) === false) {
-                throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
-            }
-
-            /* HINT: filename (File path) */
-            if (!$results) {
                 $interactor->info(
                     sprintf(T_('There was an error trying to copy file to "%s"'), $fullname),
                     true
@@ -289,8 +286,31 @@ final class SongSorter implements SongSorterInterface
 
                 return false;
             }
+            $this->logger->critical(
+                'Copied ' . $song->file . ' to ' . $fullname,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
-            /* Check the filesize */
+            // Look for the folder art and copy that as well
+            if ($old_dir != $directory) {
+                // don't move things into the same dir
+                $preferred  = Catalog::sort_clean_name($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME) ?? 'folder.jpg', '', $windowsCompat);
+                $folder_art = $directory . DIRECTORY_SEPARATOR . $preferred;
+                $old_art    = $old_dir . DIRECTORY_SEPARATOR . $preferred;
+                // copy art that exists
+                if (file_exists($old_art)) {
+                    if (copy($old_art, $folder_art) === false) {
+                        unlink($fullname); // delete the copied file on failure
+
+                        throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+                    }
+                    $this->logger->critical(
+                        'Copied ' . $old_art . ' to ' . $folder_art,
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                }
+            }
+            // Check the filesize
             $new_sum = Core::get_filesize($fullname);
             $old_sum = Core::get_filesize($song->file);
 
@@ -300,13 +320,12 @@ final class SongSorter implements SongSorterInterface
                     sprintf(T_('Size comparison failed. Not deleting "%s"'), $song->file),
                     true
                 );
+                unlink($fullname); // delete the copied file on failure
 
                 return false;
             } // end if sum's don't match
 
-            /* If we've made it this far it should be safe */
-            $results = unlink($song->file);
-            if (!$results) {
+            if (!unlink($song->file)) {
                 /* HINT: filename (File path) */
                 $interactor->info(
                     sprintf(T_('There was an error trying to delete "%s"'), $song->file),
@@ -314,9 +333,9 @@ final class SongSorter implements SongSorterInterface
                 );
             }
 
-            /* Update the catalog */
-            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
-            Dba::write($sql);
+            // Update the catalog
+            $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
+            Dba::write($sql, array($fullname, $song->id));
         } // end else
 
         return true;

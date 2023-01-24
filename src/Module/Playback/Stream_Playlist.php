@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,6 +49,7 @@ class Stream_Playlist
     public $id;
     public $urls = array();
     public $user;
+    public $streamtoken;
     public $title;
 
     /**
@@ -70,8 +71,9 @@ class Stream_Playlist
 
                 return false;
             }
-
-            $this->user = (int)(Core::get_global('user')->id);
+            $user              = Core::get_global('user');
+            $this->user        = $user->id;
+            $this->streamtoken = $user->streamtoken;
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
@@ -90,7 +92,7 @@ class Stream_Playlist
      */
     private function _add_url($url)
     {
-        debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
+        debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
         $fields       = array();
@@ -118,9 +120,12 @@ class Stream_Playlist
      */
     private function _add_urls($urls)
     {
-        debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
-        $sql    = '';
-        $values = array();
+        debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
+        $sql         = '';
+        $fields      = array();
+        $values      = array();
+        $holders_arr = array();
+
         foreach ($urls as $url) {
             $this->urls[] = $url;
             $fields       = array();
@@ -136,7 +141,19 @@ class Stream_Playlist
                     $holders[] = '?';
                 }
             }
-            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . '); ';
+            $holders_arr[] = $holders;
+        }
+
+        $holders_chunks = array_chunk($holders_arr, 500);
+        foreach ($holders_chunks as $holders_arr_temp) {
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
+
+            foreach ($holders_arr_temp as $placeholder) {
+                $sql .= '(' . implode(',', $placeholder) . '),';
+            }
+            // remove last comma
+            $sql = substr($sql, 0, -1);
+            $sql .= ';';
         }
 
         return Dba::write($sql, $values);
@@ -248,7 +265,18 @@ class Stream_Playlist
                     }
                 }
             } else {
-                $url['url'] = $object->play_url($additional_params);
+                if (in_array($type, array('song', 'podcast_episode', 'video'))) {
+                    $user = Core::get_global('user');
+                    /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $object */
+                    $url['url'] = (!empty($user))
+                        ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
+                        : $object->play_url($additional_params);
+                } elseif ($type == 'democratic') {
+                    /** @var Democratic $object */
+                    $url['url'] = $object->play_url();
+                } else {
+                    $url['url'] = $object->play_url($additional_params);
+                }
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -258,6 +286,7 @@ class Stream_Playlist
             $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
                 case 'song':
+                    /** @var \Ampache\Repository\Model\Song $object */
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
@@ -266,17 +295,19 @@ class Stream_Playlist
                     $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
                     $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
                     $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['album']     = $object->f_album_full;
+                    //$url['album']     = $object->f_album_full;
                     $url['codec']     = $object->type;
                     $url['track_num'] = (string)$object->track;
                     break;
                 case 'video':
+                    /** @var \Ampache\Repository\Model\Video $object */
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
                     $url['codec']      = $object->type;
                     break;
                 case 'live_stream':
+                    /** @var \Ampache\Repository\Model\Live_Stream $object */
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
@@ -286,26 +317,21 @@ class Stream_Playlist
                     $url['codec']     = $object->codec;
                     break;
                 case 'song_preview':
+                    /** @var \Ampache\Repository\Model\Song_Preview $object */
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
                     $url['codec']  = $object->type;
                     break;
-                case 'channel':
-                    $url['title'] = $object->name;
-                    $url['codec'] = $object->stream_type;
-                    break;
                 case 'podcast_episode':
+                    /** @var \Ampache\Repository\Model\Podcast_Episode $object */
                     $url['title']     = $object->f_name;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
                     break;
-                case 'random':
-                    $url['title'] = 'Random URL';
-                    break;
                 default:
-                    $url['title'] = Stream_Url::get_title($url);
+                    $url['title'] = Stream_Url::get_title($url['url']);
                     $url['time']  = -1;
                     break;
             }
@@ -393,7 +419,7 @@ class Stream_Playlist
         if ($redirect) {
             // Our ID is the SID, so we always want to include it
             AmpConfig::set('require_session', true, true);
-            header('Location: ' . Stream::get_base_url() . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
+            header('Location: ' . Stream::get_base_url(false, $this->streamtoken) . 'uid=' . scrub_out($this->user) . '&type=playlist&playlist_type=' . scrub_out($type));
 
             return false;
         }
@@ -617,7 +643,7 @@ class Stream_Playlist
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
                 $url_data = Stream_Url::parse($url->url);
-                $id       = $url_data['id'];
+                $url_id   = $url_data['id'];
 
                 unset($url_data['id']);
                 unset($url_data['ssid']);
@@ -632,7 +658,7 @@ class Stream_Playlist
 
                 $className = ObjectTypeToClassNameMapper::map($type);
 
-                $item = new $className($id);
+                $item = new $className($url_id);
                 $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
@@ -747,7 +773,6 @@ class Stream_Playlist
 
         return false;
     } // create_download
-
 
     /**
      * create_ram

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -259,7 +258,7 @@ class Daap_Api
         if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
             $db_results = Dba::read($sql, array(
                 Core::get_get('session-id')
             ));
@@ -310,7 +309,7 @@ class Daap_Api
     {
         self::check_auth();
 
-        $sql = "DELETE FROM `daap_session` WHERE `id` = ?";
+        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
         Dba::write($sql, array(
             $input['session-id']
         ));
@@ -433,9 +432,9 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $className = ObjectTypeToClassNameMapper::map($type);
+                    $className = ObjectTypeToClassNameMapper::map('song');
                     $media     = new $className($object_id);
-                    $url       = $media->play_url($params, 'api', true);
+                    $url       = $media->play_url($params, 'api', true, -1);
                     self::follow_stream($url);
 
                     return false;
@@ -541,8 +540,7 @@ class Daap_Api
                         }
                         break;
                     case 'daap.songdiscnumber':
-                        $album = new Album($song->album);
-                        $output .= self::tlv($tag, $album->disk);
+                        $output .= self::tlv($tag, $song->disk);
                         break;
                     case 'daap.songformat':
                         $output .= self::tlv($tag, $song->type);

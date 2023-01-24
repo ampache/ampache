@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -91,9 +91,9 @@ abstract class playlist_object extends database_object implements library_item
     {
         // format shared lists using the username
         $this->f_name = (($this->user == Core::get_global('user')->id))
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+            ? scrub_out($this->name)
+            : scrub_out($this->name . " (" . $this->username . ")");
+        $this->get_f_type();
         $this->get_f_link();
     } // format
 
@@ -121,11 +121,11 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access($user_id = null)
     {
-        if (!Access::check('interface', 25)) {
-            return false;
-        }
         if (Access::check('interface', 100)) {
             return true;
+        }
+        if (!Access::check('interface', 25)) {
+            return false;
         }
         // allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
@@ -156,7 +156,8 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return array|mixed
+     * Get item keywords for metadata searches.
+     * @return array
      */
     public function get_keywords()
     {
@@ -171,8 +172,8 @@ abstract class playlist_object extends database_object implements library_item
         $show_fullname = AmpConfig::get('show_playlist_username');
         $my_playlist   = $this->user == Core::get_global('user')->id;
         $this->f_name  = ($my_playlist || !$show_fullname)
-            ? filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-            : filter_var($this->name . " (" . $this->username . ")", FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            ? $this->name
+            : $this->name . " (" . $this->username . ")";
 
         return $this->f_name;
     }
@@ -187,8 +188,8 @@ abstract class playlist_object extends database_object implements library_item
         if (!isset($this->link)) {
             $web_path   = AmpConfig::get('web_path');
             $this->link = ($this instanceof Search)
-                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . scrub_out($this->id)
-                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . scrub_out($this->id);
+                ? $web_path . '/smartplaylist.php?action=show_playlist&playlist_id=' . $this->id
+                : $web_path . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         }
 
         return $this->link;
@@ -210,6 +211,20 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Get item type (public / private).
+     * @return string
+     */
+    public function get_f_type()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_type)) {
+            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        }
+
+        return $this->f_type;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -218,29 +233,21 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function get_childrens()
     {
-        $childrens = array();
-        $items     = $this->get_items();
-        foreach ($items as $item) {
-            if (!in_array($item['object_type'], $childrens)) {
-                $childrens[$item['object_type']] = array();
-            }
-            $childrens[$item['object_type']][] = $item['object_id'];
-        }
-
         return $this->get_items();
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
+        debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
         return array();
     }

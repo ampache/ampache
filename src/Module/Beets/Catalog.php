@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -81,7 +81,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
-
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -158,7 +157,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -212,7 +211,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $inserted = Song::insert($song);
         if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
+            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5);
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
             /* HINT: filename (file path) */
@@ -288,6 +287,14 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        return array();
+    }
+
+    /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
@@ -299,7 +306,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {
@@ -340,11 +347,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**

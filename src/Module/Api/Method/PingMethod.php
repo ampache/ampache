@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
 /**
@@ -61,13 +60,13 @@ final class PingMethod
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            if (in_array($data_version, array(3, 4, 5))) {
+            if (in_array($data_version, array(3, 4, 5, 6))) {
                 Session::write($input['auth'], $data_version);
             }
             $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)), $xmldata, Api::server_details($input['auth']));
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . Core::get_server('REMOTE_ADDR'), 5);
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

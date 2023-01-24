@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -204,8 +204,9 @@ class AmpacheMpd extends localplay_controller
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields             = array();
         $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
         $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
@@ -373,7 +374,6 @@ class AmpacheMpd extends localplay_controller
         return $this->_mpd->Pause();
     } // pause
 
-
     /**
      * volume
      * This tells MPD to set the volume to the parameter
@@ -520,7 +520,7 @@ class AmpacheMpd extends localplay_controller
      * features that this Localplay method supports.
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $array = array();
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
@@ -588,10 +588,6 @@ class AmpacheMpd extends localplay_controller
         }
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
-        if ($this->_mpd->connected) {
-            return true;
-        }
-
-        return false;
+        return $this->_mpd->connected;
     } // connect
 }

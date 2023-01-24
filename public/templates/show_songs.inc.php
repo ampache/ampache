@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,12 +37,14 @@ use Ampache\Module\Util\Ui;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 /** @var string $limit_threshold */
-
-$web_path     = AmpConfig::get('web_path');
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres  = AmpConfig::get('hide_genres');
-$thcount      = 7;
-$is_table     = $browse->is_grid_view();
+$web_path        = AmpConfig::get('web_path');
+$show_ratings    = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres     = AmpConfig::get('hide_genres');
+$thcount         = 7;
+$is_table        = $browse->is_grid_view();
+$limit_threshold = (!isset($limit_threshold))
+    ? AmpConfig::get('stats_threshold', 7)
+    : $limit_threshold;
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -104,7 +106,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', T_('Rating'), 'song_sort_rating'); ?></th>
                 <?php if (AmpConfig::get('ratings')) {
             Rating::build_cache('song', $object_ids);
             Userflag::build_cache('song', $object_ids);

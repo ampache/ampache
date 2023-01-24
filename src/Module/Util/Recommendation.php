@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,13 +31,11 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 
 class Recommendation
 {
-
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results

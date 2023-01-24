@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -161,12 +160,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '5.2.1';
+    public static $version = '6.0.0'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '521000';
+    public static $version_numeric = '600000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -368,11 +367,8 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client      = static::getUserRepository()->findByApiKey(trim($token));
-        $counts      = Catalog::get_server_counts($client->id);
-        $album_count = (Preference::get('album_group', $client->id))
-            ? (int)$counts['album_group']
-            : (int)$counts['album'];
+        $client    = static::getUserRepository()->findByApiKey(trim($token));
+        $counts    = Catalog::get_server_counts($client->id);
         $playlists = (AmpConfig::get('hide_search', false))
             ? ((int)$counts['playlist'])
             : ((int)$counts['playlist'] + (int)$counts['search']);
@@ -385,13 +381,13 @@ class Api
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
             'songs' => (int)$counts['song'],
-            'albums' => $album_count,
+            'albums' => (int)$counts['album'],
             'artists' => (int)$counts['artist'],
             'genres' => (int)$counts['tag'],
             'playlists' => (int)$counts['playlist'],
             'searches' => (int)$counts['search'],
             'playlists_searches' => $playlists,
-            'users' => ((int)$counts['user'] + (int)$counts['user']),
+            'users' => (int)$counts['user'],
             'catalogs' => (int)$counts['catalog'],
             'videos' => (int)$counts['video'],
             'podcasts' => (int)$counts['podcast'],

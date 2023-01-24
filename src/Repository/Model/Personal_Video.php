@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,7 +56,7 @@ class Personal_Video extends Video
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -119,14 +119,16 @@ class Personal_Video extends Video
     } // format
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `personal_video` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
         }
 
         return $deleted;

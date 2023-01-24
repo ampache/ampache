@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,6 +51,7 @@ class Catalog_dropbox extends Catalog
     private $type        = 'dropbox';
     private $description = 'Dropbox Remote Catalog';
 
+    private int $catalog_id;
     private int $count = 0;
     private string $authcode;
 
@@ -139,7 +140,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isReady()
     {
@@ -174,7 +175,6 @@ class Catalog_dropbox extends Catalog
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
             $info     = $this->get_info($catalog_id);
-
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -485,7 +485,7 @@ class Catalog_dropbox extends Catalog
 
                 return $video_id;
             } else {
-                debug_event('dropbox.catalog', 'failed to download file', 5, 'ampache-catalog');
+                debug_event('dropbox.catalog', 'failed to download file', 5);
             }
         } // insert_video
 
@@ -537,8 +537,7 @@ class Catalog_dropbox extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
-                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                    'ampache-catalog');
+                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $readfile = true;
                 $filesize = 40960;
@@ -547,7 +546,7 @@ class Catalog_dropbox extends Catalog
 
                 $res = $this->download($dropbox, $path, $filesize, $outfile);
                 if ($res) {
-                    debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'updating song', 5);
                     $song = new Song($row['id']);
 
                     $vainfo = $utilityFactory->createVaInfo(
@@ -574,7 +573,7 @@ class Catalog_dropbox extends Catalog
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
-                    debug_event('dropbox.catalog', 'removing song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -602,8 +601,7 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                'ampache-catalog');
+            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5);
             $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
@@ -622,6 +620,14 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        return array();
+    }
+
+    /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
@@ -633,7 +639,7 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {
@@ -736,7 +742,6 @@ class Catalog_dropbox extends Catalog
      */
     public function gather_art($songs = null, $videos = null)
     {
-
         // Make sure they've actually got methods
         $art_order = AmpConfig::get('art_order');
         if (!count($art_order)) {

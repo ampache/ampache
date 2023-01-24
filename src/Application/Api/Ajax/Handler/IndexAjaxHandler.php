@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,15 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Channel;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Recommendation;
@@ -51,8 +50,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     private RequestParserInterface $requestParser;
 
-    private ArtCollectorInterface $artCollector;
-
     private SlideshowInterface $slideshow;
 
     private AlbumRepositoryInterface $albumRepository;
@@ -67,7 +64,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     public function __construct(
         RequestParserInterface $requestParser,
-        ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
@@ -76,7 +72,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         VideoRepositoryInterface $videoRepository
     ) {
         $this->requestParser    = $requestParser;
-        $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
         $this->albumRepository  = $albumRepository;
         $this->labelRepository  = $labelRepository;
@@ -89,8 +84,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $moment  = (int) AmpConfig::get('of_the_moment');
         $user    = Core::get_global('user');
+        $moment  = (int) AmpConfig::get('of_the_moment');
         // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
             $moment = 6;
@@ -103,7 +98,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_ids      = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
                 $browse          = new Browse();
                 $hide_columns    = array('cel_artist');
-                $limit_threshold = AmpConfig::get('stats_threshold');
+                $limit_threshold = AmpConfig::get('stats_threshold', 7);
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -162,7 +157,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
                     $artist = new Artist($this->requestParser->getFromRequest('artist'));
                     $artist->format();
-                    $limit_threshold = AmpConfig::get('stats_threshold');
+                    $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = array();
                     $missing_objects = array();
                     if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
@@ -197,7 +192,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $object_ids      = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
                 $browse          = new Browse();
                 $hide_columns    = array();
-                $limit_threshold = AmpConfig::get('stats_threshold');
+                $limit_threshold = AmpConfig::get('stats_threshold', 7);
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
                 $results['similar_songs'] = ob_get_clean();
@@ -265,7 +260,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = $this->requestParser->getFromRequest('year');
 
-                    if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
+                    if (!$this->wantedRepository->find($mbid, $user->id)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -278,12 +273,11 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
-                    $mbid = $this->requestParser->getFromRequest('mbid');
+                    $mbid    = $this->requestParser->getFromRequest('mbid');
+                    $user_id = $user->has_access(75) ? null : $user->id;
+                    $walbum  = new Wanted(Wanted::get_wanted($mbid));
 
-                    $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
-
-                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
+                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $user_id);
                     ob_start();
                     $walbum->accepted = false;
                     $walbum->id       = 0;
@@ -302,14 +296,28 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['wanted_action_' . $mbid] = ob_get_clean();
                 }
                 break;
+            case 'delete_play':
+                Stats::delete((int)$_REQUEST['activity_id']);
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $user_id   = $user->id ?? -1;
+                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
+                $ajax_page = 'index';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_played.inc.php');
+                $results['recently_played'] = ob_get_clean();
+                break;
             case 'reloadnp':
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $data = Song::get_recently_played();
+                $user_id   = $user->id ?? -1;
+                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
+                $ajax_page = 'index';
                 Song::build_cache(array_keys($data));
-                $user_id = $user->id ?? -1;
                 require_once Ui::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
@@ -339,33 +347,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 require_once Ui::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
-                break;
-            case 'start_channel':
-                if (Access::check('interface', 75)) {
-                    ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        if ($channel->check_channel()) {
-                            $channel->stop_channel();
-                        }
-                        $channel->start_channel();
-                        sleep(1);
-                        echo $channel->get_channel_state();
-                    }
-                    $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
-                }
-                break;
-            case 'stop_channel':
-                if (Access::check('interface', 75)) {
-                    ob_start();
-                    $channel = new Channel((int) Core::get_request('id'));
-                    if ($channel->id) {
-                        $channel->stop_channel();
-                        sleep(1);
-                        echo $channel->get_channel_state();
-                    }
-                    $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
-                }
                 break;
             case 'slideshow':
                 ob_start();

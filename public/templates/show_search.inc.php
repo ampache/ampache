@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,10 +31,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Search $playlist */
 /** @var array $object_ids */
 
-?>
-<?php
 ob_start();
-require Ui::find_template('show_search_title.inc.php');
+echo $playlist->get_fullname();
 $title    = ob_get_contents();
 $web_path = AmpConfig::get('web_path');
 $browse   = new Browse();
@@ -56,8 +54,10 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
-            <?php
-} ?>
+        <?php } ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+        </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
         </li>
@@ -74,8 +74,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 

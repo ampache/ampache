@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
-use Requests;
+use WpOrg\Requests\Requests;
 
 /**
  * AutoUpdate Class
@@ -249,7 +249,11 @@ class AutoUpdate
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
 
-                $available = (version_compare($cpart[0], $lpart[0]) < 0);
+                // work around any possible mistakes in the order
+                $current = ($cpart[0] == 'release') ? $cpart[1] : $cpart[0];
+                $latest  = ($lpart[0] == 'release') ? $lpart[1] : $lpart[0];
+
+                $available = (version_compare($current, $latest) < 0);
             }
         }
 

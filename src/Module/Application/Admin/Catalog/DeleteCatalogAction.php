@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
+        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : array();
         $deleted  = true;
         // Delete the sucker, we don't need to check perms as that's done above
         foreach ($catalogs as $catalog_id) {
@@ -81,7 +81,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
             );
         } else {
             $this->ui->showConfirmation(
-                T_("There Was a Problem"),
+                T_('There Was a Problem'),
                 T_("There was an error deleting this Catalog"),
                 $next_url
             );

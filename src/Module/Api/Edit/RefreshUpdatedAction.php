@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -235,6 +235,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'show_ratings' => $show_ratings,
                         'cel_cover' => 'cel_cover',
                         'cel_counter' => 'cel_counter',
+                        'cel_time' => 'cel_time',
                     ]
                 );
 
@@ -287,6 +288,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
+            case 'live_stream_row':
             case 'tvshow_season_row':
                 ob_start();
 
@@ -311,7 +313,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
                  * Templates that don't need anything special
                  *
                  * broadcast_row
-                 * channel_row
                  * label_row
                  * live_stream_row
                  * pvmsg_row

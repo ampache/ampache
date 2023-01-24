@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\User;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -39,7 +40,7 @@ final class ArtCollector implements ArtCollectorInterface
     /**
      * @const ART_SEARCH_LIMIT
      */
-    public const ART_SEARCH_LIMIT = 5;
+    public const ART_SEARCH_LIMIT = 15;
 
     private ContainerInterface $dic;
 
@@ -116,6 +117,9 @@ final class ArtCollector implements ArtCollectorInterface
 
             return $playlist->gather_art($limit);
         }
+        $user = (!empty(Core::get_global('user')))
+            ? Core::get_global('user')
+            : new User(-1);
 
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($artOrder as $method) {
@@ -124,7 +128,7 @@ final class ArtCollector implements ArtCollectorInterface
                 $plugin            = new Plugin($method);
                 $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
                 if ($installed_version > 0) {
-                    if ($plugin->load(Core::get_global('user'))) {
+                    if ($plugin->load($user)) {
                         $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                     }
                 }

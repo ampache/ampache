@@ -3,7 +3,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab:
 *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
 
 var rowIter = 1;
 var rowCount = 0;
-
+// A search row is the js selection menu created for the search pages
 var SearchRow = {
     add(ruleType, operator, input, subtype) {
         if (typeof(ruleType) != "string") {
@@ -106,12 +106,15 @@ var SearchRow = {
                     }
                     if (input == realValue) {
                         option.selected = true;
+                    } else {
+                        option.selected = false;
                     }
                     option.value = realValue;
                     option.innerHTML = widget["1"][i];
                     inputNode.appendChild(option);
                     optioncount++;
                 });
+                SearchRow.sortSelect(inputNode, input);
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
@@ -146,14 +149,14 @@ var SearchRow = {
                     if (i == ruleType) {
                         option.selected = true;
                     }
-                    if (groups[g] === '') {
+                    if (groups[g] === "") {
                         optionsNode.appendChild(option);
                     } else {
                         optGroupNode.appendChild(option);
                     }
                 }
             });
-            if (groups[g] !== '') {
+            if (groups[g] !== "") {
                 optionsNode.appendChild(optGroupNode);
             }
         }
@@ -223,6 +226,7 @@ var SearchRow = {
         input_cell.append(SearchRow.constructInput(this.selectedIndex, targetID, oldinput));
     },
     createSelect(attributes, options, selected, sort=false) {
+        // used for metadata selections
         var $select = $("<select>");
         $.each(attributes, function (key, value) {
             $select.attr(key, value);
@@ -232,7 +236,7 @@ var SearchRow = {
         if (sort) {
             optionValues = optionValues.sort(function(a,b){
                 return options[a].toLowerCase() > options[b].toLowerCase() ? 1 : -1;
-            })
+            });
         }
         optionValues.forEach(function (value, index) {
             $("<option>").attr("value", value).text(options[value]).appendTo($select);
@@ -248,6 +252,23 @@ var SearchRow = {
                 name: "rule_" + ruleNumber + "_subtype"
             }, type.subtypes, subtype, true);
             return $input[0];
+        }
+    },
+    sortSelect(selectElement, selectedIndex) {
+        // Sort selection arrays
+        var sortArray = [];
+        for (var i=0; i < selectElement.options.length; i++) {
+            sortArray[i] = [];
+            sortArray[i][0] = selectElement.options[i].text;
+            sortArray[i][1] = selectElement.options[i].value;
+            sortArray[i][2] = selectElement.options[i].selected;
+        }
+        sortArray.sort();
+        while (selectElement.options.length > 0) {
+            selectElement.options[0] = null;
+        }
+        for (var i=0; i < sortArray.length; i++) {
+            selectElement.options[i] = new Option(sortArray[i][0], sortArray[i][1], false, sortArray[i][2]);
         }
     }
 };

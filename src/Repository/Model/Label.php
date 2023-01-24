@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,9 +99,13 @@ class Label extends database_object implements library_item
      */
     public $f_link;
     /**
-     * @var integer $artists
+     * @var array $artists
      */
     public $artists;
+    /**
+     * @var integer $artists
+     */
+    public $artist_count;
 
     /**
      * __construct
@@ -113,7 +117,6 @@ class Label extends database_object implements library_item
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -124,7 +127,7 @@ class Label extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -145,10 +148,8 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->get_fullname();
-        $this->get_link();
-        $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
-        $this->artists = count($this->get_artists());
+        $this->get_f_link();
+        $this->get_artist_count();
     }
 
     /**
@@ -198,7 +199,7 @@ class Label extends database_object implements library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = $this->name;
         }
 
         return $this->f_name;
@@ -220,7 +221,21 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * get_keywords
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link  = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -272,11 +287,11 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * search_childrens
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
         $search                    = array();
         $search['type']            = "artist";
@@ -307,14 +322,14 @@ class Label extends database_object implements library_item
             return false;
         }
 
-        $name     = isset($data['name']) ? $data['name'] : $this->name;
-        $mbid     = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $category = isset($data['category']) ? $data['category'] : $this->category;
-        $summary  = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $address  = isset($data['address']) ? $data['address'] : $this->address;
-        $country  = isset($data['country']) ? $data['country'] : $this->country;
-        $email    = isset($data['email']) ? $data['email'] : $this->email;
-        $website  = isset($data['website']) ? $data['website'] : $this->website;
+        $name     = $data['name'] ?? $this->name;
+        $mbid     = $data['mbid'] ?? null;
+        $category = $data['category'] ?? null;
+        $summary  = $data['summary'] ?? null;
+        $address  = $data['address'] ?? null;
+        $country  = $data['country'] ?? null;
+        $email    = $data['email'] ?? null;
+        $website  = $data['website'] ?? null;
         $active   = isset($data['active']) ? (int)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
@@ -382,14 +397,30 @@ class Label extends database_object implements library_item
      */
     public function get_artists()
     {
-        $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['artist'];
+        if (!isset($this->artists)) {
+            $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
+            $db_results = Dba::read($sql, array($this->id));
+            $results    = array();
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[] = (int)$row['artist'];
+            }
+            $this->artists = $results;
         }
 
-        return $results;
+        return $this->artists;
+    }
+
+    /**
+     * get_artist_count
+     * @return int
+     */
+    public function get_artist_count()
+    {
+        if (!isset($this->artist_count)) {
+            $this->artist_count = count($this->get_artists());
+        }
+
+        return $this->artist_count;
     }
 
     /**
@@ -405,12 +436,12 @@ class Label extends database_object implements library_item
             return '';
         }
 
-        $results = '';
-
+        $web_path = AmpConfig::get('web_path');
+        $results  = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {
             if ($link) {
-                $results .= '<a href="' . AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
+                $results .= '<a href="' . $web_path . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
             }
             $results .= $value;
             if ($link) {

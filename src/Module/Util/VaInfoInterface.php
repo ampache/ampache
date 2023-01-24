@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ interface VaInfoInterface
      * write_id3
      * This function runs the various steps to gathering the metadata
      * @param $tagData
-     * @throws Exception
+     * @throws \Exception
      */
     public function write_id3($tagData);
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,9 +27,16 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Search;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php if ($browse->is_show_header()) {
+/** @var Ampache\Repository\Model\Browse $browse */
+/** @var array $object_ids */
+
+$democratic = Democratic::get_current_playlist();
+$web_path   = AmpConfig::get('web_path');
+$use_search = AmpConfig::get('demo_use_search');
+$access100  = Access::check('interface', 100);
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata striped-rows">
@@ -40,12 +47,14 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface', 100)) { ?>
+  <?php if ($access100) { ?>
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php if (!count($object_ids)) {
-    $playlist = new Playlist($democratic->base_playlist); ?>
+<?php if (empty($object_ids) && isset($democratic->base_playlist)) {
+    $playlist = ($use_search)
+        ? new Search($democratic->base_playlist)
+        : new Playlist($democratic->base_playlist); ?>
 <tr>
     <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
 </tr>
@@ -59,20 +68,18 @@ $web_path = AmpConfig::get('web_path'); ?>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', 100)) { ?>
+        <?php if ($access100) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
-        <?php
-    } ?>
+        <?php } ?>
     </tr>
 </thead>
 <tbody>
-<?php
-$democratic = Democratic::get_current_playlist();
-    $democratic->set_parent();
+<?php $democratic->set_parent();
     foreach ($object_ids as $item) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
+        /** @var Ampache\Repository\Model\playable_item $media */
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         $media      = new $class_name($item['object_id']);
         $media->format(); ?>
@@ -89,7 +96,7 @@ $democratic = Democratic::get_current_playlist();
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
-    <?php if (Access::check('interface', 100)) { ?>
+    <?php if ($access100) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
@@ -106,12 +113,12 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', 100)) { ?>
+        <?php if ($access100) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php } ?>
     </tr>
 </tfoot>
-<?php } // end else?>
+<?php } ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {

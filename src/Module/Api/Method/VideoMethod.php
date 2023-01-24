@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,10 +71,10 @@ final class VideoMethod
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::videos(array($object_id), $user->id, false);
+                echo Json_Data::videos(array($object_id), $user, false);
                 break;
             default:
-                echo Xml_Data::videos(array($object_id), $user->id);
+                echo Xml_Data::videos(array($object_id), $user);
         }
 
         return true;

@@ -23,11 +23,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\Model\Browse;
-use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
-
 /**
  * API Class
  *
@@ -95,21 +90,7 @@ class Api3
     /**
      *  @var string $version
      */
-    public static $version = '390001';
-
-    /**
-     *  @var Browse $browse
-     */
-    private static $browse = null;
-
-    public static function getBrowse(): Browse
-    {
-        if (self::$browse === null) {
-            self::$browse = new Browse(null, false);
-        }
-
-        return self::$browse;
-    }
+    public static $version = '390001'; // AMPACHE_VERSION
 
     /**
      * constructor
@@ -119,15 +100,4 @@ class Api3
     {
         // Rien a faire
     } // constructor
-
-    /**
-     * _auto_init
-     * Automatically called when this class is loaded.
-     */
-    public static function _auto_init()
-    {
-        if (is_null(self::$browse)) {
-            self::$browse = new Browse(null, false);
-        }
-    }
 } // API3 class

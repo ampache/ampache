@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,7 +61,7 @@ class TVShow_Episode extends Video
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -150,10 +150,10 @@ class TVShow_Episode extends Video
     {
         parent::update($data);
 
-        $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
-        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
-        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
-        $summary        = isset($data['summary']) ? $data['summary'] : $this->summary;
+        $original_name  = $data['original_name'] ?? $this->original_name;
+        $tvshow_season  = $data['tvshow_season'] ?? $this->season;
+        $tvshow_episode = $data['tvshow_episode'] ?? $this->episode_number;
+        $summary        = $data['summary'] ?? null;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
         Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
@@ -198,7 +198,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * get_keywords
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -297,14 +297,16 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
         }
 
         return $deleted;

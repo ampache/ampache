@@ -1,20 +1,116 @@
 
-#: ../../resources/untranslated-strings.txt:3
+#: ./untranslated-strings.txt:3
 msgid "Connected Users"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:7
+#: ./untranslated-strings.txt:7
 msgid "Catalog Size"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:11
+#: ./untranslated-strings.txt:11
 msgid "Catalog Time"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:15
+#: ./untranslated-strings.txt:15
 msgid "Total Users"
 msgstr ""
 
-#: ../../resources/untranslated-strings.txt:19
-msgid "Update Now!"
+#: ./untranslated-strings.txt:22
+msgid "httpQ Active Instance"
+msgstr ""
+
+#: ./untranslated-strings.txt:26
+msgid "Show current song in Web Player page title"
+msgstr ""
+
+#: ./untranslated-strings.txt:30
+msgid "feature"
+msgstr ""
+
+#: ./untranslated-strings.txt:34
+msgid "query"
+msgstr ""
+
+#: ./untranslated-strings.txt:38
+msgid "transcoding"
+msgstr ""
+
+#: ./untranslated-strings.txt:42
+msgid "custom"
+msgstr ""
+
+#: ./untranslated-strings.txt:46
+msgid "theme"
+msgstr ""
+
+#: ./untranslated-strings.txt:50
+msgid "localplay"
+msgstr ""
+
+#: ./untranslated-strings.txt:54
+msgid "player"
+msgstr ""
+
+#: ./untranslated-strings.txt:58
+msgid "mpd"
+msgstr ""
+
+#: ./untranslated-strings.txt:62
+msgid "httpq"
+msgstr ""
+
+#: ./untranslated-strings.txt:66
+msgid "lastfm"
+msgstr ""
+
+#: ./untranslated-strings.txt:70
+msgid "home"
+msgstr ""
+
+#: ./untranslated-strings.txt:74
+msgid "library"
+msgstr ""
+
+#: ./untranslated-strings.txt:78
+msgid "browse"
+msgstr ""
+
+#: ./untranslated-strings.txt:82
+msgid "backend"
+msgstr ""
+
+#: ./untranslated-strings.txt:86
+msgid "privacy"
+msgstr ""
+
+#: ./untranslated-strings.txt:90
+msgid "update"
+msgstr ""
+
+#: ./untranslated-strings.txt:94
+msgid "share"
+msgstr ""
+
+#: ./untranslated-strings.txt:98
+msgid "upload"
+msgstr ""
+
+#: ./untranslated-strings.txt:102
+msgid "notification"
+msgstr ""
+
+#: ./untranslated-strings.txt:106
+msgid "metadata"
+msgstr ""
+
+#: ./untranslated-strings.txt:110
+msgid "podcast"
+msgstr ""
+
+#: ./untranslated-strings.txt:114
+msgid "catalog"
+msgstr ""
+
+#: ./untranslated-strings.txt:118
+msgid "subsonic"
 msgstr ""

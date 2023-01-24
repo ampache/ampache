@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -46,7 +47,7 @@ final class DownloadMethod
      *
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song', 'podcast_episode'
+     * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
@@ -60,24 +61,25 @@ final class DownloadMethod
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
         $format    = $input['format'];
-        $original  = $format && $format != 'raw';
-        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
-        if ($original && $type == 'song') {
-            $params .= '&transcode_to=' . $format;
-        }
-        if ($format && $type == 'song') {
+        if ($format && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&format=' . $format;
         }
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+        }
+        if ($type == 'search' || $type == 'playlist') {
+            $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
+            $media   = new Song($song_id);
+            $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

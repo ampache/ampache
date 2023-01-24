@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -75,6 +76,7 @@ class AlbumMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
         $albumId = 666;
 
@@ -88,6 +90,11 @@ class AlbumMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
@@ -100,10 +107,10 @@ class AlbumMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $albumId = 666;
-        $userId  = 42;
         $include = [3];
         $result  = 'some-result';
 
@@ -121,16 +128,16 @@ class AlbumMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($albumId);
 
-        $gatekeeper->shouldReceive('getUser->getId')
+        $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
-            ->andReturn($userId);
+            ->andReturn($user);
 
         $output->shouldReceive('albums')
             ->with(
                 [$albumId],
                 $include,
-                $userId,
+                $user,
                 true,
                 false
             )

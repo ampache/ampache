@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,8 +45,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 </ul>
 </div>
 <?php UI::show_box_bottom(); ?>
-<?php
-} ?>
+<?php } ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -56,6 +55,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
             <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
+            <th class="cel_add essential"></th>
             <th class="cel_siteurl optional"><?php echo T_('Website'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec');  ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -82,6 +82,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
+            <th class="cel_add essential"></th>
             <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec_bottom');  ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?> </th>

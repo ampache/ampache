@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,6 +44,8 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
+        $results = array();
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'flip_state':
@@ -54,10 +56,9 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $song        = new Song($_REQUEST['song_id']);
-                $new_enabled = $song->enabled ? false : true;
+                $new_enabled = !$song->enabled;
                 Song::update_enabled($new_enabled, $song->id);
                 $song->enabled = $new_enabled;
-                $song->format();
 
                 // Return the new Ajax::button
                 $id           = 'button_flip_state_' . $song->id;

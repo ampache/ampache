@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
 /** @var Search $libitem */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -55,9 +54,10 @@ use Ampache\Module\Util\ZipHandlerInterface;
         </a>
     </span>
 </td>
-<td class="cel_type"><?php echo $libitem->f_type; ?></td>
+<td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
+<td class="cel_owner"><?php echo $libitem->username; ?></td>
 <td class="cel_action">
         <?php
             // @todo remove after refactoring

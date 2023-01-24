@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,6 @@ class AmpacheVlc extends localplay_controller
     /* Variables */
     private $version     = 'Beta 0.2';
     private $description = 'Controls a VLC instance';
-
 
     /* Constructed variables */
     private $_vlc;
@@ -180,8 +179,9 @@ class AmpacheVlc extends localplay_controller
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields             = array();
         $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
         $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
@@ -517,7 +517,7 @@ class AmpacheVlc extends localplay_controller
                         // if it's a http stream not in ampacha's database just show the url'
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
-                        // it's a file get the last output after  and show that, hard to take every output possible in account
+                        // it's a file get the last output after and show that, hard to take every output possible in account
                         $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
@@ -540,7 +540,7 @@ class AmpacheVlc extends localplay_controller
      * This works as in requesting the status.xml file from VLC.
      * @return array
      */
-    public function status()
+    public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
@@ -556,7 +556,8 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array['state']  = $state;
+        $array           = array();
+        $array['state']  = $state ?? '';
         $array['volume'] = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat'] = $arrayholder['root']['repeat']['value'];
         $array['random'] = $arrayholder['root']['random']['value'];
@@ -588,13 +589,9 @@ class AmpacheVlc extends localplay_controller
     {
         $options    = self::get_instance();
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
-
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         // Not yet working all values returned are true for beta testing purpose
-        if ($this->_vlc->version() !== null) {
-            return true;
-        }
 
-        return false;
+        return ($this->_vlc->version() !== false);
     } // connect
 }

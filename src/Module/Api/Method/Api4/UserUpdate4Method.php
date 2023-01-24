@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,7 @@ final class UserUpdate4Method
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
         $disable    = $input['disable'] ?? null;
-        $maxbitrate = $input['maxbitrate'] ?? null;
+        $maxbitrate = (int)($input['maxBitRate'] ?? 0);
 
         // identify the user to modify
         $user    = User::get_from_username($username);
@@ -114,7 +114,7 @@ final class UserUpdate4Method
             } elseif ($disable === '0') {
                 $userStateToggler->enable($user);
             }
-            if ((int) $maxbitrate > 0) {
+            if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
             Api4::message('success', 'successfully updated: ' . $username, null, $input['api_format']);

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var integer|string $upload_max */
+
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
@@ -33,6 +35,7 @@ $ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
 $web_path = AmpConfig::get('web_path');
+$access50 = Access::check('interface', 50);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -171,10 +174,9 @@ $(function () {
 // Display a max file size client side if we know it
 if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
-<?php
-} ?>
+<?php } ?>
 <table class="tabledata">
-<?php if (Access::check('interface', 50)) {
+<?php if ($access50) {
     ?>
     <tr>
     <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
@@ -184,8 +186,8 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td class="upload_select">
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
-        <div id="artist_select_album_1">
+        <?php show_artist_select('artist', $artist, true, 1, $access50, $access50 ? null : $user_id); ?>
+        <div id="artist_select_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
     </td>
@@ -193,8 +195,8 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td class="upload_select">
-        <?php show_album_select('album', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
-        <div id="album_select_upload_1">
+        <?php show_album_select('album_id', $album, true, 1, $access50, $access50 ? null : $user_id); ?>
+        <div id="album_select_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>
     </td>
@@ -211,8 +213,7 @@ if ($upload_max > 0) { ?>
         </div>
     </td>
 </tr>
-<?php
-} ?>
+<?php } ?>
 </table>
 <table class="tabledata">
 <tr>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Search $libitem */
 
 use Ampache\Repository\Model\Search;
 
+/** @var Search $libitem */
 ?>
 <div>
     <form method="post" id="edit_playlist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -57,8 +57,7 @@ use Ampache\Repository\Model\Search;
                     <?php echo T_('Owner'); ?>:<br />
                 </td>
                 <td>
-                    <?php
-                    $options   = array();
+                    <?php $options   = array();
                     if (!empty($users)) {
                         foreach ($users as $user_id => $username) {
                             $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';

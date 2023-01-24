@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Requests;
+use WpOrg\Requests\Requests;
 
 /**
  * AmazonSearch Class
@@ -72,8 +72,7 @@ class AmazonSearch
      */
     public function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
     {
-
-        /* If we have a base url then use it */
+        // If we have a base url then use it
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
             debug_event(self::class, 'Retrieving from ' . $base_url_param . $this->url_suffix, 5);
@@ -158,7 +157,6 @@ class AmazonSearch
      */
     public function runSearch($url)
     {
-
         // create the parser
         $this->createParser();
 
@@ -255,7 +253,6 @@ class AmazonSearch
      */
     public function signString($string_to_sign)
     {
-
         // hash and encode the query string
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
@@ -295,7 +292,6 @@ class AmazonSearch
      */
     public function runSearchAsin($asin)
     {
-
         // get the proxy config
         $options = $this->getProxyConfig();
 
@@ -404,7 +400,6 @@ class AmazonSearch
      */
     public function endElement($parser, $tag)
     {
-
         // zero the tag
         $this->_currentTag = '';
     } // endElement

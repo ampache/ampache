@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -47,6 +48,12 @@ use Ampache\Module\Api\Ajax;
                         </div>
                     </td>
                 </tr>
+                    <?php if (count($libitem->artists) > 1) { ?>
+                        <tr>
+                            <td class="edit_dialog_content_header"><?php echo T_('Additional Artists') ?></td>
+                            <td><?php echo Artist::get_display(array_diff($libitem->artists, array($libitem->artist))); ?></td>
+                        </tr>
+                    <?php } ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
                     <td>
@@ -56,8 +63,7 @@ use Ampache\Module\Api\Ajax;
                         </div>
                     </td>
                 </tr>
-                <?php
-                } ?>
+                <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track') ?></td>
                 <td><input type="text" name="track" value="<?php echo scrub_out($libitem->track); ?>" /></td>
@@ -92,7 +98,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('song', $libitem->id, 20)); ?>" /></td>
             </tr>
             <?php
                 if (AmpConfig::get('licensing')) { ?>
@@ -105,8 +111,7 @@ use Ampache\Module\Api\Ajax;
                             </div>
                         </td>
                     </tr>
-                    <?php
-                } ?>
+                    <?php } ?>
         </table>
         <?php if (Song::isCustomMetadataEnabled()): ?>
             <button class="metadataAccordionButton"><?php echo T_('More Metadata') ?></button>
@@ -118,10 +123,10 @@ use Ampache\Module\Api\Ajax;
                             /* @var Metadata $metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
-                                echo '<tr>'
-                                . '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>'
-                                . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>'
-                                . '</tr>';
+                                echo '<tr>' .
+                                '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
+                                '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
+                                '</tr>';
                             }
                         } ?>
                     </table>

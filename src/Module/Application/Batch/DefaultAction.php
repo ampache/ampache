@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,7 +96,7 @@ final class DefaultAction implements ApplicationActionInterface
             ? (string) scrub_in(Core::get_request('type'))
             : $action;
 
-        if (!$this->zipHandler->isZipable($object_type)) {
+        if (!$this->zipHandler->isZipable(str_replace('album_disk', 'album', $object_type))) {
             $this->logger->error(
                 'Object type `' . $object_type . '` is not allowed to be zipped.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -104,7 +104,7 @@ final class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type) && $object_type !== 'album') {
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
             $object_id = $_REQUEST['id'];
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
@@ -130,16 +130,6 @@ final class DefaultAction implements ApplicationActionInterface
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
-                case 'album':
-                    $albumList  = explode(',', $_REQUEST['id']);
-                    $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name((int)$albumList[0]);
-                    if ($libitem->id) {
-                        $libitem->format();
-                        $name = $libitem->get_fullname();
-                    }
-                    break;
                 case 'browse':
                     $object_id        = (int)Core::get_request('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
@@ -149,6 +139,10 @@ final class DefaultAction implements ApplicationActionInterface
                             case 'album':
                                 $album     = $this->modelFactory->createAlbum($media_id);
                                 $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
+                                break;
+                            case 'album_disk':
+                                $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
+                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
                                 break;
                             case 'song':
                                 $media_ids[] = $media_id;

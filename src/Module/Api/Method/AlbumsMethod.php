@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,8 +89,9 @@ final class AlbumsMethod implements MethodInterface
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
+        $user   = $gatekeeper->getUser();
         $albums = $browse->get_objects();
-        if ($albums === []) {
+        if ($albums === [] || !$user) {
             throw new ResultEmptyException(
                 T_('No Results')
             );
@@ -105,7 +106,7 @@ final class AlbumsMethod implements MethodInterface
         $result = $output->albums(
             $albums,
             $include,
-            $gatekeeper->getUser()->getId(),
+            $user,
             true,
             true,
             (int) $input['limit'],

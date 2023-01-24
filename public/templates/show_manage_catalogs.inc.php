@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,12 +70,11 @@ $web_path = AmpConfig::get('web_path'); ?>
         </table>
     </form>
 </div>
-<?php
-    Ui::show_box_bottom();
-    $catalog_ids = Catalog::get_catalogs();
-    $browse      = new Browse();
+<?php Ui::show_box_bottom();
+    $catalogs = Catalog::get_catalogs();
+    $browse   = new Browse();
     $browse->set_type('catalog');
     $browse->set_static_content(true);
-    $browse->save_objects($catalog_ids);
-    $browse->show_objects($catalog_ids);
+    $browse->save_objects($catalogs);
+    $browse->show_objects($catalogs);
     $browse->store(); ?>

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use PDOStatement;
 
 /**
  * Radio Class
@@ -102,8 +101,6 @@ class Live_Stream extends database_object implements Media, library_item
     public function __construct($stream_id)
     {
         $info = $this->get_info($stream_id, 'live_stream');
-
-        // Set the vars
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -111,7 +108,7 @@ class Live_Stream extends database_object implements Media, library_item
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -124,7 +121,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_link          = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        $this->get_f_link();
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
@@ -133,6 +130,7 @@ class Live_Stream extends database_object implements Media, library_item
     } // format
 
     /**
+     * Get item keywords for metadata searches.
      * @return array
      */
     public function get_keywords()
@@ -146,7 +144,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_fullname()
     {
         if (!isset($this->f_name)) {
-            $this->f_name = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $this->f_name = $this->name;
         }
 
         return $this->f_name;
@@ -168,6 +166,48 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * get_f_artist_link
+     *
+     * @return string
+     */
+    public function get_f_artist_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     * @return string
+     */
+    public function get_f_album_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     * @return string
+     */
+    public function get_f_album_disk_link()
+    {
+        return '';
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -184,12 +224,13 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -293,7 +334,14 @@ class Live_Stream extends database_object implements Media, library_item
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
         Dba::write($sql,
-            array($data['name'], $data['site_url'], $data['url'], strtolower((string)$data['codec']), $this->id));
+            array(
+                $data['name'] ?? $this->name,
+                $data['site_url'] ?? null,
+                $data['url'] ?? $this->url,
+                strtolower((string)$data['codec']),
+                $this->id
+            )
+        );
 
         return $this->id;
     } // update
@@ -357,7 +405,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_stream_types($player = null)
     {
-        return array('foreign');
+        return array('native');
     } // native_stream
 
     /**
@@ -370,7 +418,7 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $force_http
      * @return string
      */
-    public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = '')
     {
         return $this->url . $additional_params;
     } // play_url
@@ -398,16 +446,16 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param integer $user
+     * @param integer $user_id
      * @param string $agent
      * @param array $location
      * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location, $date = null)
+    public function set_played($user_id, $agent, $location, $date = null)
     {
         // Do nothing
-        unset($user, $agent, $location, $date);
+        unset($user_id, $agent, $location, $date);
 
         return false;
     }
@@ -428,5 +476,6 @@ class Live_Stream extends database_object implements Media, library_item
 
     public function remove()
     {
+        return true;
     }
 }

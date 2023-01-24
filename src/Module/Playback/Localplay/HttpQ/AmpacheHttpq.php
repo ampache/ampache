@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -189,8 +189,9 @@ class AmpacheHttpq extends localplay_controller
      * This returns a keyed array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
      */
-    public function instance_fields()
+    public function instance_fields(): array
     {
+        $fields             = array();
         $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
         $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
         $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
@@ -526,8 +527,9 @@ class AmpacheHttpq extends localplay_controller
      * That this Localplay method supports. required function
      * @return array
      */
-    public function status()
+    public function status(): array
     {
+        $array = array();
         /* Construct the Array */
         $array['state']  = $this->_httpq->state();
         $array['volume'] = $this->_httpq->get_volume();
@@ -559,11 +561,6 @@ class AmpacheHttpq extends localplay_controller
         $options      = self::get_instance();
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
-        // Test our connection by retrieving the version
-        if ($this->_httpq->version() !== null) {
-            return true;
-        }
-
-        return false;
+        return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
     } // connect
 }

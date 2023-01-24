@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class UpdateArt4Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $overwrite = (int) $input['overwrite'] == 0;
+        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array(strtolower($type), array('artist', 'album'))) {

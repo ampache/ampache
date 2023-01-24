@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -42,36 +43,37 @@ use Ampache\Module\Util\Ui;
 class Browse extends Query
 {
     private const BROWSE_TYPES = array(
-        'song',
         'album',
-        'user',
+        'album_disk',
         'artist',
-        'live_stream',
-        'playlist',
-        'playlist_media',
-        'playlist_localplay',
-        'smartplaylist',
-        'catalog',
-        'shoutbox',
-        'tag',
-        'video',
-        'democratic',
-        'wanted',
-        'share',
-        'song_preview',
-        'channel',
         'broadcast',
-        'license',
-        'tvshow',
-        'tvshow_season',
-        'tvshow_episode',
-        'movie',
+        'catalog',
         'clip',
-        'personal_video',
+        'democratic',
         'label',
-        'pvmsg',
+        'license',
+        'live_stream',
+        'movie',
+        'personal_video',
+        'playlist',
+        'playlist_localplay',
+        'playlist_media',
         'podcast',
-        'podcast_episode'
+        'podcast_episode',
+        'pvmsg',
+        'share',
+        'shoutbox',
+        'smartplaylist',
+        'song',
+        'song_preview',
+        'tag',
+        'tag_hidden',
+        'tvshow',
+        'tvshow_episode',
+        'tvshow_season',
+        'user',
+        'video',
+        'wanted'
     );
 
     /**
@@ -104,7 +106,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -213,10 +215,8 @@ class Browse extends Query
         // simple browse because we've got too much here
         if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
-        } else {
-            if (!count($object_ids)) {
-                $this->set_total(0);
-            }
+        } elseif (!count($object_ids)) {
+            $this->set_total(0);
         }
 
         // Load any additional object we need for this
@@ -286,26 +286,30 @@ class Browse extends Query
             case 'album':
                 Album::build_cache($object_ids);
                 $box_title         = T_('Albums') . $match;
-                $allow_group_disks = false;
-                if (is_array($argument)) {
-                    $allow_group_disks = $argument['group_disks'];
-                    if (array_key_exists('title', $argument)) {
-                        $box_title = $argument['title'];
-                    }
-                }
-                if (AmpConfig::get('album_group')) {
-                    $allow_group_disks = true;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
                 }
                 $box_req = Ui::find_template('show_albums.inc.php');
+                break;
+            case 'album_disk':
+                $box_title         = T_('Albums') . $match;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
+                }
+                $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
             case 'user':
                 $box_title = T_('Browse Users') . $match;
                 $box_req   = Ui::find_template('show_users.inc.php');
                 break;
             case 'artist':
-                $box_title = ($this->is_album_artist())
-                    ? T_('Album Artists') . $match
-                    : T_('Artists') . $match;
+                if ($this->is_album_artist()) {
+                    $box_title = T_('Album Artist') . $match;
+                } elseif ($this->is_song_artist()) {
+                    $box_title = T_('Song Artist') . $match;
+                } else {
+                    $box_title = T_('Artist') . $match;
+                }
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
@@ -344,6 +348,11 @@ class Browse extends Query
                 $box_title = T_('Genres');
                 $box_req   = Ui::find_template('show_tagcloud.inc.php');
                 break;
+            case 'tag_hidden':
+                Tag::build_cache($object_ids);
+                $box_title = T_('Genres');
+                $box_req   = Ui::find_template('show_tagcloud_hidden.inc.php');
+                break;
             case 'video':
                 Video::build_cache($object_ids);
                 $video_type = 'video';
@@ -365,10 +374,6 @@ class Browse extends Query
             case 'song_preview':
                 $box_title = T_('Songs');
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
-                break;
-            case 'channel':
-                $box_title = T_('Channels');
-                $box_req   = Ui::find_template('show_channels.inc.php');
                 break;
             case 'broadcast':
                 $box_title = T_('Broadcasts');
@@ -444,10 +449,8 @@ class Browse extends Query
             echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
-        } else {
-            if (!$this->is_use_pages()) {
-                $this->show_next_link($argument);
-            }
+        } elseif (!$this->is_use_pages()) {
+            $this->show_next_link($argument);
         }
         Ajax::end_container();
     } // show_object
@@ -476,16 +479,26 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = '')
     {
+        if ($type === 'album_artist') {
+            $this->set_type('artist', $custom_base);
+            $this->set_album_artist(true);
+
+            return;
+        }
+        if ($type === 'song_artist') {
+            $this->set_type('artist', $custom_base);
+            $this->set_song_artist(true);
+
+            return;
+        }
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_pages(Core::get_cookie($name) == 'true');
             }
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
                 $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
                     AmpConfig::get('libitem_browse_alpha'));
@@ -495,13 +508,12 @@ class Browse extends Query
             }
             $name = 'browse_' . $type . '_grid_view';
             if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
-                        FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+                $this->set_grid_view(Core::get_cookie($name) == 'true');
             }
 
             parent::set_type($type, $custom_base);
         } else {
-            debug_event(self::class, 'set_type invalid type: ' . filter_var($type, FILTER_SANITIZE_STRING), 5);
+            debug_event(self::class, 'set_type invalid type: ' . $type, 5);
         }
     }
 
@@ -584,12 +596,34 @@ class Browse extends Query
 
     /**
      *
+     * @param boolean $song_artist
+     */
+    public function set_song_artist($song_artist)
+    {
+        $this->_state['song_artist'] = $song_artist;
+    }
+
+    /**
+     *
      * @return boolean
      */
     public function is_album_artist()
     {
         if (array_key_exists('album_artist', $this->_state)) {
             return make_bool($this->_state['album_artist']);
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_song_artist()
+    {
+        if (array_key_exists('song_artist', $this->_state)) {
+            return make_bool($this->_state['song_artist']);
         }
 
         return false;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,7 @@ final class RecordPlay4Method
      */
     public static function record_play(array $input): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'user'), self::ACTION)) {
+        if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
         $api_user  = User::get_from_username(Session::username($input['auth']));

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class LocalplayMethod
      * @param array $input
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
      * id
@@ -134,6 +134,10 @@ final class LocalplayMethod
                 break;
             case 'status':
                 $status = $localplay->status();
+                if ($input['api_format'] == 'json') {
+                    $status['repeat'] = (bool)$status['repeat'];
+                    $status['random'] = (bool)$status['random'];
+                }
                 break;
             default:
                 // They are doing it wrong

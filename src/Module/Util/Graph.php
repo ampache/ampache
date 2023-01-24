@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,13 +38,12 @@ class Graph
 {
     public function __construct()
     {
-        if (!AmpConfig::get('statistical_graphs') || !is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
-
-            return false;
+        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+            return true;
         }
+        debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
 
-        return true;
+        return false;
     }
 
     /**
@@ -296,8 +295,8 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog) {
-            $catalog_ids = Catalog::get_catalogs();
-            foreach ($catalog_ids as $catalog_id) {
+            $catalogs = Catalog::get_catalogs();
+            foreach ($catalogs as $catalog_id) {
                 $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date,
                     $end_date, $zoom);

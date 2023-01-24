@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,10 @@ final class ArtistAlbums4Method
             return false;
         }
         $artist = new Artist($input['filter']);
-        $albums = static::getAlbumRepository()->getByArtist($artist->id);
+        $albums = array();
+        if (isset($artist->id)) {
+            $albums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+        }
         $user   = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
@@ -63,12 +66,12 @@ final class ArtistAlbums4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::albums($albums, array(), $user->id);
+                echo Json4_Data::albums($albums, array(), $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::albums($albums, array(), $user->id);
+                echo Xml4_Data::albums($albums, array(), $user);
         }
 
         return true;

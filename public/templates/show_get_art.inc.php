@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,8 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var int $object_id */
 /** @var string $burl */
-?>
-<?php
+
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', array());
@@ -85,19 +84,12 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
                <input type="file" id="file" name="file" value="" />
             </td>
         </tr>
-       <?php
-        if (in_array('spotify', $art_order)) {
-            if ($object_type == 'album') {?>
-      <tr>
+        <?php if (in_array('spotify', $art_order)) {
+            if ($object_type == 'album') { ?>
+        <tr>
              <th class="center" rowspan="3" style>
                 <?php echo T_('Spotify Album Filters'); ?>
              </th>
-             <td>
-                <label for="for artistFilter"><?php echo T_('Artist'); ?></label>
-                <input type="checkbox" id="artistFilter"
-                    name="artist_filter" value="artist"
-                     onchange="validateArtist()">
-             </td>
          </tr>
         <tr>
            <td>
@@ -149,16 +141,3 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
     </div>
 </form>
 <?php UI::show_box_bottom(); ?>
-<script>
-    function validateArtist()
-    {
-       var artist = document.getElementById('option_artist');
-
-       var checked = document.getElementById('artistFilter').checked;
-       if (checked == true) {
-         artist.setAttribute("required", "true");
-       } else {
-         artist.removeAttribute('required');
-       }
-    }
-</script>

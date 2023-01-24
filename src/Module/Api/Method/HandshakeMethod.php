@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -73,7 +73,7 @@ final class HandshakeMethod
         $data_version = (int)substr($version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int)($version) < Api::$auth_version && $data_version !== 5) {
+        if ((int)($version) < Api::$auth_version && $data_version !== 6) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
@@ -94,7 +94,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: $username ($user_id)", 1);
+        debug_event(self::class, "Login$data_version Attempt, IP: $user_ip Time: $timestamp User: " . ($client->username ?? '') . " ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;

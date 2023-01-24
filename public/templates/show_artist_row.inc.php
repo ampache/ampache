@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -77,7 +77,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     } ?>
     </span>
 </td>
-<td class="cel_songs optional"><?php echo $libitem->songs; ?></td>
+<td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
 <td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
 <td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>

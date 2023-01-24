@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,12 +70,12 @@ final class Stats3Method
                     if ($type == "recent") {
                         if (!empty($username)) {
                             if ($user !== null) {
-                                $albums = $user->get_recently_played($limit, 'album');
+                                $albums = $user->get_recently_played('album', $limit);
                             } else {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
-                            $albums = Stats::get_recent("album", $limit, $offset);
+                            $albums = Stats::get_recent('album', $limit, $offset);
                         }
                     } else {
                         if ($type == "flagged") {
@@ -93,7 +93,7 @@ final class Stats3Method
 
         if ($albums !== null) {
             ob_end_clean();
-            echo Xml3_Data::albums($albums, array(), $user->id);
+            echo Xml3_Data::albums($albums, array(), $user);
         }
     } // stats
 

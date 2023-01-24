@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -156,7 +156,7 @@ class Catalog_beets extends Catalog
         $last_added = date("Y-m-d H:i:s", $this->last_add);
         $last_date  = new DateTime($last_added);
         if (date_diff($date, $last_date) < 0) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
+            debug_event(self::class, 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;
         }

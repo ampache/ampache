@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,16 +86,21 @@ final class TagAction implements ApplicationActionInterface
         $browse2 = $this->modelFactory->createBrowse();
         $browse2->set_type($browse_type);
         $browse2->store();
+        if ($request_type == 'tag_hidden') {
+            require_once Ui::find_template('show_tagcloud_hidden.inc.php');
 
-        require_once Ui::find_template('show_tagcloud.inc.php');
+            $this->ui->showBoxBottom();
+        } else {
+            require_once Ui::find_template('show_tagcloud.inc.php');
 
-        $this->ui->showBoxBottom();
+            $this->ui->showBoxBottom();
 
-        $type = $browse2->get_type();
+            $type = $browse2->get_type();
 
-        require_once Ui::find_template('browse_content.inc.php');
+            require_once Ui::find_template('browse_content.inc.php');
 
-        $browse->store();
+            $browse->store();
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

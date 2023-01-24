@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,9 +32,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php
-$browse = new Browse();
+/* @var string $object_type */
+/* @var Ampache\Repository\Model\TVShow $tvshow */
+/* @var array $object_ids */
+
+$web_path = AmpConfig::get('web_path');
+$browse   = new Browse();
 $browse->set_type($object_type);
 
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
@@ -45,8 +48,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     <div id="item_summary">
         <?php echo $tvshow->summary; ?>
     </div>
-    <?php
-    } ?>
+    <?php } ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php
@@ -57,10 +59,8 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     <span id="userflag_<?php echo $tvshow->id; ?>_tvshow">
         <?php echo Userflag::show($tvshow->id, 'tvshow'); ?>
     </span>
-    <?php
-    } ?>
-<?php
-    } ?>
+    <?php } ?>
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
@@ -68,20 +68,17 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play', T_('Play All'), 'directplay_full_' . $tvshow->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_tvshow_' . $tvshow->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo addslashes(T_('TV Show Edit')) ?>', '')">
@@ -89,8 +86,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
                 <?php echo T_('Edit TV Show'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
         <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo $web_path; ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
@@ -98,8 +94,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php
-    } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

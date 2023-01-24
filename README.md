@@ -8,20 +8,7 @@
 
 ## News
 
-This cycle we have added support for multiple Album and Song artists.
-This allows multiple artists to be part of a single song/album object and is created from file tags.
-
-We rely on 3 tags right now [picard-docs](https://picard-docs.musicbrainz.org/downloads/MusicBrainz_Picard_Tag_Map.html)
-
-* Artists: Array of Artist names that are looked up and matched to Song Artist (Ignored if count is the same as MusicBrainz Artist ID)
-* MusicBrainz Artist ID: Array of MBID values that denote Song Artist
-* MusicBrainz Release Artist ID: Array of MBID values that denote Album Artist
-
-If these are not arrays, we try to split and create arrays to do the lookups
-The reason the regular artist and albumartist tags are ignored (for now) is due to how awful these fields can be.
-If you don't use these tags nothing will change and will function as normal.
-
-To do a full catalog verify, disable catalog_verify_by_time in your config file.
+Ampache6 is about to shake up the develop branch. Keep track using the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details)
 
 ## Basics
 
@@ -64,8 +51,12 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * IIS
 
 * PHP 7.1-7.4 (Ampache 4.x.x)
-* PHP 7.4 (Ampache 5.0.x)
-* PHP 8.0 (Ampache 5.1.x)
+* PHP 7.4 (Ampache 5.0.x and higher)
+* PHP 8.0 (Ampache 5.1.x and higher)
+* PHP 8.1 (Ampache 5.5.0 and higher)
+* PHP 8.2 (Ampache 6.0.0 and higher)
+
+**NOTE** That php7.4 will not be released for Ampache6 but can still be used.
 
 * PHP modules:
   * PDO
@@ -88,8 +79,8 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 If you are upgrading from an older version of Ampache we recommend
 moving the old directory out of the way, extracting the new copy in
-its place and then copying the old /config/ampache.cfg.php, /rest/.htaccess,
-/channel/.htaccess, and /play/.htaccess files if any.
+its place and then copying the old /config/ampache.cfg.php,
+/rest/.htaccess, and /play/.htaccess files if any.
 All database updates will be handled by Ampache.
 
 ## License

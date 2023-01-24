@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,32 +45,41 @@ final class SortFilesCommand extends Command
 
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
+            ->option('-f|--files', T_('Rename files and keep them in the current folder'), 'boolval', false)
+            ->option('-l|--limit', T_('Limit how many moves to allow before stopping'), 'intval', 0)
+            ->option('-w|--windows', T_('Replace all Windows-incompatible characters with an underscore'), 'boolval', false)
             ->option('-n|--name', T_('Sets the default name for `Various Artists`'), 'strval')
+            ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->usage('<bold>  cleanup:sortSongs</end> <comment> ## ' . T_('Sort song files') . '<eol/>');
     }
 
-    public function execute(): void
-    {
-        $io     = $this->app()->io();
-        $values = $this->values();
-        $dryRun = $values['execute'] === false;
+    public function execute(
+        ?string $catalogName
+    ): void {
+        $interactor = $this->app()->io();
+        $values     = $this->values();
+        $dryRun     = $values['execute'] === false;
 
         if ($dryRun === true) {
-            $io->info(
+            $interactor->info(
                 T_('Running in Test Mode. Use -x to execute'),
                 true
             );
         } else {
-            $io->warn(
+            $interactor->warn(
                 T_('Running in Write Mode. Make sure you\'ve tested first!'),
                 true
             );
         }
 
         $this->songSorter->sort(
-            $io,
+            $interactor,
             $dryRun,
-            $values['name']
+            $values['files'],
+            $values['limit'],
+            $values['windows'],
+            $values['name'],
+            $catalogName
         );
     }
 }

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -120,13 +120,13 @@ final class AddUserAction implements ApplicationActionInterface
 
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            $captcha         = captcha::solved();
+            $captcha = captcha::solved();
             if (!isset($captcha)) {
                 AmpError::add('captcha', T_('Captcha is required'));
             }
             if (isset($captcha)) {
                 if ($captcha) {
-                    $msg="SUCCESS";
+                    $msg = "SUCCESS";
                 } else {
                     AmpError::add('captcha', T_('Captcha failed'));
                 }

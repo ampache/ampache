@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ use Ampache\Module\Util\Ui;
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('podcast', $libitem->id, $libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
@@ -64,8 +64,7 @@ use Ampache\Module\Util\Ui;
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast"><?php echo Rating::show($libitem->id, 'podcast'); ?></span>
                 <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast"><?php echo Userflag::show($libitem->id, 'podcast'); ?></span>
-            <?php
-            } ?>
+            <?php } ?>
         </td>
     <?php } ?>
 <td class="cel_action">
@@ -83,6 +82,5 @@ use Ampache\Module\Util\Ui;
     <a id="<?php echo 'delete_podcast_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
-    <?php
-    } ?>
+    <?php } ?>
 </td>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,9 +30,9 @@ if ($blink) {
 } ?>
 <?php Ui::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
-    <?php
+    <?php $web_path = AmpConfig::get('web_path');
     foreach ($gtypes as $gtype) {
-        $graph_link = AmpConfig::get('web_path') . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
+        $graph_link = $web_path . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
     <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
         <br /><br />
     <?php
@@ -46,8 +46,7 @@ if (AmpConfig::get('geolocation')) { ?>
         $graph = new Graph();
         $graph->display_map($user_id, $object_type, $object_id, $start_date, $end_date, $zoom); ?>
     </div>
-<?php
-    } ?>
+<?php } ?>
 
 <form action='<?php echo get_current_path(); ?>' method='post' enctype='multipart/form-data'>
     <dl class="media_details">
@@ -82,7 +81,7 @@ if (AmpConfig::get('geolocation')) { ?>
     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
-    <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_URL); ?>" />
+    <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
     <input type="hidden" name="type" value="<?php echo $type; ?>" />
 </form>
 <script>

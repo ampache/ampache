@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -106,10 +106,7 @@ class Wanted extends database_object
      */
     public function __construct($wanted_id)
     {
-        /* Get the information from the db */
         $info = static::getWantedRepository()->getById((int) $wanted_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -119,7 +116,7 @@ class Wanted extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -142,10 +139,10 @@ class Wanted extends database_object
         } catch (Exception $error) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
-            return null;
+            return array();
         }
 
-        $wartist   = array();
+        $wartist = array();
         if (!$artist) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
@@ -165,7 +162,7 @@ class Wanted extends database_object
                     }
 
                     if ($add) {
-                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && ($artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
+                        if (empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) && (!empty($artist) && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))) {
                             $wantedid = self::get_wanted($group->id);
                             $wanted   = new Wanted($wantedid);
                             if ($wanted->id) {
@@ -283,7 +280,9 @@ class Wanted extends database_object
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
+                $userId = (empty(Core::get_global('user')) || Core::get_global('user')->has_access(75))
+                    ? null
+                    : Core::get_global('user')->id;
                 static::getWantedRepository()->deleteByMusicbrainzId(
                     print_r($malbum->{'release-group'}, true),
                     $userId
@@ -297,7 +296,7 @@ class Wanted extends database_object
      */
     public function accept()
     {
-        if (Core::get_global('user')->has_access('75')) {
+        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array($this->mbid));
             $this->accepted = true;
@@ -323,7 +322,7 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
+        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept');
         $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 
@@ -343,13 +342,13 @@ class Wanted extends database_object
     {
         if ($this->id) {
             if (!$this->accepted) {
-                if (Core::get_global('user')->has_access('75')) {
+                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
                     echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'),
                         'wanted_accept_' . $this->mbid);
                 }
             }
             if (
-                Core::get_global('user')->has_access('75') ||
+                Core::get_global('user')->has_access(75) ||
                 (
                     static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
                     $this->accepted != '1'
@@ -458,7 +457,7 @@ class Wanted extends database_object
      */
     public function get_fullname()
     {
-        return filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return $this->name;
     }
 
     /**

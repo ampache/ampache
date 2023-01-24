@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -67,6 +68,7 @@ class AlbumsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
+        $user       = $this->mock(User::class);
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -87,6 +89,11 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $this->subject->handle(
             $gatekeeper,
             $response,
@@ -106,9 +113,9 @@ class AlbumsMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $userId  = 666;
         $result  = 'some-result';
         $include = [123, 456];
         $limit   = 42;
@@ -133,16 +140,16 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([$album]);
 
-        $gatekeeper->shouldReceive('getUser->getId')
+        $gatekeeper->shouldReceive('getUser')
             ->withNoArgs()
             ->once()
-            ->andReturn($userId);
+            ->andReturn($user);
 
         $output->shouldReceive('albums')
             ->with(
                 [$album],
                 $include,
-                $userId,
+                $user,
                 true,
                 true,
                 $limit,

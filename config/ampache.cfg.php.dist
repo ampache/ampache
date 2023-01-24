@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 61
+config_version = 64
 
 ;#########################################################
 ; Auto Update                                            #
@@ -375,9 +375,9 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This setting allows/disallows zip download of specific object types
 ; If empty, all supported object types can be zipped.
 ; Otherwise, only the given object list can be zipped.
-; POSSIBLE VALUES: artist, album, playlist, search, tmp_playlist
+; POSSIBLE VALUES: artist, album, album_disk, playlist, search, tmp_playlist
 ; DEFAULT: none
-;allow_zip_types = "album"
+;allow_zip_types = "album, album_disk"
 
 ; Art Zip Add
 ; This settings allows/disallows to include Album Art to the Zip 
@@ -390,6 +390,13 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; to your zip files, this only applies if you've got allow_zip_downloads
 ; DEFAULT: Ampache - Zip Batch Download
 ;file_zip_comment = "Ampache - Zip Batch Download"
+
+; Load the debug webplayer
+; This will load the *.js player instead of the *.min.js player
+; The unminified player has a lot of console.log() statements in the code.
+; You can make changes and then check how the player is functioning.
+; DEFAULT: "false"
+;webplayer_debug = "true"
 
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
@@ -561,14 +568,16 @@ sociable = "true"
 
 ; Album Art Store on Disk
 ; This defines if arts should be stored on disk instead of database.
+; You must also set a local_metadata_dir below. This folder should be
+; a local folder that is not accessible from a browser.
 ; DEFAULT: "false"
 ;album_art_store_disk = "true"
 
 ; Local Metadata Directory
-; This define a local metadata directory with write access where to store
-; heavy data if enabled (album arts, ...)
+; This define a local metadata directory OUTSIDE the web path with write access.
+; This is used to store heavy data if enabled (album art, waveforms, etc)
 ; DEFAULT: none
-;local_metadata_dir = "/metadata"
+;local_metadata_dir = "/var/www/metadata"
 
 ; Maximal upload size
 ; Specify the maximal allowed upload size for images, in bytes.
@@ -577,8 +586,8 @@ sociable = "true"
 
 ; Album Art Minimum Width
 ; Specify the minimum width for arts (in pixel).
-; DEFAULT: none
-;album_art_min_width = 100
+; DEFAULT: 30
+album_art_min_width = 30
 
 ; Album Art Maximum Width
 ; Specify the maximum width for arts (in pixel).
@@ -587,8 +596,8 @@ sociable = "true"
 
 ; Album Art Minimum Height
 ; Specify the minimum height for arts (in pixel).
-; DEFAULT: none
-;album_art_min_height = 100
+; DEFAULT: 30
+album_art_min_height = 30
 
 ; Album Art Maximum Height
 ; Specify the maximum height for arts (in pixel).
@@ -616,8 +625,10 @@ playlist_art = "true"
 ;  https://github.com/ampache/ampache/issues/1515
 ;  http://www.pchart.net/license
 ; REFERENCE: https://github.com/ampache/ampache/wiki/chart-faq
-; You can enable c-chart with the following command
-;  composer require szymach/c-pchart "2.*"
+; You can enable c-chart with the following command:
+;  composer install --dev
+; Or add it as a non-dev requirement with:
+;  composer require szymach/c-pchart "3.*"
 ; DEFAULT: "false"
 ;statistical_graphs = "true"
 
@@ -627,10 +638,10 @@ playlist_art = "true"
 ; methods simply leave it out. DB should be left as the first
 ; method unless you want it to overwrite what's already in the
 ; database
-; POSSIBLE VALUES (builtins): db tags folder lastfm musicbrainz google
+; POSSIBLE VALUES (builtins): db tags folder spotify musicbrainz google
 ; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
-; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
-art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
+; DEFAULT: db,tags,folder,spotify,musicbrainz
+art_order = "db,tags,folder,spotify,musicbrainz"
 
 ; Gather song art
 ; Gather song art additionally to the album art. This will add each
@@ -658,7 +669,7 @@ art_order = "db,spotify,TheAudioDb,musicbrainz,lastfm,tags,folder"
 
 ; Art search limit
 ;  Limit the total images returned
-;  DEFAULT: 5
+;  DEFAULT: 15
 ;art_search_limit = 15
 
 ; Recommendations
@@ -732,12 +743,6 @@ wanted_types = "album,official"
 ; DEFAULT: "false"
 ;broadcast = "true"
 
-; Channels
-; Set this to true to enable channels and the
-; possibility for users to create channels from playlists
-; DEFAULT: "false"
-;channel = "true"
-
 ; Live Streams
 ; Set this to true to enable live streams (radio) and the
 ; possibility for users to add new live streams.
@@ -788,7 +793,7 @@ refresh_limit = "60"
 ; a stream or status page.
 ; If this value is not set, no CSS will be used. Custom CSS can
 ; still be applied in the other application, like OBS.
-; DEFAULT: Not enabled
+; DEFAULT: "templates/now-playing.css"
 ;now_playing_css_file = "templates/now-playing.css"
 
 ; Footer Statistics
@@ -1219,6 +1224,9 @@ send_full_stream = "webplayer"
 ;cache_path = "/tmp"
 
 ; Default audio output format
+; This is what you want your cached format to be.
+; This should match your 'encode_target' in Transcode Settings
+; POSSIBLE VALUES: mp3 opus ogg
 ; DEFAULT: none
 ;cache_target = "mp3"
 

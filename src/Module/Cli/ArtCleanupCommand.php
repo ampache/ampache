@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,9 +46,9 @@ final class ArtCleanupCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
-        $io->info(
+        $interactor->info(
             'This file cleans the image table for items that don\'t fit into set dimensions',
             true
         );
@@ -60,15 +60,15 @@ final class ArtCleanupCommand extends Command
         );
 
         if ($runable === false) {
-            $io->error(T_('Error: A minimum OR maximum height/width must be specified in the config'), true);
-            $io->error(T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'), true);
-            $io->error(T_('Maximum Dimensions: album_art_max_width AND album_art_max_height'));
+            $interactor->error(T_('Error: A minimum OR maximum height/width must be specified in the config'), true);
+            $interactor->error(T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'), true);
+            $interactor->error(T_('Maximum Dimensions: album_art_max_width AND album_art_max_height'));
 
             return;
         }
 
         $this->artCleanup->cleanup();
 
-        $io->ok('Clean Completed', true);
+        $interactor->ok('Clean Completed', true);
     }
 }

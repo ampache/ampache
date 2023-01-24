@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,6 +49,7 @@ class Catalog_soundcloud extends Catalog
     private $type        = 'soundcloud';
     private $description = 'SoundCloud Remote Catalog';
 
+    private int $catalog_id;
     private string $authcode;
 
     /**
@@ -129,7 +130,7 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isReady()
     {
@@ -161,12 +162,11 @@ class Catalog_soundcloud extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)($catalog_id);
-            $info     = $this->get_info($catalog_id);
-
+            $info = $this->get_info($catalog_id);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
+            $this->catalog_id = (int)$catalog_id;
         }
     }
 
@@ -224,7 +224,7 @@ class Catalog_soundcloud extends Catalog
         echo "<form action='" . get_current_path() . "' method='post' enctype='multipart/form-data'>";
         if (Core::get_request('action')) {
             echo "<input type='hidden' name='action' value='" . scrub_in(Core::get_request('action')) . "' />";
-            echo "<input type='hidden' name='catalogs[]' value='" . $this->id . "' />";
+            echo "<input type='hidden' name='catalogs[]' value='" . $this->catalog_id . "' />";
         }
         echo "<input type='hidden' name='perform_ready' value='true' />";
         echo "<input type='text' name='authcode' />";
@@ -325,8 +325,8 @@ class Catalog_soundcloud extends Catalog
                             if ($this->check_remote_song($data)) {
                                 debug_event('soundcloud.catalog', 'Skipping existing song ' . $data['file'], 5);
                             } else {
-                                $data['catalog'] = $this->id;
-                                debug_event('soundcloud.catalog', 'Adding song ' . $data['file'], 5, 'ampache-catalog');
+                                $data['catalog'] = $this->catalog_id;
+                                debug_event('soundcloud.catalog', 'Adding song ' . $data['file'], 5);
                                 if (!Song::insert($data)) {
                                     debug_event('soundcloud.catalog', 'Insert failed for ' . $data['file'], 1);
                                     AmpError::add('general', T_('Unable to insert song - %s'), $data['file']);
@@ -380,10 +380,9 @@ class Catalog_soundcloud extends Catalog
             $api = $this->createClient();
             if ($api != null) {
                 $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-                $db_results = Dba::read($sql, array($this->id));
+                $db_results = Dba::read($sql, array($this->catalog_id));
                 while ($row = Dba::fetch_assoc($db_results)) {
-                    debug_event('soundcloud.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                        'ampache-catalog');
+                    debug_event('soundcloud.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
                     $remove = false;
                     try {
                         $track = $this->url_to_track($row['file']);
@@ -395,17 +394,16 @@ class Catalog_soundcloud extends Catalog
                         if ($error->getHttpCode() == '404') {
                             $remove = true;
                         } else {
-                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5,
-                                'ampache-catalog');
+                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5);
                         }
                     } catch (Exception $error) {
-                        debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
+                        debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5);
                     }
 
                     if (!$remove) {
-                        debug_event('soundcloud.catalog', 'keeping song', 5, 'ampache-catalog');
+                        debug_event('soundcloud.catalog', 'keeping song', 5);
                     } else {
-                        debug_event('soundcloud.catalog', 'removing song', 5, 'ampache-catalog');
+                        debug_event('soundcloud.catalog', 'removing song', 5);
                         $dead++;
                         Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                     }
@@ -422,6 +420,14 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
+     * @return array
+     */
+    public function check_catalog_proc()
+    {
+        return array();
+    }
+
+    /**
      * move_catalog_proc
      * This function updates the file path of the catalog to a new location (unsupported)
      * @param string $new_path
@@ -433,7 +439,7 @@ class Catalog_soundcloud extends Catalog
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function cache_catalog_proc()
     {

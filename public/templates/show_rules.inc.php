@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var null|Search $playlist */
 
+$currentType = (isset($currentType))
+    ? $currentType
+    : Core::get_request('type');
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
@@ -34,7 +37,7 @@ if (isset($playlist)) {
 }
 $logic_operator = strtolower($logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) scrub_out(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) ?: 'song'; ?>"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType ?: 'song'; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
@@ -46,7 +49,7 @@ $logic_operator = strtolower($logic_operator); ?>
                         <option value="and" <?php if ($logic_operator == 'and') {
     echo 'selected="selected"';
 }?>><?php echo T_('all rules'); ?></option>
-                        <option value="or"  <?php if ($logic_operator == 'or') {
+                        <option value="or" <?php if ($logic_operator == 'or') {
     echo 'selected="selected"';
 }?>><?php echo T_('any rule'); ?></option>
                 </select>
@@ -69,8 +72,8 @@ $logic_operator = strtolower($logic_operator); ?>
 if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
-    $mysearch = new Search(null, (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-    $mysearch->parse_rules(Search::clean_request($_REQUEST));
+    $mysearch = new Search(null, $currentType);
+    $mysearch->set_rules($_REQUEST);
     $out = $mysearch->to_js();
 }
 if ($out) {

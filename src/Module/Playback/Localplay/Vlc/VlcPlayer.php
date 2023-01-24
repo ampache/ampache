@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,11 +83,8 @@ class VlcPlayer
     {
         $args    = array();
         $results = $this->sendCommand('status.xml', $args);
-        if ($results === null) {
-            return null;
-        }
 
-        return true;
+        return ($results !== null);
     } // version
 
     /**
@@ -292,7 +289,6 @@ class VlcPlayer
         return $results;
     } // fullstate
 
-
     /**
      * volume_up
      * This increases the volume of VLC, set to +20 can be changed to your preference
@@ -331,7 +327,6 @@ class VlcPlayer
      */
     public function set_volume($value)
     {
-
         // Convert it to base 400
         $value   = $value * 4;
         $args    = array('command' => 'volume', '&val' => $value);
@@ -365,7 +360,6 @@ class VlcPlayer
      */
     public function get_tracks()
     {
-
         // Gets complete playlist + medialib in VLC's case, needs to be looked at
         $args = array();
 
@@ -383,7 +377,7 @@ class VlcPlayer
      * request to the VLC server and getting the response
      * @param $cmd
      * @param $args
-     * @return array|void|null
+     * @return array|null
      */
     private function sendCommand($cmd, $args)
     {

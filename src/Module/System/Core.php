@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,14 +61,8 @@ class Core
         if (!array_key_exists($variable, $_REQUEST)) {
             return '';
         }
-        if (filter_has_var(INPUT_POST, $variable)) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        if (filter_has_var(INPUT_GET, $variable)) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
 
-        return filter_var($_REQUEST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return scrub_in($_REQUEST[$variable]);
     }
 
     /**
@@ -83,11 +77,8 @@ class Core
         if (!array_key_exists($variable, $_GET)) {
             return '';
         }
-        if (filter_has_var(INPUT_GET, $variable)) {
-            return filter_input(INPUT_GET, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
 
-        return filter_var($_GET[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return scrub_in($_GET[$variable]);
     }
 
     /**
@@ -104,11 +95,8 @@ class Core
         if (!array_key_exists($variable, $_COOKIE)) {
             return '';
         }
-        if (filter_has_var(INPUT_COOKIE, $variable)) {
-            return filter_input(INPUT_COOKIE, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
 
-        return filter_var($_COOKIE[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return scrub_in($_COOKIE[$variable]);
     }
 
     /**
@@ -123,15 +111,8 @@ class Core
         if (!array_key_exists($variable, $_SERVER)) {
             return '';
         }
-        if (filter_has_var(INPUT_SERVER, $variable)) {
-            return filter_input(INPUT_SERVER, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
-        // INPUT_SERVER can sometimes fail
-        if (filter_has_var(INPUT_ENV, $variable)) {
-            return filter_input(INPUT_ENV, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
 
-        return filter_var($_SERVER[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return scrub_in($_SERVER[$variable]);
     }
 
     /**
@@ -146,11 +127,8 @@ class Core
         if (!array_key_exists($variable, $_POST)) {
             return '';
         }
-        if (filter_has_var(INPUT_POST, $variable)) {
-            return filter_input(INPUT_POST, $variable, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        }
 
-        return filter_var($_POST[$variable], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        return scrub_in($_POST[$variable]);
     }
 
     /**
@@ -162,11 +140,11 @@ class Core
     public static function get_user_ip()
     {
         // get the x forward if it's valid
-        if (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)) {
-            return filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR') && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
+            return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
     }
 
     /**
@@ -333,6 +311,12 @@ class Core
      */
     public static function is_readable($path)
     {
+        if (!$path) {
+            return false;
+        }
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return true;
+        }
         if (file_exists($path)) {
             if (is_dir($path)) {
                 $handle = opendir($path);
@@ -364,7 +348,7 @@ class Core
      */
     public static function get_filesize($filename)
     {
-        if (!file_exists($filename)) {
+        if (!$filename || !file_exists($filename)) {
             return 0;
         }
         $size = filesize($filename);

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json4_Data;
+use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {
@@ -63,10 +65,23 @@ final class JsonOutput implements ApiOutputInterface
 
     /**
      * At the moment, this method just acts as a proxy
+     */
+    public function error5(int $code, string $message, string $action, string $type): string
+    {
+        return Json5_Data::error(
+            $code,
+            $message,
+            $action,
+            $type
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
      *
      * @param integer[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param User $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -76,8 +91,8 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function albums(
         array $albums,
-        array $include = [],
-        ?int $user_id = null,
+        array $include,
+        User $user,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,
@@ -86,6 +101,6 @@ final class JsonOutput implements ApiOutputInterface
         Json_Data::set_offset($offset);
         Json_Data::set_limit($limit);
 
-        return Json_Data::albums($albums, $include, $user_id, $encode, $asObject);
+        return Json_Data::albums($albums, $include, $user, $encode, $asObject);
     }
 }

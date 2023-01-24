@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,13 +58,12 @@ final class AlbumArtistAction implements ApplicationActionInterface
         session_start();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->set_type('artist');
+        $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
-        $browse->set_album_artist(true);
 
         $this->ui->showHeader();
 
-        $this->ui->show('show_browse_form.inc.php');
+        $this->ui->show('show_form_browse.inc.php');
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

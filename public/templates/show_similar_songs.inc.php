@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -31,12 +30,12 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 
+/** @var Ampache\Repository\Model\Artist $artist */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
 /** @var string $limit_threshold */
-/** @var Artist $artist */
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -70,18 +69,16 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
         <th class="cel_time optional"><?php echo T_('Time'); ?></th>
         <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if (AmpConfig::get('show_skipped_times')) { ?>
             <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
-            <?php
-        } ?>
+            <?php } ?>
         <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
-            Rating::build_cache('song', $object_ids);
-            Userflag::build_cache('song', $object_ids);
-        }
+    Rating::build_cache('song', $object_ids);
+    Userflag::build_cache('song', $object_ids);
+}
         } ?>
         <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
     </tr>

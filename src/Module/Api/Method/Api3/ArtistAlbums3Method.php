@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,14 +43,17 @@ final class ArtistAlbums3Method
     public static function artist_albums(array $input)
     {
         $artist = new Artist($input['filter']);
-        $albums = static::getAlbumRepository()->getByArtist($artist->id);
+        $albums = array();
+        if (isset($artist->id)) {
+            $albums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+        }
         $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::albums($albums, array(), $user->id);
+        echo Xml3_Data::albums($albums, array(), $user);
     } // artist_albums
 
     /**

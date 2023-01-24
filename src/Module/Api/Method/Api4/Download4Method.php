@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,10 +58,10 @@ final class Download4Method
         $type     = $input['type'];
         $format   = $input['format'];
         $original = $format && $format != 'raw';
-        $user_id  = User::get_from_username(Session::username($input['auth']))->id;
+        $user     = User::get_from_username(Session::username($input['auth']));
 
         $url    = '';
-        $params = '&action=download' . '&client=api' . '&cache=1';
+        $params = '&client=api&action=download&cache=1';
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
@@ -70,11 +70,11 @@ final class Download4Method
         }
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));

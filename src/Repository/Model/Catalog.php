@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,6 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use Exception;
 use PDOStatement;
 use RecursiveDirectoryIterator;
@@ -120,10 +119,6 @@ abstract class Catalog extends database_object
      * @var string $gather_types
      */
     public $gather_types;
-    /**
-     * @var integer $filter_user
-     */
-    public $filter_user;
 
     /**
      * @var string $f_name
@@ -163,10 +158,6 @@ abstract class Catalog extends database_object
      * @var integer $enabled
      */
     public $enabled;
-    /**
-     * @var string $f_filter_user
-     */
-    public $f_filter_user;
 
     /**
      * This is a private var that's used during catalog builds
@@ -215,12 +206,12 @@ abstract class Catalog extends database_object
     abstract public function get_create_help();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function is_installed();
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function install();
 
@@ -241,13 +232,18 @@ abstract class Catalog extends database_object
     abstract public function clean_catalog_proc();
 
     /**
+     * @return array
+     */
+    abstract public function check_catalog_proc();
+
+    /**
      * @param string $new_path
      * @return boolean
      */
     abstract public function move_catalog_proc($new_path);
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract public function cache_catalog_proc();
 
@@ -270,7 +266,7 @@ abstract class Catalog extends database_object
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -424,6 +420,341 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_catalog_filters
+     * This returns the filters, sorting by name or by id as indicated by $sort
+     * $sort = field to sort on (id or name)
+     * @return array
+     */
+    public static function get_catalog_filters($sort = 'name')
+    {
+        $results = array();
+        // Now fetch the rest;
+        $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` ORDER BY `$sort` ";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_catalog_filter_names
+     * This returns the names of the catalog filters that are available with the default filter listed first.
+     * @return string[]
+     */
+    public static function get_catalog_filter_names()
+    {
+        $results = array();
+
+        // Get the default filter and name
+        // Default filter is always the first one.
+        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` = 0";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $results[]  = $row['name'];
+
+        // Now fetch the rest;
+        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` > 0 ORDER BY `name`";
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    public static function get_catalog_filter_name($group_id = 0)
+    {
+        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($group_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'] ?? '';
+    }
+
+    public static function get_catalog_filter_by_name($filter_name)
+    {
+        $sql        = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
+        $db_results = Dba::read($sql, array($filter_name));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['id'];
+    }
+
+    /**
+     * get_catalog_filter_name
+     * This returns the catalog filter name with the given ID.
+     * @return string
+     */
+    public static function get_catalog_name($filter_id = 0)
+    {
+        $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['name'];
+    }
+
+    /**
+     * @return string
+     */
+    public function get_fullname()
+    {
+        if (!isset($this->f_name)) {
+            $this->f_name = $this->name;
+        }
+
+        return $this->f_name;
+    }
+
+    /**
+     * Get item link.
+     * @return string
+     */
+    public function get_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->link)) {
+            $web_path   = AmpConfig::get('web_path');
+            $this->link = $web_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+        }
+
+        return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link  = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * filter_user_count
+     * Returns the number of users assigned to a particular filter.
+     * @return int
+     */
+    public static function filter_user_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['count'];
+    }
+
+    /**
+     * filter_catalog_count
+     * This returns the number of catalogs assigned to a filter.
+     * @return string
+     */
+    public static function filter_catalog_count($filter_id)
+    {
+        $sql        = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `enabled` = 1";
+        $db_results = Dba::read($sql, array($filter_id));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['count'];
+    }
+
+    /**
+     * filter_count
+     * This returns the number of filters.
+     * @return int
+     */
+    public static function filter_count()
+    {
+        $sql        = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group`";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+
+        return (int)$row['count'] ?? 0;
+    }
+
+    /**
+     * filter_name_exists
+     * can specifiy an ID to ignore in this check, useful for filter names.
+     * @return bool
+     */
+    public static function filter_name_exists($filter_name, $exclude_id = 0)
+    {
+        $params = array($filter_name);
+        $sql    = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
+        if ($exclude_id >= 0) {
+            $sql .= " AND `id` != ?";
+            $params[] = $exclude_id;
+        }
+
+        $db_results = Dba::read($sql, $params);
+        if (Dba::num_rows($db_results) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * check_filter_catalog_enabled
+     * Returns the `enabled` status of the filter/catalog combination
+     * @return bool
+     */
+    public static function check_filter_catalog_enabled($filter_id, $catalog_id)
+    {
+        $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
+        $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+        if (Dba::num_rows($db_results)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * check_filter_access
+     * Check that a user can access the requested catalog
+     * @return bool
+     */
+    public static function check_filter_access($catalog_id, $user_id)
+    {
+        if (AmpConfig::get('catalog_filter')) {
+            $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `catalog_id` = ? AND `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1";
+            $db_results = Dba::read($sql, array($catalog_id, $user_id));
+            if (Dba::num_rows($db_results)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * add_catalog_filter_group_map
+     * Adds appropriate rows when a catalog is added.
+     */
+    public static function add_catalog_filter_group_map($catalog_id)
+    {
+        $results    = array();
+        $sql        = "SELECT `id` FROM `catalog_filter_group` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        foreach ($results as $filter_id) {
+            $enabled = ($filter_id == 0) ? 1 : 0; // always enable for the DEFAULT group
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (?, ?, ?);";
+            $params  = array((int)$filter_id, (int)$catalog_id, $enabled);
+            Dba::write($sql, $params);
+        }
+    }
+
+    /**
+     * add_catalog_filter_group
+     * @return PDOStatement|boolean
+     */
+    public static function add_catalog_filter_group($filter_name, $catalogs)
+    {
+        // Create the filter
+        $params = array($filter_name);
+        $sql    = "INSERT INTO `catalog_filter_group` (`name`) VALUES ('$filter_name')";
+        Dba::write($sql, $params);
+        $filter_id = Dba::insert_id();
+
+        // Fill in catalog_filter_group_map table for the new filter
+        $results    = array();
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
+        foreach ($results as $catalog_id) {
+            $cn      = self::get_catalog_name($catalog_id);
+            $enabled = $catalogs[$cn];
+            $sql .= "($filter_id, $catalog_id, $enabled),";
+        }
+        // Remove last comma to avoid SQL error
+        $sql = substr($sql, 0, -1);
+
+        return Dba::write($sql);
+    }
+
+    /**
+     * edit_catalog_filter
+     * @return bool
+     */
+    public static function edit_catalog_filter($filter_id, $filter_name, $catalogs)
+    {
+        // Modify the filter name
+        $results = array();
+        $sql     = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
+        Dba::write($sql, array($filter_name, $filter_id));
+
+        // Fill in catalog_filter_group_map table for the filter
+        $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        foreach ($results as $catalog_id) {
+            $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
+            $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+            $enabled    = $catalogs[$catalog_id];
+            $sql        = (Dba::num_rows($db_results))
+                ? "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?"
+                : "INSERT INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
+            if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+                return false;
+            }
+        }
+        self::garbage_collect_filters();
+
+        return true;
+    }
+
+    /**
+     * delete_catalog_filter
+     * @return PDOStatement|boolean
+     */
+    public static function delete_catalog_filter($filter_id)
+    {
+        if ($filter_id > 0) {
+            $params = array($filter_id);
+            $sql    = "DELETE FROM `catalog_filter_group` WHERE `id` = ?";
+            if (Dba::write($sql, $params)) {
+                $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
+
+                return Dba::write($sql, $params);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * reset_user_filter
+     * reset a users's catalog filter to DEFAULT after deleting a filter group
+     */
+    public static function reset_user_filter($filter_id)
+    {
+        $sql = "UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?";
+        Dba::write($sql, array($filter_id));
+    }
+
+    /**
      * Check if a file is an audio.
      * @param string $file
      * @return boolean
@@ -501,13 +832,15 @@ abstract class Catalog extends database_object
     public static function get_enable_filter($type, $catalog_id)
     {
         $sql = "";
-        if ($type == "song" || $type == "album" || $type == "artist") {
+        if ($type == "song" || $type == "album" || $type == "artist" || $type == "album_artist") {
             if ($type == "song") {
                 $type = "id";
             }
-            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` WHERE `song_dis`.`" . $type . "` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+        } elseif ($type == "album_disk") {
+            $sql = "(SELECT DISTINCT COUNT(`album_disk`.`id`) FROM `album_disk` LEFT JOIN `album` AS `album_dis` ON `album_dis`.`id` = `album_disk`.`album_id` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `album_dis`.`catalog` WHERE `album_dis`.`id` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `album_disk`.`id`) > 0";
         } elseif ($type == "video") {
-            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` WHERE `video_dis`.`id` = " . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -522,62 +855,86 @@ abstract class Catalog extends database_object
     public static function get_user_filter($type, $user_id)
     {
         switch ($type) {
-            case "video":
-            case "artist":
             case "album":
             case "song":
+            case "video":
             case "podcast":
             case "podcast_episode":
             case "live_stream":
-                $sql = " `$type`.`id` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+            case "artist":
+                $sql = " `$type`.`id` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "song_artist":
             case "song_album":
                 $type = str_replace('song_', '', (string) $type);
-                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
+                break;
+            case "album_disk":
+                $sql = " `$type`.`album_id` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "album_artist":
-                $sql  = " `song`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `album`.`$type` IN (SELECT `object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "label":
-                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist'  AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `label_asso`.`label`) ";
+                $sql = " `label`.`id` IN (SELECT `label` FROM `label_asso` LEFT JOIN `artist` ON `label_asso`.`artist` = `artist`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'artist' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `label_asso`.`label`) ";
                 break;
             case "playlist":
-                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song'  AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist_data`.`playlist`) ";
+                $sql = " `playlist`.`id` IN (SELECT `playlist` FROM `playlist_data` LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'song' AND `catalog_map`.`object_id` = `song`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'song' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `playlist_data`.`playlist`) ";
                 break;
             case "share":
-                $sql = " `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `share`.`object_id`, `share`.`object_type`) ";
+                $sql = " `share`.`object_id` IN (SELECT `share`.`object_id` FROM `share` LEFT JOIN `catalog_map` ON `share`.`object_type` = `catalog_map`.`object_type` AND `share`.`object_id` = `catalog_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)   GROUP BY `share`.`object_id`, `share`.`object_type`) ";
                 break;
             case "tag":
-                $sql = " `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tag_map`.`tag_id`) ";
+                $sql = " `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `tag_map`.`tag_id`) ";
                 break;
             case 'tvshow':
-                $sql = " `tvshow`.`id` IN (SELECT `tvshow` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tvshow_season`.`tvshow`) ";
+                $sql = " `tvshow`.`id` IN (SELECT `tvshow` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `tvshow_season`.`tvshow`) ";
                 break;
             case 'tvshow_season':
-                $sql = " `tvshow_season`.`tvshow` IN (SELECT `season` FROM `tvshow_episode` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `tvshow_episode`.`season`) ";
+                $sql = " `tvshow_season`.`tvshow` IN (SELECT `season` FROM `tvshow_episode` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `tvshow_episode`.`season`) ";
                 break;
             case 'tvshow_episode':
             case 'movie':
             case 'personal_video':
             case 'clip':
-                $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `video`.`id`) ";
+                $sql = " `$type`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'video' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `video`.`id`) ";
+                break;
+            // enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video')
+            case "object_count_album_disk":
+                $sql = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "object_count_artist":
             case "object_count_album":
             case "object_count_song":
-            case "object_count_podcast_episode":
+            case "object_count_playlist":
+            case "object_count_genre":
+            case "object_count_catalog":
+            case "object_count_live_stream":
             case "object_count_video":
+            case "object_count_podcast":
+            case "object_count_podcast_episode":
                 $type = str_replace('object_count_', '', (string) $type);
-                $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
+                break;
+            // enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video')
+            case "rating_album_disk":
+                $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "rating_artist":
             case "rating_album":
             case "rating_song":
+            case "rating_stream":
+            case "rating_live_stream":
             case "rating_video":
+            case "rating_tvshow":
+            case "rating_tvshow_season":
+            case "rating_podcast":
             case "rating_podcast_episode":
                 $type = str_replace('rating_', '', (string) $type);
-                $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
+                break;
+            case "user_flag_album_disk":
+                $sql  = " `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = 'album' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "user_flag_artist":
             case "user_flag_album":
@@ -585,18 +942,19 @@ abstract class Catalog extends database_object
             case "user_flag_video":
             case "user_flag_podcast_episode":
                 $type = str_replace('user_flag_', '', (string) $type);
-                $sql  = " `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`filter_user` IN (0, $user_id) GROUP BY `catalog_map`.`object_id`) ";
+                $sql  = " `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = '$type' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `catalog_map`.`object_id`) ";
                 break;
             case "rating_playlist":
-                $sql  = " `rating`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist`.`id`) ";
+                $sql  = " `rating`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `playlist`.`id`) ";
                 break;
             case "user_flag_playlist":
-                $sql  = " `user_flag`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`filter_user` IN (0, $user_id) GROUP BY `playlist`.`id`) ";
+                $sql  = " `user_flag`.`object_id` IN (SELECT DISTINCT(`playlist`.`id`) FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `catalog_map` ON `playlist_data`.`object_id` = `catalog_map`.`object_id` AND `playlist_data`.`object_type` = 'song' LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  GROUP BY `playlist`.`id`) ";
                 break;
             case "catalog":
-                $sql = " `catalog`.`filter_user` IN (0, $user_id) ";
+                $sql = " `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = $user_id AND `catalog_filter_group_map`.`enabled`=1)  ";
                 break;
             default:
+                debug_event(__CLASS__, 'ERROR get_user_filter: ' . $type . ' not valid', 1);
                 $sql = "";
         }
 
@@ -662,18 +1020,18 @@ abstract class Catalog extends database_object
      */
     public static function set_update_info(string $key, int $value)
     {
-        Dba::write("REPLACE INTO `update_info` SET `key`= ?, `value`= ?;", array($key, $value));
+        Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     } // set_update_info
 
     /**
      * update_enabled
      * sets the enabled flag
-     * @param string $new_enabled
+     * @param bool $new_enabled
      * @param integer $catalog_id
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', make_bool($new_enabled), $catalog_id, '75');
+        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id, '75');
     } // update_enabled
 
     /**
@@ -683,9 +1041,9 @@ abstract class Catalog extends database_object
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param boolean $value
-     * @param integer $catalog_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $catalog_id
+     * @param int $level
      * @return PDOStatement|boolean
      */
     private static function _update_item($field, $value, $catalog_id, $level)
@@ -699,12 +1057,9 @@ abstract class Catalog extends database_object
         if (!strlen(trim((string)$value))) {
             return false;
         }
+        $sql = "UPDATE `catalog` SET `$field` = ? WHERE `id` = ?";
 
-        $value = Dba::escape($value);
-
-        $sql = "UPDATE `catalog` SET `$field`='$value' WHERE `id`='$catalog_id'";
-
-        return Dba::write($sql);
+        return Dba::write($sql, array($value, $catalog_id));
     } // _update_item
 
     /**
@@ -714,15 +1069,12 @@ abstract class Catalog extends database_object
      */
     public function format()
     {
-        $this->f_name        = filter_var($this->name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $this->link          = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
-        $this->f_link        = '<a href="' . $this->link . '" title="' . $this->f_name . '">' . $this->f_name . '</a>';
+        $this->get_fullname();
+        $this->get_link();
+        $this->get_f_link();
         $this->f_update      = $this->last_update ? get_datetime((int)$this->last_update) : T_('Never');
         $this->f_add         = $this->last_add ? get_datetime((int)$this->last_add) : T_('Never');
         $this->f_clean       = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
-        $this->f_filter_user = ($this->filter_user == 0)
-            ? T_('Public Catalog')
-            : User::get_username($this->filter_user);
     }
 
     /**
@@ -744,12 +1096,21 @@ abstract class Catalog extends database_object
             $params[] = $filter_type;
             $join     = 'AND';
         }
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= $join . self::get_user_filter('catalog', $user_id);
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "$join `enabled` = 1 ";
+            $join = 'AND';
         }
-        $sql .= "ORDER BY `name`";
-        //debug_event(__CLASS__, "get_catalogs sql:" . $sql, 5);
-
+        if (AmpConfig::get('catalog_filter')) {
+            if ($user_id > 0) {
+                $sql .= $join . self::get_user_filter('catalog', $user_id);
+                $join = 'AND';
+            }
+            if ($user_id == -1) {
+                $sql .= "$join `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0) ";
+            }
+        }
+        $sql .= "ORDER BY `name`;";
+        //debug_event(self::class, 'get_catalogs ' . $sql, 5);
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -776,7 +1137,7 @@ abstract class Catalog extends database_object
             }
             $catalog_dirs  = new RecursiveDirectoryIterator($path);
             $dir_files     = new RecursiveIteratorIterator($catalog_dirs);
-            $cache_files   = new RegexIterator($dir_files, '/\.mp3$/i');
+            $cache_files   = new RegexIterator($dir_files, "/\.$target/i");
             debug_event(__CLASS__, 'cache_catalogs: cleaning old files', 5);
             foreach ($cache_files as $file) {
                 $path    = pathinfo($file);
@@ -829,7 +1190,7 @@ abstract class Catalog extends database_object
     {
         $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::get_server_counts(0);
         $counts         = array_merge(User::count(), $counts);
-        $counts['tags'] = self::count_tags();
+        $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
         $counts['formatted_size'] = Ui::format_bytes($counts['size']);
 
@@ -894,6 +1255,7 @@ abstract class Catalog extends database_object
             return 0;
         }
 
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_soundcloud|Catalog_subsonic $classname */
         if (!$classname::create_type($insert_id, $data)) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, array($insert_id));
@@ -911,15 +1273,11 @@ abstract class Catalog extends database_object
      */
     public static function count_tags()
     {
-        // FIXME: Ignores catalog_id
-        $sql        = "SELECT COUNT(`id`) FROM `tag`";
+        $sql        = "SELECT COUNT(`id`) FROM `tag` WHERE `is_hidden` = 0;";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return 0;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**
@@ -935,14 +1293,19 @@ abstract class Catalog extends database_object
         if (!AmpConfig::get('catalog_filter')) {
             return true;
         }
-        $params = array($catalog_id);
-        $sql    = "SELECT `filter_user` FROM `catalog` WHERE `id` = ?";
+        if ($user_id == -1) {
+            // DEFAULT group only for System / Guest access
+            $params = array($catalog_id);
+            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` = 0;";
+        } else {
+            $params = array($catalog_id, $user_id);
+            $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
+        }
+        //debug_event(self::class, 'has_access ' . $sql . ' ' . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ((int)$row['filter_user'] == 0 || (int)$row['filter_user'] == $user_id) {
-                return true;
-            }
+        if (Dba::num_rows($db_results)) {
+            return true;
         }
 
         return false;
@@ -1027,26 +1390,24 @@ abstract class Catalog extends database_object
      * get_uploads_sql
      *
      * @param string $type
-     * @param integer|null $user_id
+     * @param integer $user_id
      * @return string
      */
-    public static function get_uploads_sql($type, $user_id = null)
+    public static function get_uploads_sql($type, $user_id = 0)
     {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
-        }
-
+        $sql       = '';
+        $where_sql = ($user_id > 0)
+            ? "WHERE `song`.`user_upload` = '" . $user_id . "'"
+            : "WHERE `song`.`user_upload` IS NOT NULL";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id` AS `id` FROM `song` WHERE `song`.`user_upload` = '" . $user_id . "'";
+                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `album`.`id`";
+                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
             case 'artist':
-            default:
-                $sql = "SELECT `artist`.`id` AS `id` FROM `artist` JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `artist`.`id`";
+                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
                 break;
         }
 
@@ -1067,7 +1428,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album'WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album' WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         $db_results = Dba::read($sql, array($this->id));
 
@@ -1144,11 +1505,8 @@ abstract class Catalog extends database_object
         }
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return 0;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**
@@ -1201,23 +1559,21 @@ abstract class Catalog extends database_object
     /**
      * get_artist_arrays
      *
-     * Get each array of [id, full_name, name] for artists in an array of catalog id's
+     * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param array $catalogs
      * @return array
      */
     public static function get_artist_arrays($catalogs)
     {
         $sql  = (count($catalogs) == 1)
-            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalogs[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`kind` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
-            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id` `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . Dba::escape(implode(',', $catalogs)) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`kind` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count` ORDER BY `f_name`;";
+            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalogs[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
+            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . Dba::escape(implode(',', $catalogs)) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `image`.`object_id` ORDER BY `f_name`;";
 
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            //debug_event(self::class, 'get_artist_arrays ' . print_r($row, true), 5);
             $results[] = $row;
         }
-        //debug_event(self::class, 'get_artist_arrays ' . $sql, 5);
 
         return $results;
     }
@@ -1235,7 +1591,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist' WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
             // used for recommendations / similar artists
@@ -1243,7 +1599,7 @@ abstract class Catalog extends database_object
         }
         if ($filter === 'time') {
             // used checking musicbrainz and other plugins
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND() LIMIT 500;";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE (`artist`.`last_update` < (UNIX_TIMESTAMP() - 2629800) AND `artist`.`mbid` LIKE '%-%-%-%-%') ORDER BY RAND();";
         }
         if ($filter === 'count') {
             // Update for things added in the last run or empty ones
@@ -1269,10 +1625,10 @@ abstract class Catalog extends database_object
      */
     public static function get_artists($catalogs = null, $size = 0, $offset = 0)
     {
-        $sql_where = "";
+        $sql_where = "WHERE `artist`.`album_count` > 0";
         if (is_array($catalogs) && count($catalogs)) {
             $catlist   = '(' . implode(',', $catalogs) . ')';
-            $sql_where = "WHERE `song`.`catalog` IN $catlist";
+            $sql_where = " AND `song`.`catalog` IN $catlist";
         }
 
         $sql_limit = "";
@@ -1285,10 +1641,7 @@ abstract class Catalog extends database_object
             // https://dev.mysql.com/doc/refman/5.0/en/select.html  // TODO mysql8 test
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
-        $album_type = (AmpConfig::get('album_group')) ? '`artist`.`album_group_count`' : '`artist`.`album_count`';
-
-        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, $album_type AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, $album_type ORDER BY `artist`.`name` " . $sql_limit;
-
+        $sql        = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count` AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` " . $sql_limit;
         $results    = array();
         $db_results = Dba::read($sql);
 
@@ -1362,29 +1715,27 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get all artists or artist children of a catalog id (Used for WebDav)
      * @param string $name
      * @param integer $catalog_id
      * @return array
      */
-    public static function search_childrens($name, $catalog_id = 0)
+    public static function get_children($name, $catalog_id = 0)
     {
-        $search                    = array();
-        $search['type']            = "artist";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "name";
-        if ($catalog_id > 0) {
-            $search['rule_1_input']    = $catalog_id;
-            $search['rule_1_operator'] = 0;
-            $search['rule_1']          = "catalog";
-        }
-        $artists = Search::run($search);
-
         $childrens = array();
-        foreach ($artists as $artist_id) {
+        $sql       = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
+        if ((int)$catalog_id > 0) {
+            $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
+        }
+        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ";
+        if ((int)$catalog_id > 0) {
+            $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
+        }
+        $db_results = Dba::read($sql, array($name, $name));
+        while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = array(
                 'object_type' => 'artist',
-                'object_id' => $artist_id
+                'object_id' => $row['id']
             );
         }
 
@@ -1596,7 +1947,7 @@ abstract class Catalog extends database_object
             }
 
             $parent = $libitem->get_parent();
-            if (!empty($parent)) {
+            if (!empty($parent) && $type !== 'album') {
                 self::gather_art_item($parent['object_type'], $parent['object_id'], $db_art_first, $api);
             }
         }
@@ -1684,7 +2035,7 @@ abstract class Catalog extends database_object
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
             if ($gather_song_art) {
-                $searches['song'] = $this->get_songs();
+                $searches['song'] = $this->get_song_ids();
             }
         } else {
             $searches['album']  = array();
@@ -1786,7 +2137,7 @@ abstract class Catalog extends database_object
         $overwrites   = true;
         $meta_order   = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list  = Plugin::get_plugins('get_external_metadata');
-        $user         = (Core::get_global('user')->id)
+        $user         = (!empty(Core::get_global('user')))
             ? Core::get_global('user')
             : new User(-1);
         foreach ($meta_order as $plugin_name) {
@@ -1823,12 +2174,18 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs()
+    public function get_songs($offset = 0, $limit = 0)
     {
         $songs   = array();
         $results = array();
+        if ($offset > 0) {
+            $limit = $offset . ', ' . $limit;
+        }
 
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1' ORDER BY `album`";
+        if ($offset > 0 || $limit > 0) {
+            $sql .= " LIMIT $limit";
+        }
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1856,7 +2213,7 @@ abstract class Catalog extends database_object
     {
         $songs = array();
 
-        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled`='1'";
+        $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1'";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1907,13 +2264,9 @@ abstract class Catalog extends database_object
      */
     public static function update_settings($data)
     {
-        $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ?, `filter_user` = ? WHERE `id` = ?";
-        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['filter_user'], $data['catalog_id']);
+        $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
+        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
         Dba::write($sql, $params);
-
-        if ($data['filter_user']) {
-            User::update_counts();
-        }
 
         return true;
     } // update_settings
@@ -1932,14 +2285,19 @@ abstract class Catalog extends database_object
         // Because single items are large numbers of things too
         set_time_limit(0);
 
-        $songs   = array();
-        $result  = $object_id;
-        $libitem = 0;
+        $return_id = $object_id;
+        $songs     = array();
+        $libitem   = 0;
 
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
                 $songs   = static::getSongRepository()->getByAlbum($object_id);
+                break;
+            case 'album_disk':
+                $albumDisk = new AlbumDisk($object_id);
+                $libitem   = new Album($albumDisk->album_id);
+                $songs     = static::getSongRepository()->getByAlbumDisk($object_id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
@@ -1948,6 +2306,14 @@ abstract class Catalog extends database_object
             case 'song':
                 $songs[] = $object_id;
                 break;
+            case 'podcast_episode':
+                $episode = new Podcast_Episode($object_id);
+                self::update_media_from_tags($episode);
+
+                return array(
+                    'object_id' => $object_id,
+                    'change' => true
+                );
         } // end switch type
 
         if (!$api) {
@@ -1964,16 +2330,16 @@ abstract class Catalog extends database_object
             $song   = new Song($song_id);
             $info   = self::update_media_from_tags($song);
             $file   = scrub_out($song->file);
-            $diff   = array_key_exists('element', $info) && is_array($info['element']);
-            $album  = ($album == true) || ($diff && array_key_exists('album', $info['element']));
-            $artist = ($artist == true) || ($diff && array_key_exists('artist', $info['element']));
-            $tags   = ($tags == true) || ($diff && array_key_exists('tags', $info['element']));
-            $maps   = ($maps == true) || ($diff && array_key_exists('maps', $info));
+            $diff   = array_key_exists('element', $info) && is_array($info['element']) && !empty($info['element']);
+            $album  = ($album === true) || ($diff && array_key_exists('album', $info['element']));
+            $artist = ($artist === true) || ($diff && array_key_exists('artist', $info['element']));
+            $tags   = ($tags === true) || ($diff && array_key_exists('tags', $info['element']));
+            $maps   = ($maps === true) || ($diff && array_key_exists('maps', $info));
             // don't echo useless info when using api
             if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
                 if ($diff && array_key_exists($type, $info['element'])) {
-                    $element = explode(' --> ', (string)$info['element'][$type]);
-                    $result  = (int)$element[1];
+                    $element   = explode(' --> ', (string)$info['element'][$type]);
+                    $return_id = (int)$element[1];
                 }
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
             } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
@@ -1988,60 +2354,51 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            if ($tags || $maps) {
+            $tags    = self::getSongTags('album', $libitem->id);
+            Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
+            if ($artist || $album || $tags || $maps) {
                 $artists = array();
-                $tags    = self::getSongTags('album', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
                 // update the album artists
-                foreach (Album::get_artist_map('album', $libitem->id) as $album_artist_id) {
-                    $artists[] = $album_artist_id;
-                    $tags      = self::getSongTags('artist', $album_artist_id);
-                    Tag::update_tag_list(implode(',', $tags), 'artist', $album_artist_id, true);
+                foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
+                    $artists[] = $albumArtist_id;
+                    $tags      = self::getSongTags('artist', $albumArtist_id);
+                    Tag::update_tag_list(implode(',', $tags), 'artist', $albumArtist_id, true);
                 }
                 // update the song artists too
-                foreach (Album::get_artist_map('song', $libitem->id) as $song_artist_id) {
-                    if (!in_array($song_artist_id, $artists)) {
-                        $tags = self::getSongTags('artist', $song_artist_id);
-                        Tag::update_tag_list(implode(',', $tags), 'artist', $song_artist_id, true);
+                foreach (Album::get_artist_map('song', $libitem->id) as $songArtist_id) {
+                    if (!in_array($songArtist_id, $artists)) {
+                        $tags = self::getSongTags('artist', $songArtist_id);
+                        Tag::update_tag_list(implode(',', $tags), 'artist', $songArtist_id, true);
                     }
                 }
-            }
-            if ($album) {
-                Album::update_album_counts();
-            }
-            if ($artist || $maps) {
-                Artist::update_artist_counts();
             }
         }
         // artist
         if ($libitem instanceof Artist) {
-            if ($tags) {
-                // make sure albums are updated before the artist
-                foreach ($libitem->get_child_ids() as $album_id) {
-                    $album_tags = self::getSongTags('album', $album_id);
-                    Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
-                }
-                // refresh the artist tags after everything else
-                $tags = self::getSongTags('artist', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            // make sure albums are updated before the artist (include if you're just a song artist too)
+            foreach (static::getAlbumRepository()->getAlbumByArtist($object_id) as $album_id) {
+                $album_tags = self::getSongTags('album', $album_id);
+                Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
-            if ($album || $artist) {
-                Album::update_album_counts();
-            }
-            if ($artist) {
-                Artist::update_artist_counts();
-            }
+            // refresh the artist tags after everything else
+            $tags = self::getSongTags('artist', $libitem->id);
+            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
         }
-        // collect the garage too
-        if ($album) {
-            static::getAlbumRepository()->collectGarbage();
+        // check counts
+        if ($album || $maps) {
+            Album::update_album_counts();
         }
-        if ($artist) {
+        if ($artist || $maps) {
+            Artist::update_artist_counts();
+        }
+        // collect the garbage too
+        if ($album || $artist || $maps) {
             Artist::garbage_collection();
+            static::getAlbumRepository()->collectGarbage();
         }
 
         return array(
-            'object_id' => $result,
+            'object_id' => $return_id,
             'change' => ($album || $artist || $maps || $tags)
         );
     } // update_single_item
@@ -2062,26 +2419,27 @@ abstract class Catalog extends database_object
         $sort_pattern = '',
         $rename_pattern = ''
     ) {
+        $array   = array();
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
         //retrieve the file if needed
         $media = $catalog->prepare_media($media);
 
+        /** @var Song|Podcast_Episode|Video $media */
         if (Core::get_filesize(Core::conv_lc_file($media->file)) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $media->file, 2);
+            $array['error']  = true;
 
-            return array();
+            return $array;
         }
 
-        $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        // Figure out what type of object this is and call the right  function
-        $name = ($type == 'song') ? 'song' : 'video';
-
+        $type      = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $functions = [
             'song' => static function ($results, $media) {
                 return self::update_song_from_tags($results, $media);
@@ -2089,9 +2447,12 @@ abstract class Catalog extends database_object
             'video' => static function ($results, $media) {
                 return self::update_video_from_tags($results, $media);
             },
+            'podcast_episode' => static function ($results, $media) {
+                return self::update_podcast_episode_from_tags($results, $media);
+            },
         ];
 
-        $callable = $functions[$name];
+        $callable = $functions[$type];
 
         // try and get the tags from your file
         debug_event(__CLASS__, 'Reading tags from ' . $media->file, 4);
@@ -2118,8 +2479,7 @@ abstract class Catalog extends database_object
      * Updates the song info based on tags; this is called from a bunch of
      * different places and passes in a full fledged song object, so it's a
      * static function.
-     * FIXME: This is an ugly mess, this really needs to be consolidated and
-     * cleaned up.
+     * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
      * @param array $results
      * @param Song $song
      * @return array
@@ -2134,6 +2494,7 @@ abstract class Catalog extends database_object
         $new_song->year = (strlen((string)$results['year']) > 4)
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
+        $new_song->disk    = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->title   = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate = $results['bitrate'];
         $new_song->rate    = $results['rate'];
@@ -2185,6 +2546,9 @@ abstract class Catalog extends database_object
         // genre is used in the tag and tag_map tables
         $tag_array = array();
         if (!empty($results['genre'])) {
+            if (!is_array($results['genre'])) {
+                $results['genre'] = array($results['genre']);
+            }
             // check if this thing has been renamed into something else
             foreach ($results['genre'] as $tagName) {
                 $merged = Tag::construct_from_name($tagName);
@@ -2211,7 +2575,6 @@ abstract class Catalog extends database_object
         // info for the album table.
         $album      = self::check_length($results['album']);
         $album_mbid = $results['mb_albumid'];
-        $disk       = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
         $release_type     = self::check_length($results['release_type'], 32);
@@ -2221,6 +2584,8 @@ abstract class Catalog extends database_object
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
+        $subtitle         = self::check_length($results['subtitle'], 64);
+
         // info for the artist_map table.
         $artists_array          = $results['artists'] ?? array();
         $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
@@ -2232,10 +2597,30 @@ abstract class Catalog extends database_object
             }
             $artist = $artists_array[0];
         }
+        $is_upload_artist = false;
+        if ($song->artist) {
+            $is_upload_artist = Artist::is_upload($song->artist);
+            if ($is_upload_artist) {
+                debug_event(__CLASS__, "$song->artist : is an uploaded song artist", 4);
+                $artist_mbid_array = array();
+            }
+        }
+        $is_upload_albumartist = false;
+        if ($song->album) {
+            $is_upload_albumartist = Artist::is_upload($song->albumartist);
+            if ($is_upload_albumartist) {
+                debug_event(__CLASS__, "$song->albumartist : is an uploaded album artist", 4);
+                $albumartist_mbid_array = array();
+            }
+        }
         // check whether this artist exists (and the album_artist)
-        $new_song->artist = Artist::check($artist, $artist_mbid);
-        if ($albumartist) {
-            $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+        $new_song->artist = ($is_upload_artist)
+            ? $song->artist
+            : Artist::check($artist, $artist_mbid);
+        if ($albumartist || !empty($song->albumartist)) {
+            $new_song->albumartist = ($is_upload_albumartist)
+                ? $song->albumartist
+                : Artist::check($albumartist, $albumartist_mbid);
             if (!$new_song->albumartist) {
                 $new_song->albumartist = $song->albumartist;
             }
@@ -2245,56 +2630,58 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = Album::check($song->catalog, $album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number);
+        $new_song->album = ($is_upload_albumartist)
+            ? $song->album
+            : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $subtitle);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
 
         // get the artists / album_artists for this song
-        $artist_song_array  = array($new_song->artist);
-        $artist_album_array = array($new_song->albumartist);
+        $songArtist_array  = array($new_song->artist);
+        $albumArtist_array = array($new_song->albumartist);
         // artist_map stores song and album against the artist_id
-        $artist_song_maps        = Artist::get_artist_map('song', $song->id);
-        $artist_album_maps       = Artist::get_artist_map('album', $new_song->album);
+        $artist_map_song  = Artist::get_artist_map('song', $song->id);
+        $artist_map_album = Artist::get_artist_map('album', $new_song->album);
         // album_map stores song_artist and album_artist against the album_id
-        $album_song_artist_maps  = Album::get_artist_map('song', $new_song->album);
-        $album_album_artist_maps = Album::get_artist_map('album', $new_song->album);
+        $album_map_songArtist  = Album::get_artist_map('song', $new_song->album);
+        $album_map_albumArtist = Album::get_artist_map('album', $new_song->album);
         // don't update counts unless something changes
         $map_change = false;
 
         // add song artists with a valid mbid to the list
         if (!empty($artist_mbid_array)) {
             foreach ($artist_mbid_array as $song_artist_mbid) {
-                $song_artist_id = Artist::check_mbid($song_artist_mbid);
-                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
-                    $artist_song_array[] = $song_artist_id;
+                $songArtist_id = Artist::check_mbid($song_artist_mbid);
+                if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
+                    $songArtist_array[] = $songArtist_id;
                 }
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
-        if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
+        if (!empty($artists_array) && count($artists_array) > count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = Artist::check($artist_name);
-                if ($song_artist_id > 0 && !in_array($song_artist_id, $artist_song_array)) {
-                    $artist_song_array[] = $song_artist_id;
+                $songArtist_id = Artist::check($artist_name);
+                if ($songArtist_id > 0 && !in_array($songArtist_id, $songArtist_array)) {
+                    $songArtist_array[] = $songArtist_id;
                 }
             }
         }
         // map every song artist we've found
-        foreach ($artist_song_array as $song_artist_id) {
-            if (!in_array($song_artist_id, $artist_song_maps)) {
-                $artist_song_maps[] = (int)$song_artist_id;
-                Artist::update_artist_map($song_artist_id, 'song', $song->id);
+        foreach ($songArtist_array as $songArtist_id) {
+            if (!in_array($songArtist_id, $artist_map_song)) {
+                $artist_map_song[] = (int)$songArtist_id;
+                Artist::add_artist_map($songArtist_id, 'song', $song->id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
                 }
                 $map_change = true;
             }
-            if (!in_array($song_artist_id, $album_song_artist_maps)) {
-                $album_song_artist_maps[] = $song_artist_id;
-                Album::update_album_map($new_song->album, 'song', $song_artist_id);
+            if (!in_array($songArtist_id, $album_map_songArtist)) {
+                $album_map_songArtist[] = $songArtist_id;
+                Album::add_album_map($new_song->album, 'song', $songArtist_id);
                 if ($song->played) {
-                    Stats::duplicate_map('song', $song->id, 'artist', $song_artist_id);
+                    Stats::duplicate_map('song', $song->id, 'artist', $songArtist_id);
                 }
                 $map_change = true;
             }
@@ -2302,53 +2689,65 @@ abstract class Catalog extends database_object
         // add album artists to the list
         if (!empty($albumartist_mbid_array)) {
             foreach ($albumartist_mbid_array as $album_artist_mbid) {
-                $album_artist_id = Artist::check_mbid($album_artist_mbid);
-                if ($album_artist_id > 0 && !in_array($album_artist_id, $artist_album_array)) {
-                    $artist_album_array[] = $album_artist_id;
+                $albumArtist_id = Artist::check_mbid($album_artist_mbid);
+                if ($albumArtist_id > 0 && !in_array($albumArtist_id, $albumArtist_array)) {
+                    $albumArtist_array[] = $albumArtist_id;
                 }
             }
         }
         // map every album artist we've found
-        foreach ($artist_album_array as $album_artist_id) {
-            if (!in_array($album_artist_id, $artist_album_maps)) {
-                $artist_album_maps[] = $album_artist_id;
-                Artist::update_artist_map($album_artist_id, 'album', $new_song->album);
+        foreach ($albumArtist_array as $albumArtist_id) {
+            if (!in_array($albumArtist_id, $artist_map_album)) {
+                $artist_map_album[] = $albumArtist_id;
+                Artist::add_artist_map($albumArtist_id, 'album', $new_song->album);
                 $map_change = true;
             }
-            if (!in_array($album_artist_id, $album_album_artist_maps)) {
-                $album_album_artist_maps[] = $album_artist_id;
-                Album::update_album_map($new_song->album, 'album', $album_artist_id);
+            if (!in_array($albumArtist_id, $album_map_albumArtist)) {
+                $album_map_albumArtist[] = $albumArtist_id;
+                Album::add_album_map($new_song->album, 'album', $albumArtist_id);
                 $map_change = true;
             }
         }
         // clean up the mapped things that are missing after the update
-        foreach ($artist_song_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_song_array)) {
+        foreach ($artist_map_song as $existing_map) {
+            if (!in_array($existing_map, $songArtist_array)) {
                 Artist::remove_artist_map($existing_map, 'song', $song->id);
+                Album::check_album_map($song->album, 'song', $existing_map);
                 if ($song->played) {
                     Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 }
                 $map_change = true;
             }
         }
-        foreach ($album_song_artist_maps as $existing_map) {
-            if (!in_array($existing_map, $album_song_artist_maps)) {
-                Album::remove_album_map($new_song->album, 'song', $existing_map);
-                if ($song->played) {
-                    Stats::delete_map('song', $song->id, 'artist', $existing_map);
-                }
+        foreach ($artist_map_song as $existing_map) {
+            $not_found = !in_array($existing_map, $songArtist_array);
+            // remove album song map if song artist is changed OR album changes
+            if ($not_found || ($song->album != $new_song->album)) {
+                Album::check_album_map($song->album, 'song', $existing_map);
+                $map_change = true;
+            }
+            // only delete play count on song artist change
+            if ($not_found && $song->played) {
+                Stats::delete_map('song', $song->id, 'artist', $existing_map);
                 $map_change = true;
             }
         }
-        foreach ($artist_album_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_album_array)) {
-                Artist::remove_artist_map($existing_map, 'album', $new_song->album);
+        foreach ($artist_map_album as $existing_map) {
+            if (!in_array($existing_map, $albumArtist_array)) {
+                Artist::remove_artist_map($existing_map, 'album', $song->album);
+                Album::check_album_map($song->album, 'album', $existing_map);
                 $map_change = true;
             }
         }
-        foreach ($album_album_artist_maps as $existing_map) {
-            if (!in_array($existing_map, $artist_album_array)) {
-                Album::remove_album_map($new_song->album, 'album', $existing_map);
+        foreach ($album_map_songArtist as $existing_map) {
+            // check song maps in the album_map table (because this is per song we need to check the whole album)
+            if (Album::check_album_map($song->album, 'song', $existing_map)) {
+                $map_change = true;
+            }
+        }
+        foreach ($album_map_albumArtist as $existing_map) {
+            if (!in_array($existing_map, $albumArtist_array)) {
+                Album::remove_album_map($song->album, 'album', $existing_map);
                 $map_change = true;
             }
         }
@@ -2407,8 +2806,7 @@ abstract class Catalog extends database_object
             $labelRepository = static::getLabelRepository();
 
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = Label::helper($label_name)
-                    ?: $labelRepository->lookup($label_name);
+                $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
                     $artists = $label->get_artists();
@@ -2429,7 +2827,10 @@ abstract class Catalog extends database_object
 
             // If you've migrated the album/artist you need to migrate their data here
             self::migrate('artist', $song->artist, $new_song->artist, $song->id);
-            self::migrate('album', $song->album, $new_song->album, $song->id);
+            if (self::migrate('album', $song->album, $new_song->album, $song->id)) {
+                $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
+                Dba::write($sql, array($new_song->album, $song->get_album_disk()));
+            }
 
             if ($song->tags != $new_song->tags) {
                 // we do still care if there are no tags on your object
@@ -2517,6 +2918,26 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * @param $results
+     * @param Podcast_Episode $podcast_episode
+     * @return array
+     */
+    public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode)
+    {
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $podcast_episode->id));
+
+        $podcast_episode->size = $results['size'];
+        $podcast_episode->time = $results['time'];
+
+        $array            = array();
+        $array['change']  = true;
+        $array['element'] = false;
+
+        return $array;
+    }
+
+    /**
      * Get rid of all tags found in the libraryItem
      * @param library_item $libraryItem
      * @param array $metadata
@@ -2558,36 +2979,56 @@ abstract class Catalog extends database_object
         self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // missing map tables are pretty important
-        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0;";
+        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` IS NOT NULL UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;";
         Dba::write($sql);
-        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION  SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         Dba::write($sql);
-        // Delete duplicates from the object_count table
-        debug_event(__CLASS__, 'update_counts delete object_count duplicates', 5);
-        $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `id` IN (SELECT MAX(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` HAVING COUNT(`object_id`) > 1)) AS `count`);";
+        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog` FROM `song`;";
         Dba::write($sql);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
+            // delete old maps in album_map table
+            $sql        = "SELECT `album_map`.`album_id`, `album_map`.`object_id`, `album_map`.`object_type` FROM (SELECT * FROM `album_map` WHERE `object_type` = 'song') AS `album_map` LEFT JOIN (SELECT DISTINCT `artist_id`, `album` FROM (SELECT `artist_id`, `object_id` AS `song_id` FROM `artist_map` WHERE `object_type` = 'song') AS `artist_songs`, `song` WHERE `song_id` = `id`) AS `artist_map` ON `album_map`.`object_id` = `artist_map`.`artist_id` AND `album_map`.`album_id` = `artist_map`.`album` WHERE `artist_map`.`album` IS NULL;";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = ?;";
+                Dba::write($sql, array($row['album_id'], $row['object_id'], $row['object_type']));
+            }
             // this isn't really needed often and is slow
             Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
             // Fill in null Agents with a value
             $sql = "UPDATE `object_count` SET `agent` = 'Unknown' WHERE `agent` IS NULL;";
             Dba::write($sql);
             // object_count.album
-            $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, `song`.`id` AS `songid`, `song`.`album`, `album_count`.`object_id` AS `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `album_count`.`count_type` = 'stream' AND `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
+            $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, `song`.`id` AS `songid`, `song`.`album`, `album_count`.`object_id` AS `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `album_count`.`count_type` = 'stream' AND `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
             Dba::write($sql);
             // object_count.artist
-            $sql = "UPDATE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) AS `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` AS `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `artist_count`.`count_type` = 'stream' AND `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`, `user`, `agent`, `count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
+            $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) AS `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` AS `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `artist_count`.`count_type` = 'stream' AND `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`, `user`, `agent`, `count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
             Dba::write($sql);
         }
         // fix object_count table missing artist row
         debug_event(__CLASS__, 'update_counts object_count table missing artist row', 5);
-        $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`,`object_count`.`user`,`object_count`.`agent`,`object_count`.`geo_latitude`,`object_count`.`geo_longitude`,`object_count`.`geo_name`,`object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type`  AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song')) AND `artist_check`.`object_id` IS NULL UNION SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`,`object_count`.`user`,`object_count`.`agent`,`object_count`.`geo_latitude`,`object_count`.`geo_longitude`,`object_count`.`geo_name`,`object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type`  AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'album')) AND `artist_check`.`object_id` IS NULL GROUP BY `artist_map`.`artist_id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`date`,`object_count`.`user`,`object_count`.`agent`,`object_count`.`geo_latitude`,`object_count`.`geo_longitude`,`object_count`.`geo_name`,`object_count`.`count_type`;";
+        $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song')) AND `artist_check`.`object_id` IS NULL UNION SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'album')) AND `artist_check`.`object_id` IS NULL GROUP BY `artist_map`.`artist_id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type`;";
         Dba::write($sql);
         // fix object_count table missing album row
         debug_event(__CLASS__, 'update_counts object_count table missing album row', 5);
         $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
         Dba::write($sql);
+        // also clean up some bad data that might creep in
+        Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
+        Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
+        Dba::write("UPDATE `artist` SET `placeformed` = NULL WHERE `placeformed` = '';");
+        Dba::write("UPDATE `artist` SET `yearformed` = NULL WHERE `yearformed` = 0;");
+        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
+        Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
+        Dba::write("UPDATE `album` SET `mbid` = NULL WHERE `mbid` = '';");
+        Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE `mbid_group` = '';");
+        Dba::write("UPDATE `album` SET `release_type` = NULL WHERE `release_type` = '';");
+        Dba::write("UPDATE `album` SET `original_year` = NULL WHERE `original_year` = 0;");
+        Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
+        Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
+        Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
         // song.played might have had issues
         $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         Dba::write($sql);
@@ -2620,6 +3061,9 @@ abstract class Catalog extends database_object
             Dba::write($sql);
             // podcast.total_count
             $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_count`) AS `total_count`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_count` = `object_count`.`total_count` WHERE `podcast`.`total_count` != `object_count`.`total_count` AND `podcast`.`id` = `object_count`.`podcast`;";
+            Dba::write($sql);
+            // podcast.total_skip
+            $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;";
             Dba::write($sql);
             // song.total_count
             $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
@@ -2654,7 +3098,7 @@ abstract class Catalog extends database_object
         $time         = 0;
         $size         = 0;
         foreach ($media_tables as $table) {
-            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled` = '1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
@@ -2675,11 +3119,11 @@ abstract class Catalog extends database_object
             $row        = Dba::fetch_row($db_results);
             self::set_update_info($table, (int)($row[0] ?? 0));
         }
-        // grouped album counts
-        $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`);";
+        // album_disk counts
+        $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1';";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
-        self::set_update_info('album_group', (int)($row[0] ?? 0));
+        self::set_update_info('album_disk', (int)($row[0] ?? 0));
 
         $list_tables = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($list_tables as $table) {
@@ -2771,6 +3215,21 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_gather_type
+     * @return string
+     */
+    public function get_gather_type()
+    {
+        $sql        = "SELECT `gather_types` FROM `catalog` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($this->id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row['gather_types'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_table_from_type
      * @param string $gather_type
      * @return string
@@ -2801,11 +3260,17 @@ abstract class Catalog extends database_object
      */
     public static function clean_empty_albums()
     {
-        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $sql        = "SELECT `id`, `album_artist` FROM `album` WHERE NOT EXISTS (SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`);";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql       = "DELETE FROM `album` WHERE `id` = ?";
             Dba::write($sql, array($row['id']));
+        }
+        // these files have missing albums so you can't verify them without updating from tags first
+        $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`));";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            self::update_single_item('song', $row['id'], true);
         }
     }
 
@@ -2824,7 +3289,7 @@ abstract class Catalog extends database_object
             // migrate linked tables first
             //Stats::migrate('artist', $row['maxid'], $row['minid']);
             Useractivity::migrate('artist', $row['maxid'], $row['minid']);
-            Recommendation::migrate('artist', $row['maxid'], $row['minid']);
+            Recommendation::migrate('artist', $row['maxid']);
             Share::migrate('artist', $row['maxid'], $row['minid']);
             Shoutbox::migrate('artist', $row['maxid'], $row['minid']);
             Tag::migrate('artist', $row['maxid'], $row['minid']);
@@ -2838,8 +3303,9 @@ abstract class Catalog extends database_object
             // replace all songs and albums with the original artist
             Artist::migrate($row['maxid'], $row['minid']);
         }
-        // remove the duplicate after moving everything
+        // remove the duplicates after moving everything
         Artist::garbage_collection();
+        static::getAlbumRepository()->collectGarbage();
     }
 
     /**
@@ -2861,9 +3327,7 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        if ($dead_total > 0) {
-            self::clean_empty_albums();
-        }
+        self::clean_empty_albums();
         self::clean_duplicate_artists();
 
         debug_event(__CLASS__, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
@@ -2893,6 +3357,8 @@ abstract class Catalog extends database_object
         }
 
         $verified = $this->verify_catalog_proc();
+
+        debug_event(__CLASS__, 'verify finished, ' . $verified['updated'] . ' updated', 4);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
@@ -3364,7 +3830,7 @@ abstract class Catalog extends database_object
         // Select all songs in catalog
         $params = array();
         if ($catalog_id) {
-            $sql      = "SELECT `id` FROM `song` WHERE `catalog`= ? ORDER BY `album`, `track`";
+            $sql      = "SELECT `id` FROM `song` WHERE `catalog` = ? ORDER BY `album`, `track`";
             $params[] = $catalog_id;
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
@@ -3382,8 +3848,8 @@ abstract class Catalog extends database_object
                     $xml['key']                  = $results['id'];
                     $xml['dict']['Track ID']     = (int)($results['id']);
                     $xml['dict']['Name']         = $song->title;
-                    $xml['dict']['Artist']       = $song->f_artist_full;
-                    $xml['dict']['Album']        = $song->f_album_full;
+                    $xml['dict']['Artist']       = $song->get_artist_fullname();
+                    $xml['dict']['Album']        = $song->get_album_fullname();
                     $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
@@ -3403,7 +3869,7 @@ abstract class Catalog extends database_object
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $song = new Song($results['id']);
                     $song->format();
-                    echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
+                    echo '"' . $song->id . '","' . $song->title . '","' . $song->get_artist_fullname() . '","' . $song->get_album_fullname() . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
                 }
                 break;
         } // end switch
@@ -3418,12 +3884,15 @@ abstract class Catalog extends database_object
         // fill the data
         debug_event(__CLASS__, 'Update mapping for table: ' . $table, 5);
         if ($table == 'artist') {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` WHERE `song`.`catalog` > 0 GROUP BY `song`.`catalog`, 'artist', `artist_map`.`artist_id`;";
+            // insert catalog_map artists
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
             Dba::write($sql);
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `album_map`.`object_id` FROM `album_map` LEFT JOIN `album` ON `album`.`id` = `album_map`.`album_id` AND album_map.object_type = 'album' WHERE `album`.`catalog` > 0 GROUP BY `album`.`catalog`, 'artist', `album_map`.`object_id`;";
+        } elseif ($table == 'playlist') {
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'playlist', `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' GROUP BY `song`.`catalog`, 'playlist', `playlist`.`id`;";
             Dba::write($sql);
         } else {
-            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` WHERE `$table`.`catalog` > 0 GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
+            // 'album', 'album_disk', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$table`.`catalog`, '$table', `$table`.`id` FROM `$table` GROUP BY `$table`.`catalog`, '$table', `$table`.`id`;";
             Dba::write($sql);
         }
     }
@@ -3434,13 +3903,27 @@ abstract class Catalog extends database_object
     public static function garbage_collect_mapping()
     {
         // delete non-existent maps
-        $tables = ['album', 'artist', 'song', 'video', 'podcast', 'podcast_episode', 'live_stream'];
+        $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
         foreach ($tables as $type) {
-            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN `$type` ON `$type`.`id`=`catalog_map`.`object_id` WHERE `catalog_map`.`object_type`='$type' AND `$type`.`id` IS NULL;";
+            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, `$type`.`id` AS `object_id` FROM `$type`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;";
             Dba::write($sql);
         }
+        // delete catalog_map artists
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `album`.`catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` IN ('artist', 'song_artist', 'album_artist') AND `valid_maps`.`object_id` IS NULL;";
+        Dba::write($sql);
+        // empty catalogs
         $sql = "DELETE FROM `catalog_map` WHERE `catalog_id` = 0";
         Dba::write($sql);
+    }
+
+    /**
+     * Delete catalog filters that might have gone missing
+     */
+    public static function garbage_collect_filters()
+    {
+        Dba::write("DELETE FROM `catalog_filter_group_map` WHERE `group_id` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
+        Dba::write("UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` NOT IN (SELECT `id` FROM `catalog_filter_group`);");
+        Dba::write("UPDATE IGNORE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT' AND `id` > 0;");
     }
 
     /**
@@ -3451,8 +3934,9 @@ abstract class Catalog extends database_object
         if ($catalog > 0) {
             debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
             if ($object_type == 'artist') {
-                $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `song`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `song`.`catalog` > 0 UNION SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id` WHERE `artist`.`id` = ? AND `album`.`catalog` > 0;";
-                Dba::write($sql, array($object_id, $object_id));
+                // insert catalog_map artists
+                $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
+                Dba::write($sql, array($object_id, $object_id, $object_id, $object_id));
             } else {
                 $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
                 Dba::write($sql, array($catalog, $object_type, $object_id));
@@ -3601,6 +4085,7 @@ abstract class Catalog extends database_object
         if ($action == 'import_to_catalog') {
             $options['parse_playlist'] = true;
         }
+        $catalog = null;
 
         switch ($action) {
             case 'add_to_all_catalogs':
@@ -3662,7 +4147,6 @@ abstract class Catalog extends database_object
                             $catalog->clean_catalog();
                         }
                     } // end foreach catalogs
-                    Dba::optimize_tables();
                     Artist::update_artist_counts();
                     Album::update_album_counts();
                 }
@@ -3733,15 +4217,119 @@ abstract class Catalog extends database_object
                 AmpConfig::set_by_array(['write_tags' => $write_tags], true);
         }
 
-        // Remove any orphaned artists/albums/etc.
-        debug_event(__CLASS__, 'Run Garbage collection', 5);
-        static::getCatalogGarbageCollector()->collect();
-        self::clean_empty_albums();
-        Album::update_album_artist();
-        self::clean_duplicate_artists();
-        self::update_mapping('artist');
-        self::update_mapping('album');
-        self::update_counts();
+        if ($catalog) {
+            // clean up after the action
+            debug_event(__CLASS__, 'Run Garbage collection', 5);
+            static::getCatalogGarbageCollector()->collect();
+            $catalog_media_type = $catalog->get_gather_type();
+            if ($catalog_media_type == 'music') {
+                self::clean_empty_albums();
+                Album::update_album_artist();
+                self::update_mapping('artist');
+                self::update_mapping('album');
+                self::update_mapping('album_disk');
+            } elseif ($catalog_media_type == 'podcast') {
+                self::update_mapping('podcast');
+                self::update_mapping('podcast_episode');
+            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+                self::update_mapping('video');
+            }
+            self::update_counts();
+        }
+    }
+
+    /**
+     * Get the directory for this file from the catalog and the song info using the sort_pattern
+     * takes into account various artists and the alphabet_prefix
+     * @param Song $song
+     * @param $sort_pattern
+     * @param $base
+     * @param string $various_artist
+     * @param bool $windowsCompat
+     * @return false|string
+     */
+    public function sort_find_home($song, $sort_pattern, $base = null, $various_artist = "Various Artists", $windowsCompat = false)
+    {
+        $home = '';
+        if ($base) {
+            $home = rtrim($base, "\/");
+            $home = rtrim($home, "\\");
+        }
+
+        // Create the filename that this file should have
+        $album  = self::sort_clean_name($song->get_album_fullname(), '%A', $windowsCompat);
+        $artist = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
+        $track  = self::sort_clean_name($song->track, '%T', $windowsCompat);
+        if ((int) $track < 10) {
+            $track = '0' . (string) $track;
+        }
+
+        $title   = self::sort_clean_name($song->title, '%t', $windowsCompat);
+        $year    = self::sort_clean_name($song->year, '%y', $windowsCompat);
+        $comment = self::sort_clean_name($song->comment, '%c', $windowsCompat);
+
+        // Do the various check
+        $album_object = new Album($song->album);
+        $album_object->format();
+        if ($album_object->get_album_artist_fullname() != "") {
+            $artist = $album_object->f_album_artist_name;
+        } elseif ($album_object->artist_count != 1) {
+            $artist = $various_artist;
+        }
+        $disk           = self::sort_clean_name($song->disk, '%d');
+        $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
+        $barcode        = self::sort_clean_name($album_object->barcode, '%b');
+        $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
+        $release_type   = self::sort_clean_name($album_object->release_type, '%r');
+        $release_status = self::sort_clean_name($album_object->release_status, '%R');
+        $subtitle       = self::sort_clean_name($album_object->subtitle, '%s');
+        $genre          = (!empty($album_object->tags))
+            ? Tag::get_display($album_object->tags)
+            : '%b';
+
+        // Replace everything we can find
+        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
+        $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
+
+        // Remove non A-Z0-9 chars
+        $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
+
+        // Replace non-critical search patterns
+        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
+        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
+        $sort_pattern       = str_replace($post_replace_array, $post_content_array, $sort_pattern);
+
+        $home .= "/$sort_pattern";
+
+        // don't send a mismatched file!
+        foreach ($replace_array as $replace_string) {
+            if (strpos($sort_pattern, $replace_string) !== false) {
+                return false;
+            }
+        }
+
+        return $home;
+    }
+
+    /**
+     * This is run on every individual element of the search before it is put together
+     * It removes / and \ and windows-incompatible characters (if you use -w|--windows)
+     * @param string|int $string
+     * @param string $return
+     * @param bool $windowsCompat
+     * @return string
+     */
+    public static function sort_clean_name($string, $return = '', $windowsCompat = false)
+    {
+        if (empty($string)) {
+            return $return;
+        }
+        $string = ($windowsCompat)
+            ? str_replace(['/', '\\', ':', '*', '<', '>', '"', '|', '?'], '_', (string)$string)
+            : str_replace(['/', '\\'], '_', (string)$string);
+
+        return (string)$string;
     }
 
     /**

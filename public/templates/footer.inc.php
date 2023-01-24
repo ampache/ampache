@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,23 +40,19 @@ use Ampache\Module\Util\Ui;
         <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) { ?>
             <a id="donate" href="//ampache.org/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
-        <?php
-        } ?>
-        <?php
-        if (AmpConfig::get('custom_text_footer')) {
-            echo AmpConfig::get('custom_text_footer');
-        } else { ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2020 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
-        <?php
-        } ?>
+        <?php } ?>
+        <?php if (AmpConfig::get('custom_text_footer')) {
+                echo AmpConfig::get('custom_text_footer');
+            } else { ?>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2022 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
+        <?php } ?>
         </div>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
         <div id="webplayer-minimize">
           <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
-        <?php
-            require_once Ui::find_template('uberviz.inc.php');
+        <?php require_once Ui::find_template('uberviz.inc.php');
         } ?>
     </body>
 </html>

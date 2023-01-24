@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 
@@ -34,13 +34,9 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
      */
     public function getAll(): array
     {
-        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "WHERE `catalog`.`enabled` = '1' ";
-        }
-        $params = [];
-
-        $db_results = Dba::read($sql, $params);
+        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $sql        = "SELECT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`catalog_id` = `live_stream`.`catalog` AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ");";
+        $db_results = Dba::read($sql);
         $radios     = [];
 
         while ($results = Dba::fetch_assoc($db_results)) {

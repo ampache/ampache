@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,23 +103,21 @@ class AmpacheStreamHits
             return true;
         }
         // if using free software only you can't use this plugin
-        if (!AmpConfig::get('statistical_graphs') || !is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            debug_event('streamhits.plugin', 'Access denied, statistical graph disabled.', 1);
+        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+            $next_total    = count($media_ids);
+            $graph         = new Graph();
+            $end_date      = time();
+            $start_date    = $end_date - ($this->hits_days * 86400);
+            $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);
+            $next_total += $current_total;
 
-            return true;
+            debug_event('streamhits.plugin', 'Next stream hits will be ' . $next_total . ' / ' . $this->hits_max, 3);
+
+            return ($next_total <= $this->hits_max);
         }
+        debug_event('streamhits.plugin', 'Access denied, statistical graph disabled.', 1);
 
-        $next_total = count($media_ids);
-
-        $graph         = new Graph();
-        $end_date      = time();
-        $start_date    = $end_date - ($this->hits_days * 86400);
-        $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);
-        $next_total += $current_total;
-
-        debug_event('streamhits.plugin', 'Next stream hits will be ' . $next_total . ' / ' . $this->hits_max, 3);
-
-        return ($next_total <= $this->hits_max);
+        return true;
     }
 
     /**

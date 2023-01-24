@@ -21,7 +21,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Change to master branch
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
-  * src/Config/Init/InitializationHandlerConfig.php (Set VERSION and CONFIG_VERSION)
+  * src/Config/Init/InitializationHandlerConfig.php (Search for "// AMPACHE_VERSION" to find the lines that need updating)
   * src/Module/Api/Api.php (Set $version and $version_numeric)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
@@ -65,11 +65,11 @@ read -p "Enter Ampache Version: " a_version
 * Create a zip package named "ampache-5.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
-rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_php8.0.zip ./
+rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all.zip ./
+rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all_php8.0.zip ./
 
-rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_squashed.zip ./
-rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all_squashed_php8.0.zip ./
+rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed.zip ./
+rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed_php8.0.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
@@ -177,11 +177,11 @@ After fixing up the paths you can commit then follow the regular release process
 
 * Clone the repo `git clone -b squashed https://github.com/ampache/ampache.git ampache_squashed/`
 * Clone master `git clone -b master https://github.com/ampache/ampache.git ampache_master/`
-* Copy everything except the public folder into ampache_squashed
+* Copy everything except the `/public`, `/docker` and `/vendor` folders into ampache_squashed
 * Copy everything from /public into the root on the ampache_squashed folder
 * find and replace for the following folders
 
-/admin, /channel, /daap, /play, /rest, /server, /upnp, /webdav
+/admin, /daap, /play, /rest, /server, /upnp, /webdav
 * find `$dic = require __DIR__ . '/../../src/Config/Init.php';`
 * replace `$dic = require __DIR__ . '/../src/Config/Init.php';`
 
@@ -189,19 +189,15 @@ After fixing up the paths you can commit then follow the regular release process
 * find `$dic = require __DIR__ . '/../../../src/Config/Init.php';`
 * replace `$dic = require __DIR__ . '/../../src/Config/Init.php';`
 
-/src
+/src, /templates
 * find `/public/`
 * replace `/`
 
 /
-* find `$dic = require __DIR__ . '/../src/Config/Init.php';`
-* replace `$dic = require __DIR__ . '/src/Config/Init.php';`
-* find `$dic = require_once __DIR__ . '/../src/Config/Init.php';`
-* replace `$dic = require_once __DIR__ . '/src/Config/Init.php';`
-* find `$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';`
-* replace `$dic = require_once __DIR__ . '/src/Config/Bootstrap.php';`
+* find `__DIR__ . '/../`
+* replace `__DIR__ . '/`
 
-composer.json
+composer.json, locale/base/gather-messages.sh
 * find `public/lib`
 * replace `lib`
 

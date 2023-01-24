@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -116,10 +116,12 @@ final class LastFmCollectorModule implements CollectorModuleInterface
 
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results  = pathinfo($url);
-                $mime     = 'image/' . $results['extension'];
-                $images[] = ['url' => $url, 'mime' => $mime, 'title' => 'LastFM'];
-                if ($limit && count($images) >= $limit) {
-                    return $images;
+                if (is_array($results) && array_key_exists('extension', $results) && !empty($results['extension'])) {
+                    $mime     = 'image/' . $results['extension'];
+                    $images[] = ['url' => $url, 'mime' => $mime, 'title' => 'LastFM'];
+                    if ($limit && count($images) >= $limit) {
+                        return $images;
+                    }
                 }
             } // end foreach
         } catch (Exception $error) {
@@ -129,6 +131,10 @@ final class LastFmCollectorModule implements CollectorModuleInterface
             );
         }
 
-        return $images;
+        // Drop any duplicates
+        $images = array_map("unserialize", array_unique(array_map("serialize", $images)));
+
+        // Order is smallest to largest so reverse it
+        return array_reverse($images);
     }
 }

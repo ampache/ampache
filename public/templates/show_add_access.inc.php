@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,16 +26,14 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
-<?php echo AmpError::display('general');
+Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access');
+echo AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All');
 
-/** @var string $add_type */
-?>
+/** @var string $add_type */ ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata">
         <tr>
@@ -65,8 +63,7 @@ $all          = T_('All');
                     <option value="rpc"><?php echo $apirpc; ?></option>
                     <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
-        <?php
-} else {
+        <?php } else {
     if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
@@ -100,7 +97,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
                 if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                    echo scrub_out(Core::get_server('REMOTE_ADDR'));
+                    echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
                 } else {
                     echo scrub_out(Core::get_request('start'));
                 } ?>" /></td>
@@ -109,7 +106,7 @@ $all          = T_('All');
                     <?php echo AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
                     if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                        echo scrub_out(Core::get_server('REMOTE_ADDR'));
+                        echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
                     } else {
                         echo scrub_out(Core::get_request('end'));
                     } ?>" /></td>

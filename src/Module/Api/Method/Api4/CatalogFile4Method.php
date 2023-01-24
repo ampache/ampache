@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -114,18 +117,23 @@ final class CatalogFile4Method
             }
             switch ($task) {
                 case 'clean':
+                    /** @var Catalog_local $catalog */
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
                     Catalog::update_media_from_tags($media, array($type));
                     break;
                 case 'add':
-                    $catalog->add_file($file);
+                    /** @var Catalog_local $catalog */
+                    $catalog->add_file($file, array());
                     break;
                 case 'remove':
                     $media->remove();
                     break;
             }
+            // update the counts too
+            Album::update_album_counts();
+            Artist::update_artist_counts();
             Api4::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['api_format']);
         } else {
             Api4::message('error', T_('The requested catalog was not found'), '404', $input['api_format']);

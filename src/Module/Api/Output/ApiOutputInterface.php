@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,8 @@
  */
 
 namespace Ampache\Module\Api\Output;
+
+use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
@@ -51,9 +53,19 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * This generates an error message
+     */
+    public function error5(
+        int $code,
+        string $message,
+        string $action,
+        string $type
+    ): string;
+
+    /**
      * @param integer[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param User $user
      * @param bool $encode
      * @param bool $asObject
      * @param integer $limit
@@ -63,8 +75,8 @@ interface ApiOutputInterface
      */
     public function albums(
         array $albums,
-        array $include = [],
-        ?int $user_id = null,
+        array $include,
+        User $user,
         bool $encode = true,
         bool $asObject = true,
         int $limit = 0,

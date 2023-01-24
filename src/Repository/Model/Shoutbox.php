@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,7 @@ class Shoutbox
 
     public function getId(): int
     {
-        return (int) $this->id;
+        return (int)$this->id;
     }
 
     /**
@@ -145,7 +145,7 @@ class Shoutbox
      * This takes a type and an ID and returns a created object
      * @param string $type
      * @param integer $object_id
-     * @return Object
+     * @return library_item|null
      */
     public static function get_object($type, $object_id)
     {
@@ -278,16 +278,15 @@ class Shoutbox
     public function get_display($details = true, $jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
-        $object->format();
-        $img  = $this->get_image();
-        $html = "<div class='shoutbox-item'>";
+        $img    = $this->get_image();
+        $html   = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if ($details && $img) {
             $html .= "<div class='shoutbox-img'>" . $img . "</div>";
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
+            $html .= "<div class='shoutbox-object'>" . $object->get_f_link() . "</div>";
             $html .= "<div class='shoutbox-date'>" . get_datetime((int)$this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->getTextFormatted() . "</div>";

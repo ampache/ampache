@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,5 +26,5 @@ use Ampache\Config\AmpConfig;
 <form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get('web_path') . "/$action"; ?>" enctype="multipart/form-data">
     <label for="match" accesskey="S"><?php echo $text; ?></label>
     <input type="text" id="match" name="match" value="<?php echo $match; ?>" />
-    <input type="hidden" name="action" value="<?php echo scrub_out(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_URL)); ?>">
+    <input type="hidden" name="action" value="<?php echo scrub_out(filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 </form>

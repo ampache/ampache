@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,9 +60,9 @@ final class Stream4Method
         }
         $fileid  = $input['id'];
         $type    = $input['type'];
-        $user_id = User::get_from_username(Session::username($input['auth']))->id;
+        $user    = User::get_from_username(Session::username($input['auth']));
 
-        $maxBitRate    = $input['bitrate'];
+        $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
         $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
@@ -75,7 +75,7 @@ final class Stream4Method
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0 && $type == 'song') {
+        if ($maxBitRate > 0 && $type == 'song') {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
@@ -85,11 +85,11 @@ final class Stream4Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if ($type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

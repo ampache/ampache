@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -76,14 +75,14 @@ final class ShowCreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type = Share::format_type($this->requestParser->getFromRequest('type'));
-        if (!empty($type) && !empty($_REQUEST['id'])) {
-            $object_id = $this->requestParser->getFromRequest('id');
+        $object_type = Share::is_valid_type($this->requestParser->getFromRequest('type'));
+        $object_id   = $this->requestParser->getFromRequest('id');
+        if (!empty($object_type) && !empty($object_id)) {
             if (is_array($object_id)) {
                 $object_id = $object_id[0];
             }
 
-            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
             $object     = new $class_name($object_id);
             if ($object->id) {
                 $object->format();

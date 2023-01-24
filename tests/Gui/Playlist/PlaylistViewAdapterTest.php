@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -81,15 +81,15 @@ class PlaylistViewAdapterTest extends MockeryTestCase
 
     public function testGetIdReturnsPlaylistId(): void
     {
-        $id = 666;
+        $AlbumId = 666;
 
         $this->playlist->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($id);
+            ->andReturn($AlbumId);
 
         $this->assertSame(
-            $id,
+            $AlbumId,
             $this->subject->getId()
         );
     }
@@ -147,7 +147,7 @@ class PlaylistViewAdapterTest extends MockeryTestCase
 
         $this->assertSame(
             sprintf(
-                '%s/batch.php?action=playlist&%d',
+                '%s/batch.php?action=playlist&id=%d',
                 $webPath,
                 $playlistId
             ),

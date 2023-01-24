@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class UpdateFromTagsMethod
@@ -73,13 +72,7 @@ final class UpdateFromTagsMethod
             return false;
         }
         // update your object
-        if ($type == 'album') {
-            foreach ($item->album_suite as $album_id) {
-                Catalog::update_single_item($type, $album_id, true);
-            }
-        } else {
-            Catalog::update_single_item($type, $object_id, true);
-        }
+        Catalog::update_single_item($type, $object_id, true);
 
         Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
 

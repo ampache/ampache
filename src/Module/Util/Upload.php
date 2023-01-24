@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
@@ -80,6 +81,9 @@ class Upload
                     $options['license'] = Core::get_post('license');
                 }
 
+                if (Core::get_request('artist') !== '') {
+                    $options['artist_id'] = (int)Core::get_request('artist');
+                }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
                     if (!$artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id)) {
@@ -96,7 +100,7 @@ class Upload
 
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
-                    if (!$album_id = self::check_album(Core::get_request('album_name'))) {
+                    if (!$album_id = self::check_album(Core::get_request('album_name'), $options['artist_id'])) {
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -117,6 +121,8 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
+                Album::update_album_counts();
+                Artist::update_artist_counts();
 
                 ob_get_contents();
                 ob_end_clean();
@@ -160,6 +166,21 @@ class Upload
 
         return null;
     } // check
+
+    /**
+     * can_upload
+     * check settings and permissions for uploads
+     * @param User|string|null $user
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public static function can_upload($user)
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        return AmpConfig::get('allow_upload') && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user->id ?? 0);
+    }
 
     /**
      * rerror
@@ -207,7 +228,7 @@ class Upload
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            $artist_id = Artist::check($artist_name, null, true);
+            $artist_id = Artist::check($artist_name, null);
             if ($artist_id !== null && !Access::check('interface', 50)) {
                 debug_event(self::class, 'An artist with the same name already exists, uploaded song skipped.', 3);
 
@@ -232,20 +253,21 @@ class Upload
     /**
      * check_album
      * @param string $album_name
+     * @param int $artist_id
      * @return boolean|integer
      */
-    public static function check_album($album_name)
+    public static function check_album($album_name, $artist_id)
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
-            $album_id = Album::check(AmpConfig::get('upload_catalog'), Core::get_request('album_name'), 0, 0, null, null, $album_name);
-            if ((int) $album_id < 0) {
+            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
+            if ((int)$album_id < 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
                 return false;
             }
 
-            return (int) $album_id;
+            return (int)$album_id;
         }
 
         return false;

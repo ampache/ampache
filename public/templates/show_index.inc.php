@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Art;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <div id="browse_header">
-<?php require_once Ui::find_template('show_browse_form.inc.php'); ?>
+<?php require_once Ui::find_template('show_form_browse.inc.php'); ?>
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
@@ -47,8 +47,7 @@ if (isset($user->id)) {
 <div id="now_playing">
     <?php show_now_playing(); ?>
 </div> <!-- Close Now Playing Div -->
-<?php
-} ?>
+<?php } ?>
 <!-- Randomly selected Albums of the Moment -->
 <?php if (AmpConfig::get('home_moment_albums')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
@@ -72,10 +71,10 @@ if (isset($user->id)) {
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
-        $data = Song::get_recently_played();
+        $user_id   = Core::get_global('user')->id ?? -1;
+        $data      = Stats::get_recently_played($user_id, 'stream', 'song');
+        $ajax_page = 'index';
         Song::build_cache(array_keys($data));
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
-<?php
-    } ?>
+<?php } ?>

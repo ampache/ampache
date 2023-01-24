@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
+Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=add_label">
 <table class="tabledata">
 <tr>

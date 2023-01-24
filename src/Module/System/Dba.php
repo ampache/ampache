@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ class Dba
     public static function query($sql, $params = array())
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
-        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 6);
+        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -90,7 +90,7 @@ class Dba
         } catch (PDOException $error) {
             // are you trying to write to something that doesn't exist?
             self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
 
             return false;
@@ -102,19 +102,17 @@ class Dba
 
         if (!$stmt) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
-        } else {
-            if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
-                self::$_error = json_encode($stmt->errorInfo());
-                debug_event(__CLASS__, 'Error_query SQL: ' . $sql, 5);
-                debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
-                self::finish($stmt);
-                self::disconnect();
+        } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
+            self::$_error = json_encode($stmt->errorInfo());
+            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
+            debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            self::finish($stmt);
+            self::disconnect();
 
-                return false;
-            }
+            return false;
         }
 
         return $stmt;
@@ -161,6 +159,23 @@ class Dba
         $out_var = $dbh->quote($var);
         // This is slightly less ugly than it was, but still ugly
         return substr($out_var, 1, -1);
+    }
+
+    /**
+     * check_length
+     * Truncate strings for the database that are longer than the limits
+     * @param string $value
+     * @param int $length
+     * @return string
+     */
+    public static function check_length($value, $length)
+    {
+        $result = substr($value, 0, $length);
+        if (!$result) {
+            return $value;
+        }
+
+        return $result;
     }
 
     /**
@@ -405,7 +420,7 @@ class Dba
      */
     public static function check_database_inserted()
     {
-        $sql        = "DESCRIBE session";
+        $sql        = "DESCRIBE `session`";
         $db_results = self::read($sql);
 
         if (!$db_results) {
@@ -570,11 +585,9 @@ class Dba
     /**
      * optimize_tables
      *
-     * This runs an optimize on the tables and updates the stats to improve
-     * join speed.
-     * This can be slow, but is a good idea to do from time to time. We do
-     * it in case the dba isn't doing it... which we're going to assume they
-     * aren't.
+     * This runs an optimize on the tables and updates the stats to improve join speed.
+     * This can be slow, but is a good idea to do from time to time.
+     * We do it in case the dba isn't doing it... which we're going to assume they aren't.
      */
     public static function optimize_tables()
     {
@@ -582,10 +595,11 @@ class Dba
         $db_results = self::read($sql);
 
         while ($row = self::fetch_row($db_results)) {
-            $sql = "OPTIMIZE TABLE `" . $row[0] . "`";
+            debug_event(__CLASS__, 'optimize_tables ' . $row[0], 5);
+            $sql = "OPTIMIZE TABLE `" . $row[0] . "`;";
             self::write($sql);
 
-            $sql = "ANALYZE TABLE `" . $row[0] . "`";
+            $sql = "ANALYZE TABLE `" . $row[0] . "`;";
             self::write($sql);
         }
     }

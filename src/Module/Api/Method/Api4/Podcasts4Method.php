@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2020 Ampache.org
+ * Copyright 2001 - 2022 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class Podcasts4Method
 
             return false;
         }
-        $browse = Api4::getBrowse();
+        $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
@@ -71,21 +71,20 @@ final class Podcasts4Method
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $podcasts = $browse->get_objects();
-        $episodes = $input['include'] == 'episodes';
+        $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
         $user     = User::get_from_username(Session::username($input['auth']));
-        $user_id  = $user->id;
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcasts($podcasts, $user_id, $episodes);
+                echo Json4_Data::podcasts($podcasts, $user, $episodes);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcasts($podcasts, $user_id, $episodes);
+                echo Xml4_Data::podcasts($podcasts, $user, $episodes);
         }
 
         return true;
