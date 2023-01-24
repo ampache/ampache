@@ -112,9 +112,9 @@ const getAlbum = (albumID: string, includeSongs = false) => {
         .get('', {
             params: {
                 action: 'album',
-                version: 400001,
+                version: '6.0.0',
                 filter: albumID,
-                include: [includeSongs ? 'songs' : '']
+                include: [includeSongs && 'songs']
             }
         })
         .then((response) => response.data as Album);

@@ -6,7 +6,7 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import style from './index.styl';
-import AlbumDisplayView from '~Views/AlbumDisplayView';
+import AlbumDisplay from '~components/AlbumDisplay';
 
 interface HomePageProps {
     user: User;
@@ -47,10 +47,9 @@ const HomePage: React.FC<HomePageProps> = (props) => {
                     {!randomAlbums && (
                         <ReactLoading color='#FF9D00' type={'bubbles'} />
                     )}
-                    <AlbumDisplayView
-                        albums={randomAlbums}
-                        authKey={props.user.authKey}
-                    />
+                    {randomAlbums.map((album) => (
+                        <AlbumDisplay albumId={album.id} key={album.id} />
+                    ))}
                 </div>
             </section>
         </div>

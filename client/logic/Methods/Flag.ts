@@ -1,5 +1,5 @@
 import { ampacheClient } from '~main';
-import { useMutation, useQueryClient } from '~node_modules/react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useStore } from '~store';
 import { ItemType } from '~types';
@@ -11,8 +11,7 @@ type FlagInput = {
 };
 
 const query = ({ type, favorite, objectID }: FlagInput) => {
-    console.log(objectID);
-    return ampacheClient.get(`/server/json.server.php`, {
+    return ampacheClient.get(``, {
         params: {
             action: 'flag',
             type,
@@ -23,7 +22,7 @@ const query = ({ type, favorite, objectID }: FlagInput) => {
     });
 };
 
-export const useFlagItem = () => {
+export const useFlagItem = (type: ItemType, id: string) => {
     const queryClient = useQueryClient();
     const { flagCurrentSong, currentPlayingSong } = useStore();
 
@@ -33,7 +32,7 @@ export const useFlagItem = () => {
         },
         {
             onSuccess: (data, variables) => {
-                queryClient.invalidateQueries('album');
+                queryClient.invalidateQueries([type, id]);
                 if (currentPlayingSong?.id === variables.objectID) {
                     flagCurrentSong(variables.favorite);
                 }

@@ -6,6 +6,7 @@ import { Song } from '~logic/Song';
 import updateArt from '~logic/Methods/Update_Art';
 import { useQuery } from 'react-query';
 import { ampacheClient } from '~main';
+import { OptionType } from '~types';
 
 export type Artist = {
     id: string;
@@ -86,31 +87,39 @@ export const useGetArtists = (includeAlbums = false, includeSongs = false) => {
     );
 };
 
-export const getArtist = (
-    artistID: string,
-    authKey: AuthKey,
-    includeAlbums = false,
-    includeSongs = false
+const getArtist = (
+    albumID: string,
+    includeSongs = false,
+    includeAlbums = false
 ) => {
-    let includeString = '';
-    if (includeAlbums) {
-        includeString += '&include[]=albums';
-    }
-    if (includeSongs) {
-        includeString += '&include[]=songs';
-    }
-    const getUrl = `${process.env.ServerURL}/server/json.server.php?action=artist&filter=${artistID}${includeString}&auth=${authKey}&version=400001`;
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'artist',
+                version: '6.0.0',
+                filter: albumID,
+                include: [includeSongs && 'songs', includeAlbums && 'albums']
+            }
+        })
+        .then((response) => response.data as Artist);
+};
 
-    return axios.get(getUrl).then((response) => {
-        const JSONData = response.data;
-        if (!JSONData) {
-            throw new Error('Server Error');
-        }
-        if (JSONData.error) {
-            throw new AmpacheError(JSONData.error);
-        }
-        return JSONData as Artist;
-    });
+export const useGetArtist = ({
+    artistID,
+    includeAlbums = false,
+    includeSongs = false,
+    options
+}: {
+    artistID: string;
+    includeAlbums?: boolean;
+    includeSongs?: boolean;
+    options?: OptionType<Artist>;
+}) => {
+    return useQuery<Artist, Error | AmpacheError>(
+        ['artist', artistID, includeSongs, includeAlbums],
+        () => getArtist(artistID, includeSongs, includeAlbums),
+        options
+    );
 };
 
 export const updateArtistArt = (

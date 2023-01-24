@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useGetAlbums } from '~logic/Album';
 import { User } from '~logic/User';
 import ReactLoading from 'react-loading';
-import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
+import AlbumDisplay from '~components/AlbumDisplay';
 
 interface AlbumsPageProps {
     user: User;
@@ -14,7 +14,7 @@ interface AlbumsPageProps {
 const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
     const [offset, setOffset] = useState(0);
     const { data: albums, error, isLoading } = useGetAlbums({
-        limit: 10,
+        limit: 15,
         offset
     });
 
@@ -66,10 +66,9 @@ const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
                 }}
             />
             <div className='album-grid'>
-                <AlbumDisplayView
-                    albums={albums}
-                    authKey={props.user.authKey}
-                />
+                {albums.map((album) => (
+                    <AlbumDisplay albumId={album.id} key={album.id} />
+                ))}
             </div>
         </div>
     );

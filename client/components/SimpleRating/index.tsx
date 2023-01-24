@@ -15,7 +15,7 @@ interface SimpleRatingProps {
 
 const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
     const [value, setValue] = React.useState(props.value);
-    const flagItem = useFlagItem();
+    const flagItem = useFlagItem(props.type, props.itemID);
 
     return (
         <div className={style.ratings}>

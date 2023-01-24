@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     Artist,
-    getArtist,
     updateArtistInfo,
-    updateArtistArt
+    updateArtistArt,
+    useGetArtist
 } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
@@ -13,10 +13,10 @@ import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import SimpleRating from '~components/SimpleRating';
-import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
 import useTraceUpdate from '~Debug/useTraceUpdate';
+import AlbumDisplay from '~components/AlbumDisplay';
 
 interface ArtistPageProps {
     user: User;
@@ -30,24 +30,19 @@ interface ArtistPageProps {
 const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     const musicContext = useContext(MusicContext);
 
-    const [artist, setArtist] = useState<Artist>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
     useTraceUpdate(props, 'Artist');
-    useEffect(() => {
-        if (props.match.params.artistID != null) {
-            getArtist(props.match.params.artistID, props.user.authKey, true)
-                .then((data) => {
-                    setArtist(data);
-                })
-                .catch((error) => {
-                    toast.error(
-                        '😞 Something went wrong getting information about the artist.'
-                    );
-                    setError(error);
-                });
+
+    const { data: artist } = useGetArtist({
+        artistID: props.match.params.artistID,
+        includeAlbums: true,
+        options: {
+            onError: (err) => {
+                setError(err);
+            }
         }
-    }, [props.match.params.artistID, props.user.authKey]);
-    console.log('ARTISTPAGE');
+    });
+
     const playRandomArtistSongs = () => {
         generateSongsFromArtist(artist.id, props.user.authKey)
             .then((songs) => {
@@ -132,12 +127,10 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
             )}
             <div className={`album-grid ${style.albums}`}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
-                {artist && (
-                    <AlbumDisplayView
-                        albums={artist.albums}
-                        authKey={props.user.authKey}
-                    />
-                )}
+                {artist &&
+                    artist.albums.map((album) => (
+                        <AlbumDisplay albumId={album.id} key={album.id} />
+                    ))}
             </div>
         </div>
     );

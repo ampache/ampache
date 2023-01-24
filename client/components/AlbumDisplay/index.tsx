@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
-import { Album } from '~logic/Album';
+import { useGetAlbum } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
+import { MusicContext } from '~Contexts/MusicContext';
 
 interface AlbumDisplayProps {
-    album: Album;
-    playSongFromAlbum: (albumID: string, random: boolean) => void;
+    albumId: string;
     className?: string;
 }
 
 const AlbumDisplay = (props: AlbumDisplayProps) => {
+    const musicContext = useContext(MusicContext);
+
     const [optionsVisible, setOptionsVisible] = useState(false);
-    const album = props.album;
+    const { data: album } = useGetAlbum({
+        albumID: props.albumId,
+        includeSongs: true
+    });
+
     if (!album) return null;
     return (
         <div
@@ -38,7 +44,10 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                             </Link>
                             <span
                                 onClick={() => {
-                                    props.playSongFromAlbum(album.id, false);
+                                    musicContext.startPlayingWithNewQueue(
+                                        album.tracks,
+                                        0
+                                    );
                                 }}
                                 className={style.action}
                             >
@@ -96,7 +105,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                         {album.artist.name}
                     </Link>
                     <div className={style.albumMeta}>
-                        {album.year} - {album.tracks} tracks
+                        {album.year} - {album.songcount} tracks
                     </div>
                 </div>
             </div>

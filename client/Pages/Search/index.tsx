@@ -11,7 +11,7 @@ import { Artist } from '~logic/Artist';
 import ArtistDisplayView from '~Views/ArtistDisplayView';
 
 import style from './index.styl';
-import AlbumDisplayView from '~Views/AlbumDisplayView';
+import AlbumDisplay from '~components/AlbumDisplay';
 
 interface SearchPageProps {
     user: User;
@@ -108,10 +108,9 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
                 <div className={`album-grid ${style.resultList}`}>
-                    <AlbumDisplayView
-                        albums={albumResults}
-                        authKey={props.user.authKey}
-                    />
+                    {albumResults.map((album) => (
+                        <AlbumDisplay albumId={album.id} />
+                    ))}
                 </div>
             </section>
             <section className={style.resultSection}>
