@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Artist, getArtists } from '~logic/Artist';
+import React from 'react';
+import { useGetArtists } from '~logic/Artist';
 import { User } from '~logic/User';
-import AmpacheError from '~logic/AmpacheError';
 import ReactLoading from 'react-loading';
-import { toast } from 'react-toastify';
 import ArtistDisplayView from '~Views/ArtistDisplayView';
 
 import style from './index.styl';
@@ -13,19 +11,7 @@ interface ArtistsPageProps {
 }
 
 const ArtistsPage: React.FC<ArtistsPageProps> = (props: ArtistsPageProps) => {
-    const [artists, setArtists] = useState<Artist[]>(null);
-    const [error, setError] = useState<Error | AmpacheError>(null);
-
-    useEffect(() => {
-        getArtists(props.user.authKey)
-            .then((data) => {
-                setArtists(data);
-            })
-            .catch((error) => {
-                toast.error('😞 Something went wrong getting the artist.');
-                setError(error);
-            });
-    }, [props.user.authKey]);
+    const { data: artists, error, isLoading } = useGetArtists();
 
     if (error) {
         return (

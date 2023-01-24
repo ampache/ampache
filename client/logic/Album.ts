@@ -96,7 +96,7 @@ export const useGetAlbums = (input: AlbumsInput = {}) => {
                 .get('', {
                     params: {
                         action: 'albums',
-                        version: 400001,
+                        version: '6.0.0',
                         include: [includeSongs ? 'songs' : ''],
                         limit,
                         offset

@@ -3,6 +3,7 @@ import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Song } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
+import { useStore } from '~store';
 
 export interface MusicContextInterface {
     playerStatus: PLAYERSTATUS;
@@ -67,7 +68,9 @@ export const MusicContextProvider: React.FC = (props) => {
                     'Playing an undefined song, something is wrong.'
                 );
             }
-            console.log(audioRef.audioEl);
+
+            useStore.getState().startPlayingSong(song);
+
             // eslint-disable-next-line immutable/no-mutation
             audioRef.audioEl.current.src = song.url;
             // eslint-disable-next-line immutable/no-mutation

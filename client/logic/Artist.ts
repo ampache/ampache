@@ -4,10 +4,14 @@ import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 import updateArt from '~logic/Methods/Update_Art';
+import { useQuery } from 'react-query';
+import { ampacheClient } from '~main';
 
 export type Artist = {
     id: string;
     name: string;
+    prefix: string | null;
+    basename: string;
     albums: Album[];
     albumcount: number;
     songs: Song[];
@@ -20,7 +24,6 @@ export type Artist = {
     ];
     art: string;
     flag: boolean;
-    preciserating: number;
     rating: number;
     averagerating: number;
     mbid: string;
@@ -64,29 +67,23 @@ export const getAlbumsFromArtist = (albumID: number, authKey: AuthKey) => {
         });
 };
 
-export const getArtists = (
-    authKey: AuthKey,
-    includeAlbums = false,
-    includeSongs = false
-) => {
-    let includeString = '';
-    if (includeAlbums) {
-        includeString += '&include[]=albums';
-    }
-    if (includeSongs) {
-        includeString += '&include[]=songs';
-    }
-    const getUrl = `${process.env.ServerURL}/server/json.server.php?action=artists&auth=${authKey}${includeString}&version=400001`;
-    return axios.get(getUrl).then((response) => {
-        const JSONData = response.data;
-        if (!JSONData) {
-            throw new Error('Server Error');
-        }
-        if (JSONData.error) {
-            throw new AmpacheError(JSONData.error);
-        }
-        return JSONData.artist as Artist[];
-    });
+export const useGetArtists = (includeAlbums = false, includeSongs = false) => {
+    return useQuery<Artist[], Error | AmpacheError>(
+        ['artists', includeAlbums, includeSongs],
+        () =>
+            ampacheClient
+                .get('', {
+                    params: {
+                        action: 'artists',
+                        version: '6.0.0',
+                        include: [
+                            includeSongs && 'songs',
+                            includeAlbums && 'albums'
+                        ]
+                    }
+                })
+                .then((response) => response.data.artist)
+    );
 };
 
 export const getArtist = (
