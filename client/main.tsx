@@ -23,7 +23,9 @@ ampacheClient.interceptors.response.use((res) => {
     }
     return res;
 });
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { staleTime: 300000 } }
+});
 
 const render = (Component) => {
     toast.configure();

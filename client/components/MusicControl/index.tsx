@@ -7,6 +7,7 @@ import CurrentPlaying from '~components/CurrentPlaying';
 import CurrentPlayingArt from '~components/CurrentPlayingArt';
 import SimpleRating from '~components/SimpleRating';
 import SliderControl from '~components/MusicControl/components/SliderControl';
+import Cookies from 'js-cookie';
 
 import style from './index.styl';
 import { useStore } from '~store';
@@ -15,6 +16,7 @@ const MusicControl = () => {
     const musicContext = useContext(MusicContext);
     const { currentPlayingSong } = useStore();
     const [ratingToggle, setRatingToggle] = useState(false);
+    const [oldVolume, setOldVolume] = useState(musicContext.volume);
 
     const [currentTime, setCurrentTime] = useState('');
 
@@ -204,7 +206,13 @@ const MusicControl = () => {
                     description='Mute the music'
                     role='button'
                     onClick={() => {
-                        musicContext.setVolume(0); //TODO: Unmute? Store old volume level?
+                        if (musicContext.volume > 0) {
+                            musicContext.setVolume(0);
+                            Cookies.set('volume', 0);
+                            return;
+                        }
+                        musicContext.setVolume(oldVolume);
+                        Cookies.set('volume', oldVolume);
                     }}
                     className='icon icon-button'
                 />
@@ -212,6 +220,10 @@ const MusicControl = () => {
                     name='volume'
                     onChange={(_, value: number) => {
                         musicContext.setVolume(value);
+                    }}
+                    onChangeCommitted={(_, value: number) => {
+                        setOldVolume(value);
+                        Cookies.set('volume', value);
                     }}
                     max={100}
                     min={0}

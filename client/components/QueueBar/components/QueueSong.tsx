@@ -1,18 +1,37 @@
 import React from 'react';
 import SVG from 'react-inlinesvg';
-import { Song } from '~logic/Song';
+import style from './index.styl';
+import { useGetSong } from '~logic/Song';
+import Loading from 'react-loading';
 
 interface QueueSongProps {
-    song: Song;
+    songId: string;
     currentlyPlaying: boolean;
     queueIndex: number;
     playSong: (songID: string) => void;
     removeSong: (queueIndex: number) => void;
 }
 
-import style from './index.styl';
-
 const QueueSong: React.FC<QueueSongProps> = (props) => {
+    const { playSong, songId } = props;
+
+    const { data: song, refetch: fetchSong, isFetching } = useGetSong(songId, {
+        enabled: false
+    });
+
+    if (!song) {
+        if (!isFetching) {
+            fetchSong();
+        }
+        return (
+            <li
+                className={`${style.song} card-clear`}
+                onClick={() => playSong(songId)}
+            >
+                <Loading />
+            </li>
+        );
+    }
     return (
         <li
             className={
@@ -20,18 +39,16 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
                     ? `${style.song} nowPlaying card-clear`
                     : `${style.song} card-clear`
             }
-            onClick={() => props.playSong(props.song.id)}
+            onClick={() => playSong(songId)}
         >
             <div className={style.imageWrapper}>
-                <img src={props.song.art} alt='Album cover' />
+                <img src={song.art} alt='Album cover' />
             </div>
             <div className={style.details}>
                 <div className={`card-title ${style.songName}`}>
-                    {props.song.title}
+                    {song.title}
                 </div>
-                <div className={style.albumArtist}>
-                    {props.song.artist.name}
-                </div>
+                <div className={style.albumArtist}>{song.artist.name}</div>
             </div>
             {!props.currentlyPlaying && (
                 <div className={style.actions}>

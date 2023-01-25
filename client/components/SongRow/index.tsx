@@ -21,13 +21,12 @@ interface SongRowProps {
     inPlaylistID?: string;
     showArtist?: boolean;
     showAlbum?: boolean;
-    startPlaying: (song: Song) => void;
+    startPlaying: (songId: string) => void;
     className?: string;
 }
 const contextMenuDefaultState = {
     mouseX: null,
-    mouseY: null,
-    song: null
+    mouseY: null
 };
 
 const handleRemoveFromPlaylist = async (playlistID: string, songID: string) => {
@@ -70,22 +69,23 @@ const SongRow: React.FC<SongRowProps> = memo(
         const queryClient = useQueryClient();
         const musicContext = useContext(MusicContext);
 
-        const { refetch: fetchSong, isFetching } = useGetSong(songId, {
-            enabled: false
-        });
-        const song = queryClient.getQueryData<Song>(['song', songId]);
+        const { data: song, refetch: fetchSong, isFetching } = useGetSong(
+            songId,
+            {
+                enabled: false
+            }
+        );
         const currentPlayingSong = useStore().currentPlayingSong;
         const isCurrentlyPlaying = currentPlayingSong?.id === songId;
         const [contextMenuState, setContextMenuState] = React.useState(
             contextMenuDefaultState
         );
 
-        const handleContext = (event: React.MouseEvent, song: Song) => {
+        const handleContext = (event: React.MouseEvent) => {
             event.preventDefault();
             setContextMenuState({
                 mouseX: event.clientX - 2,
-                mouseY: event.clientY - 4,
-                song
+                mouseY: event.clientY - 4
             });
         };
 
@@ -116,9 +116,10 @@ const SongRow: React.FC<SongRowProps> = memo(
                             ? `nowPlaying ${style.songRow} card-clear ${className}`
                             : `${style.songRow} card-clear ${className} `
                     }
-                    onContextMenu={(e) => handleContext(e, song)}
+                    onContextMenu={(e) => handleContext(e)}
                     onClick={() => {
-                        startPlaying(song);
+                        console.log('START', song);
+                        startPlaying(song.id);
                     }}
                     tabIndex={1}
                 >
@@ -167,7 +168,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                handleContext(e, song);
+                                handleContext(e);
                             }}
                         >
                             <SVG
@@ -219,10 +220,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                     <MenuItem
                         onClick={() => {
                             handleContextClose();
-                            musicContext.addToQueue(
-                                contextMenuState.song,
-                                true
-                            );
+                            musicContext.addToQueue(songId, true);
                         }}
                     >
                         Play Next
@@ -230,25 +228,18 @@ const SongRow: React.FC<SongRowProps> = memo(
                     <MenuItem
                         onClick={() => {
                             handleContextClose();
-                            musicContext.addToQueue(
-                                contextMenuState.song,
-                                false
-                            );
+                            musicContext.addToQueue(songId, false);
                         }}
                     >
                         Add to Queue
                     </MenuItem>
                     <MenuItem onClick={handleContextClose}>
-                        <Link
-                            to={`/artist/${contextMenuState.song?.artist.id}`}
-                        >
+                        <Link to={`/artist/${song.artist.id}`}>
                             Go to Artist
                         </Link>
                     </MenuItem>
                     <MenuItem onClick={handleContextClose}>
-                        <Link to={`/album/${contextMenuState.song?.album.id}`}>
-                            Go to Album
-                        </Link>
+                        <Link to={`/album/${song.album.id}`}>Go to Album</Link>
                     </MenuItem>
                     {inPlaylistID && (
                         <MenuItem

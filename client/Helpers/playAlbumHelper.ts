@@ -13,7 +13,8 @@ export const playSongFromAlbum = (
             if (randomSong) {
                 songIndex = Math.floor(Math.random() * songs.length) + 1;
             }
-            musicContext.startPlayingWithNewQueue(songs, songIndex);
+            const songIds = songs.map((song) => song.id);
+            musicContext.startPlayingWithNewQueue(songIds, songIndex);
         })
         .catch((error) => {
             toast.error('😞 Something went playing song from album.');

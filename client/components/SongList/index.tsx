@@ -1,11 +1,8 @@
-import React, { memo, useContext, useState } from 'react';
+import React, { memo, useContext } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
-import { Song } from '~logic/Song';
 import { SongRow } from '~components/SongRow';
 
 import style from './index.styl';
-import { useStore } from '~store';
-import AmpacheError from '~logic/AmpacheError';
 
 interface SongListProps {
     songIds: string[];
@@ -15,28 +12,16 @@ interface SongListProps {
     inAlbumID?: string;
 }
 
-const setSong = useStore.getState().startPlayingSong;
-
 // eslint-disable-next-line react/display-name
 const SongList: React.FC<SongListProps> = memo(
     ({ inPlaylistID, showAlbum, showArtist, songIds }) => {
         const musicContext = useContext(MusicContext);
 
-        const [error, setError] = useState<Error | AmpacheError>(null);
-
-        const handleStartPlaying = (song: Song) => {
-            // const queueIndex = songs.findIndex((o) => o.id === song.id);
-            // musicContext.startPlayingWithNewQueue(songs, queueIndex);
-            // setSong(song);
+        const handleStartPlaying = (startSongId: string) => {
+            const queueIndex = songIds.findIndex((o) => o === startSongId);
+            console.log('asdf', queueIndex, startSongId, songIds);
+            musicContext.startPlayingWithNewQueue(songIds, queueIndex);
         };
-
-        if (error) {
-            return (
-                <div>
-                    <span>Error: {error.message}</span>
-                </div>
-            );
-        }
 
         return (
             <>

@@ -46,10 +46,11 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     const playRandomArtistSongs = () => {
         generateSongsFromArtist(artist.id, props.user.authKey)
             .then((songs) => {
-                console.log(songs);
-                songs.sort(() => Math.random() - 0.5);
+                const songIds = songs.map((song) => song.id);
+                songIds.sort(() => Math.random() - 0.5);
 
-                musicContext.startPlayingWithNewQueue(songs);
+                if (songIds.length === 0) throw new Error('No songs?');
+                musicContext.startPlayingWithNewQueue(songIds);
                 //TODO: When working
             })
             .catch((error) => {

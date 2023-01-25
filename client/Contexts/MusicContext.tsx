@@ -1,23 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { Song } from '~logic/Song';
+import { Song, useGetSong } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
 import { useStore } from '~store';
+import Cookies from 'js-cookie';
+import { useQueryClient } from 'react-query';
 
 export interface MusicContextInterface {
     playerStatus: PLAYERSTATUS;
     // songPosition: number;
     volume: number;
     songQueueIndex: number;
-    songQueue: Song[];
+    songQueue: string[];
     playPause: () => void;
     playPrevious: () => void;
     playNext: () => void;
-    flagCurrentSong: (favorite: boolean) => void;
-    startPlayingWithNewQueue: (newQueue: Song[], startPosition?) => void;
+    startPlayingWithNewQueue: (newQueue: string[], startPosition?) => void;
     changeQueuePosition: (newPosition: number) => void;
-    addToQueue: (song: Song, next: boolean) => void;
+    addToQueue: (songId: string, next: boolean) => void;
     removeFromQueue: (queueIndex: number) => void;
     seekSongTo: (newPosition: number) => void;
     setVolume: (newVolume: number) => void;
@@ -27,17 +28,25 @@ export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED
 } as MusicContextInterface);
 
+const cookieVolume = parseInt(Cookies.get('volume') ?? 100);
+
+//REFACTOR THIS BEHEMOTH
 export const MusicContextProvider: React.FC = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
-    const [songQueue, setSongQueue] = useState<Song[]>([]);
+    const [songQueue, setSongQueue] = useState<string[]>([]);
     const [songPosition, setSongPosition] = useState(0);
     const [songQueueIndex, setSongQueueIndex] = useState(-1);
     const [userQCount, setUserQCount] = useState(0);
-    const [volume, setVolume] = useState(100);
+    const [volume, setVolume] = useState(cookieVolume);
+    const queryClient = useQueryClient();
 
     let audioRef = undefined; //TODO: Should this be useRef?
 
     const currentPlayingSong = songQueue[songQueueIndex];
+
+    const { refetch: fetchSong } = useGetSong(currentPlayingSong, {
+        enabled: false
+    });
 
     useHotkeys(
         'space',
@@ -62,11 +71,18 @@ export const MusicContextProvider: React.FC = (props) => {
     }, [audioRef, currentPlayingSong]);
 
     const _playSong = useCallback(
-        async (song: Song) => {
-            if (!song) {
+        async (songID: string) => {
+            if (!songID) {
                 return console.error(
                     'Playing an undefined song, something is wrong.'
                 );
+            }
+            const song = queryClient.getQueryData<Song>(['song', songID]);
+            if (!song) {
+                console.warn(`Failed to get song(${songID}) from cache...`);
+                return fetchSong().then(() => {
+                    _playSong(songID);
+                });
             }
 
             useStore.getState().startPlayingSong(song);
@@ -94,7 +110,7 @@ export const MusicContextProvider: React.FC = (props) => {
                 });
             }
         },
-        [audioRef, playPause]
+        [audioRef?.audioEl, fetchSong, playPause, queryClient]
     );
 
     const playPrevious = useCallback(() => {
@@ -110,16 +126,16 @@ export const MusicContextProvider: React.FC = (props) => {
 
     //This could use a better name perhaps, as it just exists to update the state in MusicContext
     //To reflect that the song is flagged, so anything that relies on MusicContext is also up-to-date
-    const flagCurrentSong = (favorite: boolean) => {
-        const newQ = songQueue.map((song) => {
-            if (song.id === currentPlayingSong?.id) {
-                return { ...song, flag: favorite };
-            }
-            return song;
-        });
-
-        setSongQueue(newQ);
-    };
+    // const flagCurrentSong = (favorite: boolean) => {
+    //     const newQ = songQueue.map((songId) => {
+    //         if (songId === currentPlayingSong?.id) {
+    //             return { ...song, flag: favorite };
+    //         }
+    //         return song;
+    //     });
+    //
+    //     setSongQueue(newQ);
+    // };
 
     useEffect(() => {
         if (!currentPlayingSong) return;
@@ -143,8 +159,11 @@ export const MusicContextProvider: React.FC = (props) => {
         playNext();
     };
 
-    const startPlayingWithNewQueue = (newQueue: Song[], startPosition = 0) => {
-        if (newQueue[startPosition].id === currentPlayingSong?.id) return;
+    const startPlayingWithNewQueue = (
+        newQueue: string[],
+        startPosition = 0
+    ) => {
+        // if (newQueue[startPosition] === currentPlayingSong) return;
 
         setUserQCount(0);
 
@@ -162,18 +181,18 @@ export const MusicContextProvider: React.FC = (props) => {
         _playSong(songQueue[newPosition]);
     };
 
-    const addToQueue = (song: Song, next: boolean) => {
+    const addToQueue = (songID: string, next: boolean) => {
         const newQueue = [...songQueue];
         if (next) {
             //splice starts at 1, so we don't need +2 //TODO make this comment more clear!
-            newQueue.splice(songQueueIndex + 1 + userQCount, 0, song);
+            newQueue.splice(songQueueIndex + 1 + userQCount, 0, songID);
             setUserQCount(userQCount + 1); //TODO: Reducer?
 
             setSongQueue(newQueue);
             return;
         }
 
-        newQueue.push(song);
+        newQueue.push(songID);
         setSongQueue(newQueue);
     };
 
@@ -210,7 +229,6 @@ export const MusicContextProvider: React.FC = (props) => {
                 playPause,
                 playPrevious,
                 playNext,
-                flagCurrentSong,
                 startPlayingWithNewQueue,
                 changeQueuePosition,
                 addToQueue,
