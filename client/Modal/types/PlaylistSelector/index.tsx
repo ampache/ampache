@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getPlaylists, Playlist } from '~logic/Playlist';
-import { AuthKey } from '~logic/Auth';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 interface PlaylistSelectorProps {
-    authKey: AuthKey;
     ok?: (resolve) => Promise<unknown>; //TODO: confirm that these are correct type definitions.
     cancel?: () => Promise<unknown>;
 }
@@ -15,10 +13,10 @@ import style from './index.styl';
 const PlaylistSelector = (props: PlaylistSelectorProps) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
 
-    const { authKey, cancel, ok } = { ...props };
+    const { cancel, ok } = props;
 
     useEffect(() => {
-        getPlaylists(authKey)
+        getPlaylists()
             .then((data) => {
                 setPlaylists(data);
             })
@@ -27,7 +25,7 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
                 console.error(error);
                 cancel();
             });
-    }, [authKey, cancel]);
+    }, [cancel]);
 
     if (!playlists) {
         return (

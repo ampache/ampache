@@ -6,6 +6,7 @@ import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 import { MusicContext } from '~Contexts/MusicContext';
+import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 
 interface AlbumDisplayProps {
     albumId: string;
@@ -17,8 +18,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
 
     const [optionsVisible, setOptionsVisible] = useState(false);
     const { data: album } = useGetAlbum({
-        albumID: props.albumId,
-        includeSongs: true
+        albumID: props.albumId
     });
 
     if (!album) return null;
@@ -44,9 +44,10 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                             </Link>
                             <span
                                 onClick={() => {
-                                    musicContext.startPlayingWithNewQueue(
-                                        album.tracks,
-                                        0
+                                    playSongFromAlbum(
+                                        album.id,
+                                        false,
+                                        musicContext
                                     );
                                 }}
                                 className={style.action}

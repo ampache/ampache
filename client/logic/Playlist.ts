@@ -2,6 +2,9 @@ import { AuthKey } from './Auth';
 import axios from 'axios';
 import AmpacheError from './AmpacheError';
 import { Song } from './Song';
+import { ampacheClient } from '~main';
+import { OptionType } from '~types';
+import { useQuery, useQueryClient } from 'react-query';
 
 export type Playlist = {
     id: string;
@@ -16,80 +19,75 @@ export type Playlist = {
     averagerating: number;
 };
 
-export const getPlaylists = (authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlists&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+export const getPlaylists = () => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlists',
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData.playlist as Playlist[];
-        });
+        })
+        .then((res) => res.data.playlist as Playlist[]);
 };
 
-export const getPlaylistSongs = (playlistID: string, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_songs&filter=${playlistID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+export const getPlaylistSongs = (playlistID: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_songs',
+                filter: playlistID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData.song as Song[];
-        });
+        })
+        .then((response) => response.data.song as Song[]);
 };
 
-export const addToPlaylist = (
+export const useGetPlaylistSongs = (
     playlistID: string,
-    songID: string,
-    authKey: AuthKey
+    options?: OptionType<Song[]>
 ) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_add_song&filter=${playlistID}&song=${songID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+    const queryClient = useQueryClient();
+    return useQuery<Song[], Error | AmpacheError>(
+        ['playlistSongs', playlistID],
+        () => getPlaylistSongs(playlistID),
+        {
+            onSuccess: (songs) => {
+                songs.map((song) => {
+                    queryClient.setQueryData(['song', song.id], song);
+                });
+            },
+            ...options
+        }
+    );
+};
+
+export const addToPlaylist = (playlistID: string, songID: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_add_song',
+                filter: playlistID,
+                song: songID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+        })
+        .then(() => true);
 };
 
 export const removeFromPlaylistWithSongID = (
     playlistID: string,
-    songID: string,
-    authKey: AuthKey
+    songID: string
 ) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_remove_song&filter=${playlistID}&song=${songID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_remove_song',
+                filter: playlistID,
+                song: songID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+        })
+        .then(() => true);
 };
 
 export const createPlaylist = (

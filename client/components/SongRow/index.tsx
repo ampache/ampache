@@ -1,124 +1,289 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
 import SVG from 'react-inlinesvg';
-import { Song } from '~logic/Song';
+import { Song, useGetSong } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 import { useStore } from '~store';
+import { useQueryClient } from 'react-query';
+import ReactLoading from 'react-loading';
+import { Menu, MenuItem } from '@material-ui/core';
+import { MusicContext } from '~Contexts/MusicContext';
+import { addToPlaylist, removeFromPlaylistWithSongID } from '~logic/Playlist';
+import PlaylistSelector from '~Modal/types/PlaylistSelector';
+import { Modal } from 'react-async-popup';
+import { toast } from 'react-toastify';
 
 interface SongRowProps {
-    song: Song;
-    isCurrentlyPlaying: boolean;
+    songId: string;
+    trackNumber?: string;
+    inPlaylistID?: string;
     showArtist?: boolean;
     showAlbum?: boolean;
     startPlaying: (song: Song) => void;
-    showContext: (event: React.MouseEvent, song: Song) => void;
     className?: string;
 }
-
-const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
-    const currentPlayingSong = useStore().currentPlayingSong;
-
-    const formatLabel = (s) => [
-        (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
-        //https://stackoverflow.com/a/37770048
-    ];
-
-    return (
-        <>
-            <li
-                className={
-                    props.isCurrentlyPlaying
-                        ? `nowPlaying ${style.songRow} card-clear ${props.className}`
-                        : `${style.songRow} card-clear ${props.className} `
-                }
-                onContextMenu={(e) => props.showContext(e, props.song)}
-                onClick={() => {
-                    props.startPlaying(props.song);
-                }}
-                tabIndex={1}
-            >
-                <div className={style.songDetails}>
-                    <div className={style.trackNumber}>{props.song.track}</div>
-                    <div className={`card-title ${style.title}`}>
-                        {props.song.title}
-                    </div>
-                    {props.showArtist && (
-                        <div
-                            className={style.artistContainer}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <Link
-                                className={style.artist}
-                                to={`/artist/${props.song.artist.id}`}
-                            >
-                                {props.song.artist.name}
-                            </Link>
-                        </div>
-                    )}
-                    {props.showAlbum && (
-                        <div
-                            className={style.albumContainer}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <Link
-                                className={style.album}
-                                to={`/album/${props.song.album.id}`}
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                {props.song.album.name}
-                            </Link>
-                        </div>
-                    )}
-                    <div className={style.time}>
-                        {formatLabel(props.song.time)}
-                    </div>
-                </div>
-
-                <div className={style.songActions}>
-                    <div
-                        className={style.options}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            props.showContext(e, props.song);
-                        }}
-                    >
-                        <SVG
-                            className='icon icon-button-smallest'
-                            src={require('~images/icons/svg/more-options-hori.svg')}
-                            title='More options'
-                            role='button'
-                        />
-                    </div>
-
-                    <div className={style.rating}>
-                        <SimpleRating
-                            value={props.song.rating}
-                            fav={
-                                props.isCurrentlyPlaying
-                                    ? currentPlayingSong?.flag
-                                    : props.song.flag
-                            }
-                            itemID={props.song.id}
-                            type='song'
-                        />
-                    </div>
-
-                    <div className={style.remove}>
-                        <SVG
-                            className='icon icon-button-smallest'
-                            src={require('~images/icons/svg/cross.svg')}
-                            title='Delete'
-                            description='Delete this song'
-                            role='button'
-                        />
-                    </div>
-                </div>
-            </li>
-        </>
-    );
+const contextMenuDefaultState = {
+    mouseX: null,
+    mouseY: null,
+    song: null
 };
 
-export default SongRow;
+const handleRemoveFromPlaylist = async (playlistID: string, songID: string) => {
+    try {
+        await removeFromPlaylistWithSongID(playlistID, songID);
+        toast.success('Removed song from playlist');
+    } catch (e) {
+        toast.error('😞 Something went wrong removing from playlist.');
+    }
+};
+
+const handleAddToPlaylist = async (songID: string) => {
+    const { show } = await Modal.new({
+        title: 'Add To Playlist',
+        content: <PlaylistSelector />,
+        footer: null
+    });
+    const playlistID = await show();
+
+    if (playlistID) {
+        try {
+            await addToPlaylist(playlistID, songID);
+            toast.success('Added song to playlist');
+        } catch (e) {
+            toast.error('😞 Something went wrong adding to playlist.');
+        }
+    }
+};
+
+const SongRow: React.FC<SongRowProps> = memo(
+    ({
+        className,
+        trackNumber,
+        showAlbum,
+        showArtist,
+        songId,
+        inPlaylistID,
+        startPlaying
+    }: SongRowProps) => {
+        const queryClient = useQueryClient();
+        const musicContext = useContext(MusicContext);
+
+        const { refetch: fetchSong, isFetching } = useGetSong(songId, {
+            enabled: false
+        });
+        const song = queryClient.getQueryData<Song>(['song', songId]);
+        const currentPlayingSong = useStore().currentPlayingSong;
+        const isCurrentlyPlaying = currentPlayingSong?.id === songId;
+        const [contextMenuState, setContextMenuState] = React.useState(
+            contextMenuDefaultState
+        );
+
+        const handleContext = (event: React.MouseEvent, song: Song) => {
+            event.preventDefault();
+            setContextMenuState({
+                mouseX: event.clientX - 2,
+                mouseY: event.clientY - 4,
+                song
+            });
+        };
+
+        const handleContextClose = () => {
+            setContextMenuState(contextMenuDefaultState);
+        };
+
+        const formatLabel = (s) => [
+            (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
+            //https://stackoverflow.com/a/37770048
+        ];
+
+        if (!song) {
+            if (!isFetching) fetchSong();
+            return (
+                <li
+                    className={`${style.songRow} card-clear ${className} ${style.songLoading} `}
+                >
+                    <ReactLoading type={'bubbles'} />
+                </li>
+            );
+        }
+        return (
+            <>
+                <li
+                    className={
+                        isCurrentlyPlaying
+                            ? `nowPlaying ${style.songRow} card-clear ${className}`
+                            : `${style.songRow} card-clear ${className} `
+                    }
+                    onContextMenu={(e) => handleContext(e, song)}
+                    onClick={() => {
+                        startPlaying(song);
+                    }}
+                    tabIndex={1}
+                >
+                    <div className={style.songDetails}>
+                        <div className={style.trackNumber}>
+                            {trackNumber ?? song.track}
+                        </div>
+                        <div className={`card-title ${style.title}`}>
+                            {song.title}
+                        </div>
+                        {showArtist && (
+                            <div
+                                className={style.artistContainer}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Link
+                                    className={style.artist}
+                                    to={`/artist/${song.artist.id}`}
+                                >
+                                    {song.artist.name}
+                                </Link>
+                            </div>
+                        )}
+                        {showAlbum && (
+                            <div
+                                className={style.albumContainer}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <Link
+                                    className={style.album}
+                                    to={`/album/${song.album.id}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {song.album.name}
+                                </Link>
+                            </div>
+                        )}
+                        <div className={style.time}>
+                            {formatLabel(song.time)}
+                        </div>
+                    </div>
+
+                    <div className={style.songActions}>
+                        <div
+                            className={style.options}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleContext(e, song);
+                            }}
+                        >
+                            <SVG
+                                className='icon icon-button-smallest'
+                                src={require('~images/icons/svg/more-options-hori.svg')}
+                                title='More options'
+                                role='button'
+                            />
+                        </div>
+
+                        <div className={style.rating}>
+                            <SimpleRating
+                                value={song.rating}
+                                fav={
+                                    isCurrentlyPlaying
+                                        ? currentPlayingSong?.flag
+                                        : song.flag
+                                }
+                                itemID={song.id}
+                                type='song'
+                            />
+                        </div>
+
+                        <div className={style.remove}>
+                            <SVG
+                                className='icon icon-button-smallest'
+                                src={require('~images/icons/svg/cross.svg')}
+                                title='Delete'
+                                description='Delete this song'
+                                role='button'
+                            />
+                        </div>
+                    </div>
+                </li>
+                <Menu
+                    open={contextMenuState.mouseY !== null}
+                    onClose={handleContextClose}
+                    anchorReference='anchorPosition'
+                    anchorPosition={
+                        contextMenuState.mouseY !== null &&
+                        contextMenuState.mouseX !== null
+                            ? {
+                                  top: contextMenuState.mouseY,
+                                  left: contextMenuState.mouseX
+                              }
+                            : undefined
+                    }
+                >
+                    <MenuItem
+                        onClick={() => {
+                            handleContextClose();
+                            musicContext.addToQueue(
+                                contextMenuState.song,
+                                true
+                            );
+                        }}
+                    >
+                        Play Next
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            handleContextClose();
+                            musicContext.addToQueue(
+                                contextMenuState.song,
+                                false
+                            );
+                        }}
+                    >
+                        Add to Queue
+                    </MenuItem>
+                    <MenuItem onClick={handleContextClose}>
+                        <Link
+                            to={`/artist/${contextMenuState.song?.artist.id}`}
+                        >
+                            Go to Artist
+                        </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleContextClose}>
+                        <Link to={`/album/${contextMenuState.song?.album.id}`}>
+                            Go to Album
+                        </Link>
+                    </MenuItem>
+                    {inPlaylistID && (
+                        <MenuItem
+                            onClick={async () => {
+                                handleContextClose();
+                                await handleRemoveFromPlaylist(
+                                    inPlaylistID,
+                                    songId
+                                );
+                                queryClient.invalidateQueries([
+                                    'playlistSongs',
+                                    inPlaylistID
+                                ]);
+                            }}
+                        >
+                            Remove From Playlist
+                        </MenuItem>
+                    )}
+                    {!inPlaylistID && (
+                        <MenuItem
+                            onClick={() => {
+                                handleContextClose();
+                                handleAddToPlaylist(songId);
+                            }}
+                        >
+                            Add to Playlist
+                        </MenuItem>
+                    )}
+                </Menu>
+            </>
+        );
+    },
+    (prevProps, nextProps) => {
+        return prevProps.songId === nextProps.songId;
+    }
+);
+
+export { SongRow };

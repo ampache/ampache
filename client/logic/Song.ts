@@ -1,3 +1,8 @@
+import { OptionType } from '~types';
+import { ampacheClient } from '~main';
+import AmpacheError from '~logic/AmpacheError';
+import { useQuery } from 'react-query';
+
 type Song = {
     id: string;
     title: string;
@@ -51,4 +56,25 @@ type Song = {
     r128_track_gain: string;
 };
 
+const getSong = (songId: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'song',
+                filter: songId,
+                version: '6.0.0'
+            }
+        })
+        .then((response) => response.data as Song);
+};
+
+export const useGetSong = (songId: string, options?: OptionType<Song>) => {
+    return useQuery<Song, Error | AmpacheError>(
+        ['song', songId],
+        () => getSong(songId),
+        {
+            ...options
+        }
+    );
+};
 export { Song };

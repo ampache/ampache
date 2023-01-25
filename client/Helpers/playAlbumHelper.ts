@@ -1,15 +1,13 @@
-import { getAlbumSongs } from '~logic/Album';
-import { AuthKey } from '~logic/Auth';
 import { toast } from 'react-toastify';
 import { MusicContextInterface } from '~Contexts/MusicContext';
+import { getAlbumSongs } from '~logic/Album';
 
 export const playSongFromAlbum = (
     albumID: string,
     randomSong: boolean,
-    authKey: AuthKey,
     musicContext: MusicContextInterface
 ) => {
-    getAlbumSongs(albumID, authKey)
+    getAlbumSongs(albumID)
         .then((songs) => {
             let songIndex = 0;
             if (randomSong) {

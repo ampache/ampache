@@ -28,7 +28,7 @@
         "zustand": "^3.7.1"
     },
     "scripts": {
-        "start": "yarn run clean && parcel index.html",
+        "start": "yarn run clean && NODE_ENV=development parcel index.html",
         "clean": "rm -rf dist .parcel-cache",
         "build": "yarn clean && parcel build index.html",
         "prod": "yarn clean && parcel build index.html --no-source-maps",

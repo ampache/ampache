@@ -3,9 +3,10 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
+import album from '~Pages/Album';
 
 type Album = {
     id: string;
@@ -50,21 +51,38 @@ const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
         });
 };
 
-const getAlbumSongs = (albumID: string, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+const getAlbumSongs = (albumID: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'album_songs',
+                filter: albumID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData.song as Song[];
-        });
+        })
+        .then((response) => response.data.song as Song[]);
+};
+
+export const useGetAlbumSongs = ({
+    albumID,
+    options
+}: {
+    albumID: string;
+    options?: OptionType<Song[]>;
+}) => {
+    const queryClient = useQueryClient();
+    return useQuery<Song[], Error | AmpacheError>(
+        ['albumSongs', albumID],
+        () => getAlbumSongs(albumID),
+        {
+            onSuccess: (songs) => {
+                songs.map((song) => {
+                    queryClient.setQueryData(['song', song.id], song);
+                });
+            },
+            ...options
+        }
+    );
 };
 
 type AlbumsInput = {
@@ -129,10 +147,18 @@ export const useGetAlbum = ({
     includeSongs?: boolean;
     options?: OptionType<Album>;
 }) => {
+    const queryClient = useQueryClient();
     return useQuery<Album, Error | AmpacheError>(
         ['album', albumID, includeSongs],
         () => getAlbum(albumID, includeSongs),
-        options
+        {
+            onSuccess: (album) => {
+                album.tracks.map((song) => {
+                    queryClient.setQueryData(['song', song.id], song);
+                });
+            },
+            ...options
+        }
     );
 };
 
