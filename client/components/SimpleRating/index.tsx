@@ -4,7 +4,7 @@ import SVG from 'react-inlinesvg';
 import style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
-import { Rating } from '@mui/lab';
+import { Rating } from '@mui/material';
 import { rateItem } from '~logic/Rate';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -36,10 +36,10 @@ const SimpleRating = (props: SimpleRatingProps) => {
     const flagItem = useFlagItem(type, itemID);
 
     const handleRating = (event, newValue: number | null) => {
-        //null when the same rating is clicked, as in to remove it, so 0
-        const rating = newValue ?? 0;
         event.preventDefault();
         event.stopPropagation();
+        //null when the same rating is clicked, as in to remove it, so 0
+        const rating = newValue ?? 0;
         queryClient.setQueryData([type, itemID], (input: any) => {
             return {
                 ...input,
@@ -74,6 +74,7 @@ const SimpleRating = (props: SimpleRatingProps) => {
                 icon={fullIcon}
                 emptyIcon={emptyIcon}
                 onChange={handleRating}
+                onClick={(e) => e.stopPropagation()}
             />
             <SVG
                 src={
