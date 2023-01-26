@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
-import Slider from '@material-ui/core/Slider';
+import { Slider } from '@mui/material';
 import CurrentPlaying from '~components/CurrentPlaying';
 import CurrentPlayingArt from '~components/CurrentPlayingArt';
 import SimpleRating from '~components/SimpleRating';

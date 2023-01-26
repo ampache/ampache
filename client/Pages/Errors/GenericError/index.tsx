@@ -1,7 +1,7 @@
 import React from 'react';
 
 import style from './index.styl';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 interface GenericErrorInterface {
     message: string;

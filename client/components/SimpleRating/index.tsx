@@ -4,7 +4,7 @@ import SVG from 'react-inlinesvg';
 import style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
-import { Rating } from '@material-ui/lab';
+import { Rating } from '@mui/lab';
 import { rateItem } from '~logic/Rate';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';

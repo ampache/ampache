@@ -1,5 +1,5 @@
 import style from '~components/MusicControl/index.styl';
-import Slider from '~node_modules/@material-ui/core/Slider';
+import { Slider } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
 import { useMusicStore } from '~store';

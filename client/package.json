@@ -6,8 +6,10 @@
     "author": "Ashot Nazaryan",
     "license": "AGPL-3.0-only",
     "dependencies": {
-        "@material-ui/core": "^4.11.3",
-        "@material-ui/lab": "^4.0.0-alpha.57",
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "@mui/lab": "^5.0.0-alpha.117",
+        "@mui/material": "^5.11.6",
         "@types/wicg-mediasession": "^1.1.0",
         "axios": "^0.26.1",
         "js-cookie": "^2.2.1",

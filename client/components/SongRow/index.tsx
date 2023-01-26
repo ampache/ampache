@@ -8,7 +8,7 @@ import style from './index.styl';
 import { useMusicStore } from '~store';
 import { useQueryClient } from 'react-query';
 import ReactLoading from 'react-loading';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import { addToPlaylist, removeFromPlaylistWithSongID } from '~logic/Playlist';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import { Modal } from 'react-async-popup';
