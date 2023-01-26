@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
@@ -10,7 +10,8 @@ interface SideBarProps {
     setSideBarVisibility: (visible: boolean) => void;
 }
 
-const Sidebar: React.FC<SideBarProps> = (props) => {
+// eslint-disable-next-line react/display-name
+export const Sidebar = memo((props: SideBarProps) => {
     const sidebarStart = '-100%';
     const sidebarEnd = '0%';
 
@@ -123,6 +124,4 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
             />
         </>
     );
-};
-
-export default Sidebar;
+});

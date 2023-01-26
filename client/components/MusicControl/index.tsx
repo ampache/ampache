@@ -10,26 +10,36 @@ import SliderControl from '~components/MusicControl/components/SliderControl';
 import Cookies from 'js-cookie';
 
 import style from './index.styl';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
+import { useGetSong } from '~logic/Song';
+import shallow from 'zustand/shallow';
+import { SongTime } from '~components/MusicControl/components/SongTime';
 
 const MusicControl = () => {
     const musicContext = useContext(MusicContext);
-    const { currentPlayingSong } = useStore();
+
+    const { songQueue, songQueueIndex, playerStatus } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex,
+            playerStatus: state.playerStatus
+        }),
+        shallow
+    );
+
+    const currentPlayingSongId = songQueue[songQueueIndex];
+
     const [ratingToggle, setRatingToggle] = useState(false);
     const [oldVolume, setOldVolume] = useState(musicContext.volume);
 
-    const [currentTime, setCurrentTime] = useState('');
-
+    const { data: currentPlayingSong } = useGetSong(currentPlayingSongId, {
+        enabled: false
+    });
     const handleRatingToggle = () => {
         if (currentPlayingSong) {
             setRatingToggle(!ratingToggle);
         }
     };
-
-    const formatLabel = (s) => [
-        (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
-        //https://stackoverflow.com/a/37770048
-    ];
 
     return (
         <div
@@ -52,12 +62,7 @@ const MusicControl = () => {
             </div>
 
             <SliderControl />
-            <div className={style.seekTimes}>
-                <span className={style.seekStart}>{currentTime}</span>
-                <span className={style.seekEnd}>
-                    {formatLabel(currentPlayingSong?.time ?? 0)}
-                </span>
-            </div>
+            <SongTime endTime={currentPlayingSong?.time} />
 
             <div className={style.controls}>
                 <div className={style.previousSong}>
@@ -66,23 +71,19 @@ const MusicControl = () => {
                         title='Previous'
                         description='Play previous song'
                         role='button'
-                        aria-disabled={musicContext.songQueueIndex <= 0}
+                        aria-disabled={songQueueIndex <= 0}
                         onClick={() => {
                             musicContext.playPrevious();
                         }}
                         className={`
                             icon icon-button 
-                            ${
-                                musicContext.songQueueIndex <= 0
-                                    ? style.disabled
-                                    : ''
-                            }
+                            ${songQueueIndex <= 0 ? style.disabled : ''}
                         `}
                     />
                 </div>
                 <div className={style.playPause}>
-                    {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
-                    musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
+                    {playerStatus === PLAYERSTATUS.STOPPED ||
+                    playerStatus === PLAYERSTATUS.PAUSED ? (
                         <SVG
                             src={require('~images/icons/svg/play.svg')}
                             title='Play'
@@ -124,18 +125,14 @@ const MusicControl = () => {
                         title='Next'
                         description='Play next song'
                         role='button'
-                        aria-disabled={
-                            musicContext.songQueueIndex ==
-                            musicContext.songQueue.length - 1
-                        }
+                        aria-disabled={songQueueIndex == songQueue.length - 1}
                         onClick={() => {
                             musicContext.playNext();
                         }}
                         className={`
                             icon icon-button 
                             ${
-                                musicContext.songQueueIndex ==
-                                musicContext.songQueue.length - 1
+                                songQueueIndex == songQueue.length - 1
                                     ? style.disabled
                                     : ''
                             }

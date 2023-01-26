@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 
 import style from './index.styl';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
+import shallow from '~node_modules/zustand/shallow';
 
 interface SongBlockProps {
     song: Song;
@@ -12,9 +13,17 @@ interface SongBlockProps {
 }
 
 const SongBlock = (props: SongBlockProps) => {
-    const { currentPlayingSong } = useStore();
+    const { songQueue, songQueueIndex } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex
+        }),
+        shallow
+    );
 
-    const currentlyPlaying = props.song.id === currentPlayingSong?.id;
+    const currentPlayingSongId = songQueue[songQueueIndex];
+
+    const currentlyPlaying = props.song.id === currentPlayingSongId;
 
     return (
         <div

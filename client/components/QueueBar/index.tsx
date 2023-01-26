@@ -4,6 +4,8 @@ import QueueSong from './components/QueueSong';
 
 import style from './index.styl';
 import { useSpring, animated } from 'react-spring';
+import { useMusicStore } from '~store';
+import shallow from '~node_modules/zustand/shallow';
 
 interface QueueBarProps {
     visible: boolean;
@@ -12,6 +14,14 @@ interface QueueBarProps {
 
 const QueueBar: React.FC<QueueBarProps> = (props) => {
     const musicContext = useContext(MusicContext);
+    const { songQueue, songQueueIndex, removeFromQueue } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex,
+            removeFromQueue: state.removeFromQueue
+        }),
+        shallow
+    );
 
     const queueBarStart = '100%';
     const queueBarEnd = '0%';
@@ -24,13 +34,11 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
     set({ x: props.visible ? queueBarEnd : queueBarStart });
 
     const handlePlaySong = (songID: string) => {
-        const queueIndex = musicContext.songQueue.findIndex(
-            (o) => o === songID
-        );
+        const queueIndex = songQueue.findIndex((o) => o === songID);
         musicContext.changeQueuePosition(queueIndex);
     };
     const handleRemoveSong = (queueIndex: number) => {
-        musicContext.removeFromQueue(queueIndex);
+        removeFromQueue(queueIndex);
     };
 
     return (
@@ -47,28 +55,25 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                 <div className={style.queueList}>
                     <div className={style.queueListInner}>
                         <ul className={`striped-list ${style.songs}`}>
-                            {musicContext.songQueue.length == 0 && (
+                            {songQueue.length == 0 && (
                                 <div className={style.emptyQueue}>
                                     Nothing in the queue
                                 </div>
                             )}
-                            {musicContext.songQueue.map(
-                                (songId: string, index) => {
-                                    return (
-                                        <QueueSong
-                                            key={index}
-                                            songId={songId}
-                                            currentlyPlaying={
-                                                musicContext.songQueueIndex ===
-                                                index
-                                            }
-                                            queueIndex={index}
-                                            playSong={handlePlaySong}
-                                            removeSong={handleRemoveSong}
-                                        />
-                                    );
-                                }
-                            )}
+                            {songQueue.map((songId: string, index) => {
+                                return (
+                                    <QueueSong
+                                        key={index}
+                                        songId={songId}
+                                        currentlyPlaying={
+                                            songQueueIndex === index
+                                        }
+                                        queueIndex={index}
+                                        playSong={handlePlaySong}
+                                        removeSong={handleRemoveSong}
+                                    />
+                                );
+                            })}
                         </ul>
                     </div>
                 </div>

@@ -13,6 +13,20 @@ interface SimpleRatingProps {
     type: ItemType;
 }
 
+const fullIcon = (
+    <SVG
+        className={`icon ${style.starIcon} ${style.active}`}
+        src={require('~images/icons/svg/star-full.svg')}
+    />
+);
+const emptyIcon = (
+    <SVG
+        className={`icon ${style.starIcon}`}
+        src={require('~images/icons/svg/star-empty.svg')}
+        color='#A1A1AA'
+    />
+);
+
 const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
     const [value, setValue] = React.useState(props.value);
     const flagItem = useFlagItem(props.type, props.itemID);
@@ -31,19 +45,8 @@ const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
                 className={style.simpleRating}
                 name='simple-controlled'
                 value={value}
-                icon={
-                    <SVG
-                        className={`icon ${style.starIcon} ${style.active}`}
-                        src={require('~images/icons/svg/star-full.svg')}
-                    />
-                }
-                emptyIcon={
-                    <SVG
-                        className={`icon ${style.starIcon}`}
-                        src={require('~images/icons/svg/star-empty.svg')}
-                        color='#A1A1AA'
-                    />
-                }
+                icon={fullIcon}
+                emptyIcon={emptyIcon}
                 onChange={(event, newValue) => {
                     setValue(newValue);
                 }}

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Artist } from '~logic/Artist';
 import ArtistDisplay from '~components/ArtistDisplay';
-import { AuthKey } from '~logic/Auth';
 import ReactLoading from 'react-loading';
 
 interface ArtistDisplayViewProps {
     artists: Artist[];
-    authKey: AuthKey;
 }
 
 const ArtistDisplayView: React.FC<ArtistDisplayViewProps> = (props) => {

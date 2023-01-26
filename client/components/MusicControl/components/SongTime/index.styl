@@ -1,0 +1,33 @@
+@import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/sizes.styl"
+
+.seekTimes
+  display flex
+  justify-content: space-between
+  padding 0 5px
+  line-height: 1
+  color colorGray400
+  grid-column: 1 / 8;
+  grid-row: 3;
+
+  @media all and (min-width: size-small)
+    grid-column: 3 / 5;
+    grid-row: 2;
+
+  @media all and (min-width: size-large)
+    grid-column: 5 / 6;
+    grid-row: 1 / 3;
+    align-self: center
+    padding: 0
+    margin-left 20px
+
+  @media all and (min-width: size-x-large)
+    margin-left 40px
+
+
+.seekEnd
+  @media all and (min-width: size-large)
+    &:before
+      content '/'
+      display inline-block
+      padding 0 5px

@@ -1,7 +1,6 @@
 import { ampacheClient } from '~main';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
-import { useStore } from '~store';
 import { ItemType } from '~types';
 
 type FlagInput = {
@@ -24,7 +23,6 @@ const query = ({ type, favorite, objectID }: FlagInput) => {
 
 export const useFlagItem = (type: ItemType, id: string) => {
     const queryClient = useQueryClient();
-    const { flagCurrentSong, currentPlayingSong } = useStore();
 
     return useMutation(
         (input: FlagInput) => {
@@ -33,9 +31,6 @@ export const useFlagItem = (type: ItemType, id: string) => {
         {
             onSuccess: (data, variables) => {
                 queryClient.invalidateQueries([type, id]);
-                if (currentPlayingSong?.id === variables.objectID) {
-                    flagCurrentSong(variables.favorite);
-                }
                 if (variables.favorite) {
                     toast.success(`${variables.type} added to favorites`);
                     return;

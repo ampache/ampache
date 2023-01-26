@@ -1,19 +1,19 @@
-import React, { memo, useContext } from 'react';
+import React, { memo } from 'react';
 import SVG from 'react-inlinesvg';
-import { Song, useGetSong } from '~logic/Song';
+import { useGetSong } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
 import { useQueryClient } from 'react-query';
 import ReactLoading from 'react-loading';
 import { Menu, MenuItem } from '@material-ui/core';
-import { MusicContext } from '~Contexts/MusicContext';
 import { addToPlaylist, removeFromPlaylistWithSongID } from '~logic/Playlist';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import { Modal } from 'react-async-popup';
 import { toast } from 'react-toastify';
+import shallow from '~node_modules/zustand/shallow';
 
 interface SongRowProps {
     songId: string;
@@ -21,6 +21,7 @@ interface SongRowProps {
     inPlaylistID?: string;
     showArtist?: boolean;
     showAlbum?: boolean;
+    isCurrentlyPlaying?: boolean;
     startPlaying: (songId: string) => void;
     className?: string;
 }
@@ -64,10 +65,16 @@ const SongRow: React.FC<SongRowProps> = memo(
         showArtist,
         songId,
         inPlaylistID,
+        isCurrentlyPlaying,
         startPlaying
     }: SongRowProps) => {
         const queryClient = useQueryClient();
-        const musicContext = useContext(MusicContext);
+        const { addToQueue } = useMusicStore(
+            (state) => ({
+                addToQueue: state.addToQueue
+            }),
+            shallow
+        );
 
         const { data: song, refetch: fetchSong, isFetching } = useGetSong(
             songId,
@@ -75,8 +82,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                 enabled: false
             }
         );
-        const currentPlayingSong = useStore().currentPlayingSong;
-        const isCurrentlyPlaying = currentPlayingSong?.id === songId;
+
         const [contextMenuState, setContextMenuState] = React.useState(
             contextMenuDefaultState
         );
@@ -182,11 +188,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                         <div className={style.rating}>
                             <SimpleRating
                                 value={song.rating}
-                                fav={
-                                    isCurrentlyPlaying
-                                        ? currentPlayingSong?.flag
-                                        : song.flag
-                                }
+                                fav={song.flag}
                                 itemID={song.id}
                                 type='song'
                             />
@@ -220,7 +222,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                     <MenuItem
                         onClick={() => {
                             handleContextClose();
-                            musicContext.addToQueue(songId, true);
+                            addToQueue(songId, true);
                         }}
                     >
                         Play Next
@@ -228,7 +230,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                     <MenuItem
                         onClick={() => {
                             handleContextClose();
-                            musicContext.addToQueue(songId, false);
+                            addToQueue(songId, false);
                         }}
                     >
                         Add to Queue
@@ -273,7 +275,7 @@ const SongRow: React.FC<SongRowProps> = memo(
         );
     },
     (prevProps, nextProps) => {
-        return prevProps.songId === nextProps.songId;
+        return prevProps.isCurrentlyPlaying === nextProps.isCurrentlyPlaying;
     }
 );
 

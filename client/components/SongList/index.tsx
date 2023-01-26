@@ -3,6 +3,8 @@ import { MusicContext } from '~Contexts/MusicContext';
 import { SongRow } from '~components/SongRow';
 
 import style from './index.styl';
+import { useMusicStore } from '~store';
+import shallow from '~node_modules/zustand/shallow';
 
 interface SongListProps {
     songIds: string[];
@@ -16,10 +18,17 @@ interface SongListProps {
 const SongList: React.FC<SongListProps> = memo(
     ({ inPlaylistID, showAlbum, showArtist, songIds }) => {
         const musicContext = useContext(MusicContext);
+        const { songQueue, songQueueIndex } = useMusicStore(
+            (state) => ({
+                songQueue: state.songQueue,
+                songQueueIndex: state.songQueueIndex
+            }),
+            shallow
+        );
 
+        const currentPlayingSongId = songQueue[songQueueIndex];
         const handleStartPlaying = (startSongId: string) => {
             const queueIndex = songIds.findIndex((o) => o === startSongId);
-            console.log('asdf', queueIndex, startSongId, songIds);
             musicContext.startPlayingWithNewQueue(songIds, queueIndex);
         };
 
@@ -35,6 +44,9 @@ const SongList: React.FC<SongListProps> = memo(
                                 showAlbum={showAlbum}
                                 inPlaylistID={inPlaylistID}
                                 startPlaying={handleStartPlaying}
+                                isCurrentlyPlaying={
+                                    songId === currentPlayingSongId
+                                }
                                 key={songId}
                                 className={style.songRow}
                             />

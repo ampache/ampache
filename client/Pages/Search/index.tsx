@@ -64,8 +64,9 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
     }, [searchQuery, props.user.authKey]);
 
     const playSong = (song: Song) => {
-        const songIndex = songResults.findIndex((o) => o.id === song.id);
-        musicContext.startPlayingWithNewQueue(songResults, songIndex);
+        const songIds = songResults.map((song) => song.id);
+        const songIndex = songIds.findIndex((o) => o === song.id);
+        musicContext.startPlayingWithNewQueue(songIds, songIndex);
     };
 
     if (!searchQuery) {
@@ -109,7 +110,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                 )}
                 <div className={`album-grid ${style.resultList}`}>
                     {albumResults.map((album) => (
-                        <AlbumDisplay albumId={album.id} />
+                        <AlbumDisplay albumId={album.id} key={album.id} />
                     ))}
                 </div>
             </section>
@@ -119,10 +120,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
                 <div className={`artist-grid ${style.resultList}`}>
-                    <ArtistDisplayView
-                        artists={artistResults}
-                        authKey={props.user.authKey}
-                    />
+                    <ArtistDisplayView artists={artistResults} />
                 </div>
             </section>
         </div>

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import '/stylus/main.styl';
 import 'react-toastify/dist/ReactToastify.css';
-import Sidebar from '~components/Sidebar';
+import { Sidebar } from '~components/Sidebar';
 import { User } from '~logic/User';
 import Header from '~components/Header';
 import ReactLoading from 'react-loading';

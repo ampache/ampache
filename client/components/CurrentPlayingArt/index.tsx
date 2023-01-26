@@ -3,10 +3,25 @@ import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
 
 import style from './index.styl';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
+import { useGetSong } from '~logic/Song';
+import shallow from '~node_modules/zustand/shallow';
 
 const CurrentPlayingArt: React.FC = () => {
-    const currentPlayingSong = useStore().currentPlayingSong;
+    const { songQueue, songQueueIndex } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex
+        }),
+        shallow
+    );
+
+    const currentPlayingSongId = songQueue[songQueueIndex];
+
+    const { data: currentPlayingSong } = useGetSong(currentPlayingSongId, {
+        enabled: false
+    });
+
     return (
         <div className={style.currentPlayingArt}>
             {!currentPlayingSong && (

@@ -3,48 +3,58 @@ import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Song, useGetSong } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
 import Cookies from 'js-cookie';
 import { useQueryClient } from 'react-query';
+import shallow from '~node_modules/zustand/shallow';
 
 export interface MusicContextInterface {
-    playerStatus: PLAYERSTATUS;
-    // songPosition: number;
     volume: number;
-    songQueueIndex: number;
-    songQueue: string[];
     playPause: () => void;
     playPrevious: () => void;
     playNext: () => void;
     startPlayingWithNewQueue: (newQueue: string[], startPosition?) => void;
     changeQueuePosition: (newPosition: number) => void;
-    addToQueue: (songId: string, next: boolean) => void;
-    removeFromQueue: (queueIndex: number) => void;
     seekSongTo: (newPosition: number) => void;
     setVolume: (newVolume: number) => void;
 }
 
-export const MusicContext = React.createContext({
-    playerStatus: PLAYERSTATUS.STOPPED
-} as MusicContextInterface);
+export const MusicContext = React.createContext({} as MusicContextInterface);
 
 const cookieVolume = parseInt(Cookies.get('volume') ?? 100);
 
-//REFACTOR THIS BEHEMOTH
 export const MusicContextProvider: React.FC = (props) => {
-    const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
-    const [songQueue, setSongQueue] = useState<string[]>([]);
-    const [songPosition, setSongPosition] = useState(0);
-    const [songQueueIndex, setSongQueueIndex] = useState(-1);
-    const [userQCount, setUserQCount] = useState(0);
     const [volume, setVolume] = useState(cookieVolume);
     const queryClient = useQueryClient();
 
     let audioRef = undefined; //TODO: Should this be useRef?
+    const {
+        songQueueIndex,
+        songQueue,
+        userQCount,
+        playerStatus,
+        setSongQueueIndex,
+        setPlayerStatus,
+        setUserQCount,
+        setSongQueue,
+        setSongPosition
+    } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex,
+            userQCount: state.userQCount,
+            playerStatus: state.playerStatus,
+            setSongQueueIndex: state.setSongQueueIndex,
+            setPlayerStatus: state.setPlayerStatus,
+            setUserQCount: state.setUserQCount,
+            setSongQueue: state.setSongQueue,
+            setSongPosition: state.setSongPosition
+        }),
+        shallow
+    );
+    const currentPlayingSongId = songQueue[songQueueIndex];
 
-    const currentPlayingSong = songQueue[songQueueIndex];
-
-    const { refetch: fetchSong } = useGetSong(currentPlayingSong, {
+    const { refetch: fetchSong } = useGetSong(currentPlayingSongId, {
         enabled: false
     });
 
@@ -59,7 +69,7 @@ export const MusicContextProvider: React.FC = (props) => {
     );
 
     const playPause = useCallback(() => {
-        if (!currentPlayingSong) return;
+        if (!currentPlayingSongId) return;
 
         const isPaused = audioRef.audioEl?.current.paused;
         if (isPaused) {
@@ -68,7 +78,7 @@ export const MusicContextProvider: React.FC = (props) => {
         } else {
             audioRef.audioEl.current.pause();
         }
-    }, [audioRef, currentPlayingSong]);
+    }, [audioRef, currentPlayingSongId]);
 
     const _playSong = useCallback(
         async (songID: string) => {
@@ -76,6 +86,9 @@ export const MusicContextProvider: React.FC = (props) => {
                 return console.error(
                     'Playing an undefined song, something is wrong.'
                 );
+            }
+            if (typeof songID !== 'string') {
+                throw new Error('_playSong received a non string');
             }
             const song = queryClient.getQueryData<Song>(['song', songID]);
             if (!song) {
@@ -85,7 +98,7 @@ export const MusicContextProvider: React.FC = (props) => {
                 });
             }
 
-            useStore.getState().startPlayingSong(song);
+            // useStore.getState().startPlayingSong(song);
 
             // eslint-disable-next-line immutable/no-mutation
             audioRef.audioEl.current.src = song.url;
@@ -120,7 +133,7 @@ export const MusicContextProvider: React.FC = (props) => {
 
     const playNext = useCallback(() => {
         setSongQueueIndex(songQueueIndex + 1);
-        if (userQCount > 0) setUserQCount(userQCount - 1);
+        if (userQCount > 0) setSongQueueIndex(userQCount - 1);
         _playSong(songQueue[songQueueIndex + 1]);
     }, [_playSong, songQueue, songQueueIndex, userQCount]);
 
@@ -138,7 +151,7 @@ export const MusicContextProvider: React.FC = (props) => {
     // };
 
     useEffect(() => {
-        if (!currentPlayingSong) return;
+        if (!currentPlayingSongId) return;
         //This seems to work, but there is a slight delay if you spam next or previous.
         //Don't know if there is a better way.
         if ('mediaSession' in navigator) {
@@ -149,7 +162,7 @@ export const MusicContextProvider: React.FC = (props) => {
                 playPrevious();
             });
         }
-    }, [currentPlayingSong, playNext, playPrevious]);
+    }, [currentPlayingSongId, playNext, playPrevious]);
 
     const songIsOver = () => {
         if (songQueueIndex === songQueue.length - 1) {
@@ -159,80 +172,59 @@ export const MusicContextProvider: React.FC = (props) => {
         playNext();
     };
 
-    const startPlayingWithNewQueue = (
-        newQueue: string[],
-        startPosition = 0
-    ) => {
-        // if (newQueue[startPosition] === currentPlayingSong) return;
+    const startPlayingWithNewQueue = useCallback(
+        (newQueue: string[], startPosition = 0) => {
+            if (newQueue[startPosition] === currentPlayingSongId) return;
 
-        setUserQCount(0);
+            setUserQCount(0);
 
-        const newQueueList = [...newQueue];
+            const newQueueList = [...newQueue];
 
-        setSongQueue(newQueueList);
-        setSongQueueIndex(startPosition); // TODO Reduce these two sets?
+            setSongQueue(newQueueList);
+            setSongQueueIndex(startPosition); // TODO Reduce these two sets?
 
-        _playSong(newQueueList[startPosition]);
-    };
+            _playSong(newQueueList[startPosition]);
+        },
+        [
+            _playSong,
+            currentPlayingSongId,
+            setSongQueue,
+            setSongQueueIndex,
+            setUserQCount
+        ]
+    );
 
-    const changeQueuePosition = (newPosition: number) => {
-        setUserQCount(0);
-        setSongQueueIndex(newPosition);
-        _playSong(songQueue[newPosition]);
-    };
-
-    const addToQueue = (songID: string, next: boolean) => {
-        const newQueue = [...songQueue];
-        if (next) {
-            //splice starts at 1, so we don't need +2 //TODO make this comment more clear!
-            newQueue.splice(songQueueIndex + 1 + userQCount, 0, songID);
-            setUserQCount(userQCount + 1); //TODO: Reducer?
-
-            setSongQueue(newQueue);
-            return;
-        }
-
-        newQueue.push(songID);
-        setSongQueue(newQueue);
-    };
-
-    const removeFromQueue = (queueIndex: number) => {
-        const newQueue = [...songQueue];
-
-        newQueue.splice(queueIndex, 1);
-        setSongQueue(newQueue);
-
-        //If we remove something from the queue that's behind the current playing song
-        //the order will get messed up without this
-        if (queueIndex < songQueueIndex) {
-            setSongQueueIndex(songQueueIndex - 1);
-        }
-    };
+    const changeQueuePosition = useCallback(
+        (newPosition: number) => {
+            setUserQCount(0);
+            setSongQueueIndex(newPosition);
+            _playSong(songQueue[newPosition]);
+        },
+        [_playSong, setSongQueueIndex, setUserQCount, songQueue]
+    );
 
     const durationChange = (elapsed) => {
-        // setSongPosition(~~elapsed);
+        setSongPosition(~~elapsed);
     };
 
-    const seekSongTo = (newPosition: number) => {
-        // eslint-disable-next-line immutable/no-mutation
-        audioRef.audioEl.current.currentTime = newPosition;
-        setSongPosition(newPosition);
-    };
+    const seekSongTo = useCallback(
+        (newPosition: number) => {
+            // eslint-disable-next-line immutable/no-mutation
+            audioRef.audioEl.current.currentTime = newPosition;
+            setSongPosition(newPosition);
+        },
+        [audioRef, setSongPosition]
+    );
 
     return (
         <MusicContext.Provider //TODO: Should this provider be split into multiple providers?
             value={{
-                playerStatus,
-                songQueueIndex,
-                songQueue,
                 volume,
                 playPause,
                 playPrevious,
                 playNext,
                 startPlayingWithNewQueue,
                 changeQueuePosition,
-                addToQueue,
-                removeFromQueue,
                 seekSongTo,
                 setVolume
             }}

@@ -11,10 +11,10 @@ interface HeaderProps extends RouteComponentProps<never> {
     username: string;
     toggleQueueBar: () => void;
     toggleSideBar: () => void;
+    history: any;
 }
 
-//TODO: Figure out how to use HeaderProps type here
-const Header: React.FC<HeaderProps> = (props) => {
+const Header = (props: HeaderProps) => {
     const [query, setQuery] = useState('');
     const searchBox = useRef(null);
 

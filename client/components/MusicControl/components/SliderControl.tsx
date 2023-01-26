@@ -2,11 +2,26 @@ import style from '~components/MusicControl/index.styl';
 import Slider from '~node_modules/@material-ui/core/Slider';
 import React, { useContext, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
-import { useStore } from '~store';
+import { useMusicStore } from '~store';
+import { useGetSong } from '~logic/Song';
+import shallow from '~node_modules/zustand/shallow';
 
 const SliderControl = () => {
     const musicContext = useContext(MusicContext);
-    const { currentPlayingSong } = useStore();
+    const { songQueue, songQueueIndex, songPosition } = useMusicStore(
+        (state) => ({
+            songQueue: state.songQueue,
+            songQueueIndex: state.songQueueIndex,
+            songPosition: state.songPosition
+        }),
+        shallow
+    );
+
+    const currentPlayingSongId = songQueue[songQueueIndex];
+
+    const { data: currentPlayingSong } = useGetSong(currentPlayingSongId, {
+        enabled: false
+    });
 
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
@@ -15,8 +30,7 @@ const SliderControl = () => {
             <Slider
                 min={0}
                 max={currentPlayingSong?.time ?? 0}
-                value={isSeeking ? seekPosition : 0}
-                // value={isSeeking ? seekPosition : musicContext.songPosition}
+                value={isSeeking ? seekPosition : songPosition}
                 onChangeCommitted={(_, value: number) => {
                     // setIsSeeking(true);
                     // setValue(value);
