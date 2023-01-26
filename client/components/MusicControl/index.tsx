@@ -29,31 +29,20 @@ const MusicControl = () => {
 
     const currentPlayingSongId = songQueue[songQueueIndex];
 
-    const [ratingToggle, setRatingToggle] = useState(false);
     const [oldVolume, setOldVolume] = useState(musicContext.volume);
 
     const { data: currentPlayingSong } = useGetSong(currentPlayingSongId, {
         enabled: false
     });
-    const handleRatingToggle = () => {
-        if (currentPlayingSong) {
-            setRatingToggle(!ratingToggle);
-        }
-    };
-
     return (
-        <div
-            className={`${style.musicControl} ${
-                ratingToggle ? style.ratingShown : null
-            }`}
-        >
+        <div className={`${style.musicControl}`}>
             <CurrentPlayingArt />
 
             <CurrentPlaying />
             <div className={style.ratingBarContainer}>
                 <div className={style.ratingBar}>
                     <SimpleRating
-                        value={currentPlayingSong?.rating}
+                        value={currentPlayingSong?.rating ?? 0}
                         fav={currentPlayingSong?.flag}
                         itemID={currentPlayingSong?.id}
                         type='song'
@@ -142,22 +131,6 @@ const MusicControl = () => {
             </div>
 
             <div className={style.secondaryControls}>
-                <div
-                    className={`${style.rating} ${
-                        ratingToggle ? style.active : null
-                    }`}
-                >
-                    <SVG
-                        src={require('~images/icons/svg/star-full.svg')}
-                        title='Show ratings'
-                        role='button'
-                        onClick={() => {
-                            handleRatingToggle();
-                        }}
-                        className='icon icon-button'
-                    />
-                </div>
-
                 <div className={style.shuffle}>
                     <SVG
                         src={require('~images/icons/svg/shuffle.svg')}

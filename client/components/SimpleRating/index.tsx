@@ -5,6 +5,9 @@ import style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
 import { Rating } from '@material-ui/lab';
+import { rateItem } from '~logic/Rate';
+import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 interface SimpleRatingProps {
     value: number;
@@ -27,49 +30,70 @@ const emptyIcon = (
     />
 );
 
-const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
-    const [value, setValue] = React.useState(props.value);
-    const flagItem = useFlagItem(props.type, props.itemID);
+const SimpleRating = (props: SimpleRatingProps) => {
+    const { fav, itemID, type, value } = props;
+    const queryClient = useQueryClient();
+    const flagItem = useFlagItem(type, itemID);
+
+    const handleRating = (event, newValue: number | null) => {
+        //null when the same rating is clicked, as in to remove it, so 0
+        const rating = newValue ?? 0;
+        event.preventDefault();
+        event.stopPropagation();
+        queryClient.setQueryData([type, itemID], (input: any) => {
+            return {
+                ...input,
+                rating
+            };
+        });
+        rateItem(itemID, type, rating).catch(() => {
+            toast.error('Failed to set rating');
+            queryClient.setQueryData([type, itemID], (input: any) => {
+                return {
+                    ...input,
+                    rating: value
+                };
+            });
+        });
+    };
 
     return (
         <div className={style.ratings}>
             <SVG
                 src={require('~images/icons/svg/cancel.svg')}
                 title='Remove rating'
-                onClick={() => {
-                    // TODO: remove rating;
+                onClick={(e) => {
+                    handleRating(e, null);
                 }}
                 className={`icon ${style.cancelIcon}`}
             />
             <Rating
                 className={style.simpleRating}
-                name='simple-controlled'
+                name={`${type}-${itemID}`}
                 value={value}
                 icon={fullIcon}
                 emptyIcon={emptyIcon}
-                onChange={(event, newValue) => {
-                    setValue(newValue);
-                }}
+                onChange={handleRating}
             />
             <SVG
                 src={
-                    props.fav
+                    fav
                         ? require('~images/icons/svg/heart-full.svg')
                         : require('~images/icons/svg/heart-empty.svg')
                 }
                 title='Toggle favorite'
-                aria-label={props.fav ? 'Favorited' : 'Not Favorited'}
+                aria-label={fav ? 'Favorited' : 'Not Favorited'}
                 onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     flagItem.mutate({
-                        type: props.type,
-                        objectID: props.itemID,
-                        favorite: !props.fav
+                        type: type,
+                        objectID: itemID,
+                        favorite: !fav
                     });
                 }}
                 className={`icon ${style.heartIcon} ${
-                    props.fav ? style.active : null
+                    fav ? style.active : null
                 }`}
             />
         </div>

@@ -35,9 +35,6 @@
     @media all and (min-width: size-x-large)
         margin-left 40px
 
-.ratingShown .ratingBarContainer
-    display flex
-
 .rating
     @media all and (min-width: size-small)
         display none
@@ -58,12 +55,6 @@
     @media all and (min-width: size-large)
         grid-template-rows 1fr auto
         grid-template-columns 180px auto 4fr auto auto auto auto
-
-    &.ratingShown
-        margin-top 40px // magic number due to absolute positioned rating :(
-
-        @media all and (min-width: size-small)
-            margin-top 0
 
 .seekbar
     width 100%
@@ -225,7 +216,7 @@
             color transparent
 
         .MuiSlider-thumb:hover
-            box-shadow: 0px 0px 0px 8px rgba(colorAmber500, 0.16);
+            box-shadow: 0 0 0 8px rgba(colorAmber500, 0.16);
 
         .MuiSlider-track
             transition width 0.2s

@@ -77,10 +77,7 @@ const SongRow: React.FC<SongRowProps> = memo(
         );
 
         const { data: song, refetch: fetchSong, isFetching } = useGetSong(
-            songId,
-            {
-                enabled: false
-            }
+            songId
         );
 
         const [contextMenuState, setContextMenuState] = React.useState(
