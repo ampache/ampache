@@ -1,0 +1,18 @@
+@keyframes loader
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.25);
+  }
+
+.appLoading
+  display flex
+  justify-content center
+  align-items center
+  height 100%
+  animation-name: loader
+  animation-duration: .75s
+  animation-direction alternate
+  animation-iteration-count infinite
+  animation-timing-function ease-in-out

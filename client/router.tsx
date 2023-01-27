@@ -19,8 +19,10 @@ import ArtistsPage from './Pages/Artists';
 import AmpacheError from './logic/AmpacheError';
 import PlaylistsPage from './Pages/Playlists';
 import PlaylistPage from './Pages/Playlist';
-import ReactLoading from 'react-loading';
 import GenericError from '~Pages/Errors/GenericError';
+import ampacheLogo from './images/ampache-dark.png';
+
+import style from './stylus/router.styl';
 
 interface RouterState {
     authKey: AuthKey;
@@ -107,7 +109,11 @@ export default class Root extends React.PureComponent<void, RouterState> {
         }
         console.log(this.state);
         if (this.state.loading) {
-            return <ReactLoading />;
+            return (
+                <div className={style.appLoading}>
+                    <img src={ampacheLogo} alt={'loading animation'} />
+                </div>
+            );
         }
 
         if (this.state.authKey == null || this.state.user == null) {
