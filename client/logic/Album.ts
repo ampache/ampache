@@ -6,7 +6,6 @@ import updateArt from '~logic/Methods/Update_Art';
 import { useQuery, useQueryClient } from 'react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
-import album from '~Pages/Album';
 
 type Album = {
     id: string;
@@ -107,6 +106,8 @@ export const useGetAlbums = (input: AlbumsInput = {}) => {
         includeSongs = false,
         options
     } = input;
+    const queryClient = useQueryClient();
+
     return useQuery<Album[], Error | AmpacheError>(
         ['albums', input],
         () =>
@@ -120,7 +121,15 @@ export const useGetAlbums = (input: AlbumsInput = {}) => {
                         offset
                     }
                 })
-                .then((response) => response.data.album as Album[]),
+                .then((response) => {
+                    response.data.album.map((album) => {
+                        queryClient.setQueryData(
+                            ['album', album.id, includeSongs],
+                            album
+                        );
+                    });
+                    return response.data.album as Album[];
+                }),
         options
     );
 };
@@ -166,8 +175,8 @@ const flagAlbum = (albumID: string, favorite: boolean, authKey: AuthKey) => {
     // return flagItem('album', albumID, favorite, authKey);
 };
 
-const updateAlbumArt = (ID: string, overwrite: boolean, authKey: AuthKey) => {
-    return updateArt('album', ID, overwrite, authKey);
+const updateAlbumArt = (ID: string, overwrite: boolean) => {
+    return updateArt('album', ID, overwrite);
 };
 
 export { getRandomAlbums, Album, getAlbumSongs, flagAlbum, updateAlbumArt };

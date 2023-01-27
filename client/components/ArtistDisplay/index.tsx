@@ -1,41 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Artist } from '~logic/Artist';
+import { useGetArtist } from '~logic/Artist';
 import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
+import ReactLoading from 'react-loading';
 
-interface ArtistDisplayProps {
-    artist: Artist;
-    className?: string;
-}
+const ArtistDisplay = ({ artistID }: { artistID: string }) => {
+    const { data: artist } = useGetArtist({ artistID });
 
-const ArtistDisplay: React.FC<ArtistDisplayProps> = (
-    props: ArtistDisplayProps
-) => {
+    if (!artist)
+        return (
+            <Link
+                to={`/artist/${artistID}`}
+                className={`card ${style.artistDisplayContainer}`}
+            >
+                <div className={style.artistDisplay}>
+                    <ReactLoading />
+                </div>
+            </Link>
+        );
     return (
         <>
             <Link
-                to={`/artist/${props.artist.id}`}
-                className={`card ${style.artistDisplayContainer} ${props.className}`}
+                to={`/artist/${artistID}`}
+                className={`card ${style.artistDisplayContainer}`}
             >
                 <div className={style.artistDisplay}>
                     <div className={style.imageContainer}>
-                        <img
-                            src={props.artist.art}
-                            alt={`Photo of ${props.artist.name}`}
-                        />
+                        <img src={artist.art} alt={`Photo of ${artist.name}`} />
                     </div>
                     <div className={style.rating}>
                         <SimpleRating
-                            value={props.artist.rating}
-                            fav={props.artist.flag}
-                            itemID={props.artist.id}
+                            value={artist.rating}
+                            fav={artist.flag}
+                            itemID={artistID}
                             type='artist'
                         />
                     </div>
                     <span className={`card-title ${style.artistName}`}>
-                        {props.artist.name}
+                        {artist.name}
                     </span>
                 </div>
             </Link>

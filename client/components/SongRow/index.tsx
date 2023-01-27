@@ -57,6 +57,7 @@ const handleAddToPlaylist = async (songID: string) => {
     }
 };
 
+// eslint-disable-next-line react/display-name
 const SongRow: React.FC<SongRowProps> = memo(
     ({
         className,
@@ -76,9 +77,7 @@ const SongRow: React.FC<SongRowProps> = memo(
             shallow
         );
 
-        const { data: song, refetch: fetchSong, isFetching } = useGetSong(
-            songId
-        );
+        const { data: song } = useGetSong(songId);
 
         const [contextMenuState, setContextMenuState] = React.useState(
             contextMenuDefaultState
@@ -102,7 +101,6 @@ const SongRow: React.FC<SongRowProps> = memo(
         ];
 
         if (!song) {
-            if (!isFetching) fetchSong();
             return (
                 <li
                     className={`${style.songRow} card-clear ${className} ${style.songLoading} `}

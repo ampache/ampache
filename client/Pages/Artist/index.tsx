@@ -1,10 +1,5 @@
 import React, { useContext, useState } from 'react';
-import {
-    Artist,
-    updateArtistInfo,
-    updateArtistArt,
-    useGetArtist
-} from '~logic/Artist';
+import { updateArtistInfo, updateArtistArt, useGetArtist } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -63,7 +58,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
 
     /*TODO: This is sort of a temp method to allow for easy updates, but in future the client should maybe check for missing data and handle it automatically*/
     const handleArtistUpdate = () => {
-        updateArtistArt(artist.id, true, props.user.authKey)
+        updateArtistArt(artist.id, true)
             .then(() => {
                 toast.success('Art Updated Successfully');
             })
@@ -122,7 +117,6 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                                 text='Shuffle'
                             />
                         </div>
-                        <div className={style.summary}>{artist.summary}</div>
                     </div>
                 </div>
             )}

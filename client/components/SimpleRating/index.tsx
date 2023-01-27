@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import SVG from 'react-inlinesvg';
 
 import style from './index.styl';
@@ -30,7 +30,8 @@ const emptyIcon = (
     />
 );
 
-const SimpleRating = (props: SimpleRatingProps) => {
+// eslint-disable-next-line react/display-name
+const SimpleRating = memo((props: SimpleRatingProps) => {
     const { fav, itemID, type, value } = props;
     const queryClient = useQueryClient();
     const flagItem = useFlagItem(type, itemID);
@@ -99,6 +100,6 @@ const SimpleRating = (props: SimpleRatingProps) => {
             />
         </div>
     );
-};
+});
 
 export default SimpleRating;

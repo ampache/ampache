@@ -4,7 +4,7 @@ import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
 
@@ -69,6 +69,7 @@ export const getAlbumsFromArtist = (albumID: number, authKey: AuthKey) => {
 };
 
 export const useGetArtists = (includeAlbums = false, includeSongs = false) => {
+    const queryClient = useQueryClient();
     return useQuery<Artist[], Error | AmpacheError>(
         ['artists', includeAlbums, includeSongs],
         () =>
@@ -83,7 +84,15 @@ export const useGetArtists = (includeAlbums = false, includeSongs = false) => {
                         ]
                     }
                 })
-                .then((response) => response.data.artist)
+                .then((response) => {
+                    response.data.artist.map((artist) => {
+                        queryClient.setQueryData(
+                            ['artist', artist.id, includeSongs, includeAlbums],
+                            artist
+                        );
+                    });
+                    return response.data.artist;
+                })
     );
 };
 
@@ -122,10 +131,6 @@ export const useGetArtist = ({
     );
 };
 
-export const updateArtistArt = (
-    ID: string,
-    overwrite: boolean,
-    authKey: AuthKey
-) => {
-    return updateArt('artist', ID, overwrite, authKey);
+export const updateArtistArt = (ID: string, overwrite: boolean) => {
+    return updateArt('artist', ID, overwrite);
 };

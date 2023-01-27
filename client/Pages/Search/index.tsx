@@ -8,10 +8,10 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { Album } from '~logic/Album';
 import { Artist } from '~logic/Artist';
-import ArtistDisplayView from '~Views/ArtistDisplayView';
 
 import style from './index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
+import ArtistDisplay from '~components/ArtistDisplay';
 
 interface SearchPageProps {
     user: User;
@@ -120,7 +120,9 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
                 <div className={`artist-grid ${style.resultList}`}>
-                    <ArtistDisplayView artists={artistResults} />
+                    {artistResults.map((artist) => (
+                        <ArtistDisplay artistID={artist.id} key={artist.id} />
+                    ))}
                 </div>
             </section>
         </div>
