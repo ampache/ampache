@@ -1,10 +1,8 @@
-import { AuthKey } from './Auth';
-import axios from 'axios';
 import AmpacheError from './AmpacheError';
 import { Song } from './Song';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export type Playlist = {
     id: string;
@@ -98,54 +96,95 @@ export const removeFromPlaylistWithSongID = (
         .then(() => true);
 };
 
-export const createPlaylist = (
-    name: string,
-    authKey: AuthKey,
+const createPlaylistFn = ({
+    name,
     type = 'public'
-) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_create&name=${name}&type=${type}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+}: {
+    name: string;
+    type?: string;
+}) =>
+    ampacheClient
+        .get<Playlist>('', {
+            params: {
+                action: 'playlist_create',
+                name,
+                type,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData as Playlist;
-        });
+        })
+        .then((res) => res.data);
+
+export const useCreatePlaylist = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: createPlaylistFn,
+        onSuccess: (newPlaylist) => {
+            queryClient.setQueryData(
+                ['playlists'],
+                (oldPlaylists: Playlist[]) => [newPlaylist, ...oldPlaylists]
+            );
+        }
+    });
 };
 
-export const renamePlaylist = (
-    playlistID: string,
-    newName: string,
-    authKey: AuthKey
-) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_edit&filter=${playlistID}&name=${newName}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+const renamePlaylistFn = ({
+    newName,
+    playlistID
+}: {
+    newName: string;
+    playlistID: string;
+}) =>
+    ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_edit',
+                name: newName,
+                filter: playlistID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+        })
+        .then((res) => res.data);
+
+export const useRenamePlaylist = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: renamePlaylistFn,
+        onSuccess: (_, { newName, playlistID }) => {
+            queryClient.setQueryData(
+                ['playlists'],
+                (oldPlaylists: Playlist[]) =>
+                    oldPlaylists.map((p) =>
+                        p.id === playlistID ? { ...p, name: newName } : p
+                    )
+            );
+        }
+    });
 };
 
-export const deletePlaylist = (playlistID: string) => {
-    return ampacheClient.get('', {
-        params: {
-            action: 'playlist_delete',
-            filter: playlistID,
-            version: '6.0.0'
+const deletePlaylistFn = ({ playlistID }: { playlistID: string }) =>
+    ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_delete',
+                filter: playlistID,
+                version: '6.0.0'
+            }
+        })
+        .then((res) => res.data);
+
+export const useDeletePlaylist = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: deletePlaylistFn,
+        onSuccess: (_, { playlistID }) => {
+            queryClient.setQueryData(
+                ['playlists'],
+                (oldPlaylists: Playlist[]) =>
+                    oldPlaylists.filter((p) => p.id !== playlistID)
+            );
         }
     });
 };

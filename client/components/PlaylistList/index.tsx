@@ -1,15 +1,14 @@
 import React, { useContext } from 'react';
 import SVG from 'react-inlinesvg';
 import {
-    createPlaylist,
-    deletePlaylist,
     getPlaylistSongs,
     Playlist,
-    renamePlaylist,
-    useGetPlaylists
+    useCreatePlaylist,
+    useDeletePlaylist,
+    useGetPlaylists,
+    useRenamePlaylist
 } from '~logic/Playlist';
 import PlaylistItem from '~components/PlaylistItem';
-import { AuthKey } from '~logic/Auth';
 import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -18,11 +17,6 @@ import { Menu, MenuItem } from '@mui/material';
 import { MusicContext } from '~Contexts/MusicContext';
 
 import style from './index.styl';
-import { useQueryClient } from '@tanstack/react-query';
-
-interface PlaylistListProps {
-    authKey?: AuthKey;
-}
 
 const contextMenuDefaultState = {
     mouseX: null,
@@ -30,9 +24,11 @@ const contextMenuDefaultState = {
     playlistID: null
 };
 
-const PlaylistList: React.FC<PlaylistListProps> = (props) => {
+const PlaylistList = () => {
     const musicContext = useContext(MusicContext);
-    const queryClient = useQueryClient();
+    const createPlaylist = useCreatePlaylist();
+    const renamePlaylist = useRenamePlaylist();
+    const deletePlaylist = useDeletePlaylist();
 
     const [contextMenuState, setContextMenuState] = React.useState(
         contextMenuDefaultState
@@ -41,21 +37,17 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const { data: playlists, error } = useGetPlaylists();
 
     const handleDeletePlaylist = (playlistID: string) => {
-        deletePlaylist(playlistID)
-            .then(() => {
-                toast.success('Deleted Playlist.');
-                queryClient.setQueryData(
-                    ['playlists'],
-                    (oldPlaylists: Playlist[]) =>
-                        oldPlaylists.filter((p) => p.id !== playlistID)
-                );
-            })
-            .catch((err) => {
-                toast.error(
-                    '😞 Something went wrong trying to delete playlist.'
-                );
-                console.error(err);
-            });
+        deletePlaylist.mutate(
+            { playlistID },
+            {
+                onSuccess: () => toast.success('Deleted Playlist.'),
+                onError: () => {
+                    toast.error(
+                        '😞 Something went wrong trying to delete playlist.'
+                    );
+                }
+            }
+        );
     };
 
     const handleNewPlaylist = async () => {
@@ -70,26 +62,20 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             ),
             footer: null
         });
-        const result = await show();
+        const result: string = await show();
 
         if (result) {
-            createPlaylist(result, props.authKey)
-                .then((newPlaylist) => {
-                    toast.success('Created Playlist.');
-                    queryClient.setQueryData(
-                        ['playlists'],
-                        (oldPlaylists: Playlist[]) => [
-                            newPlaylist,
-                            ...oldPlaylists
-                        ]
-                    );
-                })
-                .catch((err) => {
-                    toast.error(
-                        '😞 Something went wrong creating new playlist.'
-                    );
-                    console.error(err);
-                });
+            createPlaylist.mutate(
+                { name: result },
+                {
+                    onSuccess: () => toast.success('Created Playlist.'),
+                    onError: () => {
+                        toast.error(
+                            '😞 Something went wrong creating new playlist.'
+                        );
+                    }
+                }
+            );
         }
     };
 
@@ -111,21 +97,16 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         });
         const newName = await show();
         if (newName) {
-            try {
-                await renamePlaylist(playlistID, newName, props.authKey);
-
-                queryClient.setQueryData(
-                    ['playlists'],
-                    (oldPlaylists: Playlist[]) =>
-                        oldPlaylists.map((p) =>
-                            p.id === playlistID ? { ...p, name: newName } : p
+            renamePlaylist.mutate(
+                { playlistID, newName },
+                {
+                    onSuccess: () => toast.success('Edited Playlist.'),
+                    onError: () =>
+                        toast.error(
+                            '😞 Something went wrong editing the playlist.'
                         )
-                );
-
-                toast.success('Edited Playlist.');
-            } catch (e) {
-                toast.error('😞 Something went wrong editing the playlist.');
-            }
+                }
+            );
         }
     };
 
