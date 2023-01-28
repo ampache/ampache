@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import SVG from 'react-inlinesvg';
 import {
     getPlaylistSongs,
-    Playlist,
     useCreatePlaylist,
     useDeletePlaylist,
     useGetPlaylists,
@@ -156,13 +155,13 @@ const PlaylistList = () => {
                 onClick={handleNewPlaylist}
             />
             <ul className={`striped-list ${style.playlistListContainer}`}>
-                {playlists.map((playlist: Playlist) => {
+                {playlists.map(({ id }) => {
                     return (
                         <PlaylistItem
-                            playlist={playlist}
+                            playlistId={id}
                             startPlaying={startPlayingPlaylist}
                             showContext={handleContext}
-                            key={playlist.id}
+                            key={id}
                         />
                     );
                 })}

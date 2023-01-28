@@ -29,9 +29,44 @@ export const getPlaylists = () => {
 };
 
 export const useGetPlaylists = (options?: OptionType<Playlist[]>) => {
+    const queryClient = useQueryClient();
+
     return useQuery<Playlist[], Error | AmpacheError>(
         ['playlists'],
         () => getPlaylists(),
+        {
+            onSuccess: (playlists) => {
+                playlists.map((playlist) => {
+                    queryClient.setQueryData(
+                        ['playlist', playlist.id],
+                        playlist
+                    );
+                });
+            },
+            ...options
+        }
+    );
+};
+
+const getPlaylist = (playlistId: string) => {
+    return ampacheClient
+        .get<Playlist>('', {
+            params: {
+                action: 'playlist',
+                filter: playlistId,
+                version: '6.0.0'
+            }
+        })
+        .then((res) => res.data);
+};
+
+export const useGetPlaylist = (
+    playlistId: string,
+    options?: OptionType<Playlist>
+) => {
+    return useQuery<Playlist, Error | AmpacheError>(
+        ['playlist', playlistId],
+        () => getPlaylist(playlistId),
         options
     );
 };

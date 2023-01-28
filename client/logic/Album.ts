@@ -171,12 +171,8 @@ export const useGetAlbum = ({
     );
 };
 
-const flagAlbum = (albumID: string, favorite: boolean, authKey: AuthKey) => {
-    // return flagItem('album', albumID, favorite, authKey);
-};
-
 const updateAlbumArt = (ID: string, overwrite: boolean) => {
     return updateArt('album', ID, overwrite);
 };
 
-export { getRandomAlbums, Album, getAlbumSongs, flagAlbum, updateAlbumArt };
+export { getRandomAlbums, Album, getAlbumSongs, updateAlbumArt };
