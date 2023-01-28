@@ -44,7 +44,7 @@ const MusicControl = () => {
                     <SimpleRating
                         value={currentPlayingSong?.rating ?? 0}
                         fav={currentPlayingSong?.flag}
-                        itemID={currentPlayingSong?.id}
+                        itemId={currentPlayingSong?.id}
                         type='song'
                     />
                 </div>

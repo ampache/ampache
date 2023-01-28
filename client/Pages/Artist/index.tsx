@@ -101,7 +101,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                             <SimpleRating
                                 value={artist.rating}
                                 fav={artist.flag}
-                                itemID={artist.id}
+                                itemId={artist.id}
                                 type='artist'
                             />
                         </div>

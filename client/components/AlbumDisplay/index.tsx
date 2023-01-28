@@ -87,7 +87,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                 <SimpleRating
                     value={album.rating}
                     fav={album.flag}
-                    itemID={album.id}
+                    itemId={album.id}
                     type='album'
                 />
             </div>

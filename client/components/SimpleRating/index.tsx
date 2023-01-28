@@ -5,14 +5,13 @@ import style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
 import { Rating } from '@mui/material';
-import { rateItem } from '~logic/Rate';
-import { useQueryClient } from '@tanstack/react-query';
+import { useRateItem } from '~logic/Rate';
 import { toast } from 'react-toastify';
 
 interface SimpleRatingProps {
     value: number;
     fav: boolean;
-    itemID: string;
+    itemId: string;
     type: ItemType;
 }
 
@@ -32,30 +31,25 @@ const emptyIcon = (
 
 // eslint-disable-next-line react/display-name
 const SimpleRating = memo((props: SimpleRatingProps) => {
-    const { fav, itemID, type, value } = props;
-    const queryClient = useQueryClient();
-    const flagItem = useFlagItem(type, itemID);
+    const { fav, itemId, type, value } = props;
+    const flagItem = useFlagItem(type, itemId);
+    const rateItem = useRateItem();
 
     const handleRating = (event, newValue: number | null) => {
         event.preventDefault();
         event.stopPropagation();
         //null when the same rating is clicked, as in to remove it, so 0
         const rating = newValue ?? 0;
-        queryClient.setQueryData([type, itemID], (input: any) => {
-            return {
-                ...input,
-                rating
-            };
-        });
-        rateItem(itemID, type, rating).catch(() => {
-            toast.error('Failed to set rating');
-            queryClient.setQueryData([type, itemID], (input: any) => {
-                return {
-                    ...input,
-                    rating: value
-                };
-            });
-        });
+
+        rateItem.mutate(
+            { itemId, type, rating },
+            {
+                onError: (e) => {
+                    console.log(e);
+                    toast.error('Failed to set rating');
+                }
+            }
+        );
     };
 
     return (
@@ -70,7 +64,7 @@ const SimpleRating = memo((props: SimpleRatingProps) => {
             />
             <Rating
                 className={style.simpleRating}
-                name={`${type}-${itemID}`}
+                name={`${type}-${itemId}`}
                 value={value}
                 icon={fullIcon}
                 emptyIcon={emptyIcon}
@@ -90,7 +84,7 @@ const SimpleRating = memo((props: SimpleRatingProps) => {
                     e.stopPropagation();
                     flagItem.mutate({
                         type: type,
-                        objectID: itemID,
+                        objectID: itemId,
                         favorite: !fav
                     });
                 }}

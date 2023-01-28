@@ -52,7 +52,7 @@ const AlbumPage: React.FC<AlbumPageProps> = memo(
                             <SimpleRating
                                 value={album.rating}
                                 fav={album.flag}
-                                itemID={album.id}
+                                itemId={album.id}
                                 type='album'
                             />
                         </div>

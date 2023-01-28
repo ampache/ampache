@@ -20,7 +20,7 @@ const query = ({ type, favorite, objectID }: FlagInput) => {
         }
     });
 };
-
+//TODO: Refactor this
 export const useFlagItem = (type: ItemType, id: string) => {
     const queryClient = useQueryClient();
 

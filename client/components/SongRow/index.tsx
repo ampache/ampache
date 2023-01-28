@@ -184,7 +184,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                             <SimpleRating
                                 value={song.rating}
                                 fav={song.flag}
-                                itemID={song.id}
+                                itemId={song.id}
                                 type='song'
                             />
                         </div>

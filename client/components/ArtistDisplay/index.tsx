@@ -34,7 +34,7 @@ const ArtistDisplay = ({ artistID }: { artistID: string }) => {
                         <SimpleRating
                             value={artist.rating}
                             fav={artist.flag}
-                            itemID={artistID}
+                            itemId={artistID}
                             type='artist'
                         />
                     </div>
