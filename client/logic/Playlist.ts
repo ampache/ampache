@@ -4,7 +4,7 @@ import AmpacheError from './AmpacheError';
 import { Song } from './Song';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export type Playlist = {
     id: string;

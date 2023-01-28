@@ -18,7 +18,7 @@ import { Menu, MenuItem } from '@mui/material';
 import { MusicContext } from '~Contexts/MusicContext';
 
 import style from './index.styl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -45,7 +45,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             .then(() => {
                 toast.success('Deleted Playlist.');
                 queryClient.setQueryData(
-                    'playlists',
+                    ['playlists'],
                     (oldPlaylists: Playlist[]) =>
                         oldPlaylists.filter((p) => p.id !== playlistID)
                 );
@@ -77,7 +77,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 .then((newPlaylist) => {
                     toast.success('Created Playlist.');
                     queryClient.setQueryData(
-                        'playlists',
+                        ['playlists'],
                         (oldPlaylists: Playlist[]) => [
                             newPlaylist,
                             ...oldPlaylists
@@ -115,7 +115,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 await renamePlaylist(playlistID, newName, props.authKey);
 
                 queryClient.setQueryData(
-                    'playlists',
+                    ['playlists'],
                     (oldPlaylists: Playlist[]) =>
                         oldPlaylists.map((p) =>
                             p.id === playlistID ? { ...p, name: newName } : p

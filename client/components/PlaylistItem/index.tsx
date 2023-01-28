@@ -16,7 +16,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
     props: PlaylistItemProps
 ) => {
     return (
-        <li
+        (<li
             className={`card-clear ${style.playlistItem}`}
             onContextMenu={(e) => props.showContext(e, props.playlist.id)}
         >
@@ -28,7 +28,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                 </div>
                 <div className={style.details}>
                     {props.playlist.id.includes('smart_') ? ( // indicate if smartlist, else show rating
-                        <div className={style.smartlistTag}>Smartlist</div>
+                        (<div className={style.smartlistTag}>Smartlist</div>)
                     ) : (
                         <div className={style.rating}>
                             <SimpleRating
@@ -52,7 +52,6 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                     </span>
                 </div>
             </div>
-
             <div className={style.actions}>
                 <SVG
                     className='icon icon-button-small'
@@ -83,7 +82,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                     role='button'
                 />
             </div>
-        </li>
+        </li>)
     );
 };
 

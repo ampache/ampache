@@ -4,8 +4,9 @@ import Root from './router';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import AmpacheError from '~logic/AmpacheError';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export const ampacheClient = axios.create({
     baseURL: process.env.ServerURL
@@ -32,6 +33,7 @@ const render = (Component) => {
     ReactDOM.render(
         <React.StrictMode>
             <QueryClientProvider client={queryClient}>
+                <ReactQueryDevtools initialIsOpen={false} />
                 <Component />
             </QueryClientProvider>
         </React.StrictMode>,

@@ -3,7 +3,7 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
 

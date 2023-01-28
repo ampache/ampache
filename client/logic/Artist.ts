@@ -4,7 +4,7 @@ import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
 

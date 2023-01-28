@@ -6,7 +6,7 @@ import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 import { useMusicStore } from '~store';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import ReactLoading from 'react-loading';
 import { Menu, MenuItem } from '@mui/material';
 import { addToPlaylist, removeFromPlaylistWithSongID } from '~logic/Playlist';

@@ -6,7 +6,7 @@ import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
 import { Rating } from '@mui/material';
 import { rateItem } from '~logic/Rate';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 interface SimpleRatingProps {

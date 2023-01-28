@@ -1,7 +1,7 @@
 import { OptionType } from '~types';
 import { ampacheClient } from '~main';
 import AmpacheError from '~logic/AmpacheError';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 type Song = {
     id: string;

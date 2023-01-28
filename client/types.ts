@@ -1,4 +1,4 @@
-import { UseQueryOptions } from '~node_modules/react-query';
+import { UseQueryOptions } from '@tanstack/react-query';
 import AmpacheError from '~logic/AmpacheError';
 
 export type ItemType =

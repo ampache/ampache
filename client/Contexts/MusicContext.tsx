@@ -5,7 +5,7 @@ import { Song, useGetSong } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
 import { useMusicStore } from '~store';
 import Cookies from 'js-cookie';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import shallow from '~node_modules/zustand/shallow';
 
 export interface MusicContextInterface {

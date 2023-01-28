@@ -1,5 +1,5 @@
 import { ampacheClient } from '~main';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { ItemType } from '~types';
 
