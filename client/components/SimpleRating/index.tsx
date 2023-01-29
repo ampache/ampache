@@ -1,12 +1,17 @@
 import React, { memo } from 'react';
 import SVG from 'react-inlinesvg';
-
-import * as style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
 import { Rating } from '@mui/material';
 import { useRateItem } from '~logic/Rate';
 import { toast } from 'react-toastify';
+import starFullIcon from '~images/icons/svg/star-full.svg';
+import starEmptyIcon from '~images/icons/svg/star-empty.svg';
+import cancelIcon from '~images/icons/svg/cancel.svg';
+import heartFullIcon from '~images/icons/svg/heart-full.svg';
+import heartEmptyIcon from '~images/icons/svg/heart-empty.svg';
+
+import * as style from './index.styl';
 
 interface SimpleRatingProps {
     value: number;
@@ -18,13 +23,13 @@ interface SimpleRatingProps {
 const fullIcon = (
     <SVG
         className={`icon ${style.starIcon} ${style.active}`}
-        src={require('~images/icons/svg/star-full.svg')}
+        src={starFullIcon}
     />
 );
 const emptyIcon = (
     <SVG
         className={`icon ${style.starIcon}`}
-        src={require('~images/icons/svg/star-empty.svg')}
+        src={starEmptyIcon}
         color='#A1A1AA'
     />
 );
@@ -55,7 +60,7 @@ const SimpleRating = memo((props: SimpleRatingProps) => {
     return (
         <div className={style.ratings}>
             <SVG
-                src={require('~images/icons/svg/cancel.svg')}
+                src={cancelIcon}
                 title='Remove rating'
                 onClick={(e) => {
                     handleRating(e, null);
@@ -71,11 +76,7 @@ const SimpleRating = memo((props: SimpleRatingProps) => {
                 onClick={(e) => e.stopPropagation()}
             />
             <SVG
-                src={
-                    fav
-                        ? require('~images/icons/svg/heart-full.svg')
-                        : require('~images/icons/svg/heart-empty.svg')
-                }
+                src={fav ? heartFullIcon : heartEmptyIcon}
                 title='Toggle favorite'
                 aria-label={fav ? 'Favorited' : 'Not Favorited'}
                 onClick={(e) => {

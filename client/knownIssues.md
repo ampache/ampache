@@ -6,7 +6,8 @@
 - When the instance is open a for a while, and the user auth expires, the app gets stuck until you refresh a few times.
 - Poor naming convention, `ID` vs `Id`
 - Styles are messy
-
+- In prod builds the SVG images are smaller
+- 
 # Nice to have, maybe
 
 - Switch to tailwind from Stylus? Lot of work, low priority. Potentially, only do new components in tailwind and slowly convert.

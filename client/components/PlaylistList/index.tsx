@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import InputModal from '~Modal/types/InputModal';
 import { Menu, MenuItem } from '@mui/material';
 import { MusicContext } from '~Contexts/MusicContext';
+import plusIcon from '~images/icons/svg/plus.svg';
 
 import * as style from './index.styl';
 
@@ -149,7 +150,7 @@ const PlaylistList = () => {
         <div className='playlistList'>
             <SVG
                 className='icon icon-button'
-                src={require('~images/icons/svg/plus.svg')}
+                src={plusIcon}
                 title='Add to playlist'
                 role='button'
                 onClick={handleNewPlaylist}

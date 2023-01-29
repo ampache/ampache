@@ -60,37 +60,6 @@
         &::placeholder
             color colorGray300
 
-.account
-    position absolute
-    right 0
-    display none //TODO Decide if this is to be deleted
-    align-items center
-    justify-content flex-end
-    height 100%
-    z-index 2
-
-    @keyframes fadeInFromNone
-        0%
-            display none
-            opacity 0
-        1%
-            display block
-            opacity 0
-        100%
-            display block
-            opacity 1
-
-    &:hover
-        & > img
-            filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%)
-
-        //make orange
-
-        & > .options
-            display block
-            opacity 1
-            animation fadeInFromNone 0.15s easeOut
-
 .options
     animation-direction reverse
     color white

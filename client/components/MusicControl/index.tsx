@@ -15,6 +15,15 @@ import { useGetSong } from '~logic/Song';
 import shallow from 'zustand/shallow';
 import { SongTime } from '~components/MusicControl/components/SongTime';
 
+import previousTrackIcon from '~images/icons/svg/previous-track.svg';
+import playIcon from '~images/icons/svg/play.svg';
+import pauseIcon from '~images/icons/svg/pause.svg';
+import nextTrackIcon from '~images/icons/svg/next-track.svg';
+import shuffleIcon from '~images/icons/svg/shuffle.svg';
+import repeatIcon from '~images/icons/svg/repeat.svg';
+import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
+import volumeUpIcon from '~images/icons/svg/volume-up.svg';
+
 const MusicControl = () => {
     const musicContext = useContext(MusicContext);
 
@@ -56,7 +65,7 @@ const MusicControl = () => {
             <div className={style.controls}>
                 <div>
                     <SVG
-                        src={require('~images/icons/svg/previous-track.svg')}
+                        src={previousTrackIcon}
                         title='Previous'
                         description='Play previous song'
                         role='button'
@@ -74,7 +83,7 @@ const MusicControl = () => {
                     {playerStatus === PLAYERSTATUS.STOPPED ||
                     playerStatus === PLAYERSTATUS.PAUSED ? (
                         <SVG
-                            src={require('~images/icons/svg/play.svg')}
+                            src={playIcon}
                             title='Play'
                             description='Resume music'
                             role='button'
@@ -91,7 +100,7 @@ const MusicControl = () => {
                         />
                     ) : (
                         <SVG
-                            src={require('~images/icons/svg/pause.svg')}
+                            src={pauseIcon}
                             title='Pause'
                             description='Pause music'
                             role='button'
@@ -110,7 +119,7 @@ const MusicControl = () => {
                 </div>
                 <div>
                     <SVG
-                        src={require('~images/icons/svg/next-track.svg')}
+                        src={nextTrackIcon}
                         title='Next'
                         description='Play next song'
                         role='button'
@@ -133,7 +142,7 @@ const MusicControl = () => {
             <div className={style.secondaryControls}>
                 <div>
                     <SVG
-                        src={require('~images/icons/svg/shuffle.svg')}
+                        src={shuffleIcon}
                         title='Shuffle'
                         description='Shuffle queued songs'
                         role='button'
@@ -146,7 +155,7 @@ const MusicControl = () => {
 
                 <div>
                     <SVG
-                        src={require('~images/icons/svg/repeat.svg')}
+                        src={repeatIcon}
                         title='Repeat'
                         description='Repeat the current song'
                         onClick={() => {
@@ -158,7 +167,7 @@ const MusicControl = () => {
 
                 <div>
                     <SVG
-                        src={require('~images/icons/svg/more-options-hori.svg')}
+                        src={moreOptionsIcon}
                         title='More options'
                         role='button'
                         onClick={() => {
@@ -171,7 +180,7 @@ const MusicControl = () => {
 
             <div className={style.volumeSlide}>
                 <SVG
-                    src={require('~images/icons/svg/volume-up.svg')}
+                    src={volumeUpIcon}
                     title='Mute'
                     description='Mute the music'
                     role='button'

@@ -3,6 +3,7 @@ import SVG from 'react-inlinesvg';
 import * as style from './index.styl';
 import { useGetSong } from '~logic/Song';
 import Loading from 'react-loading';
+import crossIcon from '~images/icons/svg/cross.svg';
 
 interface QueueSongProps {
     songId: string;
@@ -54,7 +55,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
                 <div className={style.actions}>
                     <SVG
                         className='icon icon-button-smallest'
-                        src={require('~images/icons/svg/cross.svg')}
+                        src={crossIcon}
                         title='Remove'
                         description='Remove song from Queue'
                         role='button'

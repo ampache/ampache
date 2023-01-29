@@ -3,10 +3,14 @@ import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { useGetAlbum } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
-
-import * as style from './index.styl';
 import { MusicContext } from '~Contexts/MusicContext';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
+import playIcon from '~images/icons/svg/play.svg';
+import playNextIcon from '~images/icons/svg/play-next.svg';
+import playLastIcon from '~images/icons/svg/play-last.svg';
+import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
+
+import * as style from './index.styl';
 
 interface AlbumDisplayProps {
     albumId: string;
@@ -54,28 +58,28 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                             >
                                 <SVG
                                     className='icon icon-inline'
-                                    src={require('~images/icons/svg/play.svg')}
+                                    src={playIcon}
                                 />
                                 Play
                             </span>
                             <span className={style.action}>
                                 <SVG
                                     className='icon icon-inline'
-                                    src={require('~images/icons/svg/play-next.svg')}
+                                    src={playNextIcon}
                                 />
                                 Play next
                             </span>
                             <span className={style.action}>
                                 <SVG
                                     className='icon icon-inline'
-                                    src={require('~images/icons/svg/play-last.svg')}
+                                    src={playLastIcon}
                                 />
                                 Add to queue
                             </span>
                             <span className={style.action}>
                                 <SVG
                                     className='icon icon-inline'
-                                    src={require('~images/icons/svg/more-options-hori.svg')}
+                                    src={moreOptionsIcon}
                                 />
                                 More options
                             </span>

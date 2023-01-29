@@ -118,7 +118,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
 
         if (this.state.authKey == null || this.state.user == null) {
             return (
-                <BrowserRouter basename='/newclient'>
+                <BrowserRouter basename='/client'>
                     <Route
                         render={(props) => (
                             <LoginPage
@@ -131,7 +131,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
             );
         }
         return (
-            <BrowserRouter basename='/newclient'>
+            <BrowserRouter basename='/client'>
                 <Switch>
                     {/*TODO: Do i need this switch?*/}
                     <Route exact path='/login'>

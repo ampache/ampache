@@ -4,6 +4,8 @@ import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 import { DebounceInput } from 'react-debounce-input';
 import { useHotkeys } from 'react-hotkeys-hook';
+import hamburgerIcon from '~images/icons/svg/hamburger.svg';
+import playlistIcon from '~images/icons/svg/playlist.svg';
 
 import * as style from './index.styl';
 
@@ -37,7 +39,7 @@ const Header = (props: HeaderProps) => {
             <div className={style.menuIcon} onClick={props.toggleSideBar}>
                 <SVG
                     className='icon icon-button'
-                    src={require('~images/icons/svg/hamburger.svg')}
+                    src={hamburgerIcon}
                     title='Show menu'
                     role='button'
                 />
@@ -66,49 +68,10 @@ const Header = (props: HeaderProps) => {
             <div className={style.queueIcon} onClick={props.toggleQueueBar}>
                 <SVG
                     className='icon icon-button'
-                    src={require('~images/icons/svg/playlist.svg')}
+                    src={playlistIcon}
                     title='Show queue'
                     role='button'
                 />
-            </div>
-            <div className={style.account}>
-                <SVG
-                    src={require('~images/icons/svg/user.svg')}
-                    title='User'
-                    role='button'
-                />
-                <div className={style.options}>
-                    <ul>
-                        <li>
-                            <Link to='/account'>{props.username}</Link>
-                        </li>
-                        <hr />
-                        <li>
-                            <Link to='/favorites'>My Favorites</Link>
-                        </li>
-                        <hr />
-                        <li>My Settings</li>
-                        <li>
-                            <Link to='/interface'>Interface</Link>
-                        </li>
-                        <li>
-                            <Link to='/options'>Options</Link>
-                        </li>
-                        <li>
-                            <Link to='/playlist'>Playlist</Link>
-                        </li>
-                        <li>
-                            <Link to='/plugins'>Plugins</Link>
-                        </li>
-                        <li>
-                            <Link to='/streaming'>Streaming</Link>
-                        </li>
-                        <hr />
-                        <li>
-                            <Link to='/logout'>Logout</Link>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </header>
     );

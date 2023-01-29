@@ -3,8 +3,6 @@ import SVG from 'react-inlinesvg';
 import { useGetSong } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
-
-import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import { useQueryClient } from '@tanstack/react-query';
 import ReactLoading from 'react-loading';
@@ -14,6 +12,10 @@ import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import { Modal } from 'react-async-popup';
 import { toast } from 'react-toastify';
 import shallow from '~node_modules/zustand/shallow';
+import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
+import crossIcon from '~images/icons/svg/cross.svg';
+
+import * as style from './index.styl';
 
 interface SongRowProps {
     songId: string;
@@ -169,7 +171,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                         >
                             <SVG
                                 className='icon icon-button-smallest'
-                                src={require('~images/icons/svg/more-options-hori.svg')}
+                                src={moreOptionsIcon}
                                 title='More options'
                                 role='button'
                             />
@@ -187,7 +189,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                         <div>
                             <SVG
                                 className='icon icon-button-smallest'
-                                src={require('~images/icons/svg/cross.svg')}
+                                src={crossIcon}
                                 title='Delete'
                                 description='Delete this song'
                                 role='button'

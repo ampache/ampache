@@ -3,6 +3,10 @@ import { useGetPlaylist } from '~logic/Playlist';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
 import SimpleRating from '~components/SimpleRating';
+import playIcon from '~images/icons/svg/play.svg';
+import playNextIcon from '~images/icons/svg/play-next.svg';
+import playLastIcon from '~images/icons/svg/play-last.svg';
+import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
 
 import * as style from './index.styl';
 
@@ -52,20 +56,20 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
             <div className={style.actions}>
                 <SVG
                     className='icon icon-button-small'
-                    src={require('~images/icons/svg/play.svg')}
+                    src={playIcon}
                     title='Play'
                     role='button'
                     onClick={() => startPlaying(playlist.id)}
                 />
                 <SVG
                     className='icon icon-button-small'
-                    src={require('~images/icons/svg/play-next.svg')}
+                    src={playNextIcon}
                     title='Play next'
                     role='button'
                 />
                 <SVG
                     className='icon icon-button-small'
-                    src={require('~images/icons/svg/play-last.svg')}
+                    src={playLastIcon}
                     title='Play last'
                     role='button'
                 />
@@ -74,7 +78,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
                         showContext(e, '');
                     }}
                     className='icon icon-button-small'
-                    src={require('~images/icons/svg/more-options-hori.svg')}
+                    src={moreOptionsIcon}
                     title='More options'
                     role='button'
                 />

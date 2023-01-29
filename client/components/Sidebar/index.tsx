@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
+import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
 
 import * as style from './index.styl';
 
@@ -102,7 +103,7 @@ export const Sidebar = memo((props: SideBarProps) => {
                             <Link to='/account'>
                                 User profile
                                 <SVG
-                                    src={require('~images/icons/svg/more-options-hori.svg')}
+                                    src={moreOptionsIcon}
                                     title='User options'
                                     role='button'
                                     onClick={() => {
