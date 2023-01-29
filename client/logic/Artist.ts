@@ -4,7 +4,11 @@ import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    useInfiniteQuery,
+    useQuery,
+    useQueryClient
+} from '@tanstack/react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
 
@@ -86,14 +90,43 @@ export const useGetArtists = (includeAlbums = false, includeSongs = false) => {
                 })
                 .then((response) => {
                     response.data.artist.map((artist) => {
-                        queryClient.setQueryData(
-                            ['artist', artist.id, includeSongs, includeAlbums],
+                        queryClient.setQueriesData(
+                            ['artist', artist.id],
                             artist
                         );
                     });
                     return response.data.artist;
                 })
     );
+};
+
+export const useInfiniteArtists = (limit = 25) => {
+    const queryClient = useQueryClient();
+    return useInfiniteQuery<Artist[], Error | AmpacheError>({
+        queryKey: ['artists', false, false],
+        queryFn: ({ pageParam }) => {
+            return ampacheClient
+                .get('', {
+                    params: {
+                        action: 'artists',
+                        limit,
+                        offset: pageParam,
+                        version: '6.0.0'
+                    }
+                })
+                .then((response) => {
+                    response.data.artist.map((artist) => {
+                        queryClient.setQueriesData(
+                            ['artist', artist.id],
+                            artist
+                        );
+                    });
+                    return response.data.artist;
+                });
+        },
+        getNextPageParam: (lastPage, pages) =>
+            lastPage.length === limit ? pages.length * limit : undefined
+    });
 };
 
 const getArtist = (

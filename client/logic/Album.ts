@@ -3,7 +3,11 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import updateArt from '~logic/Methods/Update_Art';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+    useInfiniteQuery,
+    useQuery,
+    useQueryClient
+} from '@tanstack/react-query';
 import { ampacheClient } from '~main';
 import { OptionType } from '~types';
 
@@ -95,38 +99,50 @@ type AlbumsInput = {
     options?: OptionType<Album[]>;
 };
 
+export const useInfiniteAlbums = (limit = 25) => {
+    const queryClient = useQueryClient();
+    return useInfiniteQuery<Album[], Error | AmpacheError>({
+        queryKey: ['albums', false],
+        queryFn: ({ pageParam }) => {
+            return ampacheClient
+                .get('', {
+                    params: {
+                        action: 'albums',
+                        limit,
+                        offset: pageParam,
+                        version: '6.0.0'
+                    }
+                })
+                .then((response) => {
+                    response.data.album.map((album) => {
+                        queryClient.setQueriesData(['album', album.id], album);
+                    });
+                    return response.data.album;
+                });
+        },
+        getNextPageParam: (lastPage, pages) =>
+            lastPage.length === limit ? pages.length * limit : undefined
+    });
+};
+
 export const useGetAlbums = (input: AlbumsInput = {}) => {
-    const {
-        add,
-        exact,
-        limit,
-        offset,
-        update,
-        filter,
-        includeSongs = false,
-        options
-    } = input;
+    const { includeSongs = false, options } = input;
     const queryClient = useQueryClient();
 
     return useQuery<Album[], Error | AmpacheError>(
-        ['albums', input],
+        ['albums', includeSongs],
         () =>
             ampacheClient
                 .get('', {
                     params: {
                         action: 'albums',
                         version: '6.0.0',
-                        include: [includeSongs ? 'songs' : ''],
-                        limit,
-                        offset
+                        include: [includeSongs ? 'songs' : '']
                     }
                 })
                 .then((response) => {
                     response.data.album.map((album) => {
-                        queryClient.setQueryData(
-                            ['album', album.id, includeSongs],
-                            album
-                        );
+                        queryClient.setQueriesData(['album', album.id], album);
                     });
                     return response.data.album as Album[];
                 }),

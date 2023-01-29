@@ -1,59 +1,47 @@
-import React, { useState } from 'react';
-import { useGetAlbums } from '~logic/Album';
+import React from 'react';
+import { useInfiniteAlbums } from '~logic/Album';
 import ReactLoading from 'react-loading';
 
-import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import AlbumDisplay from '~components/AlbumDisplay';
+import { useObserver } from '~utils/useObserver';
 
 const AlbumsPage = () => {
-    const [offset, setOffset] = useState(0);
-    const { data: albums, error, isLoading } = useGetAlbums({
-        limit: 15,
-        offset
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetching,
+        isFetchingNextPage
+    } = useInfiniteAlbums(25);
+
+    const { observerElem } = useObserver({
+        isFetching,
+        hasNextPage,
+        fetchNextPage
     });
 
-    if (error) {
-        return (
-            <div>
-                <span>Error: {error.message}</span>
-            </div>
-        );
-    }
-    if (isLoading) {
+    if (!data) {
         return (
             <div>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
-
-    if (!albums) {
-        return <div>No Albums</div>;
-    }
-
     return (
         <div>
             <h1>Albums</h1>
-            <Button
-                size={ButtonSize.medium}
-                color={ButtonColors.green}
-                text='Back'
-                onClick={() => {
-                    setOffset(offset - 10);
-                }}
-            />
-            <Button
-                size={ButtonSize.medium}
-                color={ButtonColors.green}
-                text='Next'
-                onClick={() => {
-                    setOffset(offset + 10);
-                }}
-            />
+
             <div className='album-grid'>
-                {albums.map((album) => (
-                    <AlbumDisplay albumId={album.id} key={album.id} />
+                {data.pages.map((group, i) => (
+                    <React.Fragment key={i}>
+                        {group.map((album) => (
+                            <AlbumDisplay albumId={album.id} key={album.id} />
+                        ))}
+                    </React.Fragment>
                 ))}
+            </div>
+            <div ref={observerElem}>
+                {isFetchingNextPage && hasNextPage && 'Loading...'}
             </div>
         </div>
     );

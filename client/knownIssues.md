@@ -12,3 +12,6 @@
 
 - Switch to tailwind from Stylus? Lot of work, low priority. Potentially, only do new components in tailwind and slowly convert.
 - Store cache on local storage? Can make things feel a lot more snappy
+
+# TODOs
+- Better test states where there are no songs/albums/playlists/artists
