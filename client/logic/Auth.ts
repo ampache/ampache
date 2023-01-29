@@ -25,7 +25,7 @@ const handshake = async (username: string, password: string) => {
     const passphrase = await digestMessage(time + key);
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
+            `${process.env.ServerURL}?action=handshake&user=${username}&timestamp=${time}&auth=${passphrase}&version=350001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -43,34 +43,4 @@ const handshake = async (username: string, password: string) => {
         });
 };
 
-/**
- * @async
- * @param apiKey
- * @return {Promise<AuthKey>}
- */
-const handshakeAPIKey = (apiKey: string) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=handshake&auth=${apiKey}&version=350001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            if (JSONData.auth) {
-                return JSONData.auth as AuthKey;
-            }
-            console.log(
-                `${process.env.ServerURL}/server/json.server.php?action=handshake&auth=${apiKey}&version=350001`,
-                JSONData
-            );
-            throw new Error('Missing Auth Key'); //TOOD: Is this needed?
-        });
-};
-
-export { handshake as default, handshakeAPIKey };
+export { handshake as default };
