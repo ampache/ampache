@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface InputModalParams {
     submitButtonText: string;
@@ -44,11 +44,7 @@ const InputModal = (props: InputModalParams) => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                 />
-                <input
-                    type='submit'
-                    className={style.confirmButton}
-                    value={submitButtonText}
-                />
+                <input type='submit' value={submitButtonText} />
             </form>
         </div>
     );

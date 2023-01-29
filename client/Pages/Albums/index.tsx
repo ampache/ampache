@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import { useGetAlbums } from '~logic/Album';
-import { User } from '~logic/User';
 import ReactLoading from 'react-loading';
 
-import style from './index.styl';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import AlbumDisplay from '~components/AlbumDisplay';
 
-interface AlbumsPageProps {
-    user: User;
-}
-
-const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
+const AlbumsPage = () => {
     const [offset, setOffset] = useState(0);
     const { data: albums, error, isLoading } = useGetAlbums({
         limit: 15,
@@ -20,34 +14,25 @@ const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
 
     if (error) {
         return (
-            <div className={style.albumsPage}>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (isLoading) {
         return (
-            <div className={style.albumsPage}>
+            <div>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
 
     if (!albums) {
-        return <div className={style.albumsPage}>No Albums</div>;
+        return <div>No Albums</div>;
     }
 
     return (
-        <div className={style.albumsPage}>
-            <div className={style.details}>
-                {/*<div className='imageContainer'>*/}
-                {/*    <img*/}
-                {/*        src={this.state.theAlbum.art}*/}
-                {/*        alt={'Album Cover'}*/}
-                {/*    />*/}
-                {/*</div>*/}
-                {/*Name: {this.state.theAlbum.name}*/}
-            </div>
+        <div>
             <h1>Albums</h1>
             <Button
                 size={ButtonSize.medium}

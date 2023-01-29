@@ -9,7 +9,7 @@ import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import useTraceUpdate from '~Debug/useTraceUpdate';
 import AlbumDisplay from '~components/AlbumDisplay';
 
@@ -79,13 +79,13 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     };
     if (error) {
         return (
-            <div className={style.artistPage}>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     return (
-        <div className={style.artistPage}>
+        <div>
             {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
             {artist && (
                 <div className={style.artistInfo}>
@@ -109,7 +109,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                             {artist.name}
                         </div>
                         <div className={style.summary}>{artist.summary}</div>
-                        <div className={style.actions}>
+                        <div>
                             <Button
                                 onClick={playRandomArtistSongs}
                                 size={ButtonSize.medium}
@@ -120,7 +120,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                     </div>
                 </div>
             )}
-            <div className={`album-grid ${style.albums}`}>
+            <div className={`album-grid`}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
                 {artist &&
                     artist.albums.map((album) => (

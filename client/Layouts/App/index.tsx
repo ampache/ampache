@@ -9,7 +9,7 @@ import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl/';
 import QueueBar from '~components/QueueBar/';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface AppLayoutProps {
     user: User;

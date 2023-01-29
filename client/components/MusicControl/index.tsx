@@ -9,7 +9,7 @@ import SimpleRating from '~components/SimpleRating';
 import SliderControl from '~components/MusicControl/components/SliderControl';
 import Cookies from 'js-cookie';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import { useGetSong } from '~logic/Song';
 import shallow from 'zustand/shallow';
@@ -54,7 +54,7 @@ const MusicControl = () => {
             <SongTime endTime={currentPlayingSong?.time} />
 
             <div className={style.controls}>
-                <div className={style.previousSong}>
+                <div>
                     <SVG
                         src={require('~images/icons/svg/previous-track.svg')}
                         title='Previous'
@@ -108,7 +108,7 @@ const MusicControl = () => {
                         />
                     )}
                 </div>
-                <div className={style.nextSong}>
+                <div>
                     <SVG
                         src={require('~images/icons/svg/next-track.svg')}
                         title='Next'
@@ -131,7 +131,7 @@ const MusicControl = () => {
             </div>
 
             <div className={style.secondaryControls}>
-                <div className={style.shuffle}>
+                <div>
                     <SVG
                         src={require('~images/icons/svg/shuffle.svg')}
                         title='Shuffle'
@@ -144,7 +144,7 @@ const MusicControl = () => {
                     />
                 </div>
 
-                <div className={style.repeat}>
+                <div>
                     <SVG
                         src={require('~images/icons/svg/repeat.svg')}
                         title='Repeat'
@@ -156,7 +156,7 @@ const MusicControl = () => {
                     />
                 </div>
 
-                <div className={style.moreOptions}>
+                <div>
                     <SVG
                         src={require('~images/icons/svg/more-options-hori.svg')}
                         title='More options'

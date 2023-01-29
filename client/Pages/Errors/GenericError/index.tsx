@@ -1,6 +1,6 @@
 import React from 'react';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { Button } from '@mui/material';
 
 interface GenericErrorInterface {

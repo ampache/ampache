@@ -3,7 +3,7 @@ import { useSpring, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface SideBarProps {
     visible: boolean;
@@ -29,7 +29,7 @@ export const Sidebar = memo((props: SideBarProps) => {
                 className={
                     props.visible
                         ? `${style.sidebar} ${style.visible}`
-                        : `${style.sidebar} ${style.hidden}`
+                        : `${style.sidebar}`
                 }
             >
                 <div className={style.menuList}>

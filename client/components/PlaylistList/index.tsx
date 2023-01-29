@@ -15,7 +15,7 @@ import InputModal from '~Modal/types/InputModal';
 import { Menu, MenuItem } from '@mui/material';
 import { MusicContext } from '~Contexts/MusicContext';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 const contextMenuDefaultState = {
     mouseX: null,

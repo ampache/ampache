@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useGetArtist } from '~logic/Artist';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import ReactLoading from 'react-loading';
 
 const ArtistDisplay = ({ artistID }: { artistID: string }) => {

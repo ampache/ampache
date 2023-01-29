@@ -1,4 +1,4 @@
-import style from '~components/MusicControl/index.styl';
+import * as style from '~components/MusicControl/index.styl';
 import { Slider } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';

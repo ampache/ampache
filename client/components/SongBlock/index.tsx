@@ -2,7 +2,7 @@ import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import shallow from '~node_modules/zustand/shallow';
 

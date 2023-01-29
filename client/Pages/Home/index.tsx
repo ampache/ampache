@@ -5,7 +5,6 @@ import AmpacheError from '../../logic/AmpacheError';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import style from './index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
 
 interface HomePageProps {
@@ -31,7 +30,7 @@ const HomePage: React.FC<HomePageProps> = (props) => {
 
     if (error) {
         return (
-            <div className={style.homePage}>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
@@ -40,10 +39,10 @@ const HomePage: React.FC<HomePageProps> = (props) => {
         return <ReactLoading color='#FF9D00' type={'bubbles'} />;
     }
     return (
-        <div className={style.homePage}>
+        <div>
             <section>
                 <h1>Random Albums</h1>
-                <div className={`album-grid ${style.randomAlbums}`}>
+                <div className={`album-grid`}>
                     {!randomAlbums && (
                         <ReactLoading color='#FF9D00' type={'bubbles'} />
                     )}

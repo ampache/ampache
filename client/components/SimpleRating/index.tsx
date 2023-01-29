@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import SVG from 'react-inlinesvg';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useFlagItem } from '~logic/Methods/Flag';
 import { ItemType } from '~types';
 import { Rating } from '@mui/material';
@@ -63,7 +63,6 @@ const SimpleRating = memo((props: SimpleRatingProps) => {
                 className={`icon ${style.cancelIcon}`}
             />
             <Rating
-                className={style.simpleRating}
                 name={`${type}-${itemId}`}
                 value={value}
                 icon={fullIcon}

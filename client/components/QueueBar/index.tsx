@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
 import QueueSong from './components/QueueSong';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useSpring, animated } from 'react-spring';
 import { useMusicStore } from '~store';
 import shallow from '~node_modules/zustand/shallow';
@@ -48,13 +48,13 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                 className={
                     props.visible
                         ? `${style.queueBar} ${style.visible}`
-                        : `${style.queueBar} ${style.hidden}`
+                        : `${style.queueBar}`
                 }
             >
                 <h4 className={style.title}>Now playing</h4>
                 <div className={style.queueList}>
                     <div className={style.queueListInner}>
-                        <ul className={`striped-list ${style.songs}`}>
+                        <ul className={`striped-list`}>
                             {songQueue.length == 0 && (
                                 <div className={style.emptyQueue}>
                                     Nothing in the queue

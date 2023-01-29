@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { Album } from '~logic/Album';
 import { Artist } from '~logic/Artist';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
 import ArtistDisplay from '~components/ArtistDisplay';
 
@@ -71,14 +71,14 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
 
     if (!searchQuery) {
         return (
-            <div className={style.searchPage}>
+            <div>
                 <div>Search for something!</div>
             </div>
         );
     }
 
     return (
-        <div className={style.searchPage}>
+        <div>
             <div className={style.query}>
                 Search:
                 <span className={style.queryText}>{`"${searchQuery}"`}</span>
@@ -88,7 +88,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                 {!songResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={`song-list ${style.resultList}`}>
+                <div className={`song-list`}>
                     {songResults.length === 0 && 'No results :('}
 
                     {songResults.map((song) => {
@@ -97,7 +97,6 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                                 song={song}
                                 playSong={playSong}
                                 key={song.id}
-                                className={style.song}
                             />
                         );
                     })}
@@ -108,7 +107,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                 {!albumResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={`album-grid ${style.resultList}`}>
+                <div className={`album-grid`}>
                     {albumResults.map((album) => (
                         <AlbumDisplay albumId={album.id} key={album.id} />
                     ))}
@@ -119,7 +118,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                 {!artistResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={`artist-grid ${style.resultList}`}>
+                <div className={`artist-grid`}>
                     {artistResults.map((artist) => (
                         <ArtistDisplay artistID={artist.id} key={artist.id} />
                     ))}

@@ -2,7 +2,6 @@ import React, { memo, useContext } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
 import { SongRow } from '~components/SongRow';
 
-import style from './index.styl';
 import { useMusicStore } from '~store';
 import shallow from '~node_modules/zustand/shallow';
 
@@ -48,7 +47,6 @@ const SongList: React.FC<SongListProps> = memo(
                                     songId === currentPlayingSongId
                                 }
                                 key={songId}
-                                className={style.songRow}
                             />
                         );
                     })}

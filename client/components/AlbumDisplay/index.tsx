@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useGetAlbum } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { MusicContext } from '~Contexts/MusicContext';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 
@@ -38,7 +38,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                         <>
                             <Link
                                 to={`/album/${album.id}`}
-                                className={`${style.action} ${style.viewAlbum}`}
+                                className={`${style.action}`}
                             >
                                 View album
                             </Link>
@@ -92,7 +92,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                 />
             </div>
             <div className={style.details}>
-                <div className={style.albumInfo}>
+                <div>
                     <Link
                         to={`/album/${album.id}`}
                         className={`card-title ${style.albumName}`}
@@ -105,7 +105,7 @@ const AlbumDisplay = (props: AlbumDisplayProps) => {
                     >
                         {album.artist.name}
                     </Link>
-                    <div className={style.albumMeta}>
+                    <div>
                         {album.year} - {album.songcount} tracks
                     </div>
                 </div>

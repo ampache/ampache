@@ -2,7 +2,6 @@ import React from 'react';
 import { useGetArtists } from '~logic/Artist';
 import ReactLoading from 'react-loading';
 
-import style from './index.styl';
 import ArtistDisplay from '~components/ArtistDisplay';
 
 const ArtistsPage = () => {
@@ -10,14 +9,14 @@ const ArtistsPage = () => {
 
     if (error) {
         return (
-            <div className={style.artistsPage}>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (!artists) {
         return (
-            <div className={style.artistsPage}>
+            <div>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );

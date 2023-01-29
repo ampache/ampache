@@ -4,7 +4,7 @@ import { useGetSong } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import { useQueryClient } from '@tanstack/react-query';
 import ReactLoading from 'react-loading';
@@ -136,10 +136,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                                 className={style.artistContainer}
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <Link
-                                    className={style.artist}
-                                    to={`/artist/${song.artist.id}`}
-                                >
+                                <Link to={`/artist/${song.artist.id}`}>
                                     {song.artist.name}
                                 </Link>
                             </div>
@@ -150,7 +147,6 @@ const SongRow: React.FC<SongRowProps> = memo(
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <Link
-                                    className={style.album}
                                     to={`/album/${song.album.id}`}
                                     onClick={(e) => e.stopPropagation()}
                                 >
@@ -165,7 +161,6 @@ const SongRow: React.FC<SongRowProps> = memo(
 
                     <div className={style.songActions}>
                         <div
-                            className={style.options}
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -180,7 +175,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                             />
                         </div>
 
-                        <div className={style.rating}>
+                        <div>
                             <SimpleRating
                                 value={song.rating}
                                 fav={song.flag}
@@ -189,7 +184,7 @@ const SongRow: React.FC<SongRowProps> = memo(
                             />
                         </div>
 
-                        <div className={style.remove}>
+                        <div>
                             <SVG
                                 className='icon icon-button-smallest'
                                 src={require('~images/icons/svg/cross.svg')}

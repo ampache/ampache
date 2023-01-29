@@ -8,7 +8,7 @@ interface PlaylistSelectorProps {
     cancel?: () => Promise<unknown>;
 }
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 const PlaylistSelector = (props: PlaylistSelectorProps) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);

@@ -1,6 +1,6 @@
 import React from 'react';
 import SVG from 'react-inlinesvg';
-import style from './index.styl';
+import * as style from './index.styl';
 import { useGetSong } from '~logic/Song';
 import Loading from 'react-loading';
 

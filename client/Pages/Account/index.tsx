@@ -3,7 +3,7 @@ import { getUser, User } from '~logic/User';
 import { cleanCatalog, updateCatalog } from '~logic/Catalog';
 import { toast } from 'react-toastify';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface AccountPageProps {
     user: User;
@@ -47,7 +47,7 @@ const AccountPage: React.FC<AccountPageProps> = (props) => {
     };
 
     return (
-        <div className={style.accountPage}>
+        <div>
             <h1>Edit Account Settings</h1>
             <div>Username - {props.user.username}</div>
             <div>User ID - {props.user.id}</div>

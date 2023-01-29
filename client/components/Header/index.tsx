@@ -5,7 +5,7 @@ import logo from '~images/ampache-dark.png';
 import { DebounceInput } from 'react-debounce-input';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface HeaderProps extends RouteComponentProps<never> {
     username: string;

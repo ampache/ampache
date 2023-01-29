@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import { useGetSong } from '~logic/Song';
 import shallow from '~node_modules/zustand/shallow';

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ReactLoading from 'react-loading';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 import SongList from '~components/SongList';
 
 interface AlbumPageProps {
@@ -59,15 +59,12 @@ const AlbumPage: React.FC<AlbumPageProps> = memo(
                         <div className={`card-title ${style.albumName}`}>
                             {album.name}
                         </div>
-                        <div className={style.artistName}>
-                            <Link
-                                to={`/artist/${album.artist.id}`}
-                                className={style.artistName}
-                            >
+                        <div>
+                            <Link to={`/artist/${album.artist.id}`}>
                                 {album.artist.name}
                             </Link>
                         </div>
-                        <div className={style.albumMeta}>
+                        <div>
                             {album.year} - {album.tracks.length} tracks
                         </div>
                     </div>

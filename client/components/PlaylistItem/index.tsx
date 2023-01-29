@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
 import SimpleRating from '~components/SimpleRating';
 
-import style from './index.styl';
+import * as style from './index.styl';
 
 interface PlaylistItemProps {
     playlistId: string;
@@ -32,7 +32,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
                     {playlist.id.includes('smart_') ? ( // indicate if smartlist, else show rating
                         <div className={style.smartlistTag}>Smartlist</div>
                     ) : (
-                        <div className={style.rating}>
+                        <div>
                             <SimpleRating
                                 value={playlist.rating}
                                 fav={playlist.flag}
@@ -46,7 +46,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
                     {playlist.id.includes('smart_') && `Up to `}
                     <span className={style.itemCount}>{playlist.items}</span>
                     {` songs`}
-                    <span className={style.owner}> by {playlist.owner}</span>
+                    <span> by {playlist.owner}</span>
                 </div>
             </div>
             <div className={style.actions}>

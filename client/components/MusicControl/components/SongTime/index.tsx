@@ -1,4 +1,4 @@
-import style from './index.styl';
+import * as style from './index.styl';
 import { useMusicStore } from '~store';
 import shallow from 'zustand/shallow';
 
