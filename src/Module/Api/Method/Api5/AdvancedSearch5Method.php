@@ -89,7 +89,8 @@ final class AdvancedSearch5Method
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
+        $data    = $input;
+        $results = Search::run(offset, $user);
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
 
@@ -98,6 +99,8 @@ final class AdvancedSearch5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Json5_Data::albums($results, array(), $user);
@@ -135,6 +138,8 @@ final class AdvancedSearch5Method
                 }
                 break;
             default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Xml5_Data::albums($results, array(), $user);

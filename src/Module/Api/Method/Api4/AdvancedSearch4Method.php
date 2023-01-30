@@ -69,8 +69,10 @@ final class AdvancedSearch4Method
     {
         ob_end_clean();
 
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
+        $user = User::get_from_username(Session::username($input['auth']));
+        $data = $input;
+        unset($data['offset'], $data['limit']);
+        $results = Search::run($data, $user);
 
         $type = 'song';
         if (isset($input['type'])) {
