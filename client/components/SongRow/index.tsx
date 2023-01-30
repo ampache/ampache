@@ -13,7 +13,6 @@ import { Modal } from 'react-async-popup';
 import { toast } from 'react-toastify';
 import shallow from '~node_modules/zustand/shallow';
 import moreOptionsIcon from '~images/icons/svg/more-options-hori.svg';
-import crossIcon from '~images/icons/svg/cross.svg';
 
 import * as style from './index.styl';
 
@@ -183,16 +182,6 @@ const SongRow: React.FC<SongRowProps> = memo(
                                 fav={song.flag}
                                 itemId={song.id}
                                 type='song'
-                            />
-                        </div>
-
-                        <div>
-                            <SVG
-                                className='icon icon-button-smallest'
-                                src={crossIcon}
-                                title='Delete'
-                                description='Delete this song'
-                                role='button'
                             />
                         </div>
                     </div>

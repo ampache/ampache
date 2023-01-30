@@ -5,46 +5,38 @@
     border-radius: 3px
     cursor pointer
     display flex
-    flex-direction column
+    flex-direction row
     justify-content space-between
     height 38px
     &.songLoading
         align-items center
 
-    @media all and (min-width: size-medium)
-        flex-direction row
-
 .songActions
     display flex
     align-items center
     margin-left auto
+    flex 1
 
-    @media all and (min-width: size-medium)
-        & > div // space out items more as we have more room
-            margin-left 10px
+    @media all and (max-width: size-small)
+       display none
 
 .songDetails
-    padding 10px 10px 0 10px
+    align-items center
     overflow hidden
     position relative
+    display flex
+    flex 4
 
-    @media all and (min-width: size-medium)
-        display flex
-        flex-direction row
-        width 100%
 
 .trackNumber
     display inline-block
     vertical-align bottom
-    margin-right 10px
+    padding 0 10px
 
     &:after
         content '.'
         display inline-block
 
-    @media all and (min-width: size-medium)
-        min-width 3ch
-        text-align right
 
 .title
     display inline-block

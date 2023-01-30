@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { User } from '~logic/User';
 import { searchAlbums, searchArtists, searchSongs } from '~logic/Search';
 import { Song } from '~logic/Song';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -14,11 +13,7 @@ import AlbumDisplay from '~components/AlbumDisplay';
 import ArtistDisplay from '~components/ArtistDisplay';
 import { useParams } from 'react-router-dom';
 
-interface SearchPageProps {
-    user: User;
-}
-
-const SearchPage: React.FC<SearchPageProps> = (props) => {
+const SearchPage = () => {
     const musicContext = useContext(MusicContext);
 
     const [songResults, setSongResults] = useState<Song[]>([]);
@@ -29,7 +24,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
 
     useEffect(() => {
         if (searchQuery != null) {
-            searchSongs(searchQuery, props.user.authKey, 10)
+            searchSongs(searchQuery, 10)
                 .then((Songs) => {
                     setSongResults(Songs);
                 })
@@ -38,7 +33,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                         '😞 Something went wrong during the song search.'
                     );
                 });
-            searchAlbums(searchQuery, props.user.authKey, 6)
+            searchAlbums(searchQuery, 6)
                 .then((Albums) => {
                     setAlbumResults(Albums);
                 })
@@ -47,7 +42,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                         '😞 Something went wrong during the album search.'
                     );
                 });
-            searchArtists(searchQuery, props.user.authKey, 6)
+            searchArtists(searchQuery, 6)
                 .then((Artists) => {
                     setArtistResults(Artists);
                 })
@@ -57,7 +52,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
                     );
                 });
         }
-    }, [searchQuery, props.user.authKey]);
+    }, [searchQuery]);
 
     const playSong = (song: Song) => {
         const songIds = songResults.map((song) => song.id);
