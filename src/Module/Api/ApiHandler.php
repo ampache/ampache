@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Authentication\Gatekeeper;
@@ -88,6 +89,7 @@ final class ApiHandler implements ApiHandlerInterface
         $action        = (string)Core::get_request('action');
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
+        $is_register   = $action == RegisterMethod::ACTION;
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];
@@ -97,7 +99,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_handshake || $is_ping)
+            $api_version = ($is_handshake || $is_ping || $is_register)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -202,7 +204,8 @@ final class ApiHandler implements ApiHandlerInterface
         if (
             $gatekeeper->sessionExists() === false &&
             !$is_handshake &&
-            !$is_ping
+            !$is_ping &&
+            !$is_register
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -308,7 +311,9 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            !$is_handshake && !$is_ping
+            !$is_handshake &&
+            !$is_ping &&
+            !$is_register
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly

@@ -132,6 +132,29 @@ Destroy a session using the auth parameter.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/goodbye.json)
 
+### register
+
+Register as a new user if allowed. (Requires the username, password and email.)
+
+| Input      | Type    | Description                       | Optional |
+|------------|---------|-----------------------------------|---------:|
+| 'username' | string  | $username                         |       NO |
+| 'password' | string  | hash('sha256', $password)         |       NO |
+| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'fullname' | string  |                                   |      YES |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
 ## Non-Data Methods
 
 These methods take no parameters beyond your auth key to return information

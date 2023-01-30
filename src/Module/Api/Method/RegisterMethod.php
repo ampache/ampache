@@ -23,25 +23,27 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Api\Method\Api5;
+namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Api;
 
 /**
- * Class UserCreate5Method
+ * Class RegisterMethod
+ * @package Lib\ApiMethods
  */
-final class UserCreate5Method
+final class RegisterMethod
 {
-    public const ACTION = 'user_create';
+    public const ACTION = 'register';
 
     /**
-     * user_create
-     * MINIMUM_API_VERSION=400001
+     * register
+     * MINIMUM_API_VERSION=600000
      *
-     * Create a new user.
+     * Register a new user.
      * Requires the username, password and email.
      *
      * @param array $input
@@ -49,45 +51,58 @@ final class UserCreate5Method
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
-     * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input): bool
+    public static function register(array $input): bool
     {
-        if (!Api5::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!AmpConfig::get('allow_public_registration', false)) {
+            Api::error(T_('Enable: allow_public_registration'), '4703', self::ACTION, 'system', $input['api_format']);
             return false;
         }
-        if (!Api5::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
         $username             = $input['username'];
         $fullname             = $input['fullname'] ?? $username;
         $email                = urldecode($input['email']);
         $password             = $input['password'];
-        $disable              = (bool)($input['disable'] ?? false);
-        $access               = 25;
+        $disable              = (bool)AmpConfig::get('admin_enable_required');
+        $access               = User::access_name_to_level(AmpConfig::get('auto_user') ?? 'guest');
         $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {
-            Api5::message('successfully created: ' . $username, $input['api_format']);
+            if (!AmpConfig::get('user_no_email_confirm', false)) {
+                $client     = new User($user_id);
+                $validation = md5(uniqid((string) rand(), true));
+                $client->update_validation($validation);
+
+                // Notify user and/or admins
+                Registration::send_confirmation($username, $fullname, $email, null, $validation);
+            }
+            $text = 'successfully created: ' . $username;
+            if (AmpConfig::get('admin_enable_required')) {
+                $text = T_('Please wait for an administrator to activate your account');
+            }
+            Api::message($text, $input['api_format']);
             Catalog::count_table('user');
 
             return true;
         }
+
         if (User::id_from_username($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
         if (User::id_from_email($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $email), '4710', self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

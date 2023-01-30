@@ -89,7 +89,6 @@ final class UserCreateMethod
 
             return false;
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;

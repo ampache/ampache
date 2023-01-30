@@ -81,7 +81,9 @@ class Registration
             $mailer->message .= T_("Username") . ": $username\n";
             $mailer->message .= T_("Fullname") . ": $fullname\n";
             $mailer->message .= T_("E-mail") . ": $email\n";
-            $mailer->message .= T_("Website") . ": $website\n";
+            if (!empty($website)) {
+                $mailer->message .= T_("Website") . ": $website\n";
+            }
             $mailer->send_to_group('admins');
         }
 

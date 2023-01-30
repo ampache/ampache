@@ -103,6 +103,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
+  * register: Allow users to register an account (if enabled)
   * user_create: Add `group` parameter to pick a catalog filter group
   * user_update:
     * Add `group` parameter to pick a catalog filter group

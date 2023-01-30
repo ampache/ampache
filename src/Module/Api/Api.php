@@ -47,6 +47,7 @@ class Api
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
         Method\PingMethod::ACTION => Method\PingMethod::class,
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
+        Method\RegisterMethod::ACTION => Method\RegisterMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         Method\GetIndexesMethod::ACTION => Method\GetIndexesMethod::class,
         Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
