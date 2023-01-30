@@ -1183,7 +1183,7 @@ class Search extends playlist_object
 
         // Generate BASE SQL
         $limit_sql = "";
-        if ($limit > 0) {
+        if ($limit > 0 || $offset > 0) {
             $limit_sql = ' LIMIT ';
             if ($offset > 0) {
                 $limit_sql .= $offset . ", ";
