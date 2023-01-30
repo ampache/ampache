@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 import { DebounceInput } from 'react-debounce-input';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -9,14 +9,14 @@ import playlistIcon from '~images/icons/svg/playlist.svg';
 
 import * as style from './index.styl';
 
-interface HeaderProps extends RouteComponentProps<never> {
+interface HeaderProps {
     username: string;
     toggleQueueBar: () => void;
     toggleSideBar: () => void;
-    history: any;
 }
 
 const Header = (props: HeaderProps) => {
+    const navigate = useNavigate();
     const [query, setQuery] = useState('');
     const searchBox = useRef(null);
 
@@ -26,7 +26,7 @@ const Header = (props: HeaderProps) => {
     });
 
     const searchSubmit = (value) => {
-        props.history.push(`/search/${value}`);
+        navigate(`/search/${value}`);
     };
 
     return (
@@ -58,7 +58,6 @@ const Header = (props: HeaderProps) => {
                             searchSubmit(event.target.value);
                         }}
                         onSubmit={(event) => {
-                            console.log('SUBMIT');
                             searchSubmit(event.target.value);
                         }}
                         inputRef={searchBox}
@@ -77,4 +76,4 @@ const Header = (props: HeaderProps) => {
     );
 };
 
-export default withRouter(Header);
+export default Header;

@@ -1,22 +1,17 @@
-/* eslint-disable immutable/no-mutation */
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import Cookies from 'js-cookie';
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppLayout from './Layouts/App/';
 import HomePage from './Pages/Home/';
 import AccountPage from './Pages/Account/';
 import SearchPage from './Pages/Search/';
 import LoginPage from './Pages/Login/';
 import NotFound from './Pages/Errors/404/';
-import handshake, { AuthKey } from './logic/Auth';
-import { getUser, User } from '~logic/User';
+import { useGetUser } from '~logic/User';
 import AlbumPage from './Pages/Album';
 import AlbumsPage from './Pages/Albums';
 import ArtistPage from './Pages/Artist';
 import { MusicContextProvider } from '~Contexts/MusicContext';
 import ArtistsPage from './Pages/Artists';
-import AmpacheError from './logic/AmpacheError';
 import PlaylistsPage from './Pages/Playlists';
 import PlaylistPage from './Pages/Playlist';
 import GenericError from '~Pages/Errors/GenericError';
@@ -24,229 +19,61 @@ import ampacheLogo from './images/ampache-dark.png';
 
 import style from './stylus/router.styl';
 
-interface RouterState {
-    authKey: AuthKey;
-    username: string;
-    user: User;
-    loading: boolean;
-    error: Error;
-}
+export const Root = () => {
+    const { data: user, isLoading, error } = useGetUser();
 
-export default class Root extends React.PureComponent<void, RouterState> {
-    private readonly handleLogin: (
-        username: string,
-        password: string
-    ) => Promise<void | AmpacheError | Error>;
-    constructor(props) {
-        super(props);
-        this.state = {
-            authKey: Cookies.get('authKey'),
-            username: Cookies.get('username'),
-            user: null,
-            loading: true,
-            error: null
-        };
-
-        this.handleLogin = (username: string, password: string) => {
-            return handshake(username, password)
-                .then((newAuthKey: AuthKey) => {
-                    this.setState({ authKey: newAuthKey });
-                    Cookies.set('authKey', newAuthKey);
-                    Cookies.set('username', username);
-                    return getUser(username, newAuthKey)
-                        .then((user: User) => {
-                            user.authKey = newAuthKey;
-                            this.setState({ user });
-                        })
-                        .catch((error: AmpacheError) => {
-                            console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
-                            throw error;
-                        });
-                })
-                .catch((error: AmpacheError) => {
-                    throw error;
-                });
-        };
-        this.handleLogout = this.handleLogout.bind(this);
+    if (error) {
+        return <GenericError message={error.message} />;
     }
 
-    componentDidMount() {
-        if (this.state.authKey != null) {
-            getUser(this.state.username, this.state.authKey)
-                .then((user: User) => {
-                    user.authKey = this.state.authKey;
-                    this.setState({ user, loading: false });
-                })
-                .catch((error) => {
-                    console.error('GETUSERFAILED', error); //TODO: Error handling
-                    this.handleLogout();
-                });
-        } else {
-            this.setState({ loading: false });
-        }
+    if (isLoading) {
+        return (
+            <div className={style.appLoading}>
+                <img src={ampacheLogo} alt={'loading animation'} />
+            </div>
+        );
     }
 
-    // componentDidCatch(error: Error, errorInfo) {
-    //     console.log('EERERRR');
-    //     //TODO: Server log?
-    // }
-
-    static getDerivedStateFromError(error) {
-        // Update state so the next render will show the fallback UI.
-        console.log('DERIVED', error);
-        return { error };
-    }
-
-    private handleLogout() {
-        Cookies.remove('authKey');
-        Cookies.remove('username');
-        this.setState({ authKey: null, username: null, user: null });
-    }
-
-    render() {
-        if (this.state.error) {
-            return <GenericError message={this.state.error.message} />;
-        }
-        console.log(this.state);
-        if (this.state.loading) {
-            return (
-                <div className={style.appLoading}>
-                    <img src={ampacheLogo} alt={'loading animation'} />
-                </div>
-            );
-        }
-
-        if (this.state.authKey == null || this.state.user == null) {
-            return (
-                <BrowserRouter basename='/client'>
-                    <Route
-                        render={(props) => (
-                            <LoginPage
-                                {...props}
-                                handleLogin={this.handleLogin}
-                            />
-                        )}
-                    />
-                </BrowserRouter>
-            );
-        }
+    if (!user) {
         return (
             <BrowserRouter basename='/client'>
-                <Switch>
-                    {/*TODO: Do i need this switch?*/}
-                    <Route exact path='/login'>
-                        <Redirect to='/' />
-                    </Route>
-                    <Route
-                        exact
-                        path='/logout'
-                        render={() => {
-                            this.handleLogout();
-                            return <Redirect to='/login' />;
-                        }}
-                    />
-                    <MusicContextProvider>
-                        <AppLayout user={this.state.user}>
-                            <Switch>
-                                <Route
-                                    exact
-                                    path='/'
-                                    render={(props) => (
-                                        <HomePage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/account'
-                                    render={(props) => (
-                                        <AccountPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/album/:albumID'
-                                    render={(props) => (
-                                        <AlbumPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/albums'
-                                    render={(props) => (
-                                        <AlbumsPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/artist/:artistID'
-                                    render={(props) => (
-                                        <ArtistPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/artists'
-                                    render={(props) => (
-                                        <ArtistsPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/playlists'
-                                    render={(props) => (
-                                        <PlaylistsPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/playlist/:playlistID'
-                                    render={(props) => (
-                                        <PlaylistPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    exact
-                                    path='/search/:searchQuery?'
-                                    render={(props) => (
-                                        <SearchPage
-                                            {...props}
-                                            user={this.state.user}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    path='*'
-                                    render={(props) => <NotFound {...props} />}
-                                />
-                            </Switch>
-                        </AppLayout>
-                    </MusicContextProvider>
-                </Switch>
+                <Routes>
+                    <Route path={'*'} element={<LoginPage />}></Route>
+                </Routes>
             </BrowserRouter>
         );
     }
-}
+
+    return (
+        <BrowserRouter basename='/client'>
+            <MusicContextProvider>
+                <AppLayout user={user}>
+                    <Routes>
+                        <Route index element={<HomePage />} />
+                        <Route
+                            path='/account'
+                            element={<AccountPage user={user} />}
+                        />
+                        <Route path='/album/:albumID' element={<AlbumPage />} />
+                        <Route path='/albums' element={<AlbumsPage />} />
+                        <Route
+                            path='/artist/:artistID'
+                            element={<ArtistPage user={user} />}
+                        />
+                        <Route path='/artists' element={<ArtistsPage />} />
+                        <Route path='/playlists' element={<PlaylistsPage />} />
+                        <Route
+                            path='/playlist/:playlistID'
+                            element={<PlaylistPage />}
+                        />
+                        <Route
+                            path='/search/:searchQuery?'
+                            element={<SearchPage user={user} />}
+                        />
+                        <Route path='*' element={<NotFound />} />
+                    </Routes>
+                </AppLayout>
+            </MusicContextProvider>
+        </BrowserRouter>
+    );
+};

@@ -23,7 +23,7 @@
         "react-inlinesvg": "^2.2.2",
         "react-input-range": "^1.3.0",
         "react-loading": "^2.0.3",
-        "react-router-dom": "^5.2.0",
+        "react-router-dom": "^6.8.0",
         "react-spring": "^9.0.0-rc.3",
         "react-toastify": "^7.0.3",
         "react-use-context-menu": "^0.1.4",

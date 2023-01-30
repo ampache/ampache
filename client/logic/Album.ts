@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { Song } from './Song';
-import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import updateArt from '~logic/Methods/Update_Art';
 import {
@@ -37,21 +35,18 @@ type Album = {
     mbid: string;
 };
 
-const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&type=album&filter=random&limit=${count}&auth=${authKey}&version=500001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+const getRandomAlbums = (count: number) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'stats',
+                filter: 'random',
+                type: 'album',
+                limit: count,
+                version: '500001'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData.album as Album[];
-        });
+        })
+        .then((response) => response.data.album as Album[]);
 };
 
 const getAlbumSongs = (albumID: string) => {

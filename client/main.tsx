@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './router';
+import { Root } from '~router';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import AmpacheError from '~logic/AmpacheError';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { staleTime: 300000 } }
+});
 
 export const ampacheClient = axios.create({
     baseURL: process.env.ServerURL
@@ -20,12 +24,11 @@ ampacheClient.interceptors.request.use((config) => {
 
 ampacheClient.interceptors.response.use((res) => {
     if (res.data.error) {
+        if (res.data.error.errorMessage === 'Session Expired')
+            queryClient.setQueryData(['user'], null);
         throw new AmpacheError(res.data.error);
     }
     return res;
-});
-const queryClient = new QueryClient({
-    defaultOptions: { queries: { staleTime: 300000 } }
 });
 
 const render = (Component) => {

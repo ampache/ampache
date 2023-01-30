@@ -1,20 +1,12 @@
 import React from 'react';
-import { User } from '~logic/User';
 import SongList from '~components/SongList';
 import { useGetPlaylistSongs } from '~logic/Playlist';
 import Loading from 'react-loading';
+import { useParams } from 'react-router-dom';
 
-interface PlaylistPageProps {
-    user: User;
-    match: {
-        params: {
-            playlistID: string;
-        };
-    };
-}
+const PlaylistPage = () => {
+    const { playlistID } = useParams();
 
-const PlaylistPage: React.FC<PlaylistPageProps> = (props) => {
-    const playlistID = props.match.params.playlistID;
     const { data, isLoading } = useGetPlaylistSongs(playlistID);
 
     if (isLoading) {
@@ -24,12 +16,12 @@ const PlaylistPage: React.FC<PlaylistPageProps> = (props) => {
 
     return (
         <div className='playlistPage'>
-            <h1>Playlist - {props.match.params.playlistID}</h1>
+            <h1>Playlist - {playlistID}</h1>
             <SongList
                 showArtist={true}
                 showAlbum={true}
                 songIds={songIds}
-                inPlaylistID={props.match.params.playlistID}
+                inPlaylistID={playlistID}
             />
         </div>
     );

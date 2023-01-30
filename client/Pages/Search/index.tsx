@@ -12,14 +12,10 @@ import { Artist } from '~logic/Artist';
 import * as style from './index.styl';
 import AlbumDisplay from '~components/AlbumDisplay';
 import ArtistDisplay from '~components/ArtistDisplay';
+import { useParams } from 'react-router-dom';
 
 interface SearchPageProps {
     user: User;
-    match: {
-        params: {
-            searchQuery: string;
-        };
-    };
 }
 
 const SearchPage: React.FC<SearchPageProps> = (props) => {
@@ -29,7 +25,7 @@ const SearchPage: React.FC<SearchPageProps> = (props) => {
     const [albumResults, setAlbumResults] = useState<Album[]>([]);
     const [artistResults, setArtistResults] = useState<Artist[]>([]);
 
-    const searchQuery = props.match.params.searchQuery;
+    const { searchQuery } = useParams();
 
     useEffect(() => {
         if (searchQuery != null) {

@@ -1,33 +1,22 @@
 import React, { useState } from 'react';
 import logo from '~images/ampache-dark.png';
-import AmpacheError from '~logic/AmpacheError';
+import ReactLoading from 'react-loading';
+import { useLogin } from '~logic/Auth';
 
 import * as style from './index.styl';
-import ReactLoading from 'react-loading';
 
-interface LoginPageProps {
-    handleLogin: (
-        apiKey: string,
-        username: string
-    ) => Promise<void | AmpacheError | Error>;
-}
-
-const LoginPage: React.FC<LoginPageProps> = (props) => {
+const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | AmpacheError>(null);
+
+    const { mutate: login, error, isLoading } = useLogin();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
-        props.handleLogin(username, password).catch((e) => {
-            setLoading(false);
-            setError(e);
-        });
+        login({ username, password });
     };
 
-    if (loading) {
+    if (isLoading) {
         return <ReactLoading />;
     }
 

@@ -12,24 +12,21 @@ import SimpleRating from '~components/SimpleRating';
 import * as style from './index.styl';
 import useTraceUpdate from '~Debug/useTraceUpdate';
 import AlbumDisplay from '~components/AlbumDisplay';
+import { useParams } from 'react-router-dom';
 
 interface ArtistPageProps {
     user: User;
-    match: {
-        params: {
-            artistID: string;
-        };
-    };
 }
 
 const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     const musicContext = useContext(MusicContext);
+    const { artistID } = useParams();
 
     const [error, setError] = useState<Error | AmpacheError>(null);
     useTraceUpdate(props, 'Artist');
 
     const { data: artist } = useGetArtist({
-        artistID: props.match.params.artistID,
+        artistID,
         includeAlbums: true,
         options: {
             onError: (err) => {

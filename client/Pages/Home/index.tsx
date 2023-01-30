@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Album, getRandomAlbums } from '~logic/Album';
-import { User } from '~logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import AlbumDisplay from '~components/AlbumDisplay';
 
-interface HomePageProps {
-    user: User;
-}
-
-const HomePage: React.FC<HomePageProps> = (props) => {
+const HomePage = () => {
     const [randomAlbums, setRandomAlbums] = useState<Album[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getRandomAlbums(props.user.username, 6, props.user.authKey)
+        getRandomAlbums(6)
             .then((albums: Album[]) => {
                 setRandomAlbums(albums);
                 setLoading(false);
@@ -26,7 +21,7 @@ const HomePage: React.FC<HomePageProps> = (props) => {
                 toast.error('😞 Something went wrong getting random albums.');
                 setError(error);
             });
-    }, [props.user.authKey, props.user.username]);
+    }, []);
 
     if (error) {
         return (

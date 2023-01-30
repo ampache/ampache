@@ -1,9 +1,12 @@
-import axios from 'axios';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
+import { useQuery } from '@tanstack/react-query';
+import { OptionType } from '~types';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 //The API returns different information depending on if you are requesting yourself, or are an admin. Look at UserMethod.php:78
-type User = {
+export type User = {
     authKey: AuthKey;
     id: string;
     username: string;
@@ -20,7 +23,10 @@ type User = {
     city: string;
 };
 
-const getUser = (username: string, authKey: AuthKey) => {
+export const getUser = (specifiedUsername?: string) => {
+    const authKey = Cookies.get('authKey');
+    const username = specifiedUsername || Cookies.get('username');
+    if (!username || !authKey) return null;
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=user&username=${username}&auth=${authKey}&version=350001`
@@ -39,4 +45,10 @@ const getUser = (username: string, authKey: AuthKey) => {
             return JSONData as User;
         });
 };
-export { getUser, User };
+
+export const useGetUser = (options?: OptionType<User>) => {
+    return useQuery<User, Error | AmpacheError>(['user'], () => getUser(), {
+        retry: false,
+        ...options
+    });
+};

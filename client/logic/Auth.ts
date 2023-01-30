@@ -1,5 +1,8 @@
 import axios from 'axios';
 import AmpacheError from './AmpacheError';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getUser, User } from '~logic/User';
+import Cookies from 'js-cookie';
 
 async function digestMessage(message) {
     const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
@@ -37,10 +40,35 @@ const handshake = async (username: string, password: string) => {
                 throw new AmpacheError(JSONData.error);
             }
             if (JSONData.auth) {
+                Cookies.set('authKey', JSONData.auth, {
+                    expires: new Date(JSONData.session_expire)
+                });
+                Cookies.set('username', username, {
+                    expires: new Date(JSONData.session_expire)
+                });
                 return JSONData.auth as AuthKey;
             }
             throw new Error('Missing Auth Key');
         });
+};
+
+export const useLogin = () => {
+    const queryClient = useQueryClient();
+    return useMutation<
+        User,
+        AmpacheError | Error,
+        {
+            username: string;
+            password: string;
+        }
+    >(
+        ({ username, password }) => {
+            return handshake(username, password).then(() => getUser(username));
+        },
+        {
+            onSuccess: (user) => queryClient.setQueryData(['user'], user)
+        }
+    );
 };
 
 export { handshake as default };
