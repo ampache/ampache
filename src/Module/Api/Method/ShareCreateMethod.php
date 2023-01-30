@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api;
@@ -36,6 +37,7 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ShareCreateMethod
@@ -116,6 +118,7 @@ final class ShareCreateMethod
 
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
 
         Catalog::count_table('share');
         ob_end_clean();
@@ -124,7 +127,7 @@ final class ShareCreateMethod
                 echo Json_Data::shares($share, false);
                 break;
             default:
-                echo Xml_Data::shares($share);
+                echo Xml_Data::shares($share, $user);
         }
 
         return true;

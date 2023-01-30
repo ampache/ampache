@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api5;
@@ -36,6 +37,7 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ShareCreate5Method
@@ -115,6 +117,7 @@ final class ShareCreate5Method
 
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
 
         Catalog::count_table('share');
         ob_end_clean();
@@ -123,7 +126,7 @@ final class ShareCreate5Method
                 echo Json5_Data::shares($share, false);
                 break;
             default:
-                echo Xml5_Data::shares($share);
+                echo Xml5_Data::shares($share, $user);
         }
 
         return true;

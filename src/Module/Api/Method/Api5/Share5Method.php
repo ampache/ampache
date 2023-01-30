@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Share5Method
@@ -57,6 +59,7 @@ final class Share5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user  = User::get_from_username(Session::username($input['auth']));
         $share = array((int) $input['filter']);
 
         ob_end_clean();
@@ -65,7 +68,7 @@ final class Share5Method
                 echo Json5_Data::shares($share, false);
                 break;
             default:
-                echo Xml5_Data::shares($share);
+                echo Xml5_Data::shares($share, $user);
         }
 
         return true;

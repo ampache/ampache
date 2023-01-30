@@ -30,6 +30,8 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Shares5Method
@@ -74,6 +76,7 @@ final class Shares5Method
 
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -85,7 +88,7 @@ final class Shares5Method
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::shares($shares);
+                echo Xml5_Data::shares($shares, $user);
         }
 
         return true;

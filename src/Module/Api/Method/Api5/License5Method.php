@@ -26,10 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class License5Method
@@ -58,6 +60,7 @@ final class License5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $license   = new License($object_id);
         if (!$license->id) {
@@ -73,7 +76,7 @@ final class License5Method
                 echo Json5_Data::licenses(array($object_id), false);
                 break;
             default:
-                echo Xml5_Data::licenses(array($object_id));
+                echo Xml5_Data::licenses(array($object_id), $user);
         }
 
         return true;

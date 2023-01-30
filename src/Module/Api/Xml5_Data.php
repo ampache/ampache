@@ -399,8 +399,8 @@ class Xml5_Data
         }
         // you might not want the joined tables for playlsits
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
-            ? Catalog::get_update_info('joined')
-            : Catalog::get_update_info($object_type);
+            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
+            : Catalog::get_update_info($object_type, $user->id);
         $string = ($full_xml) ? "<total_count>" . $total_count . "</total_count>\n" : '';
 
         // here is where we call the object type
@@ -496,14 +496,15 @@ class Xml5_Data
      * This returns licenses to the user, in a pretty xml document with the information
      *
      * @param  integer[] $licenses Licence id's assigned to songs and artists
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function licenses($licenses)
+    public static function licenses($licenses, $user)
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('license') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
 
         foreach ($licenses as $license_id) {
             $license = new license($license_id);
@@ -519,14 +520,15 @@ class Xml5_Data
      * This returns labels to the user, in a pretty xml document with the information
      *
      * @param  integer[] $labels
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function labels($labels)
+    public static function labels($labels, $user)
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('license') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
 
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
@@ -544,14 +546,15 @@ class Xml5_Data
      * This returns live_streams to the user, in a pretty xml document with the information
      *
      * @param  integer[] $live_streams
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function live_streams($live_streams)
+    public static function live_streams($live_streams, $user)
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('live_stream') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n";
 
         foreach ($live_streams as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
@@ -569,14 +572,15 @@ class Xml5_Data
      * This returns genres to the user, in a pretty xml document with the information
      *
      * @param  integer[] $tags Genre id's to include
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function genres($tags)
+    public static function genres($tags, $user)
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('tag') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
@@ -604,7 +608,7 @@ class Xml5_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n" : '';
 
         Rating::build_cache('artist', $artists);
 
@@ -657,7 +661,7 @@ class Xml5_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -716,8 +720,8 @@ class Xml5_Data
         $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
         $playlist_names     = array();
         $total_count        = (AmpConfig::get('hide_search', false))
-            ? Catalog::get_update_info('joined')
-            : Catalog::get_update_info('playlist');
+            ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
+            : Catalog::get_update_info('playlist', $user->id);
         $string = "<total_count>" . $total_count . "</total_count>\n";
 
         // Foreach the playlist ids
@@ -766,14 +770,15 @@ class Xml5_Data
      * This returns shares to the user, in a pretty xml document with the information
      *
      * @param  integer[] $shares Share id's to include
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function shares($shares)
+    public static function shares($shares, $user)
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('share') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n";
 
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
@@ -808,14 +813,15 @@ class Xml5_Data
      * This returns catalogs to the user, in a pretty xml document with the information
      *
      * @param  integer[] $catalogs group of catalog id's
+     * @param  User      $user
      * @return string    return xml
      */
-    public static function catalogs($catalogs)
+    public static function catalogs($catalogs, $user)
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('catalog') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n";
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -841,7 +847,7 @@ class Xml5_Data
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('podcast') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
@@ -878,7 +884,7 @@ class Xml5_Data
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n" : '';
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
@@ -908,7 +914,7 @@ class Xml5_Data
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song') . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n" : '';
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
@@ -968,7 +974,7 @@ class Xml5_Data
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('video') . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);

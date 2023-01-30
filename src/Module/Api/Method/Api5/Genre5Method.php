@@ -25,10 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Genre5Method
@@ -52,6 +54,7 @@ final class Genre5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $tag       = new Tag($object_id);
         if (!$tag->id) {
@@ -67,7 +70,7 @@ final class Genre5Method
                 echo Json5_Data::genres(array($object_id), false);
                 break;
             default:
-                echo Xml5_Data::genres(array($object_id));
+                echo Xml5_Data::genres(array($object_id), $user);
         }
 
         return true;

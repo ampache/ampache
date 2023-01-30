@@ -148,7 +148,7 @@ final class AdvancedSearch5Method
                         echo Xml5_Data::artists($results, array(), $user);
                         break;
                     case 'label':
-                        echo Xml5_Data::labels($results);
+                        echo Xml5_Data::labels($results, $user);
                         break;
                     case 'playlist':
                         echo Xml5_Data::playlists($results, $user);
@@ -161,7 +161,7 @@ final class AdvancedSearch5Method
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml5_Data::genres($results);
+                        echo Xml5_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Xml5_Data::users($results);

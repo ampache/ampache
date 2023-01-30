@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LicensesMethod
@@ -64,6 +66,7 @@ final class LicensesMethod
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 
+        $user   = User::get_from_username(Session::username($input['auth']));
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         $licenses = $browse->get_objects();
@@ -83,7 +86,7 @@ final class LicensesMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::licenses($licenses);
+                echo Xml_Data::licenses($licenses, $user);
         }
 
         return true;

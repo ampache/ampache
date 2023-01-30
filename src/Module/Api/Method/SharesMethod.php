@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class SharesMethod
@@ -74,6 +76,7 @@ final class SharesMethod
 
             return false;
         }
+        $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -85,7 +88,7 @@ final class SharesMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::shares($shares);
+                echo Xml_Data::shares($shares, $user);
         }
 
         return true;

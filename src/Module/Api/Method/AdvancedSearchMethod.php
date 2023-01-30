@@ -151,7 +151,7 @@ final class AdvancedSearchMethod
                         echo Xml_Data::artists($results, array(), $user);
                         break;
                     case 'label':
-                        echo Xml_Data::labels($results);
+                        echo Xml_Data::labels($results, $user);
                         break;
                     case 'playlist':
                         echo Xml_Data::playlists($results, $user);
@@ -164,7 +164,7 @@ final class AdvancedSearchMethod
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results);
+                        echo Xml_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Xml_Data::users($results);

@@ -993,20 +993,18 @@ abstract class Catalog extends database_object
     /**
      * get_update_info
      *
-     * return the counts from update info to speed up responses
+     * return the counts from user_data or update_info to speed up responses
      * @param string $key
+     * @param int $user_id
      * @return int
      */
-    public static function get_update_info(string $key)
+    public static function get_update_info(string $key, int $user_id)
     {
-        if ($key == 'joined') {
-            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info` WHERE `key` IN ('playlist', 'search')";
-            $db_results = Dba::read($sql);
-        } else {
-            $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-            $db_results = Dba::read($sql, array($key));
-        }
-        $results = Dba::fetch_assoc($db_results);
+        $sql = ($user_id > 0)
+            ? "SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = " . $user_id
+            : "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
+        $db_results = Dba::read($sql, array($key));
+        $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['value'] ?? 0);
     } // get_update_info

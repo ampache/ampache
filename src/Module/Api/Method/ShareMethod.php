@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ShareMethod
@@ -58,6 +60,7 @@ final class ShareMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user  = User::get_from_username(Session::username($input['auth']));
         $share = array((int) $input['filter']);
 
         ob_end_clean();
@@ -66,7 +69,7 @@ final class ShareMethod
                 echo Json_Data::shares($share, false);
                 break;
             default:
-                echo Xml_Data::shares($share);
+                echo Xml_Data::shares($share, $user);
         }
 
         return true;

@@ -24,10 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class CatalogMethod
@@ -52,6 +54,7 @@ final class CatalogMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $catalog   = Catalog::create_from_id($object_id);
         if (!$catalog) {
@@ -67,7 +70,7 @@ final class CatalogMethod
                 echo Json_Data::catalogs(array($catalog->id), false);
                 break;
             default:
-                echo Xml_Data::catalogs(array($catalog->id));
+                echo Xml_Data::catalogs(array($catalog->id), $user);
         }
 
         return true;

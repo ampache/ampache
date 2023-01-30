@@ -28,6 +28,8 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GenresMethod
@@ -57,6 +59,7 @@ final class GenresMethod
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 
+        $user   = User::get_from_username(Session::username($input['auth']));
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         $tags = $browse->get_objects();
@@ -76,7 +79,7 @@ final class GenresMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::genres($tags);
+                echo Xml_Data::genres($tags, $user);
         }
 
         return true;

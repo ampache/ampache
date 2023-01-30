@@ -73,7 +73,7 @@ final class Catalogs5Method
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::catalogs($catalogs);
+                echo Xml5_Data::catalogs($catalogs, $user);
         }
 
         return true;

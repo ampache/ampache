@@ -24,10 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Catalog5Method
@@ -51,6 +53,7 @@ final class Catalog5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $catalog   = Catalog::create_from_id($object_id);
         if (!$catalog) {
@@ -66,7 +69,7 @@ final class Catalog5Method
                 echo Json5_Data::catalogs(array($catalog->id), false);
                 break;
             default:
-                echo Xml5_Data::catalogs(array($catalog->id));
+                echo Xml5_Data::catalogs(array($catalog->id), $user);
         }
 
         return true;

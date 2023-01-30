@@ -74,7 +74,7 @@ final class CatalogsMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::catalogs($catalogs);
+                echo Xml_Data::catalogs($catalogs, $user);
         }
 
         return true;

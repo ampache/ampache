@@ -25,10 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GenreMethod
@@ -53,6 +55,7 @@ final class GenreMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $tag       = new Tag($object_id);
         if (!$tag->id) {
@@ -68,7 +71,7 @@ final class GenreMethod
                 echo Json_Data::genres(array($object_id), false);
                 break;
             default:
-                echo Xml_Data::genres(array($object_id));
+                echo Xml_Data::genres(array($object_id), $user);
         }
 
         return true;

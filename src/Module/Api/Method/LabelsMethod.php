@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LabelsMethod
@@ -64,6 +66,7 @@ final class LabelsMethod
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC');
 
+        $user   = User::get_from_username(Session::username($input['auth']));
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         $labels = $browse->get_objects();
@@ -83,7 +86,7 @@ final class LabelsMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::labels($labels);
+                echo Xml_Data::labels($labels, $user);
         }
 
         return true;

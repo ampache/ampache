@@ -26,10 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LiveStreamMethod
@@ -59,6 +61,7 @@ final class LiveStreamMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        $user        = User::get_from_username(Session::username($input['auth']));
         $object_id   = (int) $input['filter'];
         $live_stream = new Live_Stream($object_id);
         if (!$live_stream->id) {
@@ -74,7 +77,7 @@ final class LiveStreamMethod
                 echo Json_Data::live_streams(array($object_id), false);
                 break;
             default:
-                echo Xml_Data::live_streams(array($object_id));
+                echo Xml_Data::live_streams(array($object_id), $user);
         }
 
         return true;
