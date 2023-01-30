@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -50,16 +52,20 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
-     * group      = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate = (integer) $maxbitrate //optional
+     * username          = (string) $username
+     * password          = (string) hash('sha256', $password)) //optional
+     * fullname          = (string) $fullname //optional
+     * email             = (string) $email //optional
+     * website           = (string) $website //optional
+     * state             = (string) $state //optional
+     * city              = (string) $city //optional
+     * disable           = (integer) 0,1 true to disable, false to enable //optional
+     * group             = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate        = (integer) $maxbitrate //optional
+     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
+     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      * @return boolean
      */
     public static function user_update(array $input): bool
@@ -80,6 +86,10 @@ final class UserUpdateMethod
         $disable              = $input['disable'] ?? null;
         $catalog_filter_group = $input['group'] ?? null;
         $maxbitrate           = (int)($input['maxBitRate'] ?? 0);
+        $fullname_public      = $input['fullname_public'] ?? null;
+        $reset_apikey         = $input['reset_apikey'] ?? null;
+        $reset_streamtoken    = $input['reset_streamtoken'] ?? null;
+        $clear_stats          = $input['clear_stats'] ?? null;
 
         // identify the user to modify
         $user    = User::get_from_username($username);
@@ -124,6 +134,18 @@ final class UserUpdateMethod
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
+            if ($fullname_public !== null) {
+                $user->update_fullname_public($fullname_public);
+            }
+            if ($reset_apikey) {
+                static::getUserKeyGenerator()->generateApikey($user);
+            }
+            if ($reset_streamtoken) {
+                static::getUserKeyGenerator()->generateStreamToken($user);
+            }
+            if ($clear_stats) {
+                    Stats::clear($user->id);
+            }
             Api::message('successfully updated: ' . $username, $input['api_format']);
 
             return true;
@@ -142,5 +164,15 @@ final class UserUpdateMethod
         global $dic;
 
         return $dic->get(UserStateTogglerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserKeyGenerator(): UserKeyGeneratorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserKeyGeneratorInterface::class);
     }
 }

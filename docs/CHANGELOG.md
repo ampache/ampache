@@ -104,7 +104,12 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * API6 (Based on API5)
   * user_create: Add `group` parameter to pick a catalog filter group
-  * user_update: Add `group` parameter to pick a catalog filter group
+  * user_update:
+    * Add `group` parameter to pick a catalog filter group
+    * Add `fullname_public` to enable/disable using fullname in public display
+    * Add `reset_apikey` to reset a user Api Key
+    * Add `reset_streamtoken` to reset a user Stream Token
+    * Add `clear_stats` reset all stats for this user **be very sure about this one!**
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
   * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"

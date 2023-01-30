@@ -1592,18 +1592,22 @@ Update an existing user.
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input        | Type    | Description                       | Optional |
-|--------------|---------|-----------------------------------|---------:|
-| 'username'   | string  | $username                         |       NO |
-| 'password'   | string  | hash('sha256', $password)         |      YES |
-| 'email'      | string  | e.g. user@gmail.com               |      YES |
-| 'fullname'   | string  |                                   |      YES |
-| 'website'    | string  |                                   |      YES |
-| 'state'      | string  |                                   |      YES |
-| 'city'       | string  |                                   |      YES |
-| 'disable'    | boolean | `0`, `1`                          |      YES |
-| 'group'      | integer | Catalog filter group, default = 0 |      YES |
-| 'maxbitrate' | string  |                                   |      YES |
+| Input               | Type    | Description                              | Optional |
+|---------------------|---------|------------------------------------------|---------:|
+| 'username'          | string  | $username                                |       NO |
+| 'password'          | string  | hash('sha256', $password)                |      YES |
+| 'email'             | string  | e.g. user@gmail.com                      |      YES |
+| 'fullname'          | string  |                                          |      YES |
+| 'website'           | string  |                                          |      YES |
+| 'state'             | string  |                                          |      YES |
+| 'city'              | string  |                                          |      YES |
+| 'disable'           | boolean | `0`, `1`                                 |      YES |
+| 'group'             | integer | Catalog filter group, default = 0        |      YES |
+| 'maxbitrate'        | string  |                                          |      YES |
+| 'fullname_public'   | integer | `0`, `1` show fullname in public display |      YES |
+| 'reset_apikey'      | integer | `0`, `1` reset user Api Key              |      YES |
+| 'reset_streamtoken' | integer | `0`, `1` reset user Stream Token         |      YES |
+| 'clear_stats'       | integer | `0`, `1` reset all stats for this user   |      YES |
 
 * return
 

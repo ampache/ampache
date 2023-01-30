@@ -826,7 +826,7 @@ class Catalog_local extends Catalog
         }
 
         return $missing;
-    } //_clean_chunk
+    } //_check_chunk
 
     /**
      * clean_file
