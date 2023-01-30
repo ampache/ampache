@@ -40,6 +40,18 @@
                     fn: function() {
                         self.shuffle();
                     }
+                },
+                next: {
+                    key: 78, // n
+                    fn: function() {
+                        self.next();
+                    }
+                },
+                previous: {
+                    key: 66, // b
+                    fn: function() {
+                        self.previous();
+                    }
                 }
             },
             stateClass: {
