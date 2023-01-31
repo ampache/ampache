@@ -38,21 +38,14 @@ export type Artist = {
     placeformed: string;
 };
 
-export const updateArtistInfo = (artistID: string, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=update_artist_info&id=${artistID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+export const updateArtistInfo = (artistID: string) => {
+    return ampacheClient.get(``, {
+        params: {
+            action: 'update_artist_info',
+            id: artistID,
+            version: '6.0.0'
+        }
+    });
 };
 
 export const getAlbumsFromArtist = (albumID: number, authKey: AuthKey) => {

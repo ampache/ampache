@@ -25,7 +25,7 @@ ampacheClient.interceptors.request.use((config) => {
 ampacheClient.interceptors.response.use((res) => {
     if (res.data.error) {
         if (res.data.error.errorMessage === 'Session Expired')
-            queryClient.setQueryData(['user'], null);
+            return queryClient.setQueryData(['user'], null);
         throw new AmpacheError(res.data.error);
     }
     return res;

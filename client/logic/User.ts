@@ -37,6 +37,8 @@ export const getUser = (specifiedUsername?: string) => {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
+                if (JSONData.error.errorMessage === 'Session Expired')
+                    return null;
                 if (JSONData.error.errorMessage.includes('Request Aborted'))
                     //TODO
                     return;

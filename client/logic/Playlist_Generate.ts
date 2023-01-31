@@ -1,39 +1,27 @@
-import axios from 'axios';
 import { Song } from './Song';
-import { AuthKey } from './Auth';
-import AmpacheError from '~logic/AmpacheError';
+import { ampacheClient } from '~main';
 
 //Broken
-export const generateSongsFromArtist = (artistID: string, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_generate&artist=${artistID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+export const generateSongsFromArtist = (artistID: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_generate',
+                artist: artistID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new Error(JSONData.error);
-            }
-            return JSONData.song as Song[];
-        });
+        })
+        .then((res) => res.data.song as Song[]);
 };
 
-export const generateSongsFromAlbum = (albumID: string, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${process.env.ServerURL}/server/json.server.php?action=playlist_generate&album=${albumID}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
+export const generateSongsFromAlbum = (albumID: string) => {
+    return ampacheClient
+        .get('', {
+            params: {
+                action: 'playlist_generate',
+                album: albumID,
+                version: '6.0.0'
             }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return JSONData.song as Song[];
-        });
+        })
+        .then((res) => res.data.song as Song[]);
 };

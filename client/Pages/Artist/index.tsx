@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { updateArtistInfo, updateArtistArt, useGetArtist } from '~logic/Artist';
-import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import { MusicContext } from '~Contexts/MusicContext';
 import ReactLoading from 'react-loading';
@@ -10,20 +9,14 @@ import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import SimpleRating from '~components/SimpleRating';
 
 import * as style from './index.styl';
-import useTraceUpdate from '~Debug/useTraceUpdate';
 import AlbumDisplay from '~components/AlbumDisplay';
 import { useParams } from 'react-router-dom';
 
-interface ArtistPageProps {
-    user: User;
-}
-
-const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
+const ArtistPage = () => {
     const musicContext = useContext(MusicContext);
     const { artistID } = useParams();
 
     const [error, setError] = useState<Error | AmpacheError>(null);
-    useTraceUpdate(props, 'Artist');
 
     const { data: artist } = useGetArtist({
         artistID,
@@ -36,7 +29,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     });
 
     const playRandomArtistSongs = () => {
-        generateSongsFromArtist(artist.id, props.user.authKey)
+        generateSongsFromArtist(artist.id)
             .then((songs) => {
                 const songIds = songs.map((song) => song.id);
                 songIds.sort(() => Math.random() - 0.5);
@@ -64,7 +57,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                     `😞 Something went wrong updating artist art. ${error}`
                 );
             });
-        updateArtistInfo(artist.id, props.user.authKey)
+        updateArtistInfo(artist.id)
             .then(() => {
                 toast.success('Info Updated Successfully');
             })
