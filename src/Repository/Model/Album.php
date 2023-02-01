@@ -871,24 +871,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get item album_artist name.
-     * @return string
-     */
-    public function get_artist_name()
-    {
-        if (!isset($this->artist_name)) {
-            if ($this->album_artist) {
-                $album_artist            = new Artist($this->album_artist);
-                $this->artist_name = $album_artist->name;
-            } else {
-                $this->artist_name = '';
-            }
-        }
-
-        return $this->artist_name;
-    }
-
-    /**
      * Get parent item description.
      * @return array|null
      */

@@ -516,19 +516,6 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * Get item album_artist name.
-     * @return string
-     */
-    public function get_artist_name()
-    {
-        if (!isset($this->artist_name)) {
-            $this->artist_name = $this->album->get_artist_name();
-        }
-
-        return $this->artist_name;
-    }
-
-    /**
      * Get parent item description.
      * @return array|null
      */

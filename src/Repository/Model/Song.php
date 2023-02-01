@@ -1095,7 +1095,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_album_barcode
 
     /**
-     * get_artist_name
+     * get_artist_fullname
      * gets the name of $this->artist, allows passing of id
      * @param int $artist_id
      * @return string
@@ -1110,7 +1110,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $this->f_artist_full;
-    } // get_artist_name
+    } // get_artist_fullname
 
     /**
      * get_album_artist_fullname
