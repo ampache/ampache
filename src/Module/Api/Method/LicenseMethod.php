@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -48,10 +47,11 @@ final class LicenseMethod
      * This returns a single license based on UID
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input): bool
+    public static function license(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,7 +61,6 @@ final class LicenseMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $license   = new License($object_id);
         if (!$license->id) {

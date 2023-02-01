@@ -799,8 +799,8 @@ class Json5_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, $user, false);
+                $results            = $podcast->get_episodes();
+                $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
             $JSON[] = [

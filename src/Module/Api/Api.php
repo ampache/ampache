@@ -330,7 +330,7 @@ class Api
      * check_access
      *
      * This function checks the user can perform the function requested
-     * 'interface', 100, User::get_from_username(Session::username($input['auth']))->id)
+     * 'interface', 100, $user->id)
      *
      * @param string $type
      * @param integer $level

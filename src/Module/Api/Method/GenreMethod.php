@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -47,15 +46,15 @@ final class GenreMethod
      * This returns a single genre based on UID
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre(array $input): bool
+    public static function genre(array $input, ?User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $tag       = new Tag($object_id);
         if (!$tag->id) {

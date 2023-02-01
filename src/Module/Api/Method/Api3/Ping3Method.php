@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Ping3Method
@@ -41,13 +42,13 @@ final class Ping3Method
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      * @param array $input
+     * @param User|null $user
      */
-    public static function ping(array $input)
+    public static function ping(array $input, ?User $user)
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api3::$version;
         $data_version = (int)substr($version, 0, 1);
-
-        $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api3::$version, 'compatible' => '350001');
+        $results      = array('server' => AmpConfig::get('version'), 'version' => Api3::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (Session::exists('api', $input['auth'])) {
@@ -55,12 +56,14 @@ final class Ping3Method
             if (in_array($data_version, array(3, 4, 5))) {
                 Session::write($input['auth'], $data_version);
             }
-            $xmldata = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $xmldata);
+            $results = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $results);
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
+        if ($user instanceof User) {
+            debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . " by: " . $user->username, 5);
+        }
 
         ob_end_clean();
-        echo Xml3_Data::keyed_array($xmldata);
+        echo Xml3_Data::keyed_array($results);
     } // ping
 }

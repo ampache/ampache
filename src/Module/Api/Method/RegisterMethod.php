@@ -47,13 +47,14 @@ final class RegisterMethod
      * Requires the username, password and email.
      *
      * @param array $input
+     * @param User|null $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
      * @return boolean
      */
-    public static function register(array $input): bool
+    public static function register(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
             Api::error(T_('Enable: allow_public_registration'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -62,6 +63,7 @@ final class RegisterMethod
         if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username             = $input['username'];
         $fullname             = $input['fullname'] ?? $username;
         $email                = urldecode($input['email']);

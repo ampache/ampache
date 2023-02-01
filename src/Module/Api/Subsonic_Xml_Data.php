@@ -807,10 +807,8 @@ class Subsonic_Xml_Data
             $xplayqueue->addAttribute('changed', $date->format("c"));
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);
 
-            if ($items) {
-                foreach ($items as $row) {
-                    self::addSong($xplayqueue, (int)$row['object_id'], "entry");
-                }
+            foreach ($items as $row) {
+                self::addSong($xplayqueue, (int)$row['object_id'], "entry");
             }
         }
     }

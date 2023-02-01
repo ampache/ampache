@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -49,6 +48,7 @@ final class UserUpdate4Method
      * Takes the username with optional parameters.
      *
      * @param array $input
+     * @param User|null $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -60,9 +60,9 @@ final class UserUpdate4Method
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
-    public static function user_update(array $input): bool
+    public static function user_update(array $input, ?User $user): bool
     {
-        if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_update', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), 'user_update')) {

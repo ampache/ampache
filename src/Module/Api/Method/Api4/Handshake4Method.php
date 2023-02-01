@@ -37,6 +37,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Handshake4Method
@@ -53,14 +55,18 @@ final class Handshake4Method
      * Takes a timestamp, auth key, and username.
      *
      * @param array $input
+     * @param User|null $user
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public static function handshake(array $input): bool
+    public static function handshake(array $input, ?User $user): bool
     {
+        unset($user);
         $now_time   = time();
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];
@@ -169,32 +175,34 @@ final class Handshake4Method
                 $counts = Catalog::get_server_counts($user_id);
 
                 // send the totals
-                $outarray = array('auth' => $token,
-                                  'api' => Api4::$version,
-                                  'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
-                                  'update' => date("c", (int) $row['update']),
-                                  'add' => date("c", (int) $row['add']),
-                                  'clean' => date("c", (int) $row['clean']),
-                                  'songs' => (int) $counts['song'],
-                                  'albums' => (int) $counts['album'],
-                                  'artists' => (int) $counts['artist'],
-                                  'playlists' => ((int)$counts['playlist'] + (int)$counts['search']),
-                                  'videos' => (int) $counts['video'],
-                                  'catalogs' => (int) $counts['catalog'],
-                                  'users' => (int) $counts['user'],
-                                  'tags' => (int) $counts['tag'],
-                                  'podcasts' => (int) $counts['podcast'],
-                                  'podcast_episodes' => (int) $counts['podcast_episode'],
-                                  'shares' => (int) $counts['share'],
-                                  'licenses' => (int) $counts['license'],
-                                  'live_streams' => (int) $counts['live_stream'],
-                                  'labels' => (int) $counts['label']);
+                $results = array(
+                    'auth' => $token,
+                    'api' => Api4::$version,
+                    'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
+                    'update' => date("c", (int) $row['update']),
+                    'add' => date("c", (int) $row['add']),
+                    'clean' => date("c", (int) $row['clean']),
+                    'songs' => (int) $counts['song'],
+                    'albums' => (int) $counts['album'],
+                    'artists' => (int) $counts['artist'],
+                    'playlists' => ((int)$counts['playlist'] + (int)$counts['search']),
+                    'videos' => (int) $counts['video'],
+                    'catalogs' => (int) $counts['catalog'],
+                    'users' => (int) $counts['user'],
+                    'tags' => (int) $counts['tag'],
+                    'podcasts' => (int) $counts['podcast'],
+                    'podcast_episodes' => (int) $counts['podcast_episode'],
+                    'shares' => (int) $counts['share'],
+                    'licenses' => (int) $counts['license'],
+                    'live_streams' => (int) $counts['live_stream'],
+                    'labels' => (int) $counts['label']
+                );
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($outarray, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($outarray);
+                        echo Xml4_Data::keyed_array($results);
                 }
 
                 return true;

@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -48,10 +47,11 @@ final class LiveStreamMethod
      * This returns a single live_stream based on UID
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) UID of live_stream
      * @return boolean
      */
-    public static function live_stream(array $input): bool
+    public static function live_stream(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('live_stream')) {
             Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,7 +61,6 @@ final class LiveStreamMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user        = User::get_from_username(Session::username($input['auth']));
         $object_id   = (int) $input['filter'];
         $live_stream = new Live_Stream($object_id);
         if (!$live_stream->id) {

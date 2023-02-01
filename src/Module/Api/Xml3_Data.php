@@ -340,7 +340,7 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user->id, false);
+                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
             } else {
                 $albums = (AmpConfig::get('album_group'))
                     ? $artist->album_count
@@ -664,9 +664,7 @@ class Xml3_Data
         }
         $string .= "</timeline>\n";
 
-        $final = self::_header() . $string . self::_footer();
-
-        return $final;
+        return self::_header() . $string . self::_footer();
     } // timeline
 
     /**

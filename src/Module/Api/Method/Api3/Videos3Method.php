@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Videos3Method
@@ -39,8 +40,9 @@ final class Videos3Method
      * videos
      * This returns video objects!
      * @param array $input
+     * @param User|null $user
      */
-    public static function videos(array $input)
+    public static function videos(array $input, ?User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -50,11 +52,11 @@ final class Videos3Method
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
 
-        $video_ids = $browse->get_objects();
+        $results = $browse->get_objects();
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
-        echo Xml3_Data::videos($video_ids);
+        echo Xml3_Data::videos($results);
     } // videos
 }

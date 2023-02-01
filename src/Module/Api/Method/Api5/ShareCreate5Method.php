@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api5;
@@ -38,6 +37,8 @@ use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\User;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShareCreate5Method
@@ -53,13 +54,16 @@ final class ShareCreate5Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     * @param User|null $user
      * filter      = (string) object_id
      * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input): bool
+    public static function share_create(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -84,7 +88,7 @@ final class ShareCreate5Method
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
 
-        $share = array();
+        $results = array();
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -101,7 +105,7 @@ final class ShareCreate5Method
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $share[] = Share::create_share(
+            $results[] = Share::create_share(
                 $object_type,
                 $object_id,
                 true,
@@ -112,21 +116,20 @@ final class ShareCreate5Method
                 $description
             );
         }
-        if (empty($share)) {
+        if (empty($results)) {
             Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
 
         Catalog::count_table('share');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($share, false);
+                echo Json5_Data::shares($results, false);
                 break;
             default:
-                echo Xml5_Data::shares($share, $user);
+                echo Xml5_Data::shares($results, $user);
         }
 
         return true;

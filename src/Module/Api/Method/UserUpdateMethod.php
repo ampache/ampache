@@ -32,7 +32,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -52,6 +51,7 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
+     * @param User|null $user
      * username          = (string) $username
      * password          = (string) hash('sha256', $password)) //optional
      * fullname          = (string) $fullname //optional
@@ -68,9 +68,9 @@ final class UserUpdateMethod
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      * @return boolean
      */
-    public static function user_update(array $input): bool
+    public static function user_update(array $input, ?User $user): bool
     {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
@@ -92,8 +92,7 @@ final class UserUpdateMethod
         $clear_stats          = $input['clear_stats'] ?? null;
 
         // identify the user to modify
-        $user    = User::get_from_username($username);
-        $user_id = $user->getId();
+        $user_id = $user->getId() ?? 0;
 
         if ($password && Access::check('interface', 100, $user_id)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -144,7 +143,7 @@ final class UserUpdateMethod
                 static::getUserKeyGenerator()->generateStreamToken($user);
             }
             if ($clear_stats) {
-                    Stats::clear($user->id);
+                Stats::clear($user->id);
             }
             Api::message('successfully updated: ' . $username, $input['api_format']);
 

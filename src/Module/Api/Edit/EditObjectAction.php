@@ -82,7 +82,6 @@ final class EditObjectAction extends AbstractEditAction
             return $data;
         };
         $entities($_POST);
-
         if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         } else {

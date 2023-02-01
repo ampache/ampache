@@ -45,12 +45,13 @@ final class UserDelete4Method
      * Takes the username in parameter.
      *
      * @param array $input
+     * @param User|null $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input): bool
+    public static function user_delete(array $input, ?User $user): bool
     {
-        if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_delete', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {

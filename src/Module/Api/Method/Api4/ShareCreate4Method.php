@@ -37,6 +37,9 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
+use Ampache\Repository\Model\User;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShareCreateMethod
@@ -52,13 +55,16 @@ final class ShareCreate4Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     * @param User|null $user
      * filter      = (string) object_id
      * type        = (string) object_type
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input): bool
+    public static function share_create(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
@@ -79,7 +85,7 @@ final class ShareCreate4Method
 
             return false;
         }
-        $share = array();
+        $results = array();
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
@@ -95,7 +101,7 @@ final class ShareCreate4Method
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $share[] = Share::create_share(
+            $results[] = Share::create_share(
                 $object_type,
                 $object_id,
                 true,
@@ -109,10 +115,10 @@ final class ShareCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::shares($share);
+                echo Json4_Data::shares($results);
                 break;
             default:
-                echo Xml4_Data::shares($share);
+                echo Xml4_Data::shares($results);
         }
 
         return true;

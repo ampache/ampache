@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -45,12 +46,13 @@ final class UsersMethod
      * Get ids and usernames for your site
      *
      * @param array $input
+     * @param User|null $user
      * @return boolean
      */
-    public static function users(array $input): bool
+    public static function users(array $input, ?User $user): bool
     {
-        $users = static::getUserRepository()->getValid();
-        if (empty($users)) {
+        $results = static::getUserRepository()->getValid();
+        if (empty($results)) {
             Api::empty('user', $input['api_format']);
 
             return false;
@@ -59,10 +61,10 @@ final class UsersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::users($users);
+                echo Json_Data::users($results);
                 break;
             default:
-                echo Xml_Data::users($users);
+                echo Xml_Data::users($results);
         }
 
         return true;

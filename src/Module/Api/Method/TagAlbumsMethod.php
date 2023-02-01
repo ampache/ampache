@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
+use Ampache\Repository\Model\User;
 
 /**
  * Class TagAlbumsMethod
@@ -42,8 +43,9 @@ final class TagAlbumsMethod
      * This returns the albums associated with the genre in question
      *
      * @param array $input
+     * @param User|null $user
      */
-    public static function tag_albums(array $input)
+    public static function tag_albums(array $input, ?User $user)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
     }

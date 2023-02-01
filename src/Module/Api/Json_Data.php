@@ -418,7 +418,7 @@ class Json_Data
                 "songcount" => $artist->song_count,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
+                "flag" => (bool)$flag->get_flag($user->getId(), false),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "mbid" => $artist->mbid,
@@ -486,7 +486,9 @@ class Json_Data
             if (empty($objArray['artist']['id']) && $album->artist_count > 1) {
                 $objArray['artist'] = array(
                     "id" => "0",
-                    "name" => T_('Various')
+                    "name" => T_('Various'),
+                    "prefix" => '',
+                    "basename" => T_('Various')
                 );
             }
 
@@ -503,7 +505,7 @@ class Json_Data
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->tags);
             $objArray['art']           = $art_url;
-            $objArray['flag']          = (!$flag->get_flag($user->getId(), false) ? false : true);
+            $objArray['flag']          = (bool)$flag->get_flag($user->getId(), false);
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album->mbid;
@@ -594,7 +596,7 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
+                "flag" => (bool)$flag->get_flag($user->getId(), false),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating()
             ];
@@ -788,8 +790,8 @@ class Json_Data
             $podcast_public_url  = $podcast->get_link();
             $podcast_episodes    = array();
             if ($episodes) {
-                $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, $user, false);
+                $results            = $podcast->get_episodes();
+                $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
             $JSON[] = [
@@ -805,7 +807,7 @@ class Json_Data
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
+                "flag" => (bool)$flag->get_flag($user->getId(), false),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "podcast_episode" => $podcast_episodes
@@ -861,7 +863,7 @@ class Json_Data
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
+                "flag" => (bool)$flag->get_flag($user->getId(), false),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$episode->total_count,
@@ -927,21 +929,21 @@ class Json_Data
                 "name" => $song->get_fullname(),
                 "artist" => array(
                     "id" => (string)$song->artist,
-                    "name" => $song_artist['f_name'],
+                    "name" => $song_artist['name'],
                     "prefix" => $song_artist['prefix'],
-                    "basename" => $song_artist['name']
+                    "basename" => $song_artist['basename']
                 ),
                 "album" => array(
                     "id" => (string)$song->album,
-                    "name" => $song_album['f_name'],
+                    "name" => $song_album['name'],
                     "prefix" => $song_album['prefix'],
-                    "basename" => $song_album['name']
+                    "basename" => $song_album['basename']
                 ),
                 'albumartist' => array(
                     "id" => (string)$song->albumartist,
-                    "name" => $album_artist['f_name'],
+                    "name" => $album_artist['name'],
                     "prefix" => $album_artist['prefix'],
-                    "basename" => $album_artist['name']
+                    "basename" => $album_artist['basename']
                 )
             );
 
@@ -967,7 +969,7 @@ class Json_Data
             $objArray['artist_mbid']           = $song->artist_mbid;
             $objArray['albumartist_mbid']      = $song->albumartist_mbid;
             $objArray['art']                   = $art_url;
-            $objArray['flag']                  = (!$flag->get_flag($user->getId(), false) ? false : true);
+            $objArray['flag']                  = (bool)$flag->get_flag($user->getId(), false);
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = (int)$song->total_count;
@@ -1039,7 +1041,7 @@ class Json_Data
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
-                "flag" => (!$flag->get_flag($user->getId(), false) ? false : true),
+                "flag" => (bool)$flag->get_flag($user->getId(), false),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$video->total_count
@@ -1090,15 +1092,15 @@ class Json_Data
                 "title" => $song->get_fullname(),
                 "artist" => array(
                     "id" => (string)$song->artist,
-                    "name" => $song_artist['f_name'],
+                    "name" => $song_artist['name'],
                     "prefix" => $song_artist['prefix'],
-                    "basename" => $song_artist['name']
+                    "basename" => $song_artist['basename']
                 ),
                 "album" => array(
                     "id" => (string)$song->album,
-                    "name" => $song_album['f_name'],
+                    "name" => $song_album['name'],
                     "prefix" => $song_album['prefix'],
-                    "basename" => $song_album['name']
+                    "basename" => $song_album['basename']
                 ),
                 "genre" => self::genre_array($song->tags),
                 "track" => (int)$song->track,

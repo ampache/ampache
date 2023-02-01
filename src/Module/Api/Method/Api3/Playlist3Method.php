@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Playlist3Method
@@ -38,8 +39,9 @@ final class Playlist3Method
      * playlist
      * This returns a single playlist
      * @param array $input
+     * @param User|null $user
      */
-    public static function playlist(array $input)
+    public static function playlist(array $input, ?User $user)
     {
         $uid = scrub_in($input['filter']);
 

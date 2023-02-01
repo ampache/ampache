@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Goodbye4Method
@@ -42,10 +43,11 @@ final class Goodbye4Method
      * Destroy session for auth key.
      *
      * @param array $input
+     * @param User|null $user
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye(array $input): bool
+    public static function goodbye(array $input, ?User $user): bool
     {
         if (!Api4::check_parameter($input, array('auth'), self::ACTION)) {
             return false;

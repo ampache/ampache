@@ -661,7 +661,7 @@ class Album extends database_object implements library_item
      */
     public static function get_name_array_by_id($album_id)
     {
-        $sql        = "SELECT `album`.`prefix`, `album`.`name`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `f_name` FROM `album` WHERE `id` = ?;";
+        $sql        = "SELECT `album`.`prefix`, `album`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) AS `name` FROM `album` WHERE `id` = ?;";
         $db_results = Dba::read($sql, array($album_id));
         if ($row = Dba::fetch_assoc($db_results)) {
             return $row;
@@ -669,8 +669,8 @@ class Album extends database_object implements library_item
 
         return array(
             "prefix" => '',
-            "name" => '',
-            "f_name" => ''
+            "basename" => '',
+            "name" => ''
         );
     }
 
@@ -769,8 +769,8 @@ class Album extends database_object implements library_item
             if ($this->artist_count == '1') {
                 $name_array          = Artist::get_name_array_by_id($this->album_artist);
                 $this->artist_prefix = $name_array['prefix'];
-                $this->artist_name   = $name_array['name'];
-                $this->f_artist_name = $name_array['f_name'];
+                $this->artist_name   = $name_array['basename'];
+                $this->f_artist_name = $name_array['name'];
             } else {
                 $this->artist_prefix = '';
                 $this->artist_name   = '';
@@ -866,8 +866,8 @@ class Album extends database_object implements library_item
             if ($this->album_artist) {
                 $name_array                = Artist::get_name_array_by_id($this->album_artist);
                 $this->artist_prefix       = $name_array['prefix'];
-                $this->artist_name         = $name_array['name'];
-                $this->f_album_artist_name = $name_array['f_name'];
+                $this->artist_name         = $name_array['basename'];
+                $this->f_album_artist_name = $name_array['name'];
             } else {
                 $this->artist_prefix       = '';
                 $this->artist_name         = '';

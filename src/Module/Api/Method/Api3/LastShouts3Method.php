@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LastShouts3Method
@@ -39,8 +40,9 @@ final class LastShouts3Method
      * last_shouts
      * This get the latest posted shouts
      * @param array $input
+     * @param User|null $user
      */
-    public static function last_shouts(array $input)
+    public static function last_shouts(array $input, ?User $user)
     {
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
@@ -49,13 +51,13 @@ final class LastShouts3Method
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
-                $shouts = Shoutbox::get_top($limit, $username);
+                $results = Shoutbox::get_top($limit, $username);
             } else {
-                $shouts = Shoutbox::get_top($limit);
+                $results = Shoutbox::get_top($limit);
             }
 
             ob_end_clean();
-            echo Xml3_Data::shouts($shouts);
+            echo Xml3_Data::shouts($results);
         } else {
             debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }

@@ -47,21 +47,21 @@ final class UserDeleteMethod
      * Takes the username in parameter.
      *
      * @param array $input
+     * @param User|null $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input): bool
+    public static function user_delete(array $input, ?User $user): bool
     {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
-        $user     = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+        if ($user instanceof User && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
             $user->delete();
             Api::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');

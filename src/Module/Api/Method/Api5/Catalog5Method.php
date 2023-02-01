@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
@@ -45,15 +44,15 @@ final class Catalog5Method
      * Get the catalogs from it's id.
      *
      * @param array $input
+     * @param User|null $user
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input): bool
+    public static function catalog(array $input, ?User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $catalog   = Catalog::create_from_id($object_id);
         if (!$catalog) {

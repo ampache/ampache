@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,12 +46,13 @@ final class Shares5Method
      * Get information about shared media this user is allowed to manage.
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function shares(array $input): bool
+    public static function shares(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -70,25 +70,24 @@ final class Shares5Method
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $shares = $browse->get_objects();
-        if (empty($shares)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api5::empty('shares', $input['api_format']);
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::shares($shares);
+                echo Json5_Data::shares($results);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::shares($shares, $user);
+                echo Xml5_Data::shares($results, $user);
         }
 
         return true;

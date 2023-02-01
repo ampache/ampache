@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -48,10 +47,11 @@ final class LabelMethod
      * This returns a single label based on UID
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) UID of label
      * @return boolean
      */
-    public static function label(array $input): bool
+    public static function label(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,7 +61,6 @@ final class LabelMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $label     = new Label($object_id);
         if (!$label->id) {

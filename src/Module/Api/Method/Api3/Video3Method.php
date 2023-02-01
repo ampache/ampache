@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Video3Method
@@ -38,8 +39,9 @@ final class Video3Method
      * video
      * This returns a single video
      * @param array $input
+     * @param User|null $user
      */
-    public static function video(array $input)
+    public static function video(array $input, ?User $user)
     {
         $video_id = scrub_in($input['filter']);
 

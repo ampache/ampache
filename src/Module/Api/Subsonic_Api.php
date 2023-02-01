@@ -62,6 +62,8 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use WpOrg\Requests\Requests;
 use SimpleXMLElement;
 
@@ -907,27 +909,27 @@ class Subsonic_Api
         $toYear        = $input['toYear'] ?? null;
         $musicFolderId = $input['musicFolderId'] ?? 0;
 
-        $search           = array();
-        $search['limit']  = $size;
-        $search['random'] = $size;
-        $search['type']   = "song";
+        $data             = array();
+        $data['limit']    = $size;
+        $data['random']   = $size;
+        $data['type']     = "song";
         $count            = 0;
         if ($genre) {
-            $search['rule_' . $count . '_input']    = $genre;
-            $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count]               = "tag";
+            $data['rule_' . $count . '_input']    = $genre;
+            $data['rule_' . $count . '_operator'] = 0;
+            $data['rule_' . $count]               = "tag";
             ++$count;
         }
         if ($fromYear) {
-            $search['rule_' . $count . '_input']    = $fromYear;
-            $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count]               = "year";
+            $data['rule_' . $count . '_input']    = $fromYear;
+            $data['rule_' . $count . '_operator'] = 0;
+            $data['rule_' . $count]               = "year";
             ++$count;
         }
         if ($toYear) {
-            $search['rule_' . $count . '_input']    = $toYear;
-            $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count]               = "year";
+            $data['rule_' . $count . '_input']    = $toYear;
+            $data['rule_' . $count . '_operator'] = 1;
+            $data['rule_' . $count]               = "year";
             ++$count;
         }
         if ($musicFolderId > 0) {
@@ -948,14 +950,14 @@ class Subsonic_Api
                     $ftype    = "catalog";
                 }
             }
-            $search['rule_' . $count . '_input']    = $finput;
-            $search['rule_' . $count . '_operator'] = $operator;
-            $search['rule_' . $count]               = $ftype;
+            $data['rule_' . $count . '_input']    = $finput;
+            $data['rule_' . $count . '_operator'] = $operator;
+            $data['rule_' . $count]               = $ftype;
             ++$count;
         }
         $user = User::get_from_username((string)$username);
         if ($count > 0) {
-            $songs = Random::advanced('song', $search);
+            $songs = Random::advanced('song', $data);
         } else {
             $songs = Random::get_default($size, $user);
         }
@@ -1051,6 +1053,8 @@ class Subsonic_Api
      */
     public static function search2($input, $elementName = "searchResult2")
     {
+        $username = $input['u'];
+        $user     = User::get_from_username($username);
         $operator = 0; // contains
         $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
         $query    = $original;
@@ -1085,43 +1089,43 @@ class Subsonic_Api
         $songCount    = $input['songCount'] ?? 20;
         $songOffset   = $input['songOffset'] ?? 0;
 
-        $sartist          = array();
-        $sartist['limit'] = $artistCount;
+        $data          = array();
+        $data['limit'] = $artistCount;
         if ($artistOffset) {
-            $sartist['offset'] = $artistOffset;
+            $data['offset'] = $artistOffset;
         }
-        $sartist['rule_1_input']    = $query;
-        $sartist['rule_1_operator'] = $operator;
-        $sartist['rule_1']          = 'title';
-        $sartist['type']            = 'artist';
+        $data['rule_1_input']    = $query;
+        $data['rule_1_operator'] = $operator;
+        $data['rule_1']          = 'title';
+        $data['type']            = 'artist';
         if ($artistCount > 0) {
-            $artists = Search::run($sartist);
+            $artists = Search::run($data, $user);
         }
 
-        $salbum          = array();
-        $salbum['limit'] = $albumCount;
+        $data          = array();
+        $data['limit'] = $albumCount;
         if ($albumOffset) {
-            $salbum['offset'] = $albumOffset;
+            $data['offset'] = $albumOffset;
         }
-        $salbum['rule_1_input']    = $query;
-        $salbum['rule_1_operator'] = $operator;
-        $salbum['rule_1']          = 'title';
-        $salbum['type']            = 'album';
+        $data['rule_1_input']    = $query;
+        $data['rule_1_operator'] = $operator;
+        $data['rule_1']          = 'title';
+        $data['type']            = 'album';
         if ($albumCount > 0) {
-            $albums = Search::run($salbum);
+            $albums = Search::run($data, $user);
         }
 
-        $ssong          = array();
-        $ssong['limit'] = $songCount;
+        $data          = array();
+        $data['limit'] = $songCount;
         if ($songOffset) {
-            $ssong['offset'] = $songOffset;
+            $data['offset'] = $songOffset;
         }
-        $ssong['rule_1_input']    = $query;
-        $ssong['rule_1_operator'] = $operator;
-        $ssong['rule_1']          = 'title';
-        $ssong['type']            = 'song';
+        $data['rule_1_input']    = $query;
+        $data['rule_1_operator'] = $operator;
+        $data['rule_1']          = 'title';
+        $data['type']            = 'song';
         if ($songCount > 0) {
-            $songs = Search::run($ssong);
+            $songs = Search::run($data, $user);
         }
 
         $response = Subsonic_Xml_Data::addSubsonicResponse($elementName);
@@ -1526,31 +1530,33 @@ class Subsonic_Api
      */
     public static function getlyrics($input)
     {
-        $artist = $input['artist'];
-        $title  = $input['title'];
+        $username = $input['u'];
+        $user     = User::get_from_username($username);
+        $artist   = $input['artist'];
+        $title    = $input['title'];
 
         if (!$artist && !$title) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'getlyrics');
         } else {
-            $search           = array();
-            $search['limit']  = 1;
-            $search['offset'] = 0;
-            $search['type']   = "song";
+            $data           = array();
+            $data['limit']  = 1;
+            $data['offset'] = 0;
+            $data['type']   = "song";
 
             $count = 0;
             if ($artist) {
-                $search['rule_' . $count . '_input']    = $artist;
-                $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count]               = "artist";
+                $data['rule_' . $count . '_input']    = $artist;
+                $data['rule_' . $count . '_operator'] = 4;
+                $data['rule_' . $count]               = "artist";
                 ++$count;
             }
             if ($title) {
-                $search['rule_' . $count . '_input']    = $title;
-                $search['rule_' . $count . '_operator'] = 4;
-                $search['rule_' . $count]               = "title";
+                $data['rule_' . $count . '_input']    = $title;
+                $data['rule_' . $count . '_operator'] = 4;
+                $data['rule_' . $count]               = "title";
             }
 
-            $songs    = Search::run($search);
+            $songs    = Search::run($data, $user);
             $response = Subsonic_Xml_Data::addSubsonicResponse('getlyrics');
             if (count($songs) > 0) {
                 Subsonic_Xml_Data::addLyrics($response, $artist, $title, $songs[0]);
@@ -1734,6 +1740,8 @@ class Subsonic_Api
      * Returns a <subsonic-response> element with a nested <shares> element on success, which in turns contains a single <share> element for the newly created share.
      * http://www.subsonic.org/pages/api.jsp#createShare
      * @param array $input
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function createshare($input)
     {
@@ -2022,15 +2030,15 @@ class Subsonic_Api
         }
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if ($episode->id !== null) {
+            if (!isset($episode->id)) {
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletepodcastepisode');
+            } else {
                 if ($episode->remove()) {
                     $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastepisode');
                     Catalog::count_table('podcast_episode');
                 } else {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, '', 'deletepodcastepisode');
                 }
-            } else {
-                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletepodcastepisode');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'deletepodcastepisode');
@@ -2052,11 +2060,11 @@ class Subsonic_Api
         }
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
-            if ($episode->id !== null) {
+            if (!isset($episode->id)) {
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'downloadpodcastepisode');
+            } else {
                 $episode->gather();
                 $response = Subsonic_Xml_Data::addSubsonicResponse('downloadpodcastepisode');
-            } else {
-                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'downloadpodcastepisode');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, '', 'downloadpodcastepisode');
@@ -2665,8 +2673,10 @@ class Subsonic_Api
                 $toYear   = max($input['fromYear'], $input['toYear']);
 
                 if ($fromYear || $toYear) {
-                    $search = Search::year_search($fromYear, $toYear, $size, $offset);
-                    $albums = Search::run($search);
+                    $username = $input['u'];
+                    $user     = User::get_from_username($username);
+                    $data     = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $albums   = Search::run($data, $user);
                 }
                 break;
             case "byGenre":

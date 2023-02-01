@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
+use Ampache\Repository\Model\User;
 
 /**
  * Class TagsMethod
@@ -42,8 +43,9 @@ final class TagsMethod
      * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
+     * @param User|null $user
      */
-    public static function tags(array $input)
+    public static function tags(array $input, ?User $user)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
     }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PlaylistRemoveSong3Method
@@ -39,8 +40,9 @@ final class PlaylistRemoveSong3Method
      * playlist_remove_song
      * This remove a song from a playlist
      * @param array $input
+     * @param User|null $user
      */
-    public static function playlist_remove_song(array $input)
+    public static function playlist_remove_song(array $input, ?User $user)
     {
         ob_end_clean();
         $playlist = new Playlist($input['filter']);

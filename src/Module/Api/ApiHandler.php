@@ -40,7 +40,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -59,8 +58,6 @@ final class ApiHandler implements ApiHandlerInterface
     private NetworkCheckerInterface $networkChecker;
 
     private ContainerInterface $dic;
-
-    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
@@ -411,7 +408,8 @@ final class ApiHandler implements ApiHandlerInterface
                     $gatekeeper,
                     $response,
                     $output,
-                    $input
+                    $input,
+                    $user
                 );
 
                 $gatekeeper->extendSession();
@@ -420,7 +418,8 @@ final class ApiHandler implements ApiHandlerInterface
             } else {
                 call_user_func(
                     [$handlerClassName, $action],
-                    $input
+                    $input,
+                    $user
                 );
 
                 $gatekeeper->extendSession();
@@ -524,15 +523,5 @@ final class ApiHandler implements ApiHandlerInterface
                     );
             }
         }
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

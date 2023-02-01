@@ -39,8 +39,9 @@ final class User3Method
      * user
      * This get an user public information
      * @param array $input
+     * @param User|null $user
      */
-    public static function user(array $input)
+    public static function user(array $input, ?User $user)
     {
         $username = $input['username'];
         if (!empty($username)) {

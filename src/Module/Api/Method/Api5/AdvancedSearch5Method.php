@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class AdvancedSearch5Method
@@ -60,6 +59,7 @@ final class AdvancedSearch5Method
      * https://ampache.org/api/api-json-methods
      *
      * @param array $input
+     * @param User|null $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -70,7 +70,7 @@ final class AdvancedSearch5Method
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input): bool
+    public static function advanced_search(array $input, ?User $user): bool
     {
         if (!Api5::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -88,9 +88,8 @@ final class AdvancedSearch5Method
 
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
         $data    = $input;
-        $results = Search::run(offset, $user);
+        $results = Search::run($data, $user);
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
 

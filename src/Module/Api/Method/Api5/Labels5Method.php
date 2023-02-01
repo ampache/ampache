@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,13 +46,14 @@ final class Labels5Method
      * This returns the labels  based on the specified filter
      *
      * @param array $input
+     * @param User|null $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function labels(array $input): bool
+    public static function labels(array $input, ?User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api5::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -66,11 +66,10 @@ final class Labels5Method
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC');
 
-        $user   = User::get_from_username(Session::username($input['auth']));
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $labels = $browse->get_objects();
-        if (empty($labels)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api5::empty('label', $input['api_format']);
 
             return false;
@@ -81,12 +80,12 @@ final class Labels5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::labels($labels);
+                echo Json5_Data::labels($results);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::labels($labels, $user);
+                echo Xml5_Data::labels($results, $user);
         }
 
         return true;
