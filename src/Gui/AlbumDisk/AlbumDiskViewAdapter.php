@@ -110,7 +110,9 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     public function getArt(): string
     {
         $albumId = $this->albumDisk->getAlbumId();
-        $name    = '[' . $this->albumDisk->get_album_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname());
+        $name    = ($this->albumDisk->get_artist_fullname() != "")
+            ? '[' . $this->albumDisk->get_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname())
+            : scrub_out($this->albumDisk->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 

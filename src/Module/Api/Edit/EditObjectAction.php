@@ -114,8 +114,8 @@ final class EditObjectAction extends AbstractEditAction
             if (isset($_POST['album_artist'])) {
                 unset($_POST['album_artist']);
             }
-            if (isset($_POST['album_artist_name'])) {
-                unset($_POST['album_artist_name']);
+            if (isset($_POST['artist_name'])) {
+                unset($_POST['artist_name']);
             }
             if (isset($_POST['edit_tags'])) {
                 $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);

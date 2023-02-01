@@ -481,15 +481,8 @@ class Json_Data
             $objArray['name']     = $album->get_fullname();
             $objArray['prefix']   = $album->prefix;
             $objArray['basename'] = $album->name;
-            $objArray['artist']   = Artist::get_name_array_by_id($album->album_artist);
-
-            if (empty($objArray['artist']['id']) && $album->artist_count > 1) {
-                $objArray['artist'] = array(
-                    "id" => "0",
-                    "name" => T_('Various'),
-                    "prefix" => '',
-                    "basename" => T_('Various')
-                );
+            if ($album->get_artist_fullname() != "") {
+                $objArray['artist'] = Artist::get_name_array_by_id($album->album_artist);
             }
 
             // Handle includes

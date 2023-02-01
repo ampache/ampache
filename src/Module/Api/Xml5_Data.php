@@ -430,7 +430,7 @@ class Xml5_Data
                         $string .= self::albums(array($object_id), array('songs'), $user, false);
                     } else {
                         $album = new Album($object_id);
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_album_artist_fullname() . "]]></artist>\n</$object_type>\n";
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n</$object_type>\n";
                     }
                     break;
                 case 'song':
@@ -683,13 +683,8 @@ class Xml5_Data
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
 
-            // Do a little check for artist stuff
-            if ($album->get_album_artist_fullname() != "") {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->f_album_artist_name . "]]></artist>\n";
-            } elseif ($album->artist_count != 1) {
-                $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
-            } else {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
+            if ($album->get_artist_fullname() != "") {
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->f_artist_name . "]]></artist>\n";
             }
 
             // Handle includes

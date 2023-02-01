@@ -199,16 +199,6 @@ class Album extends database_object implements library_item
     public $f_artist;
 
     /**
-     * @var string $album_artist_name
-     */
-    public $album_artist_name;
-
-    /**
-     * @var string $f_album_artist_name
-     */
-    public $f_album_artist_name;
-
-    /**
      * @var string $f_album_artist_link
      */
     public $f_album_artist_link;
@@ -290,6 +280,10 @@ class Album extends database_object implements library_item
         $this->song_count        = (int)$this->song_count;
         $this->artist_count      = (int)$this->artist_count;
         $this->song_artist_count = (int)$this->song_artist_count;
+
+        if ($this->album_artist === null && $this->artist_count > 1) {
+            $this->album_artist = 0;
+        }
 
         // finally; set up your formatted name
         $this->f_name = $this->get_fullname();
@@ -561,7 +555,6 @@ class Album extends database_object implements library_item
         }
         // set link and f_link
         $this->get_f_link();
-        $this->get_album_artist_fullname();
         $this->get_artist_fullname();
         $this->get_f_album_artist_link();
         $this->get_f_artist_link();
@@ -607,7 +600,7 @@ class Album extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => ($this->get_album_artist_fullname())
+            'value' => ($this->get_artist_fullname())
         );
         $keywords['album'] = array(
             'important' => true,
@@ -747,7 +740,7 @@ class Album extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
-            if ($this->artist_count == '1') {
+            if ($this->artist_count == 1) {
                 $web_path            = AmpConfig::get('web_path');
                 $artist_fullname     = scrub_out($this->get_artist_fullname());
                 $this->f_artist_link = "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $this->id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>";
@@ -760,13 +753,17 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get item f_artist_name.
+     * Get the album artist fullname.
      * @return string
      */
     public function get_artist_fullname()
     {
         if (!isset($this->f_artist_name)) {
-            if ($this->artist_count == '1') {
+            if ($this->album_artist === 0) {
+                $this->artist_prefix = '';
+                $this->artist_name   = T_('Various');
+                $this->f_artist_name = T_('Various');
+            } elseif ($this->album_artist < 0) {
                 $name_array          = Artist::get_name_array_by_id($this->album_artist);
                 $this->artist_prefix = $name_array['prefix'];
                 $this->artist_name   = $name_array['basename'];
@@ -774,7 +771,7 @@ class Album extends database_object implements library_item
             } else {
                 $this->artist_prefix = '';
                 $this->artist_name   = '';
-                $this->f_artist_name = T_('Various');
+                $this->f_artist_name = '';
             }
         }
 
@@ -857,28 +854,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get item album_artist fullname.
-     * @return string
-     */
-    public function get_album_artist_fullname()
-    {
-        if (!isset($this->f_album_artist_name)) {
-            if ($this->album_artist) {
-                $name_array                = Artist::get_name_array_by_id($this->album_artist);
-                $this->artist_prefix       = $name_array['prefix'];
-                $this->artist_name         = $name_array['basename'];
-                $this->f_album_artist_name = $name_array['name'];
-            } else {
-                $this->artist_prefix       = '';
-                $this->artist_name         = '';
-                $this->f_album_artist_name = '';
-            }
-        }
-
-        return $this->f_album_artist_name;
-    }
-
-    /**
      * Get the primary album_artist
      * @param int $album_id
      * @return int|null
@@ -899,18 +874,18 @@ class Album extends database_object implements library_item
      * Get item album_artist name.
      * @return string
      */
-    public function get_album_artist_name()
+    public function get_artist_name()
     {
-        if (!isset($this->album_artist_name)) {
+        if (!isset($this->artist_name)) {
             if ($this->album_artist) {
                 $album_artist            = new Artist($this->album_artist);
-                $this->album_artist_name = $album_artist->name;
+                $this->artist_name = $album_artist->name;
             } else {
-                $this->album_artist_name = '';
+                $this->artist_name = '';
             }
         }
 
-        return $this->album_artist_name;
+        return $this->artist_name;
     }
 
     /**
@@ -1106,7 +1081,9 @@ class Album extends database_object implements library_item
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->get_album_artist_fullname() ?? $this->get_artist_fullname()) . '] ' . $this->get_fullname();
+            $title = ($this->get_artist_fullname() != "")
+                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+                : $this->get_fullname();
             Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }
@@ -1134,8 +1111,8 @@ class Album extends database_object implements library_item
         $subtitle       = $data['subtitle'] ?? null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
-        if (array_key_exists('album_artist_name', $data) && !empty($data['album_artist_name'])) {
-            $album_artist = Artist::check($data['album_artist_name']);
+        if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {
+            $album_artist = Artist::check($data['artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
             $this->album_artist = $album_artist;
         }

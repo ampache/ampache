@@ -4269,11 +4269,9 @@ abstract class Catalog extends database_object
         // Do the various check
         $album_object = new Album($song->album);
         $album_object->format();
-        if ($album_object->get_album_artist_fullname() != "") {
-            $artist = $album_object->f_album_artist_name;
-        } elseif ($album_object->artist_count != 1) {
-            $artist = $various_artist;
-        }
+        $artist         = ($album_object->get_artist_fullname() != "")
+            ? $album_object->f_artist_name
+            : $various_artist;
         $disk           = self::sort_clean_name($song->disk, '%d');
         $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
         $barcode        = self::sort_clean_name($album_object->barcode, '%b');

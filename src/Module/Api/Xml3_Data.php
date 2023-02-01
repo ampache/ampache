@@ -402,7 +402,7 @@ class Xml3_Data
             if ($album->artist_count != 1) {
                 $string .= "\t<artist id=\"0\"><![CDATA[Various]]></artist>\n";
             } else {
-                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_album_artist_name() . "]]></artist>\n";
+                $string .= "\t<artist id=\"$album->album_artist\"><![CDATA[" . $album->get_artist_name() . "]]></artist>\n";
             }
 
             // Handle includes
