@@ -92,7 +92,8 @@ final class UserUpdateMethod
         $clear_stats          = $input['clear_stats'] ?? null;
 
         // identify the user to modify
-        $user_id = $user->getId() ?? 0;
+        $update_user = User::get_from_username($username);
+        $user_id     = $update_user->getId();
 
         if ($password && Access::check('interface', 100, $user_id)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -105,45 +106,45 @@ final class UserUpdateMethod
 
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
-                $user->update_password('', $password);
+                $update_user->update_password('', $password);
             }
             if ($fullname) {
-                $user->update_fullname($fullname);
+                $update_user->update_fullname($fullname);
             }
             if (Mailer::validate_address($email)) {
-                $user->update_email($email);
+                $update_user->update_email($email);
             }
             if ($website) {
-                $user->update_website($website);
+                $update_user->update_website($website);
             }
             if ($state) {
-                $user->update_state($state);
+                $update_user->update_state($state);
             }
             if ($city) {
-                $user->update_city($city);
+                $update_user->update_city($city);
             }
             if ($disable === '1') {
-                $userStateToggler->disable($user);
+                $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {
-                $userStateToggler->enable($user);
+                $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {
-                $user->update_catalog_filter_group((int)$catalog_filter_group);
+                $update_user->update_catalog_filter_group((int)$catalog_filter_group);
             }
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
             if ($fullname_public !== null) {
-                $user->update_fullname_public($fullname_public);
+                $update_user->update_fullname_public($fullname_public);
             }
             if ($reset_apikey) {
-                static::getUserKeyGenerator()->generateApikey($user);
+                static::getUserKeyGenerator()->generateApikey($update_user);
             }
             if ($reset_streamtoken) {
-                static::getUserKeyGenerator()->generateStreamToken($user);
+                static::getUserKeyGenerator()->generateStreamToken($update_user);
             }
             if ($clear_stats) {
-                Stats::clear($user->id);
+                Stats::clear($update_user->id);
             }
             Api::message('successfully updated: ' . $username, $input['api_format']);
 
