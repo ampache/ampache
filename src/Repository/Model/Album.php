@@ -763,7 +763,7 @@ class Album extends database_object implements library_item
                 $this->artist_prefix = '';
                 $this->artist_name   = T_('Various');
                 $this->f_artist_name = T_('Various');
-            } elseif ($this->album_artist < 0) {
+            } elseif ($this->album_artist > 0) {
                 $name_array          = Artist::get_name_array_by_id($this->album_artist);
                 $this->artist_prefix = $name_array['prefix'];
                 $this->artist_name   = $name_array['basename'];
