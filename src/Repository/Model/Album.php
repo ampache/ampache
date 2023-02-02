@@ -716,8 +716,7 @@ class Album extends database_object implements library_item
         if (!isset($this->f_artist_link)) {
             if ($this->album_artist === 0) {
                 $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
-            }
-            if ($this->artist_count == 1) {
+            } elseif ($this->album_artist !== null) {
                 $this->f_artist_link = '';
                 $web_path            = AmpConfig::get('web_path');
                 if (empty($this->album_artists)) {
