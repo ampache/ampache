@@ -62,9 +62,8 @@ final class Followers5Method
             return false;
         }
         $username = $input['username'];
-
-        $user     = User::get_from_username($username);
-        if (!$user instanceof User || $user->id < 1) {
+        $leader   = User::get_from_username($username);
+        if (!$leader instanceof User || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
@@ -72,7 +71,7 @@ final class Followers5Method
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowers($user->getId());
+        $results = static::getUserFollowerRepository()->getFollowers($leader->getId());
         if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 

@@ -55,6 +55,9 @@ final class FlagMethod
      */
     public static function flag(array $input, ?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -67,10 +70,6 @@ final class FlagMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
-        $user_id   = null;
-        if ($user instanceof User && $user->id > 0) {
-            $user_id = $user->id;
-        }
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -91,7 +90,7 @@ final class FlagMethod
                 return false;
             }
             $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user_id)) {
+            if ($userflag->set_flag($flag, $user->id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api::message($message . $object_id, $input['api_format']);
 

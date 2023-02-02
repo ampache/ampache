@@ -60,9 +60,10 @@ final class UserDeleteMethod
             return false;
         }
         $username = $input['username'];
+        $del_user = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user instanceof User && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-            $user->delete();
+        if ($del_user instanceof User && $user->username != $del_user->username && !Access::check('interface', 100, $user->id)) {
+            $del_user->delete();
             Api::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 

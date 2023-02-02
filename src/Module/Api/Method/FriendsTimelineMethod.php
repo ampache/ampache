@@ -53,6 +53,9 @@ final class FriendsTimelineMethod
      */
     public static function friends_timeline(array $input, ?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -62,13 +65,11 @@ final class FriendsTimelineMethod
         $since = (int) ($input['since']);
 
         $results = array();
-        if ($user instanceof User) {
-            $results = static::getUseractivityRepository()->getFriendsActivities(
-                $user->getId(),
-                $limit,
-                $since
-            );
-        }
+        $results = static::getUseractivityRepository()->getFriendsActivities(
+            $user->getId(),
+            $limit,
+            $since
+        );
         if (empty($results)) {
             Api::empty('activity', $input['api_format']);
 

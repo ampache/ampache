@@ -55,6 +55,9 @@ final class TimelineMethod
      */
     public static function timeline(array $input, ?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -68,21 +71,19 @@ final class TimelineMethod
         $since    = (int) ($input['since']);
 
         if (!empty($username)) {
-            if ($user instanceof User) {
-                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $results = static::getUseractivityRepository()->getActivities(
-                        $user->getId(),
-                        $limit,
-                        $since
-                    );
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json_Data::timeline($results);
-                            break;
-                        default:
-                            echo Xml_Data::timeline($results);
-                    }
+            if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                $results = static::getUseractivityRepository()->getActivities(
+                    $user->getId(),
+                    $limit,
+                    $since
+                );
+                ob_end_clean();
+                switch ($input['api_format']) {
+                    case 'json':
+                        echo Json_Data::timeline($results);
+                        break;
+                    default:
+                        echo Xml_Data::timeline($results);
                 }
             }
         }

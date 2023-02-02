@@ -55,6 +55,9 @@ final class Flag4Method
      */
     public static function flag(array $input, ?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
 
@@ -68,7 +71,7 @@ final class Flag4Method
         $object_id = $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
         $user_id   = null;
-        if ($user instanceof User && $user->id > 0) {
+        if ($user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
