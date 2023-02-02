@@ -60,8 +60,7 @@ final class UserDelete4Method
         $username = $input['username'];
         $del_user = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($del_user instanceof User && $del_user->username !== $user->username && !Access::check('interface', 100, $del_user->id)) {
-            $del_user->delete();
+        if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api4::message('success', 'successfully deleted: ' . $username, null, $input['api_format']);
 
             return true;
