@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -82,7 +81,7 @@ final class UserUpdate4Method
         $update_user = User::get_from_username($username);
         $user_id     = $update_user->id;
 
-        if ($password && Access::check('interface', 100, $user_id)) {
+        if ($password && $update_user->access == 100) {
             Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
 
             return false;

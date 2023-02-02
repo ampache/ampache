@@ -232,6 +232,7 @@ class Api5
      * internally.
      * @param string $filter
      * @param integer|string|boolean|null $value
+     * @param Browse|null $browse
      * @return boolean
      */
     public static function set_filter($filter, $value, ?Browse $browse = null): bool

@@ -196,19 +196,19 @@ class Xml4_Data
 
         if (is_array($tags)) {
             $atags = array();
-            foreach ($tags as $tag_id => $data) {
-                if (array_key_exists($data['id'], $atags)) {
-                    $atags[$data['id']]['count']++;
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = array(
-                        'name' => $data['name'],
+                    $atags[$tag['id']] = array(
+                        'name' => $tag['name'],
                         'count' => 1
                     );
                 }
             }
 
-            foreach ($atags as $tag => $data) {
-                $string .= "\t<tag id=\"" . $tag . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
+            foreach ($atags as $tag_id => $data) {
+                $string .= "\t<tag id=\"" . $tag_id . "\" count=\"" . $data['count'] . "\" ><![CDATA[" . $data['name'] . "]]></tag>\n";
             }
         }
 

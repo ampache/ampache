@@ -210,19 +210,19 @@ class Xml_Data
 
         if (!empty($tags)) {
             $atags = array();
-            foreach ($tags as $tag_id => $data) {
-                if (array_key_exists($data['id'], $atags)) {
-                    $atags[$data['id']]['count']++;
+            foreach ($tags as $tag) {
+                if (array_key_exists($tag['id'], $atags)) {
+                    $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$data['id']] = array(
-                        'name' => $data['name'],
+                    $atags[$tag['id']] = array(
+                        'name' => $tag['name'],
                         'count' => 1
                     );
                 }
             }
 
-            foreach ($atags as $tag => $data) {
-                $string .= "\t<genre id=\"" . $tag . "\">\t<name><![CDATA[" . $data['name'] . "]]></name></genre>\n";
+            foreach ($atags as $tag_id => $data) {
+                $string .= "\t<genre id=\"" . $tag_id . "\">\t<name><![CDATA[" . $data['name'] . "]]></name></genre>\n";
             }
         }
 

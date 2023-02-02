@@ -27,8 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserDelete4Method

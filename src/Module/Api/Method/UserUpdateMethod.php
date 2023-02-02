@@ -31,7 +31,6 @@ use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -95,7 +94,7 @@ final class UserUpdateMethod
         $update_user = User::get_from_username($username);
         $user_id     = $update_user->getId();
 
-        if ($password && Access::check('interface', 100, $user_id)) {
+        if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
 
