@@ -51,9 +51,6 @@ final class BookmarksMethod
      */
     public static function bookmarks(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         $results = static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);

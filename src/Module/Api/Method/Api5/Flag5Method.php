@@ -54,9 +54,6 @@ final class Flag5Method
      */
     public static function flag(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (!AmpConfig::get('ratings')) {
             Api5::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
 

@@ -49,9 +49,6 @@ final class ToggleFollow5Method
      */
     public static function toggle_follow(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 

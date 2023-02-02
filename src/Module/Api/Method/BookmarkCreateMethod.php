@@ -58,9 +58,6 @@ final class BookmarkCreateMethod
      */
     public static function bookmark_create(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
         }

@@ -55,9 +55,6 @@ final class TimelineMethod
      */
     public static function timeline(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
