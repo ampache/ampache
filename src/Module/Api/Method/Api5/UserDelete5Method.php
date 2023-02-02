@@ -59,10 +59,10 @@ final class UserDelete5Method
             return false;
         }
         $username = $input['username'];
-        $user     = User::get_from_username($username);
+        $del_user = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-            $user->delete();
+        if ($del_user instanceof User && $del_user->username !== $user->username && !Access::check('interface', 100, $del_user->id)) {
+            $del_user->delete();
             Api5::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 
