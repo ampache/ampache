@@ -40,10 +40,11 @@ final class Playlists3Method
      * playlists
      * This returns playlists based on the specified filter
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlists(array $input, ?User $user)
+    public static function playlists(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('playlist');

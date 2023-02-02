@@ -45,11 +45,11 @@ final class PodcastDelete5Method
      * Delete an existing podcast.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of podcast to delete
      * @return boolean
      */
-    public static function podcast_delete(array $input, ?User $user): bool
+    public static function podcast_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

@@ -45,12 +45,12 @@ final class LastShouts4Method
      * This get the latest posted shouts
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts(array $input, ?User $user): bool
+    public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
@@ -60,6 +60,7 @@ final class LastShouts4Method
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);

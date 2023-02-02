@@ -56,7 +56,7 @@ final class StatsMethod
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
@@ -65,7 +65,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input, ?User $user): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;

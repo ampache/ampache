@@ -40,9 +40,9 @@ final class TagArtists3Method
      * tag_artists
      * This returns the artists associated with the tag in question as defined by the UID
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function tag_artists(array $input, ?User $user)
+    public static function tag_artists(array $input, User $user)
     {
         $results = Tag::get_tag_objects('artist', $input['filter']);
         if (!empty($results)) {

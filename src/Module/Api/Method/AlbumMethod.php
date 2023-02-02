@@ -64,7 +64,7 @@ final class AlbumMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
      * @return ResponseInterface
@@ -77,7 +77,7 @@ final class AlbumMethod implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        ?User $user
+        User $user
     ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 
@@ -88,7 +88,7 @@ final class AlbumMethod implements MethodInterface
         }
 
         $album = $this->modelFactory->createAlbum((int) $objectId);
-        if ($album->isNew() || !$user instanceof User) {
+        if ($album->isNew()) {
             throw new ResultEmptyException((string) $objectId);
         }
         $include = [];

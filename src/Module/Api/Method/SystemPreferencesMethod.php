@@ -44,10 +44,10 @@ final class SystemPreferencesMethod
      * Get your system preferences
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * @return boolean
      */
-    public static function system_preferences(array $input, ?User $user): bool
+    public static function system_preferences(array $input, User $user): bool
     {
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

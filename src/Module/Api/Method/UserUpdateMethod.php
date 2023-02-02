@@ -51,7 +51,7 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username          = (string) $username
      * password          = (string) hash('sha256', $password)) //optional
      * fullname          = (string) $fullname //optional
@@ -68,7 +68,7 @@ final class UserUpdateMethod
      * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      * @return boolean
      */
-    public static function user_update(array $input, ?User $user): bool
+    public static function user_update(array $input, User $user): bool
     {
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

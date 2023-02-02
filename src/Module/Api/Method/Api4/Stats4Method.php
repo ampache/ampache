@@ -54,7 +54,7 @@ final class Stats4Method
      * but should be updated to follow the current input values
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type     = (string)  'song'|'album'|'artist'
      * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
@@ -63,7 +63,7 @@ final class Stats4Method
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input, ?User $user): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;

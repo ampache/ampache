@@ -40,9 +40,9 @@ final class PlaylistSongs3Method
      * playlist_songs
      * This returns the songs for a playlist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist_songs(array $input, ?User $user)
+    public static function playlist_songs(array $input, User $user)
     {
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();

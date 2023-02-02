@@ -41,10 +41,11 @@ final class PlaylistCreate3Method
      * playlist_create
      * This create a new playlist and return it
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist_create(array $input, ?User $user)
+    public static function playlist_create(array $input, User $user)
     {
+        unset($user);
         $name = $input['name'];
         $type = $input['type'];
         if ($type != 'private') {

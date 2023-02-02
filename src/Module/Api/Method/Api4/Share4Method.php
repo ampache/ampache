@@ -45,11 +45,11 @@ final class Share4Method
      * Get the share from it's id.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share(array $input, ?User $user): bool
+    public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
@@ -59,6 +59,7 @@ final class Share4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $results = array((int) $input['filter']);
 
         ob_end_clean();

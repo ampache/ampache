@@ -46,12 +46,12 @@ final class FriendsTimelineMethod
      * This get current user friends timeline
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function friends_timeline(array $input, ?User $user): bool
+    public static function friends_timeline(array $input, User $user): bool
     {
         if (!$user instanceof User) {
             return false;
@@ -64,7 +64,6 @@ final class FriendsTimelineMethod
         $limit = (int) ($input['limit']);
         $since = (int) ($input['since']);
 
-        $results = array();
         $results = static::getUseractivityRepository()->getFriendsActivities(
             $user->getId(),
             $limit,

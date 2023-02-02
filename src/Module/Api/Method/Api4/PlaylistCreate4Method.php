@@ -46,12 +46,12 @@ final class PlaylistCreate4Method
      * This create a new playlist and return it
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * name = (string) Playlist name
      * type = (string) 'public'|'private'
      * @return boolean
      */
-    public static function playlist_create(array $input, ?User $user): bool
+    public static function playlist_create(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('name', 'type'), self::ACTION)) {
             return false;

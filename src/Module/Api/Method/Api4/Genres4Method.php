@@ -44,14 +44,15 @@ final class Genres4Method
      * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function genres(array $input, ?User $user)
+    public static function genres(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('tag');

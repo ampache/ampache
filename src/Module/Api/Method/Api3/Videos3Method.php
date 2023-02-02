@@ -40,10 +40,11 @@ final class Videos3Method
      * videos
      * This returns video objects!
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function videos(array $input, ?User $user)
+    public static function videos(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('video');

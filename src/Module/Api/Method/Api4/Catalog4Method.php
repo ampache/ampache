@@ -43,11 +43,11 @@ final class Catalog4Method
      * Get the catalogs from it's id.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input, ?User $user): bool
+    public static function catalog(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

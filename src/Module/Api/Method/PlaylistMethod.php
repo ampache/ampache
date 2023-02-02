@@ -48,11 +48,11 @@ final class PlaylistMethod
      * This returns a single playlist
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist(array $input, ?User $user): bool
+    public static function playlist(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

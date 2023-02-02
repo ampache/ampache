@@ -42,10 +42,11 @@ final class Tag5Method
      * This returns a single genre based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function tag(array $input, ?User $user)
+    public static function tag(array $input, User $user)
     {
+        unset($user);
         Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
     }
 }

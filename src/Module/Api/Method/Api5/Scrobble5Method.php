@@ -45,7 +45,7 @@ final class Scrobble5Method
      * This allows other sources to record play history to Ampache
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
      * album      = (string)  $album_name
@@ -56,7 +56,7 @@ final class Scrobble5Method
      * client     = (string)  $agent //optional
      * @return boolean
      */
-    public static function scrobble(array $input, ?User $user): bool
+    public static function scrobble(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
             return false;

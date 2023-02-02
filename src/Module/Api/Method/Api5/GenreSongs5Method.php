@@ -45,13 +45,13 @@ final class GenreSongs5Method
      * returns the songs for this genre
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_songs(array $input, ?User $user): bool
+    public static function genre_songs(array $input, User $user): bool
     {
         $results = Tag::get_tag_objects('song', $input['filter']);
         if (empty($results)) {

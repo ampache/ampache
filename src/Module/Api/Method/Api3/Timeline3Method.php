@@ -41,10 +41,11 @@ final class Timeline3Method
      * timeline
      * This get an user timeline
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function timeline(array $input, ?User $user)
+    public static function timeline(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             $limit    = (int)($input['limit'] ?? 0);

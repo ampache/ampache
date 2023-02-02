@@ -46,13 +46,13 @@ final class GenreArtistsMethod
      * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists(array $input, ?User $user): bool
+    public static function genre_artists(array $input, User $user): bool
     {
         $results = Tag::get_tag_objects('artist', $input['filter']);
         if (empty($results)) {

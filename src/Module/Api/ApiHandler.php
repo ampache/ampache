@@ -87,6 +87,7 @@ final class ApiHandler implements ApiHandlerInterface
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
         $is_register   = $action == RegisterMethod::ACTION;
+        $is_public     = ($is_handshake || $is_ping || $is_register);
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];
@@ -96,7 +97,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_handshake || $is_ping || $is_register)
+            $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -200,9 +201,7 @@ final class ApiHandler implements ApiHandlerInterface
          */
         if (
             $gatekeeper->sessionExists() === false &&
-            !$is_handshake &&
-            !$is_ping &&
-            !$is_register
+            !$is_public
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -308,9 +307,7 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            !$is_handshake &&
-            !$is_ping &&
-            !$is_register
+            !$is_public
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
@@ -415,6 +412,15 @@ final class ApiHandler implements ApiHandlerInterface
                 $gatekeeper->extendSession();
 
                 return $response;
+            } elseif ($is_public) {
+                call_user_func(
+                    [$handlerClassName, $action],
+                    $input
+                );
+
+                $gatekeeper->extendSession();
+
+                return null;
             } else {
                 call_user_func(
                     [$handlerClassName, $action],

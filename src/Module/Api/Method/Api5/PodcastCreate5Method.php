@@ -47,12 +47,12 @@ final class PodcastCreate5Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
      * @return boolean
      */
-    public static function podcast_create(array $input, ?User $user): bool
+    public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

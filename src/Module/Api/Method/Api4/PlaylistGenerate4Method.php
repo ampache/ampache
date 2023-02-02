@@ -51,7 +51,7 @@ final class PlaylistGenerate4Method
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * mode   = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
      * album  = (integer) $album_id                     //optional
@@ -61,7 +61,7 @@ final class PlaylistGenerate4Method
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
      */
-    public static function playlist_generate(array $input, ?User $user)
+    public static function playlist_generate(array $input, User $user)
     {
         // parameter defaults
         $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];

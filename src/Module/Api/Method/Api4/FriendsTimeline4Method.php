@@ -44,15 +44,12 @@ final class FriendsTimeline4Method
      * This get current user friends timeline
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      */
-    public static function friends_timeline(array $input, ?User $user)
+    public static function friends_timeline(array $input, User $user)
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);

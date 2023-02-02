@@ -39,10 +39,11 @@ final class Tag3Method
      * tag
      * This returns a single tag based on UID
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function tag(array $input, ?User $user)
+    public static function tag(array $input, User $user)
     {
+        unset($user);
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         echo Xml3_Data::tags(array($uid));

@@ -46,13 +46,13 @@ final class PodcastEpisodes5Method
      * This returns the episodes for a podcast
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function podcast_episodes(array $input, ?User $user): bool
+    public static function podcast_episodes(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

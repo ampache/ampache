@@ -43,7 +43,7 @@ final class PreferenceCreate5Method
      * Add a new preference to your server
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * This inserts a new preference into the preference table
      *
      * filter      = (string) preference name
@@ -55,7 +55,7 @@ final class PreferenceCreate5Method
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return boolean
      */
-    public static function preference_create(array $input, ?User $user): bool
+    public static function preference_create(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
             return false;

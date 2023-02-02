@@ -47,12 +47,12 @@ final class GetBookmark5Method
      * Get the bookmark from it's object_id and object_type.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) object_id to find
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function get_bookmark(array $input, ?User $user): bool
+    public static function get_bookmark(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;

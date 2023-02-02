@@ -41,9 +41,9 @@ final class Artists3Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function artists(array $input, ?User $user)
+    public static function artists(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

@@ -44,11 +44,11 @@ final class PlaylistDelete4Method
      * This deletes a playlist
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist_delete(array $input, ?User $user): bool
+    public static function playlist_delete(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

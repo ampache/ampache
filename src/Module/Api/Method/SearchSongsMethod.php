@@ -46,13 +46,13 @@ final class SearchSongsMethod
      * This searches the songs and returns... songs
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function search_songs(array $input, ?User $user): bool
+    public static function search_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

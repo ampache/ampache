@@ -47,11 +47,11 @@ final class PodcastEpisodeMethod
      * Get the podcast_episode from it's id.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (integer) podcast_episode ID number
      * @return boolean
      */
-    public static function podcast_episode(array $input, ?User $user): bool
+    public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

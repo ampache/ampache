@@ -39,10 +39,11 @@ final class Video3Method
      * video
      * This returns a single video
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function video(array $input, ?User $user)
+    public static function video(array $input, User $user)
     {
+        unset($user);
         $video_id = scrub_in($input['filter']);
 
         echo Xml3_Data::videos(array($video_id));

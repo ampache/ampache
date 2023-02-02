@@ -42,10 +42,11 @@ final class TagSongs5Method
      * returns the songs for this genre
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function tag_songs(array $input, ?User $user)
+    public static function tag_songs(array $input, User $user)
     {
+        unset($user);
         Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
     }
 }

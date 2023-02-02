@@ -40,10 +40,11 @@ final class PlaylistAddSong3Method
      * playlist_add_song
      * This add a song to a playlist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist_add_song(array $input, ?User $user)
+    public static function playlist_add_song(array $input, User $user)
     {
+        unset($user);
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];

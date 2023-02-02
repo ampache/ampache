@@ -44,12 +44,12 @@ final class Artist4Method
      * This returns a single artist based on the UID of said artist
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (array) 'albums'|'songs' //optional
      * @return boolean
      */
-    public static function artist(array $input, ?User $user): bool
+    public static function artist(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

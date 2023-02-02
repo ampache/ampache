@@ -47,17 +47,14 @@ final class Flag4Method
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag(array $input, ?User $user): bool
+    public static function flag(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
 

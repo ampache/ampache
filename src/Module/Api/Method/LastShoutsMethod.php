@@ -46,12 +46,12 @@ final class LastShoutsMethod
      * This get the latest posted shouts
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts(array $input, ?User $user): bool
+    public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,6 +61,7 @@ final class LastShoutsMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);

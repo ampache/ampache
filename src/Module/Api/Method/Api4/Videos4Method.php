@@ -42,13 +42,13 @@ final class Videos4Method
      * This returns video objects!
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function videos(array $input, ?User $user)
+    public static function videos(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

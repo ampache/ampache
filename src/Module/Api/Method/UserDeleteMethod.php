@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserDeleteMethod
@@ -47,11 +46,11 @@ final class UserDeleteMethod
      * Takes the username in parameter.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input, ?User $user): bool
+    public static function user_delete(array $input, User $user): bool
     {
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

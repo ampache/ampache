@@ -48,7 +48,7 @@ final class UserUpdate4Method
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * @param User|null $update_user
+     * @param User $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -60,9 +60,9 @@ final class UserUpdate4Method
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
-    public static function user_update(array $input, ?User $update_user): bool
+    public static function user_update(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, $update_user->id, 'user_update', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_update', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), 'user_update')) {

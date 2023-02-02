@@ -30,7 +30,6 @@ use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
 
 /**
  * Class PingMethod
@@ -47,10 +46,9 @@ final class Ping4Method
      * of the server is, and what version it is running/compatible with
      *
      * @param array $input
-     * @param User|null $user
      * auth = (string) //optional
      */
-    public static function ping(array $input, ?User $user)
+    public static function ping(array $input)
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);
@@ -92,9 +90,7 @@ final class Ping4Method
             $results = array_merge($results, $countarray);
         }
 
-        if ($user instanceof User) {
-            debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . " by: " . $user->username, 5);
-        }
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

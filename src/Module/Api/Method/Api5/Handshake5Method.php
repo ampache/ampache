@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -33,6 +32,7 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -52,7 +52,6 @@ final class Handshake5Method
      * Takes a timestamp, auth key, and username.
      *
      * @param array $input
-     * @param User|null $user
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
@@ -61,9 +60,8 @@ final class Handshake5Method
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function handshake(array $input, ?User $user): bool
+    public static function handshake(array $input): bool
     {
-        unset($user);
         $now_time   = time();
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];

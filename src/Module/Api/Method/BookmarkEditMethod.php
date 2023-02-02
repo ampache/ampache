@@ -48,7 +48,7 @@ final class BookmarkEditMethod
      * Edit a placeholder for the current media that you can return to later.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
@@ -56,7 +56,7 @@ final class BookmarkEditMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_edit(array $input, ?User $user): bool
+    public static function bookmark_edit(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;

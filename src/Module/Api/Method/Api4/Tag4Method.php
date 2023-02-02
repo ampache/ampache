@@ -42,11 +42,11 @@ final class Tag4Method
      * This returns a single tag based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Tag
      * @return boolean
      */
-    public static function tag(array $input, ?User $user): bool
+    public static function tag(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

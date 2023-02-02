@@ -40,8 +40,9 @@ final class Localplay3Method
      * localplay
      * This is for controling localplay
      */
-    public static function localplay(array $input, ?User $user)
+    public static function localplay(array $input, User $user): bool
     {
+        unset($user);
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (!$localplay->connect()) {

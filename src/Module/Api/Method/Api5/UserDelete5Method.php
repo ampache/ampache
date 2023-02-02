@@ -46,11 +46,11 @@ final class UserDelete5Method
      * Takes the username in parameter.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input, ?User $user): bool
+    public static function user_delete(array $input, User $user): bool
     {
         if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

@@ -40,9 +40,9 @@ final class ToggleFollow3Method
      * toggle_follow
      * This follow/unfollow an user
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function toggle_follow(array $input, ?User $user)
+    public static function toggle_follow(array $input, User $user)
     {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];

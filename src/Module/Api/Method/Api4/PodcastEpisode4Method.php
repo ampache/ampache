@@ -46,11 +46,11 @@ final class PodcastEpisode4Method
      * Get the podcast_episode from it's id.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (integer) podcast_episode ID number
      * @return boolean
      */
-    public static function podcast_episode(array $input, ?User $user): bool
+    public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);

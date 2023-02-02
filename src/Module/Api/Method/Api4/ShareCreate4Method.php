@@ -55,7 +55,7 @@ final class ShareCreate4Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter      = (string) object_id
      * type        = (string) object_type
      * description = (string) description (will be filled for you if empty) //optional
@@ -64,7 +64,7 @@ final class ShareCreate4Method
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input, ?User $user): bool
+    public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
@@ -74,6 +74,7 @@ final class ShareCreate4Method
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
 
         $object_id   = $input['filter'];
         $object_type = $input['type'];

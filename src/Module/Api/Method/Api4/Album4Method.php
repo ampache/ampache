@@ -44,12 +44,12 @@ final class Album4Method
      * This returns a single album based on the UID provided
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) UID of Album
      * include = (array) 'songs' //optional
      * @return boolean
      */
-    public static function album(array $input, ?User $user): bool
+    public static function album(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

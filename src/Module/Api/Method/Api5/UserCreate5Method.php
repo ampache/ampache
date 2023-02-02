@@ -44,7 +44,7 @@ final class UserCreate5Method
      * Requires the username, password and email.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
@@ -52,7 +52,7 @@ final class UserCreate5Method
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input, ?User $user): bool
+    public static function user_create(array $input, User $user): bool
     {
         if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

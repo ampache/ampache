@@ -40,10 +40,11 @@ final class PlaylistDelete3Method
      * playlist_delete
      * This delete a playlist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist_delete(array $input, ?User $user)
+    public static function playlist_delete(array $input, User $user)
     {
+        unset($user);
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access()) {

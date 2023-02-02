@@ -39,9 +39,9 @@ final class Artist3Method
      * artist
      * This returns a single artist based on the UID of said artist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function artist(array $input, ?User $user)
+    public static function artist(array $input, User $user)
     {
         $uid     = scrub_in($input['filter']);
         $include = [];

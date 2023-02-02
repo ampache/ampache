@@ -53,14 +53,12 @@ final class Handshake3Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      * @param array $input
-     * @param User|null $user
      * @return boolean
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function handshake(array $input, ?User $user): bool
+    public static function handshake(array $input): bool
     {
-        unset($user);
         $now_time   = time();
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];

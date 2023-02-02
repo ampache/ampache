@@ -91,7 +91,7 @@ class Xml_Data
      * @param  integer $limit Set a limit on your results
      * @return boolean
      */
-    public static function set_limit($limit)
+    public static function set_limit($limit): bool
     {
         if (!$limit) {
             return false;
@@ -110,7 +110,7 @@ class Xml_Data
      * @param  string  $type Xml_Data type
      * @return boolean
      */
-    public static function set_type($type)
+    public static function set_type($type): bool
     {
         if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
             return false;
@@ -133,7 +133,7 @@ class Xml_Data
      * @param  string $type
      * @return string return error message xml
      */
-    public static function error($code, $string, $action, $type)
+    public static function error($code, $string, $action, $type): string
     {
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
@@ -150,7 +150,7 @@ class Xml_Data
      * @param  array  $return_data
      * @return string return success message xml
      */
-    public static function success($string, $return_data = array())
+    public static function success($string, $return_data = array()): string
     {
         $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
         foreach ($return_data as $title => $data) {
@@ -165,7 +165,7 @@ class Xml_Data
      *
      * This generates an empty root element
      */
-    public static function empty()
+    public static function empty(): string
     {
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
     } // empty
@@ -179,7 +179,7 @@ class Xml_Data
      * @return string return xml
      * @see _header()
      */
-    public static function header($title = null)
+    public static function header($title = null): string
     {
         return self::_header($title);
     } // header
@@ -192,7 +192,7 @@ class Xml_Data
      * @return string return xml
      * @see _footer()
      */
-    public static function footer()
+    public static function footer(): string
     {
         return self::_footer();
     } // footer
@@ -204,7 +204,7 @@ class Xml_Data
      * @param  array  $tags
      * @return string
      */
-    private static function genre_string($tags)
+    private static function genre_string($tags): string
     {
         $string = '';
 
@@ -238,7 +238,7 @@ class Xml_Data
      * @param  string  $type
      * @return string
      */
-    public static function output_xml_from_array($array, $callback = false, $type = '')
+    public static function output_xml_from_array($array, $callback = false, $type = ''): string
     {
         $string = '';
 
@@ -322,7 +322,7 @@ class Xml_Data
      * @param  string|boolean $object
      * @return string         return xml
      */
-    public static function keyed_array($array, $callback = false, $object = false)
+    public static function keyed_array($array, $callback = false, $object = false): string
     {
         $string = '';
         // Foreach it
@@ -364,7 +364,7 @@ class Xml_Data
      * @param  string $object_type
      * @return string return xml
      */
-    public static function object_array($array, $item, $object_type = '')
+    public static function object_array($array, $item, $object_type = ''): string
     {
         $string = ($object_type == '') ? '' : "<$object_type>\n";
         // Foreach it
@@ -394,7 +394,7 @@ class Xml_Data
      * @param  boolean $include include episodes from podcasts or tracks in a playlist
      * @return string  return xml
      */
-    public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false)
+    public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -511,7 +511,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function licenses($licenses, $user)
+    public static function licenses($licenses, $user): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -535,7 +535,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function labels($labels, $user)
+    public static function labels($labels, $user): string
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
@@ -561,7 +561,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function live_streams($live_streams, $user)
+    public static function live_streams($live_streams, $user): string
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
@@ -586,7 +586,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function genres($tags, $user)
+    public static function genres($tags, $user): string
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -614,7 +614,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function artists($artists, $include, $user, $full_xml = true)
+    public static function artists($artists, $include, $user, $full_xml = true): string
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -659,7 +659,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function albums($albums, $include, $user, $full_xml = true)
+    public static function albums($albums, $include, $user, $full_xml = true): string
     {
         if ($include == null || $include == '') {
             $include = array();
@@ -710,7 +710,7 @@ class Xml_Data
      * @param  User    $user
      * @return string  return xml
      */
-    public static function playlists($playlists, $user)
+    public static function playlists($playlists, $user): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -771,7 +771,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function shares($shares, $user)
+    public static function shares($shares, $user): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -794,7 +794,7 @@ class Xml_Data
      * @param  integer[] $bookmarks Bookmark id's to include
      * @return string    return xml
      */
-    public static function bookmarks($bookmarks)
+    public static function bookmarks($bookmarks): string
     {
         $string = "";
         foreach ($bookmarks as $bookmark_id) {
@@ -814,7 +814,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function catalogs($catalogs, $user)
+    public static function catalogs($catalogs, $user): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -840,7 +840,7 @@ class Xml_Data
      * @param  boolean   $episodes include the episodes of the podcast // optional
      * @return string    return xml
      */
-    public static function podcasts($podcasts, $user, $episodes = false)
+    public static function podcasts($podcasts, $user, $episodes = false): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -877,7 +877,7 @@ class Xml_Data
      * @param  boolean   $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true)
+    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true): string
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
@@ -907,7 +907,7 @@ class Xml_Data
      * @param boolean $full_xml
      * @return string return xml
      */
-    public static function songs($songs, $user, $full_xml = true)
+    public static function songs($songs, $user, $full_xml = true): string
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -974,7 +974,7 @@ class Xml_Data
      * @param  User      $user
      * @return string    return xml
      */
-    public static function videos($videos, $user)
+    public static function videos($videos, $user): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -1005,7 +1005,7 @@ class Xml_Data
      * @param  User  $user
      * @return string   return xml
      */
-    public static function democratic($object_ids, $user)
+    public static function democratic($object_ids, $user): string
     {
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -1048,7 +1048,7 @@ class Xml_Data
      * @param  boolean $fullinfo
      * @return string  return xml
      */
-    public static function user(User $user, $fullinfo)
+    public static function user(User $user, $fullinfo): string
     {
         $user->format();
         $string = "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n";
@@ -1072,7 +1072,7 @@ class Xml_Data
      * @param  integer[] $users User identifier list
      * @return string    return xml
      */
-    public static function users($users)
+    public static function users($users): string
     {
         $string = "";
         foreach ($users as $user_id) {
@@ -1091,7 +1091,7 @@ class Xml_Data
      * @param  integer[] $shouts Shout identifier list
      * @return string    return xml
      */
-    public static function shouts($shouts)
+    public static function shouts($shouts): string
     {
         $string = "";
         foreach ($shouts as $shout_id) {
@@ -1112,7 +1112,7 @@ class Xml_Data
      * @param  boolean $full_xml
      * @return string
      */
-    public static function output_xml($string, $full_xml = true)
+    public static function output_xml($string, $full_xml = true): string
     {
         $xml = "";
         if ($full_xml) {
@@ -1144,7 +1144,7 @@ class Xml_Data
      * @param  integer[] $activities Activity identifier list
      * @return string    return xml
      */
-    public static function timeline($activities)
+    public static function timeline($activities): string
     {
         $string = "";
         foreach ($activities as $activity_id) {
@@ -1170,7 +1170,7 @@ class Xml_Data
      * @param  string $date publish date
      * @return string RSS feed xml
      */
-    public static function rss_feed($data, $title, $date = null)
+    public static function rss_feed($data, $title, $date = null): string
     {
         $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
         if (is_int($date)) {
@@ -1196,7 +1196,7 @@ class Xml_Data
      * @param  array   $objects deleted object list
      * @return string  return xml
      */
-    public static function deleted($object_type, $objects)
+    public static function deleted($object_type, $objects): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1232,7 +1232,7 @@ class Xml_Data
      * @param  string $title
      * @return string Header xml tag.
      */
-    private static function _header($title = null)
+    private static function _header($title = null): string
     {
         switch (self::$type) {
             case 'xspf':
@@ -1259,7 +1259,7 @@ class Xml_Data
      *
      * @return string Footer xml tag.
      */
-    private static function _footer()
+    private static function _footer(): string
     {
         switch (self::$type) {
             case 'itunes':

@@ -40,10 +40,11 @@ final class PlaylistRemoveSong3Method
      * playlist_remove_song
      * This remove a song from a playlist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist_remove_song(array $input, ?User $user)
+    public static function playlist_remove_song(array $input, User $user)
     {
+        unset($user);
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $track    = scrub_in($input['track']);

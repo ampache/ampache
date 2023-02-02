@@ -47,12 +47,12 @@ final class PodcastCreate4Method
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
      * @return boolean
      */
-    public static function podcast_create(array $input, ?User $user): bool
+    public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);

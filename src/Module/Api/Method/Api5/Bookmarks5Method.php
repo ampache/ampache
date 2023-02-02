@@ -45,14 +45,11 @@ final class Bookmarks5Method
      * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * @return boolean
      */
-    public static function bookmarks(array $input, ?User $user): bool
+    public static function bookmarks(array $input, User $user): bool
     {
-        if (!$user instanceof User) {
-            return false;
-        }
         $results = static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);

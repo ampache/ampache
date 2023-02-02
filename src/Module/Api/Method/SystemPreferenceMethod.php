@@ -44,11 +44,11 @@ final class SystemPreferenceMethod
      * Get your system preferences by name
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference(array $input, ?User $user): bool
+    public static function system_preference(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

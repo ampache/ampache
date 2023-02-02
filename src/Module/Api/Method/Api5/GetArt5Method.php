@@ -47,13 +47,13 @@ final class GetArt5Method
      * Get an art image.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * id       = (string) $object_id
      * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
      * @return boolean
      */
-    public static function get_art(array $input, ?User $user): bool
+    public static function get_art(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);

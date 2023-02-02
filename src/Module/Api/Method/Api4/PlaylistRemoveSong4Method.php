@@ -48,14 +48,14 @@ final class PlaylistRemoveSong4Method
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
-    public static function playlist_remove_song(array $input, ?User $user): bool
+    public static function playlist_remove_song(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

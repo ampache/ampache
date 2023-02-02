@@ -45,14 +45,14 @@ final class GetSimilar4Method
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type   = (string) 'song'|'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar(array $input, ?User $user): bool
+    public static function get_similar(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;

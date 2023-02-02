@@ -46,7 +46,7 @@ final class ArtistsMethod
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add          = Api::set_filter(date) //optional
@@ -57,7 +57,7 @@ final class ArtistsMethod
      * limit        = (integer) //optional
      * @return boolean
      */
-    public static function artists(array $input, ?User $user): bool
+    public static function artists(array $input, User $user): bool
     {
         $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
         $browse       = Api::getBrowse();

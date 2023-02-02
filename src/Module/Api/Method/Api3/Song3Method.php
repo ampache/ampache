@@ -39,9 +39,9 @@ final class Song3Method
      * song
      * returns a single song
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function song(array $input, ?User $user)
+    public static function song(array $input, User $user)
     {
         $uid  = scrub_in($input['filter']);
 

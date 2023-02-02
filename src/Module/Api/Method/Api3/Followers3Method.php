@@ -40,10 +40,11 @@ final class Followers3Method
      * followers
      * This get an user followers
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function followers(array $input, ?User $user)
+    public static function followers(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {

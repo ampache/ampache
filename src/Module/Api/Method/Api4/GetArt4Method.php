@@ -47,12 +47,12 @@ final class GetArt4Method
      * Get an art image.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * id   = (string) $object_id
      * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast'
      * @return boolean
      */
-    public static function get_art(array $input, ?User $user): bool
+    public static function get_art(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);

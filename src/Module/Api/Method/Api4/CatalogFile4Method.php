@@ -52,13 +52,13 @@ final class CatalogFile4Method
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
      * @return boolean
      */
-    public static function catalog_file(array $input, ?User $user): bool
+    public static function catalog_file(array $input, User $user): bool
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {

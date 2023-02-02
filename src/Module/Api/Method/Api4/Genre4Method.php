@@ -44,15 +44,16 @@ final class Genre4Method
      * This returns a single genre based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre(array $input, ?User $user): bool
+    public static function genre(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {

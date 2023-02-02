@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\System\Session;
-use Ampache\Repository\Model\User;
 
 /**
  * Class Ping5Method
@@ -45,11 +44,10 @@ final class Ping5Method
      * of the server is, and what version it is running/compatible with
      *
      * @param array $input
-     * @param User|null $user
      * auth    = (string) //optional
      * version = (string) $version //optional
      */
-    public static function ping(array $input, ?User $user)
+    public static function ping(array $input)
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
@@ -65,9 +63,7 @@ final class Ping5Method
             $results = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)), $results, Api5::server_details($input['auth']));
         }
 
-        if ($user instanceof User) {
-            debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . " by: " . $user->username, 5);
-        }
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

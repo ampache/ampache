@@ -59,7 +59,7 @@ final class AdvancedSearch5Method
      * https://ampache.org/api/api-json-methods
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -70,7 +70,7 @@ final class AdvancedSearch5Method
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input, ?User $user): bool
+    public static function advanced_search(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;

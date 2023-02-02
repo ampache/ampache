@@ -234,7 +234,7 @@ class Api5
      * @param integer|string|boolean|null $value
      * @return boolean
      */
-    public static function set_filter($filter, $value, ?Browse $browse = null)
+    public static function set_filter($filter, $value, ?Browse $browse = null): bool
     {
         if (!strlen((string)$value)) {
             return false;
@@ -292,7 +292,7 @@ class Api5
      * @param string $method
      * @return boolean
      */
-    public static function check_parameter($input, $parameters, $method)
+    public static function check_parameter($input, $parameters, $method): bool
     {
         foreach ($parameters as $parameter) {
             if (array_key_exists($parameter, $input) && ($input[$parameter] === 0 || $input[$parameter] === '0')) {
@@ -324,7 +324,7 @@ class Api5
      * @param string $format
      * @return boolean
      */
-    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method, $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
@@ -345,7 +345,7 @@ class Api5
      * @param string $token
      * @return array
      */
-    public static function server_details($token = '')
+    public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';

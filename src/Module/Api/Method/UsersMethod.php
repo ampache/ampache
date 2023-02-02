@@ -46,10 +46,10 @@ final class UsersMethod
      * Get ids and usernames for your site
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * @return boolean
      */
-    public static function users(array $input, ?User $user): bool
+    public static function users(array $input, User $user): bool
     {
         $results = static::getUserRepository()->getValid();
         if (empty($results)) {
@@ -57,6 +57,7 @@ final class UsersMethod
 
             return false;
         }
+        unset($user);
 
         ob_end_clean();
         switch ($input['api_format']) {

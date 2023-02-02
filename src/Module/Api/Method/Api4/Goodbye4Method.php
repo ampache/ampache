@@ -43,15 +43,16 @@ final class Goodbye4Method
      * Destroy session for auth key.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye(array $input, ?User $user): bool
+    public static function goodbye(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
+        unset($user);
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";

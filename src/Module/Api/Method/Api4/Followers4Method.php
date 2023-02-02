@@ -47,11 +47,11 @@ final class Followers4Method
      * Error when user not found or no followers
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function followers(array $input, ?User $user): bool
+    public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
@@ -61,6 +61,7 @@ final class Followers4Method
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);

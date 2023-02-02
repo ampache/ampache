@@ -43,13 +43,13 @@ final class ArtistAlbums4Method
      * This returns the albums of an artist
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums(array $input, ?User $user): bool
+    public static function artist_albums(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

@@ -42,13 +42,13 @@ final class TagArtists4Method
      * This returns the artists associated with the tag in question as defined by the UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_artists(array $input, ?User $user): bool
+    public static function tag_artists(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

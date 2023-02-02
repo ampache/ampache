@@ -44,13 +44,13 @@ final class Rate4Method
      * This rates a library item
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean
      */
-    public static function rate(array $input, ?User $user): bool
+    public static function rate(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);

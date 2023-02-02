@@ -46,11 +46,11 @@ final class Label5Method
      * This returns a single label based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of label
      * @return boolean
      */
-    public static function label(array $input, ?User $user): bool
+    public static function label(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api5::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);

@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\System\Session;
-use Ampache\Repository\Model\User;
 
 /**
  * Class Ping3Method
@@ -42,9 +41,8 @@ final class Ping3Method
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      * @param array $input
-     * @param User|null $user
      */
-    public static function ping(array $input, ?User $user)
+    public static function ping(array $input)
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api3::$version;
         $data_version = (int)substr($version, 0, 1);
@@ -59,9 +57,7 @@ final class Ping3Method
             $results = array_merge(array('session_expire' => date("c", time() + AmpConfig::get('session_length') - 60)), $results);
         }
 
-        if ($user instanceof User) {
-            debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . " by: " . $user->username, 5);
-        }
+        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         echo Xml3_Data::keyed_array($results);

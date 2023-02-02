@@ -44,11 +44,11 @@ final class UserPreference5Method
      * Get your user preference by name
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function user_preference(array $input, ?User $user): bool
+    public static function user_preference(array $input, User $user): bool
     {
         // fix preferences that are missing for user
         User::fix_preferences($user->id);

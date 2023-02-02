@@ -46,11 +46,11 @@ final class ShareMethod
      * Get the share from it's id.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share(array $input, ?User $user): bool
+    public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

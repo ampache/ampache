@@ -47,11 +47,11 @@ final class LicenseSongsMethod
      * This returns all songs attached to a license ID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs(array $input, ?User $user): bool
+    public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);

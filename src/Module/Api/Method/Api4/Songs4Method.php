@@ -46,7 +46,7 @@ final class Songs4Method
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = Api::set_filter(date) //optional
@@ -54,7 +54,7 @@ final class Songs4Method
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function songs(array $input, ?User $user)
+    public static function songs(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

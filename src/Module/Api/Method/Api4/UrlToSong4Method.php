@@ -45,11 +45,11 @@ final class UrlToSong4Method
      * This takes a url and returns the song object in question
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * url = (string) $url
      * @return boolean
      */
-    public static function url_to_song(array $input, ?User $user): bool
+    public static function url_to_song(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('url'), self::ACTION)) {
             return false;

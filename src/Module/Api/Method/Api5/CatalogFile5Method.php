@@ -52,13 +52,13 @@ final class CatalogFile5Method
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input, ?User $user): bool
+    public static function catalog_file(array $input, User $user): bool
     {
         if (!Api5::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
             return false;

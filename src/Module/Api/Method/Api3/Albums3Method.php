@@ -40,9 +40,9 @@ final class Albums3Method
      * albums
      * This returns albums based on the provided search filters
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function albums(array $input, ?User $user)
+    public static function albums(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();

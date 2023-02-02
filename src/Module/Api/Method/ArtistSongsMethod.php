@@ -47,14 +47,14 @@ final class ArtistSongsMethod
      * This returns the songs of the specified artist
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of Artist
      * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs(array $input, ?User $user): bool
+    public static function artist_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

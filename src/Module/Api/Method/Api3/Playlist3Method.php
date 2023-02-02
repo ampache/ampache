@@ -39,10 +39,11 @@ final class Playlist3Method
      * playlist
      * This returns a single playlist
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function playlist(array $input, ?User $user)
+    public static function playlist(array $input, User $user)
     {
+        unset($user);
         $uid = scrub_in($input['filter']);
 
         ob_end_clean();

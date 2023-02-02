@@ -44,11 +44,11 @@ final class UpdateArtistInfo4Method
      * Make sure lastfm_api_key is set in your configuration file
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * id   = (integer) $artist_id)
      * @return boolean
      */
-    public static function update_artist_info(array $input, ?User $user): bool
+    public static function update_artist_info(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
             return false;

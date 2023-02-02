@@ -40,6 +40,6 @@ interface MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        ?User $user
+        User $user
     ): ResponseInterface;
 }

@@ -47,13 +47,14 @@ final class DeletedSongsMethod
      * Returns songs that have been deleted from the server
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function deleted_songs(array $input, ?User $user): bool
+    public static function deleted_songs(array $input, User $user): bool
     {
+        unset($user);
         $songs = Song::get_deleted();
         if (empty($songs)) {
             Api::empty('deleted_songs', $input['api_format']);

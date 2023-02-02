@@ -43,11 +43,11 @@ final class ToggleFollow5Method
      * This will follow/unfollow a user
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input, ?User $user): bool
+    public static function toggle_follow(array $input, User $user): bool
     {
         if (!$user instanceof User) {
             return false;

@@ -44,7 +44,7 @@ final class ShareEdit5Method
      * Takes the share id to update with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * stream      = (boolean) 0,1 //optional
      * download    = (boolean) 0,1 //optional
@@ -52,7 +52,7 @@ final class ShareEdit5Method
      * description = (string) update description //optional
      * @return boolean
      */
-    public static function share_edit(array $input, ?User $user): bool
+    public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

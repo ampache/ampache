@@ -46,13 +46,13 @@ final class UpdateArtMethod
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type      = (string) 'artist', 'album'
      * id        = (integer) $artist_id, $album_id)
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art(array $input, ?User $user): bool
+    public static function update_art(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;

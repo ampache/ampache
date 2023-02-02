@@ -45,7 +45,7 @@ final class Stream4Method
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
@@ -54,7 +54,7 @@ final class Stream4Method
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input, ?User $user): bool
+    public static function stream(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;

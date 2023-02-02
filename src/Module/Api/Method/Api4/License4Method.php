@@ -45,11 +45,11 @@ final class License4Method
      * This returns a single license based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input, ?User $user): bool
+    public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api4::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
@@ -59,6 +59,7 @@ final class License4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $results = array((int) scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {

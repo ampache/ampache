@@ -46,14 +46,14 @@ final class LabelsMethod
      * This returns the labels  based on the specified filter
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function labels(array $input, ?User $user): bool
+    public static function labels(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);

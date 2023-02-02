@@ -47,12 +47,12 @@ final class LabelArtistsMethod
      * This returns all artists attached to a label ID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function label_artists(array $input, ?User $user): bool
+    public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);

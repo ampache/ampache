@@ -46,14 +46,15 @@ final class Timeline4Method
      * This gets a user timeline from their username
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input, ?User $user): bool
+    public static function timeline(array $input, User $user): bool
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
                 return false;

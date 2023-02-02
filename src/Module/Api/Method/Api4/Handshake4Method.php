@@ -55,7 +55,6 @@ final class Handshake4Method
      * Takes a timestamp, auth key, and username.
      *
      * @param array $input
-     * @param User|null $user
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
@@ -64,9 +63,8 @@ final class Handshake4Method
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function handshake(array $input, ?User $user): bool
+    public static function handshake(array $input): bool
     {
-        unset($user);
         $now_time   = time();
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp'] ?? $now_time);
         $passphrase = $input['auth'];

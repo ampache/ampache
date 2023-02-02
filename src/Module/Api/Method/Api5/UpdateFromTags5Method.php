@@ -43,16 +43,17 @@ final class UpdateFromTags5Method
      * updates a single album, artist, song from the tag data
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * type = (string) 'artist', 'album', 'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
-    public static function update_from_tags(array $input, ?User $user): bool
+    public static function update_from_tags(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 

@@ -63,7 +63,7 @@ final class AlbumsMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -80,7 +80,7 @@ final class AlbumsMethod implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         array $input,
-        ?User  $user
+        User  $user
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();
@@ -92,7 +92,7 @@ final class AlbumsMethod implements MethodInterface
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
         $results = $browse->get_objects();
-        if ($results === [] || !$user instanceof User) {
+        if ($results === []) {
             throw new ResultEmptyException(
                 T_('No Results')
             );

@@ -42,11 +42,11 @@ final class Video4Method
      * This returns a single video
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video(array $input, ?User $user): bool
+    public static function video(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

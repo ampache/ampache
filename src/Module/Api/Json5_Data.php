@@ -87,7 +87,7 @@ class Json5_Data
      * @param  integer $limit Set a limit on your results
      * @return boolean
      */
-    public static function set_limit($limit)
+    public static function set_limit($limit): bool
     {
         if (!$limit) {
             return false;
@@ -110,7 +110,7 @@ class Json5_Data
      * @param  string $type Error type
      * @return string return error message JSON
      */
-    public static function error($code, $string, $action, $type)
+    public static function error($code, $string, $action, $type): string
     {
         $message = array("error" => array("errorCode" => (string) $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
@@ -127,7 +127,7 @@ class Json5_Data
      * @param  array  $return_data
      * @return string return success message JSON
      */
-    public static function success($string, $return_data = array())
+    public static function success($string, $return_data = array()): string
     {
         $message = array("success" => $string);
         foreach ($return_data as $title => $data) {
@@ -146,7 +146,7 @@ class Json5_Data
      * @param  string $type object type
      * @return string return empty JSON message
      */
-    public static function empty($type)
+    public static function empty($type): string
     {
         return json_encode(array($type => array()), JSON_PRETTY_PRINT);
     } // empty
@@ -158,7 +158,7 @@ class Json5_Data
      * @param  array $tags
      * @return array
      */
-    private static function genre_array($tags)
+    private static function genre_array($tags): array
     {
         $JSON = array();
 
@@ -238,7 +238,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "live_stream"
      */
-    public static function live_streams($live_streams, $object = true)
+    public static function live_streams($live_streams, $object = true): string
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
@@ -271,7 +271,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "license"
      */
-    public static function licenses($licenses, $object = true)
+    public static function licenses($licenses, $object = true): string
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -301,7 +301,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "label"
      */
-    public static function labels($labels, $object = true)
+    public static function labels($labels, $object = true): string
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
@@ -338,7 +338,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "genre"
      */
-    public static function genres($tags, $object = true)
+    public static function genres($tags, $object = true): string
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -529,7 +529,7 @@ class Json5_Data
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "playlist"
      */
-    public static function playlists($playlists, $user, $songs = false, $object = true)
+    public static function playlists($playlists, $user, $songs = false, $object = true): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -613,7 +613,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "share"
      */
-    public static function shares($shares, $object = true)
+    public static function shares($shares, $object = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -669,7 +669,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "bookmark"
      */
-    public static function bookmarks($bookmarks, $object = true)
+    public static function bookmarks($bookmarks, $object = true): string
     {
         if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
             $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
@@ -711,7 +711,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "catalog"
      */
-    public static function catalogs($catalogs, $object = true)
+    public static function catalogs($catalogs, $object = true): string
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
@@ -762,7 +762,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "podcast"
      */
-    public static function podcasts($podcasts, $user, $episodes = false, $object = true)
+    public static function podcasts($podcasts, $user, $episodes = false, $object = true): string
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
@@ -1002,7 +1002,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "video"
      */
-    public static function videos($videos, $user, $object = true)
+    public static function videos($videos, $user, $object = true): string
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -1049,7 +1049,7 @@ class Json5_Data
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return string       JSON Object "song"
      */
-    public static function democratic($object_ids, $user, $object = true)
+    public static function democratic($object_ids, $user, $object = true): string
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
@@ -1103,7 +1103,7 @@ class Json5_Data
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "user"
      */
-    public static function user(User $user, $fullinfo, $object = true)
+    public static function user(User $user, $fullinfo, $object = true): string
     {
         $user->format();
         if ($fullinfo) {
@@ -1151,7 +1151,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "user"
      */
-    public static function users($users, $object = true)
+    public static function users($users, $object = true): string
     {
         $JSON = [];
         foreach ($users as $user_id) {
@@ -1175,7 +1175,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "shout"
      */
-    public static function shouts($shouts, $object = true)
+    public static function shouts($shouts, $object = true): string
     {
         $JSON = [];
         foreach ($shouts as $shout_id) {
@@ -1206,7 +1206,7 @@ class Json5_Data
      * @param  boolean   $object (whether to return as a named object array or regular array)
      * @return string    JSON Object "activity"
      */
-    public static function timeline($activities, $object = true)
+    public static function timeline($activities, $object = true): string
     {
         $JSON = array();
         foreach ($activities as $activity_id) {
@@ -1239,7 +1239,7 @@ class Json5_Data
      * @param  array  $objects deleted object list
      * @return string JSON Object "deleted"
      */
-    public static function deleted($object_type, $objects)
+    public static function deleted($object_type, $objects): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);

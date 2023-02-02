@@ -44,13 +44,13 @@ final class PreferenceEdit5Method
      * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input, ?User $user): bool
+    public static function preference_edit(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;

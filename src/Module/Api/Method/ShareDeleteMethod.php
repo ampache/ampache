@@ -46,11 +46,11 @@ final class ShareDeleteMethod
      * Delete an existing share.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of share to delete
      * @return boolean
      */
-    public static function share_delete(array $input, ?User $user): bool
+    public static function share_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

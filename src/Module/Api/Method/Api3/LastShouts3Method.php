@@ -40,10 +40,11 @@ final class LastShouts3Method
      * last_shouts
      * This get the latest posted shouts
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function last_shouts(array $input, ?User $user)
+    public static function last_shouts(array $input, User $user)
     {
+        unset($user);
         $limit = (int)($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold');

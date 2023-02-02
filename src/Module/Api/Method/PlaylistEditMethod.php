@@ -47,7 +47,7 @@ final class PlaylistEditMethod
      * Changed name and type to optional and the playlist id is mandatory
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of playlist
      * name   = (string) 'new playlist name' //optional
      * type   = (string) 'public', 'private' //optional
@@ -57,7 +57,7 @@ final class PlaylistEditMethod
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit(array $input, ?User $user): bool
+    public static function playlist_edit(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

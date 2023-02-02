@@ -46,19 +46,20 @@ final class Shares4Method
      * Get information about shared media this user is allowed to manage.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function shares(array $input, ?User $user): bool
+    public static function shares(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
 
             return false;
         }
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('share');

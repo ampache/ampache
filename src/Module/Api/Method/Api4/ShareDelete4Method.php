@@ -44,11 +44,11 @@ final class ShareDelete4Method
      * Delete an existing share.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of share to delete
      * @return boolean
      */
-    public static function share_delete(array $input, ?User $user): bool
+    public static function share_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);

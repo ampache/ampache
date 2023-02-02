@@ -48,11 +48,11 @@ final class FollowersMethod
      * Error when user not found or no followers
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function followers(array $input, ?User $user): bool
+    public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -62,6 +62,7 @@ final class FollowersMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
         $leadUser = User::get_from_username($username);
         if (!$leadUser->id) {

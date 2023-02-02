@@ -40,9 +40,9 @@ final class AdvancedSearch3Method
      * advanced_search
      * Perform an advanced search given passed rules
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function advanced_search(array $input, ?User $user)
+    public static function advanced_search(array $input, User $user)
     {
         ob_end_clean();
 

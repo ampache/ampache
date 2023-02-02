@@ -45,18 +45,19 @@ final class DeletedVideosMethod
      * This returns video objects that have been deleted
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function deleted_videos(array $input, ?User $user): bool
+    public static function deleted_videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
+        unset($user);
 
         $video_ids = Video::get_deleted();
         if (empty($video_ids)) {

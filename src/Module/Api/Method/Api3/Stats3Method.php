@@ -43,9 +43,9 @@ final class Stats3Method
     /**
      * This get library stats.
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      */
-    public static function stats(array $input, ?User $user)
+    public static function stats(array $input, User $user)
     {
         $type     = $input['type'];
         $offset   = $input['offset'];

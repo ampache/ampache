@@ -46,7 +46,7 @@ final class PodcastEditMethod
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
      * title       = (string) title string //optional
@@ -56,7 +56,7 @@ final class PodcastEditMethod
      * copyright   = (string) //optional
      * @return boolean
      */
-    public static function podcast_edit(array $input, ?User $user): bool
+    public static function podcast_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

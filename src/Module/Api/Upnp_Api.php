@@ -1278,7 +1278,7 @@ class Upnp_Api
             }
         }
         if ($onetoken != "") {
-            $tokens[$index++] = $onetoken;
+            $tokens[$index] = $onetoken;
         }
 
         return $tokens;

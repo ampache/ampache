@@ -46,7 +46,7 @@ final class Playlists5Method
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = Api::set_filter(date) //optional
@@ -57,7 +57,7 @@ final class Playlists5Method
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * @return boolean
      */
-    public static function playlists(array $input, ?User $user): bool
+    public static function playlists(array $input, User $user): bool
     {
         $like       = !((array_key_exists('', $input) && (int)$input['exact'] == 1));
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);

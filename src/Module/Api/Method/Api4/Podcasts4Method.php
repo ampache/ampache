@@ -46,14 +46,14 @@ final class Podcasts4Method
      * Get information about podcasts.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) // optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts(array $input, ?User $user): bool
+    public static function podcasts(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);

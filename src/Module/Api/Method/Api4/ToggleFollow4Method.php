@@ -43,11 +43,11 @@ final class ToggleFollow4Method
      * This will follow/unfollow a user
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input, ?User $user): bool
+    public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);

@@ -45,12 +45,12 @@ final class CatalogAction4Method
      * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action(array $input, ?User $user): bool
+    public static function catalog_action(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;

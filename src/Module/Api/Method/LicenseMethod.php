@@ -47,11 +47,11 @@ final class LicenseMethod
      * This returns a single license based on UID
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input, ?User $user): bool
+    public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);

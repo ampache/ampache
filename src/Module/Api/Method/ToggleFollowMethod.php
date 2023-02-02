@@ -44,11 +44,11 @@ final class ToggleFollowMethod
      * This will follow/unfollow a user
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input, ?User $user): bool
+    public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);

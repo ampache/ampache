@@ -45,10 +45,10 @@ final class LocalplaySongsMethod
      * get the list of songs in your localplay instance
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * @return boolean
      */
-    public static function localplay_songs(array $input, ?User $user): bool
+    public static function localplay_songs(array $input, User $user): bool
     {
         // localplay is actually meant to be behind permissions
         $level = AmpConfig::get('localplay_level', 100);

@@ -46,13 +46,13 @@ final class Timeline5Method
      * This gets a user timeline from their username
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input, ?User $user): bool
+    public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -62,6 +62,7 @@ final class Timeline5Method
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
         $limit    = (int) ($input['limit']);
         $since    = (int) ($input['since']);

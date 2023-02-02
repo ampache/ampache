@@ -47,7 +47,7 @@ final class LocalplayMethod
      * This is for controlling Localplay
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
@@ -56,7 +56,7 @@ final class LocalplayMethod
      * id
      * @return boolean
      */
-    public static function localplay(array $input, ?User $user): bool
+    public static function localplay(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;

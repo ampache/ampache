@@ -55,7 +55,7 @@ final class ShareCreateMethod
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
-     * @param User|null $user
+     * @param User $user
      * filter      = (string) object_id
      * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
@@ -64,7 +64,7 @@ final class ShareCreateMethod
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input, ?User $user): bool
+    public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
