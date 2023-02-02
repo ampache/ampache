@@ -51,6 +51,9 @@ final class Catalogs5Method
      */
     public static function catalogs(array $input, ?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
         // filter for specific catalog types
         $filter  = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $results = $user->get_catalogs($filter);
