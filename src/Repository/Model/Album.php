@@ -276,7 +276,7 @@ class Album extends database_object implements library_item
         $this->artist_count      = (int)$this->artist_count;
         $this->song_artist_count = (int)$this->song_artist_count;
 
-        if ($this->album_artist === null && $this->artist_count > 1) {
+        if ($this->album_artist === null && $this->song_artist_count > 1) {
             $this->album_artist = 0;
         }
 
