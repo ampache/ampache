@@ -200,11 +200,6 @@ class AlbumDisk extends database_object implements library_item
     public $f_artist;
 
     /**
-     * @var string $f_album_artist_link
-     */
-    public $f_album_artist_link;
-
-    /**
      * @var string $f_name // Prefix + Name, generated
      */
     public $f_name;
@@ -328,7 +323,6 @@ class AlbumDisk extends database_object implements library_item
         // set link and f_link
         $this->get_artist_fullname();
         $this->get_f_link();
-        $this->get_f_album_artist_link();
         $this->get_f_artist_link();
 
         if (!$this->year) {
@@ -453,20 +447,6 @@ class AlbumDisk extends database_object implements library_item
         }
 
         return $this->f_link;
-    }
-
-    /**
-     * Get item f_album_artist_link.
-     * @return string
-     */
-    public function get_f_album_artist_link()
-    {
-        // don't do anything if it's formatted
-        if (!isset($this->f_album_artist_link)) {
-            $this->f_album_artist_link = $this->album->get_f_album_artist_link();
-        }
-
-        return $this->f_album_artist_link;
     }
 
     /**

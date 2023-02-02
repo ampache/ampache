@@ -199,11 +199,6 @@ class Album extends database_object implements library_item
     public $f_artist;
 
     /**
-     * @var string $f_album_artist_link
-     */
-    public $f_album_artist_link;
-
-    /**
      * @var string $f_name // Prefix + Name, generated
      */
     public $f_name;
@@ -556,7 +551,6 @@ class Album extends database_object implements library_item
         // set link and f_link
         $this->get_f_link();
         $this->get_artist_fullname();
-        $this->get_f_album_artist_link();
         $this->get_f_artist_link();
 
         if (!$this->year) {
@@ -710,29 +704,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * Get item f_album_artist_link.
-     * @return string
-     */
-    public function get_f_album_artist_link()
-    {
-        // don't do anything if it's formatted
-        if (!isset($this->f_album_artist_link)) {
-            $this->f_album_artist_link = '';
-            $web_path                  = AmpConfig::get('web_path');
-            if (empty($this->album_artists)) {
-                $this->get_album_artists();
-            }
-            foreach ($this->album_artists as $artist_id) {
-                $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                $this->f_album_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
-            }
-            $this->f_album_artist_link = rtrim($this->f_album_artist_link, ",&nbsp");
-        }
-
-        return $this->f_album_artist_link;
-    }
-
-    /**
      * Get item f_artist_link.
      * @return string
      */
@@ -740,12 +711,20 @@ class Album extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_artist_link)) {
-            if ($this->artist_count == 1) {
-                $web_path            = AmpConfig::get('web_path');
-                $artist_fullname     = scrub_out($this->get_artist_fullname());
-                $this->f_artist_link = "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $this->id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>";
-            } else {
+            if ($this->album_artist === 0) {
                 $this->f_artist_link = "<span title=\"$this->artist_count " . T_('Artists') . "\">" . T_('Various') . "</span>";
+            }
+            if ($this->artist_count == 1) {
+                $this->f_artist_link = '';
+                $web_path            = AmpConfig::get('web_path');
+                if (empty($this->album_artists)) {
+                    $this->get_album_artists();
+                }
+                foreach ($this->album_artists as $artist_id) {
+                    $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
+                    $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                }
+                $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
             }
         }
 
