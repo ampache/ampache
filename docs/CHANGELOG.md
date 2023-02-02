@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 5.5.7-develop
+## Ampache 5.5.7-release
 
 This release fixes issues when updating your databases from **really** old versions (< 3.9.0)
 
