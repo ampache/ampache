@@ -22,9 +22,12 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
-?>
+/** @var array $fields */
+/** @var array $instances */
+/** @var LocalPlay $localplay */ ?>
 <?php Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">
 <tr>
@@ -40,7 +43,7 @@ use Ampache\Module\Util\Ui;
     <td>
         <?php
             if ($field["type"] != "password") {
-                echo $instance[$key];
+                echo scrub_out($instance[$key]);
             } else {
                 echo "*****";
             } ?>

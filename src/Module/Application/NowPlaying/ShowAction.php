@@ -71,8 +71,8 @@ final class ShowAction implements ApplicationActionInterface
         Stream::garbage_collection();
 
         $css                    = '';
-        $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE);
         $refreshLimit           = '';
+        $nowPlayingCssFile      = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_CSS_FILE) ?? "templates/now-playing.css";
         $nowPlayingRefreshLimit = $this->configContainer->get(ConfigurationKeyEnum::NOW_PLAYING_REFRESH_LIMIT);
         $language               = $this->configContainer->get(ConfigurationKeyEnum::LANG);
 
@@ -117,35 +117,8 @@ final class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-
-        $results = Stream::get_now_playing();
-
-        if (Core::get_request('user_id') !== '') {
-            if (empty($results)) {
-                $last_song = Stats::get_last_play(Core::get_request('user_id'));
-                $media     = $this->modelFactory->createSong((int) $last_song['object_id']);
-                $media->format();
-
-                $client = $this->modelFactory->createUser((int) $last_song['user']);
-                $client->format();
-
-                $results[] = [
-                    'media' => $media,
-                    'client' => $client,
-                    'agent' => $last_song['agent'],
-                    'expire' => ''
-                ];
-
-                $this->logger->debug(
-                    'no result; getting last song played instead: ' . $media->id,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-            }
-            // If the URL specifies a specific user, filter the results on that user
-            $results = array_filter($results, function ($item) {
-                return ($item['client']->id === Core::get_request('user_id'));
-            });
-        }
+        $user_id = (int)Core::get_request('user_id');
+        $results = Stream::get_now_playing($user_id);
 
         require Ui::find_template('show_now_playing.inc.php');
 
