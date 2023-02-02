@@ -277,7 +277,10 @@ class Album extends database_object implements library_item
         $this->song_artist_count = (int)$this->song_artist_count;
 
         if ($this->album_artist === null && $this->song_artist_count > 1) {
-            $this->album_artist = 0;
+            $this->album_artist  = 0;
+            $this->artist_prefix = '';
+            $this->artist_name   = T_('Various');
+            $this->f_artist_name = T_('Various');
         }
 
         // finally; set up your formatted name
@@ -334,7 +337,7 @@ class Album extends database_object implements library_item
             return parent::get_from_cache('album_extra', $this->id);
         }
         $results = array();
-        if (!$this->album_artist && $this->artist_count == 1) {
+        if (empty($this->album_artist) && $this->song_artist_count == 1) {
             $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name`, `artist`.`prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
             $db_results = Dba::read($sql);
             $results    = Dba::fetch_assoc($db_results);

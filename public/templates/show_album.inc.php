@@ -49,7 +49,7 @@ $zip_album  = $batch_dl && $zipHandler->isZipable('album');
 $web_path = AmpConfig::get('web_path');
 $simple   = $album->get_fullname(true);
 $f_name   = $album->get_fullname(false, true);
-$title    = ($album->album_artist > 0)
+$title    = ($album->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($album->get_f_artist_link()) ?: '')
     : scrub_out($f_name);
 
