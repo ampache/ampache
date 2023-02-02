@@ -40,6 +40,18 @@
                     fn: function() {
                         self.shuffle();
                     }
+                },
+                next: {
+                    key: 78, // n
+                    fn: function() {
+                        self.next();
+                    }
+                },
+                previous: {
+                    key: 66, // b
+                    fn: function() {
+                        self.previous();
+                    }
                 }
             },
             stateClass: {
@@ -231,7 +243,7 @@
             // After addAfter() and remove() functions, new items need their webPlayer indexes reset
             // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
             var isAdjusted = false;
-            var current_item = this.current
+            var current_item = this.current;
             $.each($(this.cssSelector.playlist + " ul li"), function(i, playlistRow) {
                 var htmlIndex = parseInt($(playlistRow).attr("name"),10);
                 if (htmlIndex !== i) {
@@ -576,7 +588,7 @@
         },
         setCurrent: function(index) {
             if (index < 0) {
-                index = 0
+                index = 0;
             }
             console.log("setCurrent " + index);
             if (index >= 0 && this.current !== index) {
@@ -665,7 +677,7 @@
                         final_list.push(media);
                     });
                     // sorted!
-                    self.playlist = final_list
+                    self.playlist = final_list;
                     self.current = 0;
                     self.shuffling = false;
                     self._refresh(true);
