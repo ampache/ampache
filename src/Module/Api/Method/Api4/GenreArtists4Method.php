@@ -58,7 +58,6 @@ final class GenreArtists4Method
         }
         $results = Tag::get_tag_objects('artist', $input['filter']);
         if (!empty($results)) {
-
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':

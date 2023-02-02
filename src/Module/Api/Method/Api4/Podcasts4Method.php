@@ -70,7 +70,7 @@ final class Podcasts4Method
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $results = $browse->get_objects();
+        $results  = $browse->get_objects();
         $episodes = (array_key_exists('include', $input) && $input['include'] == 'episodes');
 
         ob_end_clean();

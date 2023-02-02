@@ -58,7 +58,6 @@ final class GenreAlbums4Method
         }
         $results = Tag::get_tag_objects('album', $input['filter']);
         if (!empty($results)) {
-
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':

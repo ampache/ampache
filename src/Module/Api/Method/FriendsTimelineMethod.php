@@ -61,11 +61,14 @@ final class FriendsTimelineMethod
         $limit = (int) ($input['limit']);
         $since = (int) ($input['since']);
 
-        $results = static::getUseractivityRepository()->getFriendsActivities(
-            $user->getId(),
-            $limit,
-            $since
-        );
+        $results = array();
+        if ($user instanceof User) {
+            $results = static::getUseractivityRepository()->getFriendsActivities(
+                $user->getId(),
+                $limit,
+                $since
+            );
+        }
         if (empty($results)) {
             Api::empty('activity', $input['api_format']);
 

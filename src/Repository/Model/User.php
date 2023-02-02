@@ -370,6 +370,7 @@ class User extends database_object
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
         }
+
         return $this->catalogs[$filter];
     } // get_catalogs
 

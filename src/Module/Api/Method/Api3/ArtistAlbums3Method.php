@@ -42,7 +42,7 @@ final class ArtistAlbums3Method
      */
     public static function artist_albums(array $input, ?User $user)
     {
-        $artist = new Artist($input['filter']);
+        $artist  = new Artist($input['filter']);
         $results = array();
         if (isset($artist->id)) {
             $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);

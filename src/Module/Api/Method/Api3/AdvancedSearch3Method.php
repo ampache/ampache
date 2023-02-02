@@ -52,7 +52,7 @@ final class AdvancedSearch3Method
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
-        $results = Search::run($data, $user);
+        $results        = Search::run($data, $user);
 
         $type = 'song';
         if (isset($input['type'])) {

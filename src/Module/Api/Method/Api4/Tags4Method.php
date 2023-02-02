@@ -24,6 +24,7 @@
 declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
+
 use Ampache\Repository\Model\User;
 
 /**

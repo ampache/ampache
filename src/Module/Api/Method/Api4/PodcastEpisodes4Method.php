@@ -65,7 +65,7 @@ final class PodcastEpisodes4Method
         $podcast_id = (int) scrub_in($input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcast = new Podcast($podcast_id);
-        $results   = $podcast->get_episodes();
+        $results = $podcast->get_episodes();
 
         ob_end_clean();
         switch ($input['api_format']) {

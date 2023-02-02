@@ -179,6 +179,7 @@ class Upload
         if (empty($user)) {
             $user = Core::get_global('user');
         }
+
         return AmpConfig::get('allow_upload') && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user->id ?? 0);
     }
 

@@ -58,6 +58,7 @@ final class RegisterMethod
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
             Api::error(T_('Enable: allow_public_registration'), '4703', self::ACTION, 'system', $input['api_format']);
+
             return false;
         }
         if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
