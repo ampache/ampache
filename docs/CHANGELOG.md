@@ -17,6 +17,9 @@ This release fixes issues when updating your databases from **really** old versi
 * Album might get sent to the temp playlist and screw up on insert
 * A couple of issues with now_playing.php when enabled
 * RSS user lookup on now_playing
+* webplayer
+  * `n` for next, `b` for back
+  * Missing semi-colons
 * Subsonic
   * Allow empty search queries
 
