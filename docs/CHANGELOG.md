@@ -85,6 +85,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
+* Combined a lot of duplicate functions into one
 
 ### Fixed
 
@@ -93,6 +94,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Hide Upload links if you can't access the catalog
 * Recently played for non-user calls
 * Found a few dynamic properties on objects
+* Bugs around the setting of the Various album_artist when the album_artist is null
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -123,6 +125,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Changed
 
+* ALL
+  * Albums with no album_artist may now return 0 artist called 'Various'
 * Don't send AlbumDisk objects to the API
 * XML responses
   * id is the only attribute and everything else is an element
@@ -130,8 +134,13 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Fixed
 
+* ALL
+  * advanced_search methods were breaking with various offset and limits
 * Api6 JSON
   * Share and Bookmark object id's were not strings
+* Api3
+  * Never send 0 ratings. They should always be null (e.g <rating/>)
+  * Artists method parameters were incorrect
 
 ### Removed
 
