@@ -30,6 +30,7 @@ use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PingMethod
@@ -66,6 +67,7 @@ final class Ping4Method
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_assoc($db_results);
             // Now we need to quickly get the totals
+            $user   = User::get_from_username(Session::username($input['auth']));
             $counts = Catalog::get_server_counts($user->id ?? 0);
             // now add it all together
             $countarray = array('api' => Api4::$version,

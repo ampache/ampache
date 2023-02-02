@@ -123,7 +123,7 @@ final class AdvancedSearch5Method
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json5_Data::genres($results, $user);
+                        echo Json5_Data::genres($results);
                         break;
                     case 'user':
                         echo Json5_Data::users($results);

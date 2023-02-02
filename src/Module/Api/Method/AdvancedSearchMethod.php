@@ -127,7 +127,7 @@ final class AdvancedSearchMethod
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json_Data::genres($results, $user);
+                        echo Json_Data::genres($results);
                         break;
                     case 'user':
                         echo Json_Data::users($results);
