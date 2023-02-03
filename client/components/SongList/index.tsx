@@ -3,7 +3,7 @@ import { MusicContext } from '~Contexts/MusicContext';
 import { SongRow } from '~components/SongRow';
 
 import { useMusicStore } from '~store';
-import shallow from '~node_modules/zustand/shallow';
+import shallow from 'zustand/shallow';
 
 interface SongListProps {
     songIds: string[];

@@ -75,7 +75,7 @@ const ArtistPage = () => {
         );
     }
     return (
-        <div>
+        <div className={'paddedPage'}>
             {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
             {artist && (
                 <div className={style.artistInfo}>

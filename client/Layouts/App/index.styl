@@ -9,12 +9,7 @@
 
 .content
     flex 1
-    padding: 1rem
     position relative
-
-    @media all and (min-width: size-large) {
-        padding: 2rem
-    }
 
 .contentInner
     position: absolute;
@@ -23,10 +18,3 @@
     right: 0;
     bottom: 0;
     overflow: auto;
-    padding: inherit
-
-    &::after // needed as flex doesn't include padding in height calc
-        content: '';
-        padding: inherit;
-        padding-top: 0
-        display block

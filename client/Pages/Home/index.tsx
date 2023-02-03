@@ -34,7 +34,7 @@ const HomePage = () => {
         return <ReactLoading color='#FF9D00' type={'bubbles'} />;
     }
     return (
-        <div>
+        <div className={'paddedPage'}>
             <section>
                 <h1>Random Albums</h1>
                 <div className={`album-grid`}>

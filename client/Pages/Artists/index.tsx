@@ -28,7 +28,7 @@ const ArtistsPage = () => {
         );
     }
     return (
-        <div>
+        <div className={'paddedPage'}>
             <h1>Artists</h1>
             <div className='artist-grid'>
                 {data.pages.map((group, i) => (

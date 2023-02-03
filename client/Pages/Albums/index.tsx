@@ -28,7 +28,7 @@ const AlbumsPage = () => {
         );
     }
     return (
-        <div>
+        <div className={'paddedPage'}>
             <h1>Albums</h1>
 
             <div className='album-grid'>

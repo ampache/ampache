@@ -31,7 +31,7 @@ const AlbumPage = memo(() => {
     }
     const songIds = album.tracks.map((song) => song.id);
     return (
-        <div>
+        <div className={'paddedPage'}>
             <div className={style.album}>
                 <div className={style.imageContainer}>
                     <img src={album.art} alt={'Album Cover'} />

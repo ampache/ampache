@@ -15,7 +15,7 @@ const PlaylistPage = () => {
     const songIds = data.map((song) => song.id);
 
     return (
-        <div className='playlistPage'>
+        <div className='paddedPage'>
             <h1>Playlist - {playlistID}</h1>
             <SongList
                 showArtist={true}
