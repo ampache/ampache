@@ -18,6 +18,7 @@ import GenericError from '~Pages/Errors/GenericError';
 import ampacheLogo from './images/ampache-dark.png';
 
 import style from './stylus/router.styl';
+import { FavoritesPage } from '~Pages/Favorites';
 
 export const Root = () => {
     const { data: user, isLoading, error } = useGetUser();
@@ -58,17 +59,18 @@ export const Root = () => {
                         <Route path='/albums' element={<AlbumsPage />} />
                         <Route
                             path='/artist/:artistID'
-                            element={<ArtistPage user={user} />}
+                            element={<ArtistPage />}
                         />
                         <Route path='/artists' element={<ArtistsPage />} />
                         <Route path='/playlists' element={<PlaylistsPage />} />
+                        <Route path='/favorites' element={<FavoritesPage />} />
                         <Route
                             path='/playlist/:playlistID'
                             element={<PlaylistPage />}
                         />
                         <Route
                             path='/search/:searchQuery?'
-                            element={<SearchPage user={user} />}
+                            element={<SearchPage />}
                         />
                         <Route path='*' element={<NotFound />} />
                     </Routes>
