@@ -2968,7 +2968,7 @@ abstract class Catalog extends database_object
      */
     public static function update_counts()
     {
-        $update_time = self::get_update_info('update_counts');
+        $update_time = self::get_update_info('update_counts', -1);
         $now_time    = time();
         // give the server a 30 min break for this help with load
         if ($update_time !== 0 && $update_time > ($now_time - 1800)) {
