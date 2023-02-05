@@ -127,10 +127,11 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * ALL
   * Albums with no album_artist may now return 0 artist called 'Various'
-* Don't send AlbumDisk objects to the API
+  * Don't send AlbumDisk objects to the API
 * XML responses
   * id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
+* Api6::get_indexes is depreciated and will be removed in Ampache 7.0.0
 
 ### Fixed
 
@@ -139,12 +140,19 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Api6 JSON
   * Share and Bookmark object id's were not strings
 * Api3
-  * Never send 0 ratings. They should always be null (e.g <rating/>)
+  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
   * Artists method parameters were incorrect
 
 ### Removed
 
-* Api6::album_songs remove exact as a parameter
+* Api6::album_songs remove `exact` as a parameter
+* Api6::stream remove `podcast` as a valid `type` value
+* Warning of depreciated methods from API5 have been removed from API6
+  * Api6::tag
+  * Api6::tags
+  * Api6::tag_albums
+  * Api6::tag_artists
+  * Api6::tag_songs
 
 ## Ampache 5.5.6-release
 
