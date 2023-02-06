@@ -257,9 +257,40 @@ Get information about bookmarked media this user is allowed to manage.
 
 Data methods require additional information and parameters to return information
 
+### list
+
+This takes a collection of inputs and returns ID + name for the object type
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'type'        | string     | `song`, `album`, `artist`, `album_artist`, `playlist`, `podcast`, `podcast_episode`, `live_stream` |       NO |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number                      |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+| 'hide_search' | integer    | `0`, `1` (if true do not include searches/smartlists in the result)                                |      YES |
+
+* return array
+
+```JSON
+"list": []
+
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/list.xml)
+
 ### get_indexes
 
 This takes a collection of inputs and returns ID + name for the object type
+
+**DEVELOP** This method is depreciated and will be removed in Ampache 7.0.0 (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
