@@ -47,7 +47,6 @@ final class ListMethod
      * CHANGED_IN_API_VERSION=5.0.0
      *
      * This takes a collection of inputs and returns ID + name for the object type
-     * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
      * @param User $user
