@@ -259,7 +259,9 @@ Data methods require additional information and parameters to return information
 
 ### list
 
-This takes a collection of inputs and returns ID + name for the object type
+This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
+
+This method replaces get_indexes and does not have the `include` parameter and does not include children in the response.
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|

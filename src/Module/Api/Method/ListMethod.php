@@ -43,10 +43,9 @@ final class ListMethod
 
     /**
      * list
-     * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=5.0.0
+     * MINIMUM_API_VERSION=600000
      *
-     * This takes a collection of inputs and returns ID + name for the object type
+     * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *
      * @param array $input
      * @param User $user
