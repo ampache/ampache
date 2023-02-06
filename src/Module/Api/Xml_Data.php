@@ -517,7 +517,7 @@ class Xml_Data
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
-        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'];

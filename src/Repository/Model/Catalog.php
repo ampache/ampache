@@ -3422,7 +3422,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_prefix($string, $pattern = null)
     {
-        $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {
             $string = trim((string)$matches[2]);
             $prefix = trim((string)$matches[1]);

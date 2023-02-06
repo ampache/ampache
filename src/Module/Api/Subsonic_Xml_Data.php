@@ -197,7 +197,7 @@ class Subsonic_Xml_Data
      */
     private static function addIgnoredArticles($xml)
     {
-        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern');
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La');
         if (!empty($ignoredArticles)) {
             $ignoredArticles = str_replace("|", " ", $ignoredArticles);
             $xml->addAttribute('ignoredArticles', (string)$ignoredArticles);
