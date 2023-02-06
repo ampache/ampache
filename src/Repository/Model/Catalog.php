@@ -3417,11 +3417,12 @@ abstract class Catalog extends database_object
      * trim_prefix
      * Splits the prefix from the string
      * @param string $string
+     * @param string $pattern
      * @return array
      */
-    public static function trim_prefix($string)
+    public static function trim_prefix($string, $pattern = null)
     {
-        $prefix_pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {
             $string = trim((string)$matches[2]);
             $prefix = trim((string)$matches[1]);

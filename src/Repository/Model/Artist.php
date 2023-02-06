@@ -593,17 +593,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if ($row = Dba::fetch_assoc($db_results)) {
             return array(
                 "id" => (string)$row['id'],
+                "name" => $row['name'],
                 "prefix" => $row['prefix'],
-                "basename" => $row['basename'],
-                "name" => $row['name']
+                "basename" => $row['basename']
             );
         }
 
         return array(
             "id" => '',
+            "name" => '',
             "prefix" => '',
-            "basename" => '',
-            "name" => ''
+            "basename" => ''
         );
     }
 

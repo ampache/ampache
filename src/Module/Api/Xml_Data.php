@@ -517,8 +517,15 @@ class Xml_Data
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
-            $string .= "<list id=\"" . $object['id'] . "\">\n\t<name><![CDATA[" . $object['name'] . "]]></name>\n</list>\n";
+            $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
+            $prefix   = $trimmed['prefix'];
+            $basename = $trimmed['string'];
+            $string .= "<list id=\"" . $object['id'] . "\">\n" .
+                "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
+                "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
+                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
         } // end foreach objects
 
         return self::output_xml($string);

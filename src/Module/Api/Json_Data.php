@@ -243,12 +243,17 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-
-        $JSON = [];
+        $JSON    = [];
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
-            $JSON[] = array(
+            $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
+            $prefix   = $trimmed['prefix'];
+            $basename = $trimmed['string'];
+            $JSON[]   = array(
                 "id" => (string)$object['id'],
                 "name" => $object['name'],
+                "prefix" => $prefix,
+                "basename" => $basename,
             );
         } // end foreach
         $output = array("list" => $JSON);
