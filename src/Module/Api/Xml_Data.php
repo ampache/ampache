@@ -503,6 +503,28 @@ class Xml_Data
     } // indexes
 
     /**
+     * lists
+     *
+     * This takes a name array of objects and return the data in XML format
+     *
+     * @param  array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @return string  return xml
+     */
+    public static function lists($objects): string
+    {
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
+        }
+
+        foreach ($objects as $object) {
+            $string .= "<list id=\"" . $object['id'] . "\">\n\t<name><![CDATA[" . $object['name'] . "]]></name>\n";
+        } // end foreach objects
+
+        return self::output_xml($string);
+    } // indexes
+
+    /**
      * licenses
      *
      * This returns licenses to the user, in a pretty xml document with the information

@@ -230,6 +230,33 @@ class Json_Data
     } // indexes
 
     /**
+     * lists
+     *
+     * This takes a name array of objects and return the data in JSON list object
+     *
+     * @param  array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @return string  JSON Object "list"
+     */
+    public static function lists($objects)
+    {
+
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+        foreach ($objects as $object) {
+            $JSON[] = array(
+                "id" => (string)$object['id'],
+                "name" => $object['name'],
+            );
+        } // end foreach
+        $output = array("list" => $JSON);
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    } // indexes
+
+    /**
      * live_streams
      *
      * This returns live_streams to the user, in a pretty JSON document with the information

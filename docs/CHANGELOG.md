@@ -105,6 +105,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
+  * list: Replace get_indexes with a faster lookup and similar parameters returning `id` and `name` only
   * register: Allow users to register an account (if enabled)
   * user_create: Add `group` parameter to pick a catalog filter group
   * user_update:

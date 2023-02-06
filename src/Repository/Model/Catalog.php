@@ -1555,6 +1555,49 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_name_array
+     *
+     * Get each array of fullname's for a object type
+     * @param array $objects
+     * @param string $table
+     * @return array
+     */
+    public static function get_name_array($objects, $table)
+    {
+        switch ($table) {
+            case 'artist':
+            case 'album':
+                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
+                break;
+            case 'playlist':
+            case 'live_stream':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
+                break;
+            case 'podcast':
+            case 'podcast_episode':
+            case 'song':
+            case 'video':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` ";
+                break;
+            case 'share':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` ";
+                break;
+            default:
+                return array();
+
+        }
+        $sql .= "WHERE `id` IN " . implode($objects) . ");";
+
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist_arrays
      *
      * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
