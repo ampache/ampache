@@ -662,7 +662,7 @@ final class PlayAction implements ApplicationActionInterface
                     debug_event('play/index', 'Transcoding due to downsample_remote', 5);
                 } else {
                     /** @var Song|Video $media */
-                    $media_bitrate = floor($media->bitrate / 1000);
+                    $media_bitrate = floor($media->bitrate / 1024);
                     //debug_event('play/index', "requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", 5);
                     if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
                         $transcode = true;
@@ -743,17 +743,17 @@ final class PlayAction implements ApplicationActionInterface
             $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
-                    $stream_size = ($media->time * $maxbitrate * 1000) / 8;
+                    $stream_size = ($media->time * $maxbitrate * 1024) / 8;
                 } else {
                     debug_event('play/index', 'Bad media duration / Max bitrate. Content-length calculation skipped.', 5);
                     $stream_size = null;
                 }
             } elseif ($transcode_to == 'mp3') {
                 // mp3 seems to be the only codec that calculates properly
-                $stream_rate = ($maxbitrate < floor($media->bitrate / 1000))
+                $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
                     ? $maxbitrate
-                    : floor($media->bitrate / 1000);
-                $stream_size = ($media->time * $stream_rate * 1000) / 8;
+                    : floor($media->bitrate / 1024);
+                $stream_size = ($media->time * $stream_rate * 1024) / 8;
             } else {
                 $stream_size = null;
                 $maxbitrate  = 0;
