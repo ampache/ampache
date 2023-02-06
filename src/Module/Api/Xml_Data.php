@@ -518,7 +518,7 @@ class Xml_Data
         }
 
         foreach ($objects as $object) {
-            $string .= "<list id=\"" . $object['id'] . "\">\n\t<name><![CDATA[" . $object['name'] . "]]></name>\n";
+            $string .= "<list id=\"" . $object['id'] . "\">\n\t<name><![CDATA[" . $object['name'] . "]]></name>\n</list>\n";
         } // end foreach objects
 
         return self::output_xml($string);
