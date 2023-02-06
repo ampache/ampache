@@ -1586,7 +1586,7 @@ abstract class Catalog extends database_object
                 return array();
 
         }
-        $sql .= "WHERE `id` IN " . implode($objects) . ");";
+        $sql .= "WHERE `id` IN " . implode(",", $objects) . ");";
 
         $db_results = Dba::read($sql);
         $results    = array();
