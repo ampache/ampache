@@ -1165,7 +1165,9 @@ class Xml_Data
             $dom = new DOMDocument;
             // format the string
             $dom->preserveWhiteSpace = false;
-            $dom->loadXML($xml);
+            if (!$dom->loadXML($xml)) {
+                return $xml;
+            }
             $dom->formatOutput = true;
 
             return $dom->saveXML();
