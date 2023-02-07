@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogActionMethod
@@ -47,16 +46,17 @@ final class CatalogActionMethod
      * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
+     * @param User $user
      * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action(array $input): bool
+    public static function catalog_action(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $task = (string) $input['task'];

@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,13 +46,14 @@ final class PodcastsMethod
      * Get information about podcasts.
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts(array $input): bool
+    public static function podcasts(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -70,14 +70,13 @@ final class PodcastsMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $podcasts = $browse->get_objects();
-        if (empty($podcasts)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api::empty('podcast', $input['api_format']);
 
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $include  = $input['include'] ?? '';
         $episodes = ($include == 'episodes' || (int)$include == 1);
@@ -85,12 +84,12 @@ final class PodcastsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::podcasts($podcasts, $user, $episodes);
+                echo Json_Data::podcasts($results, $user, $episodes);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::podcasts($podcasts, $user, $episodes);
+                echo Xml_Data::podcasts($results, $user, $episodes);
         }
 
         return true;

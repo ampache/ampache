@@ -56,6 +56,7 @@ final class Stats5Method
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
      * @param array $input
+     * @param User $user
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
@@ -64,7 +65,7 @@ final class Stats5Method
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -94,8 +95,6 @@ final class Stats5Method
             return false;
         }
 
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
         $user_id = $user->id;
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {

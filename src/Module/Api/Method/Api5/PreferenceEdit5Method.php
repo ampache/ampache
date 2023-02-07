@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PreferenceEdit5Method
@@ -45,17 +44,17 @@ final class PreferenceEdit5Method
      * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input): bool
+    public static function preference_edit(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
@@ -78,14 +77,16 @@ final class PreferenceEdit5Method
 
             return false;
         }
-        $preference   = Preference::get($pref_name, $user->id);
-        $output_array = array('preference' => $preference);
+        $preference = Preference::get($pref_name, $user->id);
+        $results    = array(
+            'preference' => $preference
+        );
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($output_array['preference'], 'preference');
+                echo Xml5_Data::object_array($results['preference'], 'preference');
         }
 
         return true;

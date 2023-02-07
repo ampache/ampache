@@ -89,18 +89,14 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $this->subject->handle(
             $gatekeeper,
             $response,
             $output,
             [
                 'exact' => true
-            ]
+            ],
+            $user
         );
     }
 
@@ -140,11 +136,6 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([$album]);
 
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $output->shouldReceive('albums')
             ->with(
                 [$album],
@@ -179,7 +170,8 @@ class AlbumsMethodTest extends MockeryTestCase
                     'include' => $include,
                     'limit' => $limit,
                     'offset' => $offset,
-                ]
+                ],
+                $user
             )
         );
     }

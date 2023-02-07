@@ -48,15 +48,16 @@ final class StreamMethod
      * Search and Playlist will only stream a random object not the whole thing
      *
      * @param array $input
+     * @param User $user
      * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
+     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input): bool
+    public static function stream(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -65,7 +66,6 @@ final class StreamMethod
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $user      = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
@@ -92,7 +92,7 @@ final class StreamMethod
             $media = new Song($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
-        if ($type == 'podcast_episode' || $type == 'podcast') {
+        if ($type == 'podcast_episode') {
             $media = new Podcast_Episode($object_id);
             $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }

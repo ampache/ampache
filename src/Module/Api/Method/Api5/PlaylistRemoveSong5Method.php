@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistRemoveSong5Method
@@ -49,18 +48,18 @@ final class PlaylistRemoveSong5Method
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
-    public static function playlist_remove_song(array $input): bool
+    public static function playlist_remove_song(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {

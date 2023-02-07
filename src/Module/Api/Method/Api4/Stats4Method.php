@@ -34,7 +34,6 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 
@@ -55,6 +54,7 @@ final class Stats4Method
      * but should be updated to follow the current input values
      *
      * @param array $input
+     * @param User $user
      * type     = (string)  'song'|'album'|'artist'
      * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
@@ -63,13 +63,11 @@ final class Stats4Method
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
         $user_id = $user->id;
         // override your user if you're looking at others
         if ($input['username']) {

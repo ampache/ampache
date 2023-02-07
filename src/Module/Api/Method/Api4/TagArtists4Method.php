@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\Model\User;
 
 /**
  * Class TagArtists4Method
@@ -41,17 +42,18 @@ final class TagArtists4Method
      * This returns the artists associated with the tag in question as defined by the UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_artists(array $input): bool
+    public static function tag_artists(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
-        return GenreArtists4Method::genre_artists($input);
+        return GenreArtists4Method::genre_artists($input, $user);
     } // tag_artists
 }

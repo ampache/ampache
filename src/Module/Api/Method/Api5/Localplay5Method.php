@@ -29,7 +29,6 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,22 +46,23 @@ final class Localplay5Method
      * This is for controlling Localplay
      *
      * @param array $input
+     * @param User $user
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
+     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      * id
      * @return boolean
      */
-    public static function localplay(array $input): bool
+    public static function localplay(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('command'), self::ACTION)) {
             return false;
         }
         // localplay is actually meant to be behind permissions
         $level = AmpConfig::get('localplay_level', 100);
-        if (!Api5::check_access('localplay', $level, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access('localplay', $level, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance
@@ -140,15 +140,15 @@ final class Localplay5Method
 
                 return false;
         } // end switch on command
-        $output_array = (!empty($status))
+        $results = (!empty($status))
             ? array('localplay' => array('command' => array($input['command'] => $status)))
             : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::keyed_array($output_array);
+                echo Xml5_Data::keyed_array($results);
         }
 
         return true;

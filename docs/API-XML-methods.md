@@ -140,6 +140,31 @@ Destroy a session using the auth parameter.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/goodbye.xml)
 
+### register
+
+Register as a new user if allowed. (Requires the username, password and email.)
+
+| Input      | Type    | Description                       | Optional |
+|------------|---------|-----------------------------------|---------:|
+| 'username' | string  | $username                         |       NO |
+| 'password' | string  | hash('sha256', $password)         |       NO |
+| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'fullname' | string  |                                   |      YES |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ## Non-Data Methods
 
 These methods take no parameters beyond your auth key to return information
@@ -246,9 +271,43 @@ Get information about bookmarked media this user is allowed to manage.
 
 Data methods require additional information and parameters to return information
 
+### list
+
+This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
+
+This method replaces get_indexes and does not have the `include` parameter and does not include children in the response.
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'type'        | string     | `song`, `album`, `artist`, `album_artist`, `playlist`, `podcast`, `podcast_episode`, `live_stream` |       NO |
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number                      |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+| 'hide_search' | integer    | `0`, `1` (if true do not include searches/smartlists in the result)                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <list>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/list.xml)
+
 ### get_indexes
 
 This takes a collection of inputs and returns ID + name for the object type
+
+**DEVELOP** This method is depreciated and will be removed in Ampache 7.0.0 (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1592,18 +1651,22 @@ Update an existing user.
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input        | Type    | Description                       | Optional |
-|--------------|---------|-----------------------------------|---------:|
-| 'username'   | string  | $username                         |       NO |
-| 'password'   | string  | hash('sha256', $password)         |      YES |
-| 'email'      | string  | e.g. user@gmail.com               |      YES |
-| 'fullname'   | string  |                                   |      YES |
-| 'website'    | string  |                                   |      YES |
-| 'state'      | string  |                                   |      YES |
-| 'city'       | string  |                                   |      YES |
-| 'disable'    | boolean | `0`, `1`                          |      YES |
-| 'group'      | integer | Catalog filter group, default = 0 |      YES |
-| 'maxbitrate' | string  |                                   |      YES |
+| Input               | Type    | Description                              | Optional |
+|---------------------|---------|------------------------------------------|---------:|
+| 'username'          | string  | $username                                |       NO |
+| 'password'          | string  | hash('sha256', $password)                |      YES |
+| 'email'             | string  | e.g. user@gmail.com                      |      YES |
+| 'fullname'          | string  |                                          |      YES |
+| 'website'           | string  |                                          |      YES |
+| 'state'             | string  |                                          |      YES |
+| 'city'              | string  |                                          |      YES |
+| 'disable'           | boolean | `0`, `1`                                 |      YES |
+| 'group'             | integer | Catalog filter group, default = 0        |      YES |
+| 'maxbitrate'        | string  |                                          |      YES |
+| 'fullname_public'   | integer | `0`, `1` show fullname in public display |      YES |
+| 'reset_apikey'      | integer | `0`, `1` reset user Api Key              |      YES |
+| 'reset_streamtoken' | integer | `0`, `1` reset user Stream Token         |      YES |
+| 'clear_stats'       | integer | `0`, `1` reset all stats for this user   |      YES |
 
 * return
 
@@ -1779,6 +1842,94 @@ This returns a single live_stream
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream.xml)
+
+### live_stream_create
+
+Create a live_stream (radio station) object.
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input      | Type    | Description                                      | Optional |
+|------------|---------|--------------------------------------------------|---------:|
+| 'filter'   | string  | $object_id to find                               |       NO |
+| 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'position' | integer | current track time in seconds                    |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+
+* return
+
+```XML
+<root>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_create.xml)
+
+### live_stream_edit
+
+Edit a live_stream (radio station) object.
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input      | Type    | Description                                      | Optional |
+|------------|---------|--------------------------------------------------|---------:|
+| 'filter'   | string  | $object_id to find                               |       NO |
+| 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'position' | integer | current track time in seconds                    |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+
+* return
+
+```XML
+<root>
+    <live_stream>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_edit.xml)
+
+### live_stream_delete
+
+Delete an existing live_stream (radio station). (if it exists)
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input    | Type   | Description                                      | Optional |
+|----------|--------|--------------------------------------------------|---------:|
+| 'filter' | string | $object_id to delete                             |       NO |
+| 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')            |      YES |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_delete.xml)
 
 ### labels
 

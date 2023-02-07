@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -39,21 +38,21 @@ final class ArtistAlbums3Method
      * artist_albums
      * This returns the albums of an artist
      * @param array $input
+     * @param User $user
      */
-    public static function artist_albums(array $input)
+    public static function artist_albums(array $input, User $user)
     {
-        $artist = new Artist($input['filter']);
-        $albums = array();
+        $artist  = new Artist($input['filter']);
+        $results = array();
         if (isset($artist->id)) {
-            $albums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
-        $user   = User::get_from_username(Session::username($input['auth']));
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::albums($albums, array(), $user);
+        echo Xml3_Data::albums($results, array(), $user);
     } // artist_albums
 
     /**

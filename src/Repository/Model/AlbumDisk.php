@@ -200,21 +200,6 @@ class AlbumDisk extends database_object implements library_item
     public $f_artist;
 
     /**
-     * @var string $album_artist_name
-     */
-    public $album_artist_name;
-
-    /**
-     * @var string $f_album_artist_name
-     */
-    public $f_album_artist_name;
-
-    /**
-     * @var string $f_album_artist_link
-     */
-    public $f_album_artist_link;
-
-    /**
      * @var string $f_name // Prefix + Name, generated
      */
     public $f_name;
@@ -336,10 +321,8 @@ class AlbumDisk extends database_object implements library_item
         $this->tags   = Tag::get_top_tags('album', $this->album_id);
         $this->f_tags = Tag::get_display($this->tags, true, 'album_disk');
         // set link and f_link
-        $this->get_album_artist_fullname();
-        $this->get_f_link();
         $this->get_artist_fullname();
-        $this->get_f_album_artist_link();
+        $this->get_f_link();
         $this->get_f_artist_link();
 
         if (!$this->year) {
@@ -383,7 +366,7 @@ class AlbumDisk extends database_object implements library_item
         $keywords['artist'] = array(
             'important' => true,
             'label' => T_('Artist'),
-            'value' => ($this->get_album_artist_fullname())
+            'value' => ($this->get_artist_fullname())
         );
         $keywords['album'] = array(
             'important' => true,
@@ -467,20 +450,6 @@ class AlbumDisk extends database_object implements library_item
     }
 
     /**
-     * Get item f_album_artist_link.
-     * @return string
-     */
-    public function get_f_album_artist_link()
-    {
-        // don't do anything if it's formatted
-        if (!isset($this->f_album_artist_link)) {
-            $this->f_album_artist_link = $this->album->get_f_album_artist_link();
-        }
-
-        return $this->f_album_artist_link;
-    }
-
-    /**
      * Get item f_artist_link.
      * @return string
      */
@@ -492,19 +461,6 @@ class AlbumDisk extends database_object implements library_item
         }
 
         return $this->f_artist_link;
-    }
-
-    /**
-     * Get item f_artist_name.
-     * @return string
-     */
-    public function get_artist_fullname()
-    {
-        if (!isset($this->f_artist_name)) {
-            $this->f_artist_name = $this->album->get_artist_fullname();
-        }
-
-        return $this->f_artist_name;
     }
 
     /**
@@ -530,26 +486,13 @@ class AlbumDisk extends database_object implements library_item
      * Get item album_artist fullname.
      * @return string
      */
-    public function get_album_artist_fullname()
+    public function get_artist_fullname()
     {
-        if (!isset($this->f_album_artist_name)) {
-            $this->f_album_artist_name = $this->album->get_album_artist_fullname();
+        if (!isset($this->f_artist_name)) {
+            $this->f_artist_name = $this->album->get_artist_fullname();
         }
 
-        return $this->f_album_artist_name;
-    }
-
-    /**
-     * Get item album_artist name.
-     * @return string
-     */
-    public function get_album_artist_name()
-    {
-        if (!isset($this->album_artist_name)) {
-            $this->album_artist_name = $this->album->get_album_artist_name();
-        }
-
-        return $this->album_artist_name;
+        return $this->f_artist_name;
     }
 
     /**
@@ -733,7 +676,7 @@ class AlbumDisk extends database_object implements library_item
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = '[' . ($this->get_album_artist_fullname() ?? $this->get_artist_fullname()) . '] ' . $this->get_fullname();
+            $title = '[' . ($this->get_artist_fullname() ?? $this->get_artist_fullname()) . '] ' . $this->get_fullname();
             Art::display($type, $album_id, $title, $thumb, $this->get_link());
         }
     }

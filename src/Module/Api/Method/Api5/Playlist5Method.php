@@ -32,7 +32,6 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class Playlist5Method
@@ -48,15 +47,15 @@ final class Playlist5Method
      * This returns a single playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist(array $input): bool
+    public static function playlist(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
 
         $playlist = ((int) $object_id === 0)

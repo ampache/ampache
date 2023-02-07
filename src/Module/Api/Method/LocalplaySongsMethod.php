@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -46,13 +45,14 @@ final class LocalplaySongsMethod
      * get the list of songs in your localplay instance
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function localplay_songs(array $input): bool
+    public static function localplay_songs(array $input, User $user): bool
     {
         // localplay is actually meant to be behind permissions
         $level = AmpConfig::get('localplay_level', 100);
-        if (!Api::check_access('localplay', $level, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('localplay', $level, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance
@@ -69,15 +69,15 @@ final class LocalplaySongsMethod
 
             return false;
         }
-        $output_array = array('localplay_songs' => $songs);
+        $results = array('localplay_songs' => $songs);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['localplay_songs'], 'localplay_songs');
+                echo Xml_Data::object_array($results['localplay_songs'], 'localplay_songs');
         }
 
         return true;

@@ -30,6 +30,7 @@ use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class License5Method
@@ -45,10 +46,11 @@ final class License5Method
      * This returns a single license based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input): bool
+    public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api5::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -73,7 +75,7 @@ final class License5Method
                 echo Json5_Data::licenses(array($object_id), false);
                 break;
             default:
-                echo Xml5_Data::licenses(array($object_id));
+                echo Xml5_Data::licenses(array($object_id), $user);
         }
 
         return true;

@@ -40,17 +40,19 @@ final class Followers3Method
      * followers
      * This get an user followers
      * @param array $input
+     * @param User $user
      */
-    public static function followers(array $input)
+    public static function followers(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    $users = static::getUserFollowerRepository()->getFollowers($user->id);
+                    $results = static::getUserFollowerRepository()->getFollowers($user->id);
                     ob_end_clean();
-                    echo Xml3_Data::users($users);
+                    echo Xml3_Data::users($results);
                 } else {
                     debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 }

@@ -56,6 +56,7 @@ final class StatsMethod
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
      * @param array $input
+     * @param User $user
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
@@ -64,7 +65,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -94,15 +95,13 @@ final class StatsMethod
             return false;
         }
 
-        // set a default user
-        $user = User::get_from_username(Session::username($input['auth']));
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {
             $user = User::get_from_username($input['username']);
         } elseif (array_key_exists('user_id', $input)) {
             $user = new User((int)$input['user_id']);
         }
-        if (!$user->id) {
+        if (!$user instanceof User || $user->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), 'user'), '4710', self::ACTION, 'type', $input['api_format']);
 
@@ -135,7 +134,7 @@ final class StatsMethod
             case 'forgotten':
                 debug_event(self::class, 'stats ' . $filter, 4);
                 $newest  = $filter == 'recent';
-                $results = ($user)
+                $results = (array_key_exists('username', $input) || array_key_exists('user_id', $input))
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
                     : Stats::get_recent($type, $limit, $offset, $newest);
                 $offset = 0;

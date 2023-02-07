@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Artist5Method
@@ -46,17 +45,18 @@ final class Artist5Method
      * This returns a single artist based on the UID of said artist
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function artist(array $input): bool
+    public static function artist(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
-        $artist    = new Artist((int) $object_id);
+        $artist    = new Artist($object_id);
         if (!$artist->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
@@ -64,7 +64,6 @@ final class Artist5Method
             return false;
         }
 
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);

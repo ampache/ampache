@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 
 /**
@@ -45,15 +44,16 @@ final class UpdateArtistInfo4Method
      * Make sure lastfm_api_key is set in your configuration file
      *
      * @param array $input
+     * @param User $user
      * id   = (integer) $artist_id)
      * @return boolean
      */
-    public static function update_artist_info(array $input): bool
+    public static function update_artist_info(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_artist_info', $input['api_format'])) {
+        if (!Api4::check_access('interface', 75, $user->id, 'update_artist_info', $input['api_format'])) {
             return false;
         }
         $object = (int) $input['id'];

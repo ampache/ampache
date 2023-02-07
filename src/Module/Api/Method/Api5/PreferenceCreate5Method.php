@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PreferenceCreate5Method
@@ -44,6 +43,7 @@ final class PreferenceCreate5Method
      * Add a new preference to your server
      *
      * @param array $input
+     * @param User $user
      * This inserts a new preference into the preference table
      *
      * filter      = (string) preference name
@@ -55,9 +55,8 @@ final class PreferenceCreate5Method
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return boolean
      */
-    public static function preference_create(array $input): bool
+    public static function preference_create(array $input, User $user): bool
     {
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Api5::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
             return false;
         }
@@ -92,8 +91,8 @@ final class PreferenceCreate5Method
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
-        $preference = Preference::get($pref_name, -1);
-        if (empty($preference)) {
+        $results = Preference::get($pref_name, -1);
+        if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'system', $input['api_format']);
 
@@ -101,10 +100,10 @@ final class PreferenceCreate5Method
         }
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($preference, 'preference');
+                echo Xml5_Data::object_array($results, 'preference');
         }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 /**
@@ -44,10 +43,11 @@ final class ToggleFollow5Method
      * This will follow/unfollow a user
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input): bool
+    public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -59,11 +59,10 @@ final class ToggleFollow5Method
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user        = User::get_from_username(Session::username($input['auth']));
-            $follow_user = User::get_from_username($username);
-            if ($follow_user !== null) {
+            $leader = User::get_from_username($username);
+            if ($leader !== null) {
                 static::getUserFollowToggler()->toggle(
-                    $follow_user->getId(),
+                    $leader->getId(),
                     $user->getId()
                 );
                 ob_end_clean();

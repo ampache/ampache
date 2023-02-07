@@ -244,6 +244,11 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->album->f_artist_link = $value;
 
+        $this->album->shouldReceive('get_f_artist_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
+
         $this->assertSame(
             $value,
             $this->subject->getArtistLink()

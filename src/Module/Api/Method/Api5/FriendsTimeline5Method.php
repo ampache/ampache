@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -46,11 +45,12 @@ final class FriendsTimeline5Method
      * This get current user friends timeline
      *
      * @param array $input
+     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function friends_timeline(array $input): bool
+    public static function friends_timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -59,14 +59,14 @@ final class FriendsTimeline5Method
         }
         $limit = (int) ($input['limit']);
         $since = (int) ($input['since']);
-        $user  = User::get_from_username(Session::username($input['auth']))->getId();
+        $user  = $user->getId();
 
-        $activities = static::getUseractivityRepository()->getFriendsActivities(
+        $results = static::getUseractivityRepository()->getFriendsActivities(
             $user,
             $limit,
             $since
         );
-        if (empty($activities)) {
+        if (empty($results)) {
             Api5::empty('activity', $input['api_format']);
 
             return false;
@@ -75,10 +75,10 @@ final class FriendsTimeline5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::timeline($activities);
+                echo Json5_Data::timeline($results);
                 break;
             default:
-                echo Xml5_Data::timeline($activities);
+                echo Xml5_Data::timeline($results);
         }
 
         return true;

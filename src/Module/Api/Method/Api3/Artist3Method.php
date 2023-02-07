@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -40,12 +39,12 @@ final class Artist3Method
      * artist
      * This returns a single artist based on the UID of said artist
      * @param array $input
+     * @param User $user
      */
-    public static function artist(array $input)
+    public static function artist(array $input, User $user)
     {
         $uid     = scrub_in($input['filter']);
         $include = [];
-        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }

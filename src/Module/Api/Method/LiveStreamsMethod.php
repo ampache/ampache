@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LiveStreamsMethod
@@ -45,13 +46,14 @@ final class LiveStreamsMethod
      * This returns the live_streams  based on the specified filter
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function live_streams(array $input): bool
+    public static function live_streams(array $input, User $user): bool
     {
         if (!AmpConfig::get('live_stream')) {
             Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -66,8 +68,8 @@ final class LiveStreamsMethod
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $live_streams = $browse->get_objects();
-        if (empty($live_streams)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api::empty('live_stream', $input['api_format']);
 
             return false;
@@ -78,12 +80,12 @@ final class LiveStreamsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::live_streams($live_streams);
+                echo Json_Data::live_streams($results);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::live_streams($live_streams);
+                echo Xml_Data::live_streams($results, $user);
         }
 
         return true;

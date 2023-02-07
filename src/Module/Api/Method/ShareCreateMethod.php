@@ -36,6 +36,9 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\User;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShareCreateMethod
@@ -52,13 +55,16 @@ final class ShareCreateMethod
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) object_id
      * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input): bool
+    public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -83,7 +89,7 @@ final class ShareCreateMethod
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
 
-        $share = array();
+        $results = array();
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -100,7 +106,7 @@ final class ShareCreateMethod
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $share[] = Share::create_share(
+            $results[] = Share::create_share(
                 $object_type,
                 $object_id,
                 true,
@@ -111,7 +117,7 @@ final class ShareCreateMethod
                 $description
             );
         }
-        if (empty($share)) {
+        if (empty($results)) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
@@ -121,10 +127,10 @@ final class ShareCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::shares($share, false);
+                echo Json_Data::shares($results, false);
                 break;
             default:
-                echo Xml_Data::shares($share);
+                echo Xml_Data::shares($results, $user);
         }
 
         return true;

@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Session;
 
 /**
  * Class UrlToSong5Method
@@ -46,10 +45,11 @@ final class UrlToSong5Method
      * This takes a url and returns the song object in question
      *
      * @param array $input
+     * @param User $user
      * url = (string) $url
      * @return boolean
      */
-    public static function url_to_song(array $input): bool
+    public static function url_to_song(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('url'), self::ACTION)) {
             return false;
@@ -61,7 +61,6 @@ final class UrlToSong5Method
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
 
 /**
  * Class SongDeleteMethod
@@ -47,10 +46,11 @@ final class SongDeleteMethod
      * Delete an existing song.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of song to delete
      * @return boolean
      */
-    public static function song_delete(array $input): bool
+    public static function song_delete(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -64,7 +64,6 @@ final class SongDeleteMethod
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Catalog::can_remove($song, $user->id)) {
             Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
 

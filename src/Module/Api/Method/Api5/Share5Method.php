@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Share5Method
@@ -44,10 +45,11 @@ final class Share5Method
      * Get the share from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share(array $input): bool
+    public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api5::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -57,15 +59,15 @@ final class Share5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $share = array((int) $input['filter']);
+        $results = array((int) $input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($share, false);
+                echo Json5_Data::shares($results, false);
                 break;
             default:
-                echo Xml5_Data::shares($share);
+                echo Xml5_Data::shares($results, $user);
         }
 
         return true;

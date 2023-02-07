@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -47,12 +46,13 @@ class AlbumSongsMethod
      * This returns the songs of a specified album
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs(array $input): bool
+    public static function album_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -68,9 +68,8 @@ class AlbumSongsMethod
 
         ob_end_clean();
         // songs for all disks
-        $user  = User::get_from_username(Session::username($input['auth']));
-        $songs = static::getSongRepository()->getByAlbum($album->id);
-        if (empty($songs)) {
+        $results = static::getSongRepository()->getByAlbum($album->id);
+        if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
             return false;
@@ -81,12 +80,12 @@ class AlbumSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

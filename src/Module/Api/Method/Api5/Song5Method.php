@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Song5Method
@@ -46,16 +45,16 @@ final class Song5Method
      * return a single song
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of song
      * @return boolean
      */
-    public static function song(array $input): bool
+    public static function song(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
-        $user      = User::get_from_username(Session::username($input['auth']));
         $song      = new Song($object_id);
         if (!$song->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

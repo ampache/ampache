@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
@@ -41,22 +40,22 @@ final class SearchSongs3Method
      * search_songs
      * This searches the songs and returns... songs
      * @param array $input
+     * @param User $user
      */
-    public static function search_songs(array $input)
+    public static function search_songs(array $input, User $user)
     {
-        $array                    = array();
-        $array['type']            = 'song';
-        $array['rule_1']          = 'anywhere';
-        $array['rule_1_input']    = $input['filter'];
-        $array['rule_1_operator'] = 0;
+        $data                    = array();
+        $data['type']            = 'song';
+        $data['rule_1']          = 'anywhere';
+        $data['rule_1_input']    = $input['filter'];
+        $data['rule_1_operator'] = 0;
 
         ob_end_clean();
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($array);
+        $results = Search::run($data, $user);
 
         echo Xml3_Data::songs($results, $user);
     } // search_songs

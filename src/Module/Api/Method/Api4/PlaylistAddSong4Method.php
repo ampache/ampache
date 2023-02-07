@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistAddSong4Method
@@ -46,17 +45,17 @@ final class PlaylistAddSong4Method
      * This adds a song to a playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      * @return boolean
      */
-    public static function playlist_add_song(array $input): bool
+    public static function playlist_add_song(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter', 'song'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];
@@ -65,7 +64,7 @@ final class PlaylistAddSong4Method
 
             return false;
         }
-        $unique = ((bool) AmpConfig::get('unique_playlist') || (int) $input['check'] == 1);
+        $unique = ((bool)AmpConfig::get('unique_playlist', false) || (int) $input['check'] == 1);
         if (($unique) && in_array($song, $playlist->get_songs())) {
             Api4::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 

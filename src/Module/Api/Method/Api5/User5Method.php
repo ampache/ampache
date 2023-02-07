@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -47,10 +46,11 @@ final class User5Method
      * This get a user's public information
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function user(array $input): bool
+    public static function user(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
@@ -64,8 +64,8 @@ final class User5Method
             return false;
         }
 
-        $user  = User::get_from_username($username);
-        $valid = $user !== null && in_array($user->id, static::getUserRepository()->getValid(true));
+        $check_user  = User::get_from_username($username);
+        $valid       = $check_user !== null && in_array($check_user->id, static::getUserRepository()->getValid(true));
         if (!$valid) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
@@ -73,19 +73,15 @@ final class User5Method
             return false;
         }
 
-        $apiuser  = User::get_from_username(Session::username($input['auth']));
-        $fullinfo = false;
         // get full info when you're an admin or searching for yourself
-        if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-            $fullinfo = true;
-        }
+        $fullinfo = (($check_user->id == $user->id) || (Access::check('interface', 100, $user->id)));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::user($user, $fullinfo, false);
+                echo Json5_Data::user($check_user, $fullinfo, false);
                 break;
             default:
-                echo Xml5_Data::user($user, $fullinfo);
+                echo Xml5_Data::user($check_user, $fullinfo);
         }
 
         return true;

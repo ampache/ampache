@@ -26,11 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -50,21 +50,26 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
-     * group      = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate = (integer) $maxbitrate //optional
+     * @param User $user
+     * username          = (string) $username
+     * password          = (string) hash('sha256', $password)) //optional
+     * fullname          = (string) $fullname //optional
+     * email             = (string) $email //optional
+     * website           = (string) $website //optional
+     * state             = (string) $state //optional
+     * city              = (string) $city //optional
+     * disable           = (integer) 0,1 true to disable, false to enable //optional
+     * group             = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate        = (integer) $maxbitrate //optional
+     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
+     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      * @return boolean
      */
-    public static function user_update(array $input): bool
+    public static function user_update(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
@@ -80,12 +85,16 @@ final class UserUpdateMethod
         $disable              = $input['disable'] ?? null;
         $catalog_filter_group = $input['group'] ?? null;
         $maxbitrate           = (int)($input['maxBitRate'] ?? 0);
+        $fullname_public      = $input['fullname_public'] ?? null;
+        $reset_apikey         = $input['reset_apikey'] ?? null;
+        $reset_streamtoken    = $input['reset_streamtoken'] ?? null;
+        $clear_stats          = $input['clear_stats'] ?? null;
 
         // identify the user to modify
-        $user    = User::get_from_username($username);
-        $user_id = $user->getId();
+        $update_user = User::get_from_username($username);
+        $user_id     = $update_user->getId();
 
-        if ($password && Access::check('interface', 100, $user_id)) {
+        if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
 
@@ -96,33 +105,45 @@ final class UserUpdateMethod
 
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
-                $user->update_password('', $password);
+                $update_user->update_password('', $password);
             }
             if ($fullname) {
-                $user->update_fullname($fullname);
+                $update_user->update_fullname($fullname);
             }
             if (Mailer::validate_address($email)) {
-                $user->update_email($email);
+                $update_user->update_email($email);
             }
             if ($website) {
-                $user->update_website($website);
+                $update_user->update_website($website);
             }
             if ($state) {
-                $user->update_state($state);
+                $update_user->update_state($state);
             }
             if ($city) {
-                $user->update_city($city);
+                $update_user->update_city($city);
             }
             if ($disable === '1') {
-                $userStateToggler->disable($user);
+                $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {
-                $userStateToggler->enable($user);
+                $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {
-                $user->update_catalog_filter_group((int)$catalog_filter_group);
+                $update_user->update_catalog_filter_group((int)$catalog_filter_group);
             }
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+            }
+            if ($fullname_public !== null) {
+                $update_user->update_fullname_public($fullname_public);
+            }
+            if ($reset_apikey) {
+                static::getUserKeyGenerator()->generateApikey($update_user);
+            }
+            if ($reset_streamtoken) {
+                static::getUserKeyGenerator()->generateStreamToken($update_user);
+            }
+            if ($clear_stats) {
+                Stats::clear($update_user->id);
             }
             Api::message('successfully updated: ' . $username, $input['api_format']);
 
@@ -142,5 +163,15 @@ final class UserUpdateMethod
         global $dic;
 
         return $dic->get(UserStateTogglerInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserKeyGenerator(): UserKeyGeneratorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserKeyGeneratorInterface::class);
     }
 }

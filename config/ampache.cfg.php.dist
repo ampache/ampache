@@ -25,7 +25,7 @@ config_version = 64
 
 ; We sometimes need to talk and will show a warning to admin users
 ; Enable this setting if you don't want to see warnings (When we enable them)
-; DEFAULT: false
+; DEFAULT: "false"
 ;hide_ampache_messages = "true"
 
 ;#########################################################
@@ -247,7 +247,7 @@ metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
 ; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
-; DEFAULT: filename getID3
+; DEFAULT: "filename,getID3"
 metadata_order_video = "filename,getID3"
 
 ; This determines if extended metadata grabbed from external services should be deferred.
@@ -323,7 +323,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This defines if catalog can be filtered per user.
 ; The filters are set in the catalog management pages.
 ; WARNING: this increase sensibly sql requests and slow down Ampache a lot
-; DEFAULT: false
+; DEFAULT: "false"
 ;catalog_filter = "true"
 
 ; Delete from disk
@@ -382,7 +382,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; Art Zip Add
 ; This settings allows/disallows to include Album Art to the Zip 
 ; If 'album_art_preferred_filename' exists this is included 
-; DEFAULT: false
+; DEFAULT: "false"
 ;art_zip_add = "true"
 
 ; File Zip Comment
@@ -547,7 +547,7 @@ sociable = "true"
 ; i.e. "folder.jpg" Ampache currently only supports jpg/gif and png
 ; Especially useful if you have a front and a back image in a folder
 ; comment out if Ampache should search for any jpg, gif or png
-; DEFAULT: folder.jpg
+; DEFAULT: "folder.jpg"
 ;album_art_preferred_filename = "folder.jpg"
 
 ; Artist Art Preferred Filename
@@ -555,7 +555,7 @@ sociable = "true"
 ; same folder as your files or in the parent folder
 ; e.g. /mnt/music/Artist/Album/artist.jpg
 ;      /mnt/music/Artist/artist.jpg
-; DEFAULT: folder.jpg
+; DEFAULT: "folder.jpg"
 ;artist_art_preferred_filename = "folder.jpg"
 
 ; Artist Art Dump Folder
@@ -657,7 +657,7 @@ art_order = "db,tags,folder,spotify,musicbrainz"
 ; Show song art instead of album art in web UI and Subsonic API.
 ; This will only work when gather_song_art is set to true AND when
 ; there is song art in the database.
-; DEFAULT: false
+; DEFAULT: "false"
 ;show_song_art = "true"
 
 ; Spotify Album art search filter
@@ -1036,14 +1036,14 @@ site_charset = UTF-8
 ; If a user wants to register.
 ; Username and email fields are forced.
 ; POSSIBLE VALUES: fullname,website,state,city
-; DEFAULT: fullname,website
+; DEFAULT: "fullname,website"
 registration_display_fields = "fullname,website"
 
 ; The fields that will be mandatory
 ; This controls which fields are mandatory for registration.
 ; Username and email fields are forced mandatory.
 ; POSSIBLE VALUES: fullname,website,state,city
-; DEFAULT: fullname
+; DEFAULT: "fullname"
 registration_mandatory_fields = "fullname"
 
 ;#########################################################
@@ -1277,7 +1277,7 @@ send_full_stream = "webplayer"
 ; Enable or disable email server features
 ; otherwise, you can reset your password
 ; and never receive an email with the new one
-; Default: false
+; Default: "false"
 ;mail_enable = "true"
 
 ; Method used to send mail

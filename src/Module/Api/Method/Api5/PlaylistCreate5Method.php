@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistCreate5Method
@@ -47,18 +46,18 @@ final class PlaylistCreate5Method
      * This create a new playlist and return it
      *
      * @param array $input
+     * @param User $user
      * name = (string) Playlist name
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create(array $input): bool
+    public static function playlist_create(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('name'), self::ACTION)) {
             return false;
         }
         $name = $input['name'];
         $type = (isset($input['type'])) ? $input['type'] : 'private';
-        $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
         }

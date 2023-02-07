@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class AlbumSongs4Method
@@ -46,37 +45,37 @@ class AlbumSongs4Method
      * This returns the songs of a specified album
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs(array $input): bool
+    public static function album_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new Album((int)$input['filter']);
-        $songs = array();
-        $user  = User::get_from_username(Session::username($input['auth']));
+        $album   = new Album((int)$input['filter']);
+        $results = array();
 
         ob_end_clean();
 
         if (isset($album->id)) {
             // songs for all disks
-            $songs = static::getAlbumRepository()->getSongs($album->id);
+            $results = static::getAlbumRepository()->getSongs($album->id);
         }
-        if (!empty($songs)) {
+        if (!empty($results)) {
             switch ($input['api_format']) {
                 case 'json':
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($songs, $user);
+                    echo Json4_Data::songs($results, $user);
                     break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($songs, $user);
+                    echo Xml4_Data::songs($results, $user);
             }
         }
 

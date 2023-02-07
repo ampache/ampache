@@ -47,6 +47,7 @@ final class Stream5Method
      * Search and Playlist will only stream a random object not the whole thing
      *
      * @param array $input
+     * @param User $user
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
      * bitrate = (integer) max bitrate for transcoding // Song only
@@ -55,7 +56,7 @@ final class Stream5Method
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input): bool
+    public static function stream(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -64,7 +65,6 @@ final class Stream5Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $user      = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw

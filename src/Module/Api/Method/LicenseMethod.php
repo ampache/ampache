@@ -30,6 +30,7 @@ use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LicenseMethod
@@ -46,10 +47,11 @@ final class LicenseMethod
      * This returns a single license based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license(array $input): bool
+    public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -74,7 +76,7 @@ final class LicenseMethod
                 echo Json_Data::licenses(array($object_id), false);
                 break;
             default:
-                echo Xml_Data::licenses(array($object_id));
+                echo Xml_Data::licenses(array($object_id), $user);
         }
 
         return true;

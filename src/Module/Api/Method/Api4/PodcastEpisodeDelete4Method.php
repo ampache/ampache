@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class PodcastEpisodeDelete4Method
@@ -46,17 +45,18 @@ final class PodcastEpisodeDelete4Method
      * Delete an existing podcast_episode.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast_episode to delete
      * @return boolean
      */
-    public static function podcast_episode_delete(array $input): bool
+    public static function podcast_episode_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
 
             return false;
         }
-        if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
@@ -64,15 +64,15 @@ final class PodcastEpisodeDelete4Method
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        if ($episode->id > 0) {
+        if (!isset($episode->id)) {
+            Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+        } else {
             if ($episode->remove()) {
                 Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
                 Catalog::count_table('podcast_episode');
             } else {
                 Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
             }
-        } else {
-            Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
         }
 
         return true;

@@ -370,6 +370,7 @@ class User extends database_object
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
         }
+
         return $this->catalogs[$filter];
     } // get_catalogs
 
@@ -686,7 +687,7 @@ class User extends database_object
     /**
      * update_fullname_public
      * updates their fullname public
-     * @param $new_fullname_public
+     * @param bool|string $new_fullname_public
      */
     public function update_fullname_public($new_fullname_public)
     {

@@ -993,20 +993,18 @@ abstract class Catalog extends database_object
     /**
      * get_update_info
      *
-     * return the counts from update info to speed up responses
+     * return the counts from user_data or update_info to speed up responses
      * @param string $key
+     * @param int $user_id
      * @return int
      */
-    public static function get_update_info(string $key)
+    public static function get_update_info(string $key, int $user_id)
     {
-        if ($key == 'joined') {
-            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info` WHERE `key` IN ('playlist', 'search')";
-            $db_results = Dba::read($sql);
-        } else {
-            $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-            $db_results = Dba::read($sql, array($key));
-        }
-        $results = Dba::fetch_assoc($db_results);
+        $sql = ($user_id > 0)
+            ? "SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = " . $user_id
+            : "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
+        $db_results = Dba::read($sql, array($key));
+        $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['value'] ?? 0);
     } // get_update_info
@@ -1551,6 +1549,49 @@ abstract class Catalog extends database_object
             foreach ($tvshow_ids as $tvshow_id) {
                 $results[] = new TvShow($tvshow_id);
             }
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_name_array
+     *
+     * Get each array of fullname's for a object type
+     * @param array $objects
+     * @param string $table
+     * @return array
+     */
+    public static function get_name_array($objects, $table)
+    {
+        switch ($table) {
+            case 'artist':
+            case 'album':
+                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
+                break;
+            case 'playlist':
+            case 'live_stream':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
+                break;
+            case 'podcast':
+            case 'podcast_episode':
+            case 'song':
+            case 'video':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` ";
+                break;
+            case 'share':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` ";
+                break;
+            default:
+                return array();
+
+        }
+        $sql .= "FROM $table WHERE `id` IN (" . implode(",", $objects) . ");";
+
+        $db_results = Dba::read($sql);
+        $results    = array();
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            $results[] = $row;
         }
 
         return $results;
@@ -2970,7 +3011,7 @@ abstract class Catalog extends database_object
      */
     public static function update_counts()
     {
-        $update_time = self::get_update_info('update_counts');
+        $update_time = self::get_update_info('update_counts', -1);
         $now_time    = time();
         // give the server a 30 min break for this help with load
         if ($update_time !== 0 && $update_time > ($now_time - 1800)) {
@@ -3376,11 +3417,12 @@ abstract class Catalog extends database_object
      * trim_prefix
      * Splits the prefix from the string
      * @param string $string
+     * @param string $pattern
      * @return array
      */
-    public static function trim_prefix($string)
+    public static function trim_prefix($string, $pattern = null)
     {
-        $prefix_pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {
             $string = trim((string)$matches[2]);
             $prefix = trim((string)$matches[1]);
@@ -4271,11 +4313,9 @@ abstract class Catalog extends database_object
         // Do the various check
         $album_object = new Album($song->album);
         $album_object->format();
-        if ($album_object->get_album_artist_fullname() != "") {
-            $artist = $album_object->f_album_artist_name;
-        } elseif ($album_object->artist_count != 1) {
-            $artist = $various_artist;
-        }
+        $artist         = ($album_object->get_artist_fullname() != "")
+            ? $album_object->f_artist_name
+            : $various_artist;
         $disk           = self::sort_clean_name($song->disk, '%d');
         $catalog_number = self::sort_clean_name($album_object->catalog_number, '%C');
         $barcode        = self::sort_clean_name($album_object->barcode, '%b');

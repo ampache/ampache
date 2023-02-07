@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Xml3_Data;
@@ -41,10 +40,10 @@ final class Democratic3Method
      * democratic
      * This is for controlling democratic play
      * @param array $input
+     * @param User $user
      */
-    public static function democratic(array $input)
+    public static function democratic(array $input, User $user)
     {
-        $user = User::get_from_username(Session::username($input['auth']));
         // Load up democratic information
         $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
@@ -64,8 +63,11 @@ final class Democratic3Method
                 ));
 
                 // If everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
-                echo Xml3_Data::keyed_array($xml_array);
+                $results = array(
+                    'method' => $input['method'],
+                    'result' => true
+                );
+                echo Xml3_Data::keyed_array($results);
                 break;
             case 'devote':
                 $media = new Song($input['oid']);
@@ -77,19 +79,24 @@ final class Democratic3Method
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
-                echo Xml3_Data::keyed_array($xml_array);
+                $results = array(
+                    'method' => $input['method'],
+                    'result' => true
+                );
+                echo Xml3_Data::keyed_array($results);
                 break;
             case 'playlist':
-                $objects = $democratic->get_items();
+                $results = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
-                echo Xml3_Data::democratic($objects, $user);
+                echo Xml3_Data::democratic($results, $user);
                 break;
             case 'play':
-                $url       = $democratic->play_url($user);
-                $xml_array = array('url' => $url);
-                echo Xml3_Data::keyed_array($xml_array);
+                $url     = $democratic->play_url($user);
+                $results = array(
+                    'url' => $url
+                );
+                echo Xml3_Data::keyed_array($results);
                 break;
             default:
                 echo Xml3_Data::error('405', T_('Invalid Request'));

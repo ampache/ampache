@@ -82,7 +82,6 @@ final class EditObjectAction extends AbstractEditAction
             return $data;
         };
         $entities($_POST);
-
         if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         } else {
@@ -115,8 +114,8 @@ final class EditObjectAction extends AbstractEditAction
             if (isset($_POST['album_artist'])) {
                 unset($_POST['album_artist']);
             }
-            if (isset($_POST['album_artist_name'])) {
-                unset($_POST['album_artist_name']);
+            if (isset($_POST['artist_name'])) {
+                unset($_POST['artist_name']);
             }
             if (isset($_POST['edit_tags'])) {
                 $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);

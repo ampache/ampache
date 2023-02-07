@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class PreferenceDeleteMethod
@@ -44,15 +43,15 @@ final class PreferenceDeleteMethod
      * Delete a non-system preference by name
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function preference_delete(array $input): bool
+    public static function preference_delete(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }

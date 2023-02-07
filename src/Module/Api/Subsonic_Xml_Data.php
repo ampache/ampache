@@ -197,7 +197,7 @@ class Subsonic_Xml_Data
      */
     private static function addIgnoredArticles($xml)
     {
-        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern');
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La');
         if (!empty($ignoredArticles)) {
             $ignoredArticles = str_replace("|", " ", $ignoredArticles);
             $xml->addAttribute('ignoredArticles', (string)$ignoredArticles);
@@ -395,7 +395,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', $subParent);
-        $xalbum->addAttribute('artist', (string) self::_checkName($album->get_album_artist_fullname()));
+        $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -807,10 +807,8 @@ class Subsonic_Xml_Data
             $xplayqueue->addAttribute('changed', $date->format("c"));
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);
 
-            if ($items) {
-                foreach ($items as $row) {
-                    self::addSong($xplayqueue, (int)$row['object_id'], "entry");
-                }
+            foreach ($items as $row) {
+                self::addSong($xplayqueue, (int)$row['object_id'], "entry");
             }
         }
     }

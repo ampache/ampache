@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Genres5Method
@@ -44,13 +45,14 @@ final class Genres5Method
      * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genres(array $input): bool
+    public static function genres(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -59,8 +61,8 @@ final class Genres5Method
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $tags = $browse->get_objects();
-        if (empty($tags)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api5::empty('genre', $input['api_format']);
 
             return false;
@@ -71,12 +73,12 @@ final class Genres5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::genres($tags);
+                echo Json5_Data::genres($results);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::genres($tags);
+                echo Xml5_Data::genres($results, $user);
         }
 
         return true;

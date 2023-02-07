@@ -118,7 +118,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
-                            'rels' => scrub_out($album->get_album_artist_fullname()),
+                            'rels' => scrub_out($album->get_artist_fullname()),
                             'image' => Art::url($album->id, 'album', null, 10),
                         );
                     }
@@ -146,7 +146,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
-                            'rels' => scrub_out($albumdisk->get_album_artist_fullname()),
+                            'rels' => scrub_out($albumdisk->get_artist_fullname()),
                             'image' => Art::url($albumdisk->album_id, 'album', null, 10),
                         );
                     }

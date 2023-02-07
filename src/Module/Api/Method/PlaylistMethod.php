@@ -32,7 +32,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistMethod
@@ -49,18 +48,17 @@ final class PlaylistMethod
      * This returns a single playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist(array $input): bool
+    public static function playlist(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
-
-        $playlist = ((int) $object_id === 0)
+        $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
         if (!$playlist->id) {

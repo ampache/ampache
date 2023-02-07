@@ -50,12 +50,14 @@ final class PingMethod
      */
     public static function ping(array $input)
     {
-        // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
         $data_version = (int)substr($version, 0, 1);
-
-        $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
+        $results      = array(
+            'server' => AmpConfig::get('version'),
+            'version' => Api::$version,
+            'compatible' => '350001'
+        );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
@@ -63,18 +65,22 @@ final class PingMethod
             if (in_array($data_version, array(3, 4, 5, 6))) {
                 Session::write($input['auth'], $data_version);
             }
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)), $xmldata, Api::server_details($input['auth']));
+            $results = array_merge(array(
+                'session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)),
+                $results,
+                Api::server_details($input['auth'])
+            );
         }
 
-        debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
+        debug_event(self::class, "Ping$data_version Received from: " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($xmldata, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::keyed_array($xmldata);
+                echo Xml_Data::keyed_array($results);
         }
     } // ping
 }

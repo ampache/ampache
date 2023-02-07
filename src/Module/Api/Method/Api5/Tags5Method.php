@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Tags5Method
@@ -41,9 +42,11 @@ final class Tags5Method
      * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
+     * @param User $user
      */
-    public static function tags(array $input)
+    public static function tags(array $input, User $user)
     {
+        unset($user);
         Api5::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
     }
 }

@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Catalog5Method
@@ -43,10 +44,11 @@ final class Catalog5Method
      * Get the catalogs from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input): bool
+    public static function catalog(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -66,7 +68,7 @@ final class Catalog5Method
                 echo Json5_Data::catalogs(array($catalog->id), false);
                 break;
             default:
-                echo Xml5_Data::catalogs(array($catalog->id));
+                echo Xml5_Data::catalogs(array($catalog->id), $user);
         }
 
         return true;

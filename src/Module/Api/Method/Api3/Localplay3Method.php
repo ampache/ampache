@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Localplay3Method
@@ -39,8 +40,9 @@ final class Localplay3Method
      * localplay
      * This is for controling localplay
      */
-    public static function localplay(array $input)
+    public static function localplay(array $input, User $user): bool
     {
+        unset($user);
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (!$localplay->connect()) {
@@ -69,8 +71,14 @@ final class Localplay3Method
                 return false;
         } // end switch on command
 
-        $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result))));
-        echo Xml3_Data::keyed_array($xml_array);
+        $results = array(
+            'localplay' => array(
+                'command' => array(
+                    $input['command'] => make_bool($result)
+                )
+            )
+        );
+        echo Xml3_Data::keyed_array($results);
 
         return true;
     } // localplay

@@ -47,8 +47,8 @@ $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 $web_path = AmpConfig::get('web_path');
 $simple   = $albumDisk->get_fullname(true);
 $f_name   = $albumDisk->get_fullname(false, true);
-$title    = ($albumDisk->get_f_album_artist_link())
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($albumDisk->get_f_album_artist_link()) ?: '')
+$title    = ($albumDisk->f_artist_link())
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($albumDisk->get_f_artist_link()) ?: '')
     : scrub_out($f_name);
 
 $access50          = Access::check('interface', 50);
@@ -70,10 +70,10 @@ if ($directplay_limit > 0) {
 
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($albumDisk->get_album_artist_fullname()); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($albumDisk->f_album_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($albumDisk->get_artist_fullname()); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($albumDisk->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($simple); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($albumDisk->f_album_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($albumDisk->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     <?php if ($albumDisk->mbid) { ?>
         <a href="https://musicbrainz.org/release/<?php echo $albumDisk->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } else { ?>
@@ -81,7 +81,7 @@ if ($directplay_limit > 0) {
     <?php } ?>
     </div>
     <?php
-        $name  = '[' . scrub_out($albumDisk->f_album_artist_name) . '] ' . scrub_out($f_name);
+        $name  = '[' . scrub_out($albumDisk->f_artist_name) . '] ' . scrub_out($f_name);
         $thumb = Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
 </div>

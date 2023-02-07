@@ -46,12 +46,13 @@ final class Timeline5Method
      * This gets a user timeline from their username
      *
      * @param array $input
+     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input): bool
+    public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,6 +62,7 @@ final class Timeline5Method
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
         $limit    = (int) ($input['limit']);
         $since    = (int) ($input['since']);
@@ -69,7 +71,7 @@ final class Timeline5Method
             $user = User::get_from_username($username);
             if ($user !== null) {
                 if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $activities = static::getUseractivityRepository()->getActivities(
+                    $results = static::getUseractivityRepository()->getActivities(
                         $user->getId(),
                         $limit,
                         $since
@@ -77,10 +79,10 @@ final class Timeline5Method
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo Json5_Data::timeline($activities);
+                            echo Json5_Data::timeline($results);
                             break;
                         default:
-                            echo Xml5_Data::timeline($activities);
+                            echo Xml5_Data::timeline($results);
                     }
                 }
             }

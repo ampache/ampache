@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,10 +46,11 @@ final class PodcastEpisode5Method
      * Get the podcast_episode from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter  = (integer) podcast_episode ID number
      * @return boolean
      */
-    public static function podcast_episode(array $input): bool
+    public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api5::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,21 +63,21 @@ final class PodcastEpisode5Method
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
 
-        if (!$episode->id) {
+        if (!isset($episode->id)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
+        $results = array($episode->id);
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcast_episodes(array($object_id), $user, true, false);
+                echo Json5_Data::podcast_episodes($results, $user, true, false);
                 break;
             default:
-                echo Xml5_Data::podcast_episodes(array($object_id), $user);
+                echo Xml5_Data::podcast_episodes($results, $user);
         }
 
         return true;

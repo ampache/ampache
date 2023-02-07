@@ -34,6 +34,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HandshakeMethod
@@ -56,6 +58,8 @@ final class HandshakeMethod
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
@@ -162,14 +166,14 @@ final class HandshakeMethod
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
-                $outarray = Api::server_details($token);
+                $results = Api::server_details($token);
 
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($outarray, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml_Data::keyed_array($outarray);
+                        echo Xml_Data::keyed_array($results);
                 }
 
                 return true;

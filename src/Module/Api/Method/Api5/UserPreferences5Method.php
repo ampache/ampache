@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserPreferences5Method
@@ -44,21 +43,23 @@ final class UserPreferences5Method
      * Get your user preferences
      *
      * @param array $input
+     * @param User $user
      */
-    public static function user_preferences(array $input)
+    public static function user_preferences(array $input, User $user)
     {
-        $user = User::get_from_username(Session::username($input['auth']));
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $preferences  = Preference::get_all($user->id);
-        $output_array = array('preference' => $preferences);
+        $preferences = Preference::get_all($user->id);
+        $results     = array(
+            'preference' => $preferences
+        );
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($output_array['preference'], 'preference');
+                echo Xml5_Data::object_array($results['preference'], 'preference');
         }
     }
 }

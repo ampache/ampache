@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Genre5Method
@@ -44,10 +45,11 @@ final class Genre5Method
      * This returns a single genre based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre(array $input): bool
+    public static function genre(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -67,7 +69,7 @@ final class Genre5Method
                 echo Json5_Data::genres(array($object_id), false);
                 break;
             default:
-                echo Xml5_Data::genres(array($object_id));
+                echo Xml5_Data::genres(array($object_id), $user);
         }
 
         return true;

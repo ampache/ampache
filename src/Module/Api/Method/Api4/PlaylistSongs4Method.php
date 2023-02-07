@@ -32,7 +32,6 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistSongs4Method
@@ -48,17 +47,17 @@ final class PlaylistSongs4Method
      * This returns the songs for a playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function playlist_songs(array $input): bool
+    public static function playlist_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
@@ -74,11 +73,11 @@ final class PlaylistSongs4Method
             return false;
         }
 
-        $items = $playlist->get_items();
-        $songs = array();
+        $items   = $playlist->get_items();
+        $results = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
-                $songs[] = $object['object_id'];
+                $results[] = $object['object_id'];
             }
         } // end foreach
 
@@ -87,12 +86,12 @@ final class PlaylistSongs4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::songs($songs, $user);
+                echo Json4_Data::songs($results, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::songs($songs, $user);
+                echo Xml4_Data::songs($results, $user);
         }
 
         return true;

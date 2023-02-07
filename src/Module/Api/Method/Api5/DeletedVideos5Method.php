@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 /**
@@ -43,17 +44,19 @@ final class DeletedVideos5Method
      * This returns video objects that have been deleted
      *
      * @param array $input
+     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function deleted_videos(array $input): bool
+    public static function deleted_videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
+        unset($user);
 
         $video_ids = Video::get_deleted();
         if (empty($video_ids)) {

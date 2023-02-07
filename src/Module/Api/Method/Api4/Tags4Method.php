@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Repository\Model\User;
+
 /**
  * Class Tags4Method
  */
@@ -39,13 +41,14 @@ final class Tags4Method
      * This returns the tags (Genres) based on the specified filter
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags(array $input)
+    public static function tags(array $input, User $user)
     {
-        Genres4Method::genres($input);
+        Genres4Method::genres($input, $user);
     } // tags
 }

@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class AdvancedSearch5Method
@@ -60,6 +59,7 @@ final class AdvancedSearch5Method
      * https://ampache.org/api/api-json-methods
      *
      * @param array $input
+     * @param User $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -70,7 +70,7 @@ final class AdvancedSearch5Method
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input): bool
+    public static function advanced_search(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -88,8 +88,8 @@ final class AdvancedSearch5Method
 
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
+        $data    = $input;
+        $results = Search::run($data, $user);
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
 
@@ -98,6 +98,8 @@ final class AdvancedSearch5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Json5_Data::albums($results, array(), $user);
@@ -121,7 +123,7 @@ final class AdvancedSearch5Method
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json5_Data::genres($results, $user);
+                        echo Json5_Data::genres($results);
                         break;
                     case 'user':
                         echo Json5_Data::users($results);
@@ -135,6 +137,8 @@ final class AdvancedSearch5Method
                 }
                 break;
             default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Xml5_Data::albums($results, array(), $user);
@@ -143,7 +147,7 @@ final class AdvancedSearch5Method
                         echo Xml5_Data::artists($results, array(), $user);
                         break;
                     case 'label':
-                        echo Xml5_Data::labels($results);
+                        echo Xml5_Data::labels($results, $user);
                         break;
                     case 'playlist':
                         echo Xml5_Data::playlists($results, $user);
@@ -156,7 +160,7 @@ final class AdvancedSearch5Method
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml5_Data::genres($results);
+                        echo Xml5_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Xml5_Data::users($results);

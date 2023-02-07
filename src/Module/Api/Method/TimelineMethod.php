@@ -47,12 +47,13 @@ final class TimelineMethod
      * This gets a user timeline from their username
      *
      * @param array $input
+     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input): bool
+    public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -67,22 +68,19 @@ final class TimelineMethod
         $since    = (int) ($input['since']);
 
         if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $activities = static::getUseractivityRepository()->getActivities(
-                        $user->getId(),
-                        $limit,
-                        $since
-                    );
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json_Data::timeline($activities);
-                            break;
-                        default:
-                            echo Xml_Data::timeline($activities);
-                    }
+            if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                $results = static::getUseractivityRepository()->getActivities(
+                    $user->getId(),
+                    $limit,
+                    $since
+                );
+                ob_end_clean();
+                switch ($input['api_format']) {
+                    case 'json':
+                        echo Json_Data::timeline($results);
+                        break;
+                    default:
+                        echo Xml_Data::timeline($results);
                 }
             }
         }

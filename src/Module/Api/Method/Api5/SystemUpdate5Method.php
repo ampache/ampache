@@ -46,16 +46,15 @@ final class SystemUpdate5Method
      * Check Ampache for updates and run the update if there is one.
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function system_update(array $input): bool
+    public static function system_update(array $input, User $user): bool
     {
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $updated = false;
-
         if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        $updated = false;
         if (AutoUpdate::is_update_available(true)) {
             // run the update
             AutoUpdate::update_files(true);

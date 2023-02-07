@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,10 +46,11 @@ final class PodcastEpisode4Method
      * Get the podcast_episode from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter  = (integer) podcast_episode ID number
      * @return boolean
      */
-    public static function podcast_episode(array $input): bool
+    public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
@@ -60,20 +60,21 @@ final class PodcastEpisode4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        if ($episode->id > 0) {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo Json4_Data::podcast_episodes(array($object_id), $user);
-                    break;
-                default:
-                    echo Xml4_Data::podcast_episodes(array($object_id), $user);
-            }
-        } else {
+
+        if (!isset($episode->id)) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo Json4_Data::podcast_episodes(array($object_id), $user);
+                break;
+            default:
+                echo Xml4_Data::podcast_episodes(array($object_id), $user);
         }
 
         return true;

@@ -30,7 +30,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class Flag4Method
@@ -48,12 +47,13 @@ final class Flag4Method
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
+     * @param User $user
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag(array $input): bool
+    public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
@@ -67,9 +67,8 @@ final class Flag4Method
         $type      = (string) $input['type'];
         $object_id = $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
-        $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
-        if ((int) $user->id > 0) {
+        if ($user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data

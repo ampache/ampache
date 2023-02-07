@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
@@ -48,19 +47,19 @@ final class BookmarkCreate5Method
      * Create a placeholder for the current media that you can return to later.
      *
      * @param array $input
+     * @param User $user
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' // optional
+     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_create(array $input): bool
+    public static function bookmark_create(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
@@ -105,8 +104,8 @@ final class BookmarkCreate5Method
 
         // create it then retrieve it
         Bookmark::create($object, $user->getId(), $time);
-        $bookmark = Bookmark::get_bookmark($object);
-        if (empty($bookmark)) {
+        $results = Bookmark::get_bookmark($object);
+        if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);
 
             return false;
@@ -115,10 +114,10 @@ final class BookmarkCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::bookmarks($bookmark);
+                echo Json5_Data::bookmarks($results);
                 break;
             default:
-                echo Xml5_Data::bookmarks($bookmark);
+                echo Xml5_Data::bookmarks($results);
         }
 
         return true;

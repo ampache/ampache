@@ -29,7 +29,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class Rate4Method
@@ -45,12 +44,13 @@ final class Rate4Method
      * This rates a library item
      *
      * @param array $input
+     * @param User $user
      * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean
      */
-    public static function rate(array $input): bool
+    public static function rate(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api4::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
@@ -64,7 +64,6 @@ final class Rate4Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
-        $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);

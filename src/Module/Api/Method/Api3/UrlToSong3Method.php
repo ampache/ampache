@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -42,12 +41,12 @@ final class UrlToSong3Method
      *
      * This takes a url and returns the song object in question
      * @param array $input
+     * @param User $user
      */
-    public static function url_to_song(array $input)
+    public static function url_to_song(array $input, User $user)
     {
         // Don't scrub, the function needs her raw and juicy
         $url_data = Stream_URL::parse($input['url']);
-        $user     = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         echo Xml3_Data::songs(array((int)$url_data['id']), $user);
     }

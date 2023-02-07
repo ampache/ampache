@@ -105,7 +105,9 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getArt(): string
     {
         $albumId = $this->album->getId();
-        $name    = '[' . $this->album->get_album_artist_fullname() . '] ' . scrub_out($this->album->get_fullname());
+        $name    = ($this->album->get_artist_fullname() != "")
+            ? '[' . $this->album->get_artist_fullname() . '] ' . scrub_out($this->album->get_fullname())
+            : scrub_out($this->album->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
@@ -294,7 +296,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return !empty($this->album->f_album_artist_link) ? $this->album->f_album_artist_link : $this->album->f_artist_link;
+        return $this->album->get_f_artist_link();
     }
 
     public function canShowYear(): bool

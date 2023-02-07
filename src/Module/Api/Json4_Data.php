@@ -394,21 +394,10 @@ class Json4_Data
             $objArray["id"]   = (string) $album->id;
             $objArray["name"] = $album->get_fullname();
 
-            // Do a little check for artist stuff
-            if ($album->get_album_artist_fullname() != "") {
+            if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = array(
-                    "id" => (string) $album->album_artist,
-                    "name" => $album->f_album_artist_name
-                );
-            } elseif ($album->artist_count != 1) {
-                $objArray['artist'] = array(
-                    "id" => "0",
-                    "name" => T_('Various')
-                );
-            } else {
-                $objArray['artist'] = array(
-                    "id" => (string) $album->album_artist,
-                    "name" => $album->get_album_artist_name()
+                    "id" => (string)$album->album_artist,
+                    "name" => $album->f_artist_name
                 );
             }
 
@@ -663,8 +652,8 @@ class Json4_Data
             $podcast_public_url  = $podcast->link;
             $podcast_episodes    = array();
             if ($episodes) {
-                $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, $user, false);
+                $results          = $podcast->get_episodes();
+                $podcast_episodes = self::podcast_episodes($results, $user, false);
             }
             // Build this element
             $allPodcasts[] = [

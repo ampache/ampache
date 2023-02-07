@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class SystemPreferences5Method
@@ -44,23 +43,24 @@ final class SystemPreferences5Method
      * Get your system preferences
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function system_preferences(array $input): bool
+    public static function system_preferences(array $input, User $user): bool
     {
-        $user = User::get_from_username(Session::username($input['auth']));
-
         if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $preferences  = Preference::get_all(-1);
-        $output_array = array('preference' => $preferences);
+        $preferences = Preference::get_all(-1);
+        $results     = array(
+            'preference' => $preferences
+        );
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($output_array['preference'], 'preference');
+                echo Xml5_Data::object_array($results['preference'], 'preference');
         }
 
         return true;

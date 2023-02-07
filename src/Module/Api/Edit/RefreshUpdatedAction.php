@@ -102,6 +102,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
          */
         switch ($object_type) {
             case 'song_row':
+                /** @var \Ampache\Repository\Model\Song $libitem */
                 $hide_genres    = AmpConfig::get('hide_genres');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $argument_param = '&hide=' . Core::get_request('hide');
@@ -133,6 +134,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'playlist_row':
+                /** @var \Ampache\Repository\Model\Playlist $libitem */
                 $show_art = AmpConfig::get('playlist_art');
                 $results  = preg_replace(
                     '/<\/?html(.|\s)*?>/',
@@ -149,6 +151,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'album_row':
+                /** @var \Ampache\Repository\Model\Album $libitem */
                 $hide_genres       = AmpConfig::get('hide_genres');
                 $show_played_times = AmpConfig::get('show_played_times');
                 $results           = preg_replace(
@@ -173,6 +176,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'artist_row':
+                /** @var \Ampache\Repository\Model\Artist $libitem */
                 $hide_genres      = AmpConfig::get('hide_genres');
                 $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
@@ -200,6 +204,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_row':
+                /** @var \Ampache\Repository\Model\Podcast $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -222,6 +227,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_episode_row':
+                /** @var \Ampache\Repository\Model\Podcast_Episode $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -244,6 +250,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'video_row':
+                /** @var \Ampache\Repository\Model\Video $libitem */
                 $hide_genres = AmpConfig::get('hide_genres');
                 ob_start();
 

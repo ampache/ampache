@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
@@ -48,16 +47,16 @@ final class GetBookmark5Method
      * Get the bookmark from it's object_id and object_type.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) object_id to find
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function get_bookmark(array $input): bool
+    public static function get_bookmark(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $type      = $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -95,8 +94,8 @@ final class GetBookmark5Method
             'object_id' => $object_id,
             'object_type' => $type
         );
-        $bookmark = Bookmark::get_bookmark($object);
-        if (empty($bookmark)) {
+        $results = Bookmark::get_bookmark($object);
+        if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);
 
             return false;
@@ -105,10 +104,10 @@ final class GetBookmark5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::bookmarks($bookmark);
+                echo Json5_Data::bookmarks($results);
                 break;
             default:
-                echo Xml5_Data::bookmarks($bookmark);
+                echo Xml5_Data::bookmarks($results);
         }
 
         return true;

@@ -31,7 +31,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Videos5Method
@@ -45,13 +44,14 @@ final class Videos5Method
      * This returns video objects!
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function videos(array $input): bool
+    public static function videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -66,9 +66,8 @@ final class Videos5Method
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
 
-        $video_ids = $browse->get_objects();
-        $user      = User::get_from_username(Session::username($input['auth']));
-        if (empty($video_ids)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api5::empty('video', $input['api_format']);
 
             return false;
@@ -79,12 +78,12 @@ final class Videos5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::videos($video_ids, $user);
+                echo Json5_Data::videos($results, $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::videos($video_ids, $user);
+                echo Xml5_Data::videos($results, $user);
         }
 
         return true;

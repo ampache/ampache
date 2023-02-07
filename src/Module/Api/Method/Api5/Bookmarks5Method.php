@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
@@ -46,14 +45,13 @@ final class Bookmarks5Method
      * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function bookmarks(array $input): bool
+    public static function bookmarks(array $input, User $user): bool
     {
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
-
-        if (empty($bookmarks)) {
+        $results = static::getBookmarkRepository()->getBookmarks($user->getId());
+        if (empty($results)) {
             Api5::empty('bookmark', $input['api_format']);
 
             return false;
@@ -62,10 +60,10 @@ final class Bookmarks5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::bookmarks($bookmarks);
+                echo Json5_Data::bookmarks($results);
                 break;
             default:
-                echo Xml5_Data::bookmarks($bookmarks);
+                echo Xml5_Data::bookmarks($results);
         }
 
         return true;

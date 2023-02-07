@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -44,24 +45,26 @@ final class Users5Method
      * Get ids and usernames for your site
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function users(array $input): bool
+    public static function users(array $input, User $user): bool
     {
-        $users = static::getUserRepository()->getValid();
-        if (empty($users)) {
+        $results = static::getUserRepository()->getValid();
+        if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 
             return false;
         }
+        unset($user);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::users($users);
+                echo Json5_Data::users($results);
                 break;
             default:
-                echo Xml5_Data::users($users);
+                echo Xml5_Data::users($results);
         }
 
         return true;

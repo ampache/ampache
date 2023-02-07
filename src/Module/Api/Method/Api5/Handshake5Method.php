@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -33,7 +32,10 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Handshake5Method
@@ -55,6 +57,8 @@ final class Handshake5Method
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
@@ -161,14 +165,14 @@ final class Handshake5Method
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
-                $outarray = Api5::server_details($token);
+                $results = Api5::server_details($token);
 
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($outarray, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($outarray);
+                        echo Xml5_Data::keyed_array($results);
                 }
 
                 return true;

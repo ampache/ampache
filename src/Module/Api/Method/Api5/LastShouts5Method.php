@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LastShouts5Method
@@ -44,11 +45,12 @@ final class LastShouts5Method
      * This get the latest posted shouts
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts(array $input): bool
+    public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -58,22 +60,23 @@ final class LastShouts5Method
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
         $username = $input['username'];
-        $shouts   = (!empty($username))
+        $results  = (!empty($username))
             ? Shoutbox::get_top($limit, $username)
             : Shoutbox::get_top($limit);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shouts($shouts);
+                echo Json5_Data::shouts($results);
                 break;
             default:
-                echo Xml5_Data::shouts($shouts);
+                echo Xml5_Data::shouts($results);
         }
 
         return true;

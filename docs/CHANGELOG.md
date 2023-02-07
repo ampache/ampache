@@ -85,6 +85,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
+* Combined a lot of duplicate functions into one
 
 ### Fixed
 
@@ -93,6 +94,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Hide Upload links if you can't access the catalog
 * Recently played for non-user calls
 * Found a few dynamic properties on objects
+* Bugs around the setting of the Various album_artist when the album_artist is null
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -103,8 +105,18 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
+  * list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
+  * live_stream_create: Create a new live stream (radio station)
+  * live_stream_edit: Edit a live stream
+  * live_stream_delete: Delete a stream buy ID
+  * register: Allow users to register an account (if enabled)
   * user_create: Add `group` parameter to pick a catalog filter group
-  * user_update: Add `group` parameter to pick a catalog filter group
+  * user_update:
+    * Add `group` parameter to pick a catalog filter group
+    * Add `fullname_public` to enable/disable using fullname in public display
+    * Add `reset_apikey` to reset a user Api Key
+    * Add `reset_streamtoken` to reset a user Stream Token
+    * Add `clear_stats` reset all stats for this user **be very sure about this one!**
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
   * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"
@@ -117,19 +129,37 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Changed
 
-* Don't send AlbumDisk objects to the API
+* ALL
+  * Albums with no album_artist may now return 0 artist called 'Various'
+  * Don't send AlbumDisk objects to the API
 * XML responses
   * id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
+  * Return original XML output (that may be malformed) when loadxml fails.
+* Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
 
 ### Fixed
 
+* ALL
+  * advanced_search methods were breaking with various offset and limits
 * Api6 JSON
   * Share and Bookmark object id's were not strings
+* Api3
+  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
+  * Artists method parameters were incorrect
 
 ### Removed
 
-* Api6::album_songs remove exact as a parameter
+* Api6
+  * preciserating removed from all objects (use rating)
+* Api6::album_songs remove `exact` as a parameter
+* Api6::stream remove `podcast` as a valid `type` value
+* Warning of depreciated methods from API5 have been removed from API6
+  * Api6::tag
+  * Api6::tags
+  * Api6::tag_albums
+  * Api6::tag_artists
+  * Api6::tag_songs
 
 ## Ampache 5.5.6-release
 

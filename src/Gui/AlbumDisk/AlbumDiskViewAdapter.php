@@ -110,7 +110,9 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     public function getArt(): string
     {
         $albumId = $this->albumDisk->getAlbumId();
-        $name    = '[' . $this->albumDisk->get_album_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname());
+        $name    = ($this->albumDisk->get_artist_fullname() != "")
+            ? '[' . $this->albumDisk->get_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname())
+            : scrub_out($this->albumDisk->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
@@ -299,7 +301,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return !empty($this->albumDisk->get_f_album_artist_link()) ? $this->albumDisk->get_f_album_artist_link() : $this->albumDisk->get_f_artist_link();
+        return $this->albumDisk->get_f_artist_link();
     }
 
     public function canShowYear(): bool

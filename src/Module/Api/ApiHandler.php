@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Authentication\Gatekeeper;
@@ -39,7 +40,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,8 +58,6 @@ final class ApiHandler implements ApiHandlerInterface
     private NetworkCheckerInterface $networkChecker;
 
     private ContainerInterface $dic;
-
-    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
@@ -88,6 +86,8 @@ final class ApiHandler implements ApiHandlerInterface
         $action        = (string)Core::get_request('action');
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
+        $is_register   = $action == RegisterMethod::ACTION;
+        $is_public     = ($is_handshake || $is_ping || $is_register);
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];
@@ -97,7 +97,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
         if ($api_version == 0) {
             $api_session = Session::get_api_version($input['auth']);
-            $api_version = ($is_handshake || $is_ping)
+            $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)
                 : $api_session;
             // roll up the version if you haven't enabled the older versions
@@ -201,8 +201,7 @@ final class ApiHandler implements ApiHandlerInterface
          */
         if (
             $gatekeeper->sessionExists() === false &&
-            !$is_handshake &&
-            !$is_ping
+            !$is_public
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
@@ -308,7 +307,7 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if (
-            !$is_handshake && !$is_ping
+            !$is_public
         ) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
@@ -406,16 +405,27 @@ final class ApiHandler implements ApiHandlerInterface
                     $gatekeeper,
                     $response,
                     $output,
-                    $input
+                    $input,
+                    $user
                 );
 
                 $gatekeeper->extendSession();
 
                 return $response;
-            } else {
+            } elseif ($is_public) {
                 call_user_func(
                     [$handlerClassName, $action],
                     $input
+                );
+
+                $gatekeeper->extendSession();
+
+                return null;
+            } else {
+                call_user_func(
+                    [$handlerClassName, $action],
+                    $input,
+                    $user
                 );
 
                 $gatekeeper->extendSession();
@@ -519,15 +529,5 @@ final class ApiHandler implements ApiHandlerInterface
                     );
             }
         }
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class DeletedSongs5Method
@@ -45,12 +46,14 @@ final class DeletedSongs5Method
      * Returns songs that have been deleted from the server
      *
      * @param array $input
+     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function deleted_songs(array $input): bool
+    public static function deleted_songs(array $input, User $user): bool
     {
+        unset($user);
         $songs = Song::get_deleted();
         if (empty($songs)) {
             Api5::empty('deleted_songs', $input['api_format']);

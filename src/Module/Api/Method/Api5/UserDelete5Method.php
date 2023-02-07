@@ -28,8 +28,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserDelete5Method
@@ -46,22 +44,22 @@ final class UserDelete5Method
      * Takes the username in parameter.
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input): bool
+    public static function user_delete(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
-        $user     = User::get_from_username($username);
+        $del_user = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-            $user->delete();
+        if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api5::message('successfully deleted: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 

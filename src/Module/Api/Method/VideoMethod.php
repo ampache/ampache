@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class VideoMethod
@@ -46,10 +45,11 @@ final class VideoMethod
      * This returns a single video
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video(array $input): bool
+    public static function video(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -68,7 +68,6 @@ final class VideoMethod
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::videos(array($object_id), $user, false);

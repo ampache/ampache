@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -47,36 +46,36 @@ final class User4Method
      * This get a user's public information
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user(array $input): bool
+    public static function user(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
-        $username = (string) $input['username'];
-        $user     = User::get_from_username($username);
-        $valid    = $user !== null && in_array($user->id, static::getUserRepository()->getValid(true));
+        $username   = (string) $input['username'];
+        $check_user = User::get_from_username($username);
+        $valid      = $check_user !== null && in_array($check_user->id, static::getUserRepository()->getValid(true));
         if (!$valid) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 
             return false;
         }
 
-        $apiuser  = User::get_from_username(Session::username($input['auth']));
         $fullinfo = false;
         // get full info when you're an admin or searching for yourself
-        if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+        if (($check_user->id == $user->id) || (Access::check('interface', 100, $user->id))) {
             $fullinfo = true;
         }
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::user($user, $fullinfo);
+                echo Json4_Data::user($check_user, $fullinfo);
             break;
             default:
-                echo Xml4_Data::user($user, $fullinfo);
+                echo Xml4_Data::user($check_user, $fullinfo);
         }
 
         return true;

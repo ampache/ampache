@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GetIndexesMethod
@@ -50,6 +49,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
+     * @param User $user
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -61,7 +61,7 @@ final class GetIndexesMethod
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
-    public static function get_indexes(array $input): bool
+    public static function get_indexes(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -88,7 +88,6 @@ final class GetIndexesMethod
 
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
@@ -114,14 +113,14 @@ final class GetIndexesMethod
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
+                $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
             } else {
-                $objects = $browse->get_objects();
+                $results = $browse->get_objects();
             }
         } else {
-            $objects = $browse->get_objects();
+            $results = $browse->get_objects();
         }
-        if (empty($objects)) {
+        if (empty($results)) {
             Api::empty($type, $input['api_format']);
 
             return false;
@@ -132,12 +131,12 @@ final class GetIndexesMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::indexes($objects, $type, $user, $include);
+                echo Json_Data::indexes($results, $type, $user, $include);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::indexes($objects, $type, $user, true, $include);
+                echo Xml_Data::indexes($results, $type, $user, true, $include);
         }
 
         return true;

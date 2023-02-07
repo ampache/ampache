@@ -584,21 +584,35 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item prefix, basename and name by the artist id.
+     * @param int|string|null $artist_id
      * @return array
      */
     public static function get_name_array_by_id($artist_id)
     {
-        $sql        = "SELECT `artist`.`id`, `artist`.`prefix`, `artist`.`name`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
+        if ($artist_id === 0) {
+            return array(
+                "id" => 0,
+                "name" => '',
+                "prefix" => T_('Various'),
+                "basename" => T_('Various')
+            );
+        }
+        $sql        = "SELECT `artist`.`id`, `artist`.`prefix`, `artist`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, array($artist_id));
         if ($row = Dba::fetch_assoc($db_results)) {
-            return $row;
+            return array(
+                "id" => (string)$row['id'],
+                "name" => $row['name'],
+                "prefix" => $row['prefix'],
+                "basename" => $row['basename']
+            );
         }
 
         return array(
             "id" => '',
-            "prefix" => '',
             "name" => '',
-            "f_name" => ''
+            "prefix" => '',
+            "basename" => ''
         );
     }
 

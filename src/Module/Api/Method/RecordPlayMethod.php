@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -47,37 +46,39 @@ final class RecordPlayMethod
      * Require 100 (Admin) permission to change other user's play history
      *
      * @param array $input
+     * @param User $user
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function record_play(array $input): bool
+    public static function record_play(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
-        $api_user  = User::get_from_username(Session::username($input['auth']));
-        $play_user = (isset($input['user']) && (int) $input['user'] > 0)
-            ? new User((int) $input['user'])
-            : User::get_from_username((string) $input['user']);
+        $play_user = $user;
+        if (isset($input['user'])) {
+            $play_user =  ((int)$input['user'] > 0)
+                ? new User((int)$input['user'])
+                : User::get_from_username((string)$input['user']);
+        }
+        // validate supplied user
+        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
+        if ($valid === false) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $input['user'] ?? $user->id), '4704', self::ACTION, 'user', $input['api_format']);
+
+            return false;
+        }
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $api_user->id && !Api::check_access('interface', 100, $api_user->id, self::ACTION, $input['api_format'])) {
+        if ($play_user->id !== $user->id && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
         $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
-
-        // validate supplied user
-        if ($valid === false) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $play_user->id), '4704', self::ACTION, 'user', $input['api_format']);
-
-            return false;
-        }
 
         // validate client string or fall back to 'api'
         $agent = (array_key_exists('client', $input))

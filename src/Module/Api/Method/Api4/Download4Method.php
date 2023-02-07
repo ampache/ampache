@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class Download4Method
@@ -44,12 +43,13 @@ final class Download4Method
      * Downloads a given media file. set format=raw to download the full file
      *
      * @param array $input
+     * @param User $user
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional SONG ONLY
      * @return boolean
      */
-    public static function download(array $input): bool
+    public static function download(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
@@ -58,7 +58,6 @@ final class Download4Method
         $type     = $input['type'];
         $format   = $input['format'];
         $original = $format && $format != 'raw';
-        $user     = User::get_from_username(Session::username($input['auth']));
 
         $url    = '';
         $params = '&client=api&action=download&cache=1';

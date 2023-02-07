@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Song4Method
@@ -45,16 +44,16 @@ final class Song4Method
      * return a single song
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of song
      * @return boolean
      */
-    public static function song(array $input): bool
+    public static function song(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $song_id = scrub_in($input['filter']);
-        $user    = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
         switch ($input['api_format']) {

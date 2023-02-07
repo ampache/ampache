@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserCreate5Method
@@ -45,6 +44,7 @@ final class UserCreate5Method
      * Requires the username, password and email.
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
@@ -52,9 +52,9 @@ final class UserCreate5Method
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input): bool
+    public static function user_create(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
@@ -87,7 +87,6 @@ final class UserCreate5Method
 
             return false;
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;

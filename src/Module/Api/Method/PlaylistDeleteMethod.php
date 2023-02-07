@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistDeleteMethod
@@ -47,15 +46,15 @@ final class PlaylistDeleteMethod
      * This deletes a playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist_delete(array $input): bool
+    public static function playlist_delete(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {

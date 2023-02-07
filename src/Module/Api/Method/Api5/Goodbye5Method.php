@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Goodbye5Method
@@ -42,14 +43,16 @@ final class Goodbye5Method
      * Destroy session for auth key.
      *
      * @param array $input
+     * @param User $user
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye(array $input): bool
+    public static function goodbye(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
+        unset($user);
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";

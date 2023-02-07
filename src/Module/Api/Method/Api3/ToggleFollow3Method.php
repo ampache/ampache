@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 /**
@@ -41,17 +40,17 @@ final class ToggleFollow3Method
      * toggle_follow
      * This follow/unfollow an user
      * @param array $input
+     * @param User $user
      */
-    public static function toggle_follow(array $input)
+    public static function toggle_follow(array $input, User $user)
     {
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
-                $user        = User::get_from_username(Session::username($input['auth']));
-                $follow_user = User::get_from_username($username);
-                if ($follow_user !== null) {
+                $leader = User::get_from_username($username);
+                if ($leader !== null) {
                     static::getUserFollowToggler()->toggle(
-                        $follow_user->id,
+                        $leader->id,
                         $user->id
                     );
                     ob_end_clean();

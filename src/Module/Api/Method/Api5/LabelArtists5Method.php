@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class LabelArtists5Method
@@ -47,11 +46,12 @@ final class LabelArtists5Method
      * This returns all artists attached to a label ID
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function label_artists(array $input): bool
+    public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api5::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,14 +61,13 @@ final class LabelArtists5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
         $label   = new Label((int) scrub_in($input['filter']));
-        $artists = $label->get_artists();
-        if (empty($artists)) {
+        $results = $label->get_artists();
+        if (empty($results)) {
             Api5::empty('artist', $input['api_format']);
 
             return false;
@@ -77,10 +76,10 @@ final class LabelArtists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists($artists, $include, $user);
+                echo Json5_Data::artists($results, $include, $user);
                 break;
             default:
-                echo Xml5_Data::artists($artists, $include, $user);
+                echo Xml5_Data::artists($results, $include, $user);
         }
 
         return true;

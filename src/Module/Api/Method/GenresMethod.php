@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GenresMethod
@@ -44,13 +45,14 @@ final class GenresMethod
      * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genres(array $input): bool
+    public static function genres(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -59,8 +61,8 @@ final class GenresMethod
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $tags = $browse->get_objects();
-        if (empty($tags)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api::empty('genre', $input['api_format']);
 
             return false;
@@ -71,12 +73,12 @@ final class GenresMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::genres($tags);
+                echo Json_Data::genres($results);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::genres($tags);
+                echo Xml_Data::genres($results, $user);
         }
 
         return true;

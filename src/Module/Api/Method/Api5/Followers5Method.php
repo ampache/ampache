@@ -47,10 +47,11 @@ final class Followers5Method
      * Error when user not found or no followers
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function followers(array $input): bool
+    public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api5::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -60,10 +61,10 @@ final class Followers5Method
         if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
-
-        $user     = User::get_from_username($username);
-        if (!$user->id) {
+        $leader   = User::get_from_username($username);
+        if (!$leader instanceof User || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
@@ -71,8 +72,8 @@ final class Followers5Method
             return false;
         }
 
-        $users = static::getUserFollowerRepository()->getFollowers($user->getId());
-        if (empty($users)) {
+        $results = static::getUserFollowerRepository()->getFollowers($leader->getId());
+        if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 
             return false;
@@ -81,10 +82,10 @@ final class Followers5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::users($users);
+                echo Json5_Data::users($results);
                 break;
             default:
-                echo Xml5_Data::users($users);
+                echo Xml5_Data::users($results);
         }
 
         return true;

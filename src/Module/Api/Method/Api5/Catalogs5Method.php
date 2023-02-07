@@ -24,11 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -45,19 +43,18 @@ final class Catalogs5Method
      * Get information about catalogs this user is allowed to manage.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function catalogs(array $input): bool
+    public static function catalogs(array $input, User $user): bool
     {
         // filter for specific catalog types
-        $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $user     = User::get_from_username(Session::username($input['auth']));
-        $catalogs = $user->get_catalogs($filter);
-
-        if (empty($catalogs)) {
+        $filter  = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $results = $user->get_catalogs($filter);
+        if (empty($results)) {
             Api5::empty('catalog', $input['api_format']);
 
             return false;
@@ -68,12 +65,12 @@ final class Catalogs5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::catalogs($catalogs);
+                echo Json5_Data::catalogs($results);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::catalogs($catalogs);
+                echo Xml5_Data::catalogs($results, $user);
         }
 
         return true;

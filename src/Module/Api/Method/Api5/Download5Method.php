@@ -45,12 +45,13 @@ final class Download5Method
      * Downloads a given media file. set format=raw to download the full file
      *
      * @param array $input
+     * @param User $user
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
-    public static function download(array $input): bool
+    public static function download(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
             http_response_code(400);
@@ -60,7 +61,6 @@ final class Download5Method
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
         $format    = $input['format'];
-        $user      = User::get_from_username(Session::username($input['auth']));
 
         $params = '&client=api&action=download&cache=1';
         if ($format && in_array($type, array('song', 'search', 'playlist'))) {

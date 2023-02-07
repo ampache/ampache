@@ -35,7 +35,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogFile4Method
@@ -53,12 +52,13 @@ final class CatalogFile4Method
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
      * @return boolean
      */
-    public static function catalog_file(array $input): bool
+    public static function catalog_file(array $input, User $user): bool
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
@@ -66,13 +66,13 @@ final class CatalogFile4Method
 
             return false;
         }
-        if (!Api4::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'catalog_file', $input['api_format'])) {
+        if (!Api4::check_access('interface', 50, $user->id, 'catalog_file', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
-        $file = (string) html_entity_decode($input['file']);
+        $file = html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
             Api4::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);

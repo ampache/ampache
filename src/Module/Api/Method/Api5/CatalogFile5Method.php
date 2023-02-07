@@ -35,7 +35,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogFile5Method
@@ -53,20 +52,21 @@ final class CatalogFile5Method
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input): bool
+    public static function catalog_file(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
-        $file = (string) html_entity_decode($input['file']);
+        $file = html_entity_decode($input['file']);
         $task = explode(',', (string)$input['task']);
         if (!$task) {
             $task = array();

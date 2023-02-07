@@ -48,10 +48,11 @@ final class FollowersMethod
      * Error when user not found or no followers
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function followers(array $input): bool
+    public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,10 +62,10 @@ final class FollowersMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
-
-        $user     = User::get_from_username($username);
-        if (!$user->id) {
+        $leadUser = User::get_from_username($username);
+        if (!$leadUser->id) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
@@ -72,8 +73,8 @@ final class FollowersMethod
             return false;
         }
 
-        $users = static::getUserFollowerRepository()->getFollowers($user->getId());
-        if (empty($users)) {
+        $results = static::getUserFollowerRepository()->getFollowers($leadUser->getId());
+        if (empty($results)) {
             Api::empty('user', $input['api_format']);
 
             return false;
@@ -82,10 +83,10 @@ final class FollowersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::users($users);
+                echo Json_Data::users($results);
                 break;
             default:
-                echo Xml_Data::users($users);
+                echo Xml_Data::users($results);
         }
 
         return true;

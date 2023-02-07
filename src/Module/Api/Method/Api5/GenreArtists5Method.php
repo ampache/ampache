@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GenreArtists5Method
@@ -46,32 +45,32 @@ final class GenreArtists5Method
      * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists(array $input): bool
+    public static function genre_artists(array $input, User $user): bool
     {
-        $artists = Tag::get_tag_objects('artist', $input['filter']);
-        if (empty($artists)) {
+        $results = Tag::get_tag_objects('artist', $input['filter']);
+        if (empty($results)) {
             Api5::empty('artist', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::artists($artists, array(), $user);
+                echo Json5_Data::artists($results, array(), $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::artists($artists, array(), $user);
+                echo Xml5_Data::artists($results, array(), $user);
         }
 
         return true;

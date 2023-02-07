@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PreferenceEditMethod
@@ -46,18 +45,18 @@ final class PreferenceEditMethod
      * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input): bool
+    public static function preference_edit(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = (array_key_exists('all', $input) && (int)$input['all'] == 1);
         // don't apply to all when you aren't an admin
         if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;

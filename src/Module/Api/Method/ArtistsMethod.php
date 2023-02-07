@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class ArtistsMethod
@@ -47,6 +46,7 @@ final class ArtistsMethod
      * artist objects. This function is deprecated!
      *
      * @param array $input
+     * @param User $user
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add          = Api::set_filter(date) //optional
@@ -57,7 +57,7 @@ final class ArtistsMethod
      * limit        = (integer) //optional
      * @return boolean
      */
-    public static function artists(array $input): bool
+    public static function artists(array $input, User $user): bool
     {
         $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
         $browse       = Api::getBrowse();
@@ -74,15 +74,14 @@ final class ArtistsMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $artists = $browse->get_objects();
-        if (empty($artists)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api::empty('artist', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
@@ -91,12 +90,12 @@ final class ArtistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::artists($artists, $include, $user);
+                echo Json_Data::artists($results, $include, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::artists($artists, $include, $user);
+                echo Xml_Data::artists($results, $include, $user);
         }
 
         return true;

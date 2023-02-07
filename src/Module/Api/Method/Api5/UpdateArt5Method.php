@@ -29,7 +29,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\System\Session;
 
 /**
  * Class UpdateArt5Method
@@ -46,18 +45,19 @@ final class UpdateArt5Method
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
+     * @param User $user
      * type      = (string) 'artist', 'album'
      * id        = (integer) $artist_id, $album_id)
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art(array $input): bool
+    public static function update_art(array $input, User $user): bool
     {
         if (!Api5::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
 
-        if (!Api5::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $type      = (string)$input['type'];

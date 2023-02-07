@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api5;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 
@@ -46,12 +45,12 @@ final class Album5Method
      * This returns a single album based on the UID provided
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
-     *
      * @return boolean
      */
-    public static function album(array $input): bool
+    public static function album(array $input, User $user): bool
     {
         $objectId = $input['filter'] ?? null;
 
@@ -70,7 +69,6 @@ final class Album5Method
         }
 
         ob_end_clean();
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);

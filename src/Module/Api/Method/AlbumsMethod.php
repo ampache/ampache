@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -62,6 +63,7 @@ final class AlbumsMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
+     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -69,7 +71,6 @@ final class AlbumsMethod implements MethodInterface
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
-     *
      * @return ResponseInterface
      *
      * @throws ResultEmptyException
@@ -78,7 +79,8 @@ final class AlbumsMethod implements MethodInterface
         GatekeeperInterface $gatekeeper,
         ResponseInterface $response,
         ApiOutputInterface $output,
-        array $input
+        array $input,
+        User  $user
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();
@@ -89,9 +91,8 @@ final class AlbumsMethod implements MethodInterface
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $user   = $gatekeeper->getUser();
-        $albums = $browse->get_objects();
-        if ($albums === [] || !$user) {
+        $results = $browse->get_objects();
+        if ($results === []) {
             throw new ResultEmptyException(
                 T_('No Results')
             );
@@ -104,7 +105,7 @@ final class AlbumsMethod implements MethodInterface
         ob_end_clean();
 
         $result = $output->albums(
-            $albums,
+            $results,
             $include,
             $user,
             true,

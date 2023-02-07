@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Video5Method
@@ -45,10 +44,11 @@ final class Video5Method
      * This returns a single video
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video(array $input): bool
+    public static function video(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -67,7 +67,6 @@ final class Video5Method
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 echo Json5_Data::videos(array($object_id), $user, false);

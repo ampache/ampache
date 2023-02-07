@@ -49,12 +49,14 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
     /**
      * This deletes the object with the given id from the database
      */
-    public function delete(int $liveStreamId): void
+    public function delete(int $liveStreamId): bool
     {
-        Dba::write(
+        $result = Dba::write(
             'DELETE FROM `live_stream` WHERE `id` = ?',
             [$liveStreamId]
         );
         Catalog::count_table('live_stream');
+
+        return $result !== false;
     }
 }

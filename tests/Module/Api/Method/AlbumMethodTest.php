@@ -63,11 +63,12 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
 
-        $this->subject->handle($gatekeeper, $response, $output, []);
+        $this->subject->handle($gatekeeper, $response, $output, [], $user);
     }
 
     public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
@@ -90,15 +91,10 @@ class AlbumMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
-        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId]);
+        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId], $user);
     }
 
     public function testHandleReturnsOutput(): void
@@ -128,11 +124,6 @@ class AlbumMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($albumId);
 
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $output->shouldReceive('albums')
             ->with(
                 [$albumId],
@@ -156,7 +147,7 @@ class AlbumMethodTest extends MockeryTestCase
 
         $this->assertSame(
             $response,
-            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include])
+            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include], $user)
         );
     }
 }
