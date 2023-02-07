@@ -396,7 +396,7 @@ class Json4_Data
 
             if ($album->get_artist_fullname() != "") {
                 $objArray['artist'] = array(
-                    "id" => (string) $album->album_artist,
+                    "id" => (string)$album->album_artist,
                     "name" => $album->f_artist_name
                 );
             }

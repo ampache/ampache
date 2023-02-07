@@ -434,8 +434,13 @@ class Xml_Data
                         $album = new Album($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
                         if ($album->get_artist_fullname() != "") {
-                            $album_artist = Artist::get_name_array_by_id($album->album_artist);
-                            $string .= "\t<artist id=\"" . $album->album_artist . "\">\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                            $album_artist = array(
+                                "id" => $album->album_artist,
+                                "name" => $album->f_artist_name,
+                                "prefix" => $album->artist_prefix,
+                                "basename" => $album->artist_name
+                            );
+                            $string .= "\t<artist id=\"" . $album_artist['id'] . "\">\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
                             $string .= "</$object_type>\n";
                         }
                     }
@@ -721,8 +726,13 @@ class Xml_Data
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
             if ($album->get_artist_fullname() != "") {
-                $album_artist = Artist::get_name_array_by_id($album->album_artist);
-                $string .= "\t<artist id=\"" . $album->album_artist . "\">\n\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                $album_artist = array(
+                    "id" => $album->album_artist,
+                    "name" => $album->f_artist_name,
+                    "prefix" => $album->artist_prefix,
+                    "basename" => $album->artist_name
+                );
+                $string .= "\t<artist id=\"" . $album_artist['id'] . "\">\n\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
             }
             // Handle includes
             $songs = (in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';

@@ -432,7 +432,7 @@ class Xml5_Data
                         $album = new Album($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
                         if ($album->get_artist_fullname() != "") {
-                            $string .= "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
+                            $string .= "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->f_artist_name . "]]></artist>\n";
                         }
                         $string .= "</$object_type>\n";
                     }
