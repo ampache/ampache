@@ -101,8 +101,7 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
-    ): string
-    {
+    ): string {
         Xml_Data::set_offset($offset);
         Xml_Data::set_limit($limit);
 

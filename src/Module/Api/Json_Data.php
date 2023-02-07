@@ -239,7 +239,6 @@ class Json_Data
      */
     public static function lists($objects)
     {
-
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }

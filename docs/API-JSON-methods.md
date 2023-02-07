@@ -1916,7 +1916,7 @@ Delete an existing live_stream (radio station). (if it exists)
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_delete)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_delete.json)
 
 ### labels
 

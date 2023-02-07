@@ -1929,7 +1929,7 @@ Delete an existing live_stream (radio station). (if it exists)
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_delete)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_delete.xml)
 
 ### labels
 
