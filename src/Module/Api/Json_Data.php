@@ -947,9 +947,6 @@ class Json_Data
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = Album::get_name_array_by_id($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
-            $album_artist = ($song->artist !== $song->albumartist)
-                ? Artist::get_name_array_by_id($song->albumartist)
-                : $song_artist;
             $playlist_track++;
 
             $objArray = array(
@@ -967,14 +964,19 @@ class Json_Data
                     "name" => $song_album['name'],
                     "prefix" => $song_album['prefix'],
                     "basename" => $song_album['basename']
-                ),
-                'albumartist' => array(
+                )
+            );
+            if ($song->get_album_artist_fullname() != "") {
+                $album_artist = ($song->artist !== $song->albumartist)
+                    ? Artist::get_name_array_by_id($song->albumartist)
+                    : $song_artist;
+                $objArray['albumartist'] = array(
                     "id" => (string)$song->albumartist,
                     "name" => $album_artist['name'],
                     "prefix" => $album_artist['prefix'],
                     "basename" => $album_artist['basename']
-                )
-            );
+                );
+            }
 
             $objArray['disk']                  = (int)$song->disk;
             $objArray['track']                 = (int)$song->track;

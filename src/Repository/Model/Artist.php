@@ -588,6 +588,14 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     public static function get_name_array_by_id($artist_id)
     {
+        if ($artist_id == 0) {
+            return array(
+                "id" => 0,
+                "name" => '',
+                "prefix" => T_('Various'),
+                "basename" => T_('Various')
+            );
+        }
         $sql        = "SELECT `artist`.`id`, `artist`.`prefix`, `artist`.`name` AS `basename`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, array($artist_id));
         if ($row = Dba::fetch_assoc($db_results)) {
