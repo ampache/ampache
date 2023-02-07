@@ -441,8 +441,8 @@ class Xml_Data
                                 "basename" => $album->artist_name
                             );
                             $string .= "\t<artist id=\"" . $album_artist['id'] . "\">\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
-                            $string .= "</$object_type>\n";
                         }
+                        $string .= "</$object_type>\n";
                     }
                     break;
                 case 'song':
