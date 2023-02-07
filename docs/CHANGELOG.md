@@ -149,6 +149,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Removed
 
+* Api6
+  * preciserating removed from all objects (use rating)
 * Api6::album_songs remove `exact` as a parameter
 * Api6::stream remove `podcast` as a valid `type` value
 * Warning of depreciated methods from API5 have been removed from API6
