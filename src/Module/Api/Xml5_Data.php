@@ -433,7 +433,6 @@ class Xml5_Data
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
                         if ($album->get_artist_fullname() != "") {
                             $string .= "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_artist_fullname() . "]]></artist>\n";
-                            $string .= "</$object_type>\n";
                         }
                         $string .= "</$object_type>\n";
                     }
