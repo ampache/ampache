@@ -100,10 +100,10 @@ final class LiveStreamCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($results));
+                echo Json_Data::live_streams(array((int)$results));
                 break;
             default:
-                echo Xml_Data::live_streams(array($results), $user);
+                echo Xml_Data::live_streams(array((int)$results), $user);
         }
 
         return true;

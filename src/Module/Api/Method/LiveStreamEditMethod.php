@@ -72,11 +72,11 @@ final class LiveStreamEditMethod
 
             return false;
         }
-        $name       = $input['name'] ?? $item->name;
-        $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? $item->url;
-        $codec      = preg_replace("/[^a-z]/", "", strtolower($input['codec'] ?? $item->codec));
-        $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : $item->site_url;
-        $catalog_id = filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+        $name       = (isset($input['name'])) ? filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS) : $item->name;
+        $url        = (isset($input['url'])) ? filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?? '' : $item->url;
+        $codec      = (isset($input['codec'])) ? preg_replace("/[^a-z]/", "", strtolower($input['codec'])) ?? '' : $item->codec;
+        $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) ?? '' : $item->site_url;
+        $catalog_id = (isset($input['catalog'])) ? filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT) : $item->catalog;
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
@@ -105,10 +105,10 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($results));
+                echo Json_Data::live_streams(array((int)$results));
                 break;
             default:
-                echo Xml_Data::live_streams(array($results), $user);
+                echo Xml_Data::live_streams(array((int)$results), $user);
         }
 
         return true;
