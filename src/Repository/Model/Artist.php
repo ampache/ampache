@@ -584,11 +584,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
     /**
      * Get item prefix, basename and name by the artist id.
+     * @param int|string|null $artist_id
      * @return array
      */
     public static function get_name_array_by_id($artist_id)
     {
-        if ($artist_id == 0) {
+        if ($artist_id === 0) {
             return array(
                 "id" => 0,
                 "name" => '',
