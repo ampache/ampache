@@ -834,7 +834,7 @@ class Xml5_Data
      *
      * @param  integer[] $podcasts Podcast id's to include
      * @param  User      $user
-     * @param  boolean   $episodes include the episodes of the podcast // optional
+     * @param  boolean   $episodes include the episodes of the podcast //optional
      * @return string    return xml
      */
     public static function podcasts($podcasts, $user, $episodes = false): string

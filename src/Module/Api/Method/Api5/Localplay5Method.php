@@ -51,7 +51,7 @@ final class Localplay5Method
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) // optional
+     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      * id
      * @return boolean
      */

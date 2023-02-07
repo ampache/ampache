@@ -50,7 +50,7 @@ final class BookmarkDeleteMethod
      * @param User $user
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('song', 'video', 'podcast_episode')
-     * client = (string) Agent string Default: 'AmpacheAPI' // optional
+     * client = (string) Agent string Default: 'AmpacheAPI' //optional
      * @return boolean
      */
     public static function bookmark_delete(array $input, User $user): bool

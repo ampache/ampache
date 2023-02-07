@@ -48,7 +48,7 @@ final class Podcast4Method
      * @param array $input
      * @param User $user
      * filter  = (integer) Podcast ID number
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
     public static function podcast(array $input, User $user): bool

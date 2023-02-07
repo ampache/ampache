@@ -41,7 +41,7 @@ final class RegisterMethod
 
     /**
      * register
-     * MINIMUM_API_VERSION=600000
+     * MINIMUM_API_VERSION=6.0.0
      *
      * Register a new user.
      * Requires the username, password and email.

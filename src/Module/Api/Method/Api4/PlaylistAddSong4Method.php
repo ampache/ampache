@@ -64,7 +64,7 @@ final class PlaylistAddSong4Method
 
             return false;
         }
-        $unique = ((bool) AmpConfig::get('unique_playlist') || (int) $input['check'] == 1);
+        $unique = ((bool)AmpConfig::get('unique_playlist', false) || (int) $input['check'] == 1);
         if (($unique) && in_array($song, $playlist->get_songs())) {
             Api4::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 

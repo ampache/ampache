@@ -52,6 +52,7 @@ final class Catalog4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $results = array((int) $input['filter']);
 
         ob_end_clean();

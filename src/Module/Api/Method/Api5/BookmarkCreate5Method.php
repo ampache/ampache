@@ -51,7 +51,7 @@ final class BookmarkCreate5Method
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' // optional
+     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */

@@ -43,7 +43,7 @@ final class ListMethod
 
     /**
      * list
-     * MINIMUM_API_VERSION=600000
+     * MINIMUM_API_VERSION=6.0.0
      *
      * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *

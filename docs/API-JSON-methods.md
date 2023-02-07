@@ -1836,6 +1836,88 @@ This returns a single live_stream
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream.json)
 
+### live_stream_create
+
+Create a live_stream (radio station) object.
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input      | Type    | Description                                      | Optional |
+|------------|---------|--------------------------------------------------|---------:|
+| 'filter'   | string  | $object_id to find                               |       NO |
+| 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'position' | integer | current track time in seconds                    |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+
+* return array
+
+```JSON
+"live_stream": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_create.json)
+
+### live_stream_edit
+
+Edit a live_stream (radio station) object.
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input      | Type    | Description                                      | Optional |
+|------------|---------|--------------------------------------------------|---------:|
+| 'filter'   | string  | $object_id to find                               |       NO |
+| 'type'     | string  | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'position' | integer | current track time in seconds                    |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')            |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                |      YES |
+
+* return array
+
+```JSON
+"live_stream": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_edit.json)
+
+### live_stream_delete
+
+Delete an existing live_stream (radio station). (if it exists)
+
+**ACCESS REQUIRED:** 50 (Content Manager) permission to create and edit live_streams
+
+| Input    | Type   | Description                                      | Optional |
+|----------|--------|--------------------------------------------------|---------:|
+| 'filter' | string | $object_id to delete                             |       NO |
+| 'type'   | string | `song`, `video`, `podcast_episode` (object_type) |       NO |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')            |      YES |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_delete)
+
 ### labels
 
 This returns labels based on the specified filter

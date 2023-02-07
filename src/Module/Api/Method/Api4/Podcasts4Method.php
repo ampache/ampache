@@ -48,7 +48,7 @@ final class Podcasts4Method
      * @param array $input
      * @param User $user
      * filter  = (string) Alpha-numeric search term
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * @return boolean

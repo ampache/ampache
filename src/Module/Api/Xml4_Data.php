@@ -719,7 +719,7 @@ class Xml4_Data
      *
      * @param  array   $podcasts    (description here...)
      * @param  User    $user
-     * @param  boolean $episodes include the episodes of the podcast // optional
+     * @param  boolean $episodes include the episodes of the podcast //optional
      * @return string  return xml
      */
     public static function podcasts($podcasts, $user, $episodes = false)

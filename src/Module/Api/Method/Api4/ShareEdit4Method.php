@@ -46,10 +46,10 @@ final class ShareEdit4Method
      * @param array $input
      * @param User $user
      * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * stream      = (boolean) 0,1 //optional
+     * download    = (boolean) 0,1 //optional
+     * expires     = (integer) number of whole days before expiry //optional
+     * description = (string) update description //optional
      * @return boolean
      */
     public static function share_edit(array $input, User $user): bool
