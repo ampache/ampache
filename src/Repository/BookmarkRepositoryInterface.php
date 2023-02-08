@@ -35,5 +35,5 @@ interface BookmarkRepositoryInterface
      */
     public function collectGarbage(): void;
 
-    public function update(int $userId, int $position): void;
+    public function update(int $userId, int $position, int $date): void;
 }
