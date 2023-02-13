@@ -43,7 +43,6 @@ class Ampachelistenbrainz
     // These are internal settings used by this class, run this->load to fill them out
     private $token;
     private $api_host;
-    private $user_id;
     private $scheme   = 'https';
     private $host     = 'listenbrainz.org';
 
@@ -221,8 +220,7 @@ class Ampachelistenbrainz
     public function load($user)
     {
         $user->set_preferences();
-        $data          = $user->prefs;
-        $this->user_id = $user->id;
+        $data = $user->prefs;
         // check if user have a token
         if (strlen(trim($data['listenbrainz_token']))) {
             $this->token = trim($data['listenbrainz_token']);

@@ -42,7 +42,6 @@ class AmpacheLastfm
 
     // These are internal settings used by this class, run this->load to fill them out
     private $challenge;
-    private $user_id;
     private $api_key;
     private $secret;
     private $scheme   = 'http';
@@ -198,11 +197,10 @@ class AmpacheLastfm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param int $user_id
      * @param string $token
      * @return boolean
      */
-    public function get_session($user_id, $token)
+    public function get_session($token)
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
@@ -214,7 +212,7 @@ class AmpacheLastfm
         $this->challenge = $session_key;
 
         // Update the preferences
-        Preference::update('lastfm_challenge', $user_id, $session_key);
+        Preference::update('lastfm_challenge', $this->user_id, $session_key);
         debug_event('lastfm.plugin', 'getSession Successful', 3);
 
         return true;
