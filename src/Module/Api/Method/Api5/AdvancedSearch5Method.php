@@ -88,8 +88,10 @@ final class AdvancedSearch5Method
 
             return false;
         }
-        $data    = $input;
-        $results = Search::run($data, $user);
+        $data           = $input;
+        $data['offset'] = 0;
+        $data['limit']  = 0;
+        $results        = Search::run($data, $user);
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
 
