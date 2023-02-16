@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -54,6 +55,7 @@ class Update
      * Because we may not have the update_info table we have to check
      * for its existence first.
      * @return string
+     * @throws EnvironmentNotSuitableException
      */
     public static function get_version()
     {
@@ -62,13 +64,13 @@ class Update
         $sql        = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
         if (!Dba::dbh()) {
-            header("Location: test.php");
+            throw new EnvironmentNotSuitableException();
         }
 
         // If no table
         if (!Dba::num_rows($db_results)) {
             // They can't upgrade, they are too old
-            header("Location: test.php");
+            throw new EnvironmentNotSuitableException();
         } else {
             // If we've found the update_info table, let's get the version from it
             $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
@@ -86,6 +88,7 @@ class Update
      * is something missing? why is it missing!?
      * @param bool $execute
      * @return array
+     * @throws EnvironmentNotSuitableException
      */
     public static function check_tables(bool $execute = false)
     {
