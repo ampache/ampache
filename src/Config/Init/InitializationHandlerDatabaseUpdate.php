@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
-use Ampache\Config\Init\Exception\DatabaseMissingException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\System\Dba;
@@ -38,9 +37,6 @@ final class InitializationHandlerDatabaseUpdate implements InitializationHandler
         if (!defined('OUTDATED_DATABASE_OK')) {
             if (!Dba::check_database()) {
                 throw new EnvironmentNotSuitableException();
-            }
-            if (!Dba::check_database_inserted()()) {
-                throw new DatabaseMissingException();
             }
             if (Update::need_update()) {
                 throw new DatabaseOutdatedException();

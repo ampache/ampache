@@ -24,7 +24,6 @@ namespace Ampache\Config\Init;
 
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
-use Ampache\Config\Init\Exception\DatabaseMissingException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
@@ -60,7 +59,7 @@ final class Init
             }
         } catch (ConfigFileNotFoundException $e) {
             $redirectionUrl = 'install.php';
-        } catch (ConfigFileNotParsableException | DatabaseMissingException $e) {
+        } catch (ConfigFileNotParsableException $e) {
             $redirectionUrl = 'test.php?action=config';
         } catch (EnvironmentNotSuitableException | GetTextNotAvailableException $e) {
             $redirectionUrl = 'test.php';

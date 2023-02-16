@@ -25,7 +25,6 @@ namespace Ampache\Config\Init;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
-use Ampache\Config\Init\Exception\DatabaseMissingException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
 
@@ -36,7 +35,6 @@ interface InitializationHandlerInterface
      * @throws ConfigFileNotParsableException
      * @throws EnvironmentNotSuitableException
      * @throws DatabaseOutdatedException
-     * @throws DatabaseMissingException
      * @throws GetTextNotAvailableException
      */
     public function init(): void;
