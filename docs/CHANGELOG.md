@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Ampache 5.6.0-develop
+
+### Added
+
+* Subsonic
+  * Add type and serverVersion to <subsonic-response> objects
+
+
+## API 5.6.0
+
+**NO CHANGE**
+
 ## Ampache 5.5.7-release
 
 This release fixes issues when updating your databases from **really** old versions (< 3.9.0)
