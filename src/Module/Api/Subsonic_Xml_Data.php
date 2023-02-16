@@ -1404,7 +1404,7 @@ class Subsonic_Xml_Data
         $response->addAttribute('status', (string)$status);
         $response->addAttribute('version', (string)$version);
         $response->addAttribute('type', 'ampache');
-        $response->addAttribute('version', Api::$version);
+        $response->addAttribute('serverVersion', Api::$version);
 
         return $response;
     }
