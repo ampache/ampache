@@ -99,6 +99,7 @@ class Ampachelistenbrainz
         if ($from_version < 2) {
             Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
         }
+
         return true;
     } // upgrade
 

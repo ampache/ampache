@@ -59,7 +59,6 @@ class Update
      */
     public static function get_version()
     {
-        $version = "";
         /* Make sure that update_info exits */
         $sql        = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
@@ -75,11 +74,12 @@ class Update
             // If we've found the update_info table, let's get the version from it
             $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
             $db_results = Dba::read($sql);
-            $results    = Dba::fetch_assoc($db_results);
-            $version    = $results['value'];
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return $results['value'];
+            }
         }
-
-        return $version;
+        // now it's really got problems
+        throw new EnvironmentNotSuitableException();
     } // get_version
 
     /**
