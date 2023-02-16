@@ -22,29 +22,9 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Config\Init;
+namespace Ampache\Config\Init\Exception;
 
-use Ampache\Config\Init\Exception\DatabaseMissingException;
-use Ampache\Config\Init\Exception\DatabaseOutdatedException;
-use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
-use Ampache\Module\System\Dba;
-use Ampache\Module\System\Update;
-
-final class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
+final class DatabaseMissingException extends InitializationException
 {
-    public function init(): void
-    {
-        // Check to see if we need to perform an update
-        if (!defined('OUTDATED_DATABASE_OK')) {
-            if (!Dba::check_database()) {
-                throw new EnvironmentNotSuitableException();
-            }
-            if (!Dba::check_database_inserted()()) {
-                throw new DatabaseMissingException();
-            }
-            if (Update::need_update()) {
-                throw new DatabaseOutdatedException();
-            }
-        }
-    }
+    protected $message = 'Database Missing or Offline - please update';
 }
