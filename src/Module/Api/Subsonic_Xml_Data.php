@@ -1412,6 +1412,8 @@ class Subsonic_Xml_Data
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         $response->addAttribute('status', (string)$status);
         $response->addAttribute('version', (string)$version);
+        $response->addAttribute('type', 'ampache');
+        $response->addAttribute('serverVersion', Api::$version);
 
         return $response;
     }
