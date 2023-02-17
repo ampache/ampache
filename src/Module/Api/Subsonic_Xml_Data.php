@@ -143,7 +143,7 @@ class Subsonic_Xml_Data
         }
         $xerr->addAttribute('message', (string)$message);
 
-        return $xerr;
+        return $xml;
     }
 
     /**
