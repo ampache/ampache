@@ -102,46 +102,43 @@ class Subsonic_Xml_Data
      * Add a failed subsonic-response with error information.
      *
      * @param integer $code Error code
-     * @param string $message Error message
      * @param string $function
      * @return SimpleXMLElement
      */
-    public static function addError($code, $message, $function)
+    public static function addError($code, $function)
     {
         $xml  = self::_createFailedResponse($function);
         $xerr = $xml->addChild('error');
         $xerr->addAttribute('code', (string)$code);
 
-        if (empty($message)) {
-            switch ($code) {
-                case self::SSERROR_GENERIC:
-                    $message = "A generic error.";
-                    break;
-                case self::SSERROR_MISSINGPARAM:
-                    $message = "Required parameter is missing.";
-                    break;
-                case self::SSERROR_APIVERSION_CLIENT:
-                    $message = "Incompatible Subsonic REST protocol version. Client must upgrade.";
-                    break;
-                case self::SSERROR_APIVERSION_SERVER:
-                    $message = "Incompatible Subsonic REST protocol version. Server must upgrade.";
-                    break;
-                case self::SSERROR_BADAUTH:
-                    $message = "Wrong username or password.";
-                    break;
-                case self::SSERROR_TOKENAUTHNOTSUPPORTED:
-                    $message = "Token authentication not supported.";
-                    break;
-                case self::SSERROR_UNAUTHORIZED:
-                    $message = "User is not authorized for the given operation.";
-                    break;
-                case self::SSERROR_TRIAL:
-                    $message = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.";
-                    break;
-                case self::SSERROR_DATA_NOTFOUND:
-                    $message = "The requested data was not found.";
-                    break;
-            }
+        switch ($code) {
+            case self::SSERROR_GENERIC:
+                $message = "A generic error.";
+                break;
+            case self::SSERROR_MISSINGPARAM:
+                $message = "Required parameter is missing.";
+                break;
+            case self::SSERROR_APIVERSION_CLIENT:
+                $message = "Incompatible Subsonic REST protocol version. Client must upgrade.";
+                break;
+            case self::SSERROR_APIVERSION_SERVER:
+                $message = "Incompatible Subsonic REST protocol version. Server must upgrade.";
+                break;
+            case self::SSERROR_BADAUTH:
+                $message = "Wrong username or password.";
+                break;
+            case self::SSERROR_TOKENAUTHNOTSUPPORTED:
+                $message = "Token authentication not supported.";
+                break;
+            case self::SSERROR_UNAUTHORIZED:
+                $message = "User is not authorized for the given operation.";
+                break;
+            case self::SSERROR_TRIAL:
+                $message = "The trial period for the Subsonic server is over. Please upgrade to Subsonic Premium. Visit subsonic.org for details.";
+                break;
+            case self::SSERROR_DATA_NOTFOUND:
+                $message = "The requested data was not found.";
+                break;
         }
         $xerr->addAttribute('message', (string)$message);
 
