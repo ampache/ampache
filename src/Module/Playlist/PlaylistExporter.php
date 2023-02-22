@@ -38,7 +38,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
         Interactor $interactor,
         string $dirname,
         string $type,
-        string $ext
+        string $ext,
+        string $playlist_id
     ): void {
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {
@@ -62,10 +63,16 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'playlists':
             default:
-                $ids   = Playlist::get_playlists(-1);
+                if ( $playlist_id == -1 or is_null($playlist_id) ) {
+                    $ids   = Playlist::get_playlists(-1);
+                } else {
+                    $ids = array($playlist_id);
+                }
                 $items = array();
                 foreach ($ids as $playlistid) {
-                    $items[] = new Playlist($playlistid);
+                    $pl = new Playlist($playlistid);
+                    if (is_null($pl->id)) continue; // This playlist does not exist, skip it
+                    $items[] = $pl;
                 }
                 break;
         }
