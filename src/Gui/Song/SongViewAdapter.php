@@ -396,6 +396,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->song->replaygain_album_gain !== null) {
             $songprops[T_('ReplayGain Album Gain')] = scrub_out($this->song->replaygain_album_gain);
         }
+        if ($this->song->r128_track_gain !== null) {
+            $songprops[T_('R128 Track Gain')] = scrub_out($this->song->r128_track_gain);
+        }
+        if ($this->song->r128_album_gain !== null) {
+            $songprops[T_('R128 Album Gain')] = scrub_out($this->song->r128_album_gain);
+        }
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
             $songprops[T_('Filename')] = scrub_out($this->song->file) . " " . $this->song->f_size;
         }
