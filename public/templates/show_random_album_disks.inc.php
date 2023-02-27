@@ -40,7 +40,7 @@ if (!empty($albumDisks)) {
         $albumDisk = new AlbumDisk($album_disk_id);
         $albumDisk->format();
         $show_play = true; ?>
-    <div class="random_album_disk">
+    <div class="random_album">
         <div id="album_<?php echo $album_disk_id ?>" class="art_album libitem_menu">
             <?php $thumb = 1;
         if (!Ui::is_grid_view('album')) {
