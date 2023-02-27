@@ -124,6 +124,27 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     }
                 }
                 break;
+            case 'random_album_disks':
+                $albumDisks = $this->albumRepository->getRandomAlbumDisk(
+                    $user->id,
+                    $moment
+                );
+                if (count($albumDisks) && is_array($albumDisks)) {
+                    ob_start();
+                    require_once Ui::find_template('show_random_album_disks.inc.php');
+                    $results['random_selection'] = ob_get_clean();
+                } else {
+                    $results['random_selection'] = '<!-- None found -->';
+
+                    if (Access::check('interface', 75)) {
+                        $catalogs = Catalog::get_catalogs();
+                        if (count($catalogs) == 0) {
+                            /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
+                            $results['random_selection'] = sprintf(T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');
+                        }
+                    }
+                }
+                break;
             case 'random_videos':
                 $videos = $this->videoRepository->getRandom(
                     $user->id,

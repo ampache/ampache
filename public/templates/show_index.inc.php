@@ -50,7 +50,12 @@ if (isset($user->id)) {
 <?php } ?>
 <!-- Randomly selected Albums of the Moment -->
 <?php if (AmpConfig::get('home_moment_albums')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
+    $showAlbum = AmpConfig::get('album_group');
+    if ($showAlbum) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
+    } else {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_album_disks', 'random_album_disks'));
+    } ?>
 <div id="random_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Albums of the Moment'));
     echo T_('Loading...');
