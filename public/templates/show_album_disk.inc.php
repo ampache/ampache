@@ -47,8 +47,8 @@ $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 $web_path = AmpConfig::get('web_path');
 $simple   = $albumDisk->get_fullname(true);
 $f_name   = $albumDisk->get_fullname(false, true);
-$title    = ($albumDisk->f_artist_link())
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . (($albumDisk->get_f_artist_link()) ?: '')
+$title    = ($albumDisk->album_artist !== null)
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $albumDisk->get_f_artist_link()
     : scrub_out($f_name);
 
 $access50          = Access::check('interface', 50);
