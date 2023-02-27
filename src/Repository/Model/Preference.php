@@ -1117,7 +1117,7 @@ class Preference extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $value          = $row['system_value'] ? $row['system_value'] : $row['value'];
+            $value          = $row['system_value'] ?? $row['value'];
             $name           = $row['name'];
             $results[$name] = $value;
         } // end while sys prefs

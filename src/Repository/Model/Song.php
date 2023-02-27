@@ -1340,7 +1340,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function update(array $data)
     {
-        $changed = array();
         foreach ($data as $key => $value) {
             debug_event(self::class, $key . '=' . $value, 5);
 
@@ -1351,7 +1350,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                    $changed[] = (string) $key;
                     break;
                 case 'album_name':
                     // Create new album name and id
@@ -1359,7 +1357,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                     $new_album_id = Album::check($this->catalog, $value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                    $changed[] = (string) $key;
                     break;
                 case 'artist':
                     // Change artist the song is assigned to
@@ -1367,7 +1364,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                         $old_artist_id = $this->artist;
                         $new_artist_id = $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                        $changed[] = (string) $key;
                     }
                     break;
                 case 'album':
@@ -1376,7 +1372,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                         $old_album_id = $this->$key;
                         $new_album_id = $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
-                        $changed[] = (string) $key;
                     }
                     break;
                 case 'year':
@@ -1393,13 +1388,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
                         $this->$key = $value;
-                        $changed[]  = (string) $key;
                     }
                     break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
-                    $changed[]  = (string) $key;
                     break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {
@@ -2469,6 +2462,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Dba::write($sql, array($old_artist));
         $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
         Dba::write($sql, array('artist', $old_artist));
+
+        return true;
     }
 
     /**
@@ -2517,6 +2512,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         Dba::write($sql, array('album', $old_album));
         $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
         Dba::write($sql, array('album', $old_album));
+
+        return true;
     }
 
     /**

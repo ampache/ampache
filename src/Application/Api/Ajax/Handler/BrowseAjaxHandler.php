@@ -138,7 +138,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
-                $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
+                $type = $_SESSION['tagcloud_type'] ?? 'song';
                 $browse->set_type($type);
                 break;
             case 'delete_object':

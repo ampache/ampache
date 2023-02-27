@@ -95,7 +95,7 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Constructor
-     * This takes a flagged.id and then pulls in the information for said flag entry
+     * This takes a flagged. id and then pulls in the information for said flag entry
      * @param integer $stream_id
      */
     public function __construct($stream_id)
@@ -107,6 +107,8 @@ class Live_Stream extends database_object implements Media, library_item
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
+        return true;
     } // constructor
 
     public function getId(): int

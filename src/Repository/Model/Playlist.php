@@ -531,7 +531,7 @@ class Playlist extends playlist_object
      */
     private function update_type($new_type)
     {
-        if ($this->_update_item('type', $new_type, 50)) {
+        if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
         }
     } // update_type
@@ -543,7 +543,7 @@ class Playlist extends playlist_object
      */
     private function update_user($new_user)
     {
-        if ($this->_update_item('user', $new_user, 50)) {
+        if ($this->_update_item('user', $new_user)) {
             $this->user     = $new_user;
             $this->username = User::get_username($new_user);
             $sql            = "UPDATE `playlist` SET `user` = ?, `username` = ? WHERE `playlist`.`user` = ?;";
@@ -558,7 +558,7 @@ class Playlist extends playlist_object
      */
     private function update_name($new_name)
     {
-        if ($this->_update_item('name', $new_name, 50)) {
+        if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
         }
     } // update_name
@@ -570,7 +570,7 @@ class Playlist extends playlist_object
     private function update_last_update()
     {
         $last_update = time();
-        if ($this->_update_item('last_update', $last_update, 50)) {
+        if ($this->_update_item('last_update', $last_update)) {
             $this->last_update = $last_update;
         }
         $this->set_last($this->get_total_duration(), 'last_duration');
@@ -581,12 +581,11 @@ class Playlist extends playlist_object
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
      * @param string|int $value
-     * @param int $level
      * @return PDOStatement|boolean
      */
-    private function _update_item($field, $value, $level)
+    private function _update_item($field, $value)
     {
-        if (Core::get_global('user')->id != $this->user && !Access::check('interface', $level)) {
+        if (Core::get_global('user')->id != $this->user && !Access::check('interface', 50)) {
             return false;
         }
 

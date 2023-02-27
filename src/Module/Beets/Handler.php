@@ -35,6 +35,8 @@ abstract class Handler
      * @var string
      */
     protected $commandSeperator;
+    private $handler;
+    private $handlerCommand;
 
     /**
      * @param $command
@@ -44,7 +46,7 @@ abstract class Handler
 
     /**
      * @param Catalog $handler
-     * @param $command
+     * @param string $command
      */
     public function setHandler(Catalog $handler, $command)
     {

@@ -749,7 +749,7 @@ class Query
             );
 
             if (Access::check('interface', 50)) {
-                array_push(self::$allowed_filters['playlist'], 'playlist_type');
+                self::$allowed_filters['playlist'][] = 'playlist_type';
             }
         }
 
@@ -1374,7 +1374,7 @@ class Query
      */
     public function get_having_sql()
     {
-        return isset($this->_state['having']) ? $this->_state['having'] : '';
+        return $this->_state['having'] ?? '';
     } // get_having_sql
 
     /**
@@ -1420,7 +1420,7 @@ class Query
      */
     private function post_process($data)
     {
-        $tags = isset($this->_state['filter']['tag']) ? $this->_state['filter']['tag'] : '';
+        $tags = $this->_state['filter']['tag'] ?? '';
 
         if (!is_array($tags) || sizeof($tags) < 2) {
             return $data;

@@ -138,7 +138,6 @@ class AmpacheTmdb
 
             $title = $media_info['original_name'] ?? $media_info['title'];
 
-            $results = array();
             if (in_array('movie', $gather_types)) {
                 if (!empty($media_info['title'])) {
                     $apires = $client->getSearchApi()->searchMovies($media_info['title']);

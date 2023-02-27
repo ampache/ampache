@@ -33,7 +33,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Tag;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 

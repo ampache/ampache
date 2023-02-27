@@ -656,7 +656,6 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * @param string $type
  * @param string $message
  * @param integer $level
- * @param string $file
  * @param string $username
  * @return boolean
  *
