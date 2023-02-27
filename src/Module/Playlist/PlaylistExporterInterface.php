@@ -26,5 +26,5 @@ use Ahc\Cli\IO\Interactor;
 
 interface PlaylistExporterInterface
 {
-    public function export(Interactor $interactor, string $dirname, string $type, string $ext): void;
+    public function export(Interactor $interactor, string $dirname, string $type, string $ext, string $playlist_id): void;
 }
