@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
@@ -37,7 +37,7 @@ $button   = Ajax::button('?page=index&action=random_albums', 'random', T_('Refre
 <?php
 if (!empty($albumDisks)) {
     foreach ($albumDisks as $album_disk_id) {
-        $albumDisk = new Album($album_disk_id);
+        $albumDisk = new AlbumDisk($album_disk_id);
         $albumDisk->format();
         $show_play = true; ?>
     <div class="random_album_disk">
