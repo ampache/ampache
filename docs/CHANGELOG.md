@@ -16,6 +16,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Allow Admin users to browse all user uploads
 * Add php8.2 to composer
 * Create Dockerfilephp82
+* Add custom listenbrainz_api_url to listenbrainz plugin
+* CLI
+  * Add playlistid to export:playlist (export a single playlist instead of all of them)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -86,6 +89,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
+* Subsonic
+  * Custom messages for subsonic errors [subsonic.org](http://www.subsonic.org/pages/api.jsp)
 
 ### Fixed
 
@@ -95,6 +100,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Recently played for non-user calls
 * Found a few dynamic properties on objects
 * Bugs around the setting of the Various album_artist when the album_artist is null
+* Show test errors correctly when you can connect to the server but don't have a database
+* When using LDAP check for DN and username on group membership
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -129,6 +136,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Changed
 
+* Api6
+  * Renamed user_update to user_edit (user_update still works and will be depreciated in API7)
 * ALL
   * Albums with no album_artist may now return 0 artist called 'Various'
   * Don't send AlbumDisk objects to the API
@@ -137,16 +146,6 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
 * Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
-
-### Fixed
-
-* ALL
-  * advanced_search methods were breaking with various offset and limits
-* Api6 JSON
-  * Share and Bookmark object id's were not strings
-* Api3
-  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
-  * Artists method parameters were incorrect
 
 ### Removed
 
@@ -160,6 +159,16 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Api6::tag_albums
   * Api6::tag_artists
   * Api6::tag_songs
+
+### Fixed
+
+* ALL
+  * advanced_search methods were breaking with various offset and limits
+* Api6 JSON
+  * Share and Bookmark object id's were not strings
+* Api3
+  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
+  * Artists method parameters were incorrect
 
 ## Ampache 5.5.6-release
 

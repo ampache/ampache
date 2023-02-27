@@ -142,6 +142,7 @@ class Api
         Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         Method\UserCreateMethod::ACTION => Method\UserCreateMethod::class,
+        Method\UserEditMethod::ACTION => Method\UserEditMethod::class,
         Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,
         Method\UserMethod::ACTION => Method\UserMethod::class,
         Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
