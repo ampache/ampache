@@ -9,12 +9,15 @@
 
 ### Fixed
 
+* Config had a `:` instead of a `;` for a newline
 * Subsonic
   * Error's were not returning valid responses
 
 ## API 5.6.0
 
 * advanced_search methods were breaking with various offset and limits
+* playlists methods parameter 'exact' always ending up false
+* API5::update_art hardcoded url to artist
 
 ## Ampache 5.5.7-release
 
