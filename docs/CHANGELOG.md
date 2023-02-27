@@ -7,10 +7,9 @@
 * Subsonic
   * Add type and serverVersion to <subsonic-response> objects
 
-
 ## API 5.6.0
 
-**NO CHANGE**
+* advanced_search methods were breaking with various offset and limits
 
 ## Ampache 5.5.7-release
 
