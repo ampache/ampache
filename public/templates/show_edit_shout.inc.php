@@ -21,19 +21,18 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
-/** @var Shoutbox $shout */
-/** @var User $client */
+/** @var Ampache\Repository\Model\Shoutbox $shout */
+/** @var Ampache\Repository\Model\User $client */
+/** @var Ampache\Repository\Model\library_item $object */
 
 Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/shout.php?action=edit_shout">
 <input type="hidden" name="shout_id" value="<?php echo $shout->id; ?>" />
 <table class="tabledata">
 <tr>
-    <td><strong><?php /* HINT: %1 Client link, %2 Object link */ printf(T_('Created by: %1$s for %2$s'), $client->f_link, $object->f_link); ?></strong>
+    <td><strong><?php /* HINT: %1 Client link, %2 Object link */ printf(T_('Created by: %1$s for %2$s'), $client->f_link, $object->get_f_link()); ?></strong>
 <tr>
 <tr>
     <td><strong><?php echo T_('Comment:'); ?></strong>
