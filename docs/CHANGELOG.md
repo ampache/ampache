@@ -7,6 +7,11 @@
 * Subsonic
   * Add type and serverVersion to <subsonic-response> objects
 
+### Fixed
+
+* Subsonic
+  * Error's were not returning valid responses
+
 ## API 5.6.0
 
 * advanced_search methods were breaking with various offset and limits
