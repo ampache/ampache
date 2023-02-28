@@ -681,42 +681,74 @@ class Playlist extends playlist_object
     }
 
     /**
-     * create
+     * check
      * This function creates an empty playlist, gives it a name and type
      * @param string $name
      * @param string $type
      * @param integer $user_id
-     * @return string|null
+     * @return int
      */
-    public static function create($name, $type, $user_id = null)
+    public static function check($name, $type, $user_id = null)
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? -1;
         }
-        // get the public_name/username
-        $username = User::get_username($user_id);
-        // check for duplicates
         $results    = array();
         $sql        = "SELECT `id` FROM `playlist` WHERE `name` = ? AND `user` = ? AND `type` = ?";
         $db_results = Dba::read($sql, array($name, $user_id, $type));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
         // return the duplicate ID
         if (!empty($results)) {
             return $results[0];
         }
 
+        return 0;
+    } // check
+
+    /**
+     * create
+     * This function creates an empty playlist, gives it a name and type
+     * @param string $name
+     * @param string $type
+     * @param int $user_id
+     * @param bool $existing
+     * @return int|null
+     */
+    public static function create($name, $type, $user_id = null, $existing = true)
+    {
+        if ($user_id === null) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? -1;
+        }
+        // check for duplicates
+        $existing_id = self::check($name, $type, $user_id);
+        if ($existing_id > 0) {
+            if (!$existing) {
+                return null;
+            } else {
+                return $existing_id;
+            }
+        }
+
+        // get the public_name/username
+        $username = User::get_username($user_id);
+
         $date = time();
         $sql  = "INSERT INTO `playlist` (`name`, `user`, `username`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $user_id, $username, $type, $date, $date));
         $insert_id = Dba::insert_id();
 
+        if (empty($insert_id)) {
+            return null;
+        }
+
         Catalog::count_table('playlist');
 
-        return $insert_id;
+        return (int)$insert_id;
     } // create
 
     /**

@@ -63,7 +63,7 @@ final class PlaylistCreateMethod
             $type = 'public';
         }
 
-        $object_id = Playlist::create($name, $type, $user->id);
+        $object_id = Playlist::create($name, $type, $user->id, false);
         if (!$object_id) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 

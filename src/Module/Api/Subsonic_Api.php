@@ -1225,11 +1225,17 @@ class Subsonic_Api
             self::_updatePlaylist($playlistId, $name, $songIdList, array(), true, true);
             $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
         } elseif (!empty($name)) {
-            $playlistId = Playlist::create($name, 'private');
+            $username   = $input['u'];
+            $user       = User::get_from_username($username);
+            $playlistId = Playlist::create($name, 'private', $user->id);
             if (count($songIdList) > 0) {
                 self::_updatePlaylist($playlistId, "", $songIdList, array(), true, true);
             }
-            $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
+            if (!empty($playlistId)) {
+                $response = Subsonic_Xml_Data::addSubsonicResponse('createplaylist');
+            } else {
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createplaylist');
+            }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'createplaylist');
         }
