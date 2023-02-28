@@ -152,7 +152,7 @@ class Xml_Data
      */
     public static function success($string, $return_data = array()): string
     {
-        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
+        $xml_string = "\t<success code=\"1\">\n\t<message><![CDATA[" . $string . "]]></message></success>";
         foreach ($return_data as $title => $data) {
             $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
         }

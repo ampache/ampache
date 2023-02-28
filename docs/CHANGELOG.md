@@ -142,7 +142,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Albums with no album_artist may now return 0 artist called 'Various'
   * Don't send AlbumDisk objects to the API
 * XML responses
-  * id is the only attribute and everything else is an element
+  * Api6 XML success and error response messages are put in a `message` element (like json)
+  * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
 * Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
