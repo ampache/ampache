@@ -1476,13 +1476,19 @@ class User extends database_object
 
     public function delete_streamtoken()
     {
-        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `user` = ?;";
+        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
+        Dba::write($sql, array($this->id));
+    }
+
+    public function delete_rsstoken()
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
         Dba::write($sql, array($this->id));
     }
 
     public function delete_apikey()
     {
-        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `user` = ?;";
+        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
         Dba::write($sql, array($this->id));
     }
 
