@@ -117,7 +117,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * live_stream_edit: Edit a live stream
   * live_stream_delete: Delete a stream buy ID
   * register: Allow users to register an account (if enabled)
-  * user_create: Add `group` parameter to pick a catalog filter group
+  * playlist_create: Return an error if the playlist name already exists for that user
   * user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display
