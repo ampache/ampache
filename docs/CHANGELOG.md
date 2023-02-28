@@ -12,7 +12,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * Translations 2023-01
 * Add `streamtoken` to user objects, allowing permanent stream links
-* Allow deleting a user API key
+* Allow deleting a user API key and RSS token
 * Allow Admin users to browse all user uploads
 * Add php8.2 to composer
 * Create Dockerfilephp82
