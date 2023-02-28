@@ -25,12 +25,11 @@ The goals of API6 are simply to extend on top of API5 and remove what's no longe
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
-* API 6.0 Documentation **TBC** (Ampache Develop+)
 * [API 5.5 Documentation](https://ampache.org/api/api-5)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 3.9 Documentation](https://ampache.org/api/api-3)
 
-Ampache supports the last major release of each API version. You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development
+Ampache supports the last major release of each API version. You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development.
 
 ## Changelog API develop
 
@@ -38,7 +37,7 @@ Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to kee
 
 ## Before you begin
 
-Ampache 5.2.0+ supports multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001 or 5.2.0) you will be sent API3, API4 and API5 responses in return.
+Ampache 5.2.0+ supports multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001, 5.2.0 or 6.0.0) you will be sent API3, API4, API5 and API6 responses in return.
 
 To change from API3 to API5 you can send a ping with a new version parameter to update your session (or send goodbye to log off and start again.)
 
@@ -174,110 +173,117 @@ For more in depth information regarding the different api servers you can view t
 All Auth methods return HTTP 200 responses
 
 * handshake
+* goodbye
 * ping
-* goodbye **Api4+**
+* register **Api6**
 
 ### Non-Data Methods
 
 All Non-Data methods return HTTP 200 responses
 
-* system_update **Api5+**
-* users **Api4+**
-* user_preferences **Api5+**
-* bookmarks **Api5+**
+* bookmarks
+* system_update
+* users
+* user_preferences
 
 ### Data Methods
 
 All Data methods return HTTP 200 responses
 
 * [advanced_search](https://ampache.org/api/api-advanced-search)
-* stats
-* get_indexes **Api4+**
-* get_similar **Api4+**
-* get_bookmark **Api5+**
-* artists
-* artist
-* artist_songs
-* artist_albums
 * albums
 * album
 * album_songs
-* songs
-* song
-* song_delete **Api5+**
-* url_to_song
+* artists
+* artist
+* artist_albums
+* artist_songs
+* bookmark_create
+* bookmark_delete
+* bookmark_edit
+* catalogs
+* catalog
+* catalog_action
+* catalog_file
+* deleted_podcast_episodes
+* deleted_songs
+* deleted_videos
+* flag
+* followers
+* following
+* friends_timeline
 * genres
 * genre
-* genre_artists
 * genre_albums
+* genre_artists
 * genre_songs
-* playlists
-* playlist
-* playlist_songs
-* playlist_create
-* playlist_edit **Api4+**
-* playlist_delete
-* playlist_add_song
-* playlist_remove_song
-* playlist_generate **Api4+**
-* shares **Api4+**
-* share **Api4+**
-* share_create **Api4+**
-* share_edit **Api4+**
-* share_delete **Api4+**
-* search_songs
-* videos
-* video
-* podcasts **Api4+**
-* podcast **Api4+**
-* podcast_create **Api4+**
-* podcast_edit **Api4+**
-* podcast_delete **Api4+**
-* podcast_episodes **Api4+**
-* podcast_episode **Api4+**
-* podcast_episode_delete **Api4+**
-* catalogs **Api4+**
-* catalog **Api4+**
-* catalog_action **Api4+**
-* catalog_file **Api4+**
+* get_bookmark
+* get_indexes
+* get_similar
+* labels
+* label
+* label_artists
+* last_shouts
 * licenses
 * license
 * license_songs
-* labels **Api5+**
-* label **Api5+**
-* label_artists **Api5+**
-* live_streams  **Api5+**
-* live_stream  **Api5+**
+* list **Api6** Replaces get_indexes
+* live_streams
+* live_stream
+* live_stream_create **Api6**
+* live_stream_delete **Api6**
+* live_stream_edit **Api6**
+* playlists
+* playlist
+* playlist_add_song
+* playlist_create
+* playlist_delete
+* playlist_edit
+* playlist_generate
+* playlist_remove_song
+* playlist_songs
+* podcasts
+* podcast
+* podcast_create
+* podcast_delete
+* podcast_edit
+* podcast_episodes
+* podcast_episode
+* podcast_episode_delete
+* preference_create
+* preference_delete
+* preference_edit
 * rate
-* flag **Api4+**
-* record_play **Api4+**
-* scrobble **Api4+**
-* followers
-* following
-* toggle_follow
-* last_shouts
+* record_play
+* scrobble
+* search_songs
+* shares
+* share
+* share_create
+* share_delete
+* share_edit
+* songs
+* song
+* song_delete
+* stats
+* system_preference
+* system_preferences
 * timeline
-* friends_timeline
-* update_from_tags **Api4+**
-* update_artist_info **Api4+**
-* update_art **Api4+**
-* update_podcast **Api4+**
+* toggle_follow
+* update_art
+* update_artist_info
+* update_from_tags
+* update_podcast
+* url_to_song
 * user
-* user_create **Api4+**
-* user_update **Api4+**
-* user_delete **Api4+**
-* user_preference **Api5+**
-* system_preferences **Api5+**
-* system_preference **Api5+**
-* preference_create **Api5+**
-* preference_edit **Api5+**
-* preference_delete **Api5+**
-* bookmark_create **Api5+**
-* bookmark_edit **Api5+**
-* bookmark_delete **Api5+**
-* deleted_songs **Api5+**
-* deleted_podcast_episodes **Api5+**
-* deleted_videos **Api5+**
+* user_create
+* user_delete
+* user_edit **Api6** Replaces user_update
+* user_update
+* user_preference
+* videos
+* video
+
 
 ### Binary Data Methods
 
@@ -289,17 +295,17 @@ All binary methods will not return XML/JSON responses. they will either return t
 
 @throws (HTTP 404 Not Found)
 
-* stream **Api4+**
-* download **Api4+**
-* get_art **Api4+**
+* download
+* get_art
+* stream
 
 ### Control Methods
 
 All Control methods return HTTP 200 responses
 
-* localplay
-* localplay_songs **Api5+**
 * democratic
+* localplay
+* localplay_songs
 
 ## Access Levels
 

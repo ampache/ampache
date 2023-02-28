@@ -73,7 +73,7 @@ final class SongDeleter implements SongDeleterInterface
             }
         } else {
             $this->logger->critical(
-                'Cannot delete ' . $song->file . 'file. Please check permissions.',
+                'Cannot delete ' . $song->file . ' file. Please check permissions.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
         }

@@ -118,7 +118,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * live_stream_delete: Delete a stream buy ID
   * register: Allow users to register an account (if enabled)
   * user_create: Add `group` parameter to pick a catalog filter group
-  * user_update:
+  * user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display
     * Add `reset_apikey` to reset a user Api Key
