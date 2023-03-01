@@ -329,13 +329,16 @@ class WebPlayer
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
                 case 'live_stream':
-                    $regex =  "/radio=([0-9]*)/";
+                    $regex           = "/radio=([0-9]*)/";
+                    $types['player'] = $item->codec;
                     break;
                 case 'democratic':
-                    $regex =  "/demo_id=([0-9]*)/";
+                    $regex           = "/demo_id=([0-9]*)/";
+                    $types['player'] = 'mp3';
                     break;
                 case 'random':
-                    $regex =  "/random_id=([0-9]*)/";
+                    $regex           =  "/random_id=([0-9]*)/";
+                    $types['player'] = 'mp3';
                     break;
                 default:
                     $regex =  "/" . $item->type . "=([0-9]*)/";
