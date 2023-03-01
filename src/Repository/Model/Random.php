@@ -234,11 +234,13 @@ class Random
     {
         $results = array();
         $search  = new Search($search_id);
-        if ($search->has_access($user->id)) {
+        if ($search->has_access($user->id) || $search->type == 'public') {
             foreach ($search->get_random_items(1) as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
+            return $results;
         }
+        debug_event(__CLASS__, $user->id . " doesn't have access to search:" . $search_id, 5);
 
         return $results;
     } // get_search
