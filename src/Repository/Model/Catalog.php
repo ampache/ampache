@@ -1227,14 +1227,12 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
-
         $classname = self::CATALOG_TYPES[$type] ?? null;
-
         if ($classname === null) {
             return $insert_id;
         }
 
-        $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' . '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, `rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
         Dba::write($sql, array(
             $name,
             $type,
@@ -1244,7 +1242,6 @@ abstract class Catalog extends database_object
         ));
 
         $insert_id = Dba::insert_id();
-
         if (!$insert_id) {
             AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
             debug_event(__CLASS__, 'Insert failed: ' . json_encode($data), 2);

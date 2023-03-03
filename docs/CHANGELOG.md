@@ -10,7 +10,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Added
 
-* Translations 2023-01
+* Translations 2023-02
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key and RSS token
 * Allow Admin users to browse all user uploads
@@ -113,6 +113,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 * API6 (Based on API5)
   * list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
+  * catalog_create: Create a catalog (Require: 75)
+  * catalog_delete: Delete a catalog (Require: 75)
   * live_stream_create: Create a new live stream (radio station)
   * live_stream_edit: Edit a live stream
   * live_stream_delete: Delete a stream buy ID
