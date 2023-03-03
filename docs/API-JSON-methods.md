@@ -617,7 +617,17 @@ Return children of a parent object in a folder traversal/browse style. If you do
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.json)
+
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(music%20catalog\).json)
+
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(artist\).json)
+
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(album\).json)
+
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(podcast%20catalog\).json)
+
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(video%20catalog\).json)
 
 ### catalogs
 

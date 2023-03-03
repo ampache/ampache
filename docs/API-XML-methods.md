@@ -634,6 +634,16 @@ Return children of a parent object in a folder traversal/browse style. If you do
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.xml)
 
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(music%20catalog\).xml)
+
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(artist\).xml)
+
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(album\).xml)
+
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(podcast%20catalog\).xml)
+
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(video%20catalog\).xml)
+
 ### catalogs
 
 This searches the catalogs and returns... catalogs
