@@ -680,6 +680,67 @@ Kick off a catalog update or clean for the selected catalog
 
 [Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(add_to_catalog\).xml)
 
+### catalog_create
+
+Create a public url that can be used by anyone to stream media.
+Takes the file id with optional description and expires parameters.
+
+**ACCESS REQUIRED:** 75 (Catalog Manager)
+
+| Input            | Type   | Description                                                                      | Optional |
+|------------------|--------|----------------------------------------------------------------------------------|---------:|
+| 'name'           | string | Name for the catalog                                                             |       NO |
+| 'path'           | string | URL or folder path for your catalog                                              |       NO |
+| 'type'           | string | 'local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote' Default: local  |      YES |
+| 'file_pattern'   | string | Pattern used identify tags from the file name. Default: '%T - %t'                |      YES |
+| 'folder_pattern' | string | Pattern used identify tags from the folder name. Default: '%a/%A'                |      YES |
+| 'media_type'     | string | 'music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video' Default: 'music' |      YES |
+| 'username'       | string | login to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')         |      YES |
+| 'password'       | string | password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')      |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <catalog>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_create.xml)
+
+### catalog_delete
+
+Delete an existing catalog.
+
+**ACCESS REQUIRED:** 75 (Catalog Manager)
+
+| Input    | Type   | Description              | Optional |
+|----------|--------|--------------------------|---------:|
+| 'filter' | string | UID of catalog to delete |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_delete.xml)
+
 ### catalog_file
 
 Perform actions on local catalog files.

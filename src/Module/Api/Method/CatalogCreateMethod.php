@@ -52,12 +52,12 @@ final class CatalogCreateMethod
      * @param User $user
      * name           = (string) catalog_name
      * path           = (string) URL or folder path for your catalog
-     * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote',) //optional
-     * file_pattern   = (integer) Pattern used identify tags from the file name. Default '%T - %t' //optional
+     * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * file_pattern   = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
-     * media_type     = (integer) Default: `music` ('music', 'podcast', 'clip', `tvshow`, `movie`, `personal_video`) //optional
-     * username     = (integer) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
-     * password     = (integer) password to remote catalog ('remote', 'subsonic', 'seafile') //optional
+     * media_type     = (string) Default: 'music' ('music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video') //optional
+     * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
+     * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
      */
     public static function catalog_create(array $input, User $user): bool
     {
