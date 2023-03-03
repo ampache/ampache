@@ -103,6 +103,7 @@ final class BrowseMethod
             }
             $catalog_media_type = $catalog->get_gather_type();
             $output_type        = $catalog_media_type;
+            $child_type         = 'catalog';
 
             $browse = Api::getBrowse();
             $browse->reset_filters();
@@ -129,6 +130,7 @@ final class BrowseMethod
                     $browse->set_filter('gather_types', $catalog_media_type);
                     break;
             }
+            $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
             $browse->set_filter('catalog', $catalog->id);
             $objects = $browse->get_objects();
@@ -185,7 +187,10 @@ final class BrowseMethod
                     $browse->set_type('podcast_episode');
                     $browse->set_filter('podcast', $item->id);
                     break;
+                default:
+
             }
+            $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
             $browse->set_filter('catalog', $catalog->id);
 
@@ -206,12 +211,12 @@ final class BrowseMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::browses($results, $object_id, $object_type);
+                echo Json_Data::browses($results, $object_id, $object_type, $child_type);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::browses($results, $object_id, $object_type);
+                echo Xml_Data::browses($results, $object_id, $object_type, $child_type);
         }
 
         return true;

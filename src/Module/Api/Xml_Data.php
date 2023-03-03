@@ -546,10 +546,13 @@ class Xml_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param  array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @param array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @param int     $parent_id
+     * @param string  $parent_type
+     * @param string  $child_type
      * @return string  return xml
      */
-    public static function browses($objects, $parent_id, $parent_type): string
+    public static function browses($objects, $parent_id, $parent_type, $child_type): string
     {
         $string = "<total_count>" . count($objects) . "</total_count>\n";
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
@@ -557,6 +560,7 @@ class Xml_Data
         }
         $string .= "<parent_id>" . $parent_id . "</parent_id>\n";
         $string .= "<parent_type>" . $parent_type . "</parent_type>\n";
+        $string .= "<child_type>" . $child_type . "</child_type>\n";
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
