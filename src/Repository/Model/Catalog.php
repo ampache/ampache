@@ -1561,12 +1561,13 @@ abstract class Catalog extends database_object
     public static function get_name_array($objects, $table)
     {
         switch ($table) {
-            case 'artist':
             case 'album':
+            case 'artist':
                 $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
                 break;
-            case 'playlist':
+            case 'catalog':
             case 'live_stream':
+            case 'playlist':
                 $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
                 break;
             case 'podcast':

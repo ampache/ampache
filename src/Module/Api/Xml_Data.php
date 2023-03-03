@@ -539,7 +539,38 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string);
-    } // indexes
+    } // lists
+
+    /**
+     * browses
+     *
+     * This takes a name array of objects and return the data in XML format
+     *
+     * @param  array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @return string  return xml
+     */
+    public static function browses($objects, $parent_id, $parent_type): string
+    {
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
+        }
+        $string .= "<parent_id>" . $parent_id . "</parent_id>\n";
+        $string .= "<parent_type>" . $parent_type . "</parent_type>\n";
+
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
+        foreach ($objects as $object) {
+            $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
+            $prefix   = $trimmed['prefix'];
+            $basename = $trimmed['string'];
+            $string .= "<list id=\"" . $object['id'] . "\">\n" .
+                "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
+                "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
+                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
+        } // end foreach objects
+
+        return self::output_xml($string);
+    } // browses
 
     /**
      * licenses

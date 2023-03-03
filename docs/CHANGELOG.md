@@ -102,6 +102,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Bugs around the setting of the Various album_artist when the album_artist is null
 * Show test errors correctly when you can connect to the server but don't have a database
 * When using LDAP check for DN and username on group membership
+* Browse filtering for catalogs and podcast_episodes was a bit light
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -112,15 +113,16 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
-  * list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
-  * catalog_add: Create a catalog (Require: 75)
-  * catalog_delete: Delete a catalog (Require: 75)
-  * live_stream_create: Create a new live stream (radio station)
-  * live_stream_edit: Edit a live stream
-  * live_stream_delete: Delete a stream buy ID
-  * register: Allow users to register an account (if enabled)
-  * playlist_create: Return an error if the playlist name already exists for that user
-  * user_edit (previously user_create):
+  * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
+  * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
+  * API6::catalog_add: Create a catalog (Require: 75)
+  * API6::catalog_delete: Delete a catalog (Require: 75)
+  * API6::live_stream_create: Create a new live stream (radio station)
+  * API6::live_stream_edit: Edit a live stream
+  * API6::live_stream_delete: Delete a stream buy ID
+  * API6::register: Allow users to register an account (if enabled)
+  * API6::playlist_create: Return an error if the playlist name already exists for that user
+  * API6::user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display
     * Add `reset_apikey` to reset a user Api Key
@@ -128,10 +130,12 @@ You can now use a permanent session token for streaming. (check out the wiki!)
     * Add `clear_stats` reset all stats for this user **be very sure about this one!**
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
-  * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `bitrate` to Democratic objects
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
+* JSON responses
+  * Cast bool fields to `true` and `false` instead of "1" & "0"
+  * Add `total_count` to resonses to give clients an idea of the total possible objects
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search

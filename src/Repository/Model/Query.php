@@ -158,6 +158,9 @@ class Query
             'tag',
             'name'
         ),
+        'catalog' => array(
+            'name'
+        ),
         'user' => array(
             'fullname',
             'username',
@@ -262,6 +265,7 @@ class Query
             'random'
         ),
         'podcast_episode' => array(
+            'podcast',
             'title',
             'category',
             'author',
@@ -379,9 +383,11 @@ class Query
             case 'album_artist':
             case 'album_disk':
             case 'catalog':
+            case 'podcast':
             case 'album':
             case 'disk':
             case 'hidden':
+            case 'gather_types':
                 $this->_state['filter'][$key] = $value;
                 break;
             case 'min_count':
@@ -708,6 +714,9 @@ class Query
                     'season_gt',
                     'season_lt'
                 ),
+                'catalog' => array(
+                    'gather_types'
+                ),
                 'user' => array(
                     'starts_with'
                 ),
@@ -739,6 +748,7 @@ class Query
                     'unplayed'
                 ),
                 'podcast_episode' => array(
+                    'podcast',
                     'alpha_match',
                     'exact_match',
                     'regex_match',
@@ -1277,8 +1287,8 @@ class Query
                 case 'artist':
                 case 'album':
                 case 'song':
-                case "song_artist":
-                case "song_album":
+                case 'song_artist':
+                case 'song_album':
                 case 'podcast':
                 case 'podcast_episode':
                 case 'playlist':
@@ -1571,7 +1581,7 @@ class Query
                         }
                         break;
                     case 'artist':
-                        $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
                         break;
                     case 'add_lt':
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1988,6 +1998,13 @@ class Query
                         break;
                 } // end filter
                 break;
+            case 'catalog':
+                switch ($filter) {
+                    case 'gather_types':
+                        $filter_sql = " `catalog`.`gather_types` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                } // end filter
+                break;
             case 'user':
                 switch ($filter) {
                     case 'starts_with':
@@ -2092,6 +2109,14 @@ class Query
                 break;
             case 'podcast_episode':
                 switch ($filter) {
+                    case 'catalog':
+                        $this->set_join('LEFT', '`podcast`', '`podcast`.`id`', '`podcast_episode`.`podcast`', 100);
+                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
+                        $filter_sql = " `podcast`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                        break;
+                    case 'podcast':
+                        $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
+                        break;
                     case 'exact_match':
                         $filter_sql = " `podcast_episode`.`title` = '" . Dba::escape($value) . "' AND ";
                         break;
@@ -2479,6 +2504,7 @@ class Query
                 break;
             case 'podcast_episode':
                 switch ($field) {
+                    case 'podcast':
                     case 'title':
                     case 'category':
                     case 'author':
