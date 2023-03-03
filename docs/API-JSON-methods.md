@@ -2362,7 +2362,9 @@ returns a single song
 "replaygain_album_gain": 0.000000,
 "replaygain_album_peak": 0.000000,
 "replaygain_track_gain": 0.000000,
-"replaygain_track_peak": 0.000000
+"replaygain_track_peak": 0.000000,
+"r128_track_gain": null,
+"r128_album_gain": null
 ```
 
 * throws object
@@ -2644,7 +2646,9 @@ This takes a url and returns the song object in question
 "replaygain_album_gain": 0.000000,
 "replaygain_album_peak": 0.000000,
 "replaygain_track_gain": 0.000000,
-"replaygain_track_peak": 0.000000
+"replaygain_track_peak": 0.000000,
+"r128_track_gain": null,
+"r128_album_gain": null
 ```
 
 * throws object
