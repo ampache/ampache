@@ -669,7 +669,7 @@ Kick off a catalog update or clean for the selected catalog
 
 [Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_action%20\(add_to_catalog\).json)
 
-### catalog_create
+### catalog_add
 
 Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.

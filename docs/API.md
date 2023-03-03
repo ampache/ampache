@@ -224,7 +224,7 @@ All Data methods return HTTP 200 responses
 * catalogs
 * catalog
 * catalog_action
-* catalog_create **Api6**
+* catalog_add **Api6**
 * catalog_delete **Api6**
 * catalog_file
 * deleted_podcast_episodes

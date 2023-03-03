@@ -35,15 +35,15 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
- * Class CatalogCreateMethod
+ * Class CatalogAddMethod
  * @package Lib\ApiMethods
  */
-final class CatalogCreateMethod
+final class CatalogAddMethod
 {
-    public const ACTION = 'catalog_create';
+    public const ACTION = 'catalog_add';
 
     /**
-     * catalog_create
+     * catalog_add
      * MINIMUM_API_VERSION=6.0.0
      *
      * Create a placeholder for the current media that you can return to later.
@@ -59,7 +59,7 @@ final class CatalogCreateMethod
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
      * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
      */
-    public static function catalog_create(array $input, User $user): bool
+    public static function catalog_add(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('name', 'path'), self::ACTION)) {
             return false;
