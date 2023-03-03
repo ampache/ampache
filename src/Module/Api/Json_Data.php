@@ -259,7 +259,7 @@ class Json_Data
                 "basename" => $basename,
             );
         } // end foreach
-        $output[] = array("list" => $JSON);
+        $output["list"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // lists
@@ -302,7 +302,7 @@ class Json_Data
                 "basename" => $basename
             );
         } // end foreach
-        $output[] = array("browse" => $JSON);
+        $output["browse"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // lists
@@ -339,7 +339,7 @@ class Json_Data
             );
         } // end foreach
         if ($object) {
-            $output[] = array("live_stream" => $JSON);
+            $output["live_stream"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -376,7 +376,7 @@ class Json_Data
             );
         } // end foreach
         if ($object) {
-            $output[] = array("license" => $JSON);
+            $output["license"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -420,7 +420,7 @@ class Json_Data
             );
         } // end foreach
         if ($object) {
-            $output[] = array("label" => $JSON);
+            $output["label"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -462,7 +462,7 @@ class Json_Data
             );
         } // end foreach
         if ($object) {
-            $output[] = array("genre" => $JSON);
+            $output["genre"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -540,7 +540,7 @@ class Json_Data
 
         if ($encode) {
             if ($object) {
-                $output[] = array("artist" => $JSON);
+                $output["artist"] = $JSON;
             } else {
                 $output = $JSON[0] ?? array();
             }
@@ -628,7 +628,7 @@ class Json_Data
 
         if ($encode) {
             if ($object) {
-                $output[] = array("album" => $JSON);
+                $output["album"] = $JSON;
             } else {
                 $output = $JSON[0] ?? array();
             }
@@ -722,7 +722,7 @@ class Json_Data
             ];
         } // end foreach
         if ($object) {
-            $output[] = array("playlist" => $JSON);
+            $output["playlist"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -785,7 +785,7 @@ class Json_Data
             ];
         } // end foreach
         if ($object) {
-            $output[] = array("share" => $JSON);
+            $output["share"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -834,7 +834,7 @@ class Json_Data
             ];
         } // end foreach
         if ($object) {
-            $output[] = array("bookmark" => $JSON);
+            $output["bookmark"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -890,7 +890,7 @@ class Json_Data
             ];
         } // end foreach
         if ($object) {
-            $output[] = array("catalog" => $JSON);
+            $output["catalog"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -962,7 +962,7 @@ class Json_Data
             ];
         } // end foreach
         if ($object) {
-            $output[] = array("podcast" => $JSON);
+            $output["podcast"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -1030,7 +1030,7 @@ class Json_Data
             return $JSON;
         }
         if ($object) {
-            $output[] = array("podcast_episode" => $JSON);
+            $output["podcast_episode"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -1164,7 +1164,7 @@ class Json_Data
 
         if ($encode) {
             if ($object) {
-                $output[] = array("song" => $JSON);
+                $output["song"] = $JSON;
             } else {
                 $output = $JSON[0] ?? array();
             }
@@ -1218,7 +1218,7 @@ class Json_Data
             );
         } // end foreach
         if ($object) {
-            $output[] = array("video" => $JSON);
+            $output["video"] = $JSON;
         } else {
             $output = $JSON[0] ?? array();
         }
@@ -1499,7 +1499,7 @@ class Json_Data
                     $JSON[] = $objArray;
             }
         }
-        $output[] = array("deleted_" . $object_type => $JSON);
+        $output["deleted_" . $object_type] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // deleted
