@@ -29,11 +29,9 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

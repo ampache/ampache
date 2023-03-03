@@ -22,22 +22,20 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Application\Stats;
+namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Rating;
-use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class HighestAlbumDiskAction implements ApplicationActionInterface
+final class DeleteRsstokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'highest_album_disk';
+    public const REQUEST_KEY = 'delete_rsstoken';
 
     private UiInterface $ui;
 
@@ -55,34 +53,25 @@ final class HighestAlbumDiskAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+            return null;
+        }
 
+        if (!Core::form_verify('delete_rsstoken')) {
+            throw new AccessDeniedException();
+        }
         $this->ui->showHeader();
-        $this->ui->show('show_form_highest.inc.php');
-        $this->ui->showHeader();
 
-        define('TABLE_RENDERED', 1);
+        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $client->delete_rsstoken();
 
-        // Temporary workaround to avoid sorting on custom base requests
-        define('NO_BROWSE_SORTING', true);
-
-        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
-            ? Core::get_global('user')->id
-            : null;
-
-        $objects = Rating::get_highest('album_disk', $limit, 0, $user_id);
-        $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
-        $browse->set_type('album_disk');
-        $browse->show_objects($objects);
-        $browse->store();
-
-        $this->ui->showBoxBottom();
-
-        show_table_render(false, true);
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Token has been deleted'),
+            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

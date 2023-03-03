@@ -50,7 +50,7 @@ final class GetIndexes5Method
      *
      * @param array $input
      * @param User $user
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
+     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = Api::set_filter(date) //optional

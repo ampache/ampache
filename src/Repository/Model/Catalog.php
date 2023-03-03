@@ -1029,7 +1029,12 @@ abstract class Catalog extends database_object
      */
     public static function update_enabled($new_enabled, $catalog_id)
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id, '75');
+        /* Check them Rights! */
+        if (!Access::check('interface', 75)) {
+            return false;
+        }
+
+        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
     } // update_enabled
 
     /**
@@ -1041,16 +1046,10 @@ abstract class Catalog extends database_object
      * @param string $field
      * @param string|int $value
      * @param int $catalog_id
-     * @param int $level
      * @return PDOStatement|boolean
      */
-    private static function _update_item($field, $value, $catalog_id, $level)
+    private static function _update_item($field, $value, $catalog_id)
     {
-        /* Check them Rights! */
-        if (!Access::check('interface', $level)) {
-            return false;
-        }
-
         /* Can't update to blank */
         if (!strlen(trim((string)$value))) {
             return false;
@@ -1228,14 +1227,12 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
-
         $classname = self::CATALOG_TYPES[$type] ?? null;
-
         if ($classname === null) {
             return $insert_id;
         }
 
-        $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' . '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, `rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
         Dba::write($sql, array(
             $name,
             $type,
@@ -1245,7 +1242,6 @@ abstract class Catalog extends database_object
         ));
 
         $insert_id = Dba::insert_id();
-
         if (!$insert_id) {
             AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
             debug_event(__CLASS__, 'Insert failed: ' . json_encode($data), 2);
@@ -1565,12 +1561,13 @@ abstract class Catalog extends database_object
     public static function get_name_array($objects, $table)
     {
         switch ($table) {
-            case 'artist':
             case 'album':
+            case 'artist':
                 $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
                 break;
-            case 'playlist':
+            case 'catalog':
             case 'live_stream':
+            case 'playlist':
                 $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
                 break;
             case 'podcast':
@@ -2271,8 +2268,7 @@ abstract class Catalog extends database_object
     protected function update_last_update()
     {
         $date = time();
-        $sql  = "UPDATE `catalog` SET `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, array($date, $this->id));
+        self::_update_item('last_update', $date, $this->id);
     } // update_last_update
 
     /**
@@ -2282,8 +2278,7 @@ abstract class Catalog extends database_object
     public function update_last_add()
     {
         $date = time();
-        $sql  = "UPDATE `catalog` SET `last_add` = ? WHERE `id` = ?";
-        Dba::write($sql, array($date, $this->id));
+        self::_update_item('last_add', $date, $this->id);
     } // update_last_add
 
     /**
@@ -2293,8 +2288,7 @@ abstract class Catalog extends database_object
     public function update_last_clean()
     {
         $date = time();
-        $sql  = "UPDATE `catalog` SET `last_clean` = ? WHERE `id` = ?";
-        Dba::write($sql, array($date, $this->id));
+        self::_update_item('last_clean', $date, $this->id);
     } // update_last_clean
 
     /**

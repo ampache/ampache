@@ -47,7 +47,7 @@ final class Playlists4Method
      * @param array $input
      * @param User $user
      * filter       = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact        = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add          = Api::set_filter(date) //optional
      * update       = Api::set_filter(date) //optional
      * offset       = (integer) //optional
@@ -57,7 +57,7 @@ final class Playlists4Method
      */
     public static function playlists(array $input, User $user)
     {
-        $like       = !((array_key_exists('', $input) && (int)$input['exact'] == 1));
+        $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $filter     = (string)($input['filter'] ?? '');
         $show_dupes = (bool)($input['show_dupes'] ?? false);

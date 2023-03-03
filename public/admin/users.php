@@ -30,6 +30,7 @@ use Ampache\Module\Application\Admin\User\ConfirmEnableAction;
 use Ampache\Module\Application\Admin\User\DeleteAction;
 use Ampache\Module\Application\Admin\User\DeleteApikeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\DeleteRsstokenAction;
 use Ampache\Module\Application\Admin\User\DeleteStreamtokenAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
@@ -40,6 +41,7 @@ use Ampache\Module\Application\Admin\User\ShowAction;
 use Ampache\Module\Application\Admin\User\ShowAddUserAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteApikeyAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteRsstokenAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteStreamtokenAction;
 use Ampache\Module\Application\Admin\User\ShowEditAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateApikeyAction;
@@ -67,6 +69,8 @@ $dic->get(ApplicationRunner::class)->run(
         GenerateStreamtokenAction::REQUEST_KEY => GenerateStreamtokenAction::class,
         ShowGenerateRsstokenAction::REQUEST_KEY => ShowGenerateRsstokenAction::class,
         ShowGenerateStreamtokenAction::REQUEST_KEY => ShowGenerateStreamtokenAction::class,
+        DeleteRsstokenAction::REQUEST_KEY => DeleteRsstokenAction::class,
+        ShowDeleteRsstokenAction::REQUEST_KEY => ShowDeleteRsstokenAction::class,
         DeleteStreamtokenAction::REQUEST_KEY => DeleteStreamtokenAction::class,
         ShowDeleteStreamtokenAction::REQUEST_KEY => ShowDeleteStreamtokenAction::class,
         GenerateApikeyAction::REQUEST_KEY => GenerateApikeyAction::class,

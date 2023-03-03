@@ -45,7 +45,6 @@ final class PlaylistCreate3Method
      */
     public static function playlist_create(array $input, User $user)
     {
-        unset($user);
         $name = $input['name'];
         $type = $input['type'];
         if ($type != 'private') {
@@ -53,7 +52,7 @@ final class PlaylistCreate3Method
         }
         Catalog::count_table('playlist');
 
-        $uid = Playlist::create($name, $type);
+        $uid = Playlist::create($name, $type, $user->id);
         echo Xml3_Data::playlists(array($uid));
     }
 }

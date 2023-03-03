@@ -10,12 +10,15 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Added
 
-* Translations 2023-01
+* Translations 2023-02
 * Add `streamtoken` to user objects, allowing permanent stream links
-* Allow deleting a user API key
+* Allow deleting a user API key and RSS token
 * Allow Admin users to browse all user uploads
 * Add php8.2 to composer
 * Create Dockerfilephp82
+* Add custom listenbrainz_api_url to listenbrainz plugin
+* CLI
+  * Add playlistid to export:playlist (export a single playlist instead of all of them)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -86,6 +89,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
+* Subsonic
+  * Custom messages for subsonic errors [subsonic.org](http://www.subsonic.org/pages/api.jsp)
 
 ### Fixed
 
@@ -95,6 +100,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Recently played for non-user calls
 * Found a few dynamic properties on objects
 * Bugs around the setting of the Various album_artist when the album_artist is null
+* Show test errors correctly when you can connect to the server but don't have a database
+* When using LDAP check for DN and username on group membership
+* Browse filtering for catalogs and podcast_episodes was a bit light
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -105,13 +113,16 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Added
 
 * API6 (Based on API5)
-  * list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
-  * live_stream_create: Create a new live stream (radio station)
-  * live_stream_edit: Edit a live stream
-  * live_stream_delete: Delete a stream buy ID
-  * register: Allow users to register an account (if enabled)
-  * user_create: Add `group` parameter to pick a catalog filter group
-  * user_update:
+  * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
+  * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
+  * API6::catalog_add: Create a catalog (Require: 75)
+  * API6::catalog_delete: Delete a catalog (Require: 75)
+  * API6::live_stream_create: Create a new live stream (radio station)
+  * API6::live_stream_edit: Edit a live stream
+  * API6::live_stream_delete: Delete a stream buy ID
+  * API6::register: Allow users to register an account (if enabled)
+  * API6::playlist_create: Return an error if the playlist name already exists for that user
+  * API6::user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display
     * Add `reset_apikey` to reset a user Api Key
@@ -119,34 +130,29 @@ You can now use a permanent session token for streaming. (check out the wiki!)
     * Add `clear_stats` reset all stats for this user **be very sure about this one!**
   * Add `prefix` (Prefix for Full Name) to album & artist responses
   * Add `basename` (Name without prefix) to album & artist responses
-  * JSON: Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `bitrate` to Democratic objects
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
+* JSON responses
+  * Cast bool fields to `true` and `false` instead of "1" & "0"
+  * Add `total_count` to resonses to give clients an idea of the total possible objects
 * advanced_search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
 
 ### Changed
 
+* Api6
+  * Renamed user_update to user_edit (user_update still works and will be depreciated in API7)
 * ALL
   * Albums with no album_artist may now return 0 artist called 'Various'
   * Don't send AlbumDisk objects to the API
 * XML responses
-  * id is the only attribute and everything else is an element
+  * Api6 XML success and error response messages are put in a `message` element (like json)
+  * For data responses id is the only attribute and everything else is an element
   * Name was not set as an attribute OR an element so now it's always an element
   * Return original XML output (that may be malformed) when loadxml fails.
 * Api6::get_indexes: This method is depreciated and will be removed in Ampache 7.0.0 (Use Api6::list instead)
-
-### Fixed
-
-* ALL
-  * advanced_search methods were breaking with various offset and limits
-* Api6 JSON
-  * Share and Bookmark object id's were not strings
-* Api3
-  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
-  * Artists method parameters were incorrect
 
 ### Removed
 
@@ -160,6 +166,16 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Api6::tag_albums
   * Api6::tag_artists
   * Api6::tag_songs
+
+### Fixed
+
+* ALL
+  * advanced_search methods were breaking with various offset and limits
+* Api6 JSON
+  * Share and Bookmark object id's were not strings
+* Api3
+  * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
+  * Artists method parameters were incorrect
 
 ## Ampache 5.5.6-release
 

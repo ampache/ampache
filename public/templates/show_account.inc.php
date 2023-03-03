@@ -124,6 +124,7 @@ $access100      = Access::check('interface', 100); ?>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>

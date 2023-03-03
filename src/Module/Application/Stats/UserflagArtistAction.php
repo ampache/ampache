@@ -29,7 +29,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;

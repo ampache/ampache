@@ -22,74 +22,49 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Application\Admin\Upload;
+namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction extends AbstractUploadAction
+final class ShowDeleteRsstokenAction extends AbstractUserAction
 {
-    public const REQUEST_KEY = 'show';
+    public const REQUEST_KEY = 'show_delete_rsstoken';
 
     private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $this->ui->showHeader();
-        $this->ui->showBoxTop(T_('Browse Uploads'));
 
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'song',
-            Catalog::get_uploads_sql('song')
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(
-            'album',
-            Catalog::get_uploads_sql('album')
-        );
-        $browse->set_simple_browse(true);
-        $browse->show_objects();
-        $browse->store();
-
-        if (!$this->configContainer->get(ConfigurationKeyEnum::UPLOAD_USER_ARTIST)) {
-            $browse = $this->modelFactory->createBrowse();
-            $browse->set_type(
-                'artist',
-                Catalog::get_uploads_sql('artist')
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        if ($userId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('This Token will be deleted'),
+                sprintf(
+                    'admin/users.php?action=%s&user_id=%d',
+                    DeleteRsstokenAction::REQUEST_KEY,
+                    $userId
+                ),
+                1,
+                'delete_rsstoken'
             );
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
-            $browse->store();
         }
-
-        $this->ui->showBoxBottom();
-
-        show_table_render(false, true);
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

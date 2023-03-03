@@ -322,7 +322,7 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept');
+        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept', false);
         $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 

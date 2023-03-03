@@ -75,7 +75,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }
-                    $playlist_id = (int) Playlist::create($name, 'private');
+                    $playlist_id = (int)Playlist::create($name, 'private');
                     if ($playlist_id < 1) {
                         break;
                     }

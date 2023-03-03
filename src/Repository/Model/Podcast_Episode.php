@@ -491,7 +491,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public static function update_played($new_played, $id)
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $id, '25');
+        self::_update_item('played', ($new_played ? 1 : 0), $id);
     } // update_played
 
     /**
@@ -502,7 +502,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      */
     public static function update_file($path, $id)
     {
-        self::_update_item('file', $path, $id, '25');
+        self::_update_item('file', $path, $id);
     } // update_file
 
     /**
@@ -514,13 +514,12 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
      * @param string $field
      * @param string|int $value
      * @param int $episode_id
-     * @param int $level
      * @return boolean
      */
-    private static function _update_item($field, $value, $episode_id, $level)
+    private static function _update_item($field, $value, $episode_id)
     {
         /* Check them Rights! */
-        if (!Access::check('interface', $level)) {
+        if (!Access::check('interface', 25)) {
             return false;
         }
 

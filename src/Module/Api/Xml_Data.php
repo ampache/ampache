@@ -152,7 +152,7 @@ class Xml_Data
      */
     public static function success($string, $return_data = array()): string
     {
-        $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
+        $xml_string = "\t<success code=\"1\">\n\t<message><![CDATA[" . $string . "]]></message></success>";
         foreach ($return_data as $title => $data) {
             $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
         }
@@ -539,7 +539,44 @@ class Xml_Data
         } // end foreach objects
 
         return self::output_xml($string);
-    } // indexes
+    } // lists
+
+    /**
+     * browses
+     *
+     * This takes a name array of objects and return the data in XML format
+     *
+     * @param array    $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @param int|null $parent_id
+     * @param string   $parent_type
+     * @param string   $child_type
+     * @param int|null $catalog_id
+     * @return string  return xml
+     */
+    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id): string
+    {
+        $string = "<total_count>" . count($objects) . "</total_count>\n";
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
+        }
+        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n";
+        $string .= "<parent_id>" . $parent_id . "</parent_id>\n";
+        $string .= "<parent_type>" . $parent_type . "</parent_type>\n";
+        $string .= "<child_type>" . $child_type . "</child_type>\n";
+
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
+        foreach ($objects as $object) {
+            $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
+            $prefix   = $trimmed['prefix'];
+            $basename = $trimmed['string'];
+            $string .= "<list id=\"" . $object['id'] . "\">\n" .
+                "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
+                "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
+                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
+        } // end foreach objects
+
+        return self::output_xml($string);
+    } // browses
 
     /**
      * licenses

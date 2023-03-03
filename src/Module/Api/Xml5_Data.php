@@ -43,7 +43,6 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use DOMDocument;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;

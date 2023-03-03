@@ -472,7 +472,7 @@ default_auth_level = "guest"
 
 ; 5 Star Ratings
 ; This allows ratings for almost any object in Ampache
-: It also allows users to flag objects as a favorite
+; It also allows users to flag objects as a favorite
 ; POSSIBLE VALUES: false true
 ; DEFAULT: "true"
 ratings = "true"

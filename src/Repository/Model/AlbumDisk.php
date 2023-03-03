@@ -667,8 +667,8 @@ class AlbumDisk extends database_object implements library_item
         $album_id = null;
         $type     = null;
 
-        if (Art::has_db($this->id, 'album')) {
-            $album_id = $this->id;
+        if (Art::has_db($this->album_id, 'album')) {
+            $album_id = $this->album_id;
             $type     = 'album';
         } elseif (Art::has_db($this->album->album_artist, 'artist') || $force) {
             $album_id = $this->album->album_artist;
