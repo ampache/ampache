@@ -45,14 +45,14 @@ final class BrowseMethod
      * browse
      * MINIMUM_API_VERSION=6.0.0
      *
-     * Return children of a parent object in a folder traversal/browse style (MUSIC ONLY)
+     * Return children of a parent object in a folder traversal/browse style
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      *
      * @param array $input
      * @param User $user
      * filter  = (string) object_id //optional
-     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast'
-     * catalog = (integer) catalog ID you are browsing
+     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
+     * catalog = (integer) catalog ID you are browsing // optional
      * add     = Api::set_filter(date) //optional
      * update  = Api::set_filter(date) //optional
      * offset  = (integer) //optional
@@ -61,6 +61,7 @@ final class BrowseMethod
      */
     public static function browse(array $input, User $user): bool
     {
+        $catalog_id  = $input['catalog'] ?? null;
         $object_id   = $input['filter'] ?? null;
         $object_type = $input['type'] ?? 'root';
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
@@ -88,7 +89,8 @@ final class BrowseMethod
                 $objects = array_merge($objects, User::get_user_catalogs($user->id, 'movie'));
                 $objects = array_merge($objects, User::get_user_catalogs($user->id, 'personal_video'));
             }
-            $results = Catalog::get_name_array($objects, 'catalog');
+            $child_type = 'catalog';
+            $results    = Catalog::get_name_array($objects, 'catalog');
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
             if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
@@ -103,7 +105,6 @@ final class BrowseMethod
             }
             $catalog_media_type = $catalog->get_gather_type();
             $output_type        = $catalog_media_type;
-            $child_type         = 'catalog';
 
             $browse = Api::getBrowse();
             $browse->reset_filters();
@@ -144,8 +145,7 @@ final class BrowseMethod
             if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
                 return false;
             }
-            $catalog_id = $input['catalog'] ?? null;
-            $catalog    = Catalog::create_from_id($catalog_id);
+            $catalog = Catalog::create_from_id($catalog_id);
             if (!$catalog) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
@@ -211,12 +211,12 @@ final class BrowseMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::browses($results, $object_id, $object_type, $child_type);
+                echo Json_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::browses($results, $object_id, $object_type, $child_type);
+                echo Xml_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }
 
         return true;
