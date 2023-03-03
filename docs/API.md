@@ -221,6 +221,7 @@ All Data methods return HTTP 200 responses
 * bookmark_create
 * bookmark_delete
 * bookmark_edit
+* browse **Api6**
 * catalogs
 * catalog
 * catalog_action

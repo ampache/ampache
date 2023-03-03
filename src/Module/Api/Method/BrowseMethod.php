@@ -47,6 +47,7 @@ final class BrowseMethod
      *
      * Return children of a parent object in a folder traversal/browse style
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
+     * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
      * @param array $input
      * @param User $user

@@ -601,6 +601,39 @@ Edit a placeholder for the current media that you can return to later.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark_edit.xml)
 
+### browse
+
+Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)
+
+**NOTE** Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
+
+| Input         | Type       | Description                                                                                        | Optional |
+|---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | object_id                                                                                          |      YES |
+| 'type'        | string     | 'root', 'catalog', 'artist', 'album', 'podcast'                                                    |      YES |
+| 'filter'      | string     | catalog ID you are browsing                                                                        |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <list>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.xml)
+
 ### catalogs
 
 This searches the catalogs and returns... catalogs
@@ -692,9 +725,9 @@ Takes the file id with optional description and expires parameters.
 | 'name'           | string | Name for the catalog                                                             |       NO |
 | 'path'           | string | URL or folder path for your catalog                                              |       NO |
 | 'type'           | string | 'local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote' Default: local  |      YES |
+| 'media_type'     | string | 'music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video' Default: 'music' |      YES |
 | 'file_pattern'   | string | Pattern used identify tags from the file name. Default: '%T - %t'                |      YES |
 | 'folder_pattern' | string | Pattern used identify tags from the folder name. Default: '%a/%A'                |      YES |
-| 'media_type'     | string | 'music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video' Default: 'music' |      YES |
 | 'username'       | string | login to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')         |      YES |
 | 'password'       | string | password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')      |      YES |
 

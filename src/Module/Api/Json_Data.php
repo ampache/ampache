@@ -160,7 +160,7 @@ class Json_Data
      */
     private static function genre_array($tags): array
     {
-        $JSON = array();
+        $JSON = [];
 
         if (!empty($tags)) {
             $atags = array();
@@ -239,7 +239,7 @@ class Json_Data
      */
     public static function lists($objects)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
@@ -247,6 +247,7 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'];
@@ -258,7 +259,7 @@ class Json_Data
                 "basename" => $basename,
             );
         } // end foreach
-        $output = array("list" => $JSON);
+        $output[] = array("list" => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // lists
@@ -268,16 +269,18 @@ class Json_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
-     * @param int     $parent_id
-     * @param string  $parent_type
-     * @param string  $child_type
+     * @param array    $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @param int|null $parent_id
+     * @param string   $parent_type
+     * @param string   $child_type
+     * @param int|null $catalog_id
      * @return string JSON Object "browse"
      */
-    public static function browses($objects, $parent_id, $parent_type, $child_type)
+    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects),
+            "catalog_id" => (string)$catalog_id,
             "parent_id" => (string)$parent_id,
             "parent_type" => $parent_type,
             "child_type" => $child_type
@@ -287,6 +290,7 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'];
@@ -298,7 +302,7 @@ class Json_Data
                 "basename" => $basename
             );
         } // end foreach
-        $output = array("browse" => $JSON);
+        $output[] = array("browse" => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // lists
@@ -314,13 +318,14 @@ class Json_Data
      */
     public static function live_streams($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
             $live_stream->format();
@@ -333,7 +338,10 @@ class Json_Data
                 "site_url" => $live_stream->site_url
             );
         } // end foreach
-        $output = ($object) ? array("live_stream" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("live_stream" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // live_streams
@@ -349,13 +357,14 @@ class Json_Data
      */
     public static function licenses($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $license_id) {
             $license = new License($license_id);
             $JSON[]  = array(
@@ -365,7 +374,10 @@ class Json_Data
                 "external_link" => $license->external_link
             );
         } // end foreach
-        $output = ($object) ? array("license" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("license" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // licenses
@@ -381,13 +393,14 @@ class Json_Data
      */
     public static function labels($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $label_id) {
             $label = new Label($label_id);
             $label->format();
@@ -404,7 +417,10 @@ class Json_Data
                 "user" => (string)$label->user,
             );
         } // end foreach
-        $output = ($object) ? array("label" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("label" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // labels
@@ -420,13 +436,14 @@ class Json_Data
      */
     public static function genres($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
@@ -441,7 +458,10 @@ class Json_Data
                 "live_streams" => (int)($counts['live_stream'] ?? 0)
             );
         } // end foreach
-        $output = ($object) ? array("genre" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("genre" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // genres
@@ -461,7 +481,7 @@ class Json_Data
      */
     public static function artists($objects, $include, $user, $encode = true, $object = true)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
@@ -469,6 +489,7 @@ class Json_Data
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         Rating::build_cache('artist', $objects);
+        $JSON = [];
         foreach ($objects as $artist_id) {
             $artist = new Artist($artist_id);
             if (!isset($artist->id)) {
@@ -514,7 +535,10 @@ class Json_Data
         } // end foreach artists
 
         if ($encode) {
-            $output = ($object) ? array("artist" => $JSON) : $JSON[0] ?? array();
+            if ($object) {
+                $output[] = array("artist" => $JSON);
+            }
+            $output = $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -536,7 +560,7 @@ class Json_Data
      */
     public static function albums($objects, $include, $user, $encode = true, $object = true)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
         // original year (fall back to regular year)
@@ -546,6 +570,7 @@ class Json_Data
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         Rating::build_cache('album', $objects);
+        $JSON = [];
         foreach ($objects as $album_id) {
             $album = new Album($album_id);
             $album->format();
@@ -597,7 +622,10 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            $output = ($object) ? array("album" => $JSON) : $JSON[0] ?? array();
+            if ($object) {
+                $output[] = array("album" => $JSON);
+            }
+            $output = $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -618,7 +646,7 @@ class Json_Data
      */
     public static function playlists($objects, $user, $songs = false, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
         $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
@@ -627,6 +655,7 @@ class Json_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
@@ -686,7 +715,10 @@ class Json_Data
                 "averagerating" => $rating->get_average_rating()
             ];
         } // end foreach
-        $output = ($object) ? array("playlist" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("playlist" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // playlists
@@ -702,13 +734,14 @@ class Json_Data
      */
     public static function shares($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $share_id) {
             $share                = new Share($share_id);
             $share_name           = $share->getObjectName();
@@ -744,7 +777,10 @@ class Json_Data
                 "description" => $share_description
             ];
         } // end foreach
-        $output = ($object) ? array("share" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("share" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // shares
@@ -760,13 +796,14 @@ class Json_Data
      */
     public static function bookmarks($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $bookmark_id) {
             $bookmark               = new Bookmark($bookmark_id);
             $bookmark_user          = $bookmark->getUserName();
@@ -788,7 +825,10 @@ class Json_Data
                 "update_date" => $bookmark_update_date
             ];
         } // end foreach
-        $output = ($object) ? array("bookmark" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("bookmark" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // bookmarks
@@ -804,13 +844,14 @@ class Json_Data
      */
     public static function catalogs($objects, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
@@ -839,7 +880,10 @@ class Json_Data
                 "sort_pattern" => $catalog_sort_pattern
             ];
         } // end foreach
-        $output = ($object) ? array("catalog" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("catalog" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // catalogs
@@ -857,13 +901,14 @@ class Json_Data
      */
     public static function podcasts($objects, $user, $episodes = false, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $podcast_id) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();
@@ -906,7 +951,10 @@ class Json_Data
                 "podcast_episode" => $podcast_episodes
             ];
         } // end foreach
-        $output = ($object) ? array("podcast" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("podcast" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcasts
@@ -924,13 +972,14 @@ class Json_Data
      */
     public static function podcast_episodes($objects, $user, $encode = true, $object = true)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
@@ -969,7 +1018,10 @@ class Json_Data
         if (!$encode) {
             return $JSON;
         }
-        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("podcast_episode" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // podcast_episodes
@@ -987,7 +1039,7 @@ class Json_Data
      */
     public static function songs($objects, $user, $encode = true, $object = true)
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
         Stream::set_session($_REQUEST['auth']);
@@ -997,6 +1049,7 @@ class Json_Data
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
         Song::build_cache($objects);
+        $JSON = [];
         foreach ($objects as $song_id) {
             $song = new Song($song_id);
 
@@ -1098,7 +1151,10 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            $output = ($object) ? array("song" => $JSON) : $JSON[0] ?? array();
+            if ($object) {
+                $output[] = array("song" => $JSON);
+            }
+            $output = $JSON[0] ?? array();
 
             return json_encode($output, JSON_PRETTY_PRINT);
         }
@@ -1118,12 +1174,13 @@ class Json_Data
      */
     public static function videos($objects, $user, $object = true): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $video_id) {
             $video = new Video($video_id);
             $video->format();
@@ -1147,7 +1204,10 @@ class Json_Data
                 "playcount" => (int)$video->total_count
             );
         } // end foreach
-        $output = ($object) ? array("video" => $JSON) : $JSON[0] ?? array();
+        if ($object) {
+            $output[] = array("video" => $JSON);
+        }
+        $output = $JSON[0] ?? array();
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // videos
@@ -1371,13 +1431,14 @@ class Json_Data
      */
     public static function deleted($object_type, $objects): string
     {
-        $JSON    = array(
+        $output = array(
             "total_count" => count($objects)
         );
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
+        $JSON = [];
         foreach ($objects as $row) {
             switch ($object_type) {
                 case 'song':
@@ -1424,7 +1485,7 @@ class Json_Data
                     $JSON[] = $objArray;
             }
         }
-        $output = array("deleted_" . $object_type => $JSON);
+        $output[] = array("deleted_" . $object_type => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // deleted

@@ -546,18 +546,20 @@ class Xml_Data
      *
      * This takes a name array of objects and return the data in XML format
      *
-     * @param array   $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
-     * @param int     $parent_id
-     * @param string  $parent_type
-     * @param string  $child_type
+     * @param array    $objects Array of object_ids array("id" => 1, "name" => 'Artist Name')
+     * @param int|null $parent_id
+     * @param string   $parent_type
+     * @param string   $child_type
+     * @param int|null $catalog_id
      * @return string  return xml
      */
-    public static function browses($objects, $parent_id, $parent_type, $child_type): string
+    public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id): string
     {
         $string = "<total_count>" . count($objects) . "</total_count>\n";
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
+        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n";
         $string .= "<parent_id>" . $parent_id . "</parent_id>\n";
         $string .= "<parent_type>" . $parent_type . "</parent_type>\n";
         $string .= "<child_type>" . $child_type . "</child_type>\n";
