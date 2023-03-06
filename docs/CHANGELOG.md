@@ -78,6 +78,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Album::check() add barcode, catalog number and subtitle for comparison checks
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Add username column to playlist and search rows and allow sorting
+* Show empty properties on song pages
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
