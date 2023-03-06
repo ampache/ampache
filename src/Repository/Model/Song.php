@@ -473,7 +473,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
-        $channels              = $results['channels'] ?? 0;
+        $channels              = $results['channels'] ?? null;
         $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
         $release_status        = $results['release_status'] ?? null;
         $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
@@ -732,7 +732,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`total_count`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
