@@ -83,7 +83,7 @@
             >DELETE BUTTON</a>
     </dd>
     <tal:block tal:repeat="prop SONG/getProperties">
-        <tal:block tal:condition="prop">
+        <tal:block tal:condition="prop/length">
             <tal:block>
                 <dt tal:content="repeat/prop/key"></dt>
                 <dd tal:content="structure prop"></dd>
