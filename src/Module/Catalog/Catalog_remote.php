@@ -230,17 +230,21 @@ class Catalog_remote extends Catalog
             ));
         } catch (Exception $error) {
             debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
-            AmpError::add('general', $error->getMessage());
-            echo AmpError::display('general');
-            flush();
+            if (defined('SSE_OUTPUT') || defined('API')) {
+                AmpError::add('general', $error->getMessage());
+                echo AmpError::display('general');
+                flush();
+            }
 
             return false;
         }
 
         if ($remote_handle->state() != 'CONNECTED') {
             debug_event('remote.catalog', 'API client failed to connect', 1);
-            AmpError::add('general', T_('Failed to connect to the remote server'));
-            echo AmpError::display('general');
+            if (defined('SSE_OUTPUT') || defined('API')) {
+                AmpError::add('general', T_('Failed to connect to the remote server'));
+                echo AmpError::display('general');
+            }
 
             return false;
         }
@@ -267,7 +271,11 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
+        Ui::update_text(
+            T_("Remote Catalog Updated"),
+            /* HINT: count of songs found*/
+            sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs'])
+        );
 
         // Hardcoded for now
         $step    = 500;
