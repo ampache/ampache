@@ -837,6 +837,10 @@ class Search extends playlist_object
         if (!empty($playlists)) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+        $playlists = self::get_search_array($this->user);
+        if (!empty($playlists)) {
+            $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+        }
         $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');

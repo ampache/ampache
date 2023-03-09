@@ -289,6 +289,18 @@ final class AlbumSearch implements SearchInterface
                     $where[]      = "`album`.`id` $operator_sql IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist_data`.`playlist` = ?)";
                     $parameters[] = $input;
                     break;
+                case 'smartplaylist':
+                    //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
+                    $subsearch = new Search($input, 'song', $search->search_user);
+                    $results   = $subsearch->get_subsearch('song');
+                    if (count($results) > 0) {
+                        $where[]      = "`song`.`id` $operator_sql IN (" . $results['sql'] . ")";
+                        foreach ($results['parameters'] as $parameter) {
+                            $parameters[] = $parameter;
+                        }
+                    }
+                    $join['song'] = true;
+                    break;
                 case 'file':
                     $where[]      = "`song`.`file` $operator_sql ?";
                     $parameters[] = $input;
