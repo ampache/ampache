@@ -627,6 +627,9 @@ class Album extends database_object implements library_item
         }
         if ($force_year) {
             $f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
+            if ($this->subtitle && AmpConfig::get('show_subtitle')) {
+                $f_name .= " [" . $this->subtitle . "]";
+            }
             if ($this->year > 0) {
                 $f_name .= " (" . $this->year . ")";
             }
@@ -636,8 +639,11 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
             $this->f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
+            if ($this->subtitle && AmpConfig::get('show_subtitle')) {
+                $this->f_name .= " [" . $this->subtitle . "]";
+            }
             // Album pages should show a year and looking if we need to display the release year
-            if ($this->original_year && AmpConfig::get('use_original_year') && $this->original_year != $this->year && $this->year > 0) {
+            if ($this->original_year && AmpConfig::get('show_original_year') && $this->original_year != $this->year && $this->year > 0) {
                 $this->f_name .= " (" . $this->year . ")";
             }
         }

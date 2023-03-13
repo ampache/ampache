@@ -737,6 +737,8 @@ class Ui implements UiInterface
             case 'now_playing_per_user':
             case 'show_played_times':
             case 'use_original_year':
+            case 'show_subtitle':
+            case 'show_original_year':
             case 'hide_single_artist':
             case 'hide_genres':
             case 'show_skipped_times':

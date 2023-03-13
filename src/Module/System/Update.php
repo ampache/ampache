@@ -846,6 +846,9 @@ class Update
         $update_string = "* Add upload_access_level to restrict uploads to certain user groups";
         $version[]     = array('version' => '600023', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('show_subtitle') Show Album subtitle on links (if available)<br />* Add ui option ('show_original_year') Show Album original year on links (if available)";
+        $version[]     = array('version' => '600024', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5214,4 +5217,29 @@ class Update
 
         return $retval;
     }
+
+    /**
+     * update_600024
+     *
+     * Add ui option ('show_subtitle') Show Album subtitle on links (if available)
+     * Add ui option ('show_original_year') Show Album original year on links (if available)
+     */
+    public static function update_600024(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
 } // end update.class
