@@ -1042,7 +1042,7 @@ class Subsonic_Xml_Data
         $xradio->addAttribute('id', (string)$radio->id);
         $xradio->addAttribute('name', (string)self::_checkName($radio->name));
         $xradio->addAttribute('streamUrl', (string)$radio->url);
-        $xradio->addAttribute('homePageUrl', (string)$radio->site_url);
+        $xradio->addAttribute('homepageUrl', (string)$radio->site_url);
     }
 
     /**

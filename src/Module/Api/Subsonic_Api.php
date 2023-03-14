@@ -2265,7 +2265,7 @@ class Subsonic_Api
      */
     public static function createinternetradiostation($input, $user)
     {
-        $url = self::_check_parameter($input, 'streamurl');
+        $url = self::_check_parameter($input, 'streamUrl');
         if (!$url) {
             return;
         }
@@ -2273,7 +2273,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageurl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
         $catalogs = User::get_user_catalogs($user->id, 'music');
         if (AmpConfig::get('live_stream') && Access::check('interface', 75, $user->id)) {
             $data = array(
@@ -2312,7 +2312,7 @@ class Subsonic_Api
         if (!$internetradiostation_id) {
             return;
         }
-        $url = self::_check_parameter($input, 'streamurl');
+        $url = self::_check_parameter($input, 'streamUrl');
         if (!$url) {
             return;
         }
@@ -2320,7 +2320,7 @@ class Subsonic_Api
         if (!$name) {
             return;
         }
-        $site_url = filter_var(urldecode($input['homepageurl']), FILTER_VALIDATE_URL) ?? '';
+        $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
 
         if (AmpConfig::get('live_stream') && Access::check('interface', 75, $user->id)) {
             $internetradiostation = new Live_Stream(Subsonic_Xml_Data::_getAmpacheId($internetradiostation_id));
