@@ -74,7 +74,6 @@ final class ShareCreate4Method
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
-        unset($user);
 
         $object_id   = $input['filter'];
         $object_type = $input['type'];
@@ -103,6 +102,7 @@ final class ShareCreate4Method
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
             $results[] = Share::create_share(
+                $user->id,
                 $object_type,
                 $object_id,
                 true,
@@ -110,7 +110,8 @@ final class ShareCreate4Method
                 $expire_days,
                 $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
                 0,
-                $description);
+                $description
+            );
         }
         Catalog::count_table('share');
         ob_end_clean();

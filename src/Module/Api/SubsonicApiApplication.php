@@ -142,7 +142,21 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Preference::init();
 
         // Define list of internal functions that should be skipped
-        $internal_functions = array('_check_parameter', '_decrypt_password', '_follow_stream', '_updatePlaylist', '_setStar', '_setHeader', '_apiOutput', '_apiOutput2', '_xml2json');
+        $internal_functions = array(
+            '_albumList',
+            '_apiOutput',
+            '_apiOutput2',
+            '_check_parameter',
+            '_decrypt_password',
+            '_follow_stream',
+            '_hasNestedArray',
+            '_output_body',
+            '_output_header',
+            '_setHeader',
+            '_setStar',
+            '_updatePlaylist',
+            '_xml2json'
+        );
 
         // Get the list of possible methods for the Ampache API
         $methods = array_diff(get_class_methods(Subsonic_Api::class), $internal_functions);
@@ -154,8 +168,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!empty($postdata)) {
             $query_string .= '&' . $postdata;
         }
-        $query  = explode('&', $query_string);
-        $params = array();
+        $query = explode('&', $query_string);
+        $input = array();
         foreach ($query as $param) {
             $decname  = false;
             $decvalue = false;
@@ -181,23 +195,23 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 }
             }
 
-            if (array_key_exists($decname, $params)) {
-                if (!is_array($params[$decname])) {
-                    $oldvalue           = $params[$decname];
-                    $params[$decname]   = array();
-                    $params[$decname][] = $oldvalue;
+            if (array_key_exists($decname, $input)) {
+                if (!is_array($input[$decname])) {
+                    $oldvalue          = $input[$decname];
+                    $input[$decname]   = array();
+                    $input[$decname][] = $oldvalue;
                 }
-                $params[$decname][] = $decvalue;
+                $input[$decname][] = $decvalue;
             } else {
-                $params[$decname] = $decvalue;
+                $input[$decname] = $decvalue;
             }
         }
-        //debug_event('rest/index', print_r($params, true), 5);
+        //debug_event('rest/index', print_r($input, true), 5);
         //debug_event('rest/index', print_r(apache_request_headers(), true), 5);
 
         // Call your function if it's valid
         if (in_array($action, $methods)) {
-            call_user_func(array(Subsonic_Api::class, $action), $params);
+            call_user_func(array(Subsonic_Api::class, $action), $input, $user);
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;
         }

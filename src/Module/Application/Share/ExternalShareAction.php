@@ -99,8 +99,17 @@ final class ExternalShareAction implements ApplicationActionInterface
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
-        $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire', 7), $secret);
-        $share    = new Share($share_id);
+        $share_id = Share::create_share(
+            Core::get_global('user')->id,
+            $type,
+            $share_id,
+            true,
+            $allow_download,
+            AmpConfig::get('share_expire', 7),
+            $secret
+        );
+
+        $share = new Share($share_id);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

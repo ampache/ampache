@@ -70,6 +70,7 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $share_id = Share::create_share(
+            Core::get_global('user')->id,
             $_REQUEST['type'],
             (int)$_REQUEST['id'],
             (int)$_REQUEST['allow_stream'] ?? 0,

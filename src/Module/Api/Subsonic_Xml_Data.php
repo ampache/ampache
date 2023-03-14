@@ -63,7 +63,7 @@ use SimpleXMLElement;
  */
 class Subsonic_Xml_Data
 {
-    const API_VERSION = "1.13.0";
+    const API_VERSION = "1.16.1";
 
     const SSERROR_GENERIC               = 0;
     const SSERROR_MISSINGPARAM          = 10;
@@ -391,6 +391,7 @@ class Subsonic_Xml_Data
         $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date("c", (int)$album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->total_duration);
+        $xalbum->addAttribute('playCount', $album->total_count);
         $xalbum->addAttribute('artistId', $subParent);
         $xalbum->addAttribute('artist', (string) self::_checkName($album->get_artist_fullname()));
         // original year (fall back to regular year)
@@ -670,6 +671,17 @@ class Subsonic_Xml_Data
                 $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
             }
         }
+    }
+
+    /**
+     * addVideos
+     * @param SimpleXMLElement $xml
+     * @param int $video_id
+     */
+    public static function addVideoInfo($xml, $video_id)
+    {
+        $xvideoinfo = $xml->addChild('videoinfo');
+        $xvideoinfo->addAttribute('id', $video_id);
     }
 
     /**
@@ -988,6 +1000,7 @@ class Subsonic_Xml_Data
         $xuser->addAttribute('streamRole', 'true');
         $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) ? 'true' : 'false');
         $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
+        $xuser->addAttribute('videoConversionRole', 'false');
     }
 
     /**
@@ -1149,6 +1162,24 @@ class Subsonic_Xml_Data
                 $xlyrics->addAttribute('title', (string)$title);
             }
         }
+    }
+
+    /**
+     * addAlbumInfo
+     * @param SimpleXMLElement $xml
+     * @param array $info
+     */
+    public static function addAlbumInfo($xml, $info)
+    {
+        $album = new Album((int) $info['id']);
+
+        $xartist = $xml->addChild(htmlspecialchars('albumInfo'));
+        $xartist->addChild('notes', htmlspecialchars(trim((string)$info['summary'])));
+        $xartist->addChild('musicBrainzId', $album->mbid);
+        //$xartist->addChild('lastFmUrl', "");
+        $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', htmlentities($info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', htmlentities($info['largephoto']));
     }
 
     /**
@@ -1368,6 +1399,17 @@ class Subsonic_Xml_Data
             $chat = new PrivateMsg($message);
             self::addMessage($xmessages, $chat);
         }
+    }
+
+    /**
+     * addScanStatus
+     * @param SimpleXMLElement $xml
+     */
+    public static function addScanStatus($xml)
+    {
+        $xscan = $xml->addChild(htmlspecialchars('scanStatus'));
+        $xscan->addAttribute('scanning', "false");
+        $xscan->addAttribute('count', 0);
     }
 
     /**

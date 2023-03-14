@@ -107,6 +107,7 @@ final class ShareCreateMethod
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
             $results[] = Share::create_share(
+                $user->id,
                 $object_type,
                 $object_id,
                 true,

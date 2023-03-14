@@ -118,6 +118,7 @@ class Share extends database_object
     }
 
     /**
+     * @param integer $user_id
      * @param string $object_type
      * @param integer $object_id
      * @param boolean $allow_stream
@@ -129,6 +130,7 @@ class Share extends database_object
      * @return string|null
      */
     public static function create_share(
+        $user_id,
         $object_type,
         $object_id,
         $allow_stream = true,
@@ -168,7 +170,7 @@ class Share extends database_object
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = array(
-            Core::get_global('user')->id,
+            $user_id,
             $object_type,
             $object_id,
             time(),

@@ -22,7 +22,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600023
+* Database 600024
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -45,6 +45,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Extend `time` column for the song table
   * Extend `time` column for the stream_playlist table
   * Add `upload_access_level` to restrict uploads to certain user groups
+  * Add preference `show_subtitle`, Show Album subtitle on links
+  * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
@@ -56,6 +58,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `mbid_artist` to album search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
+  * Add `smartplaylist` to album search
   * Add `duplicate_tracks` to album and song search (MIN & MAX id for song search)
   * Alias `possible_duplicate_album` => `possible_duplicate` for album search
   * Alias `album_genre` => `genre` for album search
@@ -65,6 +68,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Enable restart on democratic or random play
   * Allow removing played tracks on next
+* Subsonic
+  * API 1.16.1 support
 
 ### Changed
 
@@ -84,6 +89,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
   * Added an option `loopBack` which restarts the playlist after finishing
+* Subsonic
+  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned. 
 
 ### Removed
 
@@ -104,6 +111,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Show test errors correctly when you can connect to the server but don't have a database
 * When using LDAP check for DN and username on group membership
 * Browse filtering for catalogs and podcast_episodes was a bit light
+* Song was not checking for channel data
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
@@ -138,8 +146,19 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to resonses to give clients an idea of the total possible objects
 * advanced_search
+  * Add `album_disk` as a search type (uses album rules)
+  * Add `song_genre` to album and artist searches
+  * Add `possible_duplicate_album` to song search
+  * Add `mbid_artist` to album search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
+  * Add `smartplaylist` to album search
+  * Add `duplicate_tracks` to album and song search (MIN & MAX id for song search)
+  * Alias `possible_duplicate_album` => `possible_duplicate` for album search
+  * Alias `album_genre` => `genre` for album search
+  * Alias `mbid_album` => `mbid` for album search
+  * Alias `mbid_artist` => `mbid` for artist search
+  * Alias `song_genre` => `genre` for song search
 
 ### Changed
 
