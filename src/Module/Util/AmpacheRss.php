@@ -312,7 +312,7 @@ class AmpacheRss
     public static function load_latest_album($rsstoken = "")
     {
         $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $ids  = Stats::get_newest('album', 10, 0, 0, $user->id);
+        $ids  = Stats::get_newest('album', 10, 0, 0, (is_null($user)?0:$user->id));
 
         $results = array();
 
