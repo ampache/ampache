@@ -262,6 +262,7 @@ class Art extends database_object
                 }
                 $this->raw_mime = $results['mime'];
             } elseif (AmpConfig::get('resize_images')) {
+                if (!empty($this->thumb)) continue; // See https://github.com/ampache/ampache/issues/3386
                 if (AmpConfig::get('album_art_store_disk')) {
                     $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } elseif ($results['size'] == '275x275') {
@@ -625,6 +626,10 @@ class Art extends database_object
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
             return false;
+        }
+        if (!is_dir($path)){
+            debug_event(self::class, 'Local image art directory '. $path . ' does not even exist.', 1);
+            return null;
         }
         $path .= "art-" . $sizetext . "." . self::extension($mime);
         if (Core::is_readable($path)) {
