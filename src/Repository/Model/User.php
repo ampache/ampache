@@ -195,8 +195,8 @@ class User extends database_object
                     continue;
                 }
                 $this->$key = $value;
-             }
-         }
+            }
+        }
 
         // Make sure the Full name is always filled
         if (strlen((string)$this->fullname) < 1) {
