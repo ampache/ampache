@@ -188,13 +188,15 @@ class User extends database_object
 
         $this->id = (int)($user_id);
         $info     = $this->has_info();
-        foreach ($info as $key => $value) {
-            // Let's not save the password in this object :S
-            if ($key == 'password') {
-                continue;
-            }
-            $this->$key = $value;
-        }
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                // Let's not save the password in this object :S
+                if ($key == 'password') {
+                    continue;
+                }
+                $this->$key = $value;
+             }
+         }
 
         // Make sure the Full name is always filled
         if (strlen((string)$this->fullname) < 1) {
