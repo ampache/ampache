@@ -1820,11 +1820,9 @@ class Subsonic_Api
                 $object_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
                 if (Subsonic_Xml_Data::_isAlbum($object_id)) {
                     $object_type = 'album';
-                }
-                if (Subsonic_Xml_Data::_isSong($object_id)) {
+                } elseif (Subsonic_Xml_Data::_isSong($object_id)) {
                     $object_type = 'song';
-                }
-                if (Subsonic_Xml_Data::_isPlaylist($object_id)) {
+                } elseif (Subsonic_Xml_Data::_isPlaylist($object_id)) {
                     $object_type = 'playlist';
                 }
             }
