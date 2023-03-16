@@ -687,12 +687,12 @@ class Subsonic_Api
     public static function getvideoinfo($input, $user)
     {
         unset($user);
-        $videoid = self::_check_parameter($input, 'id');
-        if (!$videoid) {
+        $video_id = self::_check_parameter($input, 'id');
+        if (!$video_id) {
             return;
         }
         $response = Subsonic_Xml_Data::addSubsonicResponse('getvideoinfo');
-        Subsonic_Xml_Data::addVideoInfo($response, $videoid);
+        Subsonic_Xml_Data::addVideoInfo($response, (int)$video_id);
         self::_apiOutput($input, $response, array());
     }
 
