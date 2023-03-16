@@ -1807,7 +1807,7 @@ class Subsonic_Api
         if (!$object_id) {
             return;
         }
-        $description = $input['description'];
+        $description = $input['description'] ?? '';
         if (AmpConfig::get('share')) {
             $expire_days = Share::get_expiry($input['expires'] ?? null);
             $object_type = null;
