@@ -89,9 +89,15 @@ class Search extends playlist_object
         if ($search_id > 0) {
             $info = $this->get_info($search_id);
             foreach ($info as $key => $value) {
-                $this->$key = ($key == 'rules')
-                    ? json_decode((string)$value, true)
-                    : $value;
+                 if ($key == 'rules') {
+                     $this->rules = json_decode((string)$value, true);
+                     if (is_null($this->rules)) {
+                         debug_event(__CLASS__, "Can't decode key 'rules'. Not a valid json.",1 );
+                         $this->rules = array();
+                     }
+                 } else {
+                     $this->$key = $value;
+                 }
             }
             // make sure saved rules match the correct names
             $rule_count = 0;
