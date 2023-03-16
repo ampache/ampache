@@ -1119,6 +1119,7 @@ class Subsonic_Xml_Data
                 // TODO addEntry
                 self::addSong($xjbox, (int)$track['oid'], 'entry');
             }
+            // TODO This can be random play, democratic, podcasts, etc. not just songs
         }
     }
 
