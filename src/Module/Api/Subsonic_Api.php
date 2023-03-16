@@ -1812,12 +1812,12 @@ class Subsonic_Api
             $expire_days = Share::get_expiry($input['expires'] ?? null);
             $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
+                debug_event(self::class, 'createShare: sharing song list (album)', 5);
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
                 $tmp_song    = new Song($song_id);
                 $object_id   = Subsonic_Xml_Data::_getAmpacheId($tmp_song->album);
                 $object_type = 'album';
             } else {
-                $object_id = Subsonic_Xml_Data::_getAmpacheId($object_id);
                 if (Subsonic_Xml_Data::_isAlbum($object_id)) {
                     $object_type = 'album';
                 } elseif (Subsonic_Xml_Data::_isSong($object_id)) {
@@ -1825,6 +1825,7 @@ class Subsonic_Api
                 } elseif (Subsonic_Xml_Data::_isPlaylist($object_id)) {
                     $object_type = 'playlist';
                 }
+                $object_id   = Subsonic_Xml_Data::_getAmpacheId($object_id);
             }
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
