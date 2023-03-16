@@ -113,7 +113,7 @@ final class SongRepository implements SongRepositoryInterface
         Artist $artist
     ): array {
         $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql     = "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY RAND()";
+        $sql     = "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY RAND()";
 
         $db_results = Dba::read($sql, array($artist->getId()));
         $results    = array();
