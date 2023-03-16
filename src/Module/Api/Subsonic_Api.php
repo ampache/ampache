@@ -2986,7 +2986,6 @@ class Subsonic_Api
      */
     public static function startscan($input, $user)
     {
-        unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('startscan');
         Subsonic_Xml_Data::addScanStatus($response, $user);
         self::_apiOutput($input, $response);
@@ -2999,7 +2998,6 @@ class Subsonic_Api
      */
     public static function getscanstatus($input, $user)
     {
-        unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getscanstatus');
         Subsonic_Xml_Data::addScanStatus($response, $user);
         self::_apiOutput($input, $response);
