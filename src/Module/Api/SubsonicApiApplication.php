@@ -135,7 +135,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         ) {
             ob_end_clean();
             debug_event('rest/index', 'Requested client version is not supported', 3);
-            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_SERVER, $action), $callback);
+            Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_CLIENT, $action), $callback);
 
             return;
         }
