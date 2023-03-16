@@ -1404,12 +1404,15 @@ class Subsonic_Xml_Data
     /**
      * addScanStatus
      * @param SimpleXMLElement $xml
+     * @param User $user
      */
-    public static function addScanStatus($xml)
+    public static function addScanStatus($xml, $user)
     {
-        $xscan = $xml->addChild(htmlspecialchars('scanStatus'));
+        $counts = Catalog::get_server_counts($user->id);
+        $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
+        $xscan  = $xml->addChild(htmlspecialchars('scanStatus'));
         $xscan->addAttribute('scanning', "false");
-        $xscan->addAttribute('count', 0);
+        $xscan->addAttribute('count', $count);
     }
 
     /**

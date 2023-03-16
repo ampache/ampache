@@ -691,8 +691,7 @@ class Subsonic_Api
         if (!$videoid) {
             return;
         }
-        $response = Subsonic_Xml_Data::addSubsonicResponse('getsong');
-        $videoid  = Subsonic_Xml_Data::_getAmpacheId($videoid);
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getvideoinfo');
         Subsonic_Xml_Data::addVideoInfo($response, $videoid);
         self::_apiOutput($input, $response, array());
     }
@@ -2989,7 +2988,7 @@ class Subsonic_Api
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('startscan');
-        Subsonic_Xml_Data::addScanStatus($response);
+        Subsonic_Xml_Data::addScanStatus($response, $user);
         self::_apiOutput($input, $response);
     }
 
@@ -3002,7 +3001,7 @@ class Subsonic_Api
     {
         unset($user);
         $response = Subsonic_Xml_Data::addSubsonicResponse('getscanstatus');
-        Subsonic_Xml_Data::addScanStatus($response);
+        Subsonic_Xml_Data::addScanStatus($response, $user);
         self::_apiOutput($input, $response);
     }
 
