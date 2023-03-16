@@ -74,6 +74,9 @@ final class ShowAction implements ApplicationActionInterface
             $params                = [];
             $params['object_type'] = Core::get_request('object_type');
             $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+            if (empty($params['object_id'])) {
+                return null;
+            }
         }
 
         return $this->responseFactory->createResponse()
