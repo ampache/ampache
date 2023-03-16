@@ -139,8 +139,8 @@ final class PlayAction implements ApplicationActionInterface
         $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
 
         // This is specifically for tmp playlist requests
-        $demo_id    = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_SPECIAL_CHARS));
+        $demo_id    = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT));
+        $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT));
 
         // democratic play url doesn't include these
         if ($demo_id !== '') {

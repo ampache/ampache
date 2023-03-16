@@ -156,23 +156,25 @@ abstract class localplay_controller
                     'oid' => $match[1]
                 );
             }
-            preg_match('/demo_id\/(.*?)\//', $url, $match);
+            preg_match('/demo_id.(.*)/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'demo_id',
                     'oid' => $match[1]
                 );
             }
-            preg_match('/random\/(.*?)\//', $url, $match);
-            if (array_key_exists(1, $match) && $match[1]) {
+            preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
+            if (array_key_exists(1, $match) && $match[1] && array_key_exists(2, $match) && $match[2]) {
+                $result = array_combine($match[1], $match[2]);
                 return array(
-                    'primary_key' => 'random',
-                    'random_type' => $match[1]
+                    'primary_key' => $result['random_type'],
+                    'oid' => $result['random_id']
                 );
             }
         }
         $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
+            debug_event('mdp.controller', print_r($variables, true), 5);
             parse_str($variables, $data);
 
             foreach ($primary_array as $pkey) {
