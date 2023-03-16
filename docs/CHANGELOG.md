@@ -112,10 +112,13 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * When using LDAP check for DN and username on group membership
 * Browse filtering for catalogs and podcast_episodes was a bit light
 * Song was not checking for channel data
+* Ampachechartlyrics plugin object data might not be set
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
   * SQL for Artist `catalog` searches
+* Subsonic
+  * Sharing some types of object
 
 ## API develop
 
