@@ -119,6 +119,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
+        <?php if ( file_exists( __DIR__.'/../lib/javascript/custom.js') ) { ?>
+            <script src="<?php echo $web_path; ?>/lib/javascript/custom.js" defer></script>
+        <?php } // file exists custom.js ?>
 
         <script>
             $(document).ready(function(){
