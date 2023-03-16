@@ -111,10 +111,8 @@ class Subsonic_Xml_Data
         $xerr = $xml->addChild('error');
         $xerr->addAttribute('code', (string)$code);
 
+        $message = "A generic error.";
         switch ($code) {
-            case self::SSERROR_GENERIC:
-                $message = "A generic error.";
-                break;
             case self::SSERROR_MISSINGPARAM:
                 $message = "Required parameter is missing.";
                 break;
@@ -154,8 +152,6 @@ class Subsonic_Xml_Data
         $xlic = $xml->addChild('license');
         $xlic->addAttribute('valid', 'true');
         $xlic->addAttribute('email', 'webmaster@ampache.org');
-        $xlic->addAttribute('key', 'ABC123DEF');
-        $xlic->addAttribute('date', '2009-09-03T14:46:43');
     }
 
     /**
@@ -165,7 +161,7 @@ class Subsonic_Xml_Data
      */
     public static function addMusicFolders($xml, $catalogs)
     {
-        $xfolders = $xml->addChild('musicFolders');
+        $xfolders = $xml->addChild('MusicFolders');
         foreach ($catalogs as $folder_id) {
             $catalog = Catalog::create_from_id($folder_id);
             $xfolder = $xfolders->addChild('musicFolder');
@@ -548,6 +544,7 @@ class Subsonic_Xml_Data
         $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
+            // TODO addChild || use addChildArray
             self::addAlbum($xdir, $album, false, "child");
         }
     }
@@ -573,6 +570,7 @@ class Subsonic_Xml_Data
 
         $media_ids = static::getAlbumRepository()->getSongs($album->id);
         foreach ($media_ids as $song_id) {
+            // TODO addChild || use addChildArray
             self::addSong($xdir, $song_id, "child");
         }
     }
@@ -744,10 +742,10 @@ class Subsonic_Xml_Data
         $xplaylist->addAttribute('name', (string)self::_checkName($playlist->get_fullname()));
         $xplaylist->addAttribute('owner', (string)$playlist->username);
         $xplaylist->addAttribute('public', ($playlist->type != "private") ? "true" : "false");
-        $xplaylist->addAttribute('created', date("c", (int)$playlist->date));
-        $xplaylist->addAttribute('changed', date("c", (int)$playlist->last_update));
         $xplaylist->addAttribute('songCount', (string)$songcount);
         $xplaylist->addAttribute('duration', (string)$duration);
+        $xplaylist->addAttribute('created', date("c", (int)$playlist->date));
+        $xplaylist->addAttribute('changed', date("c", (int)$playlist->last_update));
         if ($playlist->has_art()) {
             $xplaylist->addAttribute('coverArt', $sub_id);
         }
@@ -755,6 +753,7 @@ class Subsonic_Xml_Data
         if ($songs) {
             $allsongs = $playlist->get_songs();
             foreach ($allsongs as $song_id) {
+                // TODO addEntry
                 self::addSong($xplaylist, $song_id, "entry");
             }
         }
@@ -784,6 +783,7 @@ class Subsonic_Xml_Data
             $xplaylist->addAttribute('duration', (string)$duration);
             $xplaylist->addAttribute('coverArt', $sub_id);
             foreach ($allitems as $item) {
+                // TODO addEntry
                 self::addSong($xplaylist, (int)$item['object_id'], "entry");
             }
         } else {
@@ -817,6 +817,7 @@ class Subsonic_Xml_Data
             $xplayqueue->addAttribute('changedBy', (string)$changedBy);
 
             foreach ($items as $row) {
+                // TODO addEntry
                 self::addSong($xplayqueue, (int)$row['object_id'], "entry");
             }
         }
@@ -870,6 +871,7 @@ class Subsonic_Xml_Data
     {
         $xplaynow = $xml->addChild('nowPlaying');
         foreach ($data as $row) {
+            // TODO addEntry
             $track = self::addSong($xplaynow, $row['media']->getId(), "entry");
             if ($track !== null) {
                 $track->addAttribute('username', (string)$row['client']->username);
@@ -1085,16 +1087,19 @@ class Subsonic_Xml_Data
         $xshare->addAttribute('visitCount', (string)$share->counter);
 
         if ($share->object_type == 'song') {
+            // TODO addEntry
             self::addSong($xshare, $share->object_id, "entry");
         } elseif ($share->object_type == 'playlist') {
             $playlist = new Playlist($share->object_id);
             $songs    = $playlist->get_songs();
             foreach ($songs as $song_id) {
+                // TODO addEntry
                 self::addSong($xshare, $song_id, "entry");
             }
         } elseif ($share->object_type == 'album') {
             $songs = static::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
+                // TODO addEntry
                 self::addSong($xshare, $song_id, "entry");
             }
         }
@@ -1111,6 +1116,7 @@ class Subsonic_Xml_Data
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
             if ($track['oid']) {
+                // TODO addEntry
                 self::addSong($xjbox, (int)$track['oid'], 'entry');
             }
         }
@@ -1153,6 +1159,7 @@ class Subsonic_Xml_Data
 
         if (!empty($lyrics) && $lyrics['text']) {
             $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text    = preg_replace('/\\n\\n/i', "\n", $text);
             $text    = str_replace("\r", '', (string)$text);
             $xlyrics = $xml->addChild('lyrics', htmlspecialchars($text));
             if ($artist) {
@@ -1188,13 +1195,16 @@ class Subsonic_Xml_Data
      * @param array $info
      * @param array $similars
      */
-    public static function addArtistInfo($xml, $info, $similars)
+    public static function addArtistInfo($xml, $info, $similars, $elementName = 'artistInfo')
     {
         $artist = new Artist((int) $info['id']);
 
-        $xartist = $xml->addChild(htmlspecialchars('artistInfo'));
-        $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
-        $xartist->addChild('musicBrainzId', $artist->mbid);
+        $xartist   = $xml->addChild(htmlspecialchars($elementName));
+        $biography = trim((string)$info['summary']);
+        if (!empty($biography)) {
+            $xartist->addChild('biography', htmlspecialchars($biography));
+        }
+        $xartist->addChild('musicBrainzId', (string)$artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
         $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
         $xartist->addChild('mediumImageUrl', htmlentities($info['mediumphoto']));
@@ -1215,21 +1225,7 @@ class Subsonic_Xml_Data
      */
     public static function addArtistInfo2($xml, $info, $similars)
     {
-        $artist = new Artist((int) $info['id']);
-
-        $xartist = $xml->addChild(htmlspecialchars('artistInfo2'));
-        $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
-        $xartist->addChild('musicBrainzId', $artist->mbid);
-        //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', htmlentities($info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', htmlentities($info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', htmlentities($info['largephoto']));
-
-        foreach ($similars as $similar) {
-            $xsimilar = $xartist->addChild('similarArtist');
-            $xsimilar->addAttribute('id', ($similar['id'] !== null ? self::_getArtistId($similar['id']) : "-1"));
-            $xsimilar->addAttribute('name', (string)self::_checkName($similar['name']));
-        }
+        self::addArtistInfo($xml, $info, $similars, 'artistInfo2');
     }
 
     /**
@@ -1336,10 +1332,13 @@ class Subsonic_Xml_Data
         $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
         if ($bookmark->object_type == "song") {
+            // TODO addEntry
             self::addSong($xbookmark, $bookmark->object_id, 'entry');
         } elseif ($bookmark->object_type == "video") {
+            // TODO addEntry
             self::addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
         } elseif ($bookmark->object_type == "podcast_episode") {
+            // TODO addEntry
             self::addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
         }
     }

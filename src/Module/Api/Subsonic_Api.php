@@ -796,6 +796,7 @@ class Subsonic_Api
     {
         unset($user);
         if (!AmpConfig::get('show_similar')) {
+            debug_event(self::class, $elementName . ': Enable: show_similar', 4);
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getsimilarsongs');
             self::_apiOutput($input, $response);
 
@@ -827,7 +828,9 @@ class Subsonic_Api
             // randomize and slice
             shuffle($songs);
             $songs = array_slice($songs, 0, $count);
-        //} elseif (Ampache\Module\Api\Subsonic_Xml_Data::_isAlbum($object_id)) { // TODO: support similar songs for albums
+        } elseif (Subsonic_Xml_Data::_isAlbum($object_id)) {
+            // TODO: support similar songs for albums
+            debug_event(self::class, $elementName . ': album is unsupported', 4);
         } elseif (Subsonic_Xml_Data::_isSong($object_id)) {
             $songs = Recommendation::get_songs_like(Subsonic_Xml_Data::_getAmpacheId($object_id), $count);
         }
