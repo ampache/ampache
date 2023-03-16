@@ -933,7 +933,7 @@ class Daap_Api
         header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
-        $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
+        $html = "<!DOCTYPE html><html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
 
         return false;
