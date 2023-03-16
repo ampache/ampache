@@ -48,6 +48,7 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function idByUsername(string $username): int
     {
+        if ($username == '-1') return 0;
         $db_results = Dba::read(
             'SELECT `id` FROM `user` WHERE `username`= ?',
             [$username]
