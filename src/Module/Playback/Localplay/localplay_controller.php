@@ -167,7 +167,7 @@ abstract class localplay_controller
             if (array_key_exists(1, $match) && $match[1]) {
                 return array(
                     'primary_key' => 'random',
-                    'type' => $match[1]
+                    'random_type' => $match[1]
                 );
             }
         }

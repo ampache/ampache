@@ -470,7 +470,7 @@ class AmpacheMpd extends localplay_controller
                     $data['link'] = '';
                     break;
                 case 'random':
-                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
+                    $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['random_type']));
                     $data['link'] = '';
                     break;
                 default:
