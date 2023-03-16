@@ -59,6 +59,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
         // do not allow administrator password resets
         if ($client->has_access(100)) {
+            debug_event(__CLASS__, 'Administrator can\'t reset their password.', 1);
             return false;
         }
         if ($client->email == $email && Mailer::is_mail_enabled()) {
