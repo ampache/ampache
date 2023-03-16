@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\WebPlayer;
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
