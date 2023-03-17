@@ -82,7 +82,7 @@ class Subsonic_Api
      * @param array $input
      * @param string $parameter
      * @param boolean $addheader
-     * @return boolean|mixed
+     * @return false|mixed
      */
     private static function _check_parameter($input, $parameter, $addheader = false)
     {
@@ -2002,7 +2002,7 @@ class Subsonic_Api
      */
     public static function refreshpodcasts($input, $user)
     {
-        if (AmpConfig::get('podcast') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcasts = Catalog::get_podcasts(User::get_user_catalogs($user->id));
             foreach ($podcasts as $podcast) {
                 $podcast->sync_episodes(true);
@@ -2028,7 +2028,7 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get('podcast') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
             $catalogs = $user->get_catalogs('podcast');
             if (count($catalogs) > 0) {
                 $data            = array();
@@ -2062,7 +2062,7 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get('podcast') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
             $podcast = new Podcast(Subsonic_Xml_Data::_getAmpacheId($podcast_id));
             if ($podcast->id) {
                 if ($podcast->remove()) {
@@ -2093,7 +2093,7 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get('podcast') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
             if (!isset($episode->id)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastepisode');
@@ -2125,7 +2125,7 @@ class Subsonic_Api
             return;
         }
 
-        if (AmpConfig::get('podcast') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('podcast') && $user->access >= 75) {
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
             if (!isset($episode->id)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'downloadpodcastepisode');
@@ -2276,7 +2276,7 @@ class Subsonic_Api
         }
         $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
         $catalogs = User::get_user_catalogs($user->id, 'music');
-        if (AmpConfig::get('live_stream') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $data = array(
                 "name" => $name,
                 "url" => $url,
@@ -2287,7 +2287,7 @@ class Subsonic_Api
             $response                = Subsonic_Xml_Data::addSubsonicResponse('createinternetradiostation');
             $internetradiostations   = array();
             $internetradiostations[] = Live_Stream::create($data);
-            if (empty($results)) {
+            if (empty($internetradiostations)) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'createinternetradiostation');
                 self::_apiOutput($input, $response);
 
@@ -2323,7 +2323,7 @@ class Subsonic_Api
         }
         $site_url = filter_var(urldecode($input['homepageUrl']), FILTER_VALIDATE_URL) ?? '';
 
-        if (AmpConfig::get('live_stream') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('live_stream') && $user->access >= 75) {
             $internetradiostation = new Live_Stream(Subsonic_Xml_Data::_getAmpacheId($internetradiostation_id));
             if ($internetradiostation->id > 0) {
                 $data = array(
@@ -2360,7 +2360,7 @@ class Subsonic_Api
         if (!$stream_id) {
             return;
         }
-        if (AmpConfig::get('live_stream') && Access::check('interface', 75, $user->id)) {
+        if (AmpConfig::get('live_stream') && $user->access >= 75) {
             if (static::getLiveStreamRepository()->delete($stream_id)) {
                 $response = Subsonic_Xml_Data::addSubsonicResponse('deleteinternetradiostation');
             } else {
@@ -2498,7 +2498,7 @@ class Subsonic_Api
             $email = urldecode($email);
         }
 
-        if (Access::check('interface', AccessLevelEnum::LEVEL_ADMIN, $user->id)) {
+        if ($user->access >= AccessLevelEnum::LEVEL_ADMIN) {
             $access = AccessLevelEnum::LEVEL_USER;
             if ($coverArtRole) {
                 $access = AccessLevelEnum::LEVEL_MANAGER;
@@ -2549,7 +2549,7 @@ class Subsonic_Api
         $shareRole    = ($input['shareRole'] == 'true');
         $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
 
-        if (Access::check('interface', 100, $user->id)) {
+        if ($user->access >= 100) {
             $access = 25;
             if ($coverArtRole) {
                 $access = 75;
@@ -2606,7 +2606,7 @@ class Subsonic_Api
     public static function deleteuser($input, $user)
     {
         $username = self::_check_parameter($input, 'username');
-        if (Access::check('interface', 100, $user->id)) {
+        if ($user->access >= 100) {
             $update_user = User::get_from_username((string)$username);
             if ($update_user->id) {
                 $update_user->delete();
@@ -2633,7 +2633,7 @@ class Subsonic_Api
         $username = self::_check_parameter($input, 'username');
         $inp_pass = self::_check_parameter($input, 'password');
         $password = self::_decryptPassword($inp_pass);
-        if ($user->username == $username || Access::check('interface', 100, $user->id)) {
+        if ($user->username == $username || $user->access >= 100) {
             $update_user = User::get_from_username((string) $username);
             if ($update_user->id && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password($password);
