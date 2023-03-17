@@ -1109,7 +1109,7 @@ class Subsonic_Xml_Data
         $xjbox  = self::addJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
-            if ($track['oid']) {
+            if (array_key_exists('oid', $track)) {
                 self::addSong($xjbox, (int)$track['oid'], 'entry');
             }
         }
