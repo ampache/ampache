@@ -140,7 +140,13 @@ class Stream_Url extends MemoryObject
                 $url = implode('/', $curel);
             }
         } else {
-            $url .= $options;
+            $pos = strpos($url, '&');
+            if ($pos !== false) {
+                // Insert options after the ssid
+                $url = substr($url, 0, $pos) . $options . substr($url, $pos);
+            } else {
+                $url .= $options;
+            }
         }
 
         return $url;
