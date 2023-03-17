@@ -1638,7 +1638,7 @@ class Subsonic_Api
     {
         $username = self::_check_parameter($input, 'username');
         $response = null;
-        if ($user->access >= 100 || $user->username == $username) {
+        if ($user->access === 100 || $user->username == $username) {
             if ($user->username == $username) {
                 $update_user = $user;
             } else {
@@ -2436,7 +2436,7 @@ class Subsonic_Api
     public static function getuser($input, $user)
     {
         $username = self::_check_parameter($input, 'username');
-        if ($user->access >= 100 || $user->username == $username) {
+        if ($user->access === 100 || $user->username == $username) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getuser');
             if ($user->username == $username) {
                 $update_user = $user;
@@ -2460,7 +2460,7 @@ class Subsonic_Api
      */
     public static function getusers($input, $user)
     {
-        if ($user->access >= 100) {
+        if ($user->access === 100) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('getusers');
             $users    = static::getUserRepository()->getValid();
             Subsonic_Xml_Data::addUsers($response, $users);
@@ -2549,7 +2549,7 @@ class Subsonic_Api
         $shareRole    = ($input['shareRole'] == 'true');
         $maxbitrate   = (int)($input['maxBitRate'] ?? 0);
 
-        if ($user->access >= 100) {
+        if ($user->access === 100) {
             $access = 25;
             if ($coverArtRole) {
                 $access = 75;
@@ -2606,7 +2606,7 @@ class Subsonic_Api
     public static function deleteuser($input, $user)
     {
         $username = self::_check_parameter($input, 'username');
-        if ($user->access >= 100) {
+        if ($user->access === 100) {
             $update_user = User::get_from_username((string)$username);
             if ($update_user->id) {
                 $update_user->delete();
@@ -2633,7 +2633,7 @@ class Subsonic_Api
         $username = self::_check_parameter($input, 'username');
         $inp_pass = self::_check_parameter($input, 'password');
         $password = self::_decryptPassword($inp_pass);
-        if ($user->username == $username || $user->access >= 100) {
+        if ($user->username == $username || $user->access === 100) {
             $update_user = User::get_from_username((string) $username);
             if ($update_user->id && !AmpConfig::get('simple_user_mode')) {
                 $update_user->update_password($password);

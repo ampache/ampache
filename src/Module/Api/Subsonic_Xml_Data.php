@@ -991,7 +991,7 @@ class Subsonic_Xml_Data
         $xuser->addAttribute('email', (string)$user->email);
         $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
-        $isAdmin   = ($user->access >= 100);
+        $isAdmin   = ($user->access === 100);
         $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');

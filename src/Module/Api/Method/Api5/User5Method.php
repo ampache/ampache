@@ -74,7 +74,7 @@ final class User5Method
         }
 
         // get full info when you're an admin or searching for yourself
-        $fullinfo = (($check_user->id == $user->id) || (Access::check('interface', 100, $user->id)));
+        $fullinfo = (($check_user->id == $user->id) || ($user->access === 100));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

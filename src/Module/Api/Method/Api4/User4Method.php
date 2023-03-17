@@ -66,7 +66,7 @@ final class User4Method
 
         $fullinfo = false;
         // get full info when you're an admin or searching for yourself
-        if (($check_user->id == $user->id) || (Access::check('interface', 100, $user->id))) {
+        if (($check_user->id == $user->id) || ($user->access === 100)) {
             $fullinfo = true;
         }
         ob_end_clean();

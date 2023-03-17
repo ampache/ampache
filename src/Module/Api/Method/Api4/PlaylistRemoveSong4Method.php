@@ -62,7 +62,7 @@ final class PlaylistRemoveSong4Method
         }
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
+        if (!$playlist->has_access($user->id) && !$user->access === 100) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
         } else {
             if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {

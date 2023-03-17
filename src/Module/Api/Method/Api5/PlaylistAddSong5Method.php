@@ -59,7 +59,7 @@ final class PlaylistAddSong5Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
+        if (!$playlist->has_access($user->id) && !$user->access === 100) {
             Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;

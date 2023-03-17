@@ -65,7 +65,7 @@ final class Playlist4Method
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $list_id), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !$user->access === 100)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
