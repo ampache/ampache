@@ -1846,7 +1846,7 @@ class Subsonic_Api
                     true,
                     Access::check_function('download'),
                     $expire_days,
-                    $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                    $passwordGenerator->generate_token(),
                     0,
                     $description
                 );

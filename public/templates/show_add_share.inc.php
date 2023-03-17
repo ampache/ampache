@@ -45,7 +45,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate_token()); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>

@@ -29,4 +29,9 @@ interface PasswordGeneratorInterface
      * or will use a random length between 14-20
      */
     public function generate(?int $length = null): string;
+
+    /**
+     * Generate a simple token for file shares (a-z, A-Z & 0-9 only)
+     */
+    public function generate_token(): string;
 }

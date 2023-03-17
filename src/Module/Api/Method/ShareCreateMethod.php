@@ -113,7 +113,7 @@ final class ShareCreateMethod
                 true,
                 $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
-                $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                $passwordGenerator->generate_token(),
                 0,
                 $description
             );

@@ -95,7 +95,7 @@ final class ExternalShareAction implements ApplicationActionInterface
 
         $type           = $this->requestParser->getFromRequest('type');
         $share_id       = $this->requestParser->getFromRequest('id');
-        $secret         = $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH);
+        $secret         = $this->passwordGenerator->generate_token();
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
