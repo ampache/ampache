@@ -34,7 +34,6 @@ class LocalPlay
 {
     /* Base Variables */
     public $type;
-
     public $f_name;
     public $f_description;
     public $f_version;
@@ -311,7 +310,7 @@ class LocalPlay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
-     * @return array|false
+     * @return array
      */
     public function status(): array
     {
@@ -320,7 +319,7 @@ class LocalPlay
         if (empty($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return false;
+            return array();
         }
 
         return $data;
