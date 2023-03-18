@@ -316,7 +316,7 @@ class LocalPlay
     {
         $data = $this->_player->status();
 
-        if (empty($data)) {
+        if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
             return array();
