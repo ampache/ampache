@@ -592,14 +592,12 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
 
-        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $filter_id) {
-            $sql .= "" . (int)$filter_id . ", " . (int)$catalog_id . ", 0),";
+            $enabled = ($filter_id == 0) ? 1 : 0; // always enable for the DEFAULT group
+            $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (?, ?, ?);";
+            $params  = array((int)$filter_id, (int)$catalog_id, $enabled);
+            Dba::write($sql, $params);
         }
-        // Remove last comma to avoid SQL error
-        $sql = substr($sql, 0, -1);
-
-        return Dba::write($sql);
     }
 
     /**
@@ -1222,7 +1220,7 @@ abstract class Catalog extends database_object
             return true;
         }
         $params = array($catalog_id, $user_id);
-        $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
+        $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
 
         $db_results = Dba::read($sql, $params);
         if (Dba::num_rows($db_results)) {
@@ -2893,7 +2891,7 @@ abstract class Catalog extends database_object
         self::set_update_info('update_counts', $now_time);
         debug_event(__CLASS__, 'update_counts after catalog changes', 5);
         // missing map tables are pretty important
-        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0;";
+        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` IS NOT NULL UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;";
         Dba::write($sql);
         $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         Dba::write($sql);

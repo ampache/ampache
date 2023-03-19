@@ -801,13 +801,13 @@ class Stats
      * get_user
      * This gets all stats for a type based on user with thresholds and all
      * If full is passed, doesn't limit based on date
-     * @param string $input_count
+     * @param string $count
      * @param string $input_type
      * @param integer $user
      * @param integer $full
      * @return array
      */
-    public static function get_user($input_count, $input_type, $user, $full = 0)
+    public static function get_user($count, $input_type, $user, $full = 0)
     {
         $type = self::validate_type($input_type);
 
@@ -816,7 +816,7 @@ class Stats
 
         // Select Objects based on user
         // FIXME:: Requires table scan, look at improving
-        $sql        = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count` WHERE `object_type` = ? AND `date` >= ? AND `user` = ? GROUP BY `object_id` ORDER BY `count` DESC LIMIT $input_count";
+        $sql        = "SELECT `object_id`, COUNT(`id`) AS `count` FROM `object_count` WHERE `object_type` = ? AND `date` >= ? AND `user` = ? GROUP BY `object_id` ORDER BY `count` DESC LIMIT " . (int)$count;
         $db_results = Dba::read($sql, array($type, $date, $user));
 
         $results = array();

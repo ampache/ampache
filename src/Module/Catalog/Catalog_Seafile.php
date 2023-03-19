@@ -323,12 +323,17 @@ class Catalog_Seafile extends Catalog
         } else {
             debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
             try {
-                $results = $this->download_metadata($file);
+                $tempfilename = $this->seafile->download($file);
+                $results      = $this->download_metadata($tempfilename, '', '', null, true);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
                 $added = Song::insert($results);
 
                 if ($added) {
+                    parent::gather_art([$added]);
+                    // Restore the Seafile virtual path
+                    $virtpath = $this->seafile->to_virtual_path($file);
+                    Dba::write("UPDATE song SET file = ? WHERE id = ?", [$virtpath, $added]);
                     $this->count++;
                 }
 
@@ -338,6 +343,8 @@ class Catalog_Seafile extends Catalog
                 debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+            } finally {
+                self::clean_tmp_file($tempfilename);
             }
         }
 
@@ -349,10 +356,11 @@ class Catalog_Seafile extends Catalog
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @param array $gather_types
+     * @param boolean $keep
      * @return array
      * @throws Exception
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
+    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false)
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -379,8 +387,7 @@ class Catalog_Seafile extends Catalog
             '',
             '',
             $sort_pattern,
-            $rename_pattern,
-            true
+            $rename_pattern
         );
         if (!$is_cached) {
             $vainfo->forceSize($file->size);
@@ -403,7 +410,9 @@ class Catalog_Seafile extends Catalog
             : $this->seafile->to_virtual_path($file);
 
         // remove the temp file
-        self::clean_tmp_file($tempfilename);
+        if (!$keep) {
+            self::clean_tmp_file($tempfilename);
+        }
 
         return $results;
     }
@@ -423,8 +432,7 @@ class Catalog_Seafile extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results['total']++;
-                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                    'ampache-catalog');
+                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
 
                 $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
@@ -436,7 +444,7 @@ class Catalog_Seafile extends Catalog
                 }
 
                 if ($metadata !== null) {
-                    debug_event('seafile_catalog', 'Verify updating song', 5, 'ampache-catalog');
+                    debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
                     $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
@@ -446,7 +454,7 @@ class Catalog_Seafile extends Catalog
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
-                    debug_event('seafile_catalog', 'Verify removing song', 5, 'ampache-catalog');
+                    debug_event('seafile_catalog', 'Verify removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     //$dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));

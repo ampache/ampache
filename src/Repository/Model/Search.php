@@ -1937,7 +1937,7 @@ class Search extends playlist_object
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `album` ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `addition_time_$key` ON `album`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'genre':
                     $where[]      = "`album`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='album' AND `tag`.`id` IS NOT NULL)";
@@ -2400,7 +2400,7 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `played_$key` ON `artist`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'catalog':
                     $where[]         = "`catalog_se`.`id` $sql_match_operator ?";
@@ -2875,17 +2875,17 @@ class Search extends playlist_object
                 case 'recent_played':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`played_$key`.`object_id` IS NOT NULL";
-                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT $input) AS `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
+                    $table['played_' . $key] = "LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `played_$key` ON `song`.`id` = `played_$key`.`object_id`";
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $sql_match_operator);
                     $where[]                   = "`addition_time_$key`.`id` IS NOT NULL";
-                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
+                    $table['addition_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `addition_time_$key` ON `song`.`id` = `addition_time_$key`.`id`";
                     break;
                 case 'recent_updated':
                     $key                     = md5($input . $sql_match_operator);
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
-                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT $input) AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
+                    $table['update_' . $key] = "LEFT JOIN (SELECT `id` FROM `song` ORDER BY $sql_match_operator DESC LIMIT " . (int)$input . ") AS `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
