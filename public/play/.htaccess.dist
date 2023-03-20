@@ -5,9 +5,9 @@
     # Redirect art/ urls to image.php
     RewriteRule ^art/([^/]+)/([^/]+)/([0-9]+)/thumb([0-9]*)\.([a-z]+)$ /image.php?object_type=$2&object_id=$3&auth=$1&thumb=$4&name=art.jpg [L]
     # let regular links through play/index.php?ssid=etc
-    RewriteRule ^play/index.php$ play/index.php [L,QSA,R]
+    RewriteRule ^play/index.php$ play/index.php [L,QSA]
     # redirect url segmented addresses play/ssid/etc 
-    RewriteRule ^play/(.*)$ play/index.php?$1 [L,QSA]
+    RewriteRule ^play/(.*)$ play/index.php?$1 [L,QSA,R=301]
     # old rules
     RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)(/.*)?$ /play/$5?$1=$2&$3=$4 [N,QSA]
     RewriteRule ^([^/]+)/([^/]+)(/.*)?$ /play/$3?$1=$2 [N,QSA]
