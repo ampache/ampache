@@ -24,6 +24,7 @@ public/.maintenance
 public/play/.htaccess
 public/rest/.htaccess
 public/lib/components
+public/lib/javascript/custom.js
 public/client
 public/newclient
 public/core
