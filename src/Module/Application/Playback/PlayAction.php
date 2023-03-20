@@ -92,6 +92,7 @@ final class PlayAction implements ApplicationActionInterface
          * The reason for not trying to do the whole job in mod_rewrite is that there are typically
          * more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg limit
          */
+        $use_auth   = AmpConfig::get('use_auth');
         $slashcount = substr_count($_SERVER['QUERY_STRING'], '/');
         if ($slashcount > 2) {
             // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
@@ -114,34 +115,58 @@ final class PlayAction implements ApplicationActionInterface
                     $new_request[$key] = $value;
                 }
             }
-            $_REQUEST = $new_request;
+            $_REQUEST     = $new_request;
+            $action       = (string)$new_request['action'] ?? '';
+            $stream_name  = (string)$new_request['name'] ?? '';
+            $object_id    = (int)scrub_in($new_request['oid'] ?? 0);
+            $user_id      = (int)scrub_in($new_request['uid'] ?? 0);
+            $session_id   = (string)scrub_in($new_request['ssid'] ?? '');
+            $type         = (string)scrub_in($new_request['type'] ?? '');
+            $client       = (string)scrub_in($new_request['client'] ?? '');
+            $cache        = (string)scrub_in($new_request['cache'] ?? '1');
+            $bitrate      = (int)scrub_in($new_request['bitrate'] ?? 0);
+            $player       = (string)scrub_in($new_request['player'] ?? '');
+            $format       = (string)scrub_in($new_request['format'] ?? '');
+            $original     = ($format == 'raw');
+            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
+
+            // Share id and secret if used
+            $share_id = (string)scrub_in((int)$new_request['share_id'] ?? '');
+            $secret   = (string)scrub_in($new_request['share_secret'] ?? 0);
+
+            // This is specifically for tmp playlist requests
+            $demo_id      = (string)scrub_in((int)$new_request['demo_id'] ?? '');
+            $random       = (string)scrub_in((int)$new_request['random'] ?? '');
+
+            // don't put this one here
+            $cpaction     = null;
+        } else {
+            /* These parameters had better come in on the url. */
+            $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+            $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+            $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
+            $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
+            $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
+            $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
+            $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
+            $original     = ($format == 'raw');
+            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+
+            // Share id and secret if used
+            $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
+            $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
+
+            // This is specifically for tmp playlist requests
+            $demo_id      = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT));
+            $random       = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT));
+
+            // run_custom_play_action... whatever that is
+            $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-
-        /* These parameters had better come in on the url. */
-        $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
-        $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
-        $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
-        $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
-        $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
-        $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
-        $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
-        $original     = ($format == 'raw');
-        $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
-        $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
-        $record_stats = true;
-        $use_auth     = AmpConfig::get('use_auth');
-
-        // Share id and secret if used
-        $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
-        $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
-
-        // This is specifically for tmp playlist requests
-        $demo_id    = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT));
-        $random     = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT));
-
         // democratic play url doesn't include these
         if ($demo_id !== '') {
             $type = 'song';
@@ -154,6 +179,7 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
+        $record_stats = true;
         // allow disabling stat recording from the play url
         if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
@@ -631,7 +657,6 @@ final class PlayAction implements ApplicationActionInterface
         debug_event('play/index', $action . ' file (' . $stream_file . '}...', 5);
         debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
-        $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($cpaction) {
             debug_event('play/index', 'Custom play action {' . $cpaction . '}', 5);
         }
