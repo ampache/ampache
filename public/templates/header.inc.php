@@ -484,7 +484,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                         <?php } ?>
                         </span>
                     <?php
-                    } elseif (!AmpConfig::get('simple_user_mode')) { ?>
+                    } elseif (AmpConfig::get('show_header_login')) { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>

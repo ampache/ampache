@@ -849,6 +849,9 @@ class Update
         $update_string = "* Add ui option ('show_subtitle') Show Album subtitle on links (if available)<br />* Add ui option ('show_original_year') Show Album original year on links (if available)";
         $version[]     = array('version' => '600024', 'description' => $update_string);
 
+        $update_string = "* Add ui option ('show_header_login') Show the login / registration links in the site header";
+        $version[]     = array('version' => '600025', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5234,6 +5237,23 @@ class Update
         $retval &= (Dba::write($sql, array($row_id)) !== false);
         $retval = true;
         $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600025
+     *
+     * Add ui option ('show_header_login') Show the login / registration links in the site header
+     */
+    public static function update_600025(): bool
+    {
+        $retval = true;
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";

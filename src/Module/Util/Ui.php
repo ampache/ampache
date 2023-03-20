@@ -739,6 +739,7 @@ class Ui implements UiInterface
             case 'use_original_year':
             case 'show_subtitle':
             case 'show_original_year':
+            case 'show_header_login':
             case 'hide_single_artist':
             case 'hide_genres':
             case 'show_skipped_times':

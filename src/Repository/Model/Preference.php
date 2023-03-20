@@ -920,6 +920,7 @@ class Preference extends database_object
             'show_album_artist' => T_("Show 'Album Artists' link in the main sidebar"),
             'show_artist' => T_("Show 'Artists' link in the main sidebar"),
             'show_donate' => T_('Show donate button in footer'),
+            'show_header_login' => T_('Show the login / registration links in the site header'),
             'show_license' => T_('Show License'),
             'show_lyrics' => T_('Show lyrics'),
             'show_original_year' => T_('Show Album original year on links (if available)'),
