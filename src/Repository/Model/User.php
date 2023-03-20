@@ -190,10 +190,6 @@ class User extends database_object
         $info     = $this->has_info();
         if (!empty($info)) {
             foreach ($info as $key => $value) {
-                // Let's not save the password in this object :S
-                if ($key == 'password') {
-                    continue;
-                }
                 $this->$key = $value;
             }
         }
@@ -259,8 +255,8 @@ class User extends database_object
             return $data;
         }
 
-        $sql        = "SELECT * FROM `user` WHERE `id`='$user_id'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($user_id));
 
         $data = Dba::fetch_assoc($db_results);
 
