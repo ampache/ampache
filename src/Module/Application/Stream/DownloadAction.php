@@ -82,8 +82,6 @@ final class DownloadAction extends AbstractStreamAction
         }
         if (array_key_exists('cache', $_REQUEST)) {
             $mediaIds[0]['cache'] = scrub_in($_REQUEST['cache']);
-        } else {
-            $mediaIds[0]['cache'] = 1;
         }
         if (array_key_exists('format', $_REQUEST)) {
             $mediaIds[0]['format'] = scrub_in($_REQUEST['format']);
