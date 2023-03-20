@@ -69,7 +69,8 @@ final class NewestArtistAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $user    = Core::get_global('user');
-        $objects = Stats::get_newest('artist', $limit, 0, 0, $user->id);
+        $user_id = $user->id ?? 0;
+        $objects = Stats::get_newest('artist', $limit, 0, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('artist');

@@ -203,8 +203,7 @@ class Shoutbox
         $comment = strip_tags($data['comment']);
 
         $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql,
-            array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data'] ?? 0));
 
         static::getUserActivityPoster()->post((int) $user, 'shout', $data['object_type'], (int) $data['object_id'], time());
 

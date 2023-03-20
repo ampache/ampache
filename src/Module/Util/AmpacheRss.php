@@ -311,8 +311,9 @@ class AmpacheRss
      */
     public static function load_latest_album($rsstoken = "")
     {
-        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $ids  = Stats::get_newest('album', 10, 0, 0, (is_null($user)?0:$user->id));
+        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user_id = $user->id ?? 0;
+        $ids     = Stats::get_newest('album', 10, 0, 0, $user_id);
 
         $results = array();
 
@@ -340,8 +341,9 @@ class AmpacheRss
      */
     public static function load_latest_artist($rsstoken = "")
     {
-        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $ids  = Stats::get_newest('artist', 10, 0, 0, $user->id);
+        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user_id = $user->id ?? 0;
+        $ids     = Stats::get_newest('artist', 10, 0, 0, $user_id);
 
         $results = array();
 

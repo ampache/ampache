@@ -630,7 +630,8 @@ class Art extends database_object
             return false;
         }
         if (!is_dir($path)) {
-            debug_event(self::class, 'Local image art directory '. $path . ' does not even exist.', 1);
+            debug_event(self::class, 'Local image art directory ' . $path . ' does not even exist.', 1);
+
             return null;
         }
         $path .= "art-" . $sizetext . "." . self::extension($mime);

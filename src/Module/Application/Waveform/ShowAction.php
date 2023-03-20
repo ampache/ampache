@@ -93,7 +93,7 @@ final class ShowAction implements ApplicationActionInterface
         return $this->responseFactory
             ->createResponse()
             ->withHeader('Cache-Control', 'public, max-age=864000') // 10 days
-            ->withHeader('ETag', '"waveform-'.$object_type.'_'.$object_id.'"')
+            ->withHeader('ETag', '"waveform-' . $object_type . '_' . $object_id . '"')
             ->withHeader(
                 'Content-type',
                 'image/png'
