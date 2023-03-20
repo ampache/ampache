@@ -629,8 +629,8 @@ class Art extends database_object
         if ($path === false) {
             return false;
         }
-        if (!is_dir($path)) {
-            debug_event(self::class, 'Local image art directory ' . $path . ' does not even exist.', 1);
+        if (!Core::is_readable($path)) {
+            debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
 
             return null;
         }
