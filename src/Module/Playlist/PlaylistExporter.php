@@ -42,22 +42,6 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $ext,
         string $playlistId
     ): void {
-        $interactor->error(
-            $dirname,
-            true
-        );
-        $interactor->error(
-            $type,
-            true
-        );
-        $interactor->error(
-            $ext,
-            true
-        );
-        $interactor->error(
-            $playlistId,
-            true
-        );
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {
             $interactor->error(
