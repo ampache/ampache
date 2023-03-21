@@ -17,6 +17,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add php8.2 to composer
 * Create Dockerfilephp82
 * Add custom listenbrainz_api_url to listenbrainz plugin
+* Add header to allow browser cache on waveform
+* Allow custom JS using `/lib/javascript/custom.js`
 * CLI
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
 * webplayer
@@ -85,6 +87,9 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
+* Split filename and folder properties on song and video pages
+* Ignore properties and data for guest users that won't have this data
+* When pulling user data don't pull the password
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
@@ -114,10 +119,15 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Browse filtering for catalogs and podcast_episodes was a bit light
 * Song was not checking for channel data
 * Ampachechartlyrics plugin object data might not be set
+* Force cast on shout data that may be null
+* Handle a bad object_id on rss requests
+* Add missing doctype for html pages
+* Missing " in html for Captcha
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
   * SQL for Artist `catalog` searches
+  * Don't try to search on bad rules. (falls back to empty rules which will show all songs)
 * Subsonic
   * Sharing some types of object
 
