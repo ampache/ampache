@@ -21,6 +21,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Allow custom JS using `/lib/javascript/custom.js`
 * CLI
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
+  * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -123,6 +124,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Handle a bad object_id on rss requests
 * Add missing doctype for html pages
 * Missing " in html for Captcha
+* CLI
+  * export:playlist command help was incorrect
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
