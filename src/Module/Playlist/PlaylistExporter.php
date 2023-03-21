@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\Search;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
@@ -61,6 +62,19 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'artists':
                 $items = Catalog::get_artists();
                 break;
+            case 'smartlists':
+                if ((int)$playlistId < 1) {
+                    $ids = Playlist::get_smartlists(-1);
+                } else {
+                    $ids = array($playlistId);
+                }
+                $items = array();
+                foreach ($ids as $playlistid) {
+                    $playlist = new Search($playlistid);
+                    if ($playlist->id) {
+                        $items[] = $playlist;
+                    }
+                }
             case 'playlists':
             default:
                 if ((int)$playlistId < 1) {
