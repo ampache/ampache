@@ -580,11 +580,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             $uid = -1;
         }
 
-        $type = $this->type;
-
-        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = rawurlencode($media_name);
+        $media_name = (AmpConfig::get('stream_beautiful_url'))
+            ? urlencode($media_name)
+            : rawurlencode($media_name);
 
         $url = Stream::get_base_url($local, $streamToken) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . '&format=raw' . $additional_params;
         if ($player !== '') {
