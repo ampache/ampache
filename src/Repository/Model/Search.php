@@ -91,7 +91,7 @@ class Search extends playlist_object
             foreach ($info as $key => $value) {
                 if ($key == 'rules') {
                     $this->rules = json_decode((string)$value, true);
-                    if (is_null($this->rules)) {
+                    if (!is_array($this->rules)) {
                         debug_event(__CLASS__, "Can't decode key 'rules'. Not a valid json.", 1);
                         $this->rules = array();
                     }
