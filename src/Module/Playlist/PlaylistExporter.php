@@ -80,13 +80,13 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ((int)$playlistId < 1) {
-                    $ids = Search::get_searches(-1);
+                    $ids = Playlist::get_smartlists(-1);
                 } else {
                     $ids = array($playlistId);
                 }
                 $items = array();
-                foreach ($ids as $playlistid) {
-                    $playlist = new Search($playlistid);
+                foreach ($ids as $playlist_id) {
+                    $playlist = new Search((int) str_replace('smart_', '', $playlist_id));
                     if ($playlist->id) {
                         $items[] = $playlist;
                     }
@@ -100,8 +100,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
                     $ids = array($playlistId);
                 }
                 $items = array();
-                foreach ($ids as $playlistid) {
-                    $playlist = new Playlist($playlistid);
+                foreach ($ids as $playlist_id) {
+                    $playlist = new Playlist($playlist_id);
                     if ($playlist->id) {
                         $items[] = $playlist;
                     }
