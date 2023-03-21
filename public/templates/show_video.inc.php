@@ -142,7 +142,8 @@ if (get_class($video) != Video::class) {
   if (Access::check('interface', 75)) {
       $data                       = pathinfo($video->file);
       $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
-      $videoprops[T_('Filename')] = scrub_out((string)$data['filename'] ?? '') . " " . $video->f_size;
+      $videoprops[T_('Filename')] = scrub_out((string)$data['filename'] ?? '');
+      $videoprops[T_('Size')]     = $video->f_size;
   }
   if ($video->update_time) {
       $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);
