@@ -46,10 +46,10 @@ final class ExportPlaylistCommand extends Command
 
         $this
             ->argument('<directory>', T_('Output directory'))
-            ->argument('[extension]', T_("Output type ('m3u', 'xspf', 'pls'), (default: m3u)"), 'm3u')
             ->argument('<type>', T_("Playlist type ('albums', 'artists', 'playlists', 'smartlists'), (default: playlists)"), 'playlists')
+            ->argument('[extension]', T_("Output type ('m3u', 'xspf', 'pls'), (default: m3u)"), 'm3u')
             ->argument('[playlistId]', T_("Playlist ID"), '-1')
-            ->usage('<bold>  export:playlist</end> <comment>playlist /tmp m3u</end> ## ' . T_('Export playlists as m3u files to /tmp') . '<eol/>');
+            ->usage('<bold>  export:playlist</end> <comment>/tmp playlists m3u</end> ## ' . T_('Export playlists as m3u files to /tmp') . '<eol/>');
     }
 
     public function execute(
