@@ -167,6 +167,7 @@ final class PlayAction implements ApplicationActionInterface
             // run_custom_play_action... whatever that is
             $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
+        //debug_event('play/index', 'REQUEST: ' . print_r($_REQUEST, true), 5);
         // democratic play url doesn't include these
         if ($demo_id > 0) {
             $type = 'song';
@@ -224,7 +225,7 @@ final class PlayAction implements ApplicationActionInterface
             $type = 'song';
         }
 
-        debug_event('play/index', "Asked for type {{$type}}", 5);
+        debug_event('play/index', "Asked for type {" . $type . "}", 5);
 
         if ($type == 'playlist') {
             $playlist_type = scrub_in($_REQUEST['playlist_type']);
@@ -342,7 +343,7 @@ final class PlayAction implements ApplicationActionInterface
             $this->userRepository->updateLastSeen($user->id);
         } else {
             $user_id = 0;
-            $share   = new Share((int) $share_id);
+            $share   = new Share($share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
                 header('HTTP/1.1 403 Access Unauthorized');
@@ -603,29 +604,26 @@ final class PlayAction implements ApplicationActionInterface
                 header(sprintf('%s: %s', $headerName, $value));
             }
 
-            $filepointer   = fopen(Core::conv_lc_file($stream_file), 'rb');
-            $bytesStreamed = 0;
-
+            $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
             if (!is_resource($filepointer)) {
                 debug_event('play/index', "Error: Unable to open " . $stream_file . " for downloading", 2);
 
                 return null;
             }
 
-            if (!$share_id) {
-                if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
+            if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
+                if (!$share_id) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
                     Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                } else {
+                    Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
                 }
-            } else {
-                Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
             }
 
             // Check to see if we should be throttling because we can get away with it
             if (AmpConfig::get('rate_limit') > 0) {
                 while (!feof($filepointer)) {
                     echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit') * 1024)));
-                    $bytesStreamed += round(AmpConfig::get('rate_limit') * 1024);
                     flush();
                     sleep(1);
                 }
@@ -834,25 +832,20 @@ final class PlayAction implements ApplicationActionInterface
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
                 if (($action != 'download') && $record_stats) {
-                    Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                    Stream::insert_now_playing((int) $media->id, $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
-                if (!$share_id && $record_stats) {
-                    if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
+                if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
+                    if (!$share_id && $record_stats) {
                         debug_event('play/index', 'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
                         // internal scrobbling (user_activity and object_count tables)
                         if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
                             // scrobble plugins
                             User::save_mediaplay($user, $media);
                         }
+                    } elseif ($share_id > 0) {
+                        // shares are people too
+                        $media->set_played(0, 'share.php', array(), $time);
                     }
-                } elseif (!$share_id && $record_stats) {
-                    if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                        debug_event('play/index', 'Registering download for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
-                        Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
-                    }
-                } elseif ($share_id) {
-                    // shares are people too
-                    $media->set_played(0, 'share.php', array(), $time);
                 }
             }
         }
