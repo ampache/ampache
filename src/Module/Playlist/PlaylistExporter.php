@@ -75,6 +75,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                         $items[] = $playlist;
                     }
                 }
+                break;
             case 'playlists':
             default:
                 if ((int)$playlistId < 1) {
