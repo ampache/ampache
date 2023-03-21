@@ -22,7 +22,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600024
+* Database 600025
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -47,6 +47,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `upload_access_level` to restrict uploads to certain user groups
   * Add preference `show_subtitle`, Show Album subtitle on links
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
+  * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
 * Config version 64
   * Drop Channels from config
   * Reset the art_order defaults
