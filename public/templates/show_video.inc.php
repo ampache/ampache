@@ -140,7 +140,9 @@ if (get_class($video) != Video::class) {
   $videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
   $videoprops[T_('Channels')]        = scrub_out($video->channels);
   if (Access::check('interface', 75)) {
-      $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
+      $data                       = pathinfo($video->file);
+      $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
+      $videoprops[T_('Filename')] = scrub_out((string)$data['filename'] ?? '') . " " . $video->f_size;
   }
   if ($video->update_time) {
       $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);

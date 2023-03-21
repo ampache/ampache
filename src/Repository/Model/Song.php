@@ -178,14 +178,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     public $channels;
 
     /**
-     * @var string $folder
-     */
-    public $folder;
-    /**
-     * @var string $filename
-     */
-    public $filename;
-    /**
      * @var array $tags
      */
     public $tags;
@@ -404,8 +396,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
             $data              = pathinfo($this->file);
             $this->type        = strtolower((string)$data['extension']);
-            $this->folder      = (string)$data['dirname'];
-            $this->filename    = (string)$data['filename'];
             $this->mime        = self::type_to_mime($this->type);
             $this->total_count = (int)$this->total_count;
         } else {
