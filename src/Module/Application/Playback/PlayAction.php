@@ -168,6 +168,29 @@ final class PlayAction implements ApplicationActionInterface
             $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         //debug_event('play/index', 'REQUEST: ' . print_r($_REQUEST, true), 5);
+        //$debug = array(
+        //    'action' => $action,
+        //    'name' => $stream_name,
+        //    'oid' => $object_id,
+        //    'uid' => $user_id,
+        //    'ssid' => $session_id,
+        //    'type' => $type,
+        //    'client' => $client,
+        //    'cache' => $cache,
+        //    'bitrate' => $bitrate,
+        //    'player' => $player,
+        //    'format' => $format,
+        //    'original' => $original,
+        //    'transcode_to' => $transcode_to,
+        //    'share_id' => $share_id,
+        //    'share_secret' => $secret,
+        //    'demo_id' => $demo_id,
+        //    'random' => $random
+        //);
+        //foreach ($debug as $key => $value) {
+        //    debug_event('play/index', $key . ': ' . $value, 5);
+        //}
+
         // democratic play url doesn't include these
         if ($demo_id > 0) {
             $type = 'song';
