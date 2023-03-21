@@ -42,6 +42,22 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $ext,
         string $playlistId
     ): void {
+        $interactor->error(
+            $dirname,
+            true
+        );
+        $interactor->error(
+            $type,
+            true
+        );
+        $interactor->error(
+            $ext,
+            true
+        );
+        $interactor->error(
+            $playlistId,
+            true
+        );
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {
             $interactor->error(
@@ -64,7 +80,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ((int)$playlistId < 1) {
-                    $ids = Playlist::get_smartlists(-1);
+                    $ids = Search::get_searches(-1);
                 } else {
                     $ids = array($playlistId);
                 }
