@@ -131,12 +131,12 @@ final class PlayAction implements ApplicationActionInterface
             $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
 
             // Share id and secret if used
-            $share_id = (string)scrub_in((int)$new_request['share_id'] ?? '');
-            $secret   = (string)scrub_in($new_request['share_secret'] ?? 0);
+            $share_id = (int)scrub_in((int)$new_request['share_id'] ?? 0);
+            $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (string)scrub_in((int)$new_request['demo_id'] ?? '');
-            $random       = (string)scrub_in((int)$new_request['random'] ?? '');
+            $demo_id      = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
+            $random       = (int)scrub_in((int)$new_request['random'] ?? 0);
 
             // don't put this one here
             $cpaction     = null;
@@ -144,13 +144,13 @@ final class PlayAction implements ApplicationActionInterface
             /* These parameters had better come in on the url. */
             $action       = (string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
             $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
-            $object_id    = (int)scrub_in(filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_SPECIAL_CHARS));
-            $user_id      = (int)scrub_in(filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $object_id    = (int)filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_NUMBER_INT);
+            $user_id      = (int)filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_NUMBER_INT);
             $session_id   = (string)scrub_in(filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
             $type         = (string)scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
             $client       = (string)scrub_in(filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
-            $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_SPECIAL_CHARS));
-            $bitrate      = (int)scrub_in(filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_SPECIAL_CHARS));
+            $cache        = (string)scrub_in(filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
+            $bitrate      = (int)filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_NUMBER_INT);
             $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
             $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
             $original     = ($format == 'raw');
@@ -161,18 +161,18 @@ final class PlayAction implements ApplicationActionInterface
             $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (string)scrub_in(filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT));
-            $random       = (string)scrub_in(filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT));
+            $demo_id      = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
+            $random       = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
             $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         // democratic play url doesn't include these
-        if ($demo_id !== '') {
+        if ($demo_id > 0) {
             $type = 'song';
         }
         // random play url can be multiple types but default to song if missing
-        if ($random !== '') {
+        if ($random === 1) {
             $type = 'song';
         }
         // if you don't specify, assume stream
@@ -410,7 +410,7 @@ final class PlayAction implements ApplicationActionInterface
         /**
          * If we've got a Democratic playlist then get the current song and redirect to that media files URL
          */
-        if ($demo_id !== '') {
+        if ($demo_id > 0) {
             $democratic = new Democratic($demo_id);
             $democratic->set_parent();
 
@@ -458,7 +458,7 @@ final class PlayAction implements ApplicationActionInterface
         /**
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
-        if ($random !== '') {
+        if ($random === 1) {
             if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
                 // continue the current object
                 $object_id = $_SESSION['random']['last'];
