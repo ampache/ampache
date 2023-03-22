@@ -2284,7 +2284,6 @@ class Subsonic_Api
                 "catalog" => $catalogs[0],
                 "site_url" => $site_url
             );
-            $response                = Subsonic_Xml_Data::addSubsonicResponse('createinternetradiostation');
             $internetradiostations   = array();
             $internetradiostations[] = Live_Stream::create($data);
             if (empty($internetradiostations)) {
@@ -2293,7 +2292,7 @@ class Subsonic_Api
 
                 return;
             }
-            Subsonic_Xml_Data::addInternetRadioStations($response, $internetradiostations);
+            $response = Subsonic_Xml_Data::addSubsonicResponse('createinternetradiostation');
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'createinternetradiostation');
         }
