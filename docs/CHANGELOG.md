@@ -20,6 +20,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add header to allow browser cache on waveform
 * Allow custom JS using `/lib/javascript/custom.js`
 * CLI
+  * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
 * webplayer
