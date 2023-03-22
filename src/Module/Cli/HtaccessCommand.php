@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\InstallationHelperInterface;
@@ -63,6 +62,34 @@ final class HtaccessCommand extends Command
         }
         $htaccess_play_file = __DIR__ . '/../../../public/play/.htaccess';
         $htaccess_rest_file = __DIR__ . '/../../../public/rest/.htaccess';
+
+        // check permissions
+        if (!check_htaccess_play_writable()) {
+            $interactor->error(
+                T_('Permission Denied') . ": " . $htaccess_play_file,
+                true
+            );
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
+
+            return;
+        }
+        if (!check_htaccess_rest_writable()) {
+            $interactor->error(
+                T_('Permission Denied') . ": " . $htaccess_rest_file,
+                true
+            );
+            $interactor->error(
+                AmpError::get('general'),
+                true
+            );
+
+            return;
+        }
+        unlink($htaccess_play_file);
+        unlink($htaccess_rest_file);
 
         // create the files
         if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->get('web_path'), false)) {
