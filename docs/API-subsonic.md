@@ -10,8 +10,10 @@ Ampache implements the [Subsonic API](http://www.subsonic.org/pages/api.jsp) wit
 
 **Compatible Versions:**
 
-* 6.0.0: 1.16.1
-* 5.*.*: 1.13.0
+* Ampache6 => Subsonic [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
+* Ampache5 => Subsonic [1.13.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.13.0.xsd)
+* Ampache4 => Subsonic [1.13.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.13.0.xsd)
+* Ampache3 => Subsonic [1.11.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.11.0.xsd)
 
 ## Subsonic Examples
 
@@ -19,5 +21,5 @@ You can get examples from an official Subsonic release as well as examples from 
 
 These servers are using a Subsonic 1.16.1 compatible API version.
 
-* [Subsonic 6.1.6](https://github.com/ampache/python3-ampache/tree/api6/docs/subsonic-6.1.6)
-* [Ampache Subsonic](https://github.com/ampache/python3-ampache/tree/api6/docs/ampache-subsonic)
+* [Subsonic 6.1.6 (1.16.1)](https://github.com/ampache/python3-ampache/tree/api6/docs/subsonic-6.1.6)
+* [Ampache Subsonic (1.16.1](https://github.com/ampache/python3-ampache/tree/api6/docs/ampache-subsonic)
