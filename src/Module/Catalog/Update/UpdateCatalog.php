@@ -261,6 +261,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     );
             }
             if ($cleanup === true || $verification === true || $collectGarbage === true) {
+                $interactor->info(
+                    T_('Garbage Collection'),
+                    true
+                );
                 $this->catalogGarbageCollector->collect();
             }
             if ($collectGarbage === true && $missing !== true) {
