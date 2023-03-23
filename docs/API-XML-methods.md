@@ -632,17 +632,19 @@ Return children of a parent object in a folder traversal/browse style. If you do
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(root\).xml)
 
-[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(music%20catalog\).xml)
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(music%20catalog\).xml)
 
-[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(artist\).xml)
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(podcast%20catalog\).xml)
 
-[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(album\).xml)
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(video%20catalog\).xml)
 
-[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(podcast%20catalog\).xml)
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(artist\).xml)
 
-[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(video%20catalog\).xml)
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(album\).xml)
+
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse20\(podcast\).xml)
 
 ### catalogs
 

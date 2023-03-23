@@ -1811,7 +1811,7 @@ class Subsonic_Api
         }
         $description = $input['description'] ?? '';
         if (AmpConfig::get('share')) {
-            $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : null;
+            $expire_days = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000) : null;
             $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
                 debug_event(self::class, 'createShare: sharing song list (album)', 5);
@@ -1877,7 +1877,7 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
             if ($share->id > 0) {
-                $expires = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
+                $expires = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) / 1000) : $share->expire_days;
                 $data    = array(
                     'max_counter' => $share->max_counter,
                     'expire' => $expires,

@@ -617,17 +617,19 @@ Return children of a parent object in a folder traversal/browse style. If you do
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(root\).json)
 
-[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(music%20catalog\).json)
+[Example: music catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(music%20catalog\).json)
 
-[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(artist\).json)
+[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(podcast%20catalog\).json)
 
-[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(album\).json)
+[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(video%20catalog\).json)
 
-[Example: podcast catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(podcast%20catalog\).json)
+[Example: artist](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(artist\).json)
 
-[Example: video catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_action%20\(video%20catalog\).json)
+[Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(album\).json)
+
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse20\(podcast\).json)
 
 ### catalogs
 
@@ -1380,7 +1382,7 @@ This takes a named array of objects and returning `id`, `name`, `prefix` and `ba
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/list.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/list.json)
 
 ### live_streams
 
