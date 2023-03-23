@@ -15,9 +15,14 @@
 
 ## API 5.6.0
 
-* advanced_search methods were breaking with various offset and limits
-* playlists methods parameter 'exact' always ending up false
-* API5::update_art hardcoded url to artist
+### Fixed
+
+* ALL
+  * share_create and share_edit methods broken when setting expiry days
+  * advanced_search methods were breaking with various offset and limits
+  * playlists methods parameter 'exact' always ending up false
+* Api5
+  * update_art hardcoded url to artist
 
 ## Ampache 5.5.7-release
 

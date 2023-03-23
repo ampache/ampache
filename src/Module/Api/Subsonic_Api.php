@@ -1746,7 +1746,7 @@ class Subsonic_Api
         }
         $description = $input['description'];
         if (AmpConfig::get('share')) {
-            $expire_days = Share::get_expiry($input['expires'] ?? null);
+            $expire_days = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) : null;
             $object_type = null;
             if (is_array($object_id) && Subsonic_Xml_Data::_isSong($object_id[0])) {
                 $song_id     = Subsonic_Xml_Data::_getAmpacheId($object_id[0]);
@@ -1813,20 +1813,8 @@ class Subsonic_Api
         if (AmpConfig::get('share')) {
             $share = new Share(Subsonic_Xml_Data::_getAmpacheId($share_id));
             if ($share->id > 0) {
-                $expires = $share->expire_days;
-                if (array_key_exists('expires', $input)) {
-                    // Parse as a string to work on 32-bit computers
-                    $expires = $input['expires'];
-                    if (strlen((string)$expires) > 3) {
-                        $expires = (int)(substr($expires, 0, -3));
-                    }
-                    if ($expires > 0) {
-                        $expires = ($expires - $share->creation_date) / 86400;
-                        $expires = ceil($expires);
-                    }
-                }
-
-                $data = array(
+                $expires = (isset($input['expires'])) ? Share::get_expiry(filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT)) : $share->expire_days;
+                $data    = array(
                     'max_counter' => $share->max_counter,
                     'expire' => $expires,
                     'allow_stream' => $share->allow_stream,
