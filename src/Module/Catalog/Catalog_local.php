@@ -563,8 +563,10 @@ class Catalog_local extends Catalog
         }
 
         $current_time = time();
-        $time_diff    = ($current_time - $start_time) ?: 0;
-        $rate         = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
+        $time_diff    = ($current_time - $start_time) ?? 0;
+        $rate         = number_format(($time_diff > 0)
+            ? $this->count / $time_diff
+            : 0, 2);
         if ($rate < 1) {
             $rate = T_('N/A');
         }
@@ -572,8 +574,7 @@ class Catalog_local extends Catalog
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top();
             Ui::update_text(T_('Catalog Updated'),
-                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff),
-                    $this->count, $rate));
+                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
             Ui::show_box_bottom();
         }
     } // add_to_catalog

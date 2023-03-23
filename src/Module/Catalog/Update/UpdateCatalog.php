@@ -57,6 +57,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ?string $catalogName,
         string $catalogType
     ): void {
+        $start_time = time();
         if ($deactivateMemoryLimit === true) {
             // Temporarily deactivate PHP memory limit
             echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
@@ -322,6 +323,12 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 true
             );
         }
+        $time_diff  = (time() - $start_time) ?? 0;
+        $interactor->info(
+            T_('Time') . ": " . date('i:s', $time_diff),
+            true
+        );
+
     }
 
     public function updatePath(

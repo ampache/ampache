@@ -405,7 +405,7 @@ class Subsonic_Xml_Data
         }
 
         $rating      = new Rating($album->id, "album");
-        $user_rating = ($rating->get_user_rating() ?: 0);
+        $user_rating = ($rating->get_user_rating() ?? 0);
         if ($user_rating > 0) {
             $xalbum->addAttribute('userRating', (string)ceil($user_rating));
         }
@@ -459,7 +459,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('duration', (string)$song->time);
             $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1000)));
             $rating      = new Rating($song->id, "song");
-            $user_rating = ($rating->get_user_rating() ?: 0);
+            $user_rating = ($rating->get_user_rating() ?? 0);
             if ($user_rating > 0) {
                 $xsong->addAttribute('userRating', (string)ceil($user_rating));
             }

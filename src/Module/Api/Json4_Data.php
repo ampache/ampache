@@ -492,7 +492,7 @@ class Json4_Data
                     $trackcount++;
                 }
             } else {
-                $items = ($playitem_total ?: 0);
+                $items = ($playitem_total ?? 0);
             }
             $rating      = new Rating($playlist_id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());

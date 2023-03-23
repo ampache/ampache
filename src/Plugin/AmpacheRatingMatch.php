@@ -233,7 +233,7 @@ class AmpacheRatingMatch
         }
         // Don't double rate something after it's already been rated before
         $rating = new Rating($song->id, 'song');
-        if (($rating->get_user_rating() ?: 0) > 0) {
+        if (($rating->get_user_rating() ?? 0) > 0) {
             return false;
         }
 

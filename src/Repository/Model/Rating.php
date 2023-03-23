@@ -385,7 +385,7 @@ class Rating extends database_object
         $rating = new Rating($object_id, $type);
 
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
-        $rate     = ($rating->get_user_rating() ?: 0);
+        $rate     = ($rating->get_user_rating() ?? 0);
 
         $global_rating = '';
 
