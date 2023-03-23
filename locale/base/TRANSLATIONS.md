@@ -37,7 +37,7 @@ cd locale/base
 Then gather the new messages
 
 ```
-gather-messages.sh -g
+./gather-messages.sh -g
 ```
 
 This will generate the pot file for upload to the repo. This is needed to allow Transifex users time to translate things.
@@ -65,7 +65,7 @@ tx migrate
 With the cli tool you can pull the changes to the messages with
 
 ```
-tx pull
+tx pull -f
 ```
 
 Here is an example of my migrated config file (~/.transifexrc) which allows me to pull the translations
