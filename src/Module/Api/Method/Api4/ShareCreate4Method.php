@@ -78,7 +78,7 @@ final class ShareCreate4Method
         $object_id   = $input['filter'];
         $object_type = $input['type'];
         $description = $input['description'] ?? null;
-        $expire_days = Share::get_expiry($input['expires'] ?? null);
+        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : null;
         // confirm the correct data
         if (!in_array($object_type, array('song', 'album', 'artist'))) {
             Api4::message('error', T_('Wrong object type ' . $object_type), '401', $input['api_format']);

@@ -135,7 +135,7 @@ class Share extends database_object
         $object_id,
         $allow_stream = true,
         $allow_download = true,
-        $expire = 0,
+        $expire_days = 0,
         $secret = '',
         $max_counter = 0,
         $description = ''
@@ -176,7 +176,7 @@ class Share extends database_object
             time(),
             (int)$allow_stream,
             (int)$allow_download,
-            $expire,
+            $expire_days,
             $secret,
             0,
             $max_counter,
