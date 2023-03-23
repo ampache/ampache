@@ -5253,7 +5253,7 @@ class Update
     public static function update_600025(): bool
     {
         $retval = true;
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";

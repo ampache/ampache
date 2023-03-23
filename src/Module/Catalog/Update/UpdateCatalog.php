@@ -53,6 +53,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $verification,
         bool $updateInfo,
         bool $optimizeDatabase,
+        bool $collectGarbage,
         ?string $catalogName,
         string $catalogType
     ): void {
@@ -259,10 +260,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
             }
-            if ($cleanup === true || $verification === true) {
+            if ($cleanup === true || $verification === true || $collectGarbage === true) {
                 $this->catalogGarbageCollector->collect();
             }
-            if ($missing !== true) {
+            if ($collectGarbage === true && $missing !== true) {
                 // clean up after the action
                 $catalog_media_type = $catalog->get_gather_type();
                 if ($catalog_media_type == 'music') {

@@ -4251,26 +4251,24 @@ abstract class Catalog extends database_object
                     }
                 }
                 AmpConfig::set_by_array(['write_tags' => $write_tags], true);
-        }
-
-        if ($catalog) {
-            // clean up after the action
-            debug_event(__CLASS__, 'Run Garbage collection', 5);
-            static::getCatalogGarbageCollector()->collect();
-            $catalog_media_type = $catalog->get_gather_type();
-            if ($catalog_media_type == 'music') {
-                self::clean_empty_albums();
-                Album::update_album_artist();
-                self::update_mapping('artist');
-                self::update_mapping('album');
-                self::update_mapping('album_disk');
-            } elseif ($catalog_media_type == 'podcast') {
-                self::update_mapping('podcast');
-                self::update_mapping('podcast_episode');
-            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                self::update_mapping('video');
-            }
-            self::update_counts();
+                break;
+            case 'garbage_collect':
+                debug_event(__CLASS__, 'Run Garbage collection', 5);
+                static::getCatalogGarbageCollector()->collect();
+                $catalog_media_type = $catalog->get_gather_type();
+                if ($catalog_media_type == 'music') {
+                    self::clean_empty_albums();
+                    Album::update_album_artist();
+                    self::update_mapping('artist');
+                    self::update_mapping('album');
+                    self::update_mapping('album_disk');
+                } elseif ($catalog_media_type == 'podcast') {
+                    self::update_mapping('podcast');
+                    self::update_mapping('podcast_episode');
+                } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+                    self::update_mapping('video');
+                }
+                self::update_counts();
         }
     }
 

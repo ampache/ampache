@@ -53,6 +53,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
         <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
         <option value="import_to_catalog"><?php echo T_('Import'); ?></option>
         <option value="update_file_tags"><?php echo T_('Update File Tags'); ?></option>
+        <option value="garbage_collect"><?php echo T_('Garbage Collection'); ?></option>
 
 <?php } ?>
         <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>

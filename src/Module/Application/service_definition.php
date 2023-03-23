@@ -268,6 +268,7 @@ return [
     Admin\Catalog\AddToCatalogAction::class => autowire(Admin\Catalog\AddToCatalogAction::class),
     Admin\Catalog\CleanAllCatalogsAction::class => autowire(Admin\Catalog\CleanAllCatalogsAction::class),
     Admin\Catalog\CleanCatalogAction::class => autowire(Admin\Catalog\CleanCatalogAction::class),
+    Admin\Catalog\GarbageCollectAction::class => autowire(Admin\Catalog\GarbageCollectAction::class),
     Admin\Catalog\UpdateFileTagsAction::class => autowire(Admin\Catalog\UpdateFileTagsAction::class),
     Admin\Catalog\UpdateAllFileTagsActions::class => autowire(Admin\Catalog\UpdateAllFileTagsActions::class),
     Admin\Catalog\GatherMediaArtAction::class => autowire(Admin\Catalog\GatherMediaArtAction::class),

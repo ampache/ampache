@@ -31,7 +31,6 @@ use Ampache\Module\System\InstallationHelperInterface;
 
 final class InstallerCommand extends Command
 {
-
     private InstallationHelperInterface $installationHelper;
 
     public function __construct(

@@ -47,7 +47,7 @@ final class CatalogActionMethod
      *
      * @param array $input
      * @param User $user
-     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
+     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
@@ -61,7 +61,7 @@ final class CatalogActionMethod
         }
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
+        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
 
@@ -91,22 +91,23 @@ final class CatalogActionMethod
                     );
                     $catalog->add_to_catalog($options);
                     break;
+                case 'garbage_collect':
+                    $catalog_media_type = $catalog->get_gather_type();
+                    if ($catalog_media_type == 'music') {
+                        Catalog::clean_empty_albums();
+                        Album::update_album_artist();
+                        Catalog::update_mapping('artist');
+                        Catalog::update_mapping('album');
+                        Catalog::update_mapping('album_disk');
+                    } elseif ($catalog_media_type == 'podcast') {
+                        Catalog::update_mapping('podcast');
+                        Catalog::update_mapping('podcast_episode');
+                    } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+                        Catalog::update_mapping('video');
+                    }
+                    Catalog::update_counts();
+                    break;
             }
-            // clean up after the action
-            $catalog_media_type = $catalog->get_gather_type();
-            if ($catalog_media_type == 'music') {
-                Catalog::clean_empty_albums();
-                Album::update_album_artist();
-                Catalog::update_mapping('artist');
-                Catalog::update_mapping('album');
-                Catalog::update_mapping('album_disk');
-            } elseif ($catalog_media_type == 'podcast') {
-                Catalog::update_mapping('podcast');
-                Catalog::update_mapping('podcast_episode');
-            } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                Catalog::update_mapping('video');
-            }
-            Catalog::update_counts();
 
             Api::message('successfully started: ' . $task, $input['api_format']);
         } else {

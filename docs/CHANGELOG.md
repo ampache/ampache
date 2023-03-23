@@ -23,6 +23,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
+  * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -92,6 +93,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Split filename and folder properties on song and video pages
 * Ignore properties and data for guest users that won't have this data
 * When pulling user data don't pull the password
+* CLI
+  * Moved catalog map and update functions out ouf run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
 * Search
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
