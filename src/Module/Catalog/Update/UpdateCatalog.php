@@ -70,7 +70,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         ];
 
         // don't look at catalogs without an action
-        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification) {
+        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification && !$collectGarbage) {
             $catalogType = '';
             $catalogName = '';
         }
