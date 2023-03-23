@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
 
 final class ConvertFileNamesCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private FileNameConverterInterface $fileNameCorrector;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         FileNameConverterInterface $fileNameCorrector
     ) {
         parent::__construct('run:convertFilenames', T_('Convert filenames using a charset'));
 
-        $this->configContainer   = $configContainer;
         $this->fileNameCorrector = $fileNameCorrector;
 
         $this

@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Song\SongSorterInterface;
 
 final class SortFilesCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private SongSorterInterface $songSorter;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         SongSorterInterface $songSorter
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
-        $this->configContainer = $configContainer;
         $this->songSorter      = $songSorter;
 
         $this

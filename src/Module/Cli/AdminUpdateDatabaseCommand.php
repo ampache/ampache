@@ -26,20 +26,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
+    public function __construct()
+    {
         parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)

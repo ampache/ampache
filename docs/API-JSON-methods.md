@@ -629,7 +629,7 @@ Return children of a parent object in a folder traversal/browse style. If you do
 
 [Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(album\).json)
 
-[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse20\(podcast\).json)
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/browse%20\(podcast\).json)
 
 ### catalogs
 

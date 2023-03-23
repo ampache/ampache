@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Cache\ObjectCacheInterface;
 
 final class ComputeCacheCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private ObjectCacheInterface $objectCache;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache
     ) {
         parent::__construct('run:computeCache', T_('Update the object cache tables'));
 
-        $this->configContainer = $configContainer;
         $this->objectCache     = $objectCache;
     }
 

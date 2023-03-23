@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
@@ -38,22 +37,18 @@ final class ExportAlbumArtCommand extends Command
 {
     private LoggerInterface $logger;
 
-    private ConfigContainerInterface $configContainer;
-
     private AlbumArtExporterInterface $albumArtExporter;
 
     private ContainerInterface $dic;
 
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
         AlbumArtExporterInterface $albumArtExporter,
         ContainerInterface $dic
     ) {
         parent::__construct('export:albumArt', T_('Export album art'));
 
         $this->logger           = $logger;
-        $this->configContainer  = $configContainer;
         $this->albumArtExporter = $albumArtExporter;
         $this->dic              = $dic;
 

@@ -25,23 +25,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Playlist\PlaylistExporter;
 use Ampache\Module\Playlist\PlaylistExporterInterface;
 
 final class ExportPlaylistCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private PlaylistExporterInterface $playlistExporter;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         PlaylistExporterInterface $playlistExporter
     ) {
         parent::__construct('export:playlist', T_('Export Playlists'));
 
-        $this->configContainer  = $configContainer;
         $this->playlistExporter = $playlistExporter;
 
         $this

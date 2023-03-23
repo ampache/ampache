@@ -26,23 +26,18 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\InstallationHelperInterface;
 
 final class InstallerCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
 
     private InstallationHelperInterface $installationHelper;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         InstallationHelperInterface $installationHelper
     ) {
         parent::__construct('install', T_('Install the database'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-U|--dbuser', T_('MySQL Administrative Username'), 'strval')

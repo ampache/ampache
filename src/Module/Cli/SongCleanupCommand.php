@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Song\SongFilesystemCleanupInterface;
 
 final class SongCleanupCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private SongFilesystemCleanupInterface $songFilesystemCleanup;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         SongFilesystemCleanupInterface $songFilesystemCleanup
     ) {
         parent::__construct('cleanup:songs', T_('Delete disabled songs'));
 
-        $this->configContainer       = $configContainer;
         $this->songFilesystemCleanup = $songFilesystemCleanup;
 
         $this

@@ -644,7 +644,7 @@ Return children of a parent object in a folder traversal/browse style. If you do
 
 [Example: album](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(album\).xml)
 
-[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse20\(podcast\).xml)
+[Example: podcast](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/browse%20\(podcast\).xml)
 
 ### catalogs
 
