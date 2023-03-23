@@ -490,10 +490,10 @@ class Share extends database_object
     /**
      * get_expiry
      * get the expiry date in days from a time()
-     * @param integer $days
+     * @param integer $time
      * @return integer
      */
-    public static function get_expiry($days = null)
+    public static function get_expiry($time = null)
     {
         if (isset($time)) {
             // 0 is a valid expiry too
@@ -516,7 +516,7 @@ class Share extends database_object
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
         $result = sprintf(
-            '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
+            "<a onclick=\"showShareDialog(event, \'%s\', %d);\">%s",
             $object_type,
             $object_id,
             Ui::get_icon('share', T_('Share'))
