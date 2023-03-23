@@ -86,7 +86,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
                 true
             );
-
+            $interactor->eol();
             if ($missing === true) {
                 ob_start();
 
@@ -118,7 +118,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             } else {
                 if ($cleanup === true) {
                     ob_start();
-
                     // Clean out dead files
                     $interactor->info(
                         T_('Start cleaning orphaned media entries'),
@@ -205,9 +204,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info(
-                        '------------------',
-                        true
-                    );
+                    '------------------',
+                    true
+                );
             }
             if ($updateInfo === true && !$external) {
                 ob_start();
@@ -256,9 +255,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     );
                 }
                 $interactor->info(
-                        '------------------',
-                        true
-                    );
+                    '------------------',
+                    true
+                );
             }
             if ($cleanup === true || $verification === true || $collectGarbage === true) {
                 $interactor->info(
@@ -266,6 +265,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $this->catalogGarbageCollector->collect();
+                $interactor->info(
+                    '------------------',
+                    true
+                );
             }
             if ($collectGarbage === true && $missing !== true) {
                 $interactor->info(
@@ -315,9 +318,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
 
             $interactor->info(
-                        '------------------',
-                        true
-                    );
+                '------------------',
+                true
+            );
         }
     }
 

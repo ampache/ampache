@@ -60,9 +60,10 @@ final class AdminUpdateDatabaseCommand extends Command
         // Check for a valid connection first
         if (!Dba::check_database()) {
             $interactor->info(
-                T_('Database Connection') . ": " . T_('Error') . "\n",
+                T_('Database Connection') . ": " . T_('Error'),
                 true
             );
+            $interactor->eol();
 
             return;
         }
@@ -93,9 +94,10 @@ final class AdminUpdateDatabaseCommand extends Command
 
         if (Update::need_update() && $execute) {
             $interactor->info(
-                T_('Update Now!') . "\n",
+                T_('Update Now!'),
                 true
             );
+            $interactor->eol();
             $updated = true;
             Update::run_update();
         }
