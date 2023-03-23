@@ -264,6 +264,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $this->catalogGarbageCollector->collect();
             }
             if ($collectGarbage === true && $missing !== true) {
+                $interactor->info(
+                    T_('Update table mapping, counts and delete garbage data'),
+                    true
+                );
                 // clean up after the action
                 $catalog_media_type = $catalog->get_gather_type();
                 if ($catalog_media_type == 'music') {
@@ -281,6 +285,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 Catalog::update_counts();
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();
+                $interactor->info(
+                    '------------------',
+                    true
+                );
             }
         }
         if ($optimizeDatabase === true) {
