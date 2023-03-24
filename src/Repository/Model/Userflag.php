@@ -298,16 +298,24 @@ class Userflag extends database_object
      */
     public static function get_latest($type, $user_id = null, $count = 0, $offset = 0)
     {
-        if ($count < 1) {
+        if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset < 1) ? $count : $offset . "," . $count;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
 
         // Select Top objects counting by # of rows
-        $sql = self::get_latest_sql($type, $user_id);
-        $sql .= "LIMIT $limit";
-        //debug_event(self::class, 'get_latest ' . $sql, 5);
+        $sql   = self::get_latest_sql($type, $user_id);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= "LIMIT $limit";
+        }
 
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {

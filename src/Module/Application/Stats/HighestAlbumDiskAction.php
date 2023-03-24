@@ -58,7 +58,6 @@ final class HighestAlbumDiskAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
         $this->ui->show('show_form_highest.inc.php');
@@ -73,7 +72,7 @@ final class HighestAlbumDiskAction implements ApplicationActionInterface
             ? Core::get_global('user')->id
             : null;
 
-        $objects = Rating::get_highest('album_disk', $limit, 0, $user_id);
+        $objects = Rating::get_highest('album_disk', -1, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('album_disk');

@@ -63,7 +63,6 @@ final class UserflagAlbumAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
         $this->ui->show('show_form_userflag.inc.php');
@@ -76,7 +75,7 @@ final class UserflagAlbumAction implements ApplicationActionInterface
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
 
-        $objects = Userflag::get_latest('album', $user_id, $limit);
+        $objects = Userflag::get_latest('album', $user_id, -1);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('album');
