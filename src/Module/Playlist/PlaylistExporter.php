@@ -75,7 +75,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                     $searchId   = (int)str_replace('smart_', '', $playlist_id);
                     $searchUser = new User($userId);
                     $playlist   = ($searchUser->id)
-                        ? new Search($searchId, $searchUser)
+                        ? new Search($searchId, 'song', $searchUser)
                         : new Search($searchId);
                     if ($playlist->id) {
                         $items[] = $playlist;
@@ -109,7 +109,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $name      = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
             $filename  = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
             $medias    = $item->get_medias();
-            $pl        = new Stream_Playlist(-1);
+            $pl        = new Stream_Playlist($userId);
             $pl->title = $item->get_fullname();
             foreach ($medias as $media) {
                 $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
