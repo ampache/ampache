@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
@@ -40,7 +41,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $dirname,
         string $type,
         string $ext,
-        string $playlistId
+        string $playlistId,
+        int $userId
     ): void {
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {
@@ -64,13 +66,17 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ((int)$playlistId < 1) {
-                    $ids = Playlist::get_smartlists(-1);
+                    $ids = Playlist::get_smartlists($userId);
                 } else {
                     $ids = array($playlistId);
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
-                    $playlist = new Search((int) str_replace('smart_', '', $playlist_id));
+                    $searchId   = (int)str_replace('smart_', '', $playlist_id);
+                    $searchUser = new User($userId);
+                    $playlist   = ($searchUser->id)
+                        ? new Search($searchId, $searchUser)
+                        : new Search($searchId);
                     if ($playlist->id) {
                         $items[] = $playlist;
                     }
@@ -79,7 +85,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'playlists':
             default:
                 if ((int)$playlistId < 1) {
-                    $ids = Playlist::get_playlists(-1);
+                    $ids = Playlist::get_playlists($userId);
                 } else {
                     $ids = array($playlistId);
                 }
