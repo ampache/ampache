@@ -45,19 +45,27 @@ final class SongCleanupCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
         $delete = $this->values()['delete'];
-
         $result = $this->songFilesystemCleanup->cleanup($delete === false);
 
         if ($delete === false) {
-            $io->green(T_('The following songs would be deleted:'), true);
+            $interactor->green(
+                T_('The following songs would be deleted:'),
+                true
+            );
         } else {
-            $io->red(T_('The following songs have been deleted:'), true);
+            $interactor->red(
+                T_('The following songs have been deleted:'),
+                true
+            );
         }
         foreach ($result as $file_name) {
-            $io->white($file_name, true);
+            $interactor->white(
+                $file_name,
+                true
+            );
         }
     }
 }

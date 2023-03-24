@@ -59,16 +59,37 @@ final class UpdateDbCommand extends Command
         $target_collation   = $translated_charset['collation'];
         $table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MyISAM';
 
-        $interactor->info(T_('This script makes changes to your database based on your config settings'), true);
-        $interactor->info(sprintf(T_('Target charset: %s'), $target_charset), true);
-        $interactor->info(sprintf(T_('Target collation: %s'), $target_collation), true);
-        $interactor->info(sprintf(T_('Table engine: %s'), $table_engine), true);
+        $interactor->info(
+            T_('This script makes changes to your database based on your config settings'),
+            true
+        );
+        $interactor->info(
+            sprintf(T_('Target charset: %s'), $target_charset),
+            true
+        );
+        $interactor->info(
+            sprintf(T_('Target collation: %s'), $target_collation),
+            true
+        );
+        $interactor->info(
+            sprintf(T_('Table engine: %s'), $table_engine),
+            true
+        );
 
         if ($dryRun === true) {
-            $interactor->info(T_('Running in Test Mode. Use -x to execute'), true);
-            $interactor->ok(T_('No changes have been made'), true);
+            $interactor->info(
+                T_('Running in Test Mode. Use -x to execute'),
+                true
+            );
+            $interactor->ok(
+                T_('No changes have been made'),
+                true
+            );
         } else {
-            $interactor->warn(T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"), true);
+            $interactor->warn(
+                T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
+                true
+            );
 
             $this->databaseCharsetUpdater->update();
         }

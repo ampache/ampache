@@ -44,9 +44,12 @@ final class ArtSizeCalculationCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
-        $io->white(T_('Started art size calculation'), true);
+        $interactor->white(
+            T_('Started art size calculation'),
+            true
+        );
 
         $inDisk   = $this->configContainer->get('album_art_store_disk');
         $localDir = $this->configContainer->get('local_metadata_dir');
@@ -72,6 +75,9 @@ final class ArtSizeCalculationCommand extends Command
             }
         }
 
-        $io->white(T_('Finished art size calculation'), true);
+        $interactor->white(
+            T_('Finished art size calculation'),
+            true
+        );
     }
 }

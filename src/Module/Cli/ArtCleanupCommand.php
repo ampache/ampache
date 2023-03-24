@@ -60,9 +60,17 @@ final class ArtCleanupCommand extends Command
         );
 
         if ($runable === false) {
-            $interactor->error(T_('Error: A minimum OR maximum height/width must be specified in the config'), true);
-            $interactor->error(T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'), true);
-            $interactor->error(T_('Maximum Dimensions: album_art_max_width AND album_art_max_height'));
+            $interactor->error(
+                T_('Error: A minimum OR maximum height/width must be specified in the config'),
+                true
+            );
+            $interactor->error(
+                T_('Minimum Dimensions: album_art_min_width AND album_art_min_height'),
+                true
+            );
+            $interactor->error(
+                T_('Maximum Dimensions: album_art_max_width AND album_art_max_height')
+            );
 
             return;
         }

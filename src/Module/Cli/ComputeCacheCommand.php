@@ -41,16 +41,20 @@ final class ComputeCacheCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
         debug_event('compute_cache', 'started cache process', 5);
-
-        $io->white(T_('Start cache process'), true);
+        $interactor->info(
+            T_('Start cache process'),
+            true
+        );
 
         $this->objectCache->compute();
 
         debug_event('compute_cache', 'Completed cache process', 5);
-
-        $io->white(T_('Completed cache process'), true);
+        $interactor->info(
+            T_('Completed cache process'),
+            true
+        );
     }
 }

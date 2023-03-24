@@ -328,7 +328,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             T_('Time') . ": " . date('i:s', $time_diff),
             true
         );
-
     }
 
     public function updatePath(

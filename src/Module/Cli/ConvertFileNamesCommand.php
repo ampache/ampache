@@ -46,17 +46,20 @@ final class ConvertFileNamesCommand extends Command
 
     public function execute(): void
     {
-        $io     = $this->app()->io();
-        $values = $this->values();
+        $interactor = $this->app()->io();
+        $values     = $this->values();
 
         if (!function_exists('iconv')) {
-            $io->warn(T_('php-iconv is required for this functionality, quitting'), true);
+            $interactor->warn(
+                T_('php-iconv is required for this functionality, quitting'),
+                true
+            );
 
             return;
         }
 
         $this->fileNameCorrector->convert(
-            $io,
+            $interactor,
             $values['charset'],
             $values['fire']
         );

@@ -117,6 +117,9 @@ final class HtaccessCommand extends Command
             return;
         }
         // successfully created htaccess files
-        $interactor->white(T_('Success'), true);
+        $interactor->white(
+            T_('Success'),
+            true
+        );
     }
 }

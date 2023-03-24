@@ -42,16 +42,28 @@ final class BroadcastCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
-        $io->white(T_('Starting broadcasts...'), true);
+        $interactor->white(
+            T_('Starting broadcasts...'),
+            true
+        );
 
         if ($this->configContainer->get('upnp_backend')) {
-            $io->white(T_("UPnP broadcast... "), true);
+            $interactor->white(
+                T_("UPnP broadcast... "),
+                true
+            );
             Upnp_Api::sddpSend();
-            $io->white(T_('Done'), true);
+            $interactor->white(
+                T_('Done'),
+                true
+            );
         } else {
-            $io->error(T_('UPnP backend disabled. Broadcast skipped.'), true);
+            $interactor->error(
+                T_('UPnP backend disabled. Broadcast skipped.'),
+                true
+            );
         }
     }
 }
