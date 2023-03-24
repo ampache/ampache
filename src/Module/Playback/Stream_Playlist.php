@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\User;
 use PDOStatement;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
@@ -194,9 +195,10 @@ class Stream_Playlist
      * @param $media
      * @param string $additional_params
      * @param string $urltype
+     * @param User $user
      * @return Stream_Url
      */
-    public static function media_to_url($media, $additional_params = '', $urltype = 'web')
+    public static function media_to_url($media, $additional_params = '', $urltype = 'web', $user = null)
     {
         $type       = $media['object_type'];
         $object_id  = $media['object_id'];
@@ -230,7 +232,7 @@ class Stream_Playlist
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
 
-        return self::media_object_to_url($object, $additional_params, $urltype);
+        return self::media_object_to_url($object, $additional_params, $urltype, $user);
     }
 
     /**
@@ -238,13 +240,16 @@ class Stream_Playlist
      * @param media $object
      * @param string $additional_params
      * @param string $urltype
+     * @param User $user
      * @return Stream_Url
      */
-    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
+    public static function media_object_to_url($object, $additional_params = '', $urltype = 'web', $user = null)
     {
         $surl = null;
         $url  = array();
-
+        if (!$user) {
+            $user = Core::get_global('user');
+        }
         $class_name  = get_class($object);
         $type        = ObjectTypeToClassNameMapper::reverseMap($class_name);
         $url['type'] = $type;
@@ -266,7 +271,6 @@ class Stream_Playlist
                 }
             } else {
                 if (in_array($type, array('song', 'podcast_episode', 'video'))) {
-                    $user = Core::get_global('user');
                     /** @var \Ampache\Repository\Model\Song|\Ampache\Repository\Model\Podcast_Episode|\Ampache\Repository\Model\Video $object */
                     $url['url'] = (!empty($user))
                         ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)

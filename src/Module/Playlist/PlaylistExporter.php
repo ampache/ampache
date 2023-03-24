@@ -108,20 +108,17 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $name = $item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
-            $name      = preg_replace('/[:]/', '.', $name);
-            $name      = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-            $filename  = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
-            $medias    = $item->get_medias();
-            $pl        = new Stream_Playlist($userId);
-            $pl->title = $item->get_fullname();
+            $name       = preg_replace('/[:]/', '.', $name);
+            $name       = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+            $filename   = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
+            $medias     = $item->get_medias();
+            $pl         = new Stream_Playlist($userId);
+            $pl->title  = $item->get_fullname();
+            $media_path = ($urltype == 'web')
+                ? ''
+                : $dirname;
             foreach ($medias as $media) {
-                if ($urltype == 'web') {
-                    $className    = ObjectTypeToClassNameMapper::map($media['object_type']);
-                    $playlistItem = new $className($media['object_id']);
-                    $pl->urls[]   = $playlistItem->play_url('', '', false, $user->id, $user->streamtoken);
-                } else {
-                    $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
-                }
+                $pl->urls[] = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();
