@@ -64,7 +64,6 @@ final class PopularVideoAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
         $user_id      = Core::get_global('user')->id ?? 0;
 
         $this->ui->showHeader();
@@ -80,7 +79,7 @@ final class PopularVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $objects = Stats::get_top('video', $limit, $thresh_value, 0, $user_id);
+            $objects = Stats::get_top('video', -1, $thresh_value, 0, $user_id);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');

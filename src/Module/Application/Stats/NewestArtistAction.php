@@ -58,7 +58,6 @@ final class NewestArtistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
 
         $this->ui->showHeader();
         $this->ui->show('show_form_newest.inc.php');
@@ -70,7 +69,7 @@ final class NewestArtistAction implements ApplicationActionInterface
 
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
-        $objects = Stats::get_newest('artist', $limit, 0, 0, $user_id);
+        $objects = Stats::get_newest('artist', -1, 0, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('artist');

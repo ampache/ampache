@@ -707,14 +707,22 @@ class Stats
      */
     public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
     {
-        $limit = ($offset < 1) ? $count : $offset . "," . $count;
+        if ($count === 0) {
+            $count = AmpConfig::get('popular_threshold', 10);
+        }
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
         $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user_id, $random);
-
-        if ($limit) {
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
             $sql .= "LIMIT $limit";
         }
-        //debug_event(self::class, 'get_top ' . $sql, 5);
 
+        //debug_event(self::class, 'get_top ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -788,14 +796,23 @@ class Stats
      */
     public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true)
     {
-        if ($count < 1) {
+        if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset < 1) ? $count : $offset . "," . $count;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
 
-        $sql = self::get_recent_sql($input_type, null, $newest);
-        $sql .= "LIMIT $limit";
+        $sql   = self::get_recent_sql($input_type, null, $newest);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= "LIMIT $limit";
+        }
 
+        //debug_event(self::class, 'get_recent ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1011,26 +1028,30 @@ class Stats
      */
     public static function get_newest($input_type, $count = 0, $offset = 0, $catalog = 0, $user_id = null)
     {
-        if ($count < 1) {
+        if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        if ($offset < 1) {
-            $limit = $count;
-        } else {
-            $limit = $offset . ', ' . $count;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
         }
 
-        $sql = self::get_newest_sql($input_type, $catalog, $user_id);
-        $sql .= "LIMIT $limit";
+        $sql   = self::get_newest_sql($input_type, $catalog, $user_id);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= "LIMIT $limit";
+        }
+
+        //debug_event(self::class, 'get_newest ' . $sql, 5);
         $db_results = Dba::read($sql);
-
-        $items = array();
-
+        $results    = array();
         while ($row = Dba::fetch_row($db_results)) {
-            $items[] = (int) $row[0];
+            $results[] = (int) $row[0];
         } // end while results
 
-        return $items;
+        return $results;
     } // get_newest
 
     /**

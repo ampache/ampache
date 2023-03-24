@@ -63,7 +63,6 @@ final class PopularAlbumAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $limit        = $this->configContainer->get(ConfigurationKeyEnum::OFFSET_LIMIT);
         $user_id      = Core::get_global('user')->id ?? 0;
 
         $this->ui->showHeader();
@@ -75,7 +74,7 @@ final class PopularAlbumAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $objects = Stats::get_top('album', $limit, $thresh_value, 0, $user_id);
+        $objects = Stats::get_top('album', -1, $thresh_value, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);
         $browse->set_type('album');
