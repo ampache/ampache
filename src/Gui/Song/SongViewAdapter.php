@@ -407,7 +407,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
-            $songprops[T_('Filename')] = scrub_out((string)$data['filename'] ?? '');
+            $songprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
             $songprops[T_('Size')]     = $this->song->f_size;
         }
         if ($this->song->update_time) {
