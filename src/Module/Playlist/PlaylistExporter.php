@@ -42,7 +42,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
         string $type,
         string $ext,
         string $playlistId,
-        int $userId
+        int $userId,
+        string $urltype
     ): void {
         // Make sure the output dir is valid and writeable
         if (!is_writeable($dirname)) {
@@ -112,7 +113,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $pl        = new Stream_Playlist($userId);
             $pl->title = $item->get_fullname();
             foreach ($medias as $media) {
-                $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
+                $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, $urltype);
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();

@@ -41,6 +41,7 @@ final class ExportPlaylistCommand extends Command
 
         $this
             ->option('-u|--user', T_('User ID'), 'intval', -1)
+            ->option('-w|--web', T_("Return remote play URL's instead of the local file"), 'boolval', false)
             ->argument('<directory>', T_('Output directory'))
             ->argument('<type>', T_("Playlist type ('albums', 'artists', 'playlists', 'smartlists'), (default: playlists)"), 'playlists')
             ->argument('[extension]', T_("Output type ('m3u', 'xspf', 'pls'), (default: m3u)"), 'm3u')
@@ -57,7 +58,11 @@ final class ExportPlaylistCommand extends Command
         if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS)) {
             $extension = current(PlaylistExporter::VALID_FILE_EXTENSIONS);
         }
-        $userId = $this->values()['user'];
+        $values  = $this->values();
+        $userId  = $values['user'];
+        $urltype = ($values['web'])
+            ? 'web'
+            : 'file';
 
         $this->playlistExporter->export(
             $this->app()->io(),
@@ -65,7 +70,8 @@ final class ExportPlaylistCommand extends Command
             $type,
             $extension,
             $playlistId,
-            $userId
+            $userId,
+            $urltype
         );
     }
 }
