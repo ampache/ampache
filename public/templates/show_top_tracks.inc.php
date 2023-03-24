@@ -69,10 +69,10 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
         <?php } ?>
         <th class="cel_time optional"><?php echo T_('Time'); ?></th>
         <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+            <th class="cel_counter optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
         <?php if (AmpConfig::get('show_skipped_times')) { ?>
-            <th class="cel_counter optional"><?php echo T_('# Skipped'); ?></th>
+            <th class="cel_counter optional"><?php echo T_('Skipped'); ?></th>
             <?php } ?>
         <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>

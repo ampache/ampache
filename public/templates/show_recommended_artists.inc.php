@@ -54,7 +54,7 @@ $cel_counter = "cel_counter"; ?>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played') ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played') ?></th>
                 <?php } ?>
             <?php if (!$hide_genres) {
     ++$thcount; ?>

@@ -36,7 +36,7 @@ $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
 // translate once
-$count_text  = T_('# Played');
+$count_text  = T_('Played');
 $rating_text = T_('Rating');
 $action_text = T_('Actions');
 //mashup and grid view need different css

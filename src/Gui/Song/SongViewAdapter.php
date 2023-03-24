@@ -415,10 +415,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('# Played')] = scrub_out($this->song->total_count);
+            $songprops[T_('Played')] = scrub_out($this->song->total_count);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('# Skipped')] = scrub_out($this->song->total_skip);
+            $songprops[T_('Skipped')] = scrub_out($this->song->total_skip);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {

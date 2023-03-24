@@ -120,8 +120,8 @@ if (AmpConfig::get('sociable')) {
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
-            <li class="tab_active"><a href="#recently_played"><?php echo T_('Recently Played'); ?></a></li>
-            <li ><a href="#recently_skipped"><?php echo T_('Recently Skipped'); ?></a></li>
+            <li class="tab_active"><a href="#recently_played"><?php echo T_('Played'); ?></a></li>
+            <li ><a href="#recently_skipped"><?php echo T_('Skipped'); ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
             <?php } ?>

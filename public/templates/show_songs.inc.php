@@ -96,12 +96,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     } ?>
             <?php if (AmpConfig::get('show_played_times')) {
         ++$thcount; ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('# Played'), 'sort_song_total_count' . $browse->id); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'sort_song_total_count' . $browse->id); ?></th>
             <?php
     } ?>
             <?php if (AmpConfig::get('show_skipped_times')) {
         ++$thcount; ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('# Skipped'), 'sort_song_total_skip' . $browse->id); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('Skipped'), 'sort_song_total_skip' . $browse->id); ?></th>
             <?php
     } ?>
             <?php if ($show_ratings) {
@@ -181,10 +181,10 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
             <?php if (AmpConfig::get('show_skipped_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Skipped'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Skipped'); ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>

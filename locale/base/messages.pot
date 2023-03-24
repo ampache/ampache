@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-03-23 16:40+1000\n"
+"POT-Creation-Date: 2023-03-24 13:18+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -457,7 +457,6 @@ msgstr ""
 
 #: ../../public/templates/header.inc.php:85
 #: ../../public/templates/show_recently_played.inc.php:43
-#: ../../public/templates/show_user.inc.php:123
 #: ../../src/Module/Util/AmpacheRss.php:130
 msgid "Recently Played"
 msgstr ""
@@ -2190,14 +2189,37 @@ msgstr ""
 msgid "Search on Musicbrainz ..."
 msgstr ""
 
+#. HINT: Number of times object has been played
 #: ../../public/templates/show_album_disk.inc.php:102
+#: ../../public/templates/show_album_disks.inc.php:58
 #: ../../public/templates/show_album_group_disks.inc.php:111
 #: ../../public/templates/show_album.inc.php:102
+#: ../../public/templates/show_albums.inc.php:58
 #: ../../public/templates/show_artist.inc.php:101
+#: ../../public/templates/show_artists.inc.php:72
+#: ../../public/templates/show_artists.inc.php:131
+#: ../../public/templates/show_podcast_episodes.inc.php:58
+#: ../../public/templates/show_podcast_episodes.inc.php:102
+#: ../../public/templates/show_podcasts.inc.php:39
+#: ../../public/templates/show_recommended_artists.inc.php:57
+#: ../../public/templates/show_similar_songs.inc.php:71
+#: ../../public/templates/show_songs.inc.php:99
+#: ../../public/templates/show_songs.inc.php:184
+#: ../../public/templates/show_top_tracks.inc.php:72
+#: ../../public/templates/show_user.inc.php:123
+#: ../../public/templates/show_video.inc.php:153
+#: ../../public/templates/show_videos.inc.php:59
+#: ../../public/templates/show_videos.inc.php:104
+#: ../../src/Gui/Song/SongViewAdapter.php:418
+#: ../../src/Repository/Model/Search.php:617
 #: ../../src/Repository/Model/Search.php:627
+#: ../../src/Repository/Model/Search.php:750
 #: ../../src/Repository/Model/Search.php:754
+#: ../../src/Repository/Model/Search.php:827
 #: ../../src/Repository/Model/Search.php:831
+#: ../../src/Repository/Model/Search.php:927
 #: ../../src/Repository/Model/Search.php:935
+#: ../../src/Repository/Model/Search.php:965
 #: ../../src/Repository/Model/Search.php:973
 msgid "Played"
 msgstr ""
@@ -2410,31 +2432,6 @@ msgstr ""
 #: ../../src/Repository/Model/Browse.php:282
 #: ../../src/Repository/Model/Browse.php:375
 msgid "Songs"
-msgstr ""
-
-#. HINT: Number of times object has been played
-#: ../../public/templates/show_album_disks.inc.php:58
-#: ../../public/templates/show_albums.inc.php:58
-#: ../../public/templates/show_artists.inc.php:72
-#: ../../public/templates/show_artists.inc.php:131
-#: ../../public/templates/show_podcast_episodes.inc.php:58
-#: ../../public/templates/show_podcast_episodes.inc.php:102
-#: ../../public/templates/show_podcasts.inc.php:39
-#: ../../public/templates/show_recommended_artists.inc.php:57
-#: ../../public/templates/show_similar_songs.inc.php:71
-#: ../../public/templates/show_songs.inc.php:99
-#: ../../public/templates/show_songs.inc.php:184
-#: ../../public/templates/show_top_tracks.inc.php:72
-#: ../../public/templates/show_video.inc.php:153
-#: ../../public/templates/show_videos.inc.php:59
-#: ../../public/templates/show_videos.inc.php:104
-#: ../../src/Gui/Song/SongViewAdapter.php:418
-#: ../../src/Repository/Model/Search.php:617
-#: ../../src/Repository/Model/Search.php:750
-#: ../../src/Repository/Model/Search.php:827
-#: ../../src/Repository/Model/Search.php:927
-#: ../../src/Repository/Model/Search.php:965
-msgid "# Played"
 msgstr ""
 
 #: ../../public/templates/show_album_disks.inc.php:60
@@ -4779,7 +4776,6 @@ msgstr ""
 
 #: ../../public/templates/show_recently_skipped.inc.php:42
 #: ../../public/templates/show_recently_skipped.inc_user.php:40
-#: ../../public/templates/show_user.inc.php:124
 msgid "Recently Skipped"
 msgstr ""
 
@@ -4895,11 +4891,12 @@ msgstr ""
 #: ../../public/templates/show_songs.inc.php:104
 #: ../../public/templates/show_songs.inc.php:187
 #: ../../public/templates/show_top_tracks.inc.php:75
+#: ../../public/templates/show_user.inc.php:124
 #: ../../src/Gui/Song/SongViewAdapter.php:421
 #: ../../src/Repository/Model/Search.php:619
 #: ../../src/Repository/Model/Search.php:929
 #: ../../src/Repository/Model/Search.php:967
-msgid "# Skipped"
+msgid "Skipped"
 msgstr ""
 
 #: ../../public/templates/show_similar_songs.inc.php:124
@@ -4961,7 +4958,7 @@ msgid "OK"
 msgstr ""
 
 #: ../../public/templates/show_test_table.inc.php:42
-#: ../../src/Module/Cli/UpdateDbCommand.php:71
+#: ../../src/Module/Cli/UpdateDbCommand.php:90
 #: ../../src/Module/System/AutoUpdate.php:270
 #: ../../src/Module/System/Update.php:708
 #: ../../src/Module/System/Update.php:795
@@ -6719,7 +6716,7 @@ msgstr ""
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
 #: ../../src/Module/Catalog/Catalog_Seafile.php:533
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:387
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:386
 msgid "There Was a Problem"
 msgstr ""
 
@@ -7204,7 +7201,7 @@ msgstr[1] ""
 
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:77
 #: ../../src/Module/Catalog/Catalog_local.php:534
-#: ../../src/Module/Cli/HtaccessCommand.php:120
+#: ../../src/Module/Cli/HtaccessCommand.php:121
 msgid "Success"
 msgstr ""
 
@@ -7932,7 +7929,7 @@ msgid "Deactivated PHP memory limit"
 msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:87
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:365
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:364
 #, php-format
 msgid "Reading Catalog: \"%s\""
 msgstr ""
@@ -7981,19 +7978,19 @@ msgstr ""
 msgid "Optimizing database tables"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:354
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:353
 msgid "The new path is invalid"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:369
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:368
 msgid "Moving Catalog path"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:382
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:381
 msgid "The Catalog path has changed"
 msgstr ""
 
-#: ../../src/Module/Catalog/Update/UpdateCatalog.php:393
+#: ../../src/Module/Catalog/Update/UpdateCatalog.php:392
 msgid "There is an error with your parameters"
 msgstr ""
 
@@ -8085,16 +8082,16 @@ msgstr ""
 msgid "Remove art which does not fit to the settings"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:63
+#: ../../src/Module/Cli/ArtCleanupCommand.php:64
 msgid ""
 "Error: A minimum OR maximum height/width must be specified in the config"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:64
+#: ../../src/Module/Cli/ArtCleanupCommand.php:68
 msgid "Minimum Dimensions: album_art_min_width AND album_art_min_height"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:65
+#: ../../src/Module/Cli/ArtCleanupCommand.php:72
 msgid "Maximum Dimensions: album_art_max_width AND album_art_max_height"
 msgstr ""
 
@@ -8102,11 +8099,11 @@ msgstr ""
 msgid "Run art size calculation"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:49
+#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:50
 msgid "Started art size calculation"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:75
+#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:79
 msgid "Finished art size calculation"
 msgstr ""
 
@@ -8114,21 +8111,21 @@ msgstr ""
 msgid "Run a UPnP broadcast"
 msgstr ""
 
-#: ../../src/Module/Cli/BroadcastCommand.php:47
+#: ../../src/Module/Cli/BroadcastCommand.php:48
 msgid "Starting broadcasts..."
 msgstr ""
 
-#: ../../src/Module/Cli/BroadcastCommand.php:50
+#: ../../src/Module/Cli/BroadcastCommand.php:54
 msgid "UPnP broadcast... "
 msgstr ""
 
-#: ../../src/Module/Cli/BroadcastCommand.php:52
+#: ../../src/Module/Cli/BroadcastCommand.php:59
 #: ../../src/Module/System/AutoUpdate.php:322
 #: ../../src/Module/System/AutoUpdate.php:346
 msgid "Done"
 msgstr ""
 
-#: ../../src/Module/Cli/BroadcastCommand.php:54
+#: ../../src/Module/Cli/BroadcastCommand.php:64
 msgid "UPnP backend disabled. Broadcast skipped."
 msgstr ""
 
@@ -8136,13 +8133,13 @@ msgstr ""
 msgid "Run the cache process"
 msgstr ""
 
-#: ../../src/Module/Cli/CacheProcessCommand.php:47
+#: ../../src/Module/Cli/CacheProcessCommand.php:48
 #: ../../src/Module/Cli/ComputeCacheCommand.php:48
 msgid "Start cache process"
 msgstr ""
 
-#: ../../src/Module/Cli/CacheProcessCommand.php:56
-#: ../../src/Module/Cli/ComputeCacheCommand.php:54
+#: ../../src/Module/Cli/CacheProcessCommand.php:60
+#: ../../src/Module/Cli/ComputeCacheCommand.php:56
 msgid "Completed cache process"
 msgstr ""
 
@@ -8166,7 +8163,7 @@ msgstr ""
 msgid "Convert filenames to utf8"
 msgstr ""
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:53
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:54
 msgid "php-iconv is required for this functionality, quitting"
 msgstr ""
 
@@ -8178,7 +8175,7 @@ msgstr ""
 msgid "Cron cache not enabled"
 msgstr ""
 
-#: ../../src/Module/Cli/CronProcessCommand.php:136
+#: ../../src/Module/Cli/CronProcessCommand.php:137
 msgid "Cron process finished"
 msgstr ""
 
@@ -8373,7 +8370,7 @@ msgstr ""
 msgid "The following songs would be deleted:"
 msgstr ""
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:57
+#: ../../src/Module/Cli/SongCleanupCommand.php:60
 msgid "The following songs have been deleted:"
 msgstr ""
 
@@ -8407,12 +8404,12 @@ msgid "Sort song files"
 msgstr ""
 
 #: ../../src/Module/Cli/SortFilesCommand.php:60
-#: ../../src/Module/Cli/UpdateDbCommand.php:68
+#: ../../src/Module/Cli/UpdateDbCommand.php:81
 msgid "Running in Test Mode. Use -x to execute"
 msgstr ""
 
 #: ../../src/Module/Cli/SortFilesCommand.php:65
-#: ../../src/Module/Cli/UpdateDbCommand.php:71
+#: ../../src/Module/Cli/UpdateDbCommand.php:90
 msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr ""
 
@@ -8482,27 +8479,27 @@ msgstr ""
 msgid "Update the database"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:62
+#: ../../src/Module/Cli/UpdateDbCommand.php:63
 msgid ""
 "This script makes changes to your database based on your config settings"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:63
+#: ../../src/Module/Cli/UpdateDbCommand.php:67
 #, php-format
 msgid "Target charset: %s"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:64
+#: ../../src/Module/Cli/UpdateDbCommand.php:71
 #, php-format
 msgid "Target collation: %s"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:65
+#: ../../src/Module/Cli/UpdateDbCommand.php:75
 #, php-format
 msgid "Table engine: %s"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:69
+#: ../../src/Module/Cli/UpdateDbCommand.php:85
 msgid "No changes have been made"
 msgstr ""
 
@@ -10176,21 +10173,21 @@ msgstr ""
 msgid "Browse was not found or expired, try reloading the page"
 msgstr ""
 
-#: ../../src/Repository/Model/Rating.php:400
+#: ../../src/Repository/Model/Rating.php:408
 msgid "Average from all users"
 msgstr ""
 
-#: ../../src/Repository/Model/Rating.php:422
+#: ../../src/Repository/Model/Rating.php:430
 msgid "not rated yet"
 msgstr ""
 
 #. HINT: object rating
-#: ../../src/Repository/Model/Rating.php:425
+#: ../../src/Repository/Model/Rating.php:433
 #, php-format
 msgid "%s of 5"
 msgstr ""
 
-#: ../../src/Repository/Model/Rating.php:438
+#: ../../src/Repository/Model/Rating.php:446
 msgid "Current rating"
 msgstr ""
 
