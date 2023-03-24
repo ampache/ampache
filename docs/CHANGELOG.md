@@ -53,10 +53,11 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add preference `show_subtitle`, Show Album subtitle on links
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
-* Config version 64
+* Config version 65
   * Drop Channels from config
   * Reset the art_order defaults
   * Add `album_disk` to allow_zip_types
+  * Add `fallback_url` for CLI actions which can't detect the URL from web requests
 * Search
   * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches

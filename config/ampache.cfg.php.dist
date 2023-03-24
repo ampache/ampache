@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 64
+config_version = 65
 
 ;#########################################################
 ; Auto Update                                            #
@@ -62,6 +62,14 @@ config_version = 64
 ; If not set, retrieved automatically from server information.
 ; DEFAULT: none
 ;local_web_path = "http://localhost/ampache"
+
+; The Ampache base URL is determinied from web requests.
+; When using CLI actions you don't send a web request meaning
+; it can't be determined. This setting allows you to set a
+; fallback when the base url can't be determined. Do not put a
+; trailing slash or this will not work.
+; DEFAULT: none
+;fallback_url = "https://example.ampache.dev"
 
 ;#########################################################
 ; Database                                               #
