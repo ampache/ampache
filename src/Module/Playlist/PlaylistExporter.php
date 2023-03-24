@@ -52,6 +52,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 true
             );
         }
+        $user = new User($userId);
 
         // Switch on the type of playlist dump we want to do here
         switch ($type) {
@@ -74,9 +75,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = array();
                 foreach ($ids as $playlist_id) {
                     $searchId   = (int)str_replace('smart_', '', $playlist_id);
-                    $searchUser = new User($userId);
-                    $playlist   = ($searchUser->id)
-                        ? new Search($searchId, 'song', $searchUser)
+                    $playlist   = ($user->id)
+                        ? new Search($searchId, 'song', $user)
                         : new Search($searchId);
                     if ($playlist->id) {
                         $items[] = $playlist;
@@ -113,7 +113,10 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $pl        = new Stream_Playlist($userId);
             $pl->title = $item->get_fullname();
             foreach ($medias as $media) {
-                $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, $urltype);
+                /* @var \Ampache\Repository\Model\Song $media */
+                $pl->urls[] = ($urltype == 'web')
+                    ? $media->play_url('', '', false, $user->id, $user->streamtoken)
+                    : Stream_Playlist::media_to_url($media, $dirname, 'file');
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();
