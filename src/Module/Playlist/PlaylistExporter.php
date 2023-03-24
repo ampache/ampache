@@ -25,11 +25,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
@@ -113,10 +115,13 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $pl        = new Stream_Playlist($userId);
             $pl->title = $item->get_fullname();
             foreach ($medias as $media) {
-                /* @var \Ampache\Repository\Model\Song $media */
-                $pl->urls[] = ($urltype == 'web')
-                    ? $media->play_url('', '', false, $user->id, $user->streamtoken)
-                    : Stream_Playlist::media_to_url($media, $dirname, 'file');
+                if ($urltype == 'web') {
+                    $className    = ObjectTypeToClassNameMapper::map($media['object_type']);
+                    $playlistItem = new $className($media['object_id']);
+                    $pl->urls[]   = $playlistItem->play_url('', '', false, $user->id, $user->streamtoken);
+                } else {
+                    $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
+                }
             }
 
             $plstr = $pl->{'get_' . $ext . '_string'}();
