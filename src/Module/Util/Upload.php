@@ -174,13 +174,17 @@ class Upload
      * @return boolean
      * @throws RuntimeException
      */
-    public static function can_upload($user)
+    public static function can_upload($user): bool
     {
         if (empty($user)) {
             $user = Core::get_global('user');
         }
+        $user_id     = $user->access ?? -1;
+        $user_access = $user->id ?? 0;
 
-        return AmpConfig::get('allow_upload') && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user->id ?? 0);
+        return AmpConfig::get('allow_upload') &&
+            AmpConfig::get('upload_access_level', 0) <= $user_access &&
+            Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user_id);
     }
 
     /**

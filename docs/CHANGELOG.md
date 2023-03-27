@@ -94,6 +94,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Split filename and folder properties on song and video pages
 * Ignore properties and data for guest users that won't have this data
 * When pulling user data don't pull the password
+* Uploads are allowed based on the `upload_access_level` (When disabled; access 25 is required)
 * CLI
   * Moved catalog map and update functions out ouf run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
 * Search
