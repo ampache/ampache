@@ -28,7 +28,6 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

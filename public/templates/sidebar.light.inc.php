@@ -25,7 +25,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
 /** require@ public/templates/header.inc.php */

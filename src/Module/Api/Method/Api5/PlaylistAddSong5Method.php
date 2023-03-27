@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\Authorization\Access;
 
 /**
  * Class PlaylistAddSong5Method

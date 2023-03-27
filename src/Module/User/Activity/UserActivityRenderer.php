@@ -58,7 +58,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
         $user       = $this->modelFactory->createUser((int) $useractivity->user);
         $class_name = ObjectTypeToClassNameMapper::map($useractivity->object_type);
 
-        /** @var Ampache\Repository\Model\library_item $libitem */
+        /** @var \Ampache\Repository\Model\library_item $libitem */
         $libitem = new $class_name($useractivity->object_id);
         $descr   = $user->get_f_link() . ' ';
         switch ($useractivity->action) {

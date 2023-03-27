@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**

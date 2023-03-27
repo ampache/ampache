@@ -21,8 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
@@ -47,7 +45,3 @@ $web_path = AmpConfig::get('web_path');
         <?php } ?>
     <?php } ?>
 </td>
-
-
-
-

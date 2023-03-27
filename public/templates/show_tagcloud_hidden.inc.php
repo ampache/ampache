@@ -22,7 +22,6 @@
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;

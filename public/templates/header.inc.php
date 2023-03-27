@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;

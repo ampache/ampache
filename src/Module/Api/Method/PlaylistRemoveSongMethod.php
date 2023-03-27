@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
 
 /**
  * Class PlaylistRemoveSongMethod

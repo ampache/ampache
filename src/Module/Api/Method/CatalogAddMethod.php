@@ -25,14 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Class CatalogAddMethod
@@ -58,6 +56,7 @@ final class CatalogAddMethod
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
      * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * @return bool
      */
     public static function catalog_add(array $input, User $user): bool
     {

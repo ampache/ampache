@@ -22,7 +22,6 @@
 
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
 /** @var array $biography */

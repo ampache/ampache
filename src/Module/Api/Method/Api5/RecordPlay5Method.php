@@ -79,7 +79,6 @@ final class RecordPlay5Method
         $object_id = (int) $input['id'];
         $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
-
         // validate client string or fall back to 'api'
         $agent = (array_key_exists('client', $input))
             ? filter_var($input['client'], FILTER_SANITIZE_STRING)

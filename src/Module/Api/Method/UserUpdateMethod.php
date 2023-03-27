@@ -35,7 +35,6 @@ final class UserUpdateMethod
 {
     public const ACTION = 'user_update';
 
-
     /**
      * user_update
      * MINIMUM_API_VERSION=400001

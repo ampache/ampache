@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;

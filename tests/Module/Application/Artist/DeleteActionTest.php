@@ -73,7 +73,6 @@ class DeleteActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
         );

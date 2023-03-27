@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Authorization\Access;
 
 /**
  * Class PlaylistEdit4Method

@@ -74,7 +74,6 @@ final class PopularPlaylistAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-
         $objects = Stats::get_top('playlist', -1, $thresh_value, 0, $user_id);
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_threshold($thresh_value);

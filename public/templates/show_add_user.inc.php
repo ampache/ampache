@@ -80,8 +80,6 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
                 </td>
         </tr>
         <tr>
-
-
 <?php if (AmpConfig::get('catalog_filter')) {
     echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
 

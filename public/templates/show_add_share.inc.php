@@ -24,7 +24,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
 
 /** @var string $message */
