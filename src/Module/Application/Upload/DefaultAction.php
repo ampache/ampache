@@ -66,7 +66,7 @@ final class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $access_level = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
+        $access_level = $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
             $access_level == 0 ||
