@@ -86,6 +86,8 @@ final class DownloadAction extends AbstractStreamAction
         }
         if (array_key_exists('format', $_REQUEST)) {
             $mediaIds[0]['format'] = scrub_in($_REQUEST['format']);
+        } else {
+            $mediaIds[0]['format'] = 'raw';
         }
         if (array_key_exists('transcode_to', $_REQUEST)) {
             $mediaIds[0]['transcode_to'] = scrub_in($_REQUEST['transcode_to']);
