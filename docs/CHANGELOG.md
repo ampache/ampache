@@ -5,7 +5,7 @@
 ### Added
 
 * Subsonic
-  * Add `type` and `serverVersion` to <subsonic-response> objects
+  * Add `type` and `serverVersion` to `<subsonic-response>` objects
 
 ### Changed
 
