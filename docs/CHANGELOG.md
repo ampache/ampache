@@ -5,7 +5,7 @@
 ### Added
 
 * Subsonic
-  * Add `type` and `serverVersion` to <subsonic-response> objects
+  * Add `type` and `serverVersion` to `<subsonic-response>` objects
 
 ### Changed
 
@@ -15,7 +15,7 @@
 ### Fixed
 
 * Config had a `:` instead of a `;` for a newline
-* Webplayer left over console logs removed
+* Webplayer missing semi colons, next / back keys in the playlist js
 * Duckduckgo search links
 * Register action missing `catalog_filter_group`
 * LDAP DN lookup for group membership
@@ -25,6 +25,7 @@
 * Possibly unset Artist name in lyrics lookup
 * Allow access to public smartlists in Random
 * Share expiry date needed some reworking
+* Preferences template using a develop only function
 * Search
   * Use artist_map table for rating searches to find all related artists
 * Subsonic
