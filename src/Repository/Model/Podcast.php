@@ -755,11 +755,11 @@ class Podcast extends database_object implements library_item
         $dirname = $this->title;
 
         // create path if it doesn't exist
-        if (!is_dir($catalog->path . DIRECTORY_SEPARATOR . $dirname) && !self::create_catalog_path($catalog->path . DIRECTORY_SEPARATOR . $dirname)) {
+        if (!is_dir($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname) && !self::create_catalog_path($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname)) {
             return '';
         }
 
-        return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
+        return $catalog->get_path() . DIRECTORY_SEPARATOR . $dirname;
     }
 
     /**

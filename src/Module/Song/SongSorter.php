@@ -140,7 +140,7 @@ final class SongSorter implements SongSorterInterface
                     // sort_find_home will replace the % with the correct values.
                     $directory = ($filesOnly)
                         ? dirname($song->file)
-                        : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->path, $various_artist, $windowsCompat);
+                        : $catalog->sort_find_home($song, $catalog->sort_pattern, $catalog->get_path(), $various_artist, $windowsCompat);
                     if ($directory === false) {
                         /* HINT: $sort_pattern after replacing %x values */
                         $interactor->info(

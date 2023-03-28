@@ -50,9 +50,15 @@ class Catalog_Seafile extends Catalog
     private static $description = 'Seafile Remote Catalog';
     private static $table_name  = 'catalog_seafile';
 
+    private SeafileAdapter $seafile;
     private int $catalog_id;
     private int $count = 0;
-    private SeafileAdapter $seafile;
+
+    private $api_key;
+    private $api_call_delay;
+
+    public $server_uri;
+    public $library_name;
 
     /**
      * get_description
@@ -71,6 +77,15 @@ class Catalog_Seafile extends Catalog
     {
         return self::$version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->server_uri;
+    } // get_path
 
     /**
      * get_type

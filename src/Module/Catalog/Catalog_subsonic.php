@@ -47,6 +47,10 @@ class Catalog_subsonic extends Catalog
 
     private int $catalog_id;
 
+    public string $uri;
+    public string $username;
+    public string $password;
+
     /**
      * get_description
      * This returns the description of this catalog
@@ -64,6 +68,15 @@ class Catalog_subsonic extends Catalog
     {
         return $this->version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->uri;
+    } // get_path
 
     /**
      * get_type
@@ -124,10 +137,6 @@ class Catalog_subsonic extends Catalog
 
         return $fields;
     }
-
-    public $uri;
-    public $username;
-    public $password;
 
     /**
      * Constructor

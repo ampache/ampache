@@ -52,6 +52,10 @@ class Catalog_soundcloud extends Catalog
     private int $catalog_id;
     private string $authcode;
 
+    public $userid;
+    public $secret;
+    public $authtoken;
+
     /**
      * get_description
      * This returns the description of this catalog
@@ -69,6 +73,15 @@ class Catalog_soundcloud extends Catalog
     {
         return $this->version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return '';
+    } // get_path
 
     /**
      * get_type
@@ -147,10 +160,6 @@ class Catalog_soundcloud extends Catalog
         $this->authcode = Core::get_request('authcode');
         $this->completeAuthToken();
     }
-
-    public $userid;
-    public $secret;
-    public $authtoken;
 
     /**
      * Constructor

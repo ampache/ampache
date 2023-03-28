@@ -38,14 +38,11 @@ class Catalog_beetsremote extends Catalog
     protected $version     = '000001';
     protected $type        = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
-
     protected $listCommand = 'item/query';
 
-    /**
-     * Beets Database File
-     * @var string
-     */
-    protected $uri;
+    protected string $uri;
+
+    public int $catalog_id;
 
     /**
      * get_create_help
@@ -158,4 +155,13 @@ class Catalog_beetsremote extends Catalog
 
         return (boolean)$this->getIdFromPath($song['file']);
     }
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->uri;
+    } // get_path
 }

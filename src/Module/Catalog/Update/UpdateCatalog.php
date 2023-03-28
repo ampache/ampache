@@ -370,7 +370,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
             $interactor->eol();
             $interactor->info(
-                sprintf('%s -> %s', $catalog->path, $newPath)
+                sprintf('%s -> %s', $catalog->get_path(), $newPath)
             );
             $interactor->eol(2);
 

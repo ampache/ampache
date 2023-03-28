@@ -40,14 +40,11 @@ class Catalog_beets extends Catalog
     protected $version     = '000001';
     protected $type        = 'beets';
     protected $description = 'Beets Catalog';
-
     protected $listCommand = 'ls';
 
-    /**
-     * Beets Database File
-     * @var string $beetsdb
-     */
-    protected $beetsdb;
+    protected string $beetsdb;
+
+    public int $catalog_id;
 
     /**
      * get_create_help
@@ -165,12 +162,13 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return string
+     * get_path
+     * This returns the current catalog path/uri
      */
-    public function getBeetsDb()
+    public function get_path()
     {
         return $this->beetsdb;
-    }
+    } // get_path
 
     public function format()
     {

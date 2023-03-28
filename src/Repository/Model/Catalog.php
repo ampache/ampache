@@ -188,6 +188,11 @@ abstract class Catalog extends database_object
     /**
      * @return string
      */
+    abstract public function get_path();
+
+    /**
+     * @return string
+     */
     abstract public function get_type();
 
     /**

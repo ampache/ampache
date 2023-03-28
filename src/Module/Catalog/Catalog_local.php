@@ -61,6 +61,8 @@ class Catalog_local extends Catalog
     private $songs_to_gather;
     private $videos_to_gather;
 
+    public string $path;
+
     /**
      * get_description
      * This returns the description of this catalog
@@ -78,6 +80,15 @@ class Catalog_local extends Catalog
     {
         return $this->version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->path;
+    } // get_path
 
     /**
      * get_type
@@ -137,7 +148,6 @@ class Catalog_local extends Catalog
         return $fields;
     }
 
-    public $path;
 
     /**
      * Constructor

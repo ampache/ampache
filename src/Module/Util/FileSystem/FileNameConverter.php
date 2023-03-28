@@ -52,10 +52,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $catalog = Catalog::create_from_id($row['id']);
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
-                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path),
+                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
                 true
             );
-            $this->charset_directory_correct($interactor, $catalog->path, $force);
+            $this->charset_directory_correct($interactor, $catalog->get_path(), $force);
         }
 
         $interactor->ok(

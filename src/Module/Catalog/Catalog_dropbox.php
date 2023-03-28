@@ -50,10 +50,16 @@ class Catalog_dropbox extends Catalog
     private $version     = '000002';
     private $type        = 'dropbox';
     private $description = 'Dropbox Remote Catalog';
+    private int $count   = 0;
 
     private int $catalog_id;
-    private int $count = 0;
+    private string $apikey;
+    private string $secret;
     private string $authcode;
+    private string $authtoken;
+
+    public string $path;
+    public $getchunk;
 
     /**
      * get_description
@@ -72,6 +78,15 @@ class Catalog_dropbox extends Catalog
     {
         return $this->version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->path;
+    } // get_path
 
     /**
      * get_type
@@ -157,12 +172,6 @@ class Catalog_dropbox extends Catalog
         // $this->authcode = $_REQUEST['authcode'];
         // $this->completeAuthToken();
     }
-
-    public $apikey;
-    public $secret;
-    public $path;
-    public $authtoken;
-    public $getchunk;
 
     /**
      * Constructor
