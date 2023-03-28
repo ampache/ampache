@@ -344,7 +344,7 @@ class Catalog_Seafile extends Catalog
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             } finally {
-                self::clean_tmp_file($tempfilename);
+                $this->clean_tmp_file($tempfilename);
             }
         }
 
@@ -411,7 +411,7 @@ class Catalog_Seafile extends Catalog
 
         // remove the temp file
         if (!$keep) {
-            self::clean_tmp_file($tempfilename);
+            $this->clean_tmp_file($tempfilename);
         }
 
         return $results;

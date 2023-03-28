@@ -256,7 +256,8 @@ class Ldap
 
                 $group_infos = self::read($link, $group_dn, [$member_attribute]);
 
-                if (!preg_grep("/^$username\$/i", $group_infos[$member_attribute])) {
+                // check username and full distinguished name for membership
+                if (!preg_grep("/^$username\$/i", $group_infos[$member_attribute]) && !preg_grep("/^$user_dn\$/i", $group_infos[$member_attribute])) {
                     throw new LdapException("`$username` is not member of the group `$group_dn`");
                 }
             }

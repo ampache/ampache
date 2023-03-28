@@ -1,5 +1,47 @@
 # CHANGELOG
 
+## Ampache 5.6.0-release
+
+### Added
+
+* Subsonic
+  * Add `type` and `serverVersion` to <subsonic-response> objects
+
+### Changed
+
+* Enforce raw format parameter on download links when not set
+* Set song channels to null instead of 0 when missing
+
+### Fixed
+
+* Config had a `:` instead of a `;` for a newline
+* Webplayer left over console logs removed
+* Duckduckgo search links
+* Register action missing `catalog_filter_group`
+* LDAP DN lookup for group membership
+* Identify object names correctly for localplay playlist items
+* Parse URLs for democratic and random correctly in localplay playlist items
+* Make sure the webplayer identies non-media stream types as valid
+* Possibly unset Artist name in lyrics lookup
+* Allow access to public smartlists in Random
+* Share expiry date needed some reworking
+* Search
+  * Use artist_map table for rating searches to find all related artists
+* Subsonic
+  * Error's were not returning valid responses
+
+## API 5.6.0
+
+### Fixed
+
+* ALL
+  * share_create and share_edit methods broken when setting expiry days
+  * advanced_search methods were breaking with various offset and limits
+  * playlists methods parameter 'exact' always ending up false
+* Api5
+  * update_art hardcoded url to artist
+  * Typo in song bitrate xml
+
 ## Ampache 5.5.7-release
 
 This release fixes issues when updating your databases from **really** old versions (< 3.9.0)

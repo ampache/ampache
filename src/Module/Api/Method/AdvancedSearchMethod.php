@@ -89,8 +89,11 @@ final class AdvancedSearchMethod
 
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
+        $user           = User::get_from_username(Session::username($input['auth']));
+        $data           = $input;
+        $data['offset'] = 0;
+        $data['limit']  = 0;
+        $results        = Search::run($data, $user);
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
 
