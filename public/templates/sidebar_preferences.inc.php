@@ -37,7 +37,7 @@ $access50     = Access::check('interface', 50);
 $access25     = ($access50 || Access::check('interface', 25));
 $categories   = Preference::get_categories();
 $current_user = $current_user ?? Core::get_global('user');
-$allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $current_user->id ?? 0); ?>
+$allow_upload = $allow_upload ?? AmpConfig::get('allow_upload') && $access25 && AmpConfig::get('upload_catalog') > 0; ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";

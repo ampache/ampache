@@ -2276,12 +2276,12 @@ class Search extends playlist_object
                         $sql_match_operator = '>=';
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
-                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                        $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
                     } elseif (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
+                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking')))";
                         $parameters[] = $input;
                     } else {
-                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `$looking`.`$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?)))";
+                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = $user_id AND `object_type`='$looking' AND `rating` $sql_match_operator ?)))";
                         $parameters[] = $input;
                     }
                     break;

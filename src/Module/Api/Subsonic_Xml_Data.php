@@ -1109,7 +1109,7 @@ class Subsonic_Xml_Data
         $xjbox  = self::addJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
         foreach ($tracks as $track) {
-            if ($track['oid']) {
+            if (array_key_exists('oid', $track)) {
                 self::addSong($xjbox, (int)$track['oid'], 'entry');
             }
         }
@@ -1412,6 +1412,8 @@ class Subsonic_Xml_Data
         $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
         $response->addAttribute('status', (string)$status);
         $response->addAttribute('version', (string)$version);
+        $response->addAttribute('type', 'ampache');
+        $response->addAttribute('serverVersion', Api::$version);
 
         return $response;
     }
