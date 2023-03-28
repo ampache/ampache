@@ -10,6 +10,8 @@
 It's easy to use a program like github desktop to compare between branches.
 **Use Linux**
 
+**note** this process has been automated. I now use the `build_release.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_release.sh) repo.
+
 * Export database from a fresh install (phpMyAdmin exports well.)
   * Tables: Structure; **select all tables**
   * Tables: Data; **only select** `access_list`, `license`, `preference`, `search`, `update_info` and `user_preference`
@@ -111,6 +113,8 @@ md5sum ../ampache-${a_version}*.zip
 
 Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
 
+**note** this process has been automated. I now use the `build_docker.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_docker.sh) repo.
+
 * To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
 * After enabling experimental mode I installed the tools and buildx container.
 * Make sure the docker API is [accessible](https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd)
@@ -174,6 +178,8 @@ git push --force origin 5.0.0
 For the squashed repo you need to manually copy/paste then do some find/replace to get the server working.
 
 After fixing up the paths you can commit then follow the regular release process
+
+**note** this process has been automated. I now use the `build_ampache-squashed.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_ampache-squashed.sh) repo.
 
 * Clone the repo `git clone -b squashed https://github.com/ampache/ampache.git ampache_squashed/`
 * Clone master `git clone -b master https://github.com/ampache/ampache.git ampache_master/`
