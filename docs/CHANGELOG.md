@@ -220,6 +220,78 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
   * Artists method parameters were incorrect
 
+## Ampache 5.6.0-release
+
+### Added
+
+* Subsonic
+  * Add `type` and `serverVersion` to `<subsonic-response>` objects
+
+### Changed
+
+* Enforce raw format parameter on download links when not set
+* Set song channels to null instead of 0 when missing
+
+### Fixed
+
+* Config had a `:` instead of a `;` for a newline
+* Webplayer missing semi colons, next / back keys in the playlist js
+* Duckduckgo search links
+* Register action missing `catalog_filter_group`
+* LDAP DN lookup for group membership
+* Identify object names correctly for localplay playlist items
+* Parse URLs for democratic and random correctly in localplay playlist items
+* Make sure the webplayer identies non-media stream types as valid
+* Possibly unset Artist name in lyrics lookup
+* Allow access to public smartlists in Random
+* Share expiry date needed some reworking
+* Preferences template using a develop only function
+* Search
+  * Use artist_map table for rating searches to find all related artists
+* Subsonic
+  * Error's were not returning valid responses
+
+## API 5.6.0
+
+### Fixed
+
+* ALL
+  * share_create and share_edit methods broken when setting expiry days
+  * advanced_search methods were breaking with various offset and limits
+  * playlists methods parameter 'exact' always ending up false
+* Api5
+  * update_art hardcoded url to artist
+  * Typo in song bitrate xml
+
+## Ampache 5.5.7-release
+
+This release fixes issues when updating your databases from **really** old versions (< 3.9.0)
+
+### Fixed
+
+* Stop filtering items beginning with a "." during catalog import
+* Don't show the filter box if there aren't any filters for the page
+* Fix up a lot of issues upgrading from really old servers
+* Don't add Album maps for null Album Artist's
+* Filter actions on the alphabet form and the graph pages correctly
+* session_set_cookie_params options array
+* Check for statistical_graph settings
+* Fetch Seafile cover art
+* Album might get sent to the temp playlist and screw up on insert
+* A couple of issues with now_playing.php when enabled
+* RSS user lookup on now_playing
+* webplayer
+  * `n` for next, `b` for back
+  * Missing semi-colons
+* Subsonic
+  * Allow empty search queries
+
+## API 5.5.7
+
+### Changed
+
+* Keep the original mime and bitrate on song objects instead of the transcoded value
+
 ## Ampache 5.5.6-release
 
 This release imports the API code cleanup from Ampache Develop which has fixed a lot of data issues.
