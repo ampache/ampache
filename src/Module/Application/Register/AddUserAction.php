@@ -203,6 +203,7 @@ final class AddUserAction implements ApplicationActionInterface
             (string) $website,
             $pass1,
             $access,
+            0,
             (string) $state,
             (string) $city,
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ADMIN_ENABLE_REQUIRED)
