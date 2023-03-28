@@ -19,6 +19,11 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add custom listenbrainz_api_url to listenbrainz plugin
 * Add header to allow browser cache on waveform
 * Allow custom JS using `/lib/javascript/custom.js`
+* Tell a user when they can't see any shares instead of a blank page
+* Allow adding live_stream's to playlists
+* Browse
+  * Add `album_artist` and `song_artist` as valid browse types
+  * Add many additional (and missing) sort types for objects
 * CLI
   * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
@@ -62,11 +67,25 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
   * Add `possible_duplicate_album` to song search
+  * Add `my_flagged` to song search
+  * Add `my_flagged_album` to song search
+  * Add `my_flagged_artist` to song search
   * Add `mbid_artist` to album search
+  * Add `subtitle` to album search
   * Add `barcode` to album search
   * Add `catalog_number` to album search
   * Add `smartplaylist` to album search
   * Add `duplicate_tracks` to album and song search (MIN & MAX id for song search)
+  * Add `episode_count` to podcast search
+  * Add `played_times` to podcast and podcast_episode search
+  * Add `skipped_times` to podcast and podcast_episode search
+  * Add `played_or_skipped_times` to podcast and podcast_episode search
+  * Add `last_play` to podcast and podcast_episode search
+  * Add `last_skip` to podcast and podcast_episode search
+  * Add `last_play_or_skip` to podcast and podcast_episode search
+  * Add `played` to podcast and podcast_episode search
+  * Add `myplayed` to podcast and podcast_episode search
+  * Add `recent_played` to podcast and podcast_episode search
   * Alias `possible_duplicate_album` => `possible_duplicate` for album search
   * Alias `album_genre` => `genre` for album search
   * Alias `mbid_album` => `mbid` for album search
@@ -95,9 +114,14 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Ignore properties and data for guest users that won't have this data
 * When pulling user data don't pull the password
 * Uploads are allowed based on the `upload_access_level` (When disabled; access 25 is required)
+* When transcoding a file change it's name parameter to the converted file type
 * CLI
   * Moved catalog map and update functions out ouf run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
+  * Make admin:updateDatabase display more information about the version and required changes
+  * Chunk the cleanup:sortSongs to give you more information
 * Search
+  * Split the Search class into smaller pieces to make it a bit less daunting
+  * Return everything when searching by no or invalid rules
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
 * webplayer
   * Only send songs (for now) to the 'Add all to playlist' button
@@ -129,16 +153,26 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Force cast on shout data that may be null
 * Handle a bad object_id on rss requests
 * Add missing doctype for html pages
+* Updating Album objects with null time
 * Missing " in html for Captcha
+* Record download stats for song, video, podcast_episode
+* Update page title using JS to follow the user
+* Correct IP check behind proxy
+* Fallbacks for user data that may not exist yet or is empty
+* Remove hidden tags from catalog map
+* Missing Podcast from `object_count` table
+* Album::check() look for null prefix's so you don't get duplicates
 * CLI
   * export:playlist command help was incorrect
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
+  * Searching by different aliases could be ignored
   * SQL for Artist `catalog` searches
   * Don't try to search on bad rules. (falls back to empty rules which will show all songs)
 * Subsonic
   * Sharing some types of object
+  * Filtering user and password
 
 ## API develop
 
@@ -188,6 +222,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Api6
   * Renamed user_update to user_edit (user_update still works and will be depreciated in API7)
 * ALL
+  * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'
   * Don't send AlbumDisk objects to the API
 * XML responses
