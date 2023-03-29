@@ -14,13 +14,16 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key and RSS token
 * Allow Admin users to browse all user uploads
-* Add php8.2 to composer
+* Add php8.2 to composer (composer_php8.2.json)
 * Create Dockerfilephp82
 * Add custom listenbrainz_api_url to listenbrainz plugin
 * Add header to allow browser cache on waveform
 * Allow custom JS using `/lib/javascript/custom.js`
 * Tell a user when they can't see any shares instead of a blank page
 * Allow adding live_stream's to playlists
+* Cache transcode format for file types instead of processsing for each call
+* Add %s (Release Comment) as a translatable tag string
+* Add the Owner to playlist rows
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -60,7 +63,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
 * Config version 65
   * Drop Channels from config
-  * Reset the art_order defaults
+  * Reset the art_order defaults (replace lastfm with spotify)
+  * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
 * Search
@@ -77,6 +81,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `smartplaylist` to album search
   * Add `duplicate_tracks` to album and song search (MIN & MAX id for song search)
   * Add `episode_count` to podcast search
+  * Add `total_skip` to podcast search
   * Add `played_times` to podcast and podcast_episode search
   * Add `skipped_times` to podcast and podcast_episode search
   * Add `played_or_skipped_times` to podcast and podcast_episode search
@@ -99,6 +104,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Changed
 
+* Change all the Information pages into browses (Default to Album/Album Disk)
+* Add extra types to the Information pages
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Download url parameter order matching "client, action, cache"
@@ -115,11 +122,15 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * When pulling user data don't pull the password
 * Uploads are allowed based on the `upload_access_level` (When disabled; access 25 is required)
 * When transcoding a file change it's name parameter to the converted file type
+* Only show user pages for non-system users
+* Large template cleanup
+* Reduce a lot of repeated actions, queries and processes
 * CLI
   * Moved catalog map and update functions out ouf run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
   * Make admin:updateDatabase display more information about the version and required changes
   * Chunk the cleanup:sortSongs to give you more information
 * Search
+  * Search by the list owner when a user is required (System lists still search as you)
   * Split the Search class into smaller pieces to make it a bit less daunting
   * Return everything when searching by no or invalid rules
   * Faster `smartplaylist` searches for song search (Does not respect limits for those subsearches)
@@ -128,12 +139,14 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Added an option `loopBack` which restarts the playlist after finishing
 * Subsonic
   * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned. 
+  * Pass the authenticated user to method calls
 
 ### Removed
 
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
+* Art from share page
 * Subsonic
   * Custom messages for subsonic errors [subsonic.org](http://www.subsonic.org/pages/api.jsp)
 
@@ -162,14 +175,26 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Remove hidden tags from catalog map
 * Missing Podcast from `object_count` table
 * Album::check() look for null prefix's so you don't get duplicates
+* Don't look at transcode_cache when downloading
+* Don't overwrite custom upload tags with the file tags
+* Streaming parameters may be lost depending on your link
+* Catalog actions are only performed on their media type (e.g. don't look for videos on music catalogs)
+* Missing translated catalog fields (e.g. %a %c)
+* Filter by allowed catalogs in more places
+* Dashboards would show very similar data
+* Config
+  * Colon instead of semi-colon
+  * Corrected default value comments
 * CLI
   * export:playlist command help was incorrect
+  * Get the website address from `fallback_url`
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
 * Search
   * Searching by different aliases could be ignored
   * SQL for Artist `catalog` searches
   * Don't try to search on bad rules. (falls back to empty rules which will show all songs)
+  * JS could not load your search if you were using a rule alias
 * Subsonic
   * Sharing some types of object
   * Filtering user and password
@@ -225,6 +250,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'
   * Don't send AlbumDisk objects to the API
+  * Send the authenticated user to all method calls
 * XML responses
   * Api6 XML success and error response messages are put in a `message` element (like json)
   * For data responses id is the only attribute and everything else is an element
