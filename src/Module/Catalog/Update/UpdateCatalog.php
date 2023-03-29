@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
@@ -266,6 +267,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $this->catalogGarbageCollector->collect();
+                Catalog::clean_empty_albums();
+                Album::update_album_artist();
+                Catalog::update_counts();
                 $interactor->info(
                     '------------------',
                     true
@@ -279,8 +283,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 // clean up after the action
                 $catalog_media_type = $catalog->get_gather_type();
                 if ($catalog_media_type == 'music') {
-                    Catalog::clean_empty_albums();
-                    Album::update_album_artist();
                     Catalog::update_mapping('artist');
                     Catalog::update_mapping('album');
                     Catalog::update_mapping('album_disk');
@@ -290,7 +292,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
                     Catalog::update_mapping('video');
                 }
-                Catalog::update_counts();
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();
                 $interactor->info(
