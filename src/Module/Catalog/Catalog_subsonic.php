@@ -362,7 +362,7 @@ class Catalog_subsonic extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+            debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);

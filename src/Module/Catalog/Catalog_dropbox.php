@@ -546,7 +546,7 @@ class Catalog_dropbox extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
-                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $readfile = true;
                 $filesize = 40960;
@@ -610,7 +610,7 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);

@@ -124,7 +124,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
     <div class="form-group" style="display: none;" id="specificpass">
         <label for="db_password" class="col-sm-4 control-label"><?php echo T_('Ampache Database User Password'); ?></label>
         <div class="col-sm-8">
-            <input type="password" class="form-control" id="db_password" name="db_password" placeholder="<?php echo T_("Password") . '(' . T_("required") . ')'; ?>">
+            <input type="password" class="form-control" id="db_password" name="db_password" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
         </div>
     </div>
     <div class="col-sm-4">

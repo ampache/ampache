@@ -598,26 +598,22 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $stats         = self::get_server_counts(0);
         $number        = 0;
         $total_updated = 0;
         $this->count   = 0;
-        $total         = 0;
 
         $catalog_media_type = $this->get_gather_type();
         if ($catalog_media_type == 'music') {
             $media_type  = 'album';
             $media_class = Album::class;
-            $total       = $stats[$media_type];
         } elseif ($catalog_media_type == 'podcast') {
             $media_type  = 'podcast_episode';
             $media_class = Podcast_Episode::class;
-            $total       = $stats[$media_type];
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type  = 'video';
             $media_class = Video::class;
-            $total       = $stats[$media_type];
         }
+        $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0 || !isset($media_type)) {
             return array('total' => $number, 'updated' => $total_updated);
         }
@@ -723,9 +719,7 @@ class Catalog_local extends Catalog
             return 0;
         }
         $dead_total  = 0;
-        $stats       = self::get_server_counts(0);
         $this->count = 0;
-        $total       = 0;
 
         $catalog_media_type = $this->get_gather_type();
         if ($catalog_media_type == 'music') {
@@ -743,7 +737,7 @@ class Catalog_local extends Catalog
         $chunks = floor($total / 10000);
         $chunk  = $chunks;
         $count  = 1;
-        while ($chunk > 0) {
+        while ($chunk >= 0) {
             debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk--;
@@ -791,7 +785,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql, array($this->catalog_id));
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
+            //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(array('(', ')', '\''), '', $results['file']);
@@ -1193,21 +1187,17 @@ class Catalog_local extends Catalog
             return array();
         }
         $missing     = array();
-        $stats       = self::get_server_counts(0);
         $this->count = 0;
-        $total       = 0;
 
         $catalog_media_type = $this->get_gather_type();
         if ($catalog_media_type == 'music') {
             $media_type = 'song';
-            $total      = $stats[$media_type];
         } elseif ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-            $total      = $stats[$media_type];
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type = 'video';
-            $total      = $stats[$media_type];
         }
+        $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0 || !isset($media_type)) {
             return $missing;
         }

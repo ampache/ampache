@@ -448,7 +448,7 @@ class Catalog_Seafile extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results['total']++;
-                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
 
                 $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
@@ -539,7 +539,7 @@ class Catalog_Seafile extends Catalog
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
 
                 try {
