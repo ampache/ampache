@@ -722,9 +722,8 @@ class Catalog_local extends Catalog
         $this->count = 0;
 
         $catalog_media_type = $this->get_gather_type();
-        if ($catalog_media_type == 'music') {
-            $media_type = 'song';
-        } elseif ($catalog_media_type == 'podcast') {
+        $media_type         = 'song';
+        if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type = 'video';
@@ -734,9 +733,13 @@ class Catalog_local extends Catalog
             return $dead_total;
         }
         $dead   = array();
-        $chunks = floor($total / 10000);
-        $chunk  = $chunks;
         $count  = 1;
+        $chunks = 1;
+        $chunk  = 0;
+        if ($total > 10000) {
+            $chunks = floor($total / 10000);
+            $chunk  = $chunks;
+        }
         while ($chunk >= 0) {
             debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
