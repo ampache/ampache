@@ -730,14 +730,12 @@ class Catalog_local extends Catalog
         $catalog_media_type = $this->get_gather_type();
         if ($catalog_media_type == 'music') {
             $media_type = 'song';
-            $total      = $stats[$media_type];
         } elseif ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-            $total      = $stats[$media_type];
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type = 'video';
-            $total      = $stats[$media_type];
         }
+        $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0 || !isset($media_type)) {
             return $dead_total;
         }

@@ -1338,21 +1338,26 @@ abstract class Catalog extends database_object
     /**
      * count_table
      *
-     * Update a specific table count when adding/removing from the server
+     * Count and/or Update a table count when adding/removing from the server
      * @param string $table
-     * @return array
+     * @param int $catalog_id
+     * @return int
      */
-    public static function count_table($table)
+    public static function count_table($table, $catalog_id = 0)
     {
-        $sql        = "SELECT COUNT(`id`) FROM `$table`";
+        $sql = ($catalog_id > 0)
+            ? "SELECT COUNT(`id`) FROM `$table` WHERE `catalog` = $catalog_id;"
+            : "SELECT COUNT(`id`) FROM `$table`;";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
         if (empty($row)) {
-            return array();
+            return 0;
         }
-        self::set_update_info($table, (int)$row[0]);
+        if ($catalog_id === 0) {
+            self::set_update_info($table, (int)$row[0]);
+        }
 
-        return $row;
+        return (int)$row[0];
     } // count_table
 
     /**
