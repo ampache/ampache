@@ -1064,6 +1064,7 @@ class Preference extends database_object
             'cron_cache',
             'daap_backend',
             'debug',
+            'deferred_ext_metadata',
             'demo_clear_sessions',
             'demo_mode',
             'demo_use_search',
