@@ -6,24 +6,27 @@
 
 A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been setup for Admins to follow the changes happening in preparation for Ampache6
 
-You can now use a permanent session token for streaming. (check out the wiki!)
+You can now use a permanent session token for streaming. (check out the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)!)
+
+You can find example Subsonic responses from an official server and Ampache server [here](https://ampache.org/api/subsonic)
 
 ### Added
 
 * Translations 2023-02
 * Add `streamtoken` to user objects, allowing permanent stream links
-* Allow deleting a user API key and RSS token
+* Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
 * Add php8.2 to composer (composer_php8.2.json)
 * Create Dockerfilephp82
-* Add custom listenbrainz_api_url to listenbrainz plugin
+* Add custom `listenbrainz_api_url` to listenbrainz plugin
 * Add header to allow browser cache on waveform
 * Allow custom JS using `/lib/javascript/custom.js`
 * Tell a user when they can't see any shares instead of a blank page
 * Allow adding live_stream's to playlists
-* Cache transcode format for file types instead of processsing for each call
+* Cache transcode format for file types instead of processing for each call
 * Add %s (Release Comment) as a translatable tag string
 * Add the Owner to playlist rows
+* Button and color Light theme fixes for the webplayer
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -104,6 +107,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Changed
 
+* Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
 * Combined all Albums into single Album objects
@@ -125,8 +129,10 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Only show user pages for non-system users
 * Large template cleanup
 * Reduce a lot of repeated actions, queries and processes
+* Update Requests module to WpOrg\Requests
+* Show 20 genres in Song, Artist & Album edit windows (up from 10)
 * CLI
-  * Moved catalog map and update functions out ouf run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
+  * Moved catalog map and update functions out of run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
   * Make admin:updateDatabase display more information about the version and required changes
   * Chunk the cleanup:sortSongs to give you more information
 * Search
@@ -152,7 +158,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 
 ### Fixed
 
-* Work around for possible release string errors (future releasese will drop "-release")
+* Work around for possible release string errors (future releases will drop "-release")
 * Ignore case in genre comparison
 * Hide Upload links if you can't access the catalog
 * Recently played for non-user calls
@@ -161,6 +167,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Show test errors correctly when you can connect to the server but don't have a database
 * When using LDAP check for DN and username on group membership
 * Browse filtering for catalogs and podcast_episodes was a bit light
+* Filterbox actions not loading correctly
 * Song was not checking for channel data
 * Ampachechartlyrics plugin object data might not be set
 * Force cast on shout data that may be null
@@ -182,6 +189,8 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 * Missing translated catalog fields (e.g. %a %c)
 * Filter by allowed catalogs in more places
 * Dashboards would show very similar data
+* Simplify all statistical_graphs checks
+* WebDav browsing issues
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
@@ -190,6 +199,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Get the website address from `fallback_url`
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
+  * Added back next / back keys in the playlist js
 * Search
   * Searching by different aliases could be ignored
   * SQL for Artist `catalog` searches
@@ -210,7 +220,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * API6::catalog_delete: Delete a catalog (Require: 75)
   * API6::live_stream_create: Create a new live stream (radio station)
   * API6::live_stream_edit: Edit a live stream
-  * API6::live_stream_delete: Delete a stream buy ID
+  * API6::live_stream_delete: Delete a stream by ID
   * API6::register: Allow users to register an account (if enabled)
   * API6::playlist_create: Return an error if the playlist name already exists for that user
   * API6::user_edit (previously user_create):
@@ -226,7 +236,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
 * JSON responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
-  * Add `total_count` to resonses to give clients an idea of the total possible objects
+  * Add `total_count` to responses to give clients an idea of the total possible objects
 * advanced_search
   * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
@@ -245,7 +255,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Changed
 
 * Api6
-  * Renamed user_update to user_edit (user_update still works and will be depreciated in API7)
+  * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
 * ALL
   * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'
@@ -261,7 +271,7 @@ You can now use a permanent session token for streaming. (check out the wiki!)
 ### Removed
 
 * Api6
-  * preciserating removed from all objects (use rating)
+  * `preciserating` removed from all objects (use rating)
 * Api6::album_songs remove `exact` as a parameter
 * Api6::stream remove `podcast` as a valid `type` value
 * Warning of depreciated methods from API5 have been removed from API6

@@ -22,4 +22,4 @@ You can get examples from an official Subsonic release as well as examples from 
 These servers are using a Subsonic 1.16.1 compatible API version.
 
 * [Subsonic 6.1.6 (1.16.1)](https://github.com/ampache/python3-ampache/tree/api6/docs/subsonic-6.1.6)
-* [Ampache Subsonic (1.16.1](https://github.com/ampache/python3-ampache/tree/api6/docs/ampache-subsonic)
+* [Ampache 6.0.0 (1.16.1)](https://github.com/ampache/python3-ampache/tree/api6/docs/ampache-subsonic)

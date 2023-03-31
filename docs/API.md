@@ -25,7 +25,7 @@ The goals of API6 are simply to extend on top of API5 and remove what's no longe
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
-* [API 5.5 Documentation](https://ampache.org/api/api-5)
+* [API 5.6 Documentation](https://ampache.org/api/api-5)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 3.9 Documentation](https://ampache.org/api/api-3)
 
