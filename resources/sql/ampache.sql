@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Dec 08, 2022 at 08:40 AM
--- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.1.11
+-- Generation Time: Mar 31, 2023 at 11:12 AM
+-- Server version: 10.5.18-MariaDB-0+deb11u1
+-- PHP Version: 8.1.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache556`
+-- Database: `ampache6`
 --
 
 -- --------------------------------------------------------
@@ -496,7 +496,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `size` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `kind` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kind` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`)
@@ -608,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `live_stream` (
   `url` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `genre` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catalog` (`catalog`),
   KEY `genre` (`genre`),
@@ -711,7 +711,7 @@ CREATE TABLE IF NOT EXISTS `movie` (
 
 DROP TABLE IF EXISTS `now_playing`;
 CREATE TABLE IF NOT EXISTS `now_playing` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `user` int(11) NOT NULL,
@@ -858,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `guid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `podcast` int(11) NOT NULL,
-  `state` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `state` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `source` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `size` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
@@ -1145,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 DROP TABLE IF EXISTS `session_remember`;
 CREATE TABLE IF NOT EXISTS `session_remember` (
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `expire` int(11) DEFAULT NULL,
   PRIMARY KEY (`username`,`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1158,7 +1158,7 @@ CREATE TABLE IF NOT EXISTS `session_remember` (
 
 DROP TABLE IF EXISTS `session_stream`;
 CREATE TABLE IF NOT EXISTS `session_stream` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `user` int(11) UNSIGNED NOT NULL,
   `agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `expire` int(11) UNSIGNED NOT NULL,
@@ -1297,7 +1297,7 @@ CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `album` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `time` smallint(5) DEFAULT NULL,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `track_num` smallint(5) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`)
@@ -1358,9 +1358,9 @@ CREATE TABLE IF NOT EXISTS `tag_merge` (
 DROP TABLE IF EXISTS `tmp_browse`;
 CREATE TABLE IF NOT EXISTS `tmp_browse` (
   `id` int(13) NOT NULL AUTO_INCREMENT,
-  `sid` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sid` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `object_data` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`sid`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
