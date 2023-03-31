@@ -345,21 +345,22 @@ function is_rtl($locale)
 function translate_pattern_code($code)
 {
     $code_array = array(
-            '%A' => 'album',
-            '%a' => 'artist',
-            '%c' => 'comment',
-            '%C' => 'catalog_number',
-            '%T' => 'track',
-            '%d' => 'disk',
-            '%g' => 'genre',
-            '%t' => 'title',
-            '%y' => 'year',
-            '%Y' => 'original_year',
-            '%r' => 'release_type',
-            '%R' => 'release_status',
-            '%s' => 'subtitle',
-            '%b' => 'barcode',
-            '%o' => 'zz_other');
+        '%A' => 'album',
+        '%a' => 'artist',
+        '%c' => 'comment',
+        '%C' => 'catalog_number',
+        '%T' => 'track',
+        '%d' => 'disk',
+        '%g' => 'genre',
+        '%t' => 'title',
+        '%y' => 'year',
+        '%Y' => 'original_year',
+        '%r' => 'release_type',
+        '%R' => 'release_status',
+        '%s' => 'subtitle',
+        '%b' => 'barcode',
+        '%o' => 'zz_other'
+    );
 
     if (isset($code_array[$code])) {
         return $code_array[$code];

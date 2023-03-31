@@ -65,10 +65,7 @@ final class PingMethod
             if (in_array($data_version, array(3, 4, 5, 6))) {
                 Session::write($input['auth'], $data_version);
             }
-            $results = array_merge(array(
-                'session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)),
-                $results,
-                Api::server_details($input['auth'])
+            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api::server_details($input['auth'])
             );
         }
 

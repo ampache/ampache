@@ -399,7 +399,8 @@ class Api
             'shares' => (int)$counts['share'],
             'licenses' => (int)$counts['license'],
             'live_streams' => (int)$counts['live_stream'],
-            'labels' => (int)$counts['label']);
+            'labels' => (int)$counts['label']
+        );
 
         return array_merge($autharray, $outarray);
     } // server_details

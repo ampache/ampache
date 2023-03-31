@@ -179,7 +179,8 @@ final class Handshake3Method
                     'artists' => $counts['artist'],
                     'playlists' => $counts['playlist'],
                     'videos' => $counts['video'],
-                    'catalogs' => $counts['catalog']));
+                    'catalogs' => $counts['catalog'])
+                );
 
                 return true;
             } // match

@@ -53,7 +53,11 @@ final class Ping4Method
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
         $data_version = (int)substr($version, 0, 1);
-        $results      = array('server' => AmpConfig::get('version'), 'version' => Api4::$version, 'compatible' => '350001');
+        $results      = array(
+            'server' => AmpConfig::get('version'),
+            'version' => Api4::$version,
+            'compatible' => '350001'
+        );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
@@ -61,7 +65,7 @@ final class Ping4Method
             if (in_array($data_version, array(3, 4, 5))) {
                 Session::write($input['auth'], $data_version);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $results);
+            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results);
             // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
             $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
             $db_results = Dba::read($sql);
@@ -88,7 +92,8 @@ final class Ping4Method
                 'shares' => (int) $counts['share'],
                 'licenses' => (int) $counts['license'],
                 'live_streams' => (int) $counts['live_stream'],
-                'labels' => (int) $counts['label']);
+                'labels' => (int) $counts['label']
+            );
             $results = array_merge($results, $countarray);
         }
 

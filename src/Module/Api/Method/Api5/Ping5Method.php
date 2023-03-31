@@ -52,7 +52,11 @@ final class Ping5Method
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
         $data_version  = (int)substr($version, 0, 1);
-        $results       = array('server' => AmpConfig::get('version'), 'version' => Api5::$version, 'compatible' => '350001');
+        $results       = array(
+            'server' => AmpConfig::get('version'),
+            'version' => Api5::$version,
+            'compatible' => '350001'
+        );
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
@@ -60,7 +64,7 @@ final class Ping5Method
             if (in_array($data_version, array(3, 4, 5))) {
                 Session::write($input['auth'], $data_version);
             }
-            $results = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60)), $results, Api5::server_details($input['auth']));
+            $results = array_merge(array('session_expire' => date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60)), $results, Api5::server_details($input['auth']));
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
