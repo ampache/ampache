@@ -3827,15 +3827,17 @@ abstract class Catalog extends database_object
      */
     public static function delete($catalog_id)
     {
+        $params  = array($catalog_id);
+        $catalog = self::create_from_id($catalog_id);
+        if (!$catalog) {
+            return false;
+        }
+
         // Large catalog deletion can take time
         set_time_limit(0);
-        $params = array($catalog_id);
 
-        // First remove the songs in this catalog
         $sql        = "DELETE FROM `song` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, $params);
-
-        // Only if the previous one works do we go on
         if (!$db_results) {
             return false;
         }
@@ -3843,34 +3845,24 @@ abstract class Catalog extends database_object
 
         $sql        = "DELETE FROM `video` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, $params);
-
         if (!$db_results) {
             return false;
         }
 
         $sql        = "DELETE FROM `podcast` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, $params);
-
         if (!$db_results) {
             return false;
         }
 
         $sql        = "DELETE FROM `live_stream` WHERE `catalog` = ?";
         $db_results = Dba::write($sql, $params);
-
         if (!$db_results) {
-            return false;
-        }
-
-        $catalog = self::create_from_id($catalog_id);
-
-        if (!$catalog) {
             return false;
         }
 
         $sql        = 'DELETE FROM `catalog_' . $catalog->get_type() . '` WHERE catalog_id = ?';
         $db_results = Dba::write($sql, $params);
-
         if (!$db_results) {
             return false;
         }
