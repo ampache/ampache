@@ -1253,6 +1253,7 @@ abstract class Catalog extends database_object
 
             return 0;
         }
+        self::clear_catalog_cache();
 
         /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_soundcloud|Catalog_subsonic $classname */
         if (!$classname::create_type($insert_id, $data)) {
@@ -1262,6 +1263,25 @@ abstract class Catalog extends database_object
         }
 
         return (int)$insert_id;
+    }
+
+    /**
+     * clear_catalog_cache
+     */
+    public static function clear_catalog_cache()
+    {
+        // clear caches if enabled to allow getting the new object
+        parent::remove_from_cache('user_catalog');
+        parent::remove_from_cache('user_catalogmusic');
+        if (AmpConfig::get('podcast')) {
+            parent::remove_from_cache('user_catalogpodcast');
+        }
+        if (AmpConfig::get('video')) {
+            parent::remove_from_cache('user_catalogclip');
+            parent::remove_from_cache('user_catalogtvshow');
+            parent::remove_from_cache('user_catalogmovie');
+            parent::remove_from_cache('user_catalogpersonal_video');
+        }
     }
 
     /**
