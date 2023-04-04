@@ -931,7 +931,7 @@ class Query
     } // set_join_and
 
     /**
-     * set_join_and
+     * set_join_and_and
      * This sets the joins for the current browse object and a second option as well
      * @param string $type
      * @param string $table
@@ -1690,7 +1690,6 @@ class Query
                 }
                 break;
             case 'artist':
-                //debug_event(self::class, "get_sql: " . print_r($this->_state['filter'], true), 5);
                 switch ($filter) {
                     case 'tag':
                         $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
