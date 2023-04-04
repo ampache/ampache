@@ -96,7 +96,10 @@ final class PrintTagsCommand extends Command
             print_r($vainfo);
 
             $interactor->eol();
-            $interactor->info('------------------------------------------------------------------', true);
+            $interactor->info(
+                '------------------------------------------------------------------',
+                true
+            );
             $interactor->info(
                 sprintf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys)),
                 true

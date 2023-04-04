@@ -527,7 +527,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
-            'channel' => 'false',
+            'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
             'share' => 'false'
