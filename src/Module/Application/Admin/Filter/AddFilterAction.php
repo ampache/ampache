@@ -84,9 +84,9 @@ final class AddFilterAction extends AbstractFilterAction
 
         $catalogs      = Catalog::get_catalogs();
         $catalog_array = array();
-        foreach ($catalogs as $catalog) {
-            $catalog_name                 = Catalog::get_catalog_name($catalog);
-            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog, FILTER_SANITIZE_NUMBER_INT);
+        foreach ($catalogs as $catalog_id) {
+            $catalog_name                 = Catalog::get_name($catalog_id);
+            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Attempt to create the filter

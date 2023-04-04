@@ -444,62 +444,17 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalog_filter_names
-     * This returns the names of the catalog filters that are available with the default filter listed first.
-     * @return string[]
+     * get_name
+     * Returns the name of the catalog matching the given ID
+     * @return string
      */
-    public static function get_catalog_filter_names()
+    public static function get_name($catalog_id = 0)
     {
-        $results = array();
-
-        // Get the default filter and name
-        // Default filter is always the first one.
-        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` = 0";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-        $results[]  = $row['name'];
-
-        // Now fetch the rest;
-        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` > 0 ORDER BY `name`";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['name'];
-        }
-
-        return $results;
-    }
-
-    public static function get_catalog_filter_name($group_id = 0)
-    {
-        $sql        = "SELECT `name` FROM `catalog_filter_group` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($group_id));
+        $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($catalog_id));
         $row        = Dba::fetch_assoc($db_results);
 
         return $row['name'] ?? '';
-    }
-
-    public static function get_catalog_filter_by_name($filter_name)
-    {
-        $sql        = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
-        $db_results = Dba::read($sql, array($filter_name));
-        $row        = Dba::fetch_assoc($db_results);
-
-        return (int)$row['id'];
-    }
-
-    /**
-     * get_catalog_filter_name
-     * This returns the catalog filter name with the given ID.
-     * @return string
-     */
-    public static function get_catalog_name($filter_id = 0)
-    {
-        $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($filter_id));
-        $row        = Dba::fetch_assoc($db_results);
-
-        return $row['name'];
     }
 
     /**
@@ -686,8 +641,8 @@ abstract class Catalog extends database_object
 
         $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $catalog_id) {
-            $cn      = self::get_catalog_name($catalog_id);
-            $enabled = $catalogs[$cn];
+            $catalog_name = self::get_name($catalog_id);
+            $enabled      = $catalogs[$catalog_name];
             $sql .= "($filter_id, $catalog_id, $enabled),";
         }
         // Remove last comma to avoid SQL error

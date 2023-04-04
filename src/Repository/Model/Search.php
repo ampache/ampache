@@ -1083,22 +1083,6 @@ class Search extends playlist_object
     } // end _filter_request
 
     /**
-     * get_name_byid
-     *
-     * Returns the name of the saved search corresponding to the given ID
-     * @param string $search_id
-     * @return string
-     */
-    public static function get_name_byid($search_id)
-    {
-        $sql        = "SELECT `name` FROM `search` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($search_id));
-        $row        = Dba::fetch_assoc($db_results);
-
-        return $row['name'];
-    }
-
-    /**
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.

@@ -46,15 +46,12 @@ $web_path = AmpConfig::get('web_path'); ?>
         </tr>
     </thead>
     <tbody>
-<?php
-$filters = Catalog::get_catalog_filter_names();
-
+<?php $filters = Catalog::get_catalog_filters();
 foreach ($filters as $filter) {
-    $filter_id    = Catalog::get_catalog_filter_by_name($filter);
-    $num_users    = Catalog::filter_user_count($filter_id);
-    $num_catalogs = Catalog::filter_catalog_count($filter_id);
-    //debug_event(self::class, "Values:  fname:$filter, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);?>
-        <tr id="<?php echo $filter; ?>">
+    $num_users    = Catalog::filter_user_count($filter['id']);
+    $num_catalogs = Catalog::filter_catalog_count($filter['id']);
+    //debug_event(self::class, "Values:  fname:$filter_name, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);?>
+        <tr id="<?php echo $filter['name']; ?>">
             <?php require Ui::find_template('show_filter_row.inc.php'); ?>
         </tr>
 <?php
