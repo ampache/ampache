@@ -175,6 +175,31 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->render()
                 );
                 break;
+            case 'album_disk_row':
+                /** @var \Ampache\Repository\Model\AlbumDisk $libitem */
+                $hide_genres       = AmpConfig::get('hide_genres');
+                $show_played_times = AmpConfig::get('show_played_times');
+                $results           = preg_replace(
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('USER_IS_REGISTERED', User::is_registered())
+                        ->setContext('USING_RATINGS', $show_ratings)
+                        ->setContext('ALBUMDISK', $this->guiFactory->createAlbumDiskViewAdapter($gatekeeper, $this->browse, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
+                        ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+                        ->setContext('IS_SHOW_PLAYLIST_ADD', true)
+                        ->setContext('CLASS_COVER', 'cel_cover')
+                        ->setContext('CLASS_ALBUM', 'cel_album')
+                        ->setContext('CLASS_ARTIST', 'cel_artist')
+                        ->setContext('CLASS_TAGS', 'cel_tags')
+                        ->setContext('CLASS_COUNTER', 'cel_counter')
+                        ->setTemplate('album_disk_row.xhtml')
+                        ->render()
+                );
+                break;
             case 'artist_row':
                 /** @var \Ampache\Repository\Model\Artist $libitem */
                 $hide_genres      = AmpConfig::get('hide_genres');

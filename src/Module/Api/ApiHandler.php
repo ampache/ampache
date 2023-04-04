@@ -129,7 +129,7 @@ final class ApiHandler implements ApiHandlerInterface
                 );
             }
         }
-        // If you call api3 from json you don't get anything so change back to 5
+        // If you call api3 from json you don't get anything so change back to the latest version
         if ($api_format == 'json' && $api_version == 3) {
             $api_version = 6;
         }
