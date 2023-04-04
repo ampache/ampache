@@ -81,7 +81,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
         </li>
         <?php } ?>
         <?php if ($access50) { ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>

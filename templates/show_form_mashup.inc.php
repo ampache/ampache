@@ -9,14 +9,10 @@ global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get('web_path');
-<<<<<<<< HEAD:templates/show_mashup_browse_form.inc.php
-$filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>
-========
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk'; ?>
->>>>>>>> develop:templates/show_form_mashup.inc.php
 
 <h3 class="box-title"><?php echo T_('Dashboards'); ?></h3>
 

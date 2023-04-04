@@ -76,16 +76,10 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
         $user       = $this->mock(User::class);
 
         $albumId = 666;
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -108,7 +102,6 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
@@ -116,11 +109,6 @@ class AlbumMethodTest extends MockeryTestCase
         $albumId = 666;
         $include = [3];
         $result  = 'some-result';
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
