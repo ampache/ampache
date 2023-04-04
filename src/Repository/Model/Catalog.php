@@ -1176,6 +1176,8 @@ abstract class Catalog extends database_object
 
             return 0;
         }
+        // clear caches if enabled to allow getting the new object
+        parent::remove_from_cache('user_catalog');
 
         /** @var Catalog $classname */
         if (!$classname::create_type($insert_id, $data)) {

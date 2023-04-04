@@ -27,6 +27,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Metadata\Repository\Metadata;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
@@ -91,6 +92,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
+        database_object::remove_from_cache('user_catalog');
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
