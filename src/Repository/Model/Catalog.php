@@ -448,7 +448,7 @@ abstract class Catalog extends database_object
      * Returns the name of the catalog matching the given ID
      * @return string
      */
-    public static function get_name($catalog_id = 0)
+    public static function getName($catalog_id = 0)
     {
         $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
         $db_results = Dba::read($sql, array($catalog_id));
@@ -641,7 +641,7 @@ abstract class Catalog extends database_object
 
         $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ";
         foreach ($results as $catalog_id) {
-            $catalog_name = self::get_name($catalog_id);
+            $catalog_name = self::getName($catalog_id);
             $enabled      = $catalogs[$catalog_name];
             $sql .= "($filter_id, $catalog_id, $enabled),";
         }
