@@ -30,6 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -106,6 +107,10 @@ class User extends database_object
      * @var string $rsstoken
      */
     public $rsstoken;
+    /**
+     * @var string $streamtoken
+     */
+    public $streamtoken;
 
     // Constructed variables
     /**
@@ -165,6 +170,11 @@ class User extends database_object
     public $catalog_filter_group;
 
     /**
+     * @var array $catalogs;
+     */
+    public $catalogs;
+
+    /**
      * Constructor
      * This function is the constructor object for the user
      * class, it currently takes a username
@@ -177,15 +187,11 @@ class User extends database_object
         }
 
         $this->id = (int)($user_id);
-
-        $info = $this->has_info();
-
-        foreach ($info as $key => $value) {
-            // Let's not save the password in this object :S
-            if ($key == 'password') {
-                continue;
+        $info     = $this->has_info();
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                $this->$key = $value;
             }
-            $this->$key = $value;
         }
 
         // Make sure the Full name is always filled
@@ -240,15 +246,17 @@ class User extends database_object
         $data = array();
         // If the ID is -1 then
         if ($user_id == '-1') {
-            $data['username'] = 'System';
-            $data['fullname'] = 'Ampache User';
-            $data['access']   = '25';
+            $data['username']             = 'System';
+            $data['fullname']             = 'Ampache User';
+            $data['access']               = '25';
+            $data['catalog_filter_group'] = 0;
+            $data['catalogs']             = self::get_user_catalogs(-1);
 
             return $data;
         }
 
-        $sql        = "SELECT * FROM `user` WHERE `id`='$user_id'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($user_id));
 
         $data = Dba::fetch_assoc($db_results);
 
@@ -333,23 +341,19 @@ class User extends database_object
     /**
      * get_user_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
+     * @param int $user_id
+     * @param string $filter
      * @return integer[]
      */
-    public static function get_user_catalogs($userid)
+    public static function get_user_catalogs($user_id, $filter = '')
     {
-        if (parent::is_cached('user_catalog', $userid)) {
-            return parent::get_from_cache('user_catalog', $userid);
+        if (parent::is_cached('user_catalog' . $filter, $user_id)) {
+            return parent::get_from_cache('user_catalog' . $filter, $user_id);
         }
 
-        $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled` = 1 ORDER BY `catalog_filter_group_map`.`catalog_id`";
-        $db_results = Dba::read($sql, array($userid));
+        $catalogs = Catalog::get_catalogs($filter, $user_id);
 
-        $catalogs = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = (int)$row['catalog_id'];
-        }
-
-        parent::add_to_cache('user_catalog', $userid, $catalogs);
+        parent::add_to_cache('user_catalog' . $filter, $user_id, $catalogs);
 
         return $catalogs;
     } // get_catalogs
@@ -359,9 +363,13 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]
      */
-    public function get_catalogs()
+    public function get_catalogs($filter)
     {
-        return self::get_user_catalogs($this->id);
+        if (!isset($this->catalogs[$filter])) {
+            $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
+        }
+
+        return $this->catalogs[$filter];
     } // get_catalogs
 
     /**
@@ -441,34 +449,20 @@ class User extends database_object
      */
     public function get_favorites($type)
     {
+        $items   = array();
         $count   = AmpConfig::get('popular_threshold', 10);
         $results = Stats::get_user($count, $type, $this->id, 1);
-
-        $items = array();
-
         foreach ($results as $row) {
-            // If its a song
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $data      = new $className($row['object_id']);
             if ($type == 'song') {
-                $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
-                $data->format();
-                $items[] = $data;
-            } elseif ($type == 'album') {
-                // If its an album
-                $data = new Album($row['object_id']);
-                $data->format();
-                $items[] = $data;
-            } elseif ($type == 'artist') {
-                // If its an artist
-                $data = new Artist($row['object_id']);
-                $data->format();
-                $data->f_name = $data->f_link;
-                $items[]      = $data;
-            } elseif (($type == 'genre' || $type == 'tag')) {
-                // If it's a genre
-                $data    = new Tag($row['object_id']);
-                $items[] = $data;
             }
+            $data->format();
+            if ($type == 'artist') {
+                $data->f_name = $data->f_link;
+            }
+            $items[] = $data;
         } // end foreach
 
         return $items;
@@ -630,8 +624,8 @@ class User extends database_object
 
     /**
      * update_catalog_filter_group
-     * updates their catalog filter
-     * @param $new_filter
+     * Set a new filter group catalog filter
+     * @param int $new_filter
      */
     public function update_catalog_filter_group($new_filter)
     {
@@ -691,7 +685,7 @@ class User extends database_object
     /**
      * update_fullname_public
      * updates their fullname public
-     * @param $new_fullname_public
+     * @param bool|string $new_fullname_public
      */
     public function update_fullname_public($new_fullname_public)
     {
@@ -772,9 +766,10 @@ class User extends database_object
         while ($results  = Dba::fetch_assoc($db_results)) {
             $user_list[] = (int)$results['id'];
         }
+        // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
-            $count_array   = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license', 'album_group', 'items', 'time', 'size');
+            $count_array   = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license', 'album_disk', 'items', 'time', 'size');
             $server_counts = Catalog::get_server_counts(0);
             foreach ($user_list as $user_id) {
                 debug_event(self::class, 'Update counts for ' . $user_id, 5);
@@ -790,6 +785,7 @@ class User extends database_object
 
         $count_array = array('song', 'video', 'podcast_episode', 'artist', 'album', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($user_list as $user_id) {
+            $catalog_array = self::get_user_catalogs($user_id);
             debug_event(self::class, 'Update counts for ' . $user_id, 5);
             // get counts per user (filtered catalogs aren't counted)
             foreach ($count_array as $table) {
@@ -807,10 +803,12 @@ class User extends database_object
             $time         = 0;
             $size         = 0;
             foreach ($media_tables as $table) {
-                $enabled_sql = ($catalog_disable && $table !== 'podcast_episode')
-                    ? " WHERE `$table`.`enabled`='1' AND"
-                    : ' WHERE';
-                $sql        = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql . Catalog::get_user_filter($table, $user_id);
+                if (empty($catalog_array)) {
+                    continue;
+                }
+                $sql        = ($catalog_disable && $table !== 'podcast_episode')
+                    ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
+                    : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
@@ -822,11 +820,11 @@ class User extends database_object
             self::set_user_data($user_id, 'items', $items);
             self::set_user_data($user_id, 'time', $time);
             self::set_user_data($user_id, 'size', $size);
-            // grouped album counts
-            $sql        = "SELECT COUNT(DISTINCT(`album`.`id`)) AS `count` FROM `album` WHERE `id` in (SELECT MIN(`id`) FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group`) AND" . Catalog::get_user_filter('album', $user_id);
+            // album_disk counts
+            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' AND" . Catalog::get_user_filter('album', $user_id);
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
-            self::set_user_data($user_id, 'album_group', (int)($row[0] ?? 0));
+            self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
         }
     } // update_counts
 
@@ -1079,7 +1077,7 @@ class User extends database_object
         }
 
         // Base link
-        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->get_f_link();
 
         if ($details) {
             $user_data = self::get_user_data($this->id);
@@ -1307,13 +1305,13 @@ class User extends database_object
      * @param boolean $newest
      * @return array
      */
-    public function get_recently_played($type, $count, $offset = 0, $newest = true)
+    public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream')
     {
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
         $limit    = ($offset < 1) ? $count : $offset . "," . $count;
 
-        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
-        $db_results = Dba::read($sql, array($type, $this->id));
+        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
+        $db_results = Dba::read($sql, array($type, $this->id, $count_type));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1351,6 +1349,20 @@ class User extends database_object
         }
 
         return $this->link;
+    }
+
+    /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
     }
 
     /**
@@ -1458,6 +1470,24 @@ class User extends database_object
     {
         $art = new Art($this->id, 'user');
         $art->reset();
+    }
+
+    public function delete_streamtoken()
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
+        Dba::write($sql, array($this->id));
+    }
+
+    public function delete_rsstoken()
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
+        Dba::write($sql, array($this->id));
+    }
+
+    public function delete_apikey()
+    {
+        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
+        Dba::write($sql, array($this->id));
     }
 
     /**

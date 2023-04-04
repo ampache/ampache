@@ -31,7 +31,7 @@ use Ampache\Module\System\LegacyLogger;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use Psr\Log\LoggerInterface;
-use Requests;
+use WpOrg\Requests\Requests;
 
 final class MusicbrainzCollectorModule implements CollectorModuleInterface
 {

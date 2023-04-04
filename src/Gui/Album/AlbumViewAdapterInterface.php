@@ -26,8 +26,6 @@ interface AlbumViewAdapterInterface
 {
     public function getId(): int;
 
-    public function getAlbumSuiteIds(): string;
-
     public function getRating(): string;
 
     public function getAverageRating(): string;

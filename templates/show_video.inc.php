@@ -38,8 +38,8 @@ use Ampache\Module\Util\Ui;
 /** @var Video $video */
 
 $web_path = AmpConfig::get('web_path');
-?>
-<?php Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
+
+Ui::show_box_top($video->get_fullname(), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;
@@ -140,14 +140,17 @@ if (get_class($video) != Video::class) {
   $videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
   $videoprops[T_('Channels')]        = scrub_out($video->channels);
   if (Access::check('interface', 75)) {
-      $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
+      $data                       = pathinfo($video->file);
+      $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
+      $videoprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
+      $videoprops[T_('Size')]     = $video->f_size;
   }
   if ($video->update_time) {
       $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);
   }
   $videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
-      $videoprops[T_('# Played')]   = scrub_out($video->total_count);
+      $videoprops[T_('Played')]   = scrub_out($video->total_count);
   }
 
     foreach ($videoprops as $key => $value) {

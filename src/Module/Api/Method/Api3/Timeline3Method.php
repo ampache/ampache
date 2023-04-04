@@ -41,9 +41,11 @@ final class Timeline3Method
      * timeline
      * This get an user timeline
      * @param array $input
+     * @param User $user
      */
-    public static function timeline(array $input)
+    public static function timeline(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             $limit    = (int)($input['limit'] ?? 0);
@@ -53,13 +55,13 @@ final class Timeline3Method
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $activities = static::getUseractivityRepository()->getActivities(
+                        $results = static::getUseractivityRepository()->getActivities(
                             $user->id,
                             $limit,
                             $since
                         );
                         ob_end_clean();
-                        echo Xml3_Data::timeline($activities);
+                        echo Xml3_Data::timeline($results);
                     }
                 }
             } else {

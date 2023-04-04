@@ -297,14 +297,16 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
         }
 
         return $deleted;

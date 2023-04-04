@@ -737,6 +737,9 @@ class Ui implements UiInterface
             case 'now_playing_per_user':
             case 'show_played_times':
             case 'use_original_year':
+            case 'show_subtitle':
+            case 'show_original_year':
+            case 'show_header_login':
             case 'hide_single_artist':
             case 'hide_genres':
             case 'show_skipped_times':
@@ -801,6 +804,7 @@ class Ui implements UiInterface
             case 'api_enable_3':
             case 'api_enable_4':
             case 'api_enable_5':
+            case 'api_enable_6':
             case 'show_album_artist':
             case 'show_artist':
                 $is_true  = '';
@@ -816,7 +820,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true);
+                show_catalog_select('upload_catalog', $value, '', true, 'music');
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -916,6 +920,7 @@ class Ui implements UiInterface
                 $is_3 = '';
                 $is_4 = '';
                 $is_5 = '';
+                $is_6 = '';
                 if ($value == 0) {
                     $is_0 = 'selected="selected"';
                 } elseif ($value == 3) {
@@ -924,12 +929,15 @@ class Ui implements UiInterface
                     $is_4 = 'selected="selected"';
                 } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
+                } elseif ($value == 6) {
+                    $is_6 = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
                 echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
                 echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
                 echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
+                echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'ratingmatch_stars':
@@ -962,21 +970,57 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'localplay_level':
-                $is_user    = '';
-                $is_admin   = '';
-                $is_manager = '';
+            case 'upload_access_level':
+                $is_user            = '';
+                $is_content_manager = '';
+                $is_catalog_manager = '';
+                $is_admin           = '';
                 if ($value == '25') {
                     $is_user = 'selected="selected"';
+                } elseif ($value == '50') {
+                    $is_content_manager = 'selected="selected"';
+                } elseif ($value == '75') {
+                    $is_catalog_manager = 'selected="selected"';
                 } elseif ($value == '100') {
                     $is_admin = 'selected="selected"';
-                } elseif ($value == '50') {
-                    $is_manager = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
                 echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
-                echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
+                echo "<option value=\"50\" $is_content_manager>" . T_('Content Manager') . "</option>\n";
+                echo "<option value=\"75\" $is_catalog_manager>" . T_('Catalog Manager') . "</option>\n";
                 echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'webplayer_removeplayed':
+                $is_one   = '';
+                $is_two   = '';
+                $is_three = '';
+                $is_five  = '';
+                $is_ten   = '';
+                $is_all   = '';
+                if ($value == '1') {
+                    $is_one = 'selected="selected"';
+                } elseif ($value == '2') {
+                    $is_two = 'selected="selected"';
+                } elseif ($value == '3') {
+                    $is_three = 'selected="selected"';
+                } elseif ($value == '5') {
+                    $is_five = 'selected="selected"';
+                } elseif ($value == '10') {
+                    $is_ten = 'selected="selected"';
+                } elseif ($value == '999') {
+                    $is_all = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
+                echo "<option value=\"1\" $is_one>" . T_('Keep last played track') . "</option>\n";
+                /* HINT: Keep (2|3|4|5|10) previous tracks */
+                echo "<option value=\"2\" $is_two>" . sprintf(T_('Keep %s previous tracks'), '2') . "</option>\n";
+                echo "<option value=\"3\" $is_three>" . sprintf(T_('Keep %s previous tracks'), '3') . "</option>\n";
+                echo "<option value=\"5\" $is_five>" . sprintf(T_('Keep %s previous tracks'), '5') . "</option>\n";
+                echo "<option value=\"10\" $is_ten>" . sprintf(T_('Keep %s previous tracks'), '10') . "</option>\n";
+                echo "<option value=\"999\" $is_all>" . T_('Remove all previous tracks') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'theme_name':

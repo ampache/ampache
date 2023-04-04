@@ -44,4 +44,17 @@ final class PasswordGenerator implements PasswordGeneratorInterface
 
         return strtr($encode, '+/', '^*');
     }
+
+    /**
+     * Generate a simple token for file shares (a-z, A-Z & 0-9 only)
+     */
+    public function generate_token(): string
+    {
+        $random_bytes  = openssl_random_pseudo_bytes(self::DEFAULT_LENGTH);
+        $random_string = base64_encode($random_bytes);
+        $random_string = preg_replace("/[^a-zA-Z0-9]/", "", $random_string);
+        $random_string = substr($random_string, 0, self::DEFAULT_LENGTH);
+
+        return strtr($random_string, '+/', '^*');
+    }
 }

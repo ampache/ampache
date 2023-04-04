@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Playlist $libitem */
 
 use Ampache\Repository\Model\Playlist;
 
+/** @var Playlist $libitem */
 ?>
 <div>
     <form method="post" id="edit_playlist_<?php echo $libitem->id; ?>" class="edit_dialog_content">

@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistsMethod
@@ -48,8 +47,9 @@ final class PlaylistsMethod
      * This returns playlists based on the specified filter
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * add         = Api::set_filter(date) //optional
      * update      = Api::set_filter(date) //optional
      * offset      = (integer) //optional
@@ -58,22 +58,21 @@ final class PlaylistsMethod
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * @return boolean
      */
-    public static function playlists(array $input): bool
+    public static function playlists(array $input, User $user): bool
     {
-        $user       = User::get_from_username(Session::username($input['auth']));
         $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $filter     = (string)($input['filter'] ?? '');
         $show_dupes = (bool)($input['show_dupes'] ?? false);
 
         // regular playlists
-        $playlists = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
+        $results = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
         // merge with the smartlists
         if (!$hide) {
-            $searches  = Playlist::get_smartlists($user->id, $filter, true, $show_dupes);
-            $playlists = array_merge($playlists, $searches);
+            $searches = Playlist::get_smartlists($user->id, $filter, true, $show_dupes);
+            $results  = array_merge($results, $searches);
         }
-        if (empty($playlists)) {
+        if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 
             return false;
@@ -84,12 +83,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::playlists($playlists, $user);
+                echo Json_Data::playlists($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::playlists($playlists, $user);
+                echo Xml_Data::playlists($results, $user);
         }
 
         return true;

@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class SongsMethod
@@ -48,6 +47,7 @@ final class SongsMethod
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add    = Api::set_filter(date) //optional
@@ -56,7 +56,7 @@ final class SongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function songs(array $input): bool
+    public static function songs(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -70,25 +70,24 @@ final class SongsMethod
         // Filter out disabled songs
         Api::set_filter('enabled', '1', $browse);
 
-        $songs = $browse->get_objects();
-        if (empty($songs)) {
+        $results = $browse->get_objects();
+        if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

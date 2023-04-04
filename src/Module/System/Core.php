@@ -314,6 +314,9 @@ class Core
         if (!$path) {
             return false;
         }
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return true;
+        }
         if (file_exists($path)) {
             if (is_dir($path)) {
                 $handle = opendir($path);

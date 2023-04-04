@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Video4Method
@@ -43,16 +42,16 @@ final class Video4Method
      * This returns a single video
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video(array $input): bool
+    public static function video(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $video_id = scrub_in($input['filter']);
-        $user     = User::get_from_username(Session::username($input['auth']));
 
         switch ($input['api_format']) {
             case 'json':

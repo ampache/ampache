@@ -30,8 +30,8 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path  = AmpConfig::get('web_path');
+$access100 = Access::check('interface', 100); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $web_path . "/admin/users.php"; ?>">
@@ -164,7 +164,8 @@ $web_path = AmpConfig::get('web_path');
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
             </td>
             <td>
                 <span>
@@ -176,9 +177,26 @@ $web_path = AmpConfig::get('web_path');
         </tr>
         <tr>
             <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($client->streamtoken) {
+                    echo $client->streamtoken;
+                } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -189,7 +207,6 @@ $web_path = AmpConfig::get('web_path');
                 </span>
             </td>
         </tr>
-
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>

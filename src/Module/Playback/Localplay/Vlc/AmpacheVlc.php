@@ -44,7 +44,6 @@ class AmpacheVlc extends localplay_controller
     private $version     = 'Beta 0.2';
     private $description = 'Controls a VLC instance';
 
-
     /* Constructed variables */
     private $_vlc;
 
@@ -518,7 +517,7 @@ class AmpacheVlc extends localplay_controller
                         // if it's a http stream not in ampacha's database just show the url'
                         $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
                     } else {
-                        // it's a file get the last output after  and show that, hard to take every output possible in account
+                        // it's a file get the last output after and show that, hard to take every output possible in account
                         $getlast      = explode('/', $entry);
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
@@ -590,13 +589,9 @@ class AmpacheVlc extends localplay_controller
     {
         $options    = self::get_instance();
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
-
         // Test our connection by retriving the version, no version in status file, just need to see if returned
         // Not yet working all values returned are true for beta testing purpose
-        if ($this->_vlc->version() !== null) {
-            return true;
-        }
 
-        return false;
+        return ($this->_vlc->version() !== false);
     } // connect
 }

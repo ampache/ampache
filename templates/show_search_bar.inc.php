@@ -26,9 +26,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 // TODO remove me
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
-?>
-<?php
-$t_search = T_('Search'); ?>
+$t_search    = T_('Search'); ?>
 <div id="sb_Subsearch">
     <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo $t_search; ?>" />
@@ -38,9 +36,13 @@ $t_search = T_('Search'); ?>
         <select name="rule_1" id="searchStringRule">
             <option value="anywhere"><?php echo T_('Anywhere')?></option>
             <option value="title"><?php echo T_('Songs')?></option>
-            <option value="album"><?php echo $t_albums?></option>
+            <?php if (AmpConfig::get('album_group')) { ?>
+                <option value="album"><?php echo $t_albums?></option>
+            <?php } else { ?>
+                <option value="album_disk"><?php echo $t_albums?></option>
+            <?php } ?>
             <option value="artist"><?php echo $t_artists?></option>
-            <option value="playlist_name"><?php echo $t_playlists?></option>
+            <option value="playlist"><?php echo $t_playlists?></option>
             <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
             <?php } ?>

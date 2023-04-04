@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Util\Ui;
 
 /** @var array $controllers */
 

@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -29,6 +28,8 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+
+/** @var int[] $data */
 
 global $dic;
 

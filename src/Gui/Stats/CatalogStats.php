@@ -49,6 +49,11 @@ final class CatalogStats implements CatalogStatsInterface
         return $this->stats['album'] ?? 0;
     }
 
+    public function getAlbumDiskCount(): int
+    {
+        return $this->stats['album_disk'] ?? 0;
+    }
+
     public function getArtistCount(): int
     {
         return $this->stats['artist'] ?? 0;

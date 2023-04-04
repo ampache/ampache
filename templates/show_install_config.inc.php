@@ -101,7 +101,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
     <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . '(' . T_("required") . ')'; ?>">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
     </div>
 </div>
 
@@ -203,24 +203,6 @@ require __DIR__ . '/install_header.inc.php'; ?>
         } ?>">
             <div class="panel-body">
                 <?php if ($this->installationHelper->install_check_server_apache()) { ?>
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
-                    <div class="col-sm-4 control-label">
-                        <?php echo T_('channel/.htaccess action'); ?>
-                    </div>
-                    <div class="col-sm-8">
-                        <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
-                        <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) {
-            echo "disabled ";
-        } ?>>
-                            <?php echo T_('Write'); ?>
-                        </button>
-                    </div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file)); ?></div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
-
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('rest/.htaccess action'); ?>
                     </div>
@@ -237,7 +219,6 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
 
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('play/.htaccess action'); ?>
                     </div>
@@ -255,7 +236,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
                 <?php } ?>
 
-                <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+                &nbsp;
                 <div class="col-sm-4">
                     <?php echo T_('config/ampache.cfg.php action'); ?>
                 </div>
@@ -271,7 +252,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
                 <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : ''; echo debug_result(check_config_values($results)); ?></div>
-                <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+                &nbsp;
 
                 <div class="col-sm-4"></div>
                 <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] . "&local_host=" . $_REQUEST['local_host']; ?>

@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class CatalogMethod
@@ -44,10 +45,11 @@ final class CatalogMethod
      * Get the catalogs from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog(array $input): bool
+    public static function catalog(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -67,7 +69,7 @@ final class CatalogMethod
                 echo Json_Data::catalogs(array($catalog->id), false);
                 break;
             default:
-                echo Xml_Data::catalogs(array($catalog->id));
+                echo Xml_Data::catalogs(array($catalog->id), $user);
         }
 
         return true;

@@ -29,8 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var int $object_id */
 /** @var string $burl */
-?>
-<?php
+
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', array());

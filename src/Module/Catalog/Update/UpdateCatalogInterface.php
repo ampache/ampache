@@ -37,6 +37,7 @@ interface UpdateCatalogInterface
         bool $verification,
         bool $updateInfo,
         bool $optimizeDatabase,
+        bool $collectGarbage,
         ?string $catalogName,
         string $catalogType
     ): void;

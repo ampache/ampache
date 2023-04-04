@@ -71,10 +71,10 @@ $web_path = AmpConfig::get('web_path'); ?>
     </form>
 </div>
 <?php Ui::show_box_bottom();
-    $catalog_ids = Catalog::get_catalogs();
-    $browse      = new Browse();
+    $catalogs = Catalog::get_catalogs();
+    $browse   = new Browse();
     $browse->set_type('catalog');
     $browse->set_static_content(true);
-    $browse->save_objects($catalog_ids);
-    $browse->show_objects($catalog_ids);
+    $browse->save_objects($catalogs);
+    $browse->show_objects($catalogs);
     $browse->store(); ?>

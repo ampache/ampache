@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -34,29 +35,32 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 $web_path          = AmpConfig::get('web_path');
+$access100         = Access::check('interface', 100);
+$access25          = ($access100 || Access::check('interface', 25));
 $site_lang         = AmpConfig::get('lang');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
-$location          = get_location();
 $_SESSION['login'] = false;
+$is_session        = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$current_user      = Core::get_global('user');
+$allow_upload      = $access25 && Upload::can_upload($current_user);
 $cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
-$current_user      = Core::get_global('user');
 // strings for the main page and templates
 $t_home      = T_('Home');
 $t_play      = T_('Play');
 $t_artists   = T_('Artists');
-$t_a_artists = T_('Album Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
 $t_genres    = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
-$t_logout    = T_('Log out');
-
+$albumString = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk';
 global $dic;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
@@ -86,7 +90,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo $site_title; ?> - <?php echo $location['title']; ?></title>
+        <title><?php echo $site_title; ?></title>
 
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
@@ -114,6 +118,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
         <script src="<?php echo $web_path; ?>/lib/javascript/base.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/javascript/tools.js" defer></script>
+        <?php if (file_exists(__DIR__ . '/../lib/javascript/custom.js')) { ?>
+            <script src="<?php echo $web_path; ?>/lib/javascript/custom.js" defer></script>
+        <?php } // file exists custom.js?>
 
         <script>
             $(document).ready(function(){
@@ -127,8 +134,37 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
             var jsWebPath = "<?php echo $web_path; ?>";
             var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
-            var jsSaveTitle = "<?php echo T_('Save') ?>";
-            var jsCancelTitle = "<?php echo T_('Cancel') ?>";
+            var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')) ?>";
+            var jsHomeTitle = "<?php echo addslashes(T_('Home')); ?>";
+            var jsUploadTitle = "<?php echo addslashes(T_('Upload')); ?>";
+            var jsLocalplayTitle = "<?php echo addslashes(T_('Localplay')); ?>";
+            var jsRandomTitle = "<?php echo addslashes(T_('Random Play')); ?>";
+            var jsPlaylistTitle = "<?php echo addslashes(T_('Playlist')); ?>";
+            var jsSmartPlaylistTitle = "<?php echo addslashes(T_('Smart Playlist')); ?>";
+            var jsSearchTitle = "<?php echo addslashes(T_('Search')); ?>";
+            var jsPreferencesTitle = "<?php echo addslashes(T_('Preferences')); ?>";
+            var jsAdminCatalogTitle = "<?php echo addslashes(T_('Catalogs')); ?>";
+            var jsAdminUserTitle = "<?php echo addslashes(T_('User Tools')); ?>";
+            var jsAdminMailTitle = "<?php echo addslashes(T_('E-mail Users')); ?>";
+            var jsAdminManageAccessTitle = "<?php echo addslashes(T_('Access Control')); ?>";
+            var jsAdminPreferencesTitle = "<?php echo addslashes(T_('Server Config')); ?>";
+            var jsAdminManageModulesTitle = "<?php echo addslashes(T_('Modules')); ?>";
+            var jsAdminLicenseTitle = "<?php echo addslashes(T_('Media Licenses')); ?>";
+            var jsAdminFilterTitle = "<?php echo addslashes(T_('Catalog Filters')); ?>";
+            var jsBrowseMusicTitle = "<?php echo addslashes(T_('Browse')); ?>";
+            var jsAlbumTitle = "<?php echo addslashes(T_('Album')); ?>";
+            var jsArtistTitle = "<?php echo addslashes(T_('Artist')); ?>";
+            var jsStatisticsTitle = "<?php echo addslashes(T_('Statistics')); ?>";
+            var jsSongTitle = "<?php echo addslashes(T_('Song')); ?>";
+            var jsDemocraticTitle = "<?php echo addslashes(T_('Democratic')); ?>";
+            var jsLabelsTitle = "<?php echo addslashes(T_('Labels')); ?>";
+            var jsDashboardTitle = "<?php echo addslashes(T_('Dashboards')); ?>";
+            var jsPodcastTitle = "<?php echo addslashes(T_('Podcast')); ?>";
+            var jsPodcastEpisodeTitle = "<?php echo addslashes(T_('Podcast Episode')); ?>";
+            var jsRadioTitle = "<?php echo addslashes(T_('Radio Stations')); ?>";
+            var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
+            var jsSaveTitle = "<?php echo addslashes(T_('Save')) ?>";
+            var jsCancelTitle = "<?php echo addslashes(T_('Cancel')) ?>";
         </script>
 
         <?php if ($site_ajax) {
@@ -154,6 +190,71 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
                 return btoa(window.location.href.substring(jsWebPath.length + 1));
             }
+            $(document).ajaxSuccess(function() {
+                var title = window.location.hash.replace(/[#$&=_]/g, '');
+                title = title.replace(/\?.*/gi, '');
+                title = title.replace(/\b(?:action|type|tab|.php|\[\]|[a-z]* id|[0-9]*)\b/gi, '');
+                title = title.trim();
+                if (title === 'index') {
+                    document.title = jsSiteTitle + ' | ' + jsHomeTitle;
+                } else if (title === 'browse') {
+                    document.title = jsSiteTitle + ' | ' + jsBrowseMusicTitle;
+                } else if (title === 'albums') {
+                    document.title = jsSiteTitle + ' | ' + jsAlbumTitle;
+                } else if (title === 'artists') {
+                    document.title = jsSiteTitle + ' | ' + jsArtistTitle;
+                } else if (title === 'song') {
+                    document.title = jsSiteTitle + ' | ' + jsSongTitle;
+                } else if (title === 'democratic') {
+                    document.title = jsSiteTitle + ' | ' + jsDemocraticTitle;
+                } else if (title === 'labels') {
+                    document.title = jsSiteTitle + ' | ' + jsLabelsTitle;
+                } else if (title === 'mashup') {
+                    document.title = jsSiteTitle + ' | ' + jsDashboardTitle;
+                } else if (title === 'podcast') {
+                    document.title = jsSiteTitle + ' | ' + jsPodcastTitle;
+                } else if (title === 'podcast_episode') {
+                    document.title = jsSiteTitle + ' | ' + jsPodcastEpisodeTitle;
+                } else if (title === 'radio') {
+                    document.title = jsSiteTitle + ' | ' + jsRadioTitle;
+                } else if (title === 'video' || title === 'tvshow_seasons' || title === 'tvshows') {
+                    document.title = jsSiteTitle + ' | ' + jsVideoTitle;
+                } else if (title === 'localplay') {
+                    document.title = jsSiteTitle + ' | ' + jsLocalplayTitle;
+                } else if (title === 'random') {
+                    document.title = jsSiteTitle + ' | ' + jsRandomTitle;
+                } else if (title === 'playlist') {
+                    document.title = jsSiteTitle + ' | ' + jsPlaylistTitle;
+                } else if (title === 'smartplaylist') {
+                    document.title = jsSiteTitle + ' | ' + jsSmartPlaylistTitle;
+                } else if (title === 'search') {
+                    document.title = jsSiteTitle + ' | ' + jsSearchTitle;
+                } else if (title === 'preferences') {
+                    document.title = jsSiteTitle + ' | ' + jsPreferencesTitle;
+                } else if (title === 'stats') {
+                    document.title = jsSiteTitle + ' | ' + jsStatisticsTitle;
+                } else if (title === 'upload') {
+                    document.title = jsSiteTitle + ' | ' + jsUploadTitle;
+                } else if (title === 'admin/catalog' || title === 'admin/index') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminCatalogTitle;
+                } else if (title === 'admin/users') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminUserTitle;
+                } else if (title === 'admin/mail') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminMailTitle;
+                } else if (title === 'admin/access') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminManageAccessTitle;
+                } else if (title === 'admin/preferences' || title === 'admin/system') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminPreferencesTitle;
+                } else if (title === 'admin/modules') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminManageModulesTitle;
+                } else if (title === 'admin/filter') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminFilterTitle;
+                } else if (title === 'admin/license') {
+                    document.title = jsSiteTitle + ' | ' + jsAdminLicenseTitle;
+                } else {
+                    document.title = jsSiteTitle;
+                }
+            });
         </script>
         <?php
             } else { ?>
@@ -376,7 +477,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 <div id="headerbox">
                     <?php Ui::show_box_top('', 'box box_headerbox');
                         require_once Ui::find_template('show_search_bar.inc.php');
-                    if (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0) {
+                    if ($is_session) {
                         require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user->id; ?>"><?php echo $current_user->fullname; ?></a>
@@ -385,7 +486,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                         <?php } ?>
                         </span>
                     <?php
-                    } elseif (!AmpConfig::get('simple_user_mode')) { ?>
+                    } elseif (AmpConfig::get('show_header_login')) { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
@@ -429,15 +530,15 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                     </a>
                 </div>
 
-                <?php if (AmpConfig::get('ratings') && Access::check('interface', 25)) { ?>
+                <?php if (AmpConfig::get('ratings') && $access25) { ?>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag">
+                    <a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>">
                         <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
                         <span><?php echo $t_favorites ?></span>
                     </a>
                 </div>
                 <?php } ?>
-                <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25) && AmpConfig::get('upload_catalog') > 0) { ?>
+                <?php if ($allow_upload) { ?>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/upload.php">
                         <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
@@ -505,7 +606,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
-                <?php if (Access::check('interface', 100)) {
+                <?php if ($access100) {
                             echo '<div id=update_notify>';
                             //if (!AmpConfig::get('hide_ampache_messages', false)) {
                             //    AutoUpdate::show_ampache_message();
@@ -518,7 +619,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                                 Plugin::show_update_available();
                                 echo '<br />';
                             }
-                            $count_temp_playlist = (!empty($current_user)) ? count($current_user->playlist->get_items()) : 0;
+                            $count_temp_playlist = (!empty($current_user))
+                                ? count($current_user->playlist->get_items())
+                                : 0;
 
                             if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">

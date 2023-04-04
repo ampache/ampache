@@ -23,8 +23,8 @@
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php
+/** @var string $redirect_url */
+
 $t_ampache = T_('Ampache');
 $htmllang  = $htmllang ?? 'en_US';
 $dir       = $dir ?? 'ltr'; ?>

@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -30,6 +29,8 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var array $data */
+
 global $dic;
 
 $ajax_page = $ajax_page ?? 'index';
@@ -37,6 +38,7 @@ $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user_id) : '';
 $web_path  = AmpConfig::get('web_path');
 $is_admin  = Access::check('interface', 100);
+$showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
@@ -128,7 +130,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
                 </span>
                 </td>
                 <td class="cel_artist"><?php echo $song->get_f_artist_link(); ?></td>
-                <td class="cel_album"><?php echo $song->f_album_link; ?></td>
+                <td class="cel_album"><?php echo ($showAlbum) ? $song->get_f_album_link() : $song->get_f_album_disk_link(); ?></td>
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">

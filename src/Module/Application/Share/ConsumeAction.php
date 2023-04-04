@@ -36,7 +36,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -86,7 +85,7 @@ final class ConsumeAction implements ApplicationActionInterface
                 throw new AccessDeniedException(
                     sprintf(
                         'Access Denied:%s is not in the Interface Access list',
-                        Core::get_server('REMOTE_ADDR')
+                        filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
                     )
                 );
             }

@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
@@ -167,6 +168,26 @@ class Upload
     } // check
 
     /**
+     * can_upload
+     * check settings and permissions for uploads
+     * @param User|string|null $user
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public static function can_upload($user): bool
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $user_id     = $user->id ?? 0;
+        $user_access = $user->access ?? -1;
+
+        return AmpConfig::get('allow_upload') &&
+            $user_access >= AmpConfig::get('upload_access_level', 0) &&
+            Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user_id);
+    }
+
+    /**
      * rerror
      * @param string $file
      * @return boolean
@@ -244,7 +265,7 @@ class Upload
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
-            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, 0, null, null, $artist_id);
+            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
             if ((int)$album_id < 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
@@ -325,7 +346,7 @@ class Upload
 
         $rootdir = "";
         if ($catalog != null && $catalog->id) {
-            $rootdir = realpath($catalog->path);
+            $rootdir = realpath($catalog->get_path());
             if (!empty($rootdir)) {
                 if (AmpConfig::get('upload_subdir')) {
                     $rootdir .= DIRECTORY_SEPARATOR . $username;

@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,14 +35,10 @@ final class GraphAction extends AbstractGraphRendererAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        UiInterface $ui
     ) {
         $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

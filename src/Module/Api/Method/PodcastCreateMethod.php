@@ -32,7 +32,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PodcastCreateMethod
@@ -49,18 +48,19 @@ final class PodcastCreateMethod
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
      * @return boolean
      */
-    public static function podcast_create(array $input): bool
+    public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
@@ -78,7 +78,6 @@ final class PodcastCreateMethod
         }
 
         Catalog::count_table('podcast');
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

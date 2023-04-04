@@ -59,7 +59,7 @@ use Ampache\Module\Authorization\Access;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('artist', $libitem->id, 20)); ?>" /></td>
             </tr>
             <?php if (AmpConfig::get('label')) { ?>
             <tr>

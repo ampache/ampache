@@ -54,10 +54,9 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $tvshow_id = (int) $request->getQueryParams()['tvshow_id'];
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The TV Show and its files will be deleted'),

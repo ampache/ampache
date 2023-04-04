@@ -80,6 +80,8 @@ interface PlaylistViewAdapterInterface
 
     public function getPlaylistLink(): string;
 
+    public function getUsername(): string;
+
     public function getLastUpdate(): string;
 
     public function getType(): string;

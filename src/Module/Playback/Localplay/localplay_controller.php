@@ -176,7 +176,6 @@ abstract class localplay_controller
         $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
             parse_str($variables, $data);
-
             foreach ($primary_array as $pkey) {
                 if (array_key_exists($pkey, $data)) {
                     $data['primary_key'] = $pkey;

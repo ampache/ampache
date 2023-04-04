@@ -88,6 +88,8 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
                     ++$track;
                 }
             }
+        } else {
+            $playlist->regenerate_track_numbers();
         }
         $this->ui->showQueryStats();
         $this->ui->showFooter();

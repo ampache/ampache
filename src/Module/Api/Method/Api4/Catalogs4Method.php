@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Catalogs4Method
@@ -42,27 +42,28 @@ final class Catalogs4Method
      * Get information about catalogs this user is allowed to manage.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function catalogs(array $input)
+    public static function catalogs(array $input, User $user)
     {
         // filter for specific catalog types
-        $filter   = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = Catalog::get_catalogs($filter);
+        $filter  = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $results = $user->get_catalogs($filter);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::catalogs($catalogs);
+                echo Json4_Data::catalogs($results);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::catalogs($catalogs);
+                echo Xml4_Data::catalogs($results);
         }
     } // catalogs
 }

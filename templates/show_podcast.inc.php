@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -35,7 +36,9 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Podcast $podcast */
 /** @var string $object_type */
 
-$browse = new Browse();
+$access75 = Access::check('interface', 75);
+$access50 = ($access75 || Access::check('interface', 50));
+$browse   = new Browse();
 $browse->set_type($object_type);
 
 Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
@@ -77,8 +80,8 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if ($access50) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
@@ -89,7 +92,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
     <?php if (AmpConfig::get('use_rss')) {
         ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
     } ?>
@@ -109,7 +112,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
             <?php echo Ajax::button_with_text('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'), 'sync_podcast_' . $podcast->id); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check('interface', 75)) { ?>
+        <?php if ($access75) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>

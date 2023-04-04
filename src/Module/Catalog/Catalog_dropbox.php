@@ -50,9 +50,16 @@ class Catalog_dropbox extends Catalog
     private $version     = '000002';
     private $type        = 'dropbox';
     private $description = 'Dropbox Remote Catalog';
+    private int $count   = 0;
 
-    private int $count = 0;
+    private int $catalog_id;
+    private string $apikey;
+    private string $secret;
     private string $authcode;
+    private string $authtoken;
+
+    public string $path;
+    public $getchunk;
 
     /**
      * get_description
@@ -71,6 +78,15 @@ class Catalog_dropbox extends Catalog
     {
         return $this->version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->path;
+    } // get_path
 
     /**
      * get_type
@@ -157,12 +173,6 @@ class Catalog_dropbox extends Catalog
         // $this->completeAuthToken();
     }
 
-    public $apikey;
-    public $secret;
-    public $path;
-    public $authtoken;
-    public $getchunk;
-
     /**
      * Constructor
      *
@@ -174,7 +184,6 @@ class Catalog_dropbox extends Catalog
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
             $info     = $this->get_info($catalog_id);
-
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -485,7 +494,7 @@ class Catalog_dropbox extends Catalog
 
                 return $video_id;
             } else {
-                debug_event('dropbox.catalog', 'failed to download file', 5, 'ampache-catalog');
+                debug_event('dropbox.catalog', 'failed to download file', 5);
             }
         } // insert_video
 
@@ -537,8 +546,7 @@ class Catalog_dropbox extends Catalog
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
-                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                    'ampache-catalog');
+                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $readfile = true;
                 $filesize = 40960;
@@ -547,7 +555,7 @@ class Catalog_dropbox extends Catalog
 
                 $res = $this->download($dropbox, $path, $filesize, $outfile);
                 if ($res) {
-                    debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'updating song', 5);
                     $song = new Song($row['id']);
 
                     $vainfo = $utilityFactory->createVaInfo(
@@ -574,7 +582,7 @@ class Catalog_dropbox extends Catalog
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
-                    debug_event('dropbox.catalog', 'removing song', 5, 'ampache-catalog');
+                    debug_event('dropbox.catalog', 'removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -602,8 +610,7 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5,
-                'ampache-catalog');
+            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Tag4Method
@@ -41,15 +42,16 @@ final class Tag4Method
      * This returns a single tag based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Tag
      * @return boolean
      */
-    public static function tag(array $input): bool
+    public static function tag(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
-        return Genre4Method::genre($input);
+        return Genre4Method::genre($input, $user);
     } // tag
 }

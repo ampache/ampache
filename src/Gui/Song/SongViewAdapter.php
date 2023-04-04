@@ -351,16 +351,21 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Title')]         = scrub_out($this->song->title);
         $songprops[T_('Song Artist')]   = $this->song->get_f_artist_link();
         $songprops[T_('Album Artist')]  = $this->song->get_f_albumartist_link();
-        $songprops[T_('Album')]         = $this->song->f_album_link;
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+            $songprops[T_('Album')] = $this->song->get_f_album_link();
+        } else {
+            $songprops[T_('Album')] = $this->song->get_f_album_disk_link();
+        }
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Track')]         = $this->song->track;
+        $songprops[T_('Disk')]          = $this->song->disk;
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = scrub_out($this->song->get_album_original_year($this->song->album));
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-        $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
-        $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
+            "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
+            "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($this->song->f_artist) . "%22+%22" . rawurlencode($this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
         if ($this->song->mbid) {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         } else {
@@ -370,14 +375,16 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
             $web_path     = $this->configContainer->getWebPath();
             $label_string = '';
-            foreach (array_map('trim', explode(';', $this->song->label)) as $label_name) {
+            foreach (array_map('trim', explode(';', (string)$this->song->label)) as $label_name) {
                 $label_string .= "<a href=\"" . $web_path . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
             }
             $songprops[T_('Label')] = rtrim($label_string, ', ');
         } else {
             $songprops[T_('Label')] = scrub_out($this->song->label);
         }
-        $songprops[T_('Song Language')]  = scrub_out($this->song->language);
+        if ($this->song->language) {
+            $songprops[T_('Song Language')] = scrub_out($this->song->language);
+        }
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
         $songprops[T_('Bitrate')]        = scrub_out($this->song->f_bitrate);
@@ -391,18 +398,27 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->song->replaygain_album_gain !== null) {
             $songprops[T_('ReplayGain Album Gain')] = scrub_out($this->song->replaygain_album_gain);
         }
+        if ($this->song->r128_track_gain !== null) {
+            $songprops[T_('R128 Track Gain')] = scrub_out($this->song->r128_track_gain);
+        }
+        if ($this->song->r128_album_gain !== null) {
+            $songprops[T_('R128 Album Gain')] = scrub_out($this->song->r128_album_gain);
+        }
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
-            $songprops[T_('Filename')] = scrub_out($this->song->file) . " " . $this->song->f_size;
+            $data                      = pathinfo($this->song->file);
+            $songprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
+            $songprops[T_('Filename')] = scrub_out((string)($data['filename'] . "." . $data['extension']) ?? '');
+            $songprops[T_('Size')]     = $this->song->f_size;
         }
         if ($this->song->update_time) {
             $songprops[T_('Last Updated')] = get_datetime((int) $this->song->update_time);
         }
         $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('# Played')] = scrub_out($this->song->total_count);
+            $songprops[T_('Played')] = scrub_out($this->song->total_count);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('# Skipped')] = scrub_out($this->song->total_skip);
+            $songprops[T_('Skipped')] = scrub_out($this->song->total_skip);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
@@ -470,7 +486,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getAlbumLink(): string
     {
-        return $this->song->f_album_link;
+        return $this->song->get_f_album_link();
+    }
+
+    public function getAlbumDiskLink(): string
+    {
+        return $this->song->get_f_album_disk_link();
     }
 
     public function getYear(): int

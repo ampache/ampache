@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
 
 final class UpdateCatalogFileCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private UpdateSingleCatalogFileInterface $updateSingleCatalogFile;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         UpdateSingleCatalogFileInterface $updateSingleCatalogFile
     ) {
         parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
 
-        $this->configContainer         = $configContainer;
         $this->updateSingleCatalogFile = $updateSingleCatalogFile;
 
         $this

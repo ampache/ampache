@@ -42,7 +42,7 @@ final class SongFilesystemCleanup implements SongFilesystemCleanupInterface
         while ($row = Dba::fetch_assoc($db_results)) {
             $result[] = $row['file'];
             if ($dryRun === false) {
-                $sql = 'DELETE FROM `song` WHERE `id` = ?';
+                $sql = 'DELETE FROM `song` WHERE `id` = ?;';
 
                 Dba::write($sql, array($row['id']));
 

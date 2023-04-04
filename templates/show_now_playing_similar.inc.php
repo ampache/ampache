@@ -28,7 +28,10 @@ use Ampache\Repository\Model\Song;
 /** @var array $songs */
 ?>
 
-<?php if ($artists) { ?>
+<?php
+$web_path = AmpConfig::get('web_path');
+$wanted   = AmpConfig::get('wanted');
+if ($artists) { ?>
 <div class="np_group similars">
     <div class="np_cell cel_similar">
         <label><?php echo T_('Similar Artists'); ?></label>
@@ -36,8 +39,8 @@ use Ampache\Repository\Model\Song;
             <div class="np_cell cel_similar_artist">
             <?php
                 if ($artistArray['id'] === null) {
-                    if (AmpConfig::get('wanted') && $artistArray['mbid']) {
-                        echo "<a class=\"missing_album\" href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $artistArray['mbid'] . "\" title=\"" . scrub_out($artistArray['name']) . "\">" . scrub_out($artistArray['name']) . "</a>";
+                    if ($wanted && $artistArray['mbid']) {
+                        echo "<a class=\"missing_album\" href=\"" . $web_path . "/artists.php?action=show_missing&mbid=" . $artistArray['mbid'] . "\" title=\"" . scrub_out($artistArray['name']) . "\">" . scrub_out($artistArray['name']) . "</a>";
                     } else {
                         echo scrub_out($artistArray['name']);
                     }

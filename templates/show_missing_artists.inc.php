@@ -23,8 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
+Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -34,10 +33,11 @@ use Ampache\Module\Util\Ui;
     <tbody>
         <?php
         if ($wartists) {
+            $web_path = AmpConfig::get('web_path');
             foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>">
             <td class="cel_artist">
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
+                <a href="<?php echo $web_path; ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
             </td>
         </tr>
         <?php

@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -48,10 +47,11 @@ final class LicenseSongsMethod
      * This returns all songs attached to a license ID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs(array $input): bool
+    public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -61,9 +61,8 @@ final class LicenseSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user     = User::get_from_username(Session::username($input['auth']));
-        $song_ids = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
-        if (empty($song_ids)) {
+        $results = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
+        if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
             return false;
@@ -72,10 +71,10 @@ final class LicenseSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs($song_ids, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
-                echo Xml_Data::songs($song_ids, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

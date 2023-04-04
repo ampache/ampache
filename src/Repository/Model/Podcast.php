@@ -74,12 +74,10 @@ class Podcast extends database_object implements library_item
             return false;
         }
 
-        /* Get the information from the db */
         $info = $this->get_info($podcast_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // constructor
@@ -148,8 +146,8 @@ class Podcast extends database_object implements library_item
         $this->f_website       = scrub_out($this->website);
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
+        $this->get_f_link();
 
         return true;
     }
@@ -213,6 +211,20 @@ class Podcast extends database_object implements library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -229,12 +241,13 @@ class Podcast extends database_object implements library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -742,11 +755,11 @@ class Podcast extends database_object implements library_item
         $dirname = $this->title;
 
         // create path if it doesn't exist
-        if (!is_dir($catalog->path . DIRECTORY_SEPARATOR . $dirname)) {
-            static::create_catalog_path($catalog->path . DIRECTORY_SEPARATOR . $dirname);
+        if (!is_dir($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname) && !self::create_catalog_path($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname)) {
+            return '';
         }
 
-        return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
+        return $catalog->get_path() . DIRECTORY_SEPARATOR . $dirname;
     }
 
     /**

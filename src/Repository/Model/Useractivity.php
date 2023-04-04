@@ -51,12 +51,10 @@ class Useractivity extends database_object
             return false;
         }
 
-        /* Get the information from the db */
         $info = $this->get_info($useract_id, 'user_activity');
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // Constructor

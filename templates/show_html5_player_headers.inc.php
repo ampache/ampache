@@ -16,8 +16,18 @@ $webplayer_debug  = (AmpConfig::get('webplayer_debug'))
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
-$iframed  = $iframed ?? false;
-$isShare  = $isShare ?? false;
+$iframed   = $iframed ?? false;
+$isShare   = $isShare ?? false;
+$isLight   = (AmpConfig::get('theme_color') == 'light');
+$highlight = $isLight
+    ? 'blue'
+    : 'orange';
+$jpinterface = ($isLight)
+    ? '#f8f8f8'
+    : '#191919';
+$jpplaylist = ($isLight)
+    ? '#d4d4d4'
+    : '#202020';
 
 if ($iframed || $isShare) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
@@ -65,6 +75,7 @@ if ($iframed || $isShare) { ?>
         jpmedia['poster'] = media['poster'];
         jpmedia['artist_id'] = media['artist_id'];
         jpmedia['album_id'] = media['album_id'];
+        jpmedia['albumdisk_id'] = media['albumdisk_id'];
         jpmedia['media_id'] = media['media_id'];
         jpmedia['media_type'] = media['media_type'];
         jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
@@ -87,6 +98,11 @@ if ($iframed || $isShare) { ?>
     {
         var jpmedia = convertMediaToJPMedia(media);
         jplaylist.addAfter(jpmedia, jplaylist.current);
+    }
+
+    function playlistLoop(bool)
+    {
+        jplaylist.toggleLoop(bool);
     }
 </script>
 <script>
@@ -201,12 +217,13 @@ if ($iframed) { ?>
         {
             if (isVisualizerEnabled()) {
                 $('#uberviz').css('visibility', 'hidden');
+                $('#vizfullbtn').css('visibility', 'hidden');
                 $('#equalizerbtn').css('visibility', 'hidden');
                 $('#equalizer').css('visibility', 'hidden');
                 $('#header').css('background-color', vizPrevHeaderColor);
                 $('#webplayer').css('background-color', vizPrevPlayerColor);
-                $('.jp-interface').css('background-color', 'rgb(25, 25, 25)');
-                $('.jp-playlist').css('background-color', 'rgb(20, 20, 20)');
+                $('.jp-interface').css('background-color', '<?php echo $jpinterface; ?>');
+                $('.jp-playlist').css('background-color', '<?php echo $jpplaylist; ?>');
             } else {
                 // Resource not yet initialized? Do it.
                 if (!vizInitialized) {
@@ -219,6 +236,7 @@ if ($iframed) { ?>
 
                 if (vizInitialized) {
                     $('#uberviz').css('visibility', 'visible');
+                    $('#vizfullbtn').css('visibility', 'visible');
                     $('#equalizerbtn').css('visibility', 'visible');
                     vizPrevHeaderColor = $('#header').css('background-color');
                     $('#header').css('background-color', 'transparent');
@@ -320,10 +338,29 @@ if ($iframed) { ?>
                 ApplyReplayGain();
 
                 if (replaygainEnabled) {
-                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px orange');
+                    $('#replaygainbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
                 } else {
                     $('#replaygainbtn').css('box-shadow', '');
                 }
+            }
+        }
+
+        var loopEnabled = false;
+
+        function TogglePlaylistLoop()
+        {
+            if (loopEnabled === false) {
+                playlistLoop(true);
+                loopEnabled = true;
+            } else {
+                playlistLoop(false);
+                loopEnabled = false;
+            }
+
+            if (loopEnabled) {
+                $('#playlistloopbtn').css('box-shadow', '0px 1px 0px 0px <?php echo $highlight ?>');
+            } else {
+                $('#playlistloopbtn').css('box-shadow', '');
             }
         }
 
@@ -554,7 +591,7 @@ if ($iframed) { ?>
     window.addEventListener('storage', function (event) {
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
-            if (event.newValue != jpuqid) {
+            if (typeof jpuqid === 'undefined' || (typeof jpuqid !== 'undefined' && event.newValue != jpuqid)) {
                 if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
                     $("#jquery_jplayer_1").data("jPlayer").pause();
                 }

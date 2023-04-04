@@ -31,7 +31,8 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\User $client */
 
 $web_path       = AmpConfig::get('web_path');
-$display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
+$display_fields = (array) AmpConfig::get('registration_display_fields');
+$access100      = Access::check('interface', 100); ?>
 <?php echo AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo $web_path; ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata">
@@ -89,8 +90,9 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -103,9 +105,26 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         </tr>
         <tr>
             <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($client->streamtoken) {
+                    echo $client->streamtoken;
+                } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>

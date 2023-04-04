@@ -46,7 +46,7 @@ use Ampache\Module\Api\Ajax;
                     </div>
                     <?php
                         } else {
-                            echo $libitem->get_album_artist_fullname();
+                            echo $libitem->get_artist_fullname();
                         } ?>
                 </td>
             </tr>
@@ -59,10 +59,6 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year') ?></td>
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Disk') ?></td>
-                <td><input type="text" name="disk" value="<?php echo scrub_out($libitem->disk); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID') ?></td>
@@ -95,6 +91,10 @@ use Ampache\Module\Api\Ajax;
                 <td><input type="text" name="release_status" value="<?php echo $libitem->release_status; ?>" /></td>
             </tr>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Release Comment') ?></td>
+                <td><input type="text" name="subtitle" value="<?php echo $libitem->subtitle; ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
                 <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>
             </tr>
@@ -108,7 +108,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('album', $libitem->id, 20)); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

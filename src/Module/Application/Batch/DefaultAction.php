@@ -104,7 +104,7 @@ final class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type) && $object_type !== 'album') {
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
             $object_id = $_REQUEST['id'];
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
@@ -130,18 +130,6 @@ final class DefaultAction implements ApplicationActionInterface
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
-                case 'album':
-                    $albumList  = (is_array($_REQUEST['id']))
-                        ? $_REQUEST['id']
-                        : explode(',', $_REQUEST['id']);
-                    $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name((int)$albumList[0]);
-                    if ($libitem->id) {
-                        $libitem->format();
-                        $name = $libitem->get_fullname();
-                    }
-                    break;
                 case 'browse':
                     $object_id        = (int)Core::get_request('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
@@ -151,6 +139,10 @@ final class DefaultAction implements ApplicationActionInterface
                             case 'album':
                                 $album     = $this->modelFactory->createAlbum($media_id);
                                 $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
+                                break;
+                            case 'album_disk':
+                                $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
+                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
                                 break;
                             case 'song':
                                 $media_ids[] = $media_id;

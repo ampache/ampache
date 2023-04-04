@@ -262,10 +262,8 @@ final class Environment implements EnvironmentInterface
         $port = 80;
         if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
             $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
-        } else {
-            if (isset($_SERVER['SERVER_PORT'])) {
-                $port = (int) $_SERVER['SERVER_PORT'];
-            }
+        } elseif (isset($_SERVER['SERVER_PORT'])) {
+            $port = (int) $_SERVER['SERVER_PORT'];
         }
 
         return $port;

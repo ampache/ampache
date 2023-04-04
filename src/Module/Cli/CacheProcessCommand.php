@@ -42,8 +42,12 @@ final class CacheProcessCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
+        $interactor->info(
+            T_('Start cache process'),
+            true
+        );
         /**
          * Pre-cache any new files
          */
@@ -52,7 +56,9 @@ final class CacheProcessCommand extends Command
         }
 
         debug_event('cache', 'finished cache process', 4);
-
-        $io->white(T_('Cache process finished'), true);
+        $interactor->white(
+            T_('Completed cache process'),
+            true
+        );
     }
 }

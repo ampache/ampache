@@ -64,15 +64,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $response = null;
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist_id']);
@@ -83,9 +80,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        $this->ui->showHeader();
         try {
             $this->artistDeleter->remove($artist);
-
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Artist has been deleted'),
@@ -102,6 +99,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

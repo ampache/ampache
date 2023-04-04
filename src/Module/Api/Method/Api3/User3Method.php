@@ -39,9 +39,11 @@ final class User3Method
      * user
      * This get an user public information
      * @param array $input
+     * @param User $user
      */
-    public static function user(array $input)
+    public static function user(array $input, User $user)
     {
+        unset($user);
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);

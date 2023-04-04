@@ -63,10 +63,10 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             return true;
         }
 
-        $user = Core::get_global('user');
-        if ($userId !== null) {
-            $user = $this->modelFactory->createUser($userId);
-        }
+        $user = ($userId !== null)
+            ? $this->modelFactory->createUser($userId)
+            : Core::get_global('user');
+
         // an empty string is an empty global
         if ($user == '' || $user == null) {
             return false;

@@ -22,8 +22,9 @@
 
 use Ampache\Module\Api\Ajax;
 
+/** @var int $refresh_limit */
+/** @var string $ajax_url */
 ?>
-
 <script>
 // Set refresh interval (in seconds)
 var refreshInterval=<?php echo $refresh_limit ?>;

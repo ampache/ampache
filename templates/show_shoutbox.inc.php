@@ -23,8 +23,7 @@
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Shoutbox')); ?>
+Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
   foreach ($shouts as $shout_id) {

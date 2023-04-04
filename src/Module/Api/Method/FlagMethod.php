@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
@@ -48,12 +47,13 @@ final class FlagMethod
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
+     * @param User $user
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag(array $input): bool
+    public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -67,11 +67,6 @@ final class FlagMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $user_id   = null;
-        if ((int) $user->id > 0) {
-            $user_id = $user->id;
-        }
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -92,7 +87,7 @@ final class FlagMethod
                 return false;
             }
             $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user_id)) {
+            if ($userflag->set_flag($flag, $user->id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api::message($message . $object_id, $input['api_format']);
 

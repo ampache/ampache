@@ -27,8 +27,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $fields */
 /** @var array $instances */
-/** @var LocalPlay $localplay */ ?>
-<?php Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
+/** @var LocalPlay $localplay */
+
+Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">
 <tr>
     <?php foreach ($fields as $key => $field) { ?>

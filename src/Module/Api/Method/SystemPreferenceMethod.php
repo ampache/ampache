@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class SystemPreferenceMethod
@@ -45,21 +44,21 @@ final class SystemPreferenceMethod
      * Get your system preferences by name
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference(array $input): bool
+    public static function system_preference(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $pref_name  = (string)($input['filter'] ?? '');
-        $preference = Preference::get($pref_name, -1);
-        if (empty($preference)) {
+        $results    = Preference::get($pref_name, -1);
+        if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
@@ -67,10 +66,10 @@ final class SystemPreferenceMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($preference, 'preference');
+                echo Xml_Data::object_array($results, 'preference');
         }
 
         return true;

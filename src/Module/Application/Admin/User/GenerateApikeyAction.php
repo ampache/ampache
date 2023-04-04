@@ -29,7 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,18 +44,18 @@ final class GenerateApikeyAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
-    private UserAccessKeyGeneratorInterface $userAccessKeyGenerator;
+    private UserKeyGeneratorInterface $userKeyGenerator;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserAccessKeyGeneratorInterface $userAccessKeyGenerator
+        UserKeyGeneratorInterface $userKeyGenerator
     ) {
-        $this->ui                     = $ui;
-        $this->modelFactory           = $modelFactory;
-        $this->configContainer        = $configContainer;
-        $this->userAccessKeyGenerator = $userAccessKeyGenerator;
+        $this->ui               = $ui;
+        $this->modelFactory     = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->userKeyGenerator = $userKeyGenerator;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -72,7 +72,7 @@ final class GenerateApikeyAction extends AbstractUserAction
 
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
-        $this->userAccessKeyGenerator->generateApikey($client);
+        $this->userKeyGenerator->generateApikey($client);
 
         $this->ui->showConfirmation(
             T_('No Problem'),

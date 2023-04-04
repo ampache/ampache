@@ -52,10 +52,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $catalog = Catalog::create_from_id($row['id']);
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
-                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path),
+                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
                 true
             );
-            $this->charset_directory_correct($interactor, $catalog->path, $force);
+            $this->charset_directory_correct($interactor, $catalog->get_path(), $force);
         }
 
         $interactor->ok(
@@ -242,9 +242,7 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $results = unlink($full_file);
-
-        if (!$results) {
+        if (!unlink($full_file)) {
             $interactor->error(
                 sprintf(T_('There was an error trying to delete "%s"'), $full_file),
                 true

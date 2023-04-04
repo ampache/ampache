@@ -23,7 +23,6 @@
 use Ampache\Repository\Model\Tag;
 
 /** @var Tag $libitem */
-
 ?>
 <div>
     <form method="post" id="edit_tag_<?php echo $libitem->id; ?>" class="edit_dialog_content">

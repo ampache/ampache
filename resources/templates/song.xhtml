@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <dl class="media_details" tal:define="song_id SONG/getId">
     <dt i18n:translate="">Rating</dt>
@@ -83,11 +84,9 @@
             >DELETE BUTTON</a>
     </dd>
     <tal:block tal:repeat="prop SONG/getProperties">
-        <tal:block tal:condition="prop">
-            <tal:block>
-                <dt tal:content="repeat/prop/key"></dt>
-                <dd tal:content="structure prop"></dd>
-            </tal:block>
+        <tal:block>
+            <dt tal:content="repeat/prop/key"></dt>
+            <dd tal:content="structure prop"></dd>
         </tal:block>
     </tal:block>
 </dl>

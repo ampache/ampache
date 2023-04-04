@@ -29,4 +29,14 @@ use function DI\autowire;
 return [
     PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
     PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
+    Search\AlbumSearch::class => autowire(),
+    Search\ArtistSearch::class => autowire(),
+    Search\LabelSearch::class => autowire(),
+    Search\PlaylistSearch::class => autowire(),
+    Search\PodcastEpisodeSearch::class => autowire(),
+    Search\PodcastSearch::class => autowire(),
+    Search\SongSearch::class => autowire(),
+    Search\TagSearch::class => autowire(),
+    Search\UserSearch::class => autowire(),
+    Search\VideoSearch::class => autowire(),
 ];

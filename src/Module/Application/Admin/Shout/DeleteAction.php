@@ -74,7 +74,6 @@ final class DeleteAction implements ApplicationActionInterface
         );
 
         $this->ui->showHeader();
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been deleted'),

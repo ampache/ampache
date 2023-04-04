@@ -66,9 +66,11 @@ final class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $access_level = $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
+            $access_level == 0 ||
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();
         }
@@ -105,7 +107,7 @@ final class DefaultAction implements ApplicationActionInterface
             require Ui::find_template('show_add_upload.inc.php');
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            echo sprintf(T_('Not Found: %s'), 'upload_catalog');
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '&nbsp' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . "</a>";
         }
         // Show the Footer
         $this->ui->showQueryStats();

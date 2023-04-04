@@ -26,7 +26,6 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Exception\ItemNotFoundException;
 

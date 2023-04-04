@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -55,9 +54,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
-
-        $response = null;
+        $this->ui->showHeader();
 
         $this->logger->debug(
             'Set track numbers called.',
@@ -92,6 +89,6 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

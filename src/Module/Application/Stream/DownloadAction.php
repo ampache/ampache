@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;

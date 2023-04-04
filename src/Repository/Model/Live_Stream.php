@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use PDOStatement;
 
 /**
  * Radio Class
@@ -96,17 +95,20 @@ class Live_Stream extends database_object implements Media, library_item
 
     /**
      * Constructor
-     * This takes a flagged.id and then pulls in the information for said flag entry
+     * This takes a flagged. id and then pulls in the information for said flag entry
      * @param integer $stream_id
      */
     public function __construct($stream_id)
     {
         $info = $this->get_info($stream_id, 'live_stream');
-
-        // Set the vars
+        if (empty($info)) {
+            return false;
+        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
+        return true;
     } // constructor
 
     public function getId(): int
@@ -124,7 +126,7 @@ class Live_Stream extends database_object implements Media, library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_link          = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        $this->get_f_link();
         $this->f_name_link     = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->get_fullname() . "</a>";
         $this->f_url_link      = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
         $this->f_site_url_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->site_url . "</a>";
@@ -169,6 +171,48 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * get_f_artist_link
+     *
+     * @return string
+     */
+    public function get_f_artist_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     * @return string
+     */
+    public function get_f_album_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     * @return string
+     */
+    public function get_f_album_disk_link()
+    {
+        return '';
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -185,12 +229,13 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -365,7 +410,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function get_stream_types($player = null)
     {
-        return array('foreign');
+        return array('native');
     } // native_stream
 
     /**
@@ -378,7 +423,7 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $force_http
      * @return string
      */
-    public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = '', $local = false, $sid = '', $force_http = '')
     {
         return $this->url . $additional_params;
     } // play_url
@@ -436,5 +481,6 @@ class Live_Stream extends database_object implements Media, library_item
 
     public function remove()
     {
+        return true;
     }
 }

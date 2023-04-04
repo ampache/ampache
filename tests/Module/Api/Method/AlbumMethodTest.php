@@ -63,11 +63,12 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
 
-        $this->subject->handle($gatekeeper, $response, $output, []);
+        $this->subject->handle($gatekeeper, $response, $output, [], $user);
     }
 
     public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
@@ -77,6 +78,7 @@ class AlbumMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
         $albumId = 666;
 
@@ -98,7 +100,7 @@ class AlbumMethodTest extends MockeryTestCase
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
-        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId]);
+        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId], $user);
     }
 
     public function testHandleReturnsOutput(): void
@@ -108,10 +110,10 @@ class AlbumMethodTest extends MockeryTestCase
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $albumId = 666;
-        $userId  = 42;
         $include = [3];
         $result  = 'some-result';
 
@@ -157,7 +159,7 @@ class AlbumMethodTest extends MockeryTestCase
 
         $this->assertSame(
             $response,
-            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include])
+            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include], $user)
         );
     }
 }

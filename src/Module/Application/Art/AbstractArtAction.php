@@ -35,7 +35,7 @@ abstract class AbstractArtAction implements ApplicationActionInterface
     protected function getItem(
         GuiGatekeeperInterface $gatekeeper
     ): ?library_item {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             return null;

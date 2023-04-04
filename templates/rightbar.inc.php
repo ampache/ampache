@@ -30,8 +30,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
-?>
+$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <script>
     function ToggleRightbarVisibility()
     {
@@ -53,22 +52,18 @@ $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
-            <?php
-            global $dic;
+            <?php global $dic;
             $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
                 $user_id
             );
-            foreach ($playlists as $playlist) {
-                ?>
+            foreach ($playlists as $playlist) { ?>
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->get_fullname(), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
-            <?php
-            } ?>
+            <?php } ?>
             </ul>
         </li>
-    <?php } ?>
-<?php
+    <?php }
 // @todo remove after refactoring
 global $dic;
 $zipHandler = $dic->get(ZipHandlerInterface::class);
@@ -129,25 +124,25 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         $objects   = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('broadcast', 'channel', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+    $normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
 
     foreach ($objects as $object_data) {
         $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type, $normal_array)) {
+            /** @var Ampache\Repository\Model\playable_item $object */
             $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(array_shift($object_data));
-            $object->format(); ?>
+            $object     = new $class_name(array_shift($object_data)); ?>
     <li>
-      <?php echo $object->f_link; ?>
-        <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
+      <?php echo $object->get_f_link();
+            echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
         }
     } if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
-<?php } ?>
-<?php if (isset($truncated)) { ?>
+<?php }
+    if (isset($truncated)) { ?>
     <li>
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>

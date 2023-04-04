@@ -82,7 +82,7 @@ class ShowGenerateRsstokenActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showConfirmation')
             ->with(
                 'Are You Sure?',
-                'This will replace your existing RSS token. Feeds with the old token might not work properly',
+                'This will replace your existing token. Links with the old token might not work properly',
                 sprintf(
                     'admin/users.php?action=%s&user_id=%d',
                     GenerateRsstokenAction::REQUEST_KEY,

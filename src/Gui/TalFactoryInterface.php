@@ -22,7 +22,6 @@
 
 namespace Ampache\Gui;
 
-use Ampache\Gui\TalViewInterface;
 use PhpTal\PhpTalInterface;
 use PhpTal\TranslationServiceInterface;
 

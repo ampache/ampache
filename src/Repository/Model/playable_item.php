@@ -55,6 +55,12 @@ interface playable_item
     public function get_link();
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link();
+
+    /**
      * get_parent
      *
      * Get parent. Return parent `object_type`, `object_id` ; null otherwise.
@@ -70,12 +76,11 @@ interface playable_item
     public function get_childrens();
 
     /**
-     * search_childrens
-     *
-     * Search for direct childrens. Return an array of `object_type`, `object_id` childrens matching the criteria.
+     * Search for direct children of an object
      * @param string $name
+     * @return array
      */
-    public function search_childrens($name);
+    public function get_children($name);
 
     /**
      * get_medias

@@ -26,18 +26,17 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\LastFm\Exception\LastFmQueryFailedException;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 
 class Recommendation
 {
-
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results
@@ -430,6 +429,49 @@ class Recommendation
 
         return $results;
     } // get_artist_info
+
+    /**
+     * get_album_info
+     * Returns album information
+     * @param integer $album_id
+     * @return array
+     */
+    public static function get_album_info($album_id)
+    {
+        $album = new Album($album_id);
+        $query = ($album->mbid)
+            ? 'mbid=' . rawurlencode($album->mbid)
+            : 'artist=' . rawurlencode($album->get_artist_fullname()) . 'album=' . rawurlencode($album->get_fullname());
+
+        $results = array(
+            'id' => $album_id,
+            'summary' => null,
+            'largephoto' => null,
+            'smallphoto' => null,
+            'mediumphoto' => null,
+            'megaphoto' => null
+        );
+
+        try {
+            $xml = self::get_lastfm_results('album.getinfo', $query);
+        } catch (LastFmQueryFailedException $e) {
+            return $results;
+        }
+
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
+            ($xml->album->wiki->summary ?? '')));
+        $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
+
+        if ($album->id) {
+            $results['id']          = $album->id;
+            $results['largephoto']  = Art::url($album->id, 'album', null, 174);
+            $results['smallphoto']  = Art::url($album->id, 'album', null, 34);
+            $results['mediumphoto'] = Art::url($album->id, 'album', null, 64);
+            $results['megaphoto']   = Art::url($album->id, 'album', null, 300);
+        }
+
+        return $results;
+    } // get_album_info
 
     /**
      * Migrate an object associate stats to a new object

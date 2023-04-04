@@ -23,8 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Configure License')); ?>
+Ui::show_box_top(T_('Configure License')); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
 <?php if (isset($license)) { ?>
 <input type="hidden" name="license_id" value="<?php echo $license->id; ?>" />

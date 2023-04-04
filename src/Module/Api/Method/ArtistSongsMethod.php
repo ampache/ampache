@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -48,13 +47,14 @@ final class ArtistSongsMethod
      * This returns the songs of the specified artist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Artist
      * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs(array $input): bool
+    public static function artist_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -67,11 +67,10 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $songs = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
+        $results = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
             ? static::getSongRepository()->getTopSongsByArtist($artist)
             : static::getSongRepository()->getByArtist($object_id);
-        $user  = User::get_from_username(Session::username($input['auth']));
-        if (empty($songs)) {
+        if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
             return false;
@@ -82,12 +81,12 @@ final class ArtistSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

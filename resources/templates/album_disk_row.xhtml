@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <td class="cel_play">
+        <span class="cel_play_content"> </span>
+        <div class="cel_play_hover">
+            <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+                <tal:block tal:replace="structure ALBUMDISK/getDirectplayButton">DIRECTPLAY</tal:block>
+                <tal:block tal:condition="ALBUMDISK/canAutoplayNext" tal:replace="structure ALBUMDISK/getAutoplayNextButton">PLAY NEXT</tal:block>
+                <tal:block tal:condition="ALBUMDISK/canAppendNext" tal:replace="structure ALBUMDISK/getAppendNextButton">APPEND NEXT</tal:block>
+            </tal:block>
+        </div>
+    </td>
+    <td class="${CLASS_COVER}" tal:content="structure ALBUMDISK/getArt">COVER</td>
+    <td class="${CLASS_ALBUM}" tal:content="structure ALBUMDISK/getAlbumLink">ALBUM NAME</td>
+    <td class="cel_add">
+        <span class="cel_item_add">
+            <tal:block tal:condition="IS_SHOW_PLAYLIST_ADD">
+                <tal:block tal:replace="structure ALBUMDISK/getAddToTemporaryPlaylistButton">ADD TO TEMPORARY PLAYLIST</tal:block>
+                <tal:block tal:replace="structure ALBUMDISK/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
+                <a
+                        id="add_playlist_${ALBUMDISK/getId}"
+                        onclick="showPlaylistDialog(event, 'album_disk', '${ALBUMDISK/getId}')"
+                        tal:content="structure ALBUMDISK/getAddToPlaylistIcon"
+                >ADD TO PLAYLIST</a>
+            </tal:block>
+        </span>
+    </td>
+    <td class="${CLASS_ARTIST}" tal:content="structure ALBUMDISK/getArtistLink">ARTIST</td>
+    <td class="cel_songs optional" tal:content="structure ALBUMDISK/getSongCount">SONG COUNT</td>
+    <td class="cel_year">
+        <tal:block tal:condition="ALBUMDISK/canShowYear" tal:content="structure ALBUMDISK/getDisplayYear">
+            YEAR
+        </tal:block>
+    </td>
+    <td class="${CLASS_COUNTER} optional" tal:condition="IS_SHOW_PLAYED_TIMES" tal:content="structure ALBUMDISK/getPlayedTimes">PLAYED TIMES</td>
+    <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure ALBUMDISK/getGenre">TAGS</td>
+    <td class="cel_ratings" tal:condition="USING_RATINGS">
+        <span class="cel_rating" id="rating_${ALBUMDISK/getId}_album" tal:content="structure ALBUMDISK/getRating">RATING</span>
+        <span class="cel_userflag" id="userflag_${ALBUMDISK/getId}_album" tal:content="structure ALBUMDISK/getUserFlags">USERFLAGS</span>
+    </td>
+    <td class="cel_action">
+        <a
+                tal:condition="ALBUMDISK/canPostShout"
+                tal:attributes="href ALBUMDISK/getPostShoutUrl"
+                tal:content="structure ALBUMDISK/getPostShoutIcon"
+        >POST SHOUT</a>
+
+        <tal:block tal:condition="ALBUMDISK/canShare" tal:replace="structure ALBUMDISK/getShareUi">SHARE</tal:block>
+
+        <a
+                class="nohtml"
+                tal:condition="ALBUMDISK/canBatchDownload"
+                tal:attributes="href ALBUMDISK/getBatchDownloadUrl"
+                tal:content="structure ALBUMDISK/getBatchDownloadIcon"
+        >BATCH DOWNLOAD</a>
+
+        <a
+                tal:condition="ALBUMDISK/isEditable"
+                id="edit_album_${ALBUMDISK/getAlbumId}"
+                onclick="showEditDialog('album_row', '${ALBUMDISK/getAlbumId}', 'edit_album_${ALBUMDISK/getAlbumId}', '${ALBUMDISK/getEditButtonTitle}', 'album_disk_')"
+                tal:content="structure ALBUMDISK/getEditIcon"
+        >EDIT</a>
+
+        <a
+                tal:condition="ALBUMDISK/canBeDeleted"
+                id="delete_album_${ALBUMDISK/getAlbumId}"
+                tal:attributes="href ALBUMDISK/getDeletionUrl"
+                tal:content="structure ALBUMDISK/getDeletionIcon"
+        >DELETION</a>
+    </td>
+</html>

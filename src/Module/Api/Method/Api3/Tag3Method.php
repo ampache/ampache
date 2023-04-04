@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Tag3Method
@@ -38,9 +39,11 @@ final class Tag3Method
      * tag
      * This returns a single tag based on UID
      * @param array $input
+     * @param User $user
      */
-    public static function tag(array $input)
+    public static function tag(array $input, User $user)
     {
+        unset($user);
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         echo Xml3_Data::tags(array($uid));

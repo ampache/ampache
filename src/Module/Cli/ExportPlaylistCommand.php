@@ -25,46 +25,53 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Playlist\PlaylistExporter;
 use Ampache\Module\Playlist\PlaylistExporterInterface;
 
 final class ExportPlaylistCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private PlaylistExporterInterface $playlistExporter;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         PlaylistExporterInterface $playlistExporter
     ) {
         parent::__construct('export:playlist', T_('Export Playlists'));
 
-        $this->configContainer  = $configContainer;
         $this->playlistExporter = $playlistExporter;
 
         $this
+            ->option('-u|--user', T_('User ID'), 'intval', -1)
+            ->option('-w|--web', T_("Return remote play URL's instead of the local file"), 'boolval', false)
             ->argument('<directory>', T_('Output directory'))
+            ->argument('<type>', T_("Playlist type ('albums', 'artists', 'playlists', 'smartlists'), (default: playlists)"), 'playlists')
             ->argument('[extension]', T_("Output type ('m3u', 'xspf', 'pls'), (default: m3u)"), 'm3u')
-            ->argument('<type>', T_("Playlist type ('albums', 'artists', 'playlists'), (default: playlists)"), 'playlists')
-            ->usage('<bold>  export:playlist</end> <comment>playlist /tmp m3u</end> ## ' . T_('Export playlists as m3u files to /tmp') . '<eol/>');
+            ->argument('[playlistId]', T_("Playlist ID"), '-1')
+            ->usage('<bold>  export:playlist</end> <comment>/tmp playlists m3u</end> ## ' . T_('Export playlists as m3u files to /tmp') . '<eol/>');
     }
 
     public function execute(
         string $type,
         string $directory,
-        string $extension
+        string $extension,
+        string $playlistId
     ): void {
         if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS)) {
             $extension = current(PlaylistExporter::VALID_FILE_EXTENSIONS);
         }
+        $values  = $this->values();
+        $userId  = $values['user'];
+        $urltype = ($values['web'])
+            ? 'web'
+            : 'file';
 
         $this->playlistExporter->export(
             $this->app()->io(),
             $directory,
             $type,
-            $extension
+            $extension,
+            $playlistId,
+            $userId,
+            $urltype
         );
     }
 }

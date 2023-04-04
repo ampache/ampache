@@ -19,11 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
-/** @var Share $libitem */
-
 use Ampache\Repository\Model\Share;
 
+/** @var Share $libitem */
 ?>
 
 <td class="cel_object"><?php echo $libitem->getObjectUrl(); ?></td>

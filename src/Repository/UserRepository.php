@@ -48,6 +48,9 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function idByUsername(string $username): int
     {
+        if ($username == '-1') {
+            return 0;
+        }
         $db_results = Dba::read(
             'SELECT `id` FROM `user` WHERE `username`= ?',
             [$username]
@@ -291,6 +294,38 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * This returns a built user from a streamToken
+     */
+    public function findByStreamToken(string $streamToken): ?User
+    {
+        if (!empty($streamToken)) {
+            // check for legacy unencrypted streamtoken
+            $sql        = "SELECT `id` FROM `user` WHERE `streamtoken` = ?";
+            $db_results = Dba::read($sql, array($streamToken));
+            $results    = Dba::fetch_assoc($db_results);
+
+            if (array_key_exists('id', $results)) {
+                return new User((int) $results['id']);
+            }
+            // check for sha256 hashed streamtoken for client
+            // https://ampache.org/api/
+            $sql        = "SELECT `id`, `streamtoken`, `username` FROM `user`";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                if ($row['streamtoken'] && $row['username']) {
+                    $key        = hash('sha256', $row['streamtoken']);
+                    $passphrase = hash('sha256', $row['username'] . $key);
+                    if ($passphrase == $streamToken) {
+                        return new User((int) $row['id']);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * updates the last seen data for the user
      */
     public function updateLastSeen(
@@ -343,6 +378,15 @@ final class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
 
         Dba::write($sql, array($rssToken, $userId));
+    }
+
+    /**
+     * Updates a users Stream token
+     */
+    public function updateStreamToken(int $userId, string $userName, string $streamToken): void
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
+        Dba::write($sql, array($streamToken, $userId));
     }
 
     /**

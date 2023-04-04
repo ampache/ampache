@@ -60,7 +60,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results      = array();
-        $request_id   = $this->requestParser->getFromRequest('id');
+        $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
@@ -69,10 +69,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                switch ($request_type) {
-                    case 'delete':
-                        Core::get_global('user')->playlist->delete_track($request_id);
-                        break;
+                if ($request_type == 'delete') {
+                    Core::get_global('user')->playlist->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
@@ -120,14 +118,14 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
-                        case 'album_full':
-                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $request_id));
+                        case 'album_random':
+                            $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
-                        case 'album_random':
-                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $request_id));
+                        case 'album_disk_random':
+                            $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }

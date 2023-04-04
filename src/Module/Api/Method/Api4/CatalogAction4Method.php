@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogAction4Method
@@ -46,16 +45,17 @@ final class CatalogAction4Method
      * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
+     * @param User $user
      * task    = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action(array $input): bool
+    public static function catalog_action(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'catalog_action', $input['api_format'])) {
+        if (!Api4::check_access('interface', 75, $user->id, 'catalog_action', $input['api_format'])) {
             return false;
         }
         $task = (string) $input['task'];
@@ -98,6 +98,7 @@ final class CatalogAction4Method
                 Album::update_album_artist();
                 Catalog::update_mapping('artist');
                 Catalog::update_mapping('album');
+                Catalog::update_mapping('album_disk');
             } elseif ($catalog_media_type == 'podcast') {
                 Catalog::update_mapping('podcast');
                 Catalog::update_mapping('podcast_episode');

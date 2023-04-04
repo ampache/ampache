@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -48,11 +47,12 @@ final class PodcastMethod
      * Get the podcast from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter  = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
-    public static function podcast(array $input): bool
+    public static function podcast(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -73,7 +73,6 @@ final class PodcastMethod
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {

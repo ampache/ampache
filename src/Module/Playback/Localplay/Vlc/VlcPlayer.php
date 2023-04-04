@@ -83,11 +83,8 @@ class VlcPlayer
     {
         $args    = array();
         $results = $this->sendCommand('status.xml', $args);
-        if ($results === null) {
-            return null;
-        }
 
-        return true;
+        return ($results !== null);
     } // version
 
     /**

@@ -35,7 +35,6 @@ use Ampache\Module\Util\Ui;
 
 abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 {
-
     /**
      * @throws ApplicationException
      */
@@ -86,12 +85,10 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
             if (isset($libitem->f_link)) {
                 $blink = $libitem->f_link;
             }
-        } else {
-            if ($user_id) {
-                $user = new User($user_id);
-                $user->format();
-                $blink = $user->f_link;
-            }
+        } elseif ($user_id) {
+            $user = new User($user_id);
+            $user->format();
+            $blink = $user->f_link;
         }
 
         require_once Ui::find_template('show_graphs.inc.php');

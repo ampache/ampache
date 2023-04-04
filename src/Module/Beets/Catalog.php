@@ -81,7 +81,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);
-
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -158,7 +157,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -212,7 +211,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $inserted = Song::insert($song);
         if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
+            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5);
         } else {
             debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
             /* HINT: filename (file path) */
@@ -348,11 +347,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
@@ -44,8 +45,9 @@ final class Slideshow implements SlideshowInterface
      */
     public function getCurrentSlideshow(): array
     {
-        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
-        $images = [];
+        $user_id = Core::get_global('user')->id ?? -1;
+        $songs   = Stats::get_recently_played($user_id, 'stream', 'song');
+        $images  = [];
         if ($songs !== []) {
             $last_song = $this->modelFactory->createSong((int) $songs[0]['object_id']);
             $last_song->format();

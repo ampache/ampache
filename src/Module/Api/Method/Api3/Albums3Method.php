@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -41,21 +40,21 @@ final class Albums3Method
      * albums
      * This returns albums based on the provided search filters
      * @param array $input
+     * @param User $user
      */
-    public static function albums(array $input)
+    public static function albums(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        $user   = User::get_from_username(Session::username($input['auth']));
 
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $albums  = $browse->get_objects();
+        $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
@@ -64,6 +63,6 @@ final class Albums3Method
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::albums($albums, $include, $user);
+        echo Xml3_Data::albums($results, $include, $user);
     } // albums
 }

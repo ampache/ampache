@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class AmpacheDiscogs
 {
@@ -230,6 +230,6 @@ class AmpacheDiscogs
      */
     public function gather_arts($type, $options = array(), $limit = 5)
     {
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 }

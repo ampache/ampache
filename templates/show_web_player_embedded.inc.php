@@ -28,13 +28,13 @@ function PlayerFrame()
 {
     var appendmedia = false;
     var playnext = false;
-    var $webplayer = $("#webplayer");
-    if ($webplayer.is(':visible')) {
+    var webplayer = $("#webplayer");
+    if (webplayer.is(':visible')) {
 
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
 <?php } ?>
-        $webplayer.show();
+        webplayer.show();
         $("#webplayer-minimize").show();
     }
     return false;

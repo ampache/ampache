@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 
@@ -46,31 +45,31 @@ final class GenreSongs4Method
      * returns the songs for this genre
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_songs(array $input): bool
+    public static function genre_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $songs = Tag::get_tag_objects('song', $input['filter']);
-        $user  = User::get_from_username(Session::username($input['auth']));
+        $results = Tag::get_tag_objects('song', $input['filter']);
 
         ob_end_clean();
-        if (!empty($songs)) {
+        if (!empty($results)) {
             switch ($input['api_format']) {
                 case 'json':
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::songs($songs, $user);
+                    echo Json4_Data::songs($results, $user);
                     break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::songs($songs, $user);
+                    echo Xml4_Data::songs($results, $user);
             }
         }
 

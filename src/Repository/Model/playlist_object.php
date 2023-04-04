@@ -93,7 +93,7 @@ abstract class playlist_object extends database_object implements library_item
         $this->f_name = (($this->user == Core::get_global('user')->id))
             ? scrub_out($this->name)
             : scrub_out($this->name . " (" . $this->username . ")");
-        $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        $this->get_f_type();
         $this->get_f_link();
     } // format
 
@@ -121,11 +121,11 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function has_access($user_id = null)
     {
-        if (!Access::check('interface', 25)) {
-            return false;
-        }
         if (Access::check('interface', 100)) {
             return true;
+        }
+        if (!Access::check('interface', 25)) {
+            return false;
         }
         // allow the owner
         if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
@@ -211,6 +211,20 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Get item type (public / private).
+     * @return string
+     */
+    public function get_f_type()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_type)) {
+            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        }
+
+        return $this->f_type;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -227,12 +241,13 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
+        debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
         return array();
     }

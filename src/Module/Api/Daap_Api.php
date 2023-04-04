@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -259,7 +258,7 @@ class Daap_Api
         if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
             $db_results = Dba::read($sql, array(
                 Core::get_get('session-id')
             ));
@@ -310,7 +309,7 @@ class Daap_Api
     {
         self::check_auth();
 
-        $sql = "DELETE FROM `daap_session` WHERE `id` = ?";
+        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
         Dba::write($sql, array(
             $input['session-id']
         ));
@@ -541,8 +540,7 @@ class Daap_Api
                         }
                         break;
                     case 'daap.songdiscnumber':
-                        $album = new Album($song->album);
-                        $output .= self::tlv($tag, $album->disk);
+                        $output .= self::tlv($tag, $song->disk);
                         break;
                     case 'daap.songformat':
                         $output .= self::tlv($tag, $song->type);
@@ -935,7 +933,7 @@ class Daap_Api
         header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
-        $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
+        $html = "<!DOCTYPE html><html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
 
         return false;

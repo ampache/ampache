@@ -295,8 +295,8 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog) {
-            $catalog_ids = Catalog::get_catalogs();
-            foreach ($catalog_ids as $catalog_id) {
+            $catalogs = Catalog::get_catalogs();
+            foreach ($catalogs as $catalog_id) {
                 $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date,
                     $end_date, $zoom);

@@ -68,9 +68,7 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Try to create the sucker
-        $results = Live_Stream::create($_POST);
-
-        if (!$results) {
+        if (!Live_Stream::create($_POST)) {
             require_once Ui::find_template('show_add_live_stream.inc.php');
         } else {
             Catalog::update_mapping('live_stream');

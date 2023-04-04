@@ -28,7 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
-use Requests;
+use WpOrg\Requests\Requests;
 
 /**
  * AutoUpdate Class
@@ -249,7 +249,11 @@ class AutoUpdate
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
 
-                $available = (version_compare($cpart[0], $lpart[0]) < 0);
+                // work around any possible mistakes in the order
+                $current = ($cpart[0] == 'release') ? $cpart[1] : $cpart[0];
+                $latest  = ($lpart[0] == 'release') ? $lpart[1] : $lpart[0];
+
+                $available = (version_compare($current, $latest) < 0);
             }
         }
 

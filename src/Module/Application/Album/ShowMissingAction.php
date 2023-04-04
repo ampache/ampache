@@ -56,7 +56,7 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
+        $this->ui->showHeader();
 
         set_time_limit(600);
         $mbid   = $_REQUEST['mbid'];

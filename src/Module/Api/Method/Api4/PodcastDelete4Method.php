@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class PodcastDelete4Method
@@ -45,17 +44,18 @@ final class PodcastDelete4Method
      * Delete an existing podcast.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast to delete
      * @return boolean
      */
-    public static function podcast_delete(array $input): bool
+    public static function podcast_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
 
             return false;
         }
-        if (!Api4::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {

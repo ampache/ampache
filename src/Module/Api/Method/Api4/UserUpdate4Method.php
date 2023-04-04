@@ -29,8 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
@@ -49,6 +47,7 @@ final class UserUpdate4Method
      * Takes the username with optional parameters.
      *
      * @param array $input
+     * @param User $user
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
      * fullname   = (string) $fullname //optional
@@ -60,9 +59,9 @@ final class UserUpdate4Method
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
-    public static function user_update(array $input): bool
+    public static function user_update(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_update', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), 'user_update')) {
@@ -79,10 +78,10 @@ final class UserUpdate4Method
         $maxbitrate = (int)($input['maxBitRate'] ?? 0);
 
         // identify the user to modify
-        $user    = User::get_from_username($username);
-        $user_id = $user->id;
+        $update_user = User::get_from_username($username);
+        $user_id     = $update_user->id;
 
-        if ($password && Access::check('interface', 100, $user_id)) {
+        if ($password && $update_user->access == 100) {
             Api4::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
 
             return false;
@@ -92,27 +91,27 @@ final class UserUpdate4Method
 
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
-                $user->update_password('', $password);
+                $update_user->update_password('', $password);
             }
             if ($fullname) {
-                $user->update_fullname($fullname);
+                $update_user->update_fullname($fullname);
             }
             if (Mailer::validate_address($email)) {
-                $user->update_email($email);
+                $update_user->update_email($email);
             }
             if ($website) {
-                $user->update_website($website);
+                $update_user->update_website($website);
             }
             if ($state) {
-                $user->update_state($state);
+                $update_user->update_state($state);
             }
             if ($city) {
-                $user->update_city($city);
+                $update_user->update_city($city);
             }
             if ($disable === '1') {
-                $userStateToggler->disable($user);
+                $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {
-                $userStateToggler->enable($user);
+                $userStateToggler->enable($update_user);
             }
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);

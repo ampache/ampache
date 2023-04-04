@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PlaylistCreate3Method
@@ -40,8 +41,9 @@ final class PlaylistCreate3Method
      * playlist_create
      * This create a new playlist and return it
      * @param array $input
+     * @param User $user
      */
-    public static function playlist_create(array $input)
+    public static function playlist_create(array $input, User $user)
     {
         $name = $input['name'];
         $type = $input['type'];
@@ -50,7 +52,7 @@ final class PlaylistCreate3Method
         }
         Catalog::count_table('playlist');
 
-        $uid = Playlist::create($name, $type);
+        $uid = Playlist::create($name, $type, $user->id);
         echo Xml3_Data::playlists(array($uid));
     }
 }

@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -45,25 +44,25 @@ final class FriendsTimeline4Method
      * This get current user friends timeline
      *
      * @param array $input
+     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      */
-    public static function friends_timeline(array $input)
+    public static function friends_timeline(array $input, User $user)
     {
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);
-            $user  = User::get_from_username(Session::username($input['auth']));
 
             if ($user->id > 0) {
-                $activities = static::getUseractivityRepository()->getActivities($user->id, $limit, $since);
+                $results = static::getUseractivityRepository()->getActivities($user->id, $limit, $since);
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json4_Data::timeline($activities);
+                        echo Json4_Data::timeline($results);
                         break;
                     default:
-                        echo Xml4_Data::timeline($activities);
+                        echo Xml4_Data::timeline($results);
                 }
             }
         } else {

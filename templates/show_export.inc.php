@@ -46,8 +46,8 @@ Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
                 <select id="export_catalog" name="export_catalog">
                     <option value=""><?php echo T_('All'); ?></option>
                     <?php
-                    $catalog_ids = Catalog::get_catalogs();
-                    foreach ($catalog_ids as $catalog_id) {
+                    $catalogs = Catalog::get_catalogs();
+                    foreach ($catalogs as $catalog_id) {
                         $catalog      = Catalog::create_from_id($catalog_id);
                         $current_name = 'catalog_' . $catalog->id; ?>
                         <option value="<?php echo $catalog->id; ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->name); ?></option>

@@ -49,7 +49,7 @@ $logic_operator = strtolower($logic_operator); ?>
                         <option value="and" <?php if ($logic_operator == 'and') {
     echo 'selected="selected"';
 }?>><?php echo T_('all rules'); ?></option>
-                        <option value="or"  <?php if ($logic_operator == 'or') {
+                        <option value="or" <?php if ($logic_operator == 'or') {
     echo 'selected="selected"';
 }?>><?php echo T_('any rule'); ?></option>
                 </select>

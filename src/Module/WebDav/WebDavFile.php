@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -42,7 +43,6 @@ class WebDavFile extends DAV\File
     public function __construct(Media $libitem)
     {
         $this->libitem = $libitem;
-        $this->libitem->format();
     }
 
     /**
@@ -51,7 +51,9 @@ class WebDavFile extends DAV\File
      */
     public function getName()
     {
-        return $this->libitem->f_file;
+        $nameinfo = pathinfo($this->libitem->file);
+
+        return (string)htmlentities($nameinfo['filename'] . '.' . $nameinfo['extension']);
     }
 
     /**
@@ -60,12 +62,20 @@ class WebDavFile extends DAV\File
      */
     public function get()
     {
-        debug_event(self::class, 'File get', 5);
+        //debug_event(self::class, 'File get ' . $this->libitem->file, 5);
         // Only media associated to a local catalog is supported
         if ($this->libitem->catalog) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if ($catalog->get_type() === 'local') {
-                return fopen($this->libitem->file, 'r');
+                $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
+
+                if (!is_resource($filepointer)) {
+                    debug_event(self::class, 'ERROR: unable to open file ' . $this->libitem->file, 3);
+
+                    return null;
+                }
+
+                return $filepointer;
             } else {
                 debug_event(self::class, 'Catalog associated to the media is not local. This is currently unsupported.', 3);
             }

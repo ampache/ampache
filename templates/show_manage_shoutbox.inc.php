@@ -43,9 +43,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             $libitem = new Shoutbox($shout_id);
 
             $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
-            $object->format();
             $client = new User($libitem->user);
-            $client->format();
 
             require Ui::find_template('show_shout_row.inc.php'); ?>
         <?php

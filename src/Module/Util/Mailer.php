@@ -138,7 +138,11 @@ final class Mailer implements MailerInterface
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'], 'fullname' => $row['fullname'], 'email' => $row['email']);
+            $results[] = array(
+                'id' => $row['id'],
+                'fullname' => $row['fullname'],
+                'email' => $row['email']
+            );
         }
 
         return $results;

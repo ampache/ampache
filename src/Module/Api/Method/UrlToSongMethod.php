@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Session;
 
 /**
  * Class UrlToSongMethod
@@ -47,10 +46,11 @@ final class UrlToSongMethod
      * This takes a url and returns the song object in question
      *
      * @param array $input
+     * @param User $user
      * url = (string) $url
      * @return boolean
      */
-    public static function url_to_song(array $input): bool
+    public static function url_to_song(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;
@@ -62,14 +62,13 @@ final class UrlToSongMethod
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs(array($url_data['id']), $user, true, false);
+                echo Json_Data::songs(array((int)$url_data['id']), $user, true, false);
                 break;
             default:
-                echo Xml_Data::songs(array($url_data['id']), $user);
+                echo Xml_Data::songs(array((int)$url_data['id']), $user);
         }
 
         return true;

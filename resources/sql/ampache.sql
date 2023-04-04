@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Dec 08, 2022 at 08:40 AM
--- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.1.11
+-- Generation Time: Mar 31, 2023 at 11:12 AM
+-- Server version: 10.5.18-MariaDB-0+deb11u1
+-- PHP Version: 8.1.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache556`
+-- Database: `ampache6`
 --
 
 -- --------------------------------------------------------
@@ -496,7 +496,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   `size` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `kind` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kind` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`)
@@ -608,7 +608,7 @@ CREATE TABLE IF NOT EXISTS `live_stream` (
   `url` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `genre` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catalog` (`catalog`),
   KEY `genre` (`genre`),
@@ -711,7 +711,7 @@ CREATE TABLE IF NOT EXISTS `movie` (
 
 DROP TABLE IF EXISTS `now_playing`;
 CREATE TABLE IF NOT EXISTS `now_playing` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `user` int(11) NOT NULL,
@@ -858,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `guid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `podcast` int(11) NOT NULL,
-  `state` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `state` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `source` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `size` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
@@ -941,7 +941,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'),
 (93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'),
 (94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'),
-(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'),
+(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'),
 (96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'),
 (97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'),
 (98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'),
@@ -956,12 +956,12 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
 (110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', NULL),
 (111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', NULL),
-(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'),
-(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'),
-(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'),
-(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 75, 'boolean', 'system', 'upload'),
-(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 75, 'string', 'system', 'upload'),
-(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'),
+(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'),
+(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'),
+(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'),
+(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'),
+(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'),
+(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'),
 (118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
 (119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
 (120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
@@ -979,7 +979,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'),
 (133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'),
 (134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'),
-(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'),
+(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'),
 (136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
 (137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'),
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'),
@@ -1000,7 +1000,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'),
 (154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'),
 (155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'),
-(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'),
+(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'),
 (157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL),
 (158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'),
 (159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'),
@@ -1018,7 +1018,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL),
 (172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
 (173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
-(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'system', NULL);
+(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);
 
 -- --------------------------------------------------------
 
@@ -1145,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 DROP TABLE IF EXISTS `session_remember`;
 CREATE TABLE IF NOT EXISTS `session_remember` (
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `expire` int(11) DEFAULT NULL,
   PRIMARY KEY (`username`,`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1158,7 +1158,7 @@ CREATE TABLE IF NOT EXISTS `session_remember` (
 
 DROP TABLE IF EXISTS `session_stream`;
 CREATE TABLE IF NOT EXISTS `session_stream` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `user` int(11) UNSIGNED NOT NULL,
   `agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `expire` int(11) UNSIGNED NOT NULL,
@@ -1297,7 +1297,7 @@ CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `album` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `time` smallint(5) DEFAULT NULL,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `track_num` smallint(5) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`)
@@ -1358,9 +1358,9 @@ CREATE TABLE IF NOT EXISTS `tag_merge` (
 DROP TABLE IF EXISTS `tmp_browse`;
 CREATE TABLE IF NOT EXISTS `tmp_browse` (
   `id` int(13) NOT NULL AUTO_INCREMENT,
-  `sid` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sid` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `data` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `object_data` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `object_data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`sid`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

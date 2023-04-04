@@ -60,13 +60,12 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Show Catalogs
-        $catalog_ids = Catalog::get_catalogs();
-
-        $browse = $this->modelFactory->createBrowse();
+        $catalogs = Catalog::get_catalogs();
+        $browse   = $this->modelFactory->createBrowse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
-        $browse->save_objects($catalog_ids);
-        $browse->show_objects($catalog_ids);
+        $browse->save_objects($catalogs);
+        $browse->show_objects($catalogs);
         $browse->store();
 
         $this->ui->showQueryStats();

@@ -285,6 +285,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return $this->playlist->get_f_link();
     }
 
+    public function getUsername(): string
+    {
+        return $this->playlist->username;
+    }
+
     public function getLastUpdate(): string
     {
         return $this->playlist->f_last_update;
@@ -292,7 +297,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getType(): string
     {
-        return $this->playlist->f_type;
+        return $this->playlist->get_f_type();
     }
 
     public function getMediaCount(): int

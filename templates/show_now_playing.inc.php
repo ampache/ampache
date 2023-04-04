@@ -36,10 +36,10 @@ use Ampache\Module\Util\Ui;
 /** @var array $results */
 
 if (count($results)) {
-    $link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('nowplaying') : ''; ?>
-<?php Ui::show_box_top(T_('Now Playing') . $link); ?>
-<?php
-foreach ($results as $item) {
+    $link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('nowplaying') : '';
+    Ui::show_box_top(T_('Now Playing') . $link);
+
+    foreach ($results as $item) {
         $media   = $item['media'];
         $np_user = $item['client'];
         $np_user->format();
@@ -54,16 +54,14 @@ foreach ($results as $item) {
         }
         if (!$np_user->f_avatar_medium) {
             $np_user->f_avatar_medium = '<img src="' . AmpConfig::get('web_path') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
-        } ?>
-<div class="np_row">
-<?php if (get_class($media) == Song::class) {
+        }
+        echo "<div class=\"np_row\">";
+        if (get_class($media) == Song::class) {
             require Ui::find_template('show_now_playing_row.inc.php');
         } elseif (get_class($media) == Video::class) {
             require Ui::find_template('show_now_playing_video_row.inc.php');
-        } ?>
-</div>
-<?php
-    } ?>
-<?php Ui::show_box_bottom(); ?>
-<?php
-} ?>
+        }
+        echo "</div>";
+    }
+    Ui::show_box_bottom();
+}

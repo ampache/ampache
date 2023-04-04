@@ -36,7 +36,6 @@ use Ampache\Module\Util\Ui;
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
 /** @var string $cel_tags */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

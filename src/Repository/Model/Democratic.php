@@ -68,7 +68,6 @@ class Democratic extends Tmp_Playlist
         parent::__construct($democratic_id);
 
         $info = $this->get_info($democratic_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -246,10 +245,15 @@ class Democratic extends Tmp_Playlist
     /**
      * play_url
      * This returns the special play URL for democratic play, only open to ADMINs
+     * @param User|null $user
+     * @return string
      */
-    public function play_url()
+    public function play_url($user = null)
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_Url::format($link);
     } // play_url
@@ -275,8 +279,7 @@ class Democratic extends Tmp_Playlist
             return $items[$offset]['object_id'];
         }
 
-        // If nothing was found and this is a voting playlist then get
-        // from base_playlist
+        // If nothing was found and this is a voting playlist then get from base_playlist
         if ($this->base_playlist) {
             $base_playlist = ($use_search)
                 ? new Search($this->base_playlist)
@@ -312,7 +315,7 @@ class Democratic extends Tmp_Playlist
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `object_type` = ? AND `tmp_playlist` = ? AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_type, $this->tmp_playlist, $object_id));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
 
@@ -407,6 +410,7 @@ class Democratic extends Tmp_Playlist
         if (!$results = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
+            $results       = array();
             $results['id'] = Dba::insert_id();
         }
 

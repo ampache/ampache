@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -91,25 +90,12 @@ final class UpdateUserAction implements ApplicationActionInterface
             AmpError::add('city', T_("Please fill in your city"));
         }
 
+        $this->ui->showHeader();
         if (!Core::get_global('user')->update($_POST)) {
             AmpError::add('general', T_('Update failed'));
         } else {
             Core::get_global('user')->upload_avatar();
-
-            //$_REQUEST['action'] = 'confirm';
-            $title    = T_('No Problem');
-            $text     = T_('Your account has been updated');
-            $next_url = sprintf(
-                '%s/preferences.php?tab=account',
-                $this->configContainer->getWebPath()
-            );
-        }
-
-        $this->ui->showHeader();
-
-        $notification_text = T_('User updated successfully');
-        if (!empty($notification_text)) {
-            display_notification($notification_text);
+            display_notification(T_('User updated successfully'));
         }
 
         $user = $gatekeeper->getUser();

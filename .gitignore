@@ -1,6 +1,8 @@
-.settings/
-.vscode/
+.fleet/
 .idea/
+.settings/
+.tx/config_*.bak
+.vscode/
 .buildpath
 .env
 .pc
@@ -8,16 +10,16 @@
 .phpunit.result.cache
 .project
 bootstrap/
-build
+build/
 config/ampache-doped.cfg.php
 config/ampache.cfg.php
+config/ampache.cfg.php.backup
 config/registration_agreement.php
 log/
 logs/
 nbproject/
 node_modules/
 .maintenance
-channel/.htaccess
 play/.htaccess
 rest/.htaccess
 lib/components/
@@ -30,7 +32,7 @@ foam
 ample
 storage/
 tmp/
-/vendor/
+vendor/
 composer.lock
 composer.phar
 cs_fixer_tmp_*
@@ -49,4 +51,3 @@ web.config
 *.swp
 *.v11.suo
 *~
-config/ampache.cfg.php.backup

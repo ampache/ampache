@@ -61,10 +61,9 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         Democratic::delete((int) $_REQUEST['democratic_id']);
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Playlist has been deleted'),

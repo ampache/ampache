@@ -104,8 +104,8 @@ class AmpacheStreamHits
         }
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            $graph         = new Graph();
             $next_total    = count($media_ids);
+            $graph         = new Graph();
             $end_date      = time();
             $start_date    = $end_date - ($this->hits_days * 86400);
             $current_total = $graph->get_total_hits($this->user_id, $start_date, $end_date);

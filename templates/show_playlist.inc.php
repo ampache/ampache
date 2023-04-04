@@ -44,10 +44,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Playlist $playlist */
 /** @var array $object_ids */
 
-?>
-<?php
 ob_start();
-require Ui::find_template('show_playlist_title.inc.php');
+echo $playlist->get_fullname();
 $title    = ob_get_contents();
 $web_path = AmpConfig::get('web_path');
 ob_end_clean();
@@ -69,7 +67,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <?php } ?>
 <div id="information_actions">
     <ul>
-    <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
+    <?php if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
@@ -132,14 +130,6 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
-    <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) { ?>
-        <li>
-            <a href="<?php echo $web_path; ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('flow'); ?>
-                <?php echo T_('Create Channel'); ?>
-            </a>
-        </li>
-    <?php } ?>
     <?php if ($playlist->has_access()) { ?>
         <?php $search_id = $playlist->has_search($playlist->user);
         if ($search_id > 0) { ?>

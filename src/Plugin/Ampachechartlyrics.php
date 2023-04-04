@@ -26,7 +26,7 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class Ampachechartlyrics
 {

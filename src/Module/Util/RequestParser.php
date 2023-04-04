@@ -26,7 +26,6 @@ namespace Ampache\Module\Util;
 
 final class RequestParser implements RequestParserInterface
 {
-
     /**
      * Return a $REQUEST variable instead of calling directly
      */

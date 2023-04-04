@@ -33,10 +33,6 @@ use Ampache\Repository\Model\Tag;
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
-            </tr>
-            <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="private" value="1" <?php echo ($libitem->is_private) ? 'checked' : ''; ?> /> <?php echo T_('Authentication Required') ?></td>
             </tr>

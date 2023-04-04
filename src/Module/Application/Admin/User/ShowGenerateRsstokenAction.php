@@ -50,18 +50,21 @@ final class ShowGenerateRsstokenAction extends AbstractUserAction
         $this->ui->showHeader();
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
-
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('This will replace your existing RSS token. Feeds with the old token might not work properly'),
-            sprintf(
-                'admin/users.php?action=%s&user_id=%d',
-                GenerateRsstokenAction::REQUEST_KEY,
-                $userId
-            ),
-            1,
-            'generate_rsstoken');
-
+        if ($userId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('This will replace your existing token. Links with the old token might not work properly'),
+                sprintf(
+                    'admin/users.php?action=%s&user_id=%d',
+                    GenerateRsstokenAction::REQUEST_KEY,
+                    $userId
+                ),
+                1,
+                'generate_rsstoken'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

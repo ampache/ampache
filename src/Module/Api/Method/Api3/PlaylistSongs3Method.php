@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
@@ -41,23 +40,23 @@ final class PlaylistSongs3Method
      * playlist_songs
      * This returns the songs for a playlist
      * @param array $input
+     * @param User $user
      */
-    public static function playlist_songs(array $input)
+    public static function playlist_songs(array $input, User $user)
     {
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();
-        $user     = User::get_from_username(Session::username($input['auth']));
 
-        $songs = array();
+        $results = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
-                $songs[] = $object['object_id'];
+                $results[] = $object['object_id'];
             }
         } // end foreach
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($songs, $user, $items);
+        echo Xml3_Data::songs($results, $user, $items);
     } // playlist_songs
 }

@@ -46,6 +46,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
+                <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
                 <?php if (AmpConfig::get('allow_video')) { ?>
                     <strong><?php echo T_('TV Shows'); ?>:</strong><br />

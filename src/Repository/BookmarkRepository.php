@@ -61,11 +61,11 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
         }
     }
 
-    public function update(int $userId, int $position): void
+    public function update(int $bookmarkId, int $position, int $date): void
     {
         Dba::write(
             'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
-            [$position, time(), $userId]
+            [$position, $date, $bookmarkId]
         );
     }
 }

@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Requests;
+use WpOrg\Requests\Requests;
 
 final class GoogleCollectorModule implements CollectorModuleInterface
 {
@@ -102,7 +102,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     }
 
                     $mime = 'image/';
-                    $mime .= $results['extension'] ?? 'jpeg';
+                    $mime .= $results['extension'] ?? 'jpg';
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
                     if ($limit > 0 && count($images) >= $limit) {

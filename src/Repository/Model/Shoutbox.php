@@ -145,7 +145,7 @@ class Shoutbox
      * This takes a type and an ID and returns a created object
      * @param string $type
      * @param integer $object_id
-     * @return Object
+     * @return library_item|null
      */
     public static function get_object($type, $object_id)
     {
@@ -203,8 +203,7 @@ class Shoutbox
         $comment = strip_tags($data['comment']);
 
         $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql,
-            array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data'] ?? 0));
 
         static::getUserActivityPoster()->post((int) $user, 'shout', $data['object_type'], (int) $data['object_id'], time());
 
@@ -278,16 +277,15 @@ class Shoutbox
     public function get_display($details = true, $jsbuttons = false)
     {
         $object = Shoutbox::get_object($this->object_type, $this->object_id);
-        $object->format();
-        $img  = $this->get_image();
-        $html = "<div class='shoutbox-item'>";
+        $img    = $this->get_image();
+        $html   = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if ($details && $img) {
             $html .= "<div class='shoutbox-img'>" . $img . "</div>";
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
+            $html .= "<div class='shoutbox-object'>" . $object->get_f_link() . "</div>";
             $html .= "<div class='shoutbox-date'>" . get_datetime((int)$this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->getTextFormatted() . "</div>";

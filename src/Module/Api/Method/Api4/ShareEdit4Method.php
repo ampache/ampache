@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class ShareEdit4Method
@@ -45,14 +44,15 @@ final class ShareEdit4Method
      * Takes the share id to update with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * stream      = (boolean) 0,1 //optional
+     * download    = (boolean) 0,1 //optional
+     * expires     = (integer) number of whole days before expiry //optional
+     * description = (string) update description //optional
      * @return boolean
      */
-    public static function share_edit(array $input): bool
+    public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api4::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
@@ -62,7 +62,6 @@ final class ShareEdit4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user     = User::get_from_username(Session::username($input['auth']));
         $share_id = $input['filter'];
         if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);

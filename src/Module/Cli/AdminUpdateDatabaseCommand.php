@@ -26,21 +26,14 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
+    public function __construct()
+    {
         parent::__construct('admin:updateDatabase', T_('Update the database to the latest version'));
-
-        $this->configContainer = $configContainer;
 
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
@@ -67,9 +60,10 @@ final class AdminUpdateDatabaseCommand extends Command
         // Check for a valid connection first
         if (!Dba::check_database()) {
             $interactor->info(
-                T_('Database Connection') . ": " . T_('Error') . "\n",
+                T_('Database Connection') . ": " . T_('Error'),
                 true
             );
+            $interactor->eol();
 
             return;
         }
@@ -99,6 +93,11 @@ final class AdminUpdateDatabaseCommand extends Command
         }
 
         if (Update::need_update() && $execute) {
+            $interactor->info(
+                T_('Update Now!'),
+                true
+            );
+            $interactor->eol();
             $updated = true;
             Update::run_update();
         }

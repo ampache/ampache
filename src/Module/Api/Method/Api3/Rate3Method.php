@@ -29,7 +29,6 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Module\System\Session;
 
 /**
  * Class Rate3Method
@@ -42,14 +41,14 @@ final class Rate3Method
      * rate
      * This rate a library item
      * @param array $input
+     * @param User $user
      */
-    public static function rate(array $input)
+    public static function rate(array $input, User $user)
     {
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
-        $user      = User::get_from_username(Session::username($input['auth']));
 
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             echo Xml3_Data::error('401', T_('Wrong library item type.'));

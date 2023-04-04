@@ -54,7 +54,7 @@ final class UploadArtAction extends AbstractArtAction
             $burl = base64_decode(Core::get_get('burl'));
         }
 
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
@@ -80,7 +80,7 @@ final class UploadArtAction extends AbstractArtAction
 
         // If we got something back insert it
         if ($image_data !== '') {
-            $art = $this->modelFactory->createArt($item->id, $object_type);
+            $art = $this->modelFactory->createArt($item->getId(), $object_type);
             if ($art->insert($image_data, $_FILES['file']['type'])) {
                 $this->ui->showContinue(
                     T_('No Problem'),

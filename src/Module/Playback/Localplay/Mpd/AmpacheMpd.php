@@ -590,10 +590,6 @@ class AmpacheMpd extends localplay_controller
         }
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
-        if ($this->_mpd->connected) {
-            return true;
-        }
-
-        return false;
+        return $this->_mpd->connected;
     } // connect
 }

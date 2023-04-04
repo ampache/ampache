@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Tags3Method
@@ -39,9 +40,11 @@ final class Tags3Method
      * tags
      * This returns the tags based on the specified filter
      * @param array $input
+     * @param User $user
      */
-    public static function tags(array $input)
+    public static function tags(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('tag');
@@ -49,13 +52,13 @@ final class Tags3Method
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $tags = $browse->get_objects();
+        $results = $browse->get_objects();
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::tags($tags);
+        echo Xml3_Data::tags($results);
     } // tags
 }

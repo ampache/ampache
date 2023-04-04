@@ -35,6 +35,6 @@ return [
     Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
     Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
     Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
-    Authorization\UserAccessKeyGeneratorInterface::class => autowire(Authorization\UserAccessKeyGenerator::class),
+    Authorization\UserKeyGeneratorInterface::class => autowire(Authorization\UserKeyGenerator::class),
     PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
 ];

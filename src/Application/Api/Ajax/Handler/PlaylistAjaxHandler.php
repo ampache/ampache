@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -76,7 +75,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }
-                    $playlist_id = (int) Playlist::create($name, 'private');
+                    $playlist_id = (int)Playlist::create($name, 'private');
                     if ($playlist_id < 1) {
                         break;
                     }

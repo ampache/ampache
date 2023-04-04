@@ -22,7 +22,6 @@
 
 namespace Ampache\Module\Application\Logout;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

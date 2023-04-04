@@ -27,6 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
@@ -81,20 +82,27 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $album = new Album($album_id[0]);
-                // songs for all disks
-                if (AmpConfig::get('album_group')) {
-                    $disc_ids = $album->get_group_disks_ids();
-                    foreach ($disc_ids as $discid) {
-                        $disc     = new Album($discid);
-                        $allsongs = $this->songRepository->getByAlbum($disc->id);
-                        foreach ($allsongs as $songid) {
-                            $songs[] = $songid;
-                        }
-                    }
-                } else {
-                    // songs for just this disk
-                    $songs = $this->songRepository->getByAlbum($album->id);
+                $songs = $this->songRepository->getByAlbum($album->id);
+
+                foreach ($songs as $song_id) {
+                    Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                break;
+            case 'album_disk':
+                $albumDisk_id = $this->albumRepository->getRandomAlbumDisk(
+                    Core::get_global('user')->id ?? -1,
+                    null
+                );
+
+                if (empty($albumDisk_id)) {
+                    $results['rfc3514'] = '0x1';
+                    break;
+                }
+
+                $albumDisk = new AlbumDisk($albumDisk_id[0]);
+                $songs     = $this->songRepository->getByAlbumDisk($albumDisk->id);
+
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

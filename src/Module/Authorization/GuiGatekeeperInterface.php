@@ -22,8 +22,6 @@
 
 namespace Ampache\Module\Authorization;
 
-use Ampache\Repository\Model\User;
-
 interface GuiGatekeeperInterface
 {
     /**

@@ -31,8 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistSongsMethod
@@ -49,21 +47,21 @@ final class PlaylistSongsMethod
      * This returns the songs for a playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function playlist_songs(array $input): bool
+    public static function playlist_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
 
-        $playlist = ((int) $object_id === 0)
+        $object_id = $input['filter'];
+        $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
 
@@ -73,7 +71,7 @@ final class PlaylistSongsMethod
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !$user->access === 100)) {
             Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -85,10 +83,10 @@ final class PlaylistSongsMethod
 
             return false;
         }
-        $songs = array();
+        $results = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
-                $songs[] = $object['object_id'];
+                $results[] = $object['object_id'];
             }
         } // end foreach
 
@@ -97,12 +95,12 @@ final class PlaylistSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

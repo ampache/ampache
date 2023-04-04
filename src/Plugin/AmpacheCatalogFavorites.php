@@ -124,12 +124,10 @@ class AmpacheCatalogFavorites
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
-                $item->format();
-
                 if ($item->id) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
@@ -154,7 +152,7 @@ class AmpacheCatalogFavorites
                     echo '</td>';
 
                     if (!$this->gridview) {
-                        echo '<td>' . $item->f_link . '</td>';
+                        echo '<td>' . $item->get_f_link() . '</td>';
                     }
 
                     echo '<td class="optional">';

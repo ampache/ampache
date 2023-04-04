@@ -26,11 +26,9 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 class TvShow extends database_object implements library_item
 {
@@ -62,12 +60,10 @@ class TvShow extends database_object implements library_item
      */
     public function __construct($show_id)
     {
-        /* Get the information from the db */
         $info = $this->get_info($show_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // constructor
@@ -163,8 +159,7 @@ class TvShow extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
-
+        $this->get_f_link();
         if ($details) {
             $this->_get_extra_info();
             $this->tags   = Tag::get_top_tags('tvshow', $this->id);
@@ -224,6 +219,20 @@ class TvShow extends database_object implements library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -240,12 +249,13 @@ class TvShow extends database_object implements library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -399,7 +409,7 @@ class TvShow extends database_object implements library_item
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
+                Stats::migrate('tvshow', $this->id, (int)$tvshow_id, 0);
                 Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
                 //Recommendation::migrate('tvshow', $this->id);
                 Share::migrate('tvshow', $this->id, (int)$tvshow_id);
@@ -465,7 +475,9 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * @return PDOStatement|boolean
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -482,7 +494,7 @@ class TvShow extends database_object implements library_item
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
                 Art::garbage_collection('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);

@@ -63,7 +63,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     $libitem->display_art($thumb); ?>
 </div>
 </td>
-<td class="cel_title"><?php echo $libitem->f_link ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link() ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);

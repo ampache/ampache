@@ -131,10 +131,10 @@ class Stream_Url extends MemoryObject
             $newel = explode('&', $options);
 
             if (count($curel) > 2) {
-                foreach ($newel as $element) {
-                    if (strpos((string)$element, '=')) {
-                        $el = explode('=', $element);
-                        array_splice($curel, count($curel) - 2, 0, $el);
+                foreach ($newel as $urlParameter) {
+                    if (strpos((string)$urlParameter, '=')) {
+                        $element = explode('=', $urlParameter);
+                        array_splice($curel, count($curel) - 2, 0, $element);
                     }
                 }
                 $url = implode('/', $curel);

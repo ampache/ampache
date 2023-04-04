@@ -51,7 +51,6 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         $sql        = "SHOW TABLES";
         $db_results = Dba::read($sql);
 
-
         // Go through the tables!
         while ($row = Dba::fetch_row($db_results)) {
             $sql              = "DESCRIBE `" . $row['0'] . "`";
@@ -101,9 +100,9 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `broadcast` MODIFY COLUMN `name` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `broadcast` MODIFY COLUMN `description` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `broadcast` MODIFY COLUMN `key` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+        Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-        Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+        Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `catalog` MODIFY COLUMN `name` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -114,18 +113,11 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `uri` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `username` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `catalog_remote` MODIFY COLUMN `password` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `name` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `description` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `url` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `interface` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `admin_password` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `channel` MODIFY COLUMN `stream_type` varchar(8) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `democratic` MODIFY COLUMN `name` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `image` MODIFY COLUMN `mime` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `image` MODIFY COLUMN `size` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `image` MODIFY COLUMN `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `image` MODIFY COLUMN `kind` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `image` MODIFY COLUMN `kind` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `ip_history` MODIFY COLUMN `agent` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `label` MODIFY COLUMN `name` varchar(80) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `label` MODIFY COLUMN `category` varchar(40) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -139,7 +131,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `name` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `site_url` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `url` varchar(4096) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `codec` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `live_stream` MODIFY COLUMN `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `localplay_httpq` MODIFY COLUMN `name` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `localplay_httpq` MODIFY COLUMN `host` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `localplay_httpq` MODIFY COLUMN `password` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -151,9 +143,9 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `movie` MODIFY COLUMN `original_name` varchar(80) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `movie` MODIFY COLUMN `summary` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `movie` MODIFY COLUMN `prefix` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `id` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");
+        Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
-        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
@@ -174,7 +166,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `podcast` MODIFY COLUMN `generator` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `title` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `guid` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `state` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `state` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `file` varchar(4096) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `source` varchar(4096) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `podcast_episode` MODIFY COLUMN `website` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -187,7 +179,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `type` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `catagory` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `preference` MODIFY COLUMN `subcatagory` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
+        Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `name` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `recommendation_item` MODIFY COLUMN `rel` varchar(256) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -201,8 +193,8 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `session` MODIFY COLUMN `agent` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `session` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `session_remember` MODIFY COLUMN `username` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");
-        Dba::write("ALTER TABLE `session_remember` MODIFY COLUMN `token` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");
-        Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `id` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");
+        Dba::write("ALTER TABLE `session_remember` MODIFY COLUMN `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+        Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
         Dba::write("ALTER TABLE `session_stream` MODIFY COLUMN `agent` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `share` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `share` MODIFY COLUMN `secret` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
@@ -226,7 +218,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `author` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `album` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `type` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
-        Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `codec` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        Dba::write("ALTER TABLE `stream_playlist` MODIFY COLUMN `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `tag` MODIFY COLUMN `name` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         Dba::write("ALTER TABLE `tag_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;");
         Dba::write("ALTER TABLE `tmp_browse` MODIFY COLUMN `sid` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation NOT NULL;");

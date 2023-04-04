@@ -138,7 +138,6 @@ class AmpacheTmdb
 
             $title = $media_info['original_name'] ?? $media_info['title'];
 
-            $results = array();
             if (in_array('movie', $gather_types)) {
                 if (!empty($media_info['title'])) {
                     $apires = $client->getSearchApi()->searchMovies($media_info['title']);
@@ -231,7 +230,7 @@ class AmpacheTmdb
     {
         debug_event('tmdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 
     /**

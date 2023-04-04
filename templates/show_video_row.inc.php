@@ -70,7 +70,7 @@ if (!isset($video_type)) {
             Art::display('video', $libitem->id, $libitem->get_fullname(), $thumb, $libitem->get_link());
         } ?>
 </td>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php

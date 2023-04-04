@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class ShareDeleteMethod
@@ -47,10 +46,11 @@ final class ShareDeleteMethod
      * Delete an existing share.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of share to delete
      * @return boolean
      */
-    public static function share_delete(array $input): bool
+    public static function share_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -60,7 +60,6 @@ final class ShareDeleteMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         if (in_array($object_id, Share::get_share_list($user))) {
             if (Share::delete_share($object_id, $user)) {

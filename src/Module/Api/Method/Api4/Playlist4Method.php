@@ -31,8 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class Playlist4Method
@@ -48,15 +46,15 @@ final class Playlist4Method
      * This returns a single playlist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist(array $input): bool
+    public static function playlist(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
         $list_id = scrub_in($input['filter']);
 
         if (str_replace('smart_', '', $list_id) === $list_id) {
@@ -66,7 +64,7 @@ final class Playlist4Method
             // Smartlists
             $playlist = new Search((int) str_replace('smart_', '', $list_id), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !$user->access === 100)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;

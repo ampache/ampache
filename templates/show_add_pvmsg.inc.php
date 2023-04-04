@@ -25,8 +25,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
+Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=add_message">
 <table class="tabledata">
 <tr>

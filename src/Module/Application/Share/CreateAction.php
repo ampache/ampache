@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -71,6 +70,7 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $share_id = Share::create_share(
+            Core::get_global('user')->id,
             $_REQUEST['type'],
             (int)$_REQUEST['id'],
             (int)$_REQUEST['allow_stream'] ?? 0,

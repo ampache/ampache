@@ -37,20 +37,25 @@ use Ampache\Module\Util\Ui;
 /** @var string $limit_threshold */
 
 $web_path          = AmpConfig::get('web_path');
+$access25          = Access::check('interface', 25);
+$show_playlist_add = $access25;
+$show_direct_play  = AmpConfig::get('directplay');
+$directplay_limit  = AmpConfig::get('direct_play_limit', 0);
+// album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$group_release     = AmpConfig::get('album_release_type');
+$original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
 $is_table          = $browse->is_grid_view();
-$group_release     = AmpConfig::get('album_release_type');
-$original_year     = AmpConfig::get('use_original_year');
 $year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
 $album_text  = T_('Album');
 $artist_text = T_('Album Artist');
 $songs_text  = T_('Songs');
 $year_text   = T_('Year');
-$count_text  = T_('# Played');
+$count_text  = T_('Played');
 $genres_text = T_('Genres');
 $rating_text = T_('Rating');
 $action_text = T_('Actions');
@@ -66,8 +71,9 @@ $artist_link = ($group_release) ? $artist_text :  Ajax::text('?page=browse&actio
 $songs_link  = ($group_release) ? $songs_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', $songs_text, 'album_sort_song_count');
 $year_link   = ($group_release) ? $year_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . $year_sort, $year_text, 'album_sort_year');
 $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'album_sort_total_count');
-?>
-<?php if ($browse->is_show_header()) {
+$rating_link = ($group_release) ? $rating_text :  Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'album_sort_rating');
+
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="album">
@@ -92,7 +98,7 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
 } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
-                <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+                <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
                 <?php
     } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>
@@ -108,21 +114,12 @@ $count_link  = ($group_release) ? $count_text :  Ajax::text('?page=browse&action
             Rating::build_cache('album', $object_ids);
             Userflag::build_cache('album', $object_ids);
         }
-
-        $show_direct_play     = AmpConfig::get('directplay');
-        $directplay_limit     = AmpConfig::get('direct_play_limit');
-
         /* Foreach through the albums */
         foreach ($object_ids as $album_id) {
             $libitem = new Album($album_id);
             $libitem->format(true, $limit_threshold);
-            $show_direct_play  = $show_direct_play;
-            $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
-                if ($show_direct_play) {
-                    $show_direct_play = $show_playlist_add;
-                }
+                $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()

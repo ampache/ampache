@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <td class="cel_play">
         <span class="cel_play_content"> </span>
@@ -31,6 +32,7 @@
         <span class="cel_rating" id="rating_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getRating">RATING</span>
         <span class="cel_userflag" id="userflag_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getUserFlags">USERFLAGS</span>
     </td>
+    <td class="cel_owner" tal:content="structure PLAYLIST/getUsername">OWNER</td>
     <td class="cel_action">
         <tal:block tal:condition="PLAYLIST/canShare" tal:replace="structure PLAYLIST/getShareUi">SHARE</tal:block>
 

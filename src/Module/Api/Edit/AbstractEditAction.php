@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Edit;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -64,7 +64,6 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         // Post first
         $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id   = (int) Core::get_get('id');
-
         if (empty($object_type)) {
             $object_type = $source_object_type = filter_input(
                 INPUT_GET,
@@ -77,7 +76,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type        = implode('_', explode('_', $object_type, -1));
         }
 
-        if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, array('share', 'channel', 'tag', 'tag_hidden'))) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, array('share', 'tag', 'tag_hidden'))) {
             $this->logger->warning(
                 sprintf('Type `%d` is not based on an item library.', $object_type),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -109,7 +108,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         }
 
         // Make sure they got them rights
-        if (!Access::check('interface', (int) $level) || AmpConfig::get('demo_mode')) {
+        if (!Access::check('interface', (int) $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return null;

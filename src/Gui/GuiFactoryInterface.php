@@ -23,6 +23,7 @@
 namespace Ampache\Gui;
 
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
+use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
@@ -32,6 +33,7 @@ use Ampache\Gui\Stats\StatsViewAdapterInterface;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
@@ -50,6 +52,12 @@ interface GuiFactoryInterface
         Browse $browse,
         Album $album
     ): AlbumViewAdapterInterface;
+
+    public function createAlbumDiskViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        AlbumDisk $albumDisk
+    ): AlbumDiskViewAdapterInterface;
 
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,

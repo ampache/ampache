@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Plugin;
@@ -47,7 +46,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
             case 'geolocation':
                 if (AmpConfig::get('geolocation')) {
                     if ($user->id) {
-                        $name      = $_REQUEST['name'] ?? null;
+                        $name = $_REQUEST['name'] ?? null;
                         if (empty($name)) {
                             $latitude  = (float)($_REQUEST['latitude'] ?? 0);
                             $longitude = (float)($_REQUEST['longitude'] ?? 0);
@@ -64,12 +63,11 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                                     }
                                 }
                             }
-                        }
-
-                        // Better to check for bugged values here and keep previous user good location
-                        // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
-                        if ($latitude > 0 && $longitude > 0) {
-                            Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                            // Better to check for bugged values here and keep previous user good location
+                            // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
+                            if ($latitude > 0 && $longitude > 0) {
+                                Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                            }
                         }
                     }
                 } else {
@@ -83,7 +81,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
-                $data      = Song::get_recently_played($user_id);
+                $data      = Stats::get_recently_played($user_id, 'stream', 'song');
                 $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_played.inc.php');
@@ -96,7 +94,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
-                $data      = Song::get_recently_played($user_id, 'skip');
+                $data      = Stats::get_recently_played($user_id, 'skip', 'song');
                 $ajax_page = 'stats';
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_skipped.inc.php');

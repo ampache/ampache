@@ -106,10 +106,7 @@ class Wanted extends database_object
      */
     public function __construct($wanted_id)
     {
-        /* Get the information from the db */
         $info = static::getWantedRepository()->getById((int) $wanted_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -142,10 +139,10 @@ class Wanted extends database_object
         } catch (Exception $error) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
-            return null;
+            return array();
         }
 
-        $wartist   = array();
+        $wartist = array();
         if (!$artist) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
@@ -325,7 +322,7 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept');
+        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept', false);
         $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 

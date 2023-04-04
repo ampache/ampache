@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

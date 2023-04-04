@@ -22,13 +22,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path');
 ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
@@ -48,7 +49,7 @@ $web_path = AmpConfig::get('web_path');
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $web_path; ?>/admin/export.php"><?php echo T_('Export Catalog'); ?></a></li>
       <?php if (AmpConfig::get('catalog_filter')) { ?>
         <li id="sb_admin_filter_Add"><a href="<?php echo $web_path; ?>/admin/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a></li>
-        <li id="sb_admin_filter_Browse"><a href="<?php echo $web_path; ?>/admin/filter.php"><?php echo T_('Manage Catalog Filters'); ?></a></li>
+        <li id="sb_admin_filter_Browse"><a href="<?php echo $web_path; ?>/admin/filter.php"><?php echo T_('Show Catalog Filters'); ?></a></li>
       <?php } ?>
       <?php if (AmpConfig::get('licensing')) { ?>
         <li id="sb_admin_ot_ManageLicense"><a href="<?php echo $web_path; ?>/admin/license.php"><?php echo T_('Manage Licenses'); ?></a></li>
@@ -64,12 +65,15 @@ $web_path = AmpConfig::get('web_path');
       <ul class="sb3" id="sb_admin_users">
         <li id="sb_admin_users_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
         <li id="sb_admin_users_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
-        <?php
-          if (Mailer::is_mail_enabled()) { ?>
+        <?php if (Mailer::is_mail_enabled()) { ?>
           <li id="sb_admin_ot_Mail"><a href="<?php echo $web_path; ?>/admin/mail.php"><?php echo T_('E-mail Users'); ?></a></li>
         <?php
           }
-        if (AmpConfig::get('sociable')) { ?>
+        if (Upload::can_upload(Core::get_global('user'))) { ?>
+            <li id="sb_admin_users_Uploads"><a href="<?php echo $web_path; ?>/admin/uploads.php"><?php echo T_('Browse Uploads'); ?></a></li>
+        <?php
+          }
+            if (AmpConfig::get('sociable')) { ?>
           <li id="sb_admin_ot_ManageShoutbox"><a href="<?php echo $web_path; ?>/admin/shout.php"><?php echo T_('Manage Shoutbox'); ?></a></li>
         <?php } ?>
         <li id="sb_admin_ot_ClearNowPlaying"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=clear_now_playing"><?php echo T_('Clear Now Playing'); ?></a></li>

@@ -24,13 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -48,13 +46,13 @@ class AlbumSongsMethod
      * This returns the songs of a specified album
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs(array $input): bool
+    public static function album_songs(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -70,23 +68,8 @@ class AlbumSongsMethod
 
         ob_end_clean();
         // songs for all disks
-        $songs = array();
-        $user  = User::get_from_username(Session::username($input['auth']));
-        $exact = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        if (AmpConfig::get('album_group') && !$exact) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $disc     = new Album($discid);
-                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
-                }
-            }
-        } else {
-            // songs for just this disk
-            $songs = static::getSongRepository()->getByAlbum($album->id);
-        }
-        if (empty($songs)) {
+        $results = static::getSongRepository()->getByAlbum($album->id);
+        if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
             return false;
@@ -97,12 +80,12 @@ class AlbumSongsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($songs, $user);
+                echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($songs, $user);
+                echo Xml_Data::songs($results, $user);
         }
 
         return true;

@@ -43,15 +43,16 @@ final class UpdatePodcast4Method
      * Sync and download new podcast episodes
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast
      * @return boolean
      */
-    public static function update_podcast(array $input): bool
+    public static function update_podcast(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access('interface', 50, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         $object_id = (int) scrub_in($input['filter']);

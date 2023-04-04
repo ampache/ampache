@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
@@ -44,56 +43,55 @@ final class Stats3Method
     /**
      * This get library stats.
      * @param array $input
+     * @param User $user
      */
-    public static function stats(array $input)
+    public static function stats(array $input, User $user)
     {
         $type     = $input['type'];
         $offset   = $input['offset'];
         $limit    = $input['limit'];
         $username = $input['username'];
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {
             $user    = User::get_from_username($input['username']);
         }
-        $albums = null;
+        $results = null;
         if ($type == "newest") {
-            $albums = Stats::get_newest("album", $limit, $offset);
+            $results = Stats::get_newest("album", $limit, $offset);
         } else {
             if ($type == "highest") {
-                $albums = Rating::get_highest("album", $limit, $offset);
+                $results = Rating::get_highest("album", $limit, $offset);
             } else {
                 if ($type == "frequent") {
-                    $albums = Stats::get_top("album", $limit, '', $offset);
+                    $results = Stats::get_top("album", $limit, '', $offset);
                 } else {
                     if ($type == "recent") {
                         if (!empty($username)) {
                             if ($user !== null) {
-                                $albums = $user->get_recently_played('album', $limit);
+                                $results = $user->get_recently_played('album', $limit);
                             } else {
                                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                             }
                         } else {
-                            $albums = Stats::get_recent('album', $limit, $offset);
+                            $results = Stats::get_recent('album', $limit, $offset);
                         }
                     } else {
                         if ($type == "flagged") {
-                            $albums = Userflag::get_latest('album');
+                            $results = Userflag::get_latest('album');
                         } else {
                             if (!$limit) {
                                 $limit = AmpConfig::get('popular_threshold');
                             }
-                            $albums = static::getAlbumRepository()->getRandom($user->id, $limit);
+                            $results = static::getAlbumRepository()->getRandom($user->id, $limit);
                         }
                     }
                 }
             }
         }
 
-        if ($albums !== null) {
+        if ($results !== null) {
             ob_end_clean();
-            echo Xml3_Data::albums($albums, array(), $user);
+            echo Xml3_Data::albums($results, array(), $user);
         }
     } // stats
 

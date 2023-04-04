@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Exception;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class AmpacheHeadphones
 {

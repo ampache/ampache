@@ -78,7 +78,7 @@ final class ShowSongAction implements ApplicationActionInterface
                 'Requested a song that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_('You have requested a Song that does not exist.');
+            echo T_('You have requested an object that does not exist');
         } else {
             $this->ui->showBoxTop(
                 scrub_out($song->get_fullname()),

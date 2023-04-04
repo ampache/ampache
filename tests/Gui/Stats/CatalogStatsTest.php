@@ -59,6 +59,7 @@ class CatalogStatsTest extends MockeryTestCase
             ['getConnectedCount', 'connected', 666, 0],
             ['getUserCount', 'user', 666, 0],
             ['getAlbumCount', 'album', 666, 0],
+            ['getAlbumDiskCount', 'album_disk', 666, 0],
             ['getArtistCount', 'artist', 666, 0],
             ['getSongCount', 'song', 666, 0],
             ['getPodcastCount', 'podcast', 666, 0],

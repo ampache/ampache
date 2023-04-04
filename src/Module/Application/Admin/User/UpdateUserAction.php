@@ -94,12 +94,8 @@ final class UpdateUserAction extends AbstractUserAction
         /* Verify Input */
         if (empty($username)) {
             AmpError::add('username', T_("A Username is required"));
-        } else {
-            if ($username != $client->username) {
-                if ($this->userRepository->idByUsername($username) > 0) {
-                    AmpError::add('username', T_("That Username already exists"));
-                }
-            }
+        } elseif ($username != $client->username && $this->userRepository->idByUsername($username) > 0) {
+            AmpError::add('username', T_("That Username already exists"));
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
             AmpError::add('password', T_("Your Passwords don't match"));

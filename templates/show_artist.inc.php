@@ -25,7 +25,6 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -53,7 +52,7 @@ $use_wanted        = AmpConfig::get('wanted');
 /** @var GuiGatekeeperInterface $gatekeeper */
 
 if ($directplay_limit > 0) {
-    $show_playlist_add = ($artist->songs <= $directplay_limit);
+    $show_playlist_add = ($artist->song_count <= $directplay_limit);
     if ($show_direct_play) {
         $show_direct_play = $show_playlist_add;
     }
@@ -96,8 +95,7 @@ Ui::show_box_top($title, 'info-box'); ?>
     </span>
     <?php } ?>
 <?php } ?>
-<?php
-if (AmpConfig::get('show_played_times')) { ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
         /* HINT: Number of times an object has been played */
@@ -108,10 +106,9 @@ if (AmpConfig::get('show_played_times')) { ?>
 <?php
 $owner_id = $artist->get_user_owner();
 if (AmpConfig::get('sociable') && $owner_id > 0) {
-    $owner = new User($owner_id);
-    $owner->format(); ?>
+    $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
-    <?php echo T_('Uploaded by'); ?> <?php echo $owner->f_link; ?>
+    <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
 </div>
 <?php
 } ?>
@@ -119,7 +116,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if ($object_type == 'album') { ?>
+        <?php if ($object_type == 'album' || $object_type == 'album_disk') { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
@@ -181,7 +178,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
         </li>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>

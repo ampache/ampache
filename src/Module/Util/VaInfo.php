@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -93,6 +92,7 @@ final class VaInfo implements VaInfoInterface
         'resolution_x' => null,
         'resolution_y' => null,
         'size' => null,
+        'subtitle' => null,
         'summary' => null,
         'time' => null,
         'title' => null,
@@ -635,6 +635,7 @@ final class VaInfo implements VaInfoInterface
             $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string)$tags['original_year']) : $info['original_year'];
             $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string)$tags['barcode']) : $info['barcode'];
             $info['catalog_number'] = (!$info['catalog_number'] && array_key_exists('catalog_number', $tags)) ? trim((string)$tags['catalog_number']) : $info['catalog_number'];
+            $info['subtitle']       = (!$info['subtitle'] && array_key_exists('subtitle', $tags)) ? trim((string)$tags['subtitle']) : $info['subtitle'];
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
@@ -1103,9 +1104,6 @@ final class VaInfo implements VaInfoInterface
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
-                case 'music_cd_identifier':
-                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
-                    break;
                 case 'originalyear':
                 case 'originalreleaseyear':
                     $parsed['original_year'] = $data[0];
@@ -1113,6 +1111,14 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'releasecomment':
+                case 'discsubtitle':
+                case 'version':
+                    $parsed['subtitle'] = $data[0];
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
@@ -1242,6 +1248,11 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                 case 'organization':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'releasecomment':
+                case 'discsubtitle':
+                case 'version':
+                    $parsed['subtitle'] = $data[0];
                     break;
                 case 'rating':
                     $rating_user = -1;
@@ -1375,6 +1386,11 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'releasecomment':
+                case 'set_subtitle':
+                case 'version':
+                    $parsed['subtitle'] = $data[0];
                     break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
@@ -1613,6 +1629,11 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
+                case 'releasecomment':
+                case 'discsubtitle':
+                case 'version':
+                    $parsed['subtitle'] = $data[0];
+                    break;
                 case 'tv_episode':
                     $parsed['tvshow_episode'] = $data[0];
                     break;
@@ -1687,11 +1708,16 @@ final class VaInfo implements VaInfoInterface
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
-                case 'music_cd_identifier':
-                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                case 'releasecomment':
+                case 'setsubtitle':
+                case 'version':
+                    $parsed['subtitle'] = $data[0];
                     break;
                 case 'originalreleaseyear':
                     $parsed['original_year'] = str_replace("\x00", '', $data[0]);
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tagname] = $data[0];

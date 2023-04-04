@@ -77,14 +77,12 @@ final class CreateAction implements ApplicationActionInterface
             // Create the playlist
             Democratic::create($_POST);
             $democratic = Democratic::get_current_playlist();
-        } else {
-            if (!$democratic->update($_POST)) {
-                $this->ui->showConfirmation(
-                    T_('There Was a Problem'),
-                    T_("Cooldown out of range."),
-                    AmpConfig::get('web_path') . "/democratic.php?action=manage"
-                );
-            }
+        } elseif (!$democratic->update($_POST)) {
+            $this->ui->showConfirmation(
+                T_('There Was a Problem'),
+                T_("Cooldown out of range."),
+                AmpConfig::get('web_path') . "/democratic.php?action=manage"
+            );
         }
 
         // Now check for additional things we might have to do

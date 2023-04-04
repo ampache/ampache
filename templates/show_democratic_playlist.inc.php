@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Search;
 $democratic = Democratic::get_current_playlist();
 $web_path   = AmpConfig::get('web_path');
 $use_search = AmpConfig::get('demo_use_search');
+$access100  = Access::check('interface', 100);
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -46,7 +47,7 @@ if ($browse->is_show_header()) {
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface', 100)) { ?>
+  <?php if ($access100) { ?>
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
@@ -67,7 +68,7 @@ if ($browse->is_show_header()) {
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', 100)) { ?>
+        <?php if ($access100) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php } ?>
     </tr>
@@ -78,6 +79,7 @@ if ($browse->is_show_header()) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
+        /** @var Ampache\Repository\Model\playable_item $media */
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         $media      = new $class_name($item['object_id']);
         $media->format(); ?>
@@ -94,7 +96,7 @@ if ($browse->is_show_header()) {
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
-    <?php if (Access::check('interface', 100)) { ?>
+    <?php if ($access100) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
@@ -111,7 +113,7 @@ if ($browse->is_show_header()) {
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', 100)) { ?>
+        <?php if ($access100) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php } ?>
     </tr>

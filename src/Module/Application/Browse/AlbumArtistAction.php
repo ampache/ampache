@@ -58,13 +58,12 @@ final class AlbumArtistAction implements ApplicationActionInterface
         session_start();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->set_type('artist');
+        $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
-        $browse->set_album_artist(true);
 
         $this->ui->showHeader();
 
-        $this->ui->show('show_browse_form.inc.php');
+        $this->ui->show('show_form_browse.inc.php');
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

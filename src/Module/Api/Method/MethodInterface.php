@@ -26,6 +26,7 @@ use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
 interface MethodInterface
@@ -38,6 +39,7 @@ interface MethodInterface
         GatekeeperInterface $gatekeeper,
         ResponseInterface $response,
         ApiOutputInterface $output,
-        array $input
+        array $input,
+        User $user
     ): ResponseInterface;
 }

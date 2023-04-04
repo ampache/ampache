@@ -20,8 +20,6 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 ?>

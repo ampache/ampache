@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class ShareMethod
@@ -45,10 +46,11 @@ final class ShareMethod
      * Get the share from it's id.
      *
      * @param array $input
+     * @param User $user
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share(array $input): bool
+    public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -58,15 +60,15 @@ final class ShareMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $share = array((int) $input['filter']);
+        $results = array((int) $input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::shares($share, false);
+                echo Json_Data::shares($results, false);
                 break;
             default:
-                echo Xml_Data::shares($share);
+                echo Xml_Data::shares($results, $user);
         }
 
         return true;

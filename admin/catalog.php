@@ -33,6 +33,7 @@ use Ampache\Module\Application\Admin\Catalog\ClearStatsAction;
 use Ampache\Module\Application\Admin\Catalog\DeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\EnableDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\FullServiceAction;
+use Ampache\Module\Application\Admin\Catalog\GarbageCollectAction;
 use Ampache\Module\Application\Admin\Catalog\GatherMediaArtAction;
 use Ampache\Module\Application\Admin\Catalog\ImportToCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
@@ -70,6 +71,7 @@ $dic->get(ApplicationRunner::class)->run(
         AddToCatalogAction::REQUEST_KEY => AddToCatalogAction::class,
         CleanAllCatalogsAction::REQUEST_KEY => CleanAllCatalogsAction::class,
         CleanCatalogAction::REQUEST_KEY => CleanCatalogAction::class,
+        GarbageCollectAction::REQUEST_KEY => GarbageCollectAction::class,
         UpdateFileTagsAction::REQUEST_KEY => UpdateFileTagsAction::class,
         UpdateAllFileTagsActions::REQUEST_KEY => UpdateAllFileTagsActions::class,
         GatherMediaArtAction::REQUEST_KEY => GatherMediaArtAction::class,

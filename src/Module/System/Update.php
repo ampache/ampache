@@ -25,7 +25,12 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
 /**
@@ -50,30 +55,31 @@ class Update
      * Because we may not have the update_info table we have to check
      * for its existence first.
      * @return string
+     * @throws EnvironmentNotSuitableException
      */
     public static function get_version()
     {
-        $version = "";
         /* Make sure that update_info exits */
         $sql        = "SHOW TABLES LIKE 'update_info'";
         $db_results = Dba::read($sql);
         if (!Dba::dbh()) {
-            header("Location: test.php");
+            throw new EnvironmentNotSuitableException();
         }
 
         // If no table
         if (!Dba::num_rows($db_results)) {
             // They can't upgrade, they are too old
-            header("Location: test.php");
+            throw new EnvironmentNotSuitableException();
         } else {
             // If we've found the update_info table, let's get the version from it
             $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
             $db_results = Dba::read($sql);
-            $results    = Dba::fetch_assoc($db_results);
-            $version    = $results['value'];
+            if ($results = Dba::fetch_assoc($db_results)) {
+                return $results['value'];
+            }
         }
-
-        return $version;
+        // now it's really got problems
+        throw new EnvironmentNotSuitableException();
     } // get_version
 
     /**
@@ -82,6 +88,7 @@ class Update
      * is something missing? why is it missing!?
      * @param bool $execute
      * @return array
+     * @throws EnvironmentNotSuitableException
      */
     public static function check_tables(bool $execute = false)
     {
@@ -126,7 +133,8 @@ class Update
             'artist_map' => "CREATE TABLE IF NOT EXISTS `artist_map` (`artist_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_artist_map` (`object_id`, `object_type`, `artist_id`), KEY `object_id_index` (`object_id`), KEY `artist_id_index` (`artist_id`), KEY `artist_id_type_index` (`artist_id`, `object_type`), KEY `object_id_type_index` (`object_id`, `object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
             'album_map' => "CREATE TABLE IF NOT EXISTS `album_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`), KEY `object_id_index` (`object_id`), KEY `album_id_type_index` (`album_id`, `object_type`), KEY `object_id_type_index` (`object_id`, `object_type`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;",
             'catalog_filter_group' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `name` (`name`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT'); UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT'; ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = 1;",
-            'catalog_filter_group_map' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;"
+            'catalog_filter_group_map' => "CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;",
+            'album_disk' => "CREATE TABLE IF NOT EXISTS `album_disk` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `album_id` int(11) UNSIGNED NOT NULL, `disk` int(11) UNSIGNED NOT NULL, `disk_count` int(11) unsigned DEFAULT 0 NOT NULL, `time` bigint(20) UNSIGNED DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `song_count` smallint(5) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY `unique_album_disk` (`album_id`, `disk`, `catalog`), INDEX `id_index` (`id`), INDEX `album_id_type_index` (`album_id`, `disk`), INDEX `id_disk_index` (`id`, `disk`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;"
         );
         $versions   = array(
             'image' => 360003,
@@ -164,7 +172,8 @@ class Update
             'artist_map' => 530000,
             'album_map' => 530001,
             'catalog_filter_group' => 550001,
-            'catalog_filter_group_map' => 550001
+            'catalog_filter_group_map' => 550001,
+            'album_disk' => 600004
         );
         foreach ($tables as $table_name => $table_sql) {
             $sql        = "DESCRIBE `$table_name`;";
@@ -770,6 +779,78 @@ class Update
 
         $update_string = "* Add `song_artist` and `album_artist` maps to catalog_map";
         $version[]     = array('version' => '550005', 'description' => $update_string);
+
+        $update_string = "* Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played";
+        $version[]     = array('version' => '600001', 'description' => $update_string);
+
+        $update_string = "* Drop channel table";
+        $version[]     = array('version' => '600002', 'description' => $update_string);
+
+        $update_string = "* Add `total_skip` to podcast table";
+        $version[]     = array('version' => '600003', 'description' => $update_string);
+
+        $update_string = "* Add `disk` to song table<br />* Create album_disk table and migrate user ratings & flags";
+        $version[]     = array('version' => '600004', 'description' => $update_string);
+
+        $update_string = "<b>" . T_("WARNING") . "</b> Please consider using the CLI for this update (php bin/cli admin:updateDatabase -e) <a href='https://github.com/ampache/ampache/wiki/ampache6-details'>Ampache Wiki</a><br />* Migrate multi-disk albums to single album id's";
+        $version[]     = array('version' => '600005', 'description' => $update_string);
+
+        $update_string = "* Add `disk_count` to album table";
+        $version[]     = array('version' => '600006', 'description' => $update_string);
+
+        $update_string = "* Fill album_disk table update count tables";
+        $version[]     = array('version' => '600007', 'description' => $update_string);
+
+        $update_string = "* Rename `artist`.`album_group_count` => `album_disk_count`";
+        $version[]     = array('version' => '600008', 'description' => $update_string);
+
+        $update_string = "* Drop `disk` from the `album` table";
+        $version[]     = array('version' => '600009', 'description' => $update_string);
+
+        $update_string = "* Rename `user_data` album keys";
+        $version[]     = array('version' => '600010', 'description' => $update_string);
+
+        $update_string = "* Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables";
+        $version[]     = array('version' => '600011', 'description' => $update_string);
+
+        $update_string = "* Add `song_artist` and `album_artist` maps to catalog_map<br />* This is a duplicate of `update_550004` But may have been skipped depending on your site's version history";
+        $version[]     = array('version' => '600012', 'description' => $update_string);
+
+        $update_string = "* Add ui option 'api_enable_6' to enable/disable API6";
+        $version[]     = array('version' => '600013', 'description' => $update_string);
+
+        $update_string = "* Add `subtitle` to the album table";
+        $version[]     = array('version' => '600014', 'description' => $update_string);
+
+        $update_string = "* Add `streamtoken` to user table allowing permalink music stream access";
+        $version[]     = array('version' => '600015', 'description' => $update_string);
+
+        $update_string = "* Add `object_type_IDX` to artist_map table<br />* Add `object_type_IDX` to catalog_map table";
+        $version[]     = array('version' => '600016', 'description' => $update_string);
+
+        $update_string = "* Drop `user_playlist` table and recreate it";
+        $version[]     = array('version' => '600018', 'description' => $update_string);
+
+        $update_string = "* During migration some album_disk data may be missing it's object type";
+        $version[]     = array('version' => '600019', 'description' => $update_string);
+
+        $update_string = "* Set system preferences to Admin (100)<br />* These options are only available to Admin users anyway";
+        $version[]     = array('version' => '600020', 'description' => $update_string);
+
+        $update_string = "* Extend `time` column for the song table";
+        $version[]     = array('version' => '600021', 'description' => $update_string);
+
+        $update_string = "* Extend `time` column for the stream_playlist table";
+        $version[]     = array('version' => '600022', 'description' => $update_string);
+
+        $update_string = "* Add upload_access_level to restrict uploads to certain user groups";
+        $version[]     = array('version' => '600023', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('show_subtitle') Show Album subtitle on links (if available)<br />* Add ui option ('show_original_year') Show Album original year on links (if available)";
+        $version[]     = array('version' => '600024', 'description' => $update_string);
+
+        $update_string = "* Add ui option ('show_header_login') Show the login / registration links in the site header";
+        $version[]     = array('version' => '600025', 'description' => $update_string);
 
         return $version;
     }
@@ -4655,6 +4736,306 @@ class Update
         $retval = true;
 
         // delete bad maps if they exist
+        $tables = ['song', 'album', 'album_disk', 'video', 'podcast', 'podcast_episode', 'live_stream'];
+        foreach ($tables as $type) {
+            $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;";
+            Dba::write($sql);
+        }
+        // delete catalog_map artists
+        $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` INNER JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` INNER JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `album`.`catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` IN ('artist', 'song_artist', 'album_artist') AND `valid_maps`.`object_id` IS NULL;";
+        Dba::write($sql);
+        // insert catalog_map artists
+        $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_600001
+     *
+     * Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
+     */
+    public static function update_600001(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_600002
+     *
+     * Drop channel table
+     */
+    public static function update_600002(): bool
+    {
+        $retval = true;
+        $sql    = "DROP TABLE IF EXISTS `channel`";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_600003
+     *
+     * Add `total_skip` to podcast table
+     */
+    public static function update_600003(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `podcast` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;";
+        Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_600004
+     *
+     * Add `disk` to song table
+     * Create album_disk table and migrate user ratings & flags
+     */
+    public static function update_600004(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = 'MyISAM';
+        // add disk to song table
+        $sql = "ALTER TABLE `song` ADD `disk` smallint(5) UNSIGNED DEFAULT NULL AFTER `album`;";
+        $retval &= (Dba::write($sql) !== false);
+        // fill the data
+        $sql = "UPDATE `song`, (SELECT DISTINCT `id`, `disk` FROM `album`) AS `album` SET `song`.`disk` = `album`.`disk` WHERE (`song`.`disk` != `album`.`disk` OR `song`.`disk` IS NULL) AND `song`.`album` = `album`.`id`;";
+        $retval &= (Dba::write($sql) !== false);
+        // create the table
+        $sql = "DROP TABLE IF EXISTS `album_disk`;";
+        Dba::write($sql);
+        $sql = "CREATE TABLE IF NOT EXISTS `album_disk` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `album_id` int(11) UNSIGNED NOT NULL, `disk` int(11) UNSIGNED NOT NULL, `disk_count` int(11) unsigned DEFAULT 0 NOT NULL, `time` bigint(20) UNSIGNED DEFAULT NULL, `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0, `song_count` smallint(5) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY `unique_album_disk` (`album_id`, `disk`, `catalog`), INDEX `id_index` (`id`), INDEX `album_id_type_index` (`album_id`, `disk`), INDEX `id_disk_index` (`id`, `disk`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+        // make sure ratings and counts will be entered
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        // fill the data
+        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog` FROM `song`;";
+        $retval &= (Dba::write($sql) !== false);
+        // rating (id, `user`, object_type, object_id, rating)
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
+        // user_flag (id, `user`, object_id, object_type, `date`)
+        $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
+        Song::clear_cache();
+        Artist::clear_cache();
+        Album::clear_cache();
+
+        return $retval;
+    }
+
+    /** update_600005
+     *
+     * Migrate multi-disk albums to single album id's
+     */
+    public static function update_600005(): bool
+    {
+        $sql        = "SELECT MIN(`id`) AS `id` FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` HAVING COUNT(`id`) > 1;";
+        $db_results = Dba::read($sql);
+        $album_list = array();
+        $migrate    = array();
+        // get the base album you will migrate into
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $album_list[] = $row['id'];
+        }
+        // get all matching albums that will migrate into the base albums
+        foreach ($album_list as $album_id) {
+            $album    = new Album((int)$album_id);
+            $f_name   = $album->get_fullname(true);
+            $where    = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+            $params   = array($f_name, $f_name);
+            if ($album->mbid) {
+                $where .= 'AND `album`.`mbid` = ? ';
+                $params[] = $album->mbid;
+            } else {
+                $where .= 'AND `album`.`mbid` IS NULL ';
+            }
+            if ($album->mbid_group) {
+                $where .= 'AND `album`.`mbid_group` = ? ';
+                $params[] = $album->mbid_group;
+            } else {
+                $where .= 'AND `album`.`mbid_group` IS NULL ';
+            }
+            if ($album->prefix) {
+                $where .= 'AND `album`.`prefix` = ? ';
+                $params[] = $album->prefix;
+            }
+            if ($album->album_artist) {
+                $where .= 'AND `album`.`album_artist` = ? ';
+                $params[] = $album->album_artist;
+            }
+            if ($album->original_year) {
+                $where .= 'AND `album`.`original_year` = ? ';
+                $params[] = $album->original_year;
+            }
+            if ($album->release_type) {
+                $where .= 'AND `album`.`release_type` = ? ';
+                $params[] = $album->release_type;
+            }
+            if ($album->release_status) {
+                $where .= 'AND `album`.`release_status` = ? ';
+                $params[] = $album->release_status;
+            }
+
+            $sql        = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $where GROUP BY `album`.`id` ORDER BY `disk` ASC";
+            $db_results = Dba::read($sql, $params);
+
+            while ($row = Dba::fetch_assoc($db_results)) {
+                if ($row['id'] !== $album_id) {
+                    $migrate[] = array(
+                        'old' => $row['id'],
+                        'new' => $album_id
+                    );
+                }
+            }
+        }
+        debug_event(self::class, 'update_600005: migrate {' . count($migrate) . '} albums', 4);
+        // get the songs for these id's and migrate to the base id
+        foreach ($migrate as $albums) {
+            debug_event(self::class, 'update_600005: migrate album: ' . $albums['old'] . ' => ' . $albums['new'], 4);
+            $sql = "UPDATE `song` SET `album` = ? WHERE `album` = ?;";
+            if (Dba::write($sql, array($albums['new'], $albums['old'])) === false) {
+                debug_event(self::class, 'update_600005: FAIL: album ' . $albums['old'], 1);
+
+                return false;
+            }
+            // bulk migrate by album only (0 will let us migrate everything below)
+            Song::migrate_album($albums['new'], 0, $albums['old']);
+        }
+        // check that the migration is finished
+        $sql        = "SELECT MAX(`id`) AS `id` FROM `album` WHERE `id` IN (SELECT `album` FROM `song`) GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` HAVING COUNT(`id`) > 1;";
+        $db_results = Dba::read($sql);
+        if (Dba::fetch_assoc($db_results)) {
+            debug_event(self::class, 'update_600005: FAIL', 1);
+
+            return false;
+        }
+        // clean up this mess
+        Catalog::clean_empty_albums();
+        Song::clear_cache();
+        Artist::clear_cache();
+        Album::clear_cache();
+        debug_event(self::class, 'update_600005: SUCCESS', 5);
+
+        return true;
+    }
+
+    /** update_600006
+     *
+     * Add `disk_count` to album table
+     */
+    public static function update_600006(): bool
+    {
+        return (Dba::write("ALTER TABLE `album` ADD `disk_count` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `disk`;") !== false);
+    }
+
+    /**
+     * update_600007
+     *
+     * Fill album_disk table update count tables
+     */
+    public static function update_600007(): bool
+    {
+        $retval = true;
+        $sql    = "UPDATE `album`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `album_disk` SET `album`.`disk_count` = `album_disk`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album_disk`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `disk_count` SET `album_disk`.`disk_count` = `disk_count`.`disk_count` WHERE `album_disk`.`disk_count` != `disk_count`.`disk_count` AND `album_disk`.`album_id` = `disk_count`.`album_id`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album_disk`, (SELECT SUM(`time`) AS `time`, `album`, `disk` FROM `song` GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`time` = `song`.`time` WHERE (`album_disk`.`time` != `song`.`time` OR `album_disk`.`time` IS NULL) AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album_disk`, (SELECT COUNT(DISTINCT `id`) AS `song_count`, `album`, `disk` FROM `song` GROUP BY `album`, `disk`) AS `song` SET `album_disk`.`song_count` = `song`.`song_count` WHERE `album_disk`.`song_count` != `song`.`song_count` AND `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk`;";
+        Dba::write($sql);
+        $sql = "UPDATE `album_disk`, (SELECT SUM(`song`.`total_count`) AS `total_count`, `album_disk`.`id` AS `object_id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` GROUP BY `album_disk`.`id`) AS `object_count` SET `album_disk`.`total_count` = `object_count`.`total_count` WHERE `album_disk`.`total_count` != `object_count`.`total_count` AND `album_disk`.`id` = `object_count`.`object_id`;";
+        Dba::write($sql);
+        // now that the data is in it can update counts
+        Album::update_album_counts();
+        Artist::update_artist_counts();
+
+        return $retval;
+    }
+
+    /**
+     * update_600008
+     *
+     * Rename `artist`.`album_group_count` => `album_disk_count`
+     */
+    public static function update_600008(): bool
+    {
+        return (Dba::write("ALTER TABLE `artist` CHANGE `album_group_count` `album_disk_count` smallint(5) unsigned DEFAULT 0 NULL;") !== false);
+    }
+
+    /**
+     * update_600009
+     *
+     * Drop `disk` from the `album` table
+     */
+    public static function update_600009(): bool
+    {
+        return (Dba::write("ALTER TABLE `album` DROP COLUMN `disk`;") !== false);
+    }
+
+    /**
+     * update_600010
+     *
+     * Rename `user_data` album keys
+     */
+    public static function update_600010(): bool
+    {
+        $retval = true;
+        // album was the ungrouped disks so rename those first
+        $sql    = "UPDATE IGNORE `user_data` SET `key` = 'album_disk' WHERE `key` = 'album';";
+        $retval &= (Dba::write($sql) !== false);
+        // album_group is now the default state
+        $sql    = "UPDATE IGNORE `user_data` SET `key` = 'album' WHERE `key` = 'album_group';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "DELETE FROM `user_data` WHERE `key` = 'album_group';";
+        Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_600011
+     *
+     * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
+     */
+    public static function update_600011(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_600012
+     *
+     * Add `song_artist` and `album_artist` maps to catalog_map
+     * This is a duplicate of `update_550004` But may have been skipped depending on your site's version history
+     */
+    public static function update_600012(): bool
+    {
+        $retval = true;
+
+        // delete bad maps if they exist
         $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
         foreach ($tables as $type) {
             $sql = "DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;";
@@ -4666,6 +5047,217 @@ class Update
         // insert catalog_map artists
         $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
         $retval &= (Dba::write($sql) !== false);
+        Catalog::update_mapping('artist');
+        Catalog::update_mapping('album');
+        Catalog::update_mapping('album_disk');
+
+        return $retval;
+    }
+
+    /**
+     * update_600013
+     *
+     * Add ui option 'api_enable_6' to enable/disable API6
+     */
+    public static function update_600013(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600014
+     *
+     * Add `subtitle` to the album table
+     */
+    public static function update_600014(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $sql       = "ALTER TABLE `album` ADD `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600015
+     *
+     * Add `streamtoken` to user table allowing permalink music stream access
+     */
+    public static function update_600015(): bool
+    {
+        return (Dba::write("ALTER TABLE `user` ADD `streamtoken` varchar(255) NULL AFTER `rsstoken`;") !== false);
+    }
+
+    /**
+     * update_600016
+     *
+     * Add `object_type_IDX` to artist_map table
+     * Add `object_type_IDX` to catalog_map table
+     */
+    public static function update_600016(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `artist_map` DROP KEY `object_type_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`;";
+        Dba::write($sql);
+        $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`);";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600017 skipped.
+     */
+
+    /**
+     * update_600018
+     *
+     * Drop `user_playlist` table and recreate it
+     */
+    public static function update_600018(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $sql       = "DROP TABLE IF EXISTS `user_playlist`";
+        Dba::write($sql);
+        $sql = "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600019
+     *
+     * During migration some album_disk data may be missing it's object type
+     */
+    public static function update_600019(): bool
+    {
+        $retval = true;
+        $sql    = "UPDATE IGNORE `rating` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "DELETE FROM `rating` WHERE `object_type` = '';";
+        Dba::write($sql);
+        $sql    = "UPDATE IGNORE `object_count` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
+        $retval &= (Dba::write($sql) !== false);
+        $sql = "DELETE FROM `object_count` WHERE `object_type` = '';";
+        Dba::write($sql);
+        // rating (id, `user`, object_type, object_id, rating)
+        $sql = "INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = 'album' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = 'album' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
+        // user_flag (id, `user`, object_id, object_type, `date`)
+        $sql = "INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT 'album_disk', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = 'album' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = 'album' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = 'album' AND `album_disk`.`id` IS NOT NULL;";
+        Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_600020
+     *
+     * Set system preferences to 100.
+     * These options are only available to Admin users anyway
+     */
+    public static function update_600020(): bool
+    {
+        return (Dba::write("UPDATE `preference` SET `level` = 100 WHERE `catagory` = 'system';") !== false);
+    }
+
+    /** update_600021
+     *
+     * Extend `time` column for the song table
+     */
+    public static function update_600021(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /** update_600022
+     *
+     * Extend `time` column for the stream_playlist table
+     */
+    public static function update_600022(): bool
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600023
+     *
+     * Add upload_access_level to restrict uploads to certain users
+     */
+    public static function update_600023(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '25')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600024
+     *
+     * Add ui option ('show_subtitle') Show Album subtitle on links (if available)
+     * Add ui option ('show_original_year') Show Album original year on links (if available)
+     */
+    public static function update_600024(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600025
+     *
+     * Add ui option ('show_header_login') Show the login / registration links in the site header
+     */
+    public static function update_600025(): bool
+    {
+        $retval = true;
+        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
     }

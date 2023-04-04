@@ -54,9 +54,9 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Podcast Episode will be deleted'),

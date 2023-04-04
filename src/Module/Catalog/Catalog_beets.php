@@ -40,14 +40,11 @@ class Catalog_beets extends Catalog
     protected $version     = '000001';
     protected $type        = 'beets';
     protected $description = 'Beets Catalog';
-
     protected $listCommand = 'ls';
 
-    /**
-     * Beets Database File
-     * @var string $beetsdb
-     */
-    protected $beetsdb;
+    protected string $beetsdb;
+
+    public int $catalog_id;
 
     /**
      * get_create_help
@@ -156,7 +153,7 @@ class Catalog_beets extends Catalog
         $last_added = date("Y-m-d H:i:s", $this->last_add);
         $last_date  = new DateTime($last_added);
         if (date_diff($date, $last_date) < 0) {
-            debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
+            debug_event(self::class, 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;
         }
@@ -165,12 +162,13 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * @return string
+     * get_path
+     * This returns the current catalog path/uri
      */
-    public function getBeetsDb()
+    public function get_path()
     {
         return $this->beetsdb;
-    }
+    } // get_path
 
     public function format()
     {

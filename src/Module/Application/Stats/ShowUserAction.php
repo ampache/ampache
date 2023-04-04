@@ -77,23 +77,23 @@ final class ShowUserAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
-
-        $client = $this->modelFactory->createUser($userId);
-
-        $this->ui->show(
-            'show_user.inc.php',
-            [
-                'client' => $client,
-                'activities' => $this->useractivityRepository->getActivities($userId),
-                'followers' => $this->userFollowerRepository->getFollowers($userId),
-                'following' => $this->userFollowerRepository->getFollowing($userId),
-                'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                'userActivityRenderer' => $this->userActivityRenderer
-            ]
-        );
-
-        show_table_render(false, true);
-
+        if ($userId == 0) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $client = $this->modelFactory->createUser($userId);
+            $this->ui->show(
+                'show_user.inc.php',
+                [
+                    'client' => $client,
+                    'activities' => $this->useractivityRepository->getActivities($userId),
+                    'followers' => $this->userFollowerRepository->getFollowers($userId),
+                    'following' => $this->userFollowerRepository->getFollowing($userId),
+                    'userFollowStateRenderer' => $this->userFollowStateRenderer,
+                    'userActivityRenderer' => $this->userActivityRenderer
+                ]
+            );
+            show_table_render(false, true);
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

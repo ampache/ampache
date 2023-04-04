@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Label;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LabelMethod
@@ -46,10 +47,11 @@ final class LabelMethod
      * This returns a single label based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of label
      * @return boolean
      */
-    public static function label(array $input): bool
+    public static function label(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
             Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -74,7 +76,7 @@ final class LabelMethod
                 echo Json_Data::labels(array($object_id), false);
                 break;
             default:
-                echo Xml_Data::labels(array($object_id));
+                echo Xml_Data::labels(array($object_id), $user);
         }
 
         return true;

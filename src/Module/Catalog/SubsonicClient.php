@@ -178,10 +178,8 @@ class SubsonicClient
         if ($port == null && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
             $port = $_port;
-        } else {
-            if ($port == null) {
-                $port = ($protocol == "https") ? '443' : '80';
-            }
+        } elseif ($port == null) {
+            $port = ($protocol == "https") ? '443' : '80';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;

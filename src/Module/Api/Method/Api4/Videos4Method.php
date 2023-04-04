@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Videos4Method
@@ -43,12 +42,13 @@ final class Videos4Method
      * This returns video objects!
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function videos(array $input)
+    public static function videos(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -58,19 +58,18 @@ final class Videos4Method
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
 
-        $video_ids = $browse->get_objects();
-        $user      = User::get_from_username(Session::username($input['auth']));
+        $results = $browse->get_objects();
 
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::videos($video_ids, $user);
+                echo Json4_Data::videos($results, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::videos($video_ids, $user);
+                echo Xml4_Data::videos($results, $user);
         }
     } // videos
 }

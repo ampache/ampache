@@ -37,13 +37,11 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
 {
-
     /**
      * set_cron_date
      * Record when the cron has finished.

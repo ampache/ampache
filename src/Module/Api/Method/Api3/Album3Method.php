@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -40,12 +39,12 @@ final class Album3Method
      * album
      * This returns a single album based on the UID provided
      * @param array $input
+     * @param User $user
      */
-    public static function album(array $input)
+    public static function album(array $input, User $user)
     {
         $uid     = scrub_in($input['filter']);
         $include = [];
-        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }

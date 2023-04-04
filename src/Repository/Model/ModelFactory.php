@@ -79,6 +79,12 @@ final class ModelFactory implements ModelFactoryInterface
         return new Album($albumId);
     }
 
+    public function createAlbumDisk(
+        ?int $albumDiskId = null
+    ): AlbumDisk {
+        return new AlbumDisk($albumDiskId);
+    }
+
     public function createArtist(
         ?int $artistId = null
     ): Artist {
@@ -109,12 +115,6 @@ final class ModelFactory implements ModelFactoryInterface
         int $liveStreamId
     ): Live_Stream {
         return new Live_Stream($liveStreamId);
-    }
-
-    public function createChannel(
-        int $channelId
-    ): Channel {
-        return new Channel($channelId);
     }
 
     public function createPodcast(

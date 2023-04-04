@@ -26,7 +26,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
@@ -78,7 +77,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
     public function remove(
         Artist $artist
     ): void {
-        $album_ids = $this->albumRepository->getByArtist($artist->id);
+        $album_ids = $this->albumRepository->getAlbumByArtist($artist->id);
 
         foreach ($album_ids as $albumId) {
             $album = $this->modelFactory->createAlbum($albumId);

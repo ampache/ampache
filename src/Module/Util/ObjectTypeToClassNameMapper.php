@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
@@ -54,6 +54,7 @@ final class ObjectTypeToClassNameMapper
 {
     private const OBJECT_TYPE_MAPPING = [
         'album' => Album::class,
+        'album_disk' => AlbumDisk::class,
         'song' => Song::class,
         'playlist' => Playlist::class,
         'artist' => Artist::class,
@@ -61,7 +62,6 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
-        'channel' => Channel::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
         'user' => User::class,
@@ -71,6 +71,7 @@ final class ObjectTypeToClassNameMapper
         'clip' => Clip::class,
         'label' => Label::class,
         'podcast' => Podcast::class,
+        'genre' => Tag::class,
         'tag' => Tag::class,
         'tag_hidden' => Tag::class,
         'wanted' => Wanted::class,

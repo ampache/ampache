@@ -98,24 +98,27 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 // Check 'value' with isset because it can null
                 //(user type a "start with" word and deletes it)
-                if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) || isset($_REQUEST['value']))) {
-                    // Set any new filters we've just added
-                    $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
-                    $browse->set_catalog($_SESSION['catalog']);
+                if ((array_key_exists('key', $_REQUEST) && $_REQUEST['key']) && (array_key_exists('value', $_REQUEST) && isset($_REQUEST['value']))) {
+                    $value = $_REQUEST['value'];
+                    if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
+                        $value = 0;
+                    }
+                    $browse->set_filter($_REQUEST['key'], $value);
                 }
 
-                if ($_REQUEST['sort']) {
+                if (array_key_exists('sort', $_REQUEST) && $_REQUEST['sort']) {
                     // Set the new sort value
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
-                if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
+                if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-                } elseif ((int) Core::get_request('catalog_key') == 0) {
+                } else {
                     $browse->set_filter('catalog', null);
-                    unset($_SESSION['catalog']);
+                    $_SESSION['catalog'] = null;
                 }
+                $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
                 $browse->show_objects(null, $argument);
@@ -135,7 +138,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
-                $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
+                $type = $_SESSION['tagcloud_type'] ?? 'song';
                 $browse->set_type($type);
                 break;
             case 'delete_object':
@@ -160,7 +163,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (!Core::get_global('user')->has_access('75')) {
+                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');
@@ -175,7 +178,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'page':
-                $browse->set_start($_REQUEST['start']);
+                $browse->set_start((int)$_REQUEST['start']);
                 ob_start();
                 $browse->show_objects(null, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();

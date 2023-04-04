@@ -57,12 +57,10 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function __construct($show_id)
     {
-        /* Get the information from the db */
         $info = $this->get_info($show_id);
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // constructor
@@ -141,8 +139,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $tvshow->format($details);
         $this->f_tvshow      = $tvshow->get_link();
         $this->f_tvshow_link = $tvshow->f_link;
-
-        $this->f_link = '<a href="' . $this->get_link() . '" title="' . $tvshow->get_fullname() . ' - ' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->get_f_link();
 
         if ($details) {
             $this->_get_extra_info();
@@ -206,6 +203,21 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $tvshow       = new TvShow($this->tvshow);
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . $tvshow->get_fullname() . ' - ' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * @return array
      */
     public function get_parent()
@@ -222,12 +234,13 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -304,11 +317,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         if (Art::has_db($this->id, 'tvshow_season')) {
             $tvshow_id = $this->id;
             $type      = 'tvshow_season';
-        } else {
-            if (Art::has_db($this->tvshow, 'tvshow') || $force) {
-                $tvshow_id = $this->tvshow;
-                $type      = 'tvshow';
-            }
+        } elseif (Art::has_db($this->tvshow, 'tvshow') || $force) {
+            $tvshow_id = $this->tvshow;
+            $type      = 'tvshow';
         }
 
         if ($tvshow_id !== null && $type !== null) {
@@ -386,7 +397,9 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
     } // update
 
     /**
-     * @return PDOStatement|boolean
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
@@ -403,7 +416,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
             if ($deleted) {
                 Art::garbage_collection('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);

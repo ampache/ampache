@@ -98,7 +98,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('song', $libitem->id, 20)); ?>" /></td>
             </tr>
             <?php
                 if (AmpConfig::get('licensing')) { ?>
@@ -123,10 +123,10 @@ use Ampache\Module\Api\Ajax;
                             /* @var Metadata $metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
-                                echo '<tr>'
-                                . '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>'
-                                . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>'
-                                . '</tr>';
+                                echo '<tr>' .
+                                '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
+                                '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
+                                '</tr>';
                             }
                         } ?>
                     </table>

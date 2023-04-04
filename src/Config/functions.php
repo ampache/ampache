@@ -25,17 +25,10 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Metadata\Repository\MetadataField;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -351,7 +344,8 @@ function is_rtl($locale)
  */
 function translate_pattern_code($code)
 {
-    $code_array = array('%A' => 'album',
+    $code_array = array(
+        '%A' => 'album',
         '%a' => 'artist',
         '%c' => 'comment',
         '%C' => 'catalog_number',
@@ -362,8 +356,11 @@ function translate_pattern_code($code)
         '%y' => 'year',
         '%Y' => 'original_year',
         '%r' => 'release_type',
+        '%R' => 'release_status',
+        '%s' => 'subtitle',
         '%b' => 'barcode',
-        '%o' => 'zz_other');
+        '%o' => 'zz_other'
+    );
 
     if (isset($code_array[$code])) {
         return $code_array[$code];
@@ -538,19 +535,10 @@ function check_config_writable()
 /**
  * @return boolean
  */
-function check_htaccess_channel_writable()
-{
-    return ((file_exists(__DIR__ . '/../../channel/.htaccess') && is_writeable(__DIR__ . '/../../channel/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../channel/.htaccess') && is_writeable(__DIR__ . '/../../channel/')));
-}
-
-/**
- * @return boolean
- */
 function check_htaccess_rest_writable()
 {
-    return ((file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/')));
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
 /**
@@ -558,8 +546,8 @@ function check_htaccess_rest_writable()
  */
 function check_htaccess_play_writable()
 {
-    return ((file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/')));
+    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
 }
 
 /**
@@ -658,7 +646,7 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     $log_line = "[$error_name] $errstr in file $errfile($errline)";
-    debug_event('log.lib', $log_line, $level, '', 'ampache');
+    debug_event('log.lib', $log_line, $level, 'ampache');
 }
 
 /**
@@ -669,13 +657,12 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
  * @param string $type
  * @param string $message
  * @param integer $level
- * @param string $file
  * @param string $username
  * @return boolean
  *
  * @deprecated Use LegacyLogger
  */
-function debug_event($type, $message, $level, $file = '', $username = '')
+function debug_event($type, $message, $level, $username = '')
 {
     if (!$username && Core::get_global('user')) {
         $username = Core::get_global('user')->username;
@@ -753,101 +740,6 @@ function return_referer()
 } // return_referer
 
 /**
- * get_location
- * This function gets the information about a person's current location.
- * This is used for A) sidebar highlighting & submenu showing and B) titlebar
- * information. It returns an array of information about what they are currently
- * doing.
- * Possible array elements
- * ['title']    Text name for the page
- * ['page']    actual page name
- * ['section']    name of the section we are in, admin, browse etc (submenu)
- */
-function get_location()
-{
-    $location = array();
-
-    if (strlen((string) $_SERVER['PHP_SELF'])) {
-        $source = $_SERVER['PHP_SELF'];
-    } else {
-        $source = $_SERVER['REQUEST_URI'];
-    }
-
-    /* Sanatize the $_SERVER['PHP_SELF'] variable */
-    $source           = str_replace(AmpConfig::get('raw_web_path'), "", $source);
-    $location['page'] = preg_replace("/^\/(.+\.php)\/?.*/", "$1", $source);
-
-    switch ($location['page']) {
-        case 'index.php':
-            $location['title'] = T_('Home');
-            break;
-        case 'upload.php':
-            $location['title'] = T_('Upload');
-            break;
-        case 'localplay.php':
-            $location['title'] = T_('Localplay');
-            break;
-        case 'randomplay.php':
-            $location['title'] = T_('Random Play');
-            break;
-        case 'playlist.php':
-            $location['title'] = T_('Playlist');
-            break;
-        case 'search.php':
-            $location['title'] = T_('Search');
-            break;
-        case 'preferences.php':
-            $location['title'] = T_('Preferences');
-            break;
-        case 'admin/catalog.php':
-        case 'admin/index.php':
-            $location['title']   = T_('Admin-Catalog');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/users.php':
-            $location['title']   = T_('Admin-User Management');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/mail.php':
-            $location['title']   = T_('Admin-Mail Users');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/access.php':
-            $location['title']   = T_('Admin-Manage Access Lists');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/preferences.php':
-            $location['title']   = T_('Admin-Site Preferences');
-            $location['section'] = 'admin';
-            break;
-        case 'admin/modules.php':
-            $location['title']   = T_('Admin-Manage Modules');
-            $location['section'] = 'admin';
-            break;
-        case 'browse.php':
-            $location['title']   = T_('Browse Music');
-            $location['section'] = 'browse';
-            break;
-        case 'albums.php':
-            $location['title']   = T_('Albums');
-            $location['section'] = 'browse';
-            break;
-        case 'artists.php':
-            $location['title']   = T_('Artists');
-            $location['section'] = 'browse';
-            break;
-        case 'stats.php':
-            $location['title'] = T_('Statistics');
-            break;
-        default:
-            $location['title'] = '';
-            break;
-    } // switch on raw page location
-
-    return $location;
-} // get_location
-
-/**
  * show_album_select
  * This displays a select of every album that we've got in Ampache (which can be
  * hella long). It's used by the Edit page and takes a $name and a $album_id
@@ -869,7 +761,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
         $key = "album_select_c" . ++$album_id_cnt;
     }
 
-    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix`, `disk` FROM `album`";
+    $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
     $params = array();
     if ($user !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
@@ -889,9 +781,6 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
         $album_name = trim((string) $row['prefix'] . " " . $row['name']);
-        if (!AmpConfig::get('album_group') && (int) $count > 1) {
-            $album_name .= " [" . T_('Disk') . " " . $row['disk'] . "]";
-        }
         if ($row['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }
@@ -1082,10 +971,10 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     $params = array();
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ?";
+        $sql .= "WHERE `gather_types` = ? ";
         $params[] = $filter_type;
     }
-    $sql .= "ORDER BY `name`";
+    $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
     $results    = array();
     while ($row = Dba::fetch_assoc($db_results)) {
@@ -1360,7 +1249,7 @@ function nT_($original, $plural, $value)
 function get_themes()
 {
     /* Open the themes dir and start reading it */
-    $handle = opendir(__DIR__ . '/../../themes');
+    $handle = opendir(__DIR__ . '/../../public/themes');
 
     if (!is_resource($handle)) {
         debug_event('themes', 'Failed to open /themes directory', 2);
@@ -1405,7 +1294,7 @@ function get_theme($name)
         return $_mapcache[$name];
     }
 
-    $config_file = __DIR__ . "/../../themes/" . $name . "/theme.cfg.php";
+    $config_file = __DIR__ . "/../../public/themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
         $results         = parse_ini_file($config_file);
         $results['path'] = $name;
@@ -1431,7 +1320,7 @@ function get_theme($name)
  */
 function get_theme_author($theme_name)
 {
-    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
     $results    = read_config($theme_path);
 
     return $results['author'];
@@ -1445,7 +1334,7 @@ function get_theme_author($theme_name)
  */
 function theme_exists($theme_name)
 {
-    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
+    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
 
     if (!file_exists($theme_path)) {
         return false;

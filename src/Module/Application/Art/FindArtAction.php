@@ -102,11 +102,6 @@ final class FindArtAction extends AbstractArtAction
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
         }
 
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
-        }
-
         $this->ui->showHeader();
 
         // If we've got an upload ignore the rest and just insert it

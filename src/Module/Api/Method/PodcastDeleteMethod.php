@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class PodcastDeleteMethod
@@ -47,17 +46,17 @@ final class PodcastDeleteMethod
      * Delete an existing podcast.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast to delete
      * @return boolean
      */
-    public static function podcast_delete(array $input): bool
+    public static function podcast_delete(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }

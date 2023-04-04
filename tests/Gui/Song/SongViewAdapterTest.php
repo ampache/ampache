@@ -69,15 +69,15 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetIdReturnsSongId(): void
     {
-        $id = 666;
+        $AlbumId = 666;
 
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturn($id);
+            ->andReturn($AlbumId);
 
         $this->assertSame(
-            $id,
+            $AlbumId,
             $this->subject->getId()
         );
     }
@@ -312,6 +312,11 @@ class SongViewAdapterTest extends MockeryTestCase
         $value = 'some-album-link';
 
         $this->song->f_album_link = $value;
+
+        $this->song->shouldReceive('get_f_album_link')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($value);
 
         $this->assertSame(
             $value,

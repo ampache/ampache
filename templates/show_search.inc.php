@@ -31,10 +31,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Search $playlist */
 /** @var array $object_ids */
 
-?>
-<?php
 ob_start();
-require Ui::find_template('show_search_title.inc.php');
+echo $playlist->get_fullname();
 $title    = ob_get_contents();
 $web_path = AmpConfig::get('web_path');
 $browse   = new Browse();

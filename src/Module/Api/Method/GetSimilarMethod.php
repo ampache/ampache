@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\User;
 
@@ -47,13 +46,14 @@ final class GetSimilarMethod
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * @param array $input
+     * @param User $user
      * type   = (string) 'song', 'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar(array $input): bool
+    public static function get_similar(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
@@ -67,7 +67,7 @@ final class GetSimilarMethod
             return false;
         }
 
-        $objects = array();
+        $results = array();
         $similar = array();
         switch ($type) {
             case 'artist':
@@ -77,26 +77,25 @@ final class GetSimilarMethod
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $objects[] = $child['id'];
+            $results[] = $child['id'];
         }
-        if (empty($objects)) {
+        if (empty($results)) {
             Api::empty($type, $input['api_format']);
 
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::indexes($objects, $type, $user);
+                echo Json_Data::indexes($results, $type, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::indexes($objects, $type, $user);
+                echo Xml_Data::indexes($results, $type, $user);
         }
 
         return true;

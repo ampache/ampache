@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Song\SongSorterInterface;
 
 final class SortFilesCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private SongSorterInterface $songSorter;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         SongSorterInterface $songSorter
     ) {
         parent::__construct('cleanup:sortSongs', T_('Sort songs files'));
 
-        $this->configContainer = $configContainer;
         $this->songSorter      = $songSorter;
 
         $this
@@ -56,24 +51,24 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName
     ): void {
-        $io     = $this->app()->io();
-        $values = $this->values();
-        $dryRun = $values['execute'] === false;
+        $interactor = $this->app()->io();
+        $values     = $this->values();
+        $dryRun     = $values['execute'] === false;
 
         if ($dryRun === true) {
-            $io->info(
+            $interactor->info(
                 T_('Running in Test Mode. Use -x to execute'),
                 true
             );
         } else {
-            $io->warn(
+            $interactor->warn(
                 T_('Running in Write Mode. Make sure you\'ve tested first!'),
                 true
             );
         }
 
         $this->songSorter->sort(
-            $io,
+            $interactor,
             $dryRun,
             $values['files'],
             $values['limit'],

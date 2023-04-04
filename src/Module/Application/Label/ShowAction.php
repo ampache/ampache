@@ -76,7 +76,10 @@ final class ShowAction implements ApplicationActionInterface
                 $label_id = $this->labelRepository->lookup((string) $name);
             }
         }
-        if ($label_id > 0) {
+        if ($label_id < 1) {
+            echo T_('You have requested an object that does not exist');
+            $this->ui->showFooter();
+        } else {
             $label = $this->modelFactory->createLabel($label_id);
             $label->format();
 

@@ -53,6 +53,10 @@ interface ModelFactoryInterface
         ?int $albumId = null
     ): Album;
 
+    public function createAlbumDisk(
+        ?int $albumDiskId = null
+    ): AlbumDisk;
+
     public function createArtist(
         ?int $artistId = null
     ): Artist;
@@ -74,10 +78,6 @@ interface ModelFactoryInterface
     public function createLiveStream(
         int $liveStreamId
     ): Live_Stream;
-
-    public function createChannel(
-        int $channelId
-    ): Channel;
 
     public function createPodcast(
         int $podcastId

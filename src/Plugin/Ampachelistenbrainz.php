@@ -25,10 +25,10 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Statistics\Stats;
 
 class Ampachelistenbrainz
 {
@@ -36,16 +36,15 @@ class Ampachelistenbrainz
     public $categories  = 'scrobbling';
     public $description = 'Records your played songs to your ListenBrainz Account';
     public $url;
-    public $version     = '000001';
+    public $version     = '000002';
     public $min_ampache = '380004';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $token;
-    private $user_id;
+    private $api_host;
     private $scheme   = 'https';
     private $host     = 'listenbrainz.org';
-    private $api_host = 'api.listenbrainz.org';
 
     /**
      * Constructor
@@ -72,6 +71,7 @@ class Ampachelistenbrainz
         }
 
         Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -92,6 +92,14 @@ class Ampachelistenbrainz
      */
     public function upgrade()
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+        if ($from_version < 2) {
+            Preference::insert('listenbrainz_api_url', T_('ListenBrainz API URL'), 'api.listenbrainz.org', 25, 'string', 'plugins', $this->name);
+        }
+
         return true;
     } // upgrade
 
@@ -213,8 +221,7 @@ class Ampachelistenbrainz
     public function load($user)
     {
         $user->set_preferences();
-        $data          = $user->prefs;
-        $this->user_id = $user->id;
+        $data = $user->prefs;
         // check if user have a token
         if (strlen(trim($data['listenbrainz_token']))) {
             $this->token = trim($data['listenbrainz_token']);
@@ -224,6 +231,7 @@ class Ampachelistenbrainz
 
             return false;
         }
+        $this->api_host = $data['listenbrainz_api_url'] ?? 'api.listenbrainz.org';
 
         return true;
     } // load

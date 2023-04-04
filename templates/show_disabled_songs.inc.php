@@ -23,7 +23,6 @@
 use Ampache\Config\AmpConfig;
 
 /** @var Ampache\Repository\Model\Song[] $songs */
-
 ?>
 <br />
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">

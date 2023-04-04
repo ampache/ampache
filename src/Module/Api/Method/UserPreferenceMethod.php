@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserPreferenceMethod
@@ -46,18 +45,18 @@ final class UserPreferenceMethod
      * Get your user preference by name
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function user_preference(array $input): bool
+    public static function user_preference(array $input, User $user): bool
     {
-        $user = User::get_from_username(Session::username($input['auth']));
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
         $pref_name  = (string)($input['filter'] ?? '');
-        $preference = Preference::get($pref_name, $user->id);
-        if (empty($preference)) {
+        $results    = Preference::get($pref_name, $user->id);
+        if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
@@ -65,10 +64,10 @@ final class UserPreferenceMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($preference, 'preference');
+                echo Xml_Data::object_array($results, 'preference');
         }
 
         return true;

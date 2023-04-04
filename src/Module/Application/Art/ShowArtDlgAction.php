@@ -46,7 +46,7 @@ final class ShowArtDlgAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {

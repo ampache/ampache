@@ -38,7 +38,6 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_time */
 /** @var string $cel_counter */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -64,7 +63,7 @@ if ($is_mashup) {
     </td>
 <?php
         } ?>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php

@@ -63,16 +63,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $response = null;
-
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             // Show the Footer
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $album = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
@@ -82,6 +78,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        $this->ui->showHeader();
         try {
             $this->albumDeleter->delete($album);
 
@@ -102,6 +99,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

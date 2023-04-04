@@ -32,7 +32,6 @@ use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
-
     /**
      * splits up a standard SQL dump file into distinct sql queries
      * @param string $sql
@@ -528,7 +527,6 @@ final class InstallationHelper implements InstallationHelperInterface
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
-            'channel' => 'false',
             'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
@@ -548,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $trconfig['ratings']                   = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
-                $trconfig['channel']                   = 'false';
                 $trconfig['live_stream']               = 'false';
 
                 $dbconfig['download']    = '0';

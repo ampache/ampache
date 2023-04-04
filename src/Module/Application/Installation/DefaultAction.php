@@ -71,9 +71,8 @@ final class DefaultAction implements ApplicationActionInterface
 
         define('INSTALL', 1);
 
-        $htaccess_play_file    = __DIR__ . '/../../../../play/.htaccess';
-        $htaccess_rest_file    = __DIR__ . '/../../../../rest/.htaccess';
-        $htaccess_channel_file = __DIR__ . '/../../../../channel/.htaccess';
+        $htaccess_play_file = __DIR__ . '/../../../../public/play/.htaccess';
+        $htaccess_rest_file = __DIR__ . '/../../../../public/rest/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in($_REQUEST['web_path'] ?? '');
@@ -137,7 +136,7 @@ final class DefaultAction implements ApplicationActionInterface
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset ?: 'UTF-8', true);
         if (!class_exists('Gettext\Translations')) {
-            require_once __DIR__ . '/../../../../templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         } else {
             load_gettext();
@@ -170,14 +169,14 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));
-                        require_once __DIR__ . '/../../../../templates/show_install.inc.php';
+                        require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
 
                 if (!$skip_admin) {
                     if (!$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                        require_once __DIR__ . '/../../../../templates/show_install.inc.php';
+                        require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
@@ -186,7 +185,7 @@ final class DefaultAction implements ApplicationActionInterface
                 Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
                 // Intentional break fall-through
             case 'show_create_config':
-                require_once __DIR__ . '/../../../../templates/show_install_config.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_config.inc.php';
                 break;
             case 'create_config':
                 $all  = (isset($_POST['create_all']));
@@ -194,17 +193,12 @@ final class DefaultAction implements ApplicationActionInterface
                 if (!$skip) {
                     $write                     = (isset($_POST['write']));
                     $download                  = (isset($_POST['download']));
-                    $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
                     $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
                     $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-                    $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
                     $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
                     $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
                     $created_config = true;
-                    if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
-                    }
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
@@ -253,14 +247,14 @@ final class DefaultAction implements ApplicationActionInterface
                 header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
-                require_once __DIR__ . '/../../../../templates/show_install.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                 break;
             case 'check':
-                require_once __DIR__ . '/../../../../templates/show_install_check.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_check.inc.php';
                 break;
             default:
                 // Show the language options first
-                require_once __DIR__ . '/../../../../templates/show_install_lang.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_lang.inc.php';
                 break;
         } // end action switch
 

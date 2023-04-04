@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Gui\TalView;
-use Ampache\Gui\TalViewInterface;
 use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PhpTal\TranslationServiceInterface;

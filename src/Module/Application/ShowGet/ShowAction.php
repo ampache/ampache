@@ -26,7 +26,6 @@ namespace Ampache\Module\Application\ShowGet;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

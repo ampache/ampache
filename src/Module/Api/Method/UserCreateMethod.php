@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserCreateMethod
@@ -46,16 +45,18 @@ final class UserCreateMethod
      * Requires the username, password and email.
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
      * disable  = (integer) 0,1 //optional, default = 0
+     * group    = (integer) Catalog filter group for the new user //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input): bool
+    public static function user_create(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
@@ -67,7 +68,7 @@ final class UserCreateMethod
         $password             = $input['password'];
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
-        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $catalog_filter_group = $input['group'] ?? 0;
         $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {
@@ -88,7 +89,6 @@ final class UserCreateMethod
 
             return false;
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
         return false;

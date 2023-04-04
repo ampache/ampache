@@ -29,6 +29,8 @@ use Ampache\Module\Util\Ui;
 
 global $dic;
 
+/** @var array $configuration */
+
 $environment = $dic->get(EnvironmentInterface::class);
 $web_path    = AmpConfig::get('web_path'); ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>

@@ -50,19 +50,17 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
-        $response = null;
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $artistId = (int) ($request->getQueryParams()['artist_id'] ?? 0);
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Artist and all files will be deleted'),
@@ -77,6 +75,6 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Label $libitem */
 
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 
+/** @var Label $libitem */
 ?>
 <div>
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">

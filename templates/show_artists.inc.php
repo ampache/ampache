@@ -41,9 +41,13 @@ $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
 // translate depending on the browse type
-$artist_text  = ($browse->is_album_artist())
-    ? T_('Album Artist')
-    : T_('Artist');
+if ($browse->is_album_artist()) {
+    $artist_text = T_('Album Artist');
+} elseif ($browse->is_song_artist()) {
+    $artist_text = T_('Song Artist');
+} else {
+    $artist_text = T_('Artist');
+}
 // mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
@@ -65,7 +69,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_albums optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_count', T_('Albums'), 'artist_sort_album_count'); ?></th>
             <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('# Played'), 'artist_sort_total_count'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('Played'), 'artist_sort_total_count'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) {
     ++$thcount; ?>
@@ -74,7 +78,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 } ?>
             <?php if ($show_ratings) {
         ++$thcount; ?>
-                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+                <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=rating', T_('Rating'), 'artist_sort_rating'); ?></th>
             <?php
     } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -98,7 +102,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             $show_direct_play  = $show_direct_play_cfg;
             $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->songs <= $directplay_limit);
+                $show_playlist_add = ($libitem->song_count <= $directplay_limit);
                 if ($show_direct_play) {
                     $show_direct_play = $show_playlist_add;
                 }
@@ -124,7 +128,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?> essential"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>

@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class PodcastEdit4Method
@@ -45,6 +44,7 @@ final class PodcastEdit4Method
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
      * title       = (string) title string //optional
@@ -54,14 +54,13 @@ final class PodcastEdit4Method
      * copyright   = (string) //optional
      * @return boolean
      */
-    public static function podcast_edit(array $input): bool
+    public static function podcast_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
 
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         if (!Api4::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }

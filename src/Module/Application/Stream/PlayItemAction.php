@@ -56,9 +56,7 @@ final class PlayItemAction extends AbstractStreamAction
         }
         $objectType = $_REQUEST['object_type'];
         $objectIds  = explode(',', Core::get_get('object_id'));
-
-        $mediaIds = [];
-
+        $mediaIds   = [];
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
                 $class_name = ObjectTypeToClassNameMapper::map($objectType);

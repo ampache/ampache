@@ -38,7 +38,7 @@ use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
 use PDOStatement;
-use Requests;
+use WpOrg\Requests;
 use RuntimeException;
 
 /**
@@ -262,6 +262,9 @@ class Art extends database_object
                 }
                 $this->raw_mime = $results['mime'];
             } elseif (AmpConfig::get('resize_images')) {
+                if (!empty($this->thumb)) { // See https://github.com/ampache/ampache/issues/3386
+                    continue;
+                }
                 if (AmpConfig::get('album_art_store_disk')) {
                     $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } elseif ($results['size'] == '275x275') {
@@ -329,7 +332,7 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . $rurl['extension'];
+        $mime  = "image/" . $rurl['extension'] ?? 'jpg';
         $this->insert($image, $mime);
     }
 
@@ -386,9 +389,8 @@ class Art extends database_object
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
             foreach ($songs as $song_id) {
-                $song   = new Song($song_id);
-                $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $song        = new Song($song_id);
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
@@ -626,6 +628,11 @@ class Art extends database_object
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
             return false;
+        }
+        if (!Core::is_readable($path)) {
+            debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
+
+            return null;
         }
         $path .= "art-" . $sizetext . "." . self::extension($mime);
         if (Core::is_readable($path)) {
@@ -1007,8 +1014,8 @@ class Art extends database_object
             $options = array();
             try {
                 $options['timeout'] = 10;
-                Requests::register_autoloader();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
+                Requests\Autoload::register();
+                $request = Requests\Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);

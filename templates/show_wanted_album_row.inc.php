@@ -19,12 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Wanted $libitem */
 
 use Ampache\Repository\Model\Wanted;
 
+/** @var Wanted $libitem */
 ?>
-
 <td class="cel_album"><?php echo $libitem->f_link; ?></td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>

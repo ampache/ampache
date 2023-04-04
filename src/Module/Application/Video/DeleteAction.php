@@ -54,22 +54,24 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $videoId = (int) $request->getQueryParams()['video_id'] ?? 0;
 
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('The Video will be deleted'),
-            sprintf(
-                '%s/video.php?action=confirm_delete&video_id=%d',
-                $this->configContainer->getWebPath(),
-                $videoId
-            ),
-            1,
-            'delete_video'
-        );
-
+        $this->ui->showHeader();
+        if ($videoId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('The Video will be deleted'),
+                sprintf(
+                    '%s/video.php?action=confirm_delete&video_id=%d',
+                    $this->configContainer->getWebPath(),
+                    $videoId
+                ),
+                1,
+                'delete_video'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

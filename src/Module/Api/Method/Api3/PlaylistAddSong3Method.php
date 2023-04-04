@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PlaylistAddSong3Method
@@ -39,9 +40,11 @@ final class PlaylistAddSong3Method
      * playlist_add_song
      * This add a song to a playlist
      * @param array $input
+     * @param User $user
      */
-    public static function playlist_add_song(array $input)
+    public static function playlist_add_song(array $input, User $user)
     {
+        unset($user);
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];

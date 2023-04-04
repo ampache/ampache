@@ -26,7 +26,6 @@ namespace Ampache\Module\Authorization;
 
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\User;
 
 /**
  * Routes access checks and other authorization related calls to its static versions

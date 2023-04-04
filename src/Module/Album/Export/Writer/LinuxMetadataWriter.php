@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export\Writer;
 
-use Ampache\Repository\Model\Album;
-
 final class LinuxMetadataWriter implements MetadataWriterInterface
 {
     public function write(

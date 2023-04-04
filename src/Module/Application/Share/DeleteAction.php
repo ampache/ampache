@@ -66,9 +66,9 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $this->ui->showHeader();
-
         $share_id = $this->requestParser->getFromRequest('id');
+
+        $this->ui->showHeader();
         if (Share::delete_share($share_id, Core::get_global('user'))) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
             $this->ui->showConfirmation(

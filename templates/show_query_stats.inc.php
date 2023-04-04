@@ -24,8 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\database_object;
 use Ampache\Module\System\Dba;
 
-?>
-<?php if (AmpConfig::get('show_footer_statistics')) { ?>
+if (AmpConfig::get('show_footer_statistics')) { ?>
     <br />
     <span class="query-count">
     <?php echo T_('Queries: '); ?><?php echo Dba::$stats['query']; ?>

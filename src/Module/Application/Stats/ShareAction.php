@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Share;
@@ -88,7 +87,7 @@ final class ShareAction implements ApplicationActionInterface
             ? Share::get_share_list($user)
             : array();
         if ($user->id && !empty($object_ids)) {
-            $browse     = $this->modelFactory->createBrowse();
+            $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');
             $browse->set_static_content(true);
             $browse->save_objects($object_ids);

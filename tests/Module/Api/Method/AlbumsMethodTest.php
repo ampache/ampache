@@ -84,12 +84,6 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_sort')
             ->with('name', 'ASC')
             ->once();
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
             ->once()
@@ -101,7 +95,8 @@ class AlbumsMethodTest extends MockeryTestCase
             $output,
             [
                 'exact' => true
-            ]
+            ],
+            $user
         );
     }
 
@@ -113,12 +108,12 @@ class AlbumsMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $browse     = $this->mock(Browse::class);
+        $album      = $this->mock(Album::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $albums  = [666];
         $result  = 'some-result';
-        $include = ['songs'];
+        $include = [123, 456];
         $limit   = 42;
         $offset  = 33;
 
@@ -136,20 +131,14 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_sort')
             ->with('name', 'ASC')
             ->once();
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
-
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
             ->once()
-            ->andReturn($albums);
+            ->andReturn([$album]);
 
         $output->shouldReceive('albums')
             ->with(
-                $albums,
+                [$album],
                 $include,
                 $user,
                 true,
@@ -181,7 +170,8 @@ class AlbumsMethodTest extends MockeryTestCase
                     'include' => $include,
                     'limit' => $limit,
                     'offset' => $offset,
-                ]
+                ],
+                $user
             )
         );
     }

@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -44,24 +45,26 @@ final class Users4Method
      * Get ids and usernames for your site
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function users(array $input): bool
+    public static function users(array $input, User $user): bool
     {
-        $users = static::getUserRepository()->getValid();
-        if (empty($users)) {
+        $results = static::getUserRepository()->getValid();
+        if (empty($results)) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 
             return false;
         }
+        unset($user);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::users($users);
+                echo Json4_Data::users($results);
                 break;
             default:
-                echo Xml4_Data::users($users);
+                echo Xml4_Data::users($results);
         }
 
         return true;

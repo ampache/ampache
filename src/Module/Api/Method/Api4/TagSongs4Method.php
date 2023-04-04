@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Repository\Model\User;
 
 /**
  * Class TagSongs4Method
@@ -41,17 +42,18 @@ final class TagSongs4Method
      * returns the songs for this tag
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Tag
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_songs(array $input): bool
+    public static function tag_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
-        return GenreSongs4Method::genre_songs($input);
+        return GenreSongs4Method::genre_songs($input, $user);
     } // tag_songs
 }

@@ -77,7 +77,7 @@ $web_path   = AmpConfig::get('web_path'); ?>
     } ?>
     </span>
 </td>
-<td class="cel_songs optional"><?php echo $libitem->songs; ?></td>
+<td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
 <td class="cel_albums optional"><?php echo $libitem->albums; ?></td>
 <td class="<?php echo $cel_time; ?> optional"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
