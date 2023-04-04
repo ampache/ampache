@@ -2,9 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude(['vendor', 'lib/components', 'foam', 'ample', 'client', 'newclient'])
-    ->in('public/')
-    ->in('src/')
-    ->in('tests/')
+    ->in('./')
 ;
 
 $config = new PhpCsFixer\Config();
