@@ -1073,6 +1073,11 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
+        if (empty($results)) {
+            debug_event(self::class, 'get_catalogs ERROR: no catalogs found for user ' . $user_id, 5);
+
+            return array(0);
+        }
 
         return $results;
     }
