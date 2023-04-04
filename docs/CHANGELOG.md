@@ -27,6 +27,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Add %s (Release Comment) as a translatable tag string
 * Add the Owner to playlist rows
 * Button and color Light theme fixes for the webplayer
+* Get album info from last.fm for similar & related objects
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -149,6 +150,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Removed
 
+* Combined a lot of duplicate properties, functions and process all over the place
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one

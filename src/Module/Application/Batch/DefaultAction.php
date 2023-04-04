@@ -96,7 +96,7 @@ final class DefaultAction implements ApplicationActionInterface
             ? (string) scrub_in(Core::get_request('type'))
             : $action;
 
-        if (!$this->zipHandler->isZipable(str_replace('album_disk', 'album', $object_type))) {
+        if (!$this->zipHandler->isZipable($object_type)) {
             $this->logger->error(
                 'Object type `' . $object_type . '` is not allowed to be zipped.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
