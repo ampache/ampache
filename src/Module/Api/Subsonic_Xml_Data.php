@@ -672,7 +672,7 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * addVideos
+     * addVideoInfo
      * @param SimpleXMLElement $xml
      * @param int $video_id
      */

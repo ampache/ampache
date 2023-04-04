@@ -1186,7 +1186,7 @@ class Upnp_Api
                 }
                 break;
             case 'movies':
-                // Get clips list
+                // Get movies list
                 if (count($pathreq) == 1) {
                     $videos              = Catalog::get_videos(null, 'movie');
                     [$maxCount, $videos] = self::_slice($videos, $start, $count);
@@ -1197,7 +1197,7 @@ class Upnp_Api
                 }
                 break;
             case 'personal_videos':
-                // Get clips list
+                // Get personal_videos list
                 if (count($pathreq) == 1) {
                     $videos              = Catalog::get_videos(null, 'personal_video');
                     [$maxCount, $videos] = self::_slice($videos, $start, $count);

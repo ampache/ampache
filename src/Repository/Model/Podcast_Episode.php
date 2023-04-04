@@ -508,7 +508,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     /**
      * _update_item
      * This is a private function that should only be called from within the podcast episode class.
-     * It takes a field, value song_id and level. first and foremost it checks the level
+     * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
