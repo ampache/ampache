@@ -627,7 +627,6 @@ class Preference extends database_object
             'art_order',
             'auth_methods',
             'getid3_tag_order',
-            'mb_detect_order',
             'metadata_order',
             'metadata_order_video',
             'registration_display_fields',

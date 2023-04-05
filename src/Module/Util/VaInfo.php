@@ -220,7 +220,7 @@ final class VaInfo implements VaInfoInterface
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
-                $mb_order = "auto";
+                $mb_order = 'auto';
             }
 
             $test_tags = array('artist', 'album', 'genre', 'title');

@@ -132,7 +132,10 @@ class Wanted extends database_object
         $lookupId = $artist->mbid ?? $mbid;
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array('release-groups');
-        $types    = explode(',', AmpConfig::get('wanted_types'));
+        $types    = AmpConfig::get('wanted_types', array());
+        if (!is_array($types)) {
+            $types = explode(',', $types);
+        }
         try {
             $martist = $mbrainz->lookup('artist', $lookupId, $includes);
             debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
