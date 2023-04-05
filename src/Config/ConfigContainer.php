@@ -86,10 +86,13 @@ final class ConfigContainer implements ConfigContainerInterface
         if ($typeList === null) {
             return [];
         }
+        if (!is_array($typeList)) {
+            $typeList = explode(',', $typeList);
+        }
 
         return array_map(
             'trim',
-            explode(',', $typeList)
+            $typeList
         );
     }
 
