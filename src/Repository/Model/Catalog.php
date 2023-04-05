@@ -1074,7 +1074,6 @@ abstract class Catalog extends database_object
             $results[] = (int)$row['id'];
         }
         if (empty($results)) {
-
             return array(0);
         }
 

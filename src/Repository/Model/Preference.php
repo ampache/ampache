@@ -623,17 +623,22 @@ class Preference extends database_object
     public static function fix_preferences($results)
     {
         $arrays = array(
+            'allow_zip_types',
+            'art_order',
             'auth_methods',
             'getid3_tag_order',
+            'mb_detect_order',
             'metadata_order',
             'metadata_order_video',
-            'art_order',
             'registration_display_fields',
-            'registration_mandatory_fields'
+            'registration_mandatory_fields',
+            'wanted_types'
         );
 
         foreach ($arrays as $item) {
-            $results[$item] = (trim((string)$results[$item])) ? explode(',', $results[$item]) : array();
+            $results[$item] = (array_key_exists($item, $results) && trim((string)$results[$item]))
+                ? explode(',', $results[$item])
+                : array();
         }
 
         foreach ($results as $key => $data) {
