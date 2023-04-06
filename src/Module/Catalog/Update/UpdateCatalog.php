@@ -281,7 +281,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 // clean up after the action
-                $catalog_media_type = $catalog->get_gather_type();
+                $catalog_media_type = $catalog->gather_types;
                 if ($catalog_media_type == 'music') {
                     Catalog::update_mapping('artist');
                     Catalog::update_mapping('album');

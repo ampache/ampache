@@ -92,7 +92,7 @@ final class CatalogActionMethod
                     $catalog->add_to_catalog($options);
                     break;
                 case 'garbage_collect':
-                    $catalog_media_type = $catalog->get_gather_type();
+                    $catalog_media_type = $catalog->gather_types;
                     if ($catalog_media_type == 'music') {
                         Catalog::clean_empty_albums();
                         Album::update_album_artist();

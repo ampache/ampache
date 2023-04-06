@@ -4964,8 +4964,8 @@ class Update
         $sql = "UPDATE `album_disk`, (SELECT SUM(`song`.`total_count`) AS `total_count`, `album_disk`.`id` AS `object_id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` GROUP BY `album_disk`.`id`) AS `object_count` SET `album_disk`.`total_count` = `object_count`.`total_count` WHERE `album_disk`.`total_count` != `object_count`.`total_count` AND `album_disk`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // now that the data is in it can update counts
-        Album::update_album_counts();
-        Artist::update_artist_counts();
+        Album::update_table_counts();
+        Artist::update_table_counts();
 
         return $retval;
     }

@@ -2411,10 +2411,10 @@ abstract class Catalog extends database_object
         }
         // check counts
         if ($album || $maps) {
-            Album::update_album_counts();
+            Album::update_table_counts();
         }
         if ($artist || $maps) {
-            Artist::update_artist_counts();
+            Artist::update_table_counts();
         }
         // collect the garbage too
         if ($album || $artist || $maps) {
@@ -3111,8 +3111,8 @@ abstract class Catalog extends database_object
             $sql = "UPDATE `video`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
         }
-        Artist::update_artist_counts();
-        Album::update_album_counts();
+        Artist::update_table_counts();
+        Album::update_table_counts();
 
         // update server total counts
         debug_event(__CLASS__, 'update_counts server total counts', 5);
@@ -3222,11 +3222,11 @@ abstract class Catalog extends database_object
      */
     public function get_gather_types($media_type = '')
     {
-        $gtypes = $this->gather_types;
-        if (empty($gtypes)) {
-            $gtypes = "music";
+        $catalog_media_type = $this->gather_types;
+        if (empty($catalog_media_type)) {
+            $catalog_media_type = "music";
         }
-        $types = explode(',', $gtypes);
+        $types = explode(',', $catalog_media_type);
 
         if ($media_type == "video") {
             $types = array_diff($types, array('music'));
@@ -3237,21 +3237,6 @@ abstract class Catalog extends database_object
         }
 
         return $types;
-    }
-
-    /**
-     * get_gather_type
-     * @return string
-     */
-    public function get_gather_type()
-    {
-        $sql        = "SELECT `gather_types` FROM `catalog` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['gather_types'];
-        }
-
-        return '';
     }
 
     /**
@@ -4123,8 +4108,8 @@ abstract class Catalog extends database_object
                         echo AmpError::display('catalog_add');
                     }
                 }
-                Artist::update_artist_counts();
-                Album::update_album_counts();
+                Artist::update_table_counts();
+                Album::update_table_counts();
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -4165,8 +4150,8 @@ abstract class Catalog extends database_object
                             $catalog->clean_catalog();
                         }
                     } // end foreach catalogs
-                    Artist::update_artist_counts();
-                    Album::update_album_counts();
+                    Artist::update_table_counts();
+                    Album::update_table_counts();
                 }
                 break;
             case 'update_from':
@@ -4237,7 +4222,8 @@ abstract class Catalog extends database_object
             case 'garbage_collect':
                 debug_event(__CLASS__, 'Run Garbage collection', 5);
                 static::getCatalogGarbageCollector()->collect();
-                $catalog_media_type = $catalog->get_gather_type();
+                /** @var Catalog $catalog */
+                $catalog_media_type = $catalog->gather_types;
                 if ($catalog_media_type == 'music') {
                     self::clean_empty_albums();
                     Album::update_album_artist();

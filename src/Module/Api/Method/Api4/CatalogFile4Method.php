@@ -132,8 +132,10 @@ final class CatalogFile4Method
                     break;
             }
             // update the counts too
-            Album::update_album_counts();
-            Artist::update_artist_counts();
+            if ($media instanceof Song) {
+                Album::update_album_count($media->album);
+                Artist::update_table_counts();
+            }
             Api4::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['api_format']);
         } else {
             Api4::message('error', T_('The requested catalog was not found'), '404', $input['api_format']);
