@@ -301,7 +301,7 @@ class Preference extends database_object
         }
 
         if (self::has_access($name)) {
-            $sql = "UPDATE `user_preference` SET `value` = ?  WHERE `preference` = ? $user_check";
+            $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? $user_check";
             Dba::write($sql, $params);
             self::clear_from_session();
 
