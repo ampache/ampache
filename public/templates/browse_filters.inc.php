@@ -79,6 +79,7 @@ if (!empty($allowed_filters)) { ?>
     }
     if (in_array('catalog', $allowed_filters)) { ?>
         <form method="post" id="catalog_choice" action="javascript.void(0);">
+            FIX THIS <input type="hidden" name="hide" value="cel_you" /> each type needs a hide value if the object_type has hidden columns
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
