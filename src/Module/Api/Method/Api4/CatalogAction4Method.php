@@ -92,7 +92,7 @@ final class CatalogAction4Method
                     break;
             }
             // clean up after the action
-            $catalog_media_type = $catalog->get_gather_type();
+            $catalog_media_type = $catalog->gather_types;
             if ($catalog_media_type == 'music') {
                 Catalog::clean_empty_albums();
                 Album::update_album_artist();

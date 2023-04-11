@@ -171,7 +171,16 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
                 $item_id = $item->id;
-                $result  = $this->spotifyWebAPI->{$getType}($item_id);
+                try {
+                    $result = $this->spotifyWebAPI->{$getType}($item_id);
+                } catch (SpotifyWebAPIException $error) {
+                    $this->logger->error(
+                        'gather_spotify' . $error->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+
+                    return $images;
+                }
 
                 foreach ($result->images as $image) {
                     $images[] = [

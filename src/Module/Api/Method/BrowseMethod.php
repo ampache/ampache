@@ -104,7 +104,7 @@ final class BrowseMethod
 
                 return false;
             }
-            $catalog_media_type = $catalog->get_gather_type();
+            $catalog_media_type = $catalog->gather_types;
             $output_type        = $catalog_media_type;
 
             $browse = Api::getBrowse();

@@ -71,7 +71,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
-  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "/", "\", "|", "," and ";")
+  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
 * Search
   * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches

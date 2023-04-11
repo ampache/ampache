@@ -1045,7 +1045,7 @@ class Update
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-        $sql       = "CREATE TABLE `image` (`id` int(11) unsigned NOT NULL auto_increment, `image` mediumblob NOT NULL, `mime` varchar(64) NOT NULL, `size` varchar(64) NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) unsigned NOT NULL, PRIMARY KEY  (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql       = "CREATE TABLE `image` (`id` int(11) unsigned NOT NULL auto_increment, `image` mediumblob NOT NULL, `mime` varchar(64) NOT NULL, `size` varchar(64) NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation";
         $retval &= (Dba::write($sql) !== false);
 
         foreach (array('album', 'artist') as $type) {
@@ -1082,7 +1082,7 @@ class Update
         $retval = true;
         $sql    = "DROP TABLE IF EXISTS `tmp_browse`";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY  (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;";
+        $sql = "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -2593,7 +2593,7 @@ class Update
 
         $sql = "CREATE TABLE `user_pvmsg` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `subject` varchar(80) NOT NULL, `message` TEXT CHARACTER SET $charset NULL, `from_user` int(11) unsigned NOT NULL, `to_user` int(11) unsigned NOT NULL, `is_read` tinyint(1) unsigned NOT NULL DEFAULT '0', `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
-        $sql = "CREATE TABLE `user_follower` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `follow_user` int(11) unsigned NOT NULL, `follow_date` int(11) unsigned  NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
+        $sql = "CREATE TABLE `user_follower` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `follow_user` int(11) unsigned NOT NULL, `follow_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
         $retval &= (Dba::write($sql) !== false);
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('notify_email', '0', 'Receive notifications by email (shouts, private messages, ...)', 25, 'boolean', 'options')";
         $retval &= (Dba::write($sql) !== false);
@@ -4219,7 +4219,7 @@ class Update
         $sql = "CREATE TABLE IF NOT EXISTS `album_map` (`album_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_album_map` (`object_id`, `object_type`, `album_id`), INDEX `object_id_index` (`object_id`), INDEX `album_id_type_index` (`album_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         $retval &= (Dba::write($sql) !== false);
         // fill the data
-        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`)  SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
@@ -4964,8 +4964,8 @@ class Update
         $sql = "UPDATE `album_disk`, (SELECT SUM(`song`.`total_count`) AS `total_count`, `album_disk`.`id` AS `object_id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` GROUP BY `album_disk`.`id`) AS `object_count` SET `album_disk`.`total_count` = `object_count`.`total_count` WHERE `album_disk`.`total_count` != `object_count`.`total_count` AND `album_disk`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // now that the data is in it can update counts
-        Album::update_album_counts();
-        Artist::update_artist_counts();
+        Album::update_table_counts();
+        Artist::update_table_counts();
 
         return $retval;
     }
