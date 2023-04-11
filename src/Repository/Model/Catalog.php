@@ -34,7 +34,6 @@ use Ampache\Module\Catalog\Catalog_dropbox;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
-use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
@@ -75,7 +74,6 @@ abstract class Catalog extends database_object
         'local' => Catalog_local::class,
         'remote' => Catalog_remote::class,
         'seafile' => Catalog_Seafile::class,
-        'soundcloud' => Catalog_soundcloud::class,
         'subsonic' => Catalog_subsonic::class,
     ];
 
@@ -1215,7 +1213,7 @@ abstract class Catalog extends database_object
         }
         self::clear_catalog_cache();
 
-        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_soundcloud|Catalog_subsonic $classname */
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
         if (!$classname::create_type($insert_id, $data)) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
             Dba::write($sql, array($insert_id));
