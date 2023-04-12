@@ -1484,6 +1484,11 @@ final class VaInfo implements VaInfoInterface
                     case 'label':
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
+                    case 'albumcomment':
+                    case 'set_subtitle':
+                    case 'version':
+                        $parsed['subtitle'] = $data[0];
+                        break;
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
                         if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
