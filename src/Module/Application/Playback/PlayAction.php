@@ -1045,7 +1045,10 @@ final class PlayAction implements ApplicationActionInterface
             );
         } elseif ($status > 0) {
             do {
-                $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+                $read_size = min(2048, $stream_size - $bytes_streamed);
+                if ($transcode || $read_size < 1) {
+                    $read_size = 2048;
+                }
                 if ($buf = fread($filepointer, $read_size)) {
                     if ($send_all_in_once) {
                         $buf_all .= $buf;
@@ -1060,7 +1063,7 @@ final class PlayAction implements ApplicationActionInterface
                     }
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+            } while (!feof($filepointer) && (connection_status() == 0));
         }
 
         if ($send_all_in_once && connection_status() == 0) {
