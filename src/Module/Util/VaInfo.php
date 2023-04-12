@@ -1112,7 +1112,7 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'albumcomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
@@ -1250,7 +1250,7 @@ final class VaInfo implements VaInfoInterface
                 case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'albumcomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
@@ -1389,7 +1389,7 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'albumcomment':
                 case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
@@ -1631,7 +1631,7 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'albumcomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
