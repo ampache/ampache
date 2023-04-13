@@ -141,8 +141,8 @@ final class PlayAction implements ApplicationActionInterface
             $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
-            $random       = (int)scrub_in((int)$new_request['random'] ?? 0);
+            $demo_id = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
+            $random  = (int)scrub_in((int)$new_request['random'] ?? 0);
 
             // don't put this one here
             $cpaction     = null;
@@ -167,11 +167,11 @@ final class PlayAction implements ApplicationActionInterface
             $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
-            $random       = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
+            $demo_id = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
+            $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
         //$this->logger->debug('Called for action: {' . Core::get_request('action') . '}', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
