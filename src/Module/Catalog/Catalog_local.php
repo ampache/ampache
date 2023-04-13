@@ -601,6 +601,7 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         $number        = 0;
+        $total         = 0;
         $total_updated = 0;
         $this->count   = 0;
 
@@ -608,14 +609,16 @@ class Catalog_local extends Catalog
         if ($catalog_media_type == 'music') {
             $media_type  = 'album';
             $media_class = Album::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         } elseif ($catalog_media_type == 'podcast') {
             $media_type  = 'podcast_episode';
             $media_class = Podcast_Episode::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type  = 'video';
             $media_class = Video::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         }
-        $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0 || !isset($media_type)) {
             return array('total' => $number, 'updated' => $total_updated);
         }
@@ -797,7 +800,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_count_' . $this->catalog_id, $count);
                 Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
             }
-            if (self::clean_file($results['file'], $media_type)) {
+            if ($this->clean_file($results['file'], $media_type)) {
                 $dead[] = $results['id'];
             }
         }
@@ -1195,9 +1198,8 @@ class Catalog_local extends Catalog
         $this->count = 0;
 
         $catalog_media_type = $this->gather_types;
-        if ($catalog_media_type == 'music') {
-            $media_type = 'song';
-        } elseif ($catalog_media_type == 'podcast') {
+        $media_type         = 'song';
+        if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type = 'video';

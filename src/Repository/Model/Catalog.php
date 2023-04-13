@@ -1569,7 +1569,6 @@ abstract class Catalog extends database_object
                 break;
             default:
                 return array();
-
         }
         $sql .= "FROM $table WHERE `id` IN (" . implode(",", $objects) . ");";
 
