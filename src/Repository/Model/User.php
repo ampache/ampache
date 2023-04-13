@@ -66,7 +66,7 @@ class User extends database_object
     /**
      * @var integer $access
      */
-    public $access;
+    public int $access;
     /**
      * @var boolean $disabled
      */

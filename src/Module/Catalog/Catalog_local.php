@@ -601,6 +601,7 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         $number        = 0;
+        $total         = 0;
         $total_updated = 0;
         $this->count   = 0;
 
@@ -608,14 +609,16 @@ class Catalog_local extends Catalog
         if ($catalog_media_type == 'music') {
             $media_type  = 'album';
             $media_class = Album::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         } elseif ($catalog_media_type == 'podcast') {
             $media_type  = 'podcast_episode';
             $media_class = Podcast_Episode::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type  = 'video';
             $media_class = Video::class;
+            $total       = self::count_table($media_type, $this->catalog_id);
         }
-        $total = self::count_table($media_type, $this->catalog_id);
         if ($total == 0 || !isset($media_type)) {
             return array('total' => $number, 'updated' => $total_updated);
         }
@@ -797,7 +800,7 @@ class Catalog_local extends Catalog
                 Ui::update_text('clean_count_' . $this->catalog_id, $count);
                 Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
             }
-            if (self::clean_file($results['file'], $media_type)) {
+            if ($this->clean_file($results['file'], $media_type)) {
                 $dead[] = $results['id'];
             }
         }
@@ -1087,33 +1090,6 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * check_local_mp3
-     * Checks the song to see if it's there already returns true if found, false if not
-     * @param string $full_file
-     * @param string $gather_type
-     * @return boolean
-     */
-    public function check_local_mp3($full_file, $gather_type = '')
-    {
-        $file_date = filemtime($full_file);
-        if ($file_date < $this->last_add) {
-            debug_event('local.catalog', 'Skipping ' . $full_file . ' File modify time before last add run', 3);
-
-            return true;
-        }
-
-        $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($full_file));
-
-        // If it's found then return true
-        if (Dba::fetch_row($db_results)) {
-            return true;
-        }
-
-        return false;
-    } // check_local_mp3
-
-    /**
      * @param string $file_path
      * @return string|string[]
      */
@@ -1195,9 +1171,8 @@ class Catalog_local extends Catalog
         $this->count = 0;
 
         $catalog_media_type = $this->gather_types;
-        if ($catalog_media_type == 'music') {
-            $media_type = 'song';
-        } elseif ($catalog_media_type == 'podcast') {
+        $media_type         = 'song';
+        if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
         } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             $media_type = 'video';

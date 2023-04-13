@@ -189,7 +189,7 @@ final class BrowseMethod
                     $browse->set_filter('podcast', $item->id);
                     break;
                 default:
-
+                    $output_type = $object_type;
             }
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');

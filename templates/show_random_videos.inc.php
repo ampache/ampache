@@ -36,7 +36,7 @@ $web_path = AmpConfig::get('web_path');
 $button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh'); ?>
 <?php Ui::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php
-if ($videos) {
+if (!empty($videos)) {
     foreach ($videos as $video_id) {
         $video = Video::create_from_id($video_id);
         $video->format(); ?>

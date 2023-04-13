@@ -40,12 +40,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         ?int $count = 1
     ): array {
         $results = [];
-
-        if (!$count) {
-            $count = 1;
-        }
-
-        $sql  = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
+        $sql     = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {

@@ -73,7 +73,7 @@ final class PlaylistEdit5Method
         $playlist = new Playlist($input['filter']);
 
         // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->id || (!$playlist->has_access($user->id) && !$user->access === 100)) {
+        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
             Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;

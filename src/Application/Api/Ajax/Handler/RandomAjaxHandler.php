@@ -72,8 +72,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'album':
                 $album_id = $this->albumRepository->getRandom(
-                    Core::get_global('user')->id ?? -1,
-                    null
+                    Core::get_global('user')->id ?? -1
                 );
 
                 if (empty($album_id)) {

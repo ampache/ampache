@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -54,7 +55,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog   = Catalog::create_from_id($row['id']);
+            /** @var Catalog_local $catalog */
+            $catalog = Catalog::create_from_id($row['id']);
             ob_flush();
             if (!$catalog) {
                 $interactor->error(

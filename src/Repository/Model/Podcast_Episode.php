@@ -28,7 +28,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -723,15 +722,5 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public static function type_to_mime($type)
     {
         return Song::type_to_mime($type);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getUtilityFactory(): UtilityFactoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UtilityFactoryInterface::class);
     }
 }
