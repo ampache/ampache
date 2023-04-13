@@ -36,7 +36,7 @@
         }
     },
     "require": {
-        "php": ">=7.4 || >=8.0 || >=8.1 || >=8.2",
+        "php": ">=8.2",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-gd": "*",
@@ -87,7 +87,7 @@
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
         "scaron/prettyphoto": "3.*",
-        "scn/phptal": "^3.0",
+        "scn/phptal": "dev-master",
         "shrikeh/teapot": "^2.3",
         "swisnl/jquery-contextmenu": "2.1.*",
         "symfony/event-dispatcher": "^4.4.20",
