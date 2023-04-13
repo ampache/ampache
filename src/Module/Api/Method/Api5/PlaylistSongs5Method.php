@@ -70,7 +70,7 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !$user->access === 100)) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && $user->access !== 100)) {
             Api5::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
