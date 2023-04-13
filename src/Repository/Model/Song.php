@@ -36,7 +36,6 @@ use Ampache\Repository\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use Ampache\Repository\LicenseRepositoryInterface;
 use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
@@ -389,7 +388,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->initializeMetadata();
         }
 
-        $info = $this->has_info($limit_threshold);
+        $info = $this->has_info();
         if ($info !== false && is_array($info)) {
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -723,10 +722,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * has_info
-     * @param string $limit_threshold
      * @return array|boolean
      */
-    private function has_info($limit_threshold = '')
+    private function has_info()
     {
         $song_id = $this->id;
 
@@ -2537,16 +2535,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(SongTagWriterInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getLicenseRepository(): LicenseRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LicenseRepositoryInterface::class);
     }
 
     /**
