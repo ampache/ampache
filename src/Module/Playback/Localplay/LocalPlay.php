@@ -138,11 +138,7 @@ class LocalPlay
      */
     public function format_name($name, $object_id)
     {
-        $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name,
-            'localplay_skip_' . $object_id);
-
-        return $name;
+        return Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, scrub_out($name), 'localplay_skip_' . $object_id);
     } // format_name
 
     /**
@@ -527,9 +523,7 @@ class LocalPlay
      */
     public function update_instance($uid, $data)
     {
-        $data = $this->_player->update_instance($uid, $data);
-
-        return $data;
+        return $this->_player->update_instance($uid, $data);
     } // update_instance
 
     /**

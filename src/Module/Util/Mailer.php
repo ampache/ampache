@@ -183,17 +183,12 @@ final class Mailer implements MailerInterface
         }
         $mail->Body = $this->message;
 
-        $sendmail = AmpConfig::get('sendmail_path');
-        $sendmail = $sendmail ? $sendmail : '/usr/sbin/sendmail';
-        $mailhost = AmpConfig::get('mail_host');
-        $mailhost = $mailhost ? $mailhost : 'localhost';
-        $mailport = AmpConfig::get('mail_port');
-        $mailport = $mailport ? $mailport : 25;
+        $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
+        $mailhost = AmpConfig::get('mail_host', 'localhost');
+        $mailport = AmpConfig::get('mail_port', 25);
         $mailauth = AmpConfig::get('mail_auth');
-        $mailuser = AmpConfig::get('mail_auth_user');
-        $mailuser = $mailuser ? $mailuser : '';
-        $mailpass = AmpConfig::get('mail_auth_pass');
-        $mailpass = $mailpass ? $mailpass : '';
+        $mailuser = AmpConfig::get('mail_auth_user', '');
+        $mailpass = AmpConfig::get('mail_auth_pass', '');
 
         switch ($mailtype) {
             case 'smtp':

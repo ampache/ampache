@@ -360,7 +360,9 @@ class Catalog_Seafile extends Catalog
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             } finally {
-                $this->clean_tmp_file($tempfilename);
+                if (isset($tempfilename)) {
+                    $this->clean_tmp_file($tempfilename);
+                }
             }
         }
 
@@ -494,6 +496,7 @@ class Catalog_Seafile extends Catalog
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         // if you have the file it's all good
+        /** @var Song $media */
         if (is_file($media->file)) {
             return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
         }

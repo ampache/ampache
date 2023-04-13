@@ -219,7 +219,7 @@ final class DefaultAction implements ApplicationActionInterface
                 if (!array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
-                array_push($media_files[$dirname], Core::conv_lc_file($media->file));
+                $media_files[$dirname][] = Core::conv_lc_file($media->file);
             }
         }
 

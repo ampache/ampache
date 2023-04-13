@@ -60,6 +60,7 @@ class Catalog_dropbox extends Catalog
 
     public string $path;
     public $getchunk;
+    private $videos_to_gather;
 
     /**
      * get_description
@@ -477,7 +478,7 @@ class Catalog_dropbox extends Catalog
                 $results['catalog'] = $this->id;
 
                 $results['file'] = $outfile;
-                $video_id        = Video::insert($results, $gtypes, []);
+                $video_id        = Video::insert($results, $gtypes);
                 if ($results['art']) {
                     $art = new Art($video_id, 'video');
                     $art->insert_url($results['art']);
