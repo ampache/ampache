@@ -1112,7 +1112,6 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
@@ -1250,7 +1249,6 @@ final class VaInfo implements VaInfoInterface
                 case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
@@ -1389,7 +1387,7 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
@@ -1483,6 +1481,11 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'label':
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'set subtitle':
+                    case 'set_subtitle':
+                    case 'version':
+                        $parsed['subtitle'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
@@ -1631,7 +1634,6 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
                 case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
