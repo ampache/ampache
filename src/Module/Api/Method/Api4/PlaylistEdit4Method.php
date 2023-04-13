@@ -72,7 +72,7 @@ final class PlaylistEdit4Method
         $playlist = new Playlist($input['filter']);
 
         // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->id || (!$playlist->has_access($user->id) && !$user->access === 100)) {
+        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;

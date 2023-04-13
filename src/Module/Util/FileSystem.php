@@ -234,8 +234,8 @@ class FileSystem
         }
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         array_pop($new);
-        array_push($new, $name);
-        $new = implode(DIRECTORY_SEPARATOR, $new);
+        $new[] = $name;
+        $new   = implode(DIRECTORY_SEPARATOR, $new);
         if (is_file($new) || is_dir($new)) {
             throw new Exception('Path already exists: ' . $new);
         }

@@ -105,8 +105,7 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         ) {
             $this->ui->show(
-                'show_add_label.inc.php',
-                []
+                'show_add_label.inc.php'
             );
         } else {
             echo T_('The Label cannot be found');

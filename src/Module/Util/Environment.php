@@ -283,14 +283,14 @@ final class Environment implements EnvironmentInterface
 
         // In case the local setting is 0
         ini_set('session.gc_probability', '5');
-
-        if (!isset($results['memory_limit']) ||
-            (Ui::unformat_bytes($results['memory_limit']) < Ui::unformat_bytes('32M'))
+        $current_memory = ini_get('memory_limit');
+        if (!$current_memory ||
+            (Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M'))
         ) {
-            $results['memory_limit'] = '32M';
+            $current_memory = '32M';
         }
 
-        set_memory_limit($results['memory_limit']);
+        set_memory_limit($current_memory);
     }
 
     /**

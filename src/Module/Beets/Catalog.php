@@ -94,6 +94,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function prepare_media($media)
     {
+        /** @var Song $media */
         debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;

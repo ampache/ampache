@@ -995,6 +995,8 @@ abstract class Catalog extends database_object
         }
 
         self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
+
+        return true;
     } // update_enabled
 
     /**
@@ -1569,7 +1571,6 @@ abstract class Catalog extends database_object
                 break;
             default:
                 return array();
-
         }
         $sql .= "FROM $table WHERE `id` IN (" . implode(",", $objects) . ");";
 

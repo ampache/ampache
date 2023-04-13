@@ -38,16 +38,9 @@ final class VideoRepository implements VideoRepositoryInterface
         int $userId,
         ?int $count = 1
     ): array {
-        $results = [];
-
-        if (!$count) {
-            $count = 1;
-        }
-
-        $sql = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
-        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
+        $results    = [];
+        $sql        = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }

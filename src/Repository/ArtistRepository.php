@@ -50,15 +50,10 @@ final class ArtistRepository implements ArtistRepositoryInterface
      */
     public function getRandom(
         int $userId,
-        int $count = 1
+        ?int $count = 1
     ): array {
         $results = array();
-
-        if (!$count) {
-            $count = 1;
-        }
-
-        $sql = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
+        $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {

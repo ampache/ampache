@@ -372,9 +372,10 @@ class Random
 
         $sql = "";
         switch ($type) {
+            case 'video':
             case 'song':
-                $sql = "SELECT `song`.`id`, `song`.`size`, `song`.`time` FROM `song` ";
-                if ($search_info) {
+                $sql = "SELECT `$type`.`id`, `$type`.`size`, `$type`.`time` FROM `$type` ";
+                if (!empty($search_info['table_sql'])) {
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
@@ -390,7 +391,7 @@ class Random
                 if (!$search_info || !$search_info['join']['song']) {
                     $sql .= "LEFT JOIN `song` ON `song`.`$type`=`$type`.`id` ";
                 }
-                if ($search_info) {
+                if (!empty($search_info['table_sql'])) {
                     $sql .= $search_info['table_sql'];
                 }
                 $sql .= $catalog_disable_sql;
@@ -400,18 +401,6 @@ class Random
                         : " WHERE " . $search_info['where_sql'];
                 }
                 $sql .= " GROUP BY `$type`.`id`";
-                break;
-            case 'video':
-                $sql = "SELECT `video`.`id`, `video`.`size`, `video`.`time` FROM `video` ";
-                if ($search_info) {
-                    $sql .= $search_info['table_sql'];
-                }
-                $sql .= $catalog_disable_sql;
-                if (!empty($search_info['where_sql'])) {
-                    $sql .= ($catalog_disable)
-                        ? " AND " . $search_info['where_sql']
-                        : " WHERE " . $search_info['where_sql'];
-                }
                 break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
