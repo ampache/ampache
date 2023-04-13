@@ -78,7 +78,6 @@
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-di/php-di": "^6.0",
-        "php-tmdb/api": "2.*",
         "phpmailer/phpmailer": "6.5.*",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
