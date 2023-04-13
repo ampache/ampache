@@ -68,7 +68,7 @@ final class SongRepository implements SongRepositoryInterface
         int $limit = 0
     ): array {
         $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ?  AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` ";
+        $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` ";
 
         if ($limit) {
             $sql .= "LIMIT " . (string)$limit;
@@ -92,7 +92,7 @@ final class SongRepository implements SongRepositoryInterface
         string $labelName
     ): array {
         $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ?  AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
+        $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
         $db_results = Dba::read($sql, [$labelName]);
         $results    = array();

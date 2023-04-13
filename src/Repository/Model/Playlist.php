@@ -75,9 +75,10 @@ class Playlist extends playlist_object
      */
     public static function garbage_collection()
     {
-        foreach (array('song', 'video') as $object_type) {
+        foreach (array('song', 'podcast_episode', 'video') as $object_type) {
             Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `playlist_data`.`object_id` WHERE `" . $object_type . "`.`file` IS NULL AND `playlist_data`.`object_type`='" . $object_type . "';");
         }
+        Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` WHERE `live_stream`.`id` IS NULL AND `playlist_data`.`object_type`='live_stream';");
         Dba::write("DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL;");
     }
 
@@ -377,27 +378,21 @@ class Playlist extends playlist_object
 
             switch ($object_type) {
                 case "song":
-                    $sql = "SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_type` = 'song' ";
-                    if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-                        $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled`=1) ';
-                        $params[] = $user_id;
-                    }
-                    $sql .= 'ORDER BY RAND()';
-                    break;
+                case "live_stream":
                 case "podcast_episode":
-                    $sql = "SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `object_type` = 'podcast_episode' ";
+                case "video":
+                    $sql = "SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `$object_type` ON `playlist_data`.`object_id` = `$object_type`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_type` = '$object_type' ";
                     if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-                        $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled`=1) ';
+                        $sql .= "AND `playlist_data`.`object_type`='$object_type' AND `$object_type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled`=1) ";
                         $params[] = $user_id;
                     }
                     $sql .= 'ORDER BY RAND()';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
+                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
             }
             $db_results  = Dba::read($sql . $limit_sql, $params);
-
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
                     'object_type' => $row['object_type'],

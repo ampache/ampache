@@ -268,8 +268,8 @@ deferred_ext_metadata = "true"
 ; Some taggers use delimiters other than \0 for fields
 ; This list specifies possible delimiters additional to \0
 ; This setting takes a regex pattern. TODO: explain that this is not just for genres until we can replace this safely
-; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
+; DEFAULT: "[/]{2}|[/\\|,;]" (Split on "//", "_", "/", "\", "|", "," and ";")
+additional_genre_delimiters = "[/]{2}|[_/\\|,;]"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this

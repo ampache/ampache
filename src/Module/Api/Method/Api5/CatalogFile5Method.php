@@ -151,8 +151,10 @@ final class CatalogFile5Method
                 }
             }
             // update the counts too
-            Album::update_album_counts();
-            Artist::update_artist_counts();
+            if ($media instanceof Song) {
+                Album::update_album_count($media->album);
+                Artist::update_table_counts();
+            }
             Api5::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
         } else {
             Api5::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);

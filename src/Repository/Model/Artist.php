@@ -1048,7 +1048,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                     Song::update_artist($artist_id, $song_id, $this->id, false);
                     Song::update_utime($song_id, $time);
                 }
-                self::update_artist_counts();
+                self::update_table_counts();
                 $updated    = true;
                 $current_id = $artist_id;
             } // end if it changed
@@ -1062,7 +1062,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Userflag::garbage_collection();
                 Label::garbage_collection();
                 $this->getUseractivityRepository()->collectGarbage();
-                self::update_artist_counts();
+                self::update_table_counts();
             } // if updated
         } elseif ($this->mbid != $mbid) {
             $sql = 'UPDATE `artist` SET `mbid` = ? WHERE `id` = ?';
@@ -1160,9 +1160,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * update_artist_counts
      *
      */
-    public static function update_artist_counts()
+    public static function update_table_counts()
     {
-        debug_event(__CLASS__, 'update_artist_counts', 5);
+        debug_event(__CLASS__, 'update_table_counts', 5);
         // artist.time
         $sql = "UPDATE `artist`, (SELECT SUM(`song`.`time`) AS `time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' GROUP BY `artist_map`.`artist_id`) AS `song` SET `artist`.`time` = `song`.`time` WHERE `artist`.`time` != `song`.`time` AND `artist`.`id` = `song`.`artist_id`;";
         Dba::write($sql);
@@ -1222,7 +1222,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         Dba::write($sql, array($old_object_id));
         $sql = "DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';";
         Dba::write($sql, array($old_object_id));
-        self::update_artist_counts();
+        self::update_table_counts();
     }
 
     /**

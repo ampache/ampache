@@ -220,7 +220,7 @@ final class VaInfo implements VaInfoInterface
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
-                $mb_order = "auto";
+                $mb_order = 'auto';
             }
 
             $test_tags = array('artist', 'album', 'genre', 'title');
@@ -1112,8 +1112,8 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
-                case 'discsubtitle':
+                case 'set subtitle':
+                case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1249,8 +1249,8 @@ final class VaInfo implements VaInfoInterface
                 case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
-                case 'discsubtitle':
+                case 'set subtitle':
+                case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;
@@ -1387,7 +1387,7 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
+                case 'set subtitle':
                 case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
@@ -1481,6 +1481,11 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'label':
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'set subtitle':
+                    case 'set_subtitle':
+                    case 'version':
+                        $parsed['subtitle'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
@@ -1629,8 +1634,8 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
-                case 'releasecomment':
-                case 'discsubtitle':
+                case 'set subtitle':
+                case 'set_subtitle':
                 case 'version':
                     $parsed['subtitle'] = $data[0];
                     break;

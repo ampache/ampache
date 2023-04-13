@@ -614,9 +614,9 @@ class Search extends playlist_object
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('Played'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         /* HINT: Percentage of (Times Played / Times skipped) * 100 */
@@ -747,7 +747,7 @@ class Search extends playlist_object
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('Played'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
@@ -824,7 +824,7 @@ class Search extends playlist_object
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('Played'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
@@ -924,9 +924,9 @@ class Search extends playlist_object
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('Played'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
@@ -962,9 +962,9 @@ class Search extends playlist_object
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('Played'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);

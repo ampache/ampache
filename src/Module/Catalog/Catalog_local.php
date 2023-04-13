@@ -524,7 +524,7 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         // If podcast catalog, we don't want to analyze files for now
-        if ($this->gather_types == "podcast") {
+        if ($this->gather_types == 'podcast') {
             $this->sync_podcasts();
         } else {
             /* Get the songs and then insert them into the db */
@@ -565,8 +565,10 @@ class Catalog_local extends Catalog
         }
         if ($this->count > 0) {
             // update the counts too
-            Album::update_album_counts();
-            Artist::update_artist_counts();
+            if ($this->gather_types == 'music') {
+                Album::update_table_counts();
+                Artist::update_table_counts();
+            }
 
             /* Update the Catalog last_update */
             $this->update_last_add();
@@ -602,7 +604,7 @@ class Catalog_local extends Catalog
         $total_updated = 0;
         $this->count   = 0;
 
-        $catalog_media_type = $this->get_gather_type();
+        $catalog_media_type = $this->gather_types;
         if ($catalog_media_type == 'music') {
             $media_type  = 'album';
             $media_class = Album::class;
@@ -721,7 +723,7 @@ class Catalog_local extends Catalog
         $dead_total  = 0;
         $this->count = 0;
 
-        $catalog_media_type = $this->get_gather_type();
+        $catalog_media_type = $this->gather_types;
         $media_type         = 'song';
         if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
@@ -1192,7 +1194,7 @@ class Catalog_local extends Catalog
         $missing     = array();
         $this->count = 0;
 
-        $catalog_media_type = $this->get_gather_type();
+        $catalog_media_type = $this->gather_types;
         if ($catalog_media_type == 'music') {
             $media_type = 'song';
         } elseif ($catalog_media_type == 'podcast') {
