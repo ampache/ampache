@@ -109,6 +109,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Changed
 
+* Moved composer to php8.2 minimum by default. Use `composer_old.json` for older PHP versions
 * Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
@@ -156,6 +157,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
+* Catalogs
+  * Soundcloud catalogs
+* Plugins
+  * The Movie Database (TMDB) plugin
 * Subsonic
   * Custom messages for subsonic errors [subsonic.org](http://www.subsonic.org/pages/api.jsp)
 
