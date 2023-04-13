@@ -1090,33 +1090,6 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * check_local_mp3
-     * Checks the song to see if it's there already returns true if found, false if not
-     * @param string $full_file
-     * @param string $gather_type
-     * @return boolean
-     */
-    public function check_local_mp3($full_file, $gather_type = '')
-    {
-        $file_date = filemtime($full_file);
-        if ($file_date < $this->last_add) {
-            debug_event('local.catalog', 'Skipping ' . $full_file . ' File modify time before last add run', 3);
-
-            return true;
-        }
-
-        $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($full_file));
-
-        // If it's found then return true
-        if (Dba::fetch_row($db_results)) {
-            return true;
-        }
-
-        return false;
-    } // check_local_mp3
-
-    /**
      * @param string $file_path
      * @return string|string[]
      */
