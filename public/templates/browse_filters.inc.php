@@ -41,7 +41,7 @@ if (!empty($allowed_filters)) { ?>
         <form id="multi_alpha_filter_form" action="javascript:void(0);">
             <label id="multi_alpha_filterLabel" for="multi_alpha_filter"><?php echo T_('Starts With'); ?></label>
             <input type="text" id="multi_alpha_filter" name="multi_alpha_filter" value="<?php $browse->set_catalog($_SESSION['catalog']);
-    echo scrub_out($browse->get_filter('starts_with')); ?>" onBlur="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with'); ?>', 'multi_alpha_filter');">
+        echo scrub_out($browse->get_filter('starts_with')); ?>" onBlur="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with'); ?>', 'multi_alpha_filter');">
         </form>
     <?php }
     if (in_array('minimum_count', $allowed_filters)) { ?>

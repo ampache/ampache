@@ -91,11 +91,11 @@ if ($browse->is_show_header()) {
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
             <?php }
-if (!$hide_genres) {
-    ++$thcount; ?>
+            if (!$hide_genres) {
+                ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo $genres_text; ?></th>
             <?php
-}
+            }
 if ($show_ratings) {
     ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
@@ -160,10 +160,10 @@ foreach ($object_ids as $album_disk_id) {
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php }
-if (!$hide_genres) { ?>
+            if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo $genres_text; ?></th>
 <?php }
-if ($show_ratings) { ?>
+            if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
 <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>

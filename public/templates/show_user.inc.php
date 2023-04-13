@@ -64,12 +64,12 @@ if (AmpConfig::get('sociable')) {
     $plugins = Plugin::get_plugins('display_user_field'); ?>
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
-        $plugin = new Plugin($plugin_name);
-        if ($plugin->load($client)) { ?>
+    $plugin = new Plugin($plugin_name);
+    if ($plugin->load($client)) { ?>
         <li><?php $plugin->_plugin->display_user_field(); ?> </li>
 <?php } ?>
 <?php
-    } ?>
+} ?>
     </ul>
 <?php
 } ?>
@@ -136,86 +136,85 @@ if (AmpConfig::get('sociable')) {
     <div id="tabs_content">
         <div id="recently_played" class="tab_content" style="display: block;">
         <?php $current_list = Tmp_Playlist::get_from_username($client->username);
-        if ($current_list) {
-            $tmp_playlist = new Tmp_Playlist($current_list);
-            $object_ids   = $tmp_playlist->get_items();
-            if (count($object_ids) > 0) {
-                Ui::show_box_top(T_('Active Playlist')); ?>
+if ($current_list) {
+    $tmp_playlist = new Tmp_Playlist($current_list);
+    $object_ids   = $tmp_playlist->get_items();
+    if (count($object_ids) > 0) {
+        Ui::show_box_top(T_('Active Playlist')); ?>
                 <table>
                     <tr>
                         <td>
-                            <?php foreach ($object_ids as $object_data) {
-                    /** @var Ampache\Repository\Model\playable_item $object */
-                    $type       = array_shift($object_data);
-                    $class_name = ObjectTypeToClassNameMapper::map($type);
-                    $object     = new $class_name(array_shift($object_data));
-                    echo $object->get_f_link(); ?>
-                                <br />
-                                <?php
-                } ?>
+        <?php foreach ($object_ids as $object_data) {
+            /** @var Ampache\Repository\Model\playable_item $object */
+            $type       = array_shift($object_data);
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $object     = new $class_name(array_shift($object_data));
+            echo $object->get_f_link(); ?>
+            <br />
+            <?php
+        } ?>
                         </td>
                     </tr>
                 </table><br />
-                <?php Ui::show_box_bottom();
-            }
-        }
-            $ajax_page = 'stats';
-            $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
-            Song::build_cache(array_keys($data));
-            require Ui::find_template('show_recently_played.inc.php'); ?>
+        <?php Ui::show_box_bottom();
+    }
+}
+$ajax_page = 'stats';
+$limit     = AmpConfig::get('popular_threshold', 10);
+$data      = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+Song::build_cache(array_keys($data));
+require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
         <div id="recently_skipped" class="tab_content">
-            <?php
-            $ajax_page = 'stats';
-            $limit     = AmpConfig::get('popular_threshold', 10);
-            $data      = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
-            Song::build_cache(array_keys($data));
-            require Ui::find_template('show_recently_skipped.inc.php'); ?>
+<?php $ajax_page = 'stats';
+$limit           = AmpConfig::get('popular_threshold', 10);
+$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
+Song::build_cache(array_keys($data));
+require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
-        <?php if (AmpConfig::get('allow_upload')) { ?>
+<?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">
-        <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
-            $browse = new Browse();
-            $browse->set_type('artist', $sql);
-            $browse->set_simple_browse(true);
-            $browse->show_objects();
-            $browse->store(); ?>
+    <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
+    $browse     = new Browse();
+    $browse->set_type('artist', $sql);
+    $browse->set_simple_browse(true);
+    $browse->show_objects();
+    $browse->store(); ?>
         </div>
-        <?php } ?>
+<?php } ?>
         <div id="playlists" class="tab_content">
         <?php
-            $playlist_ids = Playlist::get_playlists($client->id);
-            $browse       = new Browse();
-            $browse->set_type('playlist');
-            $browse->set_simple_browse(false);
-            $browse->show_objects($playlist_ids);
-            $browse->store(); ?>
+$playlist_ids = Playlist::get_playlists($client->id);
+$browse       = new Browse();
+$browse->set_type('playlist');
+$browse->set_simple_browse(false);
+$browse->show_objects($playlist_ids);
+$browse->store(); ?>
         </div>
-        <?php if (AmpConfig::get('sociable')) { ?>
+<?php if (AmpConfig::get('sociable')) { ?>
         <div id="following" class="tab_content">
-        <?php $browse = new Browse();
-            $browse->set_type('user');
-            $browse->set_simple_browse(false);
-            $browse->show_objects($following);
-            $browse->store(); ?>
+    <?php $browse = new Browse();
+    $browse->set_type('user');
+    $browse->set_simple_browse(false);
+    $browse->show_objects($following);
+    $browse->store(); ?>
         </div>
         <div id="followers" class="tab_content">
-        <?php $browse = new Browse();
-            $browse->set_type('user');
-            $browse->set_simple_browse(false);
-            $browse->show_objects($followers);
-            $browse->store(); ?>
+    <?php $browse = new Browse();
+    $browse->set_type('user');
+    $browse->set_simple_browse(false);
+    $browse->show_objects($followers);
+    $browse->store(); ?>
         </div>
             <div id="timeline" class="tab_content">
-                <?php if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
-                Useractivity::build_cache($activities);
-                foreach ($activities as $activity_id) {
-                    echo $userActivityRenderer->show(new Useractivity($activity_id));
-                }
-            } ?>
+    <?php if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
+        Useractivity::build_cache($activities);
+        foreach ($activities as $activity_id) {
+            echo $userActivityRenderer->show(new Useractivity($activity_id));
+        }
+    } ?>
             </div>
-        <?php } ?>
+<?php } ?>
     </div>
 </div>
 

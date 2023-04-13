@@ -119,16 +119,16 @@ use Ampache\Module\Api\Ajax;
                     <table class="tabledata">
                         <?php
                         $dismetas = $libitem->getDisabledMetadataFields();
-                        foreach ($libitem->getMetadata() as $metadata) {
-                            /* @var Metadata $metadata */
-                            $field = $metadata->getField();
-                            if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
-                                echo '<tr>' .
-                                '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
-                                '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
-                                '</tr>';
-                            }
-                        } ?>
+            foreach ($libitem->getMetadata() as $metadata) {
+                /* @var Metadata $metadata */
+                $field = $metadata->getField();
+                if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
+                    echo '<tr>' .
+                    '<td class="edit_dialog_content_header">' . $field->getFormattedName() . '</td>' .
+                    '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
+                    '</tr>';
+                }
+            } ?>
                     </table>
                 </div>
             <?php endif; ?>

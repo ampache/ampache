@@ -77,9 +77,9 @@ use Ampache\Module\Api\Ajax;
                 <?php if (Access::check('interface', 50)) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
-                    } else {
-                        echo $libitem->mbid_group;
-                    } ?>
+                } else {
+                    echo $libitem->mbid_group;
+                } ?>
                 </td>
             </tr>
             <tr>

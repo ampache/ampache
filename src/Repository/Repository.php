@@ -105,8 +105,8 @@ class Repository
             $parts = explode('And', $matches[1]);
 
             return $this->findBy(
-                    $parts,
-                    $this->resolveObjects($arguments)
+                $parts,
+                $this->resolveObjects($arguments)
             );
         }
 
@@ -121,10 +121,10 @@ class Repository
         $className = get_called_class();
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
-                '/(?<=.)([A-Z])/',
-                function ($name) {
-                    return '_' . strtolower((string) $name[0]);
-                }, end($nameParts));
+            '/(?<=.)([A-Z])/',
+            function ($name) {
+                return '_' . strtolower((string) $name[0]);
+            }, end($nameParts));
 
         return lcfirst($tableName);
     }
@@ -137,9 +137,9 @@ class Repository
     {
         $properties = $object->getDirtyProperties();
         $this->setPrivateProperty(
-                $object,
-                'id',
-                $this->insertRecord($properties)
+            $object,
+            'id',
+            $this->insertRecord($properties)
         );
     }
 
@@ -170,8 +170,8 @@ class Repository
     {
         $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ") VALUES(" . implode(',', array_fill(0, count($properties), '?')) . ")";
         Dba::write(
-                $sql,
-                array_values($this->resolveObjects($properties))
+            $sql,
+            array_values($this->resolveObjects($properties))
         );
 
         return Dba::insert_id();

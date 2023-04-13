@@ -106,9 +106,9 @@ final class SongSorter implements SongSorterInterface
                     if ($limit > 0 && $move_count == $limit) {
                         /* HINT: filename (File path) */
                         $interactor->info(
-                        sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
-                        true
-                    );
+                            sprintf(nT_('%d file updated.', '%d files updated.', $move_count), $move_count),
+                            true
+                        );
 
                         return;
                     }
@@ -120,9 +120,9 @@ final class SongSorter implements SongSorterInterface
                         );
                         /* HINT: filename (File path) OR table name (podcast, clip, etc) */
                         $interactor->info(
-                        sprintf(T_('Missing: %s'), $song->file),
-                        true
-                    );
+                            sprintf(T_('Missing: %s'), $song->file),
+                            true
+                        );
                         continue;
                     }
                     $song->format();
@@ -168,9 +168,9 @@ final class SongSorter implements SongSorterInterface
                     if ($song->file != $fullpath && strlen($fullpath)) {
                         /* HINT: filename (File path) */
                         $interactor->info(
-                        sprintf(T_('Destin: %s'), $fullpath),
-                        true
-                    );
+                            sprintf(T_('Destin: %s'), $fullpath),
+                            true
+                        );
                         flush();
                         if ($this->sort_move_file($interactor, $song, $fullpath, $dryRun, $windowsCompat)) {
                             $move_count++;

@@ -78,20 +78,20 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
 ?>
 <ul class="sb2" id="sb_home">
     <?php if (AmpConfig::get('browse_filter')) {
-    echo "<li>";
-    Ajax::start_container('browse_filters');
-    Ajax::end_container();
-    echo "</li>";
-} ?>
+        echo "<li>";
+        Ajax::start_container('browse_filters');
+        Ajax::end_container();
+        echo "</li>";
+    } ?>
     <li class="sb2_browse">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_icon('all', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
         <?php $text = (string) scrub_in(Core::get_request('action')) . '_ac';
-        if ($text) {
-            ${$text} = ' selected="selected"';
-        } ?>
+if ($text) {
+    ${$text} = ' selected="selected"';
+} ?>
         <ul class="sb3" id="sb_home_browse">
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs ?></a></li>
             <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
@@ -207,7 +207,7 @@ $state_home_information   = (!isset($_COOKIE['sb_home_information']) || $_COOKIE
             <?php } ?>
             <?php if ($server_allow && $controller) { ?>
             <?php // Little bit of work to be done here
-                $localplay             = new LocalPlay(AmpConfig::get('localplay_controller'));
+        $localplay                     = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $current_instance      = $localplay->current_instance();
                 $class                 = $current_instance ? '' : ' class="active_instance"'; ?>
                 <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay ?></a></li>

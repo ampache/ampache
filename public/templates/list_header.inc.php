@@ -51,7 +51,7 @@ if (array_key_exists('browse_uid', $_REQUEST)) {
     AmpConfig::set('list_header_uid', ++$uid, true);
 }
 $sides  = 0;
- ?>
+?>
 <?php if (!$browse->is_use_pages() && !$is_header) { ?>
 <?php $this->show_next_link(); ?>
 </p>
@@ -106,12 +106,12 @@ if ($limit > 0 && $total > $limit) {
     </div>
 <?php } ?>
 <?php if ($pages > 1 && $start > -1) {
-        $current_page = 0;
-        if ($start > 0) {
-            $current_page = floor($start / $limit);
-        }
+    $current_page = 0;
+    if ($start > 0) {
+        $current_page = floor($start / $limit);
+    }
 
-        if ($browse->is_use_pages()) { ?>
+    if ($browse->is_use_pages()) { ?>
     <span class="list-header-navmenu-border">
     <span><?php echo Ajax::text('?page=browse&action=page&browse_id=' . $browse->id . '&start=' . $prev_offset . '&browse_uid=' . $uid . $argument_param, T_('Prev'), 'browse_' . $uid . 'prev', '', 'prev'); ?></span>
     &nbsp;

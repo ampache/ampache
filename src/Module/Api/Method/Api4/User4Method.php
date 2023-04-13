@@ -72,7 +72,7 @@ final class User4Method
         switch ($input['api_format']) {
             case 'json':
                 echo Json4_Data::user($check_user, $fullinfo);
-            break;
+                break;
             default:
                 echo Xml4_Data::user($check_user, $fullinfo);
         }

@@ -144,7 +144,7 @@ final class PlaylistGenerate4Method
                         Json4_Data::set_offset($input['offset'] ?? 0);
                         Json4_Data::set_limit($input['limit'] ?? 0);
                         echo json_encode($results, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         Xml4_Data::set_offset($input['offset'] ?? 0);
                         Xml4_Data::set_limit($input['limit'] ?? 0);
@@ -157,7 +157,7 @@ final class PlaylistGenerate4Method
                         Json4_Data::set_offset($input['offset'] ?? 0);
                         Json4_Data::set_limit($input['limit'] ?? 0);
                         echo Json4_Data::indexes($results, 'song', $user);
-                    break;
+                        break;
                     default:
                         Xml4_Data::set_offset($input['offset'] ?? 0);
                         Xml4_Data::set_limit($input['limit'] ?? 0);
@@ -171,7 +171,7 @@ final class PlaylistGenerate4Method
                         Json4_Data::set_offset($input['offset'] ?? 0);
                         Json4_Data::set_limit($input['limit'] ?? 0);
                         echo Json4_Data::songs($results, $user);
-                    break;
+                        break;
                     default:
                         Xml4_Data::set_offset($input['offset'] ?? 0);
                         Xml4_Data::set_limit($input['limit'] ?? 0);

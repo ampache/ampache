@@ -74,7 +74,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
             $mailer->recipient      = $client->email;
 
             $message  = sprintf(
-            /* HINT: %1 IP Address, %2 Username */
+                /* HINT: %1 IP Address, %2 Username */
                 T_('A user from "%1$s" has requested a password reset for "%2$s"'),
                 $current_ip,
                 $client->username

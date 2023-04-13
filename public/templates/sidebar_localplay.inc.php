@@ -90,10 +90,10 @@ if ($server_allow && $controller && $access_check) { ?>
   <?php if (!$server_allow) { ?>
     <li><?php echo T_('Allow Localplay Set to False'); ?></li>
   <?php
-        } elseif (!$controller) { ?>
+  } elseif (!$controller) { ?>
     <li><?php echo T_('Localplay Controller Not Defined'); ?></li>
   <?php
-        } elseif (!$access_check) { ?>
+  } elseif (!$access_check) { ?>
     <li><?php echo T_('Access Denied'); ?></li>
   <?php } ?>
 <?php } ?>

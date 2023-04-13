@@ -35,28 +35,28 @@ if (Preference::has_access('play_type')) { ?>
         <select id="play_type_select" name="type">
             <?php if (AmpConfig::get('allow_stream_playback')) { ?>
                 <option value="stream" <?php if (isset($is_stream)) {
-    echo $is_stream;
-} ?>><?php echo T_('Stream'); ?></option>
+                    echo $is_stream;
+                } ?>><?php echo T_('Stream'); ?></option>
             <?php
-    }
+            }
     if (AmpConfig::get('allow_localplay_playback')) { ?>
                 <option value="localplay" <?php if (isset($is_localplay)) {
-        echo $is_localplay;
-    } ?>><?php echo T_('Localplay'); ?></option>
+                    echo $is_localplay;
+                } ?>><?php echo T_('Localplay'); ?></option>
             <?php
     }
     if (AmpConfig::get('allow_democratic_playback')) { ?>
                 <option value="democratic" <?php if (isset($is_democratic)) {
-        echo $is_democratic;
-    } ?>><?php echo T_('Democratic'); ?></option>
+                    echo $is_democratic;
+                } ?>><?php echo T_('Democratic'); ?></option>
             <?php } ?>
             <option value="web_player" <?php if (isset($is_web_player)) {
-        echo $is_web_player;
-    } ?>><?php echo T_('Web Player'); ?></option>
+                echo $is_web_player;
+            } ?>><?php echo T_('Web Player'); ?></option>
         </select>
         <?php echo Ajax::observe('play_type_select', 'change', Ajax::action('?page=stream&action=set_play_type', 'play_type_select', 'play_type_form')); ?>
     </form>
 <?php } else {
-        echo T_(ucwords(AmpConfig::get('play_type')));
-    } ?>
+    echo T_(ucwords(AmpConfig::get('play_type')));
+} ?>
 </div>

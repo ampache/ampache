@@ -75,8 +75,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            // Handle the users basketcases...
             case 'basket':
+                // Handle the users basketcases...
                 $object_type = $request_type ?? $this->requestParser->getFromRequest('object_type');
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $object_id = $request_id ?? $this->requestParser->getFromRequest('object_id');
@@ -156,8 +156,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            /* Setting ratings */
             case 'set_rating':
+                /* Setting ratings */
                 if (User::is_registered()) {
                     ob_start();
                     $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
@@ -170,8 +170,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     $results['rfc3514'] = '0x1';
                 }
                 break;
-            /* Setting userflags */
             case 'set_userflag':
+                /* Setting userflags */
                 if (User::is_registered()) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');

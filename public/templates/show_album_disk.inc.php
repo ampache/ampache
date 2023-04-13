@@ -82,8 +82,8 @@ if ($directplay_limit > 0) {
     </div>
     <?php
         $name  = '[' . scrub_out($albumDisk->f_artist_name) . '] ' . scrub_out($f_name);
-        $thumb = Ui::is_grid_view('album') ? 32 : 11;
-        Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
+$thumb         = Ui::is_grid_view('album') ? 32 : 11;
+Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -100,8 +100,8 @@ if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .
-        /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
+/* HINT: Number of times an object has been played */
+sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
 </div>
 <?php } ?>
 
@@ -119,9 +119,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
         <?php if ($show_direct_play) {
-        $play       = T_('Play');
-        $playnext   = T_('Play next');
-        $playlast   = T_('Play last'); ?>
+            $play       = T_('Play');
+            $playnext   = T_('Play next');
+            $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumDisk->id, 'play', $play, 'directplay_full_' . $albumDisk->id); ?>
         </li>
@@ -136,12 +136,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
             <?php } ?>
         <?php
-    } ?>
+        } ?>
 
         <?php if ($show_playlist_add) {
-        $addtotemp  = T_('Add to Temporary Playlist');
-        $randtotemp = T_('Random to Temporary Playlist');
-        $addtoexist = T_('Add to playlist'); ?>
+            $addtotemp  = T_('Add to Temporary Playlist');
+            $randtotemp = T_('Random to Temporary Playlist');
+            $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_disk&id=' . $albumDisk->id, 'add', $addtotemp, 'play_full_' . $albumDisk->id); ?>
         </li>
@@ -155,7 +155,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </a>
         </li>
         <?php
-    } ?>
+        } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $albumDisk->id)); ?>
@@ -163,7 +163,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || $access25) { ?>
             <?php if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+                $postshout = T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $albumDisk->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout); ?>
@@ -171,7 +171,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 </a>
             </li>
             <?php
-    } ?>
+            } ?>
         <?php } ?>
     <?php if ($access25) { ?>
             <?php if (AmpConfig::get('share')) { ?>
@@ -181,7 +181,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php } ?>
         <?php } ?>
         <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || $access50) {
-        $saveorder  = T_('Save Track Order'); ?>
+            $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
@@ -197,10 +197,10 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </a>
         </li>
         <?php
-    } ?>
+        } ?>
         <?php if ($isAlbumEditable) {
-        $t_upload = T_('Upload');
-        if (AmpConfig::get('allow_upload') && $albumDisk->album_artist > 0) { ?>
+            $t_upload = T_('Upload');
+            if (AmpConfig::get('allow_upload') && $albumDisk->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
@@ -215,10 +215,10 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 </a>
             </li>
             <?php
-    } ?>
+        } ?>
         <?php
-        if ($zip_albumD) {
-            $download   = T_('Download'); ?>
+            if ($zip_albumD) {
+                $download   = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $albumDisk->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download); ?>
@@ -226,7 +226,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </a>
         </li>
         <?php
-        } ?>
+            } ?>
         <?php if (Catalog::can_remove($albumDisk)) {
             $delete = T_('Delete'); ?>
         <li>
@@ -246,11 +246,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <div id='reordered_list_<?php echo $albumDisk->id; ?>'>
 <?php
     $browse = new Browse();
-    $browse->set_type('song');
-    $browse->set_simple_browse(true);
-    $browse->set_filter('album_disk', $albumDisk->id);
-    $browse->set_sort('track', 'ASC');
-    $browse->get_objects();
-    $browse->show_objects(null, array('hide' => $hide_array));
-    $browse->store(); ?>
+$browse->set_type('song');
+$browse->set_simple_browse(true);
+$browse->set_filter('album_disk', $albumDisk->id);
+$browse->set_sort('track', 'ASC');
+$browse->get_objects();
+$browse->show_objects(null, array('hide' => $hide_array));
+$browse->store(); ?>
 </div>

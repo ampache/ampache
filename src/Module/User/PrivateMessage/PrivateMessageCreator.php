@@ -80,9 +80,9 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
                 $mailer->subject        = sprintf('[%s] %s', T_('Private Message'), $subject);
                 /* HINT: User fullname */
                 $mailer->message = sprintf(
-                        T_('You received a new private message from %s.'),
-                        $sender->fullname
-                    );
+                    T_('You received a new private message from %s.'),
+                    $sender->fullname
+                );
                 $mailer->message .= "\n\n----------------------\n\n";
                 $mailer->message .= $message;
                 $mailer->message .= "\n\n----------------------\n\n";

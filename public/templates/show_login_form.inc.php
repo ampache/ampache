@@ -63,10 +63,10 @@ $_SESSION['login'] = true; ?>
 <body id="loginPage">
     <div id="maincontainer">
         <?php if (!$mobile_session) {
-    echo "<div id=\"header\"><!-- This is the header -->";
-    echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
-    echo "</div>";
-} ?>
+            echo "<div id=\"header\"><!-- This is the header -->";
+            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+            echo "</div>";
+        } ?>
         <div id="loginbox">
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
@@ -102,17 +102,17 @@ $_SESSION['login'] = true; ?>
                 </div>
             </form>
             <?php if ($mobile_session) {
-    echo '<div id="mobileheader"><!-- This is the header -->';
-    echo '<h1 id="headerlogo"></h1>';
-    echo '</div>';
-}
-    if (AmpConfig::get('cookie_disclaimer')) {
-        echo '<div id="cookie_notice>';
-        echo T_("Ampache places cookies on your computer to help make this website better.");
-        echo '</br>';
-        echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
-        echo '</br>';
-        echo T_("By logging in you agree to the use of cookies while using this site.");
-        echo '</div>';
-    }
-    UI::show_footer();
+                echo '<div id="mobileheader"><!-- This is the header -->';
+                echo '<h1 id="headerlogo"></h1>';
+                echo '</div>';
+            }
+            if (AmpConfig::get('cookie_disclaimer')) {
+                echo '<div id="cookie_notice>';
+                echo T_("Ampache places cookies on your computer to help make this website better.");
+                echo '</br>';
+                echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
+                echo '</br>';
+                echo T_("By logging in you agree to the use of cookies while using this site.");
+                echo '</div>';
+            }
+            UI::show_footer();

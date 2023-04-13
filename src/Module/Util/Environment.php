@@ -236,13 +236,8 @@ final class Environment implements EnvironmentInterface
     public function isSsl(): bool
     {
         return (
-            (
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
-            ) || (
-                isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') == 'on'
-            )
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https') ||
+            (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') == 'on')
         );
     }
 

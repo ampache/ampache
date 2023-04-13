@@ -66,33 +66,33 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_siteurl"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=website', T_('Website'), 'podcast_sort_website'); ?></th>
             <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
-    ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
                 <?php
-} ?>
+            } ?>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
             <?php
-    } ?>
+            } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>
         </tr>
     </thead>
     <tbody>
         <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast', $object_ids);
-            Userflag::build_cache('podcast', $object_ids);
-        }
+                if (AmpConfig::get('ratings')) {
+                    Rating::build_cache('podcast', $object_ids);
+                    Userflag::build_cache('podcast', $object_ids);
+                }
 
-        foreach ($object_ids as $podcast_id) {
-            $libitem = new Podcast($podcast_id);
-            $libitem->format(); ?>
+                foreach ($object_ids as $podcast_id) {
+                    $libitem = new Podcast($podcast_id);
+                    $libitem->format(); ?>
         <tr id="podcast_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php
-        } ?>
+                } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
@@ -118,5 +118,5 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

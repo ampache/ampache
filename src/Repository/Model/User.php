@@ -1123,6 +1123,7 @@ class User extends database_object
      */
     public static function access_name_to_level($name)
     {
+        // FIXME why is manager not here? (AccessLevelEnum::LEVEL_CONTENT_MANAGER;)
         switch ($name) {
             case 'admin':
                 return AccessLevelEnum::LEVEL_ADMIN;
@@ -1130,9 +1131,6 @@ class User extends database_object
                 return AccessLevelEnum::LEVEL_USER;
             case 'manager':
                 return AccessLevelEnum::LEVEL_MANAGER;
-            // FIXME why is content manager not here?
-            //case 'manager':
-                //return AccessLevelEnum::LEVEL_CONTENT_MANAGER;
             case 'guest':
                 return AccessLevelEnum::LEVEL_GUEST;
             default:

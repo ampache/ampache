@@ -87,7 +87,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
         <?php if ($site_social) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Newest Shouts'); ?>" href="<?php echo $web_path; ?>/rss.php?type=latest_shout" />
         <?php }
-            } ?>
+        } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $site_title; ?></title>
@@ -168,7 +168,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
         </script>
 
         <?php if ($site_ajax) {
-                $iframed = true; ?>
+            $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
         <?php require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
@@ -257,7 +257,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             });
         </script>
         <?php
-            } else { ?>
+        } else { ?>
         <script>
             function NavigateTo(url)
             {
@@ -476,17 +476,18 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                 </h1>
                 <div id="headerbox">
                     <?php Ui::show_box_top('', 'box box_headerbox');
-                        require_once Ui::find_template('show_search_bar.inc.php');
-                    if ($is_session) {
-                        require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
+require_once Ui::find_template('show_search_bar.inc.php');
+if ($is_session) {
+    require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $current_user->id; ?>"><?php echo $current_user->fullname; ?></a>
                         <?php if ($site_social) { ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic; echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount(($current_user->getId())); ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic;
+                            echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount(($current_user->getId())); ?>)</a>
                         <?php } ?>
                         </span>
                     <?php
-                    } elseif (AmpConfig::get('show_header_login')) { ?>
+} elseif (AmpConfig::get('show_header_login')) { ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
@@ -549,9 +550,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             </div>
             <?php } ?>
             <?php $sidebarLight = AmpConfig::get('sidebar_light');
-            $isCollapsed        = (($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
-                        ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
-                        (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
+$isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
+            ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
+            (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
@@ -604,26 +605,27 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
+            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo((isset($count_temp_playlist) || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild');
+echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
-                            echo '<div id=update_notify>';
-                            //if (!AmpConfig::get('hide_ampache_messages', false)) {
-                            //    AutoUpdate::show_ampache_message();
-                            //}
-                            if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
-                                AutoUpdate::show_new_version();
-                                echo '<br />';
-                            }
-                            if (Plugin::is_update_available()) {
-                                Plugin::show_update_available();
-                                echo '<br />';
-                            }
-                            $count_temp_playlist = (!empty($current_user))
-                                ? count($current_user->playlist->get_items())
-                                : 0;
+                    echo '<div id=update_notify>';
+                    //if (!AmpConfig::get('hide_ampache_messages', false)) {
+                    //    AutoUpdate::show_ampache_message();
+                    //}
+                    if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
+                        AutoUpdate::show_new_version();
+                        echo '<br />';
+                    }
+                    if (Plugin::is_update_available()) {
+                        Plugin::show_update_available();
+                        echo '<br />';
+                    }
+                    $count_temp_playlist = (!empty($current_user))
+                        ? count($current_user->playlist->get_items())
+                        : 0;
 
-                            if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
+                    if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br />
@@ -632,9 +634,9 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
                                 <br />
                             </div>
                 <?php }
-                            echo '</div>';
-                        }
-                if (AmpConfig::get("ajax_load")) {
-                    require Ui::find_template('show_web_player_embedded.inc.php');
-                } ?>
+                    echo '</div>';
+                }
+    if (AmpConfig::get("ajax_load")) {
+        require Ui::find_template('show_web_player_embedded.inc.php');
+    } ?>
                 <div id="guts">

@@ -63,7 +63,8 @@ Ui::show_box_top($string, 'info-box'); ?>
             if (obj.checked) {
                 setTimeout(function() {
                     if (obj.checked) {
-                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'"; if (!isset($_GET['reloadpage'])) {
+                        window.location.href = window.location.href<?php echo " + '&dummy=" . time() . "'";
+if (!isset($_GET['reloadpage'])) {
     echo " + '&reloadpage=1'";
 } ?>;
                     }
@@ -77,7 +78,7 @@ Ui::show_box_top($string, 'info-box'); ?>
         <?php } ?>
     </script>
     <input type="checkbox" id='chkreloadpage' onClick="reloadPageChanged(this);" <?php if (isset($_GET['reloadpage'])) {
-    echo "checked";
-} ?> /> <?php echo T_('Reload this page automatically'); ?>
+        echo "checked";
+    } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
 <?php Ui::show_box_bottom(); ?>

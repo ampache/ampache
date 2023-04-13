@@ -83,10 +83,10 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
             $sql .= sprintf(
-                    "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
-                    $rating_filter,
-                    $userId
-                );
+                "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
+                $rating_filter,
+                $userId
+            );
         }
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',

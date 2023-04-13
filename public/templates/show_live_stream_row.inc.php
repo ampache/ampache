@@ -34,25 +34,25 @@ use Ampache\Module\Util\Ui;
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
-    echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play'), 'play_live_stream_' . $libitem->id);
-    if (Stream_Playlist::check_autoplay_next()) {
-        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $libitem->id);
-    }
-    if (Stream_Playlist::check_autoplay_append()) {
-        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
-    }
-} ?>
+        echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id, 'play', T_('Play'), 'play_live_stream_' . $libitem->id);
+        if (Stream_Playlist::check_autoplay_next()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_live_stream_' . $libitem->id);
+        }
+        if (Stream_Playlist::check_autoplay_append()) {
+            echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_live_stream_' . $libitem->id);
+        }
+    } ?>
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
     <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-    $libitem->display_art($thumb); ?>
+$libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
-        if (Access::check('interface', 25)) { ?>
+if (Access::check('interface', 25)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo 'live_stream' ?>', '<?php echo $libitem->id ?>')">
                 <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')) ?>
             </a>
@@ -63,13 +63,13 @@ use Ampache\Module\Util\Ui;
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
 <td class="cel_action">
     <?php
-        if (Access::check('interface', 50)) { ?>
+if (Access::check('interface', 50)) { ?>
         <a id="<?php echo 'edit_live_stream_' . $libitem->id ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_live_stream_' . $libitem->id ?>', '<?php echo addslashes(T_('Live Stream Edit')) ?>', 'live_stream_')">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
-        }
-        if (Access::check('interface', 75)) {
-            echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
-        } ?>
+}
+if (Access::check('interface', 75)) {
+    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_live_stream_' . $libitem->id);
+} ?>
 </td>

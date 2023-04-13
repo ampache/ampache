@@ -40,11 +40,11 @@ $current_user = $current_user ?? Core::get_global('user');
 $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user); ?>
 <ul class="sb2" id="sb_preferences">
     <?php if (AmpConfig::get('browse_filter')) {
-    echo "<li>";
-    Ajax::start_container('browse_filters');
-    Ajax::end_container();
-    echo "</li>";
-} ?>
+        echo "<li>";
+        Ajax::start_container('browse_filters');
+        Ajax::end_container();
+        echo "</li>";
+    } ?>
   <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo $t_preferences; ?></span>
@@ -85,7 +85,7 @@ $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
     </ul>
 </ul>
        <?php }
-       if (!AmpConfig::get('simple_user_mode')) { ?>
+if (!AmpConfig::get('simple_user_mode')) { ?>
     <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>

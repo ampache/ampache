@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Live_Stream;
 <?php Ui::show_box_top($radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
-        Art::display('live_stream', $radio->id, $radio->get_fullname(), $thumb); ?>
+Art::display('live_stream', $radio->id, $radio->get_fullname(), $thumb); ?>
 </div>
 <dl class="media_details">
 <dt><?php echo T_('Action'); ?></dt>
@@ -50,14 +50,14 @@ use Ampache\Repository\Model\Live_Stream;
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'add', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
 <?php $itemprops[T_('Name')]     = $radio->get_fullname();
-    $itemprops[T_('Website')]    = scrub_out($radio->site_url);
-    $itemprops[T_('Stream')]     = $radio->f_url_link;
-    $itemprops[T_('Codec')]      = scrub_out($radio->codec);
+$itemprops[T_('Website')]        = scrub_out($radio->site_url);
+$itemprops[T_('Stream')]         = $radio->f_url_link;
+$itemprops[T_('Codec')]          = scrub_out($radio->codec);
 
-    foreach ($itemprops as $key => $value) {
-        if (trim($value)) {
-            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
-        }
-    } ?>
+foreach ($itemprops as $key => $value) {
+    if (trim($value)) {
+        echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
+    }
+} ?>
 </dl>
 <?php Ui::show_box_bottom(); ?>

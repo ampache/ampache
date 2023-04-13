@@ -136,7 +136,7 @@ final class Stats4Method
                             $user_id,
                             $limit
                         );
-                    }
+                }
         }
 
         ob_end_clean();
@@ -151,7 +151,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::songs($results, $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::songs($results, $user);
             }
@@ -160,7 +160,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::artists($results, array(), $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::artists($results, array(), $user);
             }
@@ -169,7 +169,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::albums($results, array(), $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::albums($results, array(), $user);
             }

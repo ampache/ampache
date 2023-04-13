@@ -294,8 +294,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream',
-                $this->sids[$from->resourceId])) {
+        if (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream', $this->sids[$from->resourceId])) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to

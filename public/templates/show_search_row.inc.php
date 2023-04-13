@@ -59,21 +59,17 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
 <td class="cel_owner"><?php echo $libitem->username; ?></td>
 <td class="cel_action">
-        <?php
-            // @todo remove after refactoring
-            global $dic;
-            $zipHandler = $dic->get(ZipHandlerInterface::class);
-            if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
+<?php global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
                 <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 </a>
-        <?php
-            }
-            if ($libitem->has_access()) { ?>
+<?php }
+if ($libitem->has_access()) { ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 </a>
-                <?php
-                echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);
-            } ?>
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);
+} ?>
 </td>

@@ -76,48 +76,48 @@ $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
         <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php if (AmpConfig::get('ratings')) {
-    Rating::build_cache('song', $object_ids);
-    Userflag::build_cache('song', $object_ids);
-}
+                Rating::build_cache('song', $object_ids);
+                Userflag::build_cache('song', $object_ids);
+            }
         } ?>
         <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
     </tr>
     </thead>
     <tbody>
         <?php global $dic;
-        $talFactory = $dic->get(TalFactoryInterface::class);
-        $guiFactory = $dic->get(GuiFactoryInterface::class);
-        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-        foreach ($object_ids as $song_id) {
-            $libitem = new Song($song_id, $limit_threshold);
-            $libitem->format(); ?>
+foreach ($object_ids as $song_id) {
+    $libitem = new Song($song_id, $limit_threshold);
+    $libitem->format(); ?>
 
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php
-                if ($libitem->enabled || Access::check('interface', 50)) {
-                    $content = $talFactory->createTalView()
-                        ->setContext('USER_IS_REGISTERED', User::is_registered())
-                        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                        ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                        ->setContext('ARGUMENT_PARAM', '')
-                        ->setContext('IS_TABLE_VIEW', $is_table)
-                        ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
-                        ->setContext('IS_SHOW_LICENSE', $show_license)
-                        ->setContext('IS_HIDE_GENRE', $hide_genres)
-                        ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                        ->setContext('IS_HIDE_ALBUM', $hide_album)
-                        ->setContext('IS_HIDE_YEAR', $hide_year)
-                        ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
-                        ->setTemplate('song_row.xhtml')
-                        ->render();
+        if ($libitem->enabled || Access::check('interface', 50)) {
+            $content = $talFactory->createTalView()
+                ->setContext('USER_IS_REGISTERED', User::is_registered())
+                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+                ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
+                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+                ->setContext('ARGUMENT_PARAM', '')
+                ->setContext('IS_TABLE_VIEW', $is_table)
+                ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                ->setContext('IS_SHOW_LICENSE', $show_license)
+                ->setContext('IS_HIDE_GENRE', $hide_genres)
+                ->setContext('IS_HIDE_ARTIST', $hide_artist)
+                ->setContext('IS_HIDE_ALBUM', $hide_album)
+                ->setContext('IS_HIDE_YEAR', $hide_year)
+                ->setContext('IS_HIDE_DRAG', (empty($argument) || $hide_drag))
+                ->setTemplate('song_row.xhtml')
+                ->render();
 
-                    echo $content;
-                } ?>
+            echo $content;
+        } ?>
             </tr>
             <?php
-        } ?>
+} ?>
 
         <?php if (!count($object_ids)) { ?>
             <tr>

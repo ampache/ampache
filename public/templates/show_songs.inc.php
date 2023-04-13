@@ -69,68 +69,68 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
             <?php if (!$hide_artist) {
-    ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
             <?php
-} ?>
+            } ?>
             <?php if (!$hide_album) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
             <?php
-    } ?>
+            } ?>
             <?php if (!$hide_year) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <?php
-    } ?>
+            } ?>
             <?php if (!$hide_genres) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php
-    } ?>
+            } ?>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
             <?php if ($show_license) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
             <?php
-    } ?>
+            } ?>
             <?php if (AmpConfig::get('show_played_times')) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'sort_song_total_count' . $browse->id); ?></th>
             <?php
-    } ?>
+            } ?>
             <?php if (AmpConfig::get('show_skipped_times')) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('Skipped'), 'sort_song_total_skip' . $browse->id); ?></th>
             <?php
-    } ?>
+            } ?>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+                ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', T_('Rating'), 'song_sort_rating'); ?></th>
                 <?php if (AmpConfig::get('ratings')) {
-            Rating::build_cache('song', $object_ids);
-            Userflag::build_cache('song', $object_ids);
-        } ?>
+                    Rating::build_cache('song', $object_ids);
+                    Userflag::build_cache('song', $object_ids);
+                } ?>
                 <?php
-    } ?>
+            } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
 
             <?php if (isset($argument) && $argument && !$hide_drag) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                 <th class="cel_drag essential"></th>
             <?php
-    } ?>
+            } ?>
         </tr>
     </thead>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
         <?php global $dic;
-            $talFactory = $dic->get(TalFactoryInterface::class);
-            $guiFactory = $dic->get(GuiFactoryInterface::class);
-            $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-            foreach ($object_ids as $song_id) {
-                $libitem = new Song($song_id, $limit_threshold);
-                $libitem->format(); ?>
+foreach ($object_ids as $song_id) {
+    $libitem = new Song($song_id, $limit_threshold);
+    $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php if ($libitem->enabled || Access::check('interface', 50)) {
                     $content = $talFactory->createTalView()
@@ -154,7 +154,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 } ?>
             </tr>
         <?php
-            } ?>
+} ?>
 
     <?php if (!count($object_ids)) { ?>
         <tr>
@@ -199,5 +199,5 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>
