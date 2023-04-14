@@ -58,7 +58,7 @@
         "cboden/ratchet": "0.4.*",
         "clue/multicast-react": "^1.1.0",
         "components/bootstrap": "3.*",
-        "components/jquery": "2.2.*",
+        "components/jquery": "3.5.*",
         "components/jqueryui": "1.*",
         "doctrine/cache": "1.*.*",
         "evenement/evenement": "2.*",
