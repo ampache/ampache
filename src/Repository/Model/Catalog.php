@@ -1039,13 +1039,13 @@ abstract class Catalog extends database_object
     /**
      * get_catalogs
      *
-     * Pull all the current catalogs and return an array of ids
-     * of what you find
+     * Pull all the current catalogs and return an array of ids of what you find
      * @param string $filter_type
      * @param int $user_id
+     * @param bool $query
      * @return integer[]
      */
-    public static function get_catalogs($filter_type = '', $user_id = null)
+    public static function get_catalogs($filter_type = '', $user_id = null, $query = false)
     {
         $params = array();
         $sql    = "SELECT `id` FROM `catalog` ";
@@ -1075,7 +1075,7 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
-        if (empty($results)) {
+        if (empty($results) && $query) {
             return array(0);
         }
 
@@ -1385,13 +1385,13 @@ abstract class Catalog extends database_object
             : "WHERE `song`.`user_upload` IS NOT NULL";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
+                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
+                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
                 break;
             case 'artist':
-                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ")";
+                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
                 break;
         }
 
