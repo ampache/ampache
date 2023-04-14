@@ -35,7 +35,7 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
     public function getAll(): array
     {
         $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql        = "SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = 'live_stream' AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id)) . ");";
+        $sql        = "SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = 'live_stream' AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ");";
         $db_results = Dba::read($sql);
         $radios     = [];
 
