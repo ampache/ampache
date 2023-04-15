@@ -616,6 +616,25 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
+     * Get MusicBrainz ID by the artist id.
+     * @param int|string|null $artist_id
+     * @return string
+     */
+    public static function get_mbid_by_id($artist_id)
+    {
+        if ($artist_id === 0) {
+            return "89ad4ac3-39f7-470e-963a-56509c546377";
+        }
+        $sql        = "SELECT `artist`.`mbid` FROM `artist` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, array($artist_id));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (string)$row['mbid'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_display
      * This returns a csv formatted version of the artists that we are given
      * @param array $artists

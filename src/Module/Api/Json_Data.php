@@ -1080,6 +1080,12 @@ class Json_Data
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = Album::get_name_array_by_id($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
+            $song_artists = array();
+            foreach ($song->artists as $artist_id) {
+                $artist_info = Artist::get_name_array_by_id($artist_id);
+                $artist_info["mbid"] = Artist::get_mbid_by_id($artist_id);
+                $song_artists[] = $artist_info;
+            }
             $playlist_track++;
 
             $objArray = array(
@@ -1092,6 +1098,7 @@ class Json_Data
                     "prefix" => $song_artist['prefix'],
                     "basename" => $song_artist['basename']
                 ),
+                "artists" => $song_artists,
                 "album" => array(
                     "id" => (string)$song->album,
                     "name" => $song_album['name'],
