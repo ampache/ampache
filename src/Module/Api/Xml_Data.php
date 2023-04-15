@@ -1012,6 +1012,12 @@ class Xml_Data
             $song->format();
             $song_album    = Album::get_name_array_by_id($song->album);
             $song_artist   = Artist::get_name_array_by_id($song->artist);
+            $song_artists = array();
+            foreach ($song->artists as $artist_id) {
+                $artist_info = Artist::get_name_array_by_id($artist_id);
+                $artist_info["mbid"] = Artist::get_mbid_by_id($artist_id);
+                $song_artists[] = $artist_info;
+            }
             $tag_string    = self::genre_string(Tag::get_top_tags('song', $song_id));
             $rating        = new Rating($song_id, 'song');
             $user_rating   = $rating->get_user_rating($user->getId());
@@ -1027,9 +1033,11 @@ class Xml_Data
             $play_url      = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $playlist_track++;
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
-                "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n" .
-                "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->f_name . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n";
+            foreach ($song_artists as $this_artist) {
+                $string .= "\t<artist id=\"" . $this_artist['id'] . "\"><name><![CDATA[" . $this_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $this_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $this_artist['basename'] . "]]></basename>\n\t<mbid><![CDATA[" . $this_artist['mbid'] . "]]></mbid>\n</artist>\n";
+            }
+            $string .= "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
             if ($song->get_album_artist_fullname() != "") {
                 $album_artist = ($song->artist !== $song->albumartist)
                     ? Artist::get_name_array_by_id($song->albumartist)
