@@ -66,6 +66,7 @@ final class CatalogAddMethod
         if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        $path           = $input['path'];
         $name           = $input['name'];
         $type           = $input['type'] ?? 'local';
         $rename_pattern = $input['file_pattern'] ?? '%T - %t';
@@ -94,12 +95,12 @@ final class CatalogAddMethod
                 return false;
             }
         }
-        $path = ($is_remote)
-            ? filter_var(urldecode($input['path']), FILTER_VALIDATE_URL)
-            : Catalog_local::check_path($input['path']);
-        if (!$path) {
+        $path_ok = ($is_remote)
+            ? filter_var(urldecode($path), FILTER_VALIDATE_URL)
+            : Catalog_local::check_path($path);
+        if (!$path_ok) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $input['path']), '4710', self::ACTION, 'path', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $path), '4710', self::ACTION, 'path', $input['api_format']);
 
             return false;
         }
