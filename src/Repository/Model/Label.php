@@ -82,6 +82,10 @@ class Label extends database_object implements library_item
      */
     public $active;
     /**
+     * @var integer $creation_date
+     */
+    public $creation_date;
+    /**
      * @var integer $user
      */
     public $user;
