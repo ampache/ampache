@@ -1082,9 +1082,7 @@ class Json_Data
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = array();
             foreach ($song->artists as $artist_id) {
-                $artist_info = Artist::get_name_array_by_id($artist_id);
-                $artist_info["mbid"] = Artist::get_mbid_by_id($artist_id);
-                $song_artists[] = $artist_info;
+                $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
             $playlist_track++;
 
@@ -1136,9 +1134,6 @@ class Json_Data
             $objArray['url']                   = $play_url;
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
-            $objArray['album_mbid']            = $song->album_mbid;
-            $objArray['artist_mbid']           = $song->artist_mbid;
-            $objArray['albumartist_mbid']      = $song->albumartist_mbid;
             $objArray['art']                   = $art_url;
             $objArray['flag']                  = (bool)$flag->get_flag($user->getId(), false);
             $objArray['rating']                = $user_rating;
