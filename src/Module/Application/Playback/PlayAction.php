@@ -522,6 +522,10 @@ final class PlayAction implements ApplicationActionInterface
             if ($last_id > 0 && $last_time >= $time) {
                 // continue the current object
                 $object_id = $last_id;
+                $this->logger->debug(
+                    'Called random again too quickly sending last song id: {' . $object_id . '}',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             } else {
                 // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
