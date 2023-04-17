@@ -1090,12 +1090,6 @@ class Json_Data
                 "id" => (string)$song->id,
                 "title" => $song->get_fullname(),
                 "name" => $song->get_fullname(),
-                "artist" => array(
-                    "id" => (string)$song->artist,
-                    "name" => $song_artist['name'],
-                    "prefix" => $song_artist['prefix'],
-                    "basename" => $song_artist['basename']
-                ),
                 "artists" => $song_artists,
                 "album" => array(
                     "id" => (string)$song->album,
