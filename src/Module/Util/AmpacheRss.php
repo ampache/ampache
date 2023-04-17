@@ -133,7 +133,7 @@ class AmpacheRss
             'latest_shout' => T_('Newest Shouts')
         );
 
-        return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
+        return AmpConfig::get('site_title') . ' - ' . $titles[$this->type];
     } // get_title
 
     /**
