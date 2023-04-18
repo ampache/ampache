@@ -1024,11 +1024,6 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        // Don't send a content-length when you don't know what it actually is
-        $cLength = (!$transcode)
-            ? $stream_size
-            : null;
-
         // Actually do the streaming
         $bytes_streamed = 0;
         $buf_all        = '';
