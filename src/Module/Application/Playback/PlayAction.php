@@ -1027,19 +1027,21 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
-
+        // Don't send a content-length when you don't know what it actually is
+        $cLength = (!$transcode)
+            ? $stream_size
+            : null;
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $cLength);
         foreach ($headers as $headerName => $value) {
             header(sprintf('%s: %s', $headerName, $value));
         }
 
-        $bytes_streamed = 0;
-
         // Actually do the streaming
-        $buf_all = '';
-        $r_arr   = array($filepointer);
-        $w_arr   = $e_arr = array();
-        $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
+        $bytes_streamed = 0;
+        $buf_all        = '';
+        $r_arr          = array($filepointer);
+        $w_arr          = $e_arr = array();
+        $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             $this->logger->error(
                 'stream_select failed.',
