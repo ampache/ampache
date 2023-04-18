@@ -1012,7 +1012,7 @@ class Xml_Data
             $song->format();
             $song_album    = Album::get_name_array_by_id($song->album);
             $song_artist   = Artist::get_name_array_by_id($song->artist);
-            $song_artists = array();
+            $song_artists  = array();
             foreach ($song->artists as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
