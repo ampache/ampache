@@ -65,13 +65,15 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add preference `show_subtitle`, Show Album subtitle on links
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
-* Config version 65
+* Config version 66
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
   * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
+  * Removed `send_full_stream`
+  * Update your `encode_args_opus` settings
 * Search
   * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
@@ -134,6 +136,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Reduce a lot of repeated actions, queries and processes
 * Update Requests module to WpOrg\Requests
 * Show 20 genres in Song, Artist & Album edit windows (up from 10)
+* Process stream output and then send the content to the player
+* Composer
+  * Updated jquery to 3.5
+  * Updated php-cs-fixer to 3.10+
 * CLI
   * Moved catalog map and update functions out of run:updateCatalog clean, add and verify commands (use -t|--garbage to put them back)
   * Make admin:updateDatabase display more information about the version and required changes
@@ -200,6 +206,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Simplify all statistical_graphs checks
 * WebDav browsing issues
 * Ampache Debug page didn't have all the possible boolean values to make pretty
+* Do not scrub title for RSS output
+* Repeating random play URL's could skip the first song.
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
@@ -243,6 +251,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `bitrate` to Democratic objects
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
+  * Add all mapped artists to song and album objects (JSON added an `artists` element)
 * JSON responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects
@@ -281,6 +290,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 * Api6
   * `preciserating` removed from all objects (use rating)
+  * Remove non-song MBIDs as not relevant to the object
 * Api6::album_songs remove `exact` as a parameter
 * Api6::stream remove `podcast` as a valid `type` value
 * Warning of depreciated methods from API5 have been removed from API6
