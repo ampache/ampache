@@ -1050,11 +1050,7 @@ final class PlayAction implements ApplicationActionInterface
             );
         } elseif ($status > 0) {
             do {
-                $read_size = min(2048, $stream_size - $bytes_streamed);
-                if ($read_size < 1) {
-                    $read_size = 2048;
-                }
-                if ($buf = fread($filepointer, $read_size)) {
+                if ($buf = fread($filepointer, 8192)) {
                     if ($send_all_in_once) {
                         $buf_all .= $buf;
                     } elseif (!empty($buf)) {
