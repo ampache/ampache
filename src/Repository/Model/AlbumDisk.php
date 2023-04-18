@@ -312,7 +312,7 @@ class AlbumDisk extends database_object implements library_item
         }
 
         $this->f_release_type = $this->album->f_release_type;
-        $this->album_artists  = $this->album->get_album_artists();
+        $this->album_artists  = $this->album->get_artists();
 
         if ($details) {
             $this->tags   = $this->album->tags;

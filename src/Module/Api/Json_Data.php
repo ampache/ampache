@@ -603,6 +603,11 @@ class Json_Data
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 );
+                $album_artists = array();
+                foreach ($album->get_artists() as $artist_id) {
+                    $album_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['artists'] = $album_artists;
             }
 
             // Handle includes
@@ -1081,7 +1086,7 @@ class Json_Data
             $song_album   = Album::get_name_array_by_id($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = array();
-            foreach ($song->artists as $artist_id) {
+            foreach ($song->get_artists() as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
             $playlist_track++;
