@@ -753,6 +753,10 @@ class Xml_Data
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
             $album->format();
+            $album_artists = array();
+            foreach ($album->get_artists() as $artist_id) {
+                $album_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
 
             $rating      = new Rating($album_id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -763,13 +767,9 @@ class Xml_Data
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
             if ($album->get_artist_fullname() != "") {
-                $album_artist = array(
-                    "id" => $album->album_artist,
-                    "name" => $album->f_artist_name,
-                    "prefix" => $album->artist_prefix,
-                    "basename" => $album->artist_name
-                );
-                $string .= "\t<artist id=\"" . $album_artist['id'] . "\">\n\t<name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                foreach ($album_artists as $album_artist) {
+                    $string .= "\t<artist id=\"" . $album_artist['id'] . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                }
             }
             // Handle includes
             $songs = (in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
@@ -1013,7 +1013,7 @@ class Xml_Data
             $song_album    = Album::get_name_array_by_id($song->album);
             $song_artist   = Artist::get_name_array_by_id($song->artist);
             $song_artists  = array();
-            foreach ($song->artists as $artist_id) {
+            foreach ($song->get_artists() as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
             $tag_string    = self::genre_string(Tag::get_top_tags('song', $song_id));
