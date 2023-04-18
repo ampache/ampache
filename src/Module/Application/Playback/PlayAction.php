@@ -902,15 +902,12 @@ final class PlayAction implements ApplicationActionInterface
                     );
                     $stream_size = null;
                 }
-            } elseif ($transcode_to == 'mp3') {
+            } else {
                 // mp3 seems to be the only codec that calculates properly
                 $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
                     ? $maxbitrate
                     : floor($media->bitrate / 1024);
                 $stream_size = ($media->time * $stream_rate * 1024) / 8;
-            } else {
-                $stream_size = null;
-                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $media->size;
