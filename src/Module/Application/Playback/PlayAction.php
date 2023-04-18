@@ -223,8 +223,9 @@ final class PlayAction implements ApplicationActionInterface
         $is_download   = ($action == 'download' || $cache == '1');
         $maxbitrate    = 0;
         $media_bitrate = 0;
-        $resolution    = '';
         $quality       = 0;
+        $resolution    = '';
+        $subtitle      = '';
         $time          = time();
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
@@ -250,9 +251,6 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
         }
-        $subtitle         = '';
-        $send_full_stream = (string)AmpConfig::get('send_full_stream');
-        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
 
         if (!$type) {
             $type = 'song';
@@ -857,8 +855,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             } elseif (array_key_exists('segment', $_REQUEST)) {
                 // 10 seconds segment. Should it be an option?
-                $ssize            = 10;
-                $send_all_in_once = true; // Should we use temporary folder instead?
+                $ssize = 10;
                 $this->logger->debug(
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -1050,9 +1047,7 @@ final class PlayAction implements ApplicationActionInterface
         } elseif ($status > 0) {
             do {
                 if ($buf = fread($filepointer, 8192)) {
-                    if ($send_all_in_once) {
-                        $buf_all .= $buf;
-                    } elseif (!empty($buf)) {
+                    if (!empty($buf)) {
                         print($buf);
                         if (ob_get_length()) {
                             ob_flush();
@@ -1066,14 +1061,8 @@ final class PlayAction implements ApplicationActionInterface
             } while (!feof($filepointer) && (connection_status() == 0));
         }
 
-        if ($send_all_in_once && connection_status() == 0) {
-            header("Content-Length: " . strlen($buf_all));
-            print($buf_all);
-            ob_flush();
-        }
-
         $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent.
+        // Need to make sure enough bytes were sent. TODO: why?
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
             print(str_repeat(' ', $stream_size - $bytes_streamed));
             $bytes_streamed = $stream_size;
