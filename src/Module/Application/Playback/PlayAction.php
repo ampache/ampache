@@ -1028,10 +1028,6 @@ final class PlayAction implements ApplicationActionInterface
         $cLength = (!$transcode)
             ? $stream_size
             : null;
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $cLength);
-        foreach ($headers as $headerName => $value) {
-            header(sprintf('%s: %s', $headerName, $value));
-        }
 
         // Actually do the streaming
         $bytes_streamed = 0;
@@ -1048,18 +1044,23 @@ final class PlayAction implements ApplicationActionInterface
             do {
                 if ($buf = fread($filepointer, 8192)) {
                     if (!empty($buf)) {
-                        print($buf);
-                        if (ob_get_length()) {
-                            ob_flush();
-                            flush();
-                            ob_end_flush();
-                        }
-                        ob_start();
+                        $buf_all .= $buf;
                     }
                     $bytes_streamed += strlen($buf);
                 }
             } while (!feof($filepointer) && (connection_status() == 0));
         }
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
+        foreach ($headers as $headerName => $value) {
+            header(sprintf('%s: %s', $headerName, $value));
+        }
+        print($buf_all);
+        if (ob_get_length()) {
+            ob_flush();
+            flush();
+            ob_end_flush();
+        }
+        ob_start();
 
         $real_bytes_streamed = $bytes_streamed;
         // Need to make sure enough bytes were sent. TODO: why?
