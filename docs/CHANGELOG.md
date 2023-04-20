@@ -28,6 +28,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Add the Owner to playlist rows
 * Button and color Light theme fixes for the webplayer
 * Get album info from last.fm for similar & related objects
+* Try to bypass bad xml for podcast feeds if it can't load
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -207,7 +208,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * WebDav browsing issues
 * Ampache Debug page didn't have all the possible boolean values to make pretty
 * Do not scrub title for RSS output
-* Repeating random play URL's could skip the first song.
+* Repeating random play URL's could skip the first song
+* Send the final url for play_url's instead of figuring it on the fly
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
