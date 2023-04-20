@@ -420,11 +420,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        $username = Dba::escape($username);
-        $password = Dba::escape($password);
-
         $user_id = User::create($username, 'Administrator', '', '', $password, '100');
-
         if ($user_id < 1) {
             /* HINT: Database error message */
             AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
