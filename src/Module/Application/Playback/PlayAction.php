@@ -591,7 +591,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $cache_path     = (string)AmpConfig::get('cache_path', '');
-        $cache_target   = AmpConfig::get('cache_target', '');
+        $cache_target   = (string)AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
         $mediaCatalogId = ($media instanceof Song_Preview)
@@ -614,8 +614,8 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
             }
-            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if (!$is_download && !empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
+            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
+            if (!$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -662,7 +662,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // Format the media name
         $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($is_download && !$transcode_to)
+        $transcode_to = ($cache_file || ($is_download && !$transcode_to))
             ? false
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 

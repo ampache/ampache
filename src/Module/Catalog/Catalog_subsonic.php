@@ -412,7 +412,7 @@ class Catalog_subsonic extends Catalog
     {
         $remote = AmpConfig::get('cache_remote');
         $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination, source and target format
         if (!is_dir($path) || !$remote || !$target) {
             debug_event('local.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
@@ -430,11 +430,13 @@ class Catalog_subsonic extends Catalog
             'format' => $target,
             'maxBitRate' => $max_bitrate
         );
-        $subsonic   = $this->createClient();
-        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, array($this->catalog_id));
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $subsonic     = $this->createClient();
+        $sql          = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
+        $db_results   = Dba::read($sql, array($this->catalog_id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id);
+            $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target);
             $file_exists = ($target_file !== false && is_file($target_file));
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {

@@ -1236,10 +1236,10 @@ class Catalog_local extends Catalog
         $ape    = AmpConfig::get('cache_ape');
         $shn    = AmpConfig::get('cache_shn');
         $mp3    = AmpConfig::get('cache_mp3');
-        $target = AmpConfig::get('cache_target');
         $path   = (string)AmpConfig::get('cache_path', '');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
 
             return false;
@@ -1314,7 +1314,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id);
+            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
             if (is_file($old_target_file)) {
                 // check for the old path first

@@ -1087,8 +1087,8 @@ abstract class Catalog extends database_object
      */
     public static function cache_catalogs()
     {
-        $target = AmpConfig::get('cache_target');
         $path   = (string)AmpConfig::get('cache_path', '');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
         if (is_dir($path) && $target) {
             $catalogs = self::get_catalogs('music');
@@ -4047,12 +4047,10 @@ abstract class Catalog extends database_object
      * @param string $catalog_id
      * @return false|string
      */
-    public static function get_cache_path($object_id, $catalog_id)
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
     {
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             return false;
         }
         // make a folder per catalog
