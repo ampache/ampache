@@ -182,7 +182,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php } ?>
         <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || $access50) {
             $saveorder  = T_('Save Track Order'); ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>

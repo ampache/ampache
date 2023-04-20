@@ -198,7 +198,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')
         </li>
 <?php }
 if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
