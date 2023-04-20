@@ -41,8 +41,10 @@ final class InterfaceImplementationChecker
      */
     private static function is_class_typeof(string $instance, string $interface_name): bool
     {
+        if (empty($instance)) {
+            return false;
+        }
         $instance = ObjectTypeToClassNameMapper::map($instance);
-
         if (class_exists($instance)) {
             return in_array(
                 $interface_name,

@@ -255,11 +255,10 @@ class AmpacheRss
     public static function pubdate_now_playing()
     {
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
-        $data = Stream::get_now_playing();
-
+        $data    = Stream::get_now_playing();
         $element = array_shift($data);
 
-        return $element['expire'];
+        return $element['expire'] ?? null;
     } // pubdate_now_playing
 
     /**

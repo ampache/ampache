@@ -90,8 +90,8 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
                 $medias    = array();
-                $item_id   = $_REQUEST['item_id'];
-                $item_type = $_REQUEST['item_type'];
+                $item_id   = $_REQUEST['item_id'] ?? '';
+                $item_type = $_REQUEST['item_type'] ?? '';
 
                 if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
