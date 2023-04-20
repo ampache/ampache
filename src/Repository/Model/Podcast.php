@@ -47,6 +47,7 @@ class Podcast extends database_object implements library_item
     public $lastbuilddate;
     public $lastsync;
     public $total_count;
+    public $total_skip;
     public $episodes;
     public $has_art;
 
