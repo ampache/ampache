@@ -291,8 +291,9 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Api6
   * `preciserating` removed from all objects (use rating)
   * Remove non-song MBIDs as not relevant to the object
-* Api6::album_songs remove `exact` as a parameter
-* Api6::stream remove `podcast` as a valid `type` value
+  * album_songs remove `exact` as a parameter
+  * stream remove `podcast` as a valid `type` value
+* preference_create: don't allow creating 'system' preferences
 * Warning of depreciated methods from API5 have been removed from API6
   * Api6::tag
   * Api6::tags
