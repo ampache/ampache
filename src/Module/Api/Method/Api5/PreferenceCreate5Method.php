@@ -79,7 +79,7 @@ final class PreferenceCreate5Method
             return false;
         }
         $category = (string) $input['category'];
-        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'))) {
+        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'))) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'category', $input['api_format']);
 
             return false;
