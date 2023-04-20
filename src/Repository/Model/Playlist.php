@@ -469,7 +469,7 @@ class Playlist extends playlist_object
             return 0;
         }
 
-        return $row['list_count'];
+        return (int)$row['list_count'];
     } // get_media_count
 
     /**
