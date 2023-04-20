@@ -34,7 +34,6 @@ use Ampache\Module\Catalog\Catalog_dropbox;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
-use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
@@ -76,7 +75,6 @@ abstract class Catalog extends database_object
         'local' => Catalog_local::class,
         'remote' => Catalog_remote::class,
         'seafile' => Catalog_Seafile::class,
-        'soundcloud' => Catalog_soundcloud::class,
         'subsonic' => Catalog_subsonic::class,
     ];
 
