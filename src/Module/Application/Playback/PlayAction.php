@@ -229,8 +229,6 @@ final class PlayAction implements ApplicationActionInterface
         $time          = time();
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
-            $transcode_to = $transcode_to ?? (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
-
             // Trick to avoid LimitInternalRecursion reconfiguration
             $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
             if (!empty($vsettings)) {
