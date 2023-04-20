@@ -715,8 +715,7 @@ class Daap_Api
     {
         $values = explode('.', $value);
         if (count($values) == 4) {
-            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C",
-                    $values[2]) . pack("C", $values[3]);
+            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
         } else {
             debug_event(self::class, 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }
@@ -879,9 +878,11 @@ class Daap_Api
                 return 8;
             case 'string':
                 return 9;
-            case 'date': // represented as a 4 byte integer
+            case 'date':
+                // represented as a 4 byte integer
                 return 10;
-            case 'version': // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
+            case 'version':
+                // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
                 return 11;
             case 'list':
                 return 12;

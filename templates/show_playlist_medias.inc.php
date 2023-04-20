@@ -68,23 +68,23 @@ $count     = 1; ?>
             </thead>
             <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
             <?php foreach ($object_ids as $object) {
-    if (!is_array($object)) {
-        $object = (array) $object;
-    }
-    $object_type = $object['object_type'];
-    if (InterfaceImplementationChecker::is_library_item($object_type)) {
-        /** @var Ampache\Repository\Model\playable_item $libitem */
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $libitem    = new $class_name($object['object_id']);
-        $libitem->format();
-        $playlist_track = (int)($object['track'] ?? $count); ?>
+                if (!is_array($object)) {
+                    $object = (array) $object;
+                }
+                $object_type = $object['object_type'];
+                if (InterfaceImplementationChecker::is_library_item($object_type)) {
+                    /** @var Ampache\Repository\Model\playable_item $libitem */
+                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $libitem    = new $class_name($object['object_id']);
+                    $libitem->format();
+                    $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count) ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
                     </tr>
                     <?php
-    }
-    $count++;
-} ?>
+                }
+                $count++;
+            } ?>
             </tbody>
             <tfoot>
             <tr class="th-bottom">

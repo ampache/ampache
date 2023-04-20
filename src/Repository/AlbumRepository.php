@@ -40,7 +40,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         ?int $count = 1
     ): array {
         $results = [];
-        $sql     = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
+        $sql     = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
@@ -78,15 +78,15 @@ final class AlbumRepository implements AlbumRepositoryInterface
             $count = 1;
         }
 
-        $sql  = "SELECT DISTINCT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ";
+        $sql = "SELECT DISTINCT `album_disk`.`id` FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
             $sql .= sprintf(
-                    "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
-                    $rating_filter,
-                    $userId
-                );
+                "AND `album`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'album' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ",
+                $rating_filter,
+                $userId
+            );
         }
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',
@@ -110,7 +110,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         int $albumId
     ): array {
         $userId     = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
+        $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumId]);
 
         $results = [];
@@ -130,7 +130,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         int $albumDiskId
     ): array {
         $userId = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
+        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
@@ -310,7 +310,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
+        $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if ($catalog !== null) {
             $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
         }
@@ -382,7 +382,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
+        $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if ($catalog !== null) {
             $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalog) . "'";
         }
@@ -451,7 +451,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         bool $group_release_type = false
     ): array {
         $userId        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
-        $catalog_where = "AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId)) . ")";
+        $catalog_where = "AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
         if ($catalog !== null) {
             $catalog_where .= "AND `album_disk`.`catalog` = '" . Dba::escape($catalog) . "'";
         }

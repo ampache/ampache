@@ -187,9 +187,9 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-                $this->configContainer->isAuthenticationEnabled() === false ||
-                $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
-            ) &&
+            $this->configContainer->isAuthenticationEnabled() === false ||
+            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+        ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 

@@ -20,7 +20,7 @@
  *
  */
 
- // jsTree file system browser
+// jsTree file system browser
 
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;

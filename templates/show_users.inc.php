@@ -100,5 +100,5 @@ foreach ($object_ids as $user_id) {
 </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-        require Ui::find_template('list_header.inc.php');
-    } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

@@ -386,10 +386,8 @@ class Broadcast extends database_object implements library_item
     {
         if ($this->id) {
             if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit',
-                        T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
-                        T_('Delete')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -401,8 +399,7 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast_link()
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast',
-                T_('Broadcast')) . "</a>";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
         $link .= "</div>";
 
         return $link;

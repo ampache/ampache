@@ -538,7 +538,7 @@ class Album extends database_object implements library_item
         $web_path = AmpConfig::get('web_path');
 
         $this->f_release_type = ucwords((string)$this->release_type);
-        $this->get_album_artists();
+        $this->get_artists();
 
         if ($details) {
             /* Pull the advanced information */
@@ -703,7 +703,7 @@ class Album extends database_object implements library_item
      * Get item album_artists array
      * @return array
      */
-    public function get_album_artists()
+    public function get_artists()
     {
         if (empty($this->album_artists)) {
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
@@ -726,7 +726,7 @@ class Album extends database_object implements library_item
                 $this->f_artist_link = '';
                 $web_path            = AmpConfig::get('web_path');
                 if (empty($this->album_artists)) {
-                    $this->get_album_artists();
+                    $this->get_artists();
                 }
                 foreach ($this->album_artists as $artist_id) {
                     $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));

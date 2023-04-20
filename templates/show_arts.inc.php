@@ -59,7 +59,7 @@ while ($count <= $rows) {
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
                 [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php
-            } else { ?>
+                } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>
                 <?php } ?>
                 </p>

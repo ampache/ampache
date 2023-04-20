@@ -45,7 +45,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
-    Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
+Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
 </div>
 <?php if ($podcast->description) { ?>
 <div id="item_summary">
@@ -133,9 +133,8 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
     </div>
     <div id="tabs_content">
         <div id="episodes" class="tab_content" style="display: block;">
-<?php
-    $browse->show_objects($object_ids, true);
-    $browse->store(); ?>
+<?php $browse->show_objects($object_ids, true);
+$browse->store(); ?>
         </div>
     </div>
 </div>

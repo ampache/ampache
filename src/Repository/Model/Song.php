@@ -1776,7 +1776,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         if (!isset($this->artists)) {
-            $this->artists = self::get_parent_array($this->id);
+            $this->get_artists();
         }
         if (!isset($this->albumartists)) {
             $this->albumartists = self::get_parent_array($this->album, 'album');
@@ -1933,6 +1933,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
+     * Get item album_artists array
+     * @return array
+     */
+    public function get_artists()
+    {
+        if (!isset($this->artists)) {
+            $this->artists = self::get_parent_array($this->id);
+        }
+
+        return $this->artists;
+    }
+
+    /**
      * Get item f_artist_link.
      * @return string
      */
@@ -1943,7 +1956,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->f_artist_link  = '';
             $web_path             = AmpConfig::get('web_path');
             if (!isset($this->artists)) {
-                $this->artists = self::get_parent_array($this->id);
+                $this->get_artists();
             }
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));

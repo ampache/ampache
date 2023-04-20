@@ -133,7 +133,7 @@ class AmpacheRss
             'latest_shout' => T_('Newest Shouts')
         );
 
-        return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
+        return AmpConfig::get('site_title') . ' - ' . $titles[$this->type];
     } // get_title
 
     /**
@@ -192,8 +192,7 @@ class AmpacheRss
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . Ui::get_icon('feed',
-                T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . Ui::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }

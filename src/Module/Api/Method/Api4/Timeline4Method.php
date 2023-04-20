@@ -76,7 +76,7 @@ final class Timeline4Method
                         switch ($input['api_format']) {
                             case 'json':
                                 echo Json4_Data::timeline($results);
-                            break;
+                                break;
                             default:
                                 echo Xml4_Data::timeline($results);
                         }

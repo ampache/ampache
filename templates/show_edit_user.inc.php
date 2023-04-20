@@ -49,8 +49,8 @@ $access100 = Access::check('interface', 100); ?>
             <td><?php echo T_('Full Name'); ?>:</td>
             <td><input type="text" name="fullname" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
-    echo "checked";
-} ?> /> <?php echo T_('Public'); ?>
+                    echo "checked";
+                } ?> /> <?php echo T_('Public'); ?>
                 <?php echo AmpError::display('fullname'); ?>
             </td>
         </tr>
@@ -92,28 +92,28 @@ $access100 = Access::check('interface', 100); ?>
             <td><?php echo T_('User Access Level'); ?>:</td>
             <td>
                 <?php $var_name = 'on_' . (string)$client->access;
-                $on_5           = '';
-                $on_25          = '';
-                $on_50          = '';
-                $on_75          = '';
-                $on_100         = '';
-                switch ($var_name) {
-                    case 'on_5':
-                        $on_5 = 'selected="selected"';
-                        break;
-                    case 'on_25':
-                        $on_25 = 'selected="selected"';
-                        break;
-                    case 'on_50':
-                        $on_50 = 'selected="selected"';
-                        break;
-                    case 'on_75':
-                        $on_75 = 'selected="selected"';
-                        break;
-                    case 'on_100':
-                        $on_100 = 'selected="selected"';
-                        break;
-                } ?>
+$on_5                           = '';
+$on_25                          = '';
+$on_50                          = '';
+$on_75                          = '';
+$on_100                         = '';
+switch ($var_name) {
+    case 'on_5':
+        $on_5 = 'selected="selected"';
+        break;
+    case 'on_25':
+        $on_25 = 'selected="selected"';
+        break;
+    case 'on_50':
+        $on_50 = 'selected="selected"';
+        break;
+    case 'on_75':
+        $on_75 = 'selected="selected"';
+        break;
+    case 'on_100':
+        $on_100 = 'selected="selected"';
+        break;
+} ?>
                 <select name="access">
                     <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                     <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
@@ -170,8 +170,8 @@ $access100 = Access::check('interface', 100); ?>
             <td>
                 <span>
                     <?php if ($client->apikey) {
-                    echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
-                } ?>
+                        echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
+                    } ?>
                 </span>
             </td>
         </tr>
@@ -186,8 +186,8 @@ $access100 = Access::check('interface', 100); ?>
             <td>
                 <span>
                     <?php if ($client->streamtoken) {
-                    echo $client->streamtoken;
-                } ?>
+                        echo $client->streamtoken;
+                    } ?>
                 </span>
             </td>
         </tr>
@@ -202,8 +202,8 @@ $access100 = Access::check('interface', 100); ?>
             <td>
                 <span>
                     <?php if ($client->rsstoken) {
-                    echo $client->rsstoken;
-                } ?>
+                        echo $client->rsstoken;
+                    } ?>
                 </span>
             </td>
         </tr>

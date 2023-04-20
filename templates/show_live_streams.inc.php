@@ -90,5 +90,5 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

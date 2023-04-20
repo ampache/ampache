@@ -192,9 +192,9 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-                $this->configContainer->isAuthenticationEnabled() === false ||
-                $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
-            ) &&
+            $this->configContainer->isAuthenticationEnabled() === false ||
+            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+        ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 

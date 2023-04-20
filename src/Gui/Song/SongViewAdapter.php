@@ -174,9 +174,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-                $this->configContainer->isAuthenticationEnabled() === false ||
-                $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
-            ) &&
+            $this->configContainer->isAuthenticationEnabled() === false ||
+            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+        ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
@@ -280,10 +280,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || (
-                (!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
-        );
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
+            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
     public function getEditButtonTitle(): string
@@ -298,10 +296,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canToggleState(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) || (
-                (!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
-        );
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) ||
+            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
     public function getToggleStateButton(): string

@@ -293,19 +293,18 @@ function get_languages()
                 case 'zh_TW':
                     $name = '&#32321;&#39636;&#20013;&#25991;';
                     break; /* Chinese (traditional)*/
-                /* These languages are right to left. */
                 case 'ar_SA':
                     $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;';
-                    break; /* Arabic */
+                    break; /* Arabic (Right to Left RTL) */
                 case 'he_IL':
                     $name = '&#1506;&#1489;&#1512;&#1497;&#1514;';
-                    break; /* Hebrew */
+                    break; /* Hebrew (Right to Left RTL) */
                 case 'fa_IR':
                     $name = '&#1601;&#1575;&#1585;&#1587;&#1610;';
-                    break; /* Farsi */
+                    break; /* Farsi (Right to Left RTL) */
                 default:
                     $name = sprintf(
-                    /* HINT: File */
+                        /* HINT: File */
                         T_('Unknown %s'), '(' . $file . ')');
                     break;
             } // end switch
@@ -345,20 +344,21 @@ function is_rtl($locale)
 function translate_pattern_code($code)
 {
     $code_array = array(
-        '%A' => 'album',
         '%a' => 'artist',
+        '%A' => 'album',
+        '%b' => 'barcode',
         '%c' => 'comment',
         '%C' => 'catalog_number',
-        '%T' => 'track',
         '%d' => 'disk',
         '%g' => 'genre',
+        '%l' => 'label',
         '%t' => 'title',
-        '%y' => 'year',
-        '%Y' => 'original_year',
+        '%T' => 'track',
         '%r' => 'release_type',
         '%R' => 'release_status',
         '%s' => 'subtitle',
-        '%b' => 'barcode',
+        '%y' => 'year',
+        '%Y' => 'original_year',
         '%o' => 'zz_other'
     );
 

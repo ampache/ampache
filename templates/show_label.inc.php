@@ -116,15 +116,15 @@ if ($label->website) {
     </div>
     <div id="tabs_content">
         <div id="artists" class="tab_content" style="display: block;">
-<?php
-    $browse->show_objects($object_ids, true);
-    $browse->set_use_alpha(false, false);
-    $browse->store(); ?>
+<?php $browse->show_objects($object_ids, true);
+$browse->set_use_alpha(false, false);
+$browse->store(); ?>
         </div>
-<?php
-    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
+<?php echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
         <div id="songs" class="tab_content">
-        <?php Ui::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); Ui::show_box_bottom(); ?>
+        <?php Ui::show_box_top(T_('Songs'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
         </div>
     </div>
 </div>

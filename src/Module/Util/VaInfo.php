@@ -1450,9 +1450,9 @@ final class VaInfo implements VaInfoInterface
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                    // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
-                    // all replaygain values aren't always correctly retrieved
                     case 'replaygain_track_gain':
+                        // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
+                        // all replaygain values aren't always correctly retrieved
                         $parsed['replaygain_track_gain'] = (float) $txxx['data'];
                         break;
                     case 'replaygain_track_peak':

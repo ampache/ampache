@@ -603,6 +603,11 @@ class Json_Data
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 );
+                $album_artists = array();
+                foreach ($album->get_artists() as $artist_id) {
+                    $album_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['artists'] = $album_artists;
             }
 
             // Handle includes
@@ -1080,6 +1085,10 @@ class Json_Data
             $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = Album::get_name_array_by_id($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
+            $song_artists = array();
+            foreach ($song->get_artists() as $artist_id) {
+                $song_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
             $playlist_track++;
 
             $objArray = array(
@@ -1092,6 +1101,7 @@ class Json_Data
                     "prefix" => $song_artist['prefix'],
                     "basename" => $song_artist['basename']
                 ),
+                "artists" => $song_artists,
                 "album" => array(
                     "id" => (string)$song->album,
                     "name" => $song_album['name'],
@@ -1129,9 +1139,6 @@ class Json_Data
             $objArray['url']                   = $play_url;
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
-            $objArray['album_mbid']            = $song->album_mbid;
-            $objArray['artist_mbid']           = $song->artist_mbid;
-            $objArray['albumartist_mbid']      = $song->albumartist_mbid;
             $objArray['art']                   = $art_url;
             $objArray['flag']                  = (bool)$flag->get_flag($user->getId(), false);
             $objArray['rating']                = $user_rating;

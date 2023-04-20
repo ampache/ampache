@@ -32,19 +32,17 @@ Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES); ?>
 <div id="information_actions">
 <ul>
-    <?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
+<?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
     <li>
         <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
     </li>
     <li>
         <?php echo Ajax::button_with_text('?action=basket&type=browse_set_random&browse_id=' . $browse->id, 'random', T_('Random to Temporary Playlist'), 'add_search_results_random'); ?>
     </li>
-    <?php } ?>
-    <?php
-    // @todo remove after refactoring
-    global $dic;
-    $zipHandler = $dic->get(ZipHandlerInterface::class);
-    if (Access::check_function('batch_download') && $zipHandler->isZipable($search_type)) { ?>
+<?php }
+global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable($search_type)) { ?>
 <li>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out($search_type); ?>&amp;browse_id=<?php echo $browse->id; ?>">
         <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>

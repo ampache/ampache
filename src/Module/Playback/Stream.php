@@ -545,9 +545,9 @@ class Stream
     public static function kill_process($transcoder)
     {
         $status = proc_get_status($transcoder['process']);
-        if ($status['running'] == true) {
+        if ($status['running']) {
             $pid = $status['pid'];
-            debug_event(self::class, 'Stream process about to be killed. pid:' . $pid, 1);
+            debug_event(self::class, 'WARNING Stream is probably being killed early! pid:' . $pid, 1);
 
             (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
 

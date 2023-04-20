@@ -136,11 +136,11 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 foreach ($filter as $item) {
                     switch (trim($item)) {
                         case 'artist':
-                          $query1 .= " artist:\"{$data['artist']}\"";
-                        break;
+                            $query1 .= " artist:\"{$data['artist']}\"";
+                            break;
                         case preg_match('/year:.*/', $item):
-                           $query1 .= ' ' . $item;
-                        break;
+                            $query1 .= ' ' . $item;
+                            break;
                         default:
                     }
                 }

@@ -82,11 +82,11 @@ if ($directplay_limit > 0) {
     </div>
     <?php
         $name  = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
-        $thumb = Ui::is_grid_view('album') ? 32 : 11;
-        Art::display('album', $album->id, $name, $thumb); ?>
+$thumb         = Ui::is_grid_view('album') ? 32 : 11;
+Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) {
-            if (AmpConfig::get('ratings')) { ?>
+    if (AmpConfig::get('ratings')) { ?>
         <span id="rating_<?php echo $album->id; ?>_album">
             <?php echo Rating::show($album->id, 'album', true); ?>
         </span>
@@ -94,14 +94,14 @@ if ($directplay_limit > 0) {
             <?php echo Userflag::show($album->id, 'album'); ?>
         </span>
         <?php }
-        } ?>
+    } ?>
 <?php
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .
-        /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
+    /* HINT: Number of times an object has been played */
+    sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
 </div>
 <?php } ?>
 <?php
@@ -118,9 +118,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
         <?php if ($show_direct_play) {
-        $play       = T_('Play');
-        $playnext   = T_('Play next');
-        $playlast   = T_('Play last'); ?>
+            $play       = T_('Play');
+            $playnext   = T_('Play next');
+            $playlast   = T_('Play last'); ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
         </li>
@@ -129,18 +129,18 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
         </li>
             <?php }
-        if (Stream_Playlist::check_autoplay_append()) { ?>
+            if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
         </li>
             <?php } ?>
         <?php
-    } ?>
+        } ?>
 
         <?php if ($show_playlist_add) {
-        $addtotemp  = T_('Add to Temporary Playlist');
-        $randtotemp = T_('Random to Temporary Playlist');
-        $addtoexist = T_('Add to playlist'); ?>
+            $addtotemp  = T_('Add to Temporary Playlist');
+            $randtotemp = T_('Random to Temporary Playlist');
+            $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -150,11 +150,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <a id="<?php echo 'add_playlist_' . $album->id ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id ?>')">
                 <?php echo Ui::get_icon('playlist_add', $addtoexist);
-        echo $addtoexist ?>
+            echo $addtoexist ?>
             </a>
         </li>
         <?php
-    }
+        }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
@@ -178,14 +178,14 @@ if (Access::check('interface', 25)) {
                 <?php echo Share::display_ui('album', $album->id); ?>
             </li>
             <?php }
-}
+    }
 if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
     $saveorder  = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('statistics', T_('Graphs'));
-echo T_('Graphs'); ?>
+        echo T_('Graphs'); ?>
                 </a>
             </li>
         <?php } ?>
@@ -210,7 +210,7 @@ if ($isAlbumEditable) {
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload);
-    echo $t_upload; ?>
+        echo $t_upload; ?>
                     </a>
                 </li>
     <?php } ?>

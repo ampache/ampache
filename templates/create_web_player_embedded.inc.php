@@ -42,7 +42,7 @@ if (array_key_exists('append', $_REQUEST)) { ?>
     if (array_key_exists('playnext', $_REQUEST)) { ?>
         playnext = true;
 <?php
-        }
+    }
 } ?>
     }
 

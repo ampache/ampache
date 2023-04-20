@@ -320,7 +320,12 @@ class WebPlayer
 
                 // this should probably only be in songs
                 if ($media->type != $types['real']) {
-                    $url .= '&transcode_to=' . $types['real'];
+                    $pos = strrpos($url, '&');
+                    if ($pos !== false) {
+                        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
+                    } else {
+                        $url .= '&transcode_to=' . $types['real'];
+                    }
                 }
             }
             $json['media_id']   = $media->id;

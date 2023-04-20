@@ -28,20 +28,20 @@ use Ampache\Repository\Model\Artist;
 ?>
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
-    $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
-    Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
-} ?>
+        $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
+        Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
+    } ?>
     <div class="item_properties">
         <?php $dcol = array();
-        if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
-            $dcol[] = $biography['placeformed'];
-        }
-        if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
-            $dcol[] = $biography['yearformed'];
-        }
-        if (count($dcol) > 0) {
-            echo implode(', ', $dcol);
-        } ?>
+if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
+    $dcol[] = $biography['placeformed'];
+}
+if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
+    $dcol[] = $biography['yearformed'];
+}
+if (count($dcol) > 0) {
+    echo implode(', ', $dcol);
+} ?>
     </div>
 </div>
 <div id="item_summary">

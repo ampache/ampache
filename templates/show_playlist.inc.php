@@ -51,9 +51,8 @@ $web_path = AmpConfig::get('web_path');
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
-    <?php
-    $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
-    $playlist->display_art($thumb, false, false) ?>
+<?php $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
+$playlist->display_art($thumb, false, false) ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -67,7 +66,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <?php } ?>
 <div id="information_actions">
     <ul>
-    <?php if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || $playlist->user == Core::get_global('user')->id) { ?>
+<?php if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(50)) || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
@@ -87,12 +86,10 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
                 <?php echo T_('Remove Duplicates'); ?>
             </a>
         </li>
-    <?php } ?>
-    <?php
-    // @todo remove after refactoring
-    global $dic;
-    $zipHandler = $dic->get(ZipHandlerInterface::class);
-    if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
+<?php }
+global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
@@ -159,10 +156,10 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
     $browse = new Browse();
-    $browse->set_type('playlist_media');
-    $browse->add_supplemental_object('playlist', $playlist->id);
-    $browse->set_static_content(true);
-    $browse->duration = Search::get_total_duration($object_ids);
-    $browse->show_objects($object_ids, true);
-    $browse->store(); ?>
+$browse->set_type('playlist_media');
+$browse->add_supplemental_object('playlist', $playlist->id);
+$browse->set_static_content(true);
+$browse->duration = Search::get_total_duration($object_ids);
+$browse->show_objects($object_ids, true);
+$browse->store(); ?>
 </div>

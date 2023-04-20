@@ -96,8 +96,7 @@ class TVShow_Episode extends Video
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season,
-                'tvshow_season')) {
+        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }
@@ -188,8 +187,7 @@ class TVShow_Episode extends Video
 
         $this->f_file = $this->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
-                    $this->episode_number);
+            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
         $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;

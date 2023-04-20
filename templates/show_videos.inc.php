@@ -69,18 +69,18 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     </thead>
     <tbody>
         <?php foreach ($object_ids as $video_id) {
-    if (isset($video_type)) {
-        $className = ObjectTypeToClassNameMapper::map($video_type);
-        $libitem   = new $className($video_id);
-    } else {
-        $libitem = new Video($video_id);
-    }
-    $libitem->format(); ?>
+            if (isset($video_type)) {
+                $className = ObjectTypeToClassNameMapper::map($video_type);
+                $libitem   = new $className($video_id);
+            } else {
+                $libitem = new Video($video_id);
+            }
+            $libitem->format(); ?>
         <tr id="video_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_video_row.inc.php'); ?>
         </tr>
         <?php
-} ?>
+        } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="42"><span class="nodata"><?php echo T_('No video found'); ?></span></td>
@@ -94,8 +94,8 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add"></th>
 <?php if (isset($video_type) && $video_type != 'video') {
-        require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
-    } ?>
+    require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
+} ?>
             <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
@@ -115,5 +115,5 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-        require Ui::find_template('list_header.inc.php');
-    } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

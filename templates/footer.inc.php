@@ -32,18 +32,18 @@ use Ampache\Module\Util\Ui;
         </div> <!-- end id="maincontainer"-->
         <?php
             $count_temp_playlist = 0;
-            if (!isset($_SESSION['login']) || !$_SESSION['login']) {
-                if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
-                    $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
-                }
-            } ?>
+if (!isset($_SESSION['login']) || !$_SESSION['login']) {
+    if (!empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+        $count_temp_playlist = count(Core::get_global('user')->playlist->get_items());
+    }
+} ?>
         <div id="footer" class="<?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'footer-wild'); ?>">
         <?php if (AmpConfig::get('show_donate')) { ?>
             <a id="donate" href="//ampache.org/donate.html" title="<?php echo T_('Donate'); ?>" target="_blank"><?php echo T_('Donate'); ?></a> |
         <?php } ?>
         <?php if (AmpConfig::get('custom_text_footer')) {
-                echo AmpConfig::get('custom_text_footer');
-            } else { ?>
+            echo AmpConfig::get('custom_text_footer');
+        } else { ?>
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2022 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php } ?>
         </div>

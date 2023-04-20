@@ -28,16 +28,16 @@ use Ampache\Module\System\Core;
 <ul>
 <?php
     $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
-    foreach ($broadcasts as $broadcast_id) {
-        $broadcast = new Broadcast($broadcast_id);
-        $broadcast->format(); ?>
+foreach ($broadcasts as $broadcast_id) {
+    $broadcast = new Broadcast($broadcast_id);
+    $broadcast->format(); ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
             <?php echo $broadcast->get_fullname(); ?>
         </a>
     </li>
 <?php
-    } ?>
+} ?>
 </ul><br />
 <a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
     <?php echo T_('New broadcast'); ?>

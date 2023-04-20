@@ -59,7 +59,6 @@ final class PluginEnum
         'streamhits' => AmpacheStreamHits::class,
         'streamtime' => AmpacheStreamTime::class,
         'theaudiodb' => AmpacheTheaudiodb::class,
-        'tmdb' => AmpacheTmdb::class,
         'tvdb' => AmpacheTvdb::class,
         'twitter' => AmpacheTwitter::class,
         'yourls' => AmpacheYourls::class,

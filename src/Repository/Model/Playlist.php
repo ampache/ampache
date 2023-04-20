@@ -336,7 +336,7 @@ class Playlist extends playlist_object
                 default:
                     $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist`= ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
                     debug_event(__CLASS__, "get_items(): $object_type not handled", 5);
-        }
+            }
             $db_results  = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {

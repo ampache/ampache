@@ -223,8 +223,9 @@ final class PlayAction implements ApplicationActionInterface
         $is_download   = ($action == 'download' || $cache == '1');
         $maxbitrate    = 0;
         $media_bitrate = 0;
-        $resolution    = '';
         $quality       = 0;
+        $resolution    = '';
+        $subtitle      = '';
         $time          = time();
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
@@ -250,9 +251,6 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
         }
-        $subtitle         = '';
-        $send_full_stream = (string)AmpConfig::get('send_full_stream');
-        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
 
         if (!$type) {
             $type = 'song';
@@ -517,9 +515,15 @@ final class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random === 1) {
-            if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
+            $last_id   = (int)(User::get_user_data($user_id, 'random_song')['random_song'] ?? 0);
+            $last_time = (int)(User::get_user_data($user_id, 'random_time')['random_time'] ?? 0);
+            if ($last_id > 0 && $last_time >= $time) {
                 // continue the current object
-                $object_id = $_SESSION['random']['last'];
+                $object_id = $last_id;
+                $this->logger->debug(
+                    'Called random again too quickly sending last song id: {' . $object_id . '}',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             } else {
                 // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
@@ -528,36 +532,35 @@ final class PlayAction implements ApplicationActionInterface
                     $rtype = $type;
                 }
                 $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
-                if ($object_id > 0) {
-                    // Save this one in case we do a seek
-                    $_SESSION['random']['last'] = $object_id;
-                }
-                $media = new Song($object_id);
-                if ($media->id > 0) {
-                    // If the media is disabled
-                    if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
-                        $this->logger->warning(
-                            "Error: " . $media->file . " is currently disabled, song skipped",
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
-                        header('HTTP/1.1 404 File disabled');
-
-                        return null;
-                    }
-
-                    // play the song instead of going through all the crap
-                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+            }
+            $media = new Song($object_id);
+            if ($media->id > 0) {
+                // If the media is disabled
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
+                    $this->logger->warning(
+                        "Error: " . $media->file . " is currently disabled, song skipped",
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+                    header('HTTP/1.1 404 File disabled');
 
                     return null;
                 }
-                $this->logger->warning(
-                    "Error: RANDOM song could not be found",
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                header('HTTP/1.1 404 File not found');
+                // Save this for a short time in case there are issues loading the url
+                User::set_user_data($user_id, 'random_song', $object_id);
+                User::set_user_data($user_id, 'random_time', ($time + (min(10, ($media->time)))));
+
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
 
                 return null;
             }
+            $this->logger->warning(
+                "Error: RANDOM song could not be found",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            header('HTTP/1.1 404 File not found');
+
+            return null;
         } // if random
 
         if ($type == 'video') {
@@ -852,8 +855,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             } elseif (array_key_exists('segment', $_REQUEST)) {
                 // 10 seconds segment. Should it be an option?
-                $ssize            = 10;
-                $send_all_in_once = true; // Should we use temporary folder instead?
+                $ssize = 10;
                 $this->logger->debug(
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -897,15 +899,12 @@ final class PlayAction implements ApplicationActionInterface
                     );
                     $stream_size = null;
                 }
-            } elseif ($transcode_to == 'mp3') {
+            } else {
                 // mp3 seems to be the only codec that calculates properly
                 $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
                     ? $maxbitrate
                     : floor($media->bitrate / 1024);
                 $stream_size = ($media->time * $stream_rate * 1024) / 8;
-            } else {
-                $stream_size = null;
-                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $media->size;
@@ -1025,19 +1024,12 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
-
-        foreach ($headers as $headerName => $value) {
-            header(sprintf('%s: %s', $headerName, $value));
-        }
-
-        $bytes_streamed = 0;
-
         // Actually do the streaming
-        $buf_all = '';
-        $r_arr   = array($filepointer);
-        $w_arr   = $e_arr = array();
-        $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
+        $bytes_streamed = 0;
+        $buf_all        = '';
+        $r_arr          = array($filepointer);
+        $w_arr          = $e_arr = array();
+        $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             $this->logger->error(
                 'stream_select failed.',
@@ -1045,35 +1037,28 @@ final class PlayAction implements ApplicationActionInterface
             );
         } elseif ($status > 0) {
             do {
-                $read_size = min(2048, $stream_size - $bytes_streamed);
-                if ($read_size < 1) {
-                    $read_size = 2048;
-                }
-                if ($buf = fread($filepointer, $read_size)) {
-                    if ($send_all_in_once) {
+                if ($buf = fread($filepointer, 8192)) {
+                    if (!empty($buf)) {
                         $buf_all .= $buf;
-                    } elseif (!empty($buf)) {
-                        print($buf);
-                        if (ob_get_length()) {
-                            ob_flush();
-                            flush();
-                            ob_end_flush();
-                        }
-                        ob_start();
                     }
                     $bytes_streamed += strlen($buf);
                 }
             } while (!feof($filepointer) && (connection_status() == 0));
         }
-
-        if ($send_all_in_once && connection_status() == 0) {
-            header("Content-Length: " . strlen($buf_all));
-            print($buf_all);
-            ob_flush();
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
+        foreach ($headers as $headerName => $value) {
+            header(sprintf('%s: %s', $headerName, $value));
         }
+        print($buf_all);
+        if (ob_get_length()) {
+            ob_flush();
+            flush();
+            ob_end_flush();
+        }
+        ob_start();
 
         $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent.
+        // Need to make sure enough bytes were sent. TODO: why?
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
             print(str_repeat(' ', $stream_size - $bytes_streamed));
             $bytes_streamed = $stream_size;

@@ -64,22 +64,22 @@ $all          = T_('All');
                     <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php } else {
-    if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
+            if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>
                     <option selected="selected" value="all"><?php echo $localnetwork . ' + ' . $all; ?></option>
         <?php
-        } else { ?>
+            } else { ?>
                 <select name="type">
                     <option selected="selected" value="stream"><?php echo $streamaccess; ?></option>
                     <option value="interface"><?php echo T_('Web Interface'); ?></option>
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="rpc"><?php echo $apirpc; ?></option>
         <?php
-        }
-} ?>
+            }
+        } ?>
                 </select>
             </td>
         </tr>
@@ -96,20 +96,20 @@ $all          = T_('All');
                 <?php echo T_('Start'); ?>:
                     <?php echo AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
-                if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                    echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
-                } else {
-                    echo scrub_out(Core::get_request('start'));
-                } ?>" /></td>
+                        if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
+                            echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
+                        } else {
+                            echo scrub_out(Core::get_request('start'));
+                        } ?>" /></td>
             <td>
                 <?php echo T_('End'); ?>:
                     <?php echo AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
-                    if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
-                        echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
-                    } else {
-                        echo scrub_out(Core::get_request('end'));
-                    } ?>" /></td>
+                            if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
+                                echo scrub_out(filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP));
+                            } else {
+                                echo scrub_out(Core::get_request('end'));
+                            } ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

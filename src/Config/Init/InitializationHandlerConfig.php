@@ -33,7 +33,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = '6.0.0'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '65';
+    private const CONFIG_VERSION = '66';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 

@@ -63,7 +63,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
                                  echo 'required';
                              }
                          }
-                     ?>
+                ?>
                     />
                   </td>
                 </tr>
@@ -117,7 +117,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
               </td>
 
           <?php }
-        } else { ?>
+             } else { ?>
             <td>
             </td>
             <?php } ?>
@@ -135,7 +135,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         } else {
             $cancelurl = (string) $burl;
         }
-         ?>
+?>
         <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>

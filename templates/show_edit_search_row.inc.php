@@ -45,8 +45,8 @@ use Ampache\Repository\Model\Search;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
                 <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) {
-    echo "checked";
-} ?> /></td>
+                    echo "checked";
+                } ?> /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
@@ -58,13 +58,13 @@ use Ampache\Repository\Model\Search;
                 </td>
                 <td>
                     <?php $options   = array();
-                    if (!empty($users)) {
-                        foreach ($users as $user_id => $username) {
-                            $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
-                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
-                        }
-                        echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
-                    } ?>
+if (!empty($users)) {
+    foreach ($users as $user_id => $username) {
+        $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
+        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+    }
+    echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
+} ?>
                 </td>
             </tr>
         </table>

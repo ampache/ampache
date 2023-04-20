@@ -8,11 +8,21 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 return $config->setRules([
         '@PSR2' => true,
-        'binary_operator_spaces' => ['operators' => ['=' => 'align']],
+        'binary_operator_spaces' => [
+            'operators' => ['=' => 'align']
+        ],
         'blank_line_after_namespace' => true,
-        'blank_line_before_statement' => ['statements' => ['declare', 'return']],
-        'braces' => ['allow_single_line_closure' => true],
-        'concat_space' => ['spacing' => 'one'],
+        'blank_line_before_statement' => [
+            'statements' => ['declare', 'return']
+        ],
+        'concat_space' => [
+            'spacing' => 'one'
+        ],
+        'curly_braces_position' => [
+            'functions_opening_brace' => 'next_line_unless_newline_at_signature_end',
+            'allow_single_line_empty_anonymous_classes' => true,
+            'allow_single_line_anonymous_functions' => true
+        ],
         'constant_case' => true,
         'elseif' => true,
         'encoding' => true,
@@ -25,10 +35,10 @@ return $config->setRules([
         'single_blank_line_at_eof' => true,
         'strict_param' => false,
         'visibility_required' => false,
-     ])
-   ->setIndent("    ")
-   ->setUsingCache(false)
-   ->setFinder($finder)
-   ->setLineEnding("\n")
+    ])
+    ->setIndent("    ")
+    ->setUsingCache(false)
+    ->setFinder($finder)
+    ->setLineEnding("\n")
 ;
 
