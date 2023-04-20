@@ -344,20 +344,21 @@ function is_rtl($locale)
 function translate_pattern_code($code)
 {
     $code_array = array(
-        '%A' => 'album',
         '%a' => 'artist',
+        '%A' => 'album',
+        '%b' => 'barcode',
         '%c' => 'comment',
         '%C' => 'catalog_number',
-        '%T' => 'track',
         '%d' => 'disk',
         '%g' => 'genre',
+        '%l' => 'label',
         '%t' => 'title',
-        '%y' => 'year',
-        '%Y' => 'original_year',
+        '%T' => 'track',
         '%r' => 'release_type',
         '%R' => 'release_status',
         '%s' => 'subtitle',
-        '%b' => 'barcode',
+        '%y' => 'year',
+        '%Y' => 'original_year',
         '%o' => 'zz_other'
     );
 
