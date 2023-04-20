@@ -134,7 +134,9 @@ final class PlayAction implements ApplicationActionInterface
             $player       = (string)scrub_in($new_request['player'] ?? '');
             $format       = (string)scrub_in($new_request['format'] ?? '');
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
+            $transcode_to = (!$original && $format != '')
+                ? $format
+                : (string)scrub_in($new_request['transcode_to'] ?? '');
 
             // Share id and secret if used
             $share_id = (int)scrub_in((int)$new_request['share_id'] ?? 0);
@@ -160,7 +162,9 @@ final class PlayAction implements ApplicationActionInterface
             $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
             $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            $transcode_to = (!$original && $format != '')
+                ? $format
+                : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Share id and secret if used
             $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
@@ -590,7 +594,9 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
-        $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
+        $mediaCatalogId = ($media instanceof Song_Preview)
+            ? null
+            : $media->catalog;
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
@@ -636,7 +642,9 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         // load the cache file or the local file
-        $stream_file = ($cache_file && $file_target) ? $file_target : $media->file;
+        $stream_file = ($cache_file && $file_target)
+            ? $file_target
+            : $media->file;
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
@@ -755,7 +763,9 @@ final class PlayAction implements ApplicationActionInterface
         // Determine whether to transcode
         $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
+        $transcode_to = ($transcode_to == $media->type)
+            ? null
+            : $transcode_to;
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -831,7 +841,9 @@ final class PlayAction implements ApplicationActionInterface
         $troptions = array();
         if ($transcode) {
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
+                    ? $maxbitrate
+                    : $bitrate;
             }
             if ($maxbitrate > 0) {
                 $troptions['maxbitrate'] = $maxbitrate;
@@ -859,7 +871,9 @@ final class PlayAction implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
-                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
+                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
+                    ? $ssize
+                    : ($media->time - $troptions['frame']);
             }
 
             $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
