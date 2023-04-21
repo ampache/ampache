@@ -57,7 +57,7 @@ if (isset($_GET['operation'])) {
                 break;
             case 'rename_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
-                $rslt = $fs->rename($node, isset($_GET['text']) ? $_GET['text'] : '');
+                $rslt = $fs->rename($node, $_GET['text'] ?? '');
                 break;
             case 'delete_node':
                 $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';

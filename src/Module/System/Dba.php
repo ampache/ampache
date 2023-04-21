@@ -79,41 +79,39 @@ class Dba
             return false;
         }
 
+        self::$_sql = $sql;
         try {
             // Run the query
-            if (!empty($params) && strpos((string)$sql, '?')) {
-                $stmt = $dbh->prepare($sql);
+            if (!empty($params) && strpos((string)self::$_sql, '?')) {
+                $stmt = $dbh->prepare(self::$_sql);
                 $stmt->execute($params);
             } else {
-                $stmt = $dbh->query($sql);
+                $stmt = $dbh->query(self::$_sql);
             }
         } catch (PDOException $error) {
             // are you trying to write to something that doesn't exist?
             self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
 
             return false;
         }
 
-        // Save the query, to make debug easier
-        self::$_sql = $sql;
-        self::$stats['query']++;
-
         if (!$stmt) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
         } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = json_encode($stmt->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . $sql . ' ' . json_encode($params), 5);
+            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
             debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
             self::finish($stmt);
             self::disconnect();
 
             return false;
         }
+        self::$stats['query']++;
 
         return $stmt;
     }

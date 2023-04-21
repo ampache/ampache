@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
