@@ -26,6 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -344,8 +347,10 @@ class Stream
 
             return false;
         }
-        $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
         $song_file = self::scrub_arg($media->file);
+        $bit_rate  = ($transcode_settings === false)
+            ? $media->bitrate
+            : self::get_max_bitrate($media, $transcode_settings);
 
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
@@ -421,30 +426,23 @@ class Stream
      * get_max_bitrate
      *
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
-     * @param $media
+     * @param Song|Podcast_Episode|Video $media
+     * @param array $transcode_settings
      * @param string $type
      * @param string $player
      * @param array $options
      * @return integer
      */
-    public static function get_max_bitrate($media, $type = null, $player = null, $options = array())
+    public static function get_max_bitrate($media, $transcode_settings)
     {
-        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
-        // Bail out early if we're unutterably broken
-        if ($transcode_settings === false) {
-            debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
-
-            return $media->bitrate;
-        }
-
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
-        if (!array_key_exists('bitrate', $options)) {
+        if (!array_key_exists('bitrate', $transcode_settings)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate == 0) {
+        } elseif ($bit_rate > (int)$transcode_settings['bitrate'] || $bit_rate == 0) {
             // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
+            $bit_rate = $transcode_settings['bitrate'];
         }
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 

@@ -224,6 +224,7 @@ final class PlayAction implements ApplicationActionInterface
             $action       = 'download';
             $record_stats = false;
         }
+        $transcode     = false;
         $is_download   = ($action == 'download' || $cache == '1');
         $maxbitrate    = 0;
         $media_bitrate = 0;
@@ -760,8 +761,6 @@ final class PlayAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
         }
-        // Determine whether to transcode
-        $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = ($transcode_to == $media->type)
             ? null
@@ -891,17 +890,12 @@ final class PlayAction implements ApplicationActionInterface
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
 
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
-            // Content-length guessing if required by the player.
-            // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_to = Stream::get_transcode_settings_for_media(
-                (string) $media->type,
-                $transcode_to,
-                $player,
-                (string) $media->type,
-                $troptions
-            )['format'];
-            $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
+            $maxbitrate         = (empty($transcode_settings))
+                ? $media->bitrate
+                : Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
+                // Content-length guessing if required by the player.
                 if ($media->time > 0 && $maxbitrate > 0) {
                     $stream_size = ($media->time * $maxbitrate * 1024) / 8;
                 } else {
