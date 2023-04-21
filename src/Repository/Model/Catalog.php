@@ -1097,9 +1097,9 @@ abstract class Catalog extends database_object
                 $catalog = self::create_from_id($catalogid);
                 $catalog->cache_catalog_proc();
             }
-            $catalog_dirs  = new RecursiveDirectoryIterator($path);
-            $dir_files     = new RecursiveIteratorIterator($catalog_dirs);
-            $cache_files   = new RegexIterator($dir_files, "/\.$target/i");
+            $catalog_dirs = new RecursiveDirectoryIterator($path);
+            $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+            $cache_files  = new RegexIterator($dir_files, "/\.$target/i");
             debug_event(__CLASS__, 'cache_catalogs: cleaning old files', 5);
             foreach ($cache_files as $file) {
                 $path    = pathinfo($file);

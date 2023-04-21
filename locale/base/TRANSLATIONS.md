@@ -80,4 +80,11 @@ rest_hostname = https://rest.api.transifex.com
 token         = 1/2345675623876238476103450278634925761291
 ```
 
+Finally, to build all the mo files which Ampache uses you need to install gettext
+
+Now you can forcibly rebuils all the mo files with this command
+
+```
+bash gather-messages.sh -fa
+```
 

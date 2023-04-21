@@ -52,7 +52,7 @@ usage() {
     echo -e "[-h|--help]\t\t Shows this help screen."
     echo ""
     echo -e "\033[32m If you encounter any bugs, please report them on Transifex (https://www.transifex.com/projects/p/ampache/)\033[0m"
-    echo -e "\033[32m See also: https://github.com/ampache/ampache/blob/master/locale/base/TRANSLATIONS\033[0m"
+    echo -e "\033[32m See also: https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md\033[0m"
     echo ""
     exit 1
 }
