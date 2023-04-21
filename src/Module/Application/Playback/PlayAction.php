@@ -837,8 +837,10 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        $troptions = array();
+        $transcode_settings = array();
+        $troptions          = array();
         if ($transcode) {
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
                     ? $maxbitrate
@@ -875,7 +877,7 @@ final class PlayAction implements ApplicationActionInterface
                     : ($media->time - $troptions['frame']);
             }
 
-            $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
+            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
@@ -890,8 +892,7 @@ final class PlayAction implements ApplicationActionInterface
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
 
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
-            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
-            $maxbitrate         = (empty($transcode_settings))
+            $maxbitrate = (empty($transcode_settings))
                 ? $media->bitrate
                 : Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {

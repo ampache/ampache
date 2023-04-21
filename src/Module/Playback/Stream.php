@@ -326,47 +326,44 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
-     * @param $media
-     * @param string $type
-     * @param string $player
-     * @param array $options
+     * @param Song|Podcast_Episode|Video $media
+     * @param array $transcode_settings
+     * @param array|string $options
      * @return array|false
      */
-    public static function start_transcode($media, $type = null, $player = null, $options = array())
+    public static function start_transcode($media, $transcode_settings, $options = array())
     {
         $out_file = false;
-        if ($player == 'cache_catalog_proc') {
-            $out_file = $options[0];
-            $player   = 'api';
+        if (is_string($options)) {
+            $out_file = $options;
             $options  = array();
         }
-        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings === false) {
+        if (empty($transcode_settings)) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
             return false;
         }
         $song_file = self::scrub_arg($media->file);
-        $bit_rate  = ($transcode_settings === false)
-            ? $media->bitrate
-            : self::get_max_bitrate($media, $transcode_settings);
-
+        $bit_rate  = self::get_max_bitrate($media, $transcode_settings);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
-        $command = $transcode_settings['command'];
-
+        $command    = $transcode_settings['command'];
         $string_map = array(
             '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
         );
-        if (isset($options['maxbitrate'])) {
-            $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
-        } else {
-            $string_map['%MAXBITRATE%'] = 8000;
-        }
+        $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
+            ? $options['maxbitrate']
+            : 8000;
+        $string_map['%RESOLUTION%'] = (isset($options['resolution']))
+            ? $options['resolution']
+            : $media->f_resolution ?? '1280x720';
+        $string_map['%QUALITY%'] = (isset($options['quality']))
+            ? (31 * (101 - $options['quality'])) / 100
+            : 10;
         if (isset($options['frame'])) {
             $frame                = gmdate("H:i:s", $options['frame']);
             $string_map['%TIME%'] = $frame;
@@ -374,16 +371,6 @@ class Stream
         if (isset($options['duration'])) {
             $duration                 = gmdate("H:i:s", $options['duration']);
             $string_map['%DURATION%'] = $duration;
-        }
-        if (isset($options['resolution'])) {
-            $string_map['%RESOLUTION%'] = $options['resolution'];
-        } else {
-            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
-        }
-        if (isset($options['quality'])) {
-            $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
-        } else {
-            $string_map['%QUALITY%'] = 10;
         }
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
