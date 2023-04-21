@@ -732,11 +732,9 @@ class Stream
             $session_string = 'ssid=' . $session_id . '&';
         }
 
-        if ($local) {
-            $web_path = AmpConfig::get('local_web_path');
-        } else {
-            $web_path = AmpConfig::get('web_path');
-        }
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get('web_path');
         if (empty($web_path)) {
             $web_path = AmpConfig::get('fallback_url');
         }
