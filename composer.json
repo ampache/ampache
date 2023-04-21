@@ -72,7 +72,6 @@
         "maennchen/zipstream-php": "0.4.*",
         "mikealmond/musicbrainz": "dev-master",
         "moinax/tvdb": "1.*",
-        "mptre/php-soundcloud": "2.*",
         "narrowspark/http-emitter": "^1.0 || ^2.0",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
@@ -109,18 +108,6 @@
     },
     "repositories":
     [
-        {
-            "type": "package",
-            "package": {
-                "name": "mptre/php-soundcloud",
-                "version": "2.3.2",
-                "source": {
-                    "url": "https://github.com/mptre/php-soundcloud.git",
-                    "type": "git",
-                    "reference": "v2.3.2"
-                }
-            }
-        },
         {
             "type": "package",
             "package": {

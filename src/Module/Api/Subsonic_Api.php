@@ -1871,7 +1871,7 @@ class Subsonic_Api
      */
     public static function getpodcasts($input)
     {
-        $podcast_id      = $input['id'];
+        $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
         if (AmpConfig::get('podcast')) {
@@ -2726,9 +2726,9 @@ class Subsonic_Api
      */
     private static function _setStar($input, $star)
     {
-        $object_id = $input['id'];
-        $albumId   = $input['albumId'];
-        $artistId  = $input['artistId'];
+        $object_id = $input['id'] ?? null;
+        $albumId   = $input['albumId'] ?? null;
+        $artistId  = $input['artistId'] ?? null;
 
         // Normalize all in one array
         $ids = array();
