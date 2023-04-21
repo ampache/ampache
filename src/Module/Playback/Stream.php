@@ -451,7 +451,7 @@ class Stream
         // Never upsample a media
         if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1024);
         }
 
         return $bit_rate;

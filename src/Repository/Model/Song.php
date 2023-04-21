@@ -1804,7 +1804,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->get_f_album_link();
 
         // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
+        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
