@@ -37,9 +37,9 @@ use Ampache\Module\Util\Ui;
                     echo $libitem->f_avatar_mini;
                 }
                 echo $libitem->username;
-                if ($libitem->fullname_public || Access::check('interface', 100)) {
-                    echo " (" . $libitem->fullname . ")";
-                } ?>
+if ($libitem->fullname_public || Access::check('interface', 100)) {
+    echo " (" . $libitem->fullname . ")";
+} ?>
         </a>
     </td>
     <td class="cel_lastseen"><?php echo $last_seen; ?></td>

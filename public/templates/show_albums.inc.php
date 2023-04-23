@@ -92,57 +92,57 @@ if ($browse->is_show_header()) {
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
             <?php } ?>
             <?php if (!$hide_genres) {
-    ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo $genres_text; ?></th>
             <?php
-} ?>
+            } ?>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
                 <?php
-    } ?>
+            } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>
         </tr>
     </thead>
     <tbody>
         <?php global $dic;
-        $talFactory = $dic->get(TalFactoryInterface::class);
-        $guiFactory = $dic->get(GuiFactoryInterface::class);
-        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-            Userflag::build_cache('album', $object_ids);
-        }
-        /* Foreach through the albums */
-        foreach ($object_ids as $album_id) {
-            $libitem = new Album($album_id);
-            $libitem->format(true, $limit_threshold);
-            if ($directplay_limit > 0) {
-                $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
-            } ?>
+if (AmpConfig::get('ratings')) {
+    Rating::build_cache('album', $object_ids);
+    Userflag::build_cache('album', $object_ids);
+}
+/* Foreach through the albums */
+foreach ($object_ids as $album_id) {
+    $libitem = new Album($album_id);
+    $libitem->format(true, $limit_threshold);
+    if ($directplay_limit > 0) {
+        $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
+    } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
-                    ->setContext('USER_IS_REGISTERED', User::is_registered())
-                    ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                    ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
-                    ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                    ->setContext('IS_TABLE_VIEW', $is_table)
-                    ->setContext('IS_HIDE_GENRE', $hide_genres)
-                    ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
-                    ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                    ->setContext('CLASS_COVER', $cel_cover)
-                    ->setContext('CLASS_ALBUM', $cel_album)
-                    ->setContext('CLASS_ARTIST', $cel_artist)
-                    ->setContext('CLASS_TAGS', $cel_tags)
-                    ->setContext('CLASS_COUNTER', $cel_counter)
-                    ->setTemplate('album_row.xhtml')
-                    ->render();
+            ->setContext('USER_IS_REGISTERED', User::is_registered())
+            ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+            ->setContext('ALBUM', $guiFactory->createAlbumViewAdapter($gatekeeper, $browse, $libitem))
+            ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+            ->setContext('IS_TABLE_VIEW', $is_table)
+            ->setContext('IS_HIDE_GENRE', $hide_genres)
+            ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+            ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+            ->setContext('CLASS_COVER', $cel_cover)
+            ->setContext('CLASS_ALBUM', $cel_album)
+            ->setContext('CLASS_ARTIST', $cel_artist)
+            ->setContext('CLASS_TAGS', $cel_tags)
+            ->setContext('CLASS_COUNTER', $cel_counter)
+            ->setTemplate('album_row.xhtml')
+            ->render();
 
-            echo $content; ?>
+    echo $content; ?>
         </tr>
         <?php
-        }?>
+}?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Album found'); ?></span></td>
@@ -174,5 +174,5 @@ if ($browse->is_show_header()) {
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

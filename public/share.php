@@ -34,8 +34,7 @@ use Ampache\Module\Application\Share\ShowDeleteAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-
+$action = $_REQUEST['action'] ?? '';
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
     define('OUTDATED_DATABASE_OK', 1);

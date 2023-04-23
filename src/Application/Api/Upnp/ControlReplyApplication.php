@@ -96,10 +96,10 @@ final class ControlReplyApplication implements ApplicationInterface
                     "</SOAP-ENV:Body> " .
                     "</SOAP-ENV:Envelope>";
                 break;
-            // "<SearchCaps>dc:creator,dc:date,dc:title,upnp:album,upnp:actor,upnp:artist,upnp:class,upnp:genre,@id,@parentID,@refID</SearchCaps>" .
-            // 17/10 removed upnp:author@role, from searchcaps as this is not trivial to implement
-            // 20/10 put it back because it stops M1000 from searching for anything ("Search not supported on this server")
             case 'searchcapabilities':
+                // "<SearchCaps>dc:creator,dc:date,dc:title,upnp:album,upnp:actor,upnp:artist,upnp:class,upnp:genre,@id,@parentID,@refID</SearchCaps>" .
+                // 17/10 removed upnp:author@role, from searchcaps as this is not trivial to implement
+                // 20/10 put it back because it stops M1000 from searching for anything ("Search not supported on this server")
                 $soapXML = "<?xml version=\"1.0\"?>" .
                     "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
                     "<s:Body>" .

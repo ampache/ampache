@@ -45,7 +45,7 @@ global $dic;
 $ui = $dic->get(UiInterface::class);
 
 $ui->show(
-        'show_form_genre.inc.php',
+    'show_form_genre.inc.php',
     [
         'type' => $browse_type
     ]

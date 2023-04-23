@@ -104,7 +104,8 @@ $configuration['database_password'] = '*********'; ?>
         </tr>
         <tr>
             <td><?php echo T_('Override Execution Time'); ?></td>
-            <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
+            <td><?php set_time_limit(0);
+echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Open Basedir'); ?></td>
@@ -171,7 +172,7 @@ $configuration['database_password'] = '*********'; ?>
                 <td><?php echo $value; ?></td>
             </tr>
     <?php }
-} ?>
+    } ?>
             </tbody>
     </table>
     <?php Ui::show_box_bottom(); ?>

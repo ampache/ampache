@@ -51,10 +51,10 @@ $t_search    = T_('Search'); ?>
             <?php } ?>
         </select>
         <?php if ($environment->isMobile()) {
-    echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
-} else {
-    echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
-} ?>
+            echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
+        } else {
+            echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";
+        } ?>
     </form>
 </div>
 

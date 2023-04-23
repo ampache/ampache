@@ -54,5 +54,5 @@ $name = scrub_out($libitem->get_fullname()); ?>
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>
     <?php }
-} ?>
+    } ?>
 </td>

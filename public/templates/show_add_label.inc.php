@@ -45,41 +45,41 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
         <td>
             <select name="category">
                 <option value="personal" <?php if (empty($_REQUEST['category']) || $_REQUEST['category'] === "personal") {
-    echo "selected";
-} ?>><?php echo T_('Personal'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Personal'); ?></option>
                 <option value="association" <?php if (Core::get_request('category') === "association") {
-    echo "selected";
-} ?>><?php echo T_('Association'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Association'); ?></option>
                 <option value="company" <?php if (Core::get_request('category') === "company") {
-    echo "selected";
-} ?>><?php echo T_('Company'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Company'); ?></option>
                 <option value="imprint" <?php if (Core::get_request('category') === "imprint") {
-    echo "selected";
-} ?>><?php echo T_('Imprint'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Imprint'); ?></option>
                 <option value="production" <?php if (Core::get_request('category') === "production") {
-    echo "selected";
-} ?>><?php echo T_('Production'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Production'); ?></option>
                 <option value="original production" <?php if (Core::get_request('category') === "original production") {
-    echo "selected";
-} ?>><?php echo T_('Original Production'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Original Production'); ?></option>
                 <option value="bootleg production" <?php if (Core::get_request('category') === "bootleg production") {
-    echo "selected";
-} ?>><?php echo T_('Bootleg Production'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Bootleg Production'); ?></option>
                 <option value="reissue production" <?php if (Core::get_request('category') === "reissue production") {
-    echo "selected";
-} ?>><?php echo T_('Reissue Production'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Reissue Production'); ?></option>
                 <option value="distributor" <?php if (Core::get_request('category') === "distributor") {
-    echo "selected";
-} ?>><?php echo T_('Distributor'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Distributor'); ?></option>
                 <option value="holding" <?php if (Core::get_request('category') === "holding") {
-    echo "selected";
-} ?>><?php echo T_('Holding'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Holding'); ?></option>
                 <option value="rights society" <?php if (Core::get_request('category') === "rights society") {
-    echo "selected";
-} ?>><?php echo T_('Rights Society'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Rights Society'); ?></option>
                 <option value="tag_generated" <?php if (Core::get_request('category') === "tag_generated") {
-    echo "selected";
-} ?>><?php echo T_('Tag Generated'); ?></option>
+                    echo "selected";
+                } ?>><?php echo T_('Tag Generated'); ?></option>
             </select>
         </td>
 </tr>
@@ -119,11 +119,11 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
     <td>
         <select name="active">
             <option value="1" <?php if ((int)$_REQUEST['active'] === 1) {
-    echo "selected";
-} ?>><?php echo T_('Active'); ?></option>
+                echo "selected";
+            } ?>><?php echo T_('Active'); ?></option>
             <option value="0" <?php if (empty($_REQUEST['active']) || (int)$_REQUEST['active'] === 0) {
-    echo "selected";
-} ?>><?php echo T_('Inactive'); ?></option>
+                echo "selected";
+            } ?>><?php echo T_('Inactive'); ?></option>
         </select>
     </td>
 </tr>

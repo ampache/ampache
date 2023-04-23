@@ -87,8 +87,8 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <span>
                     <?php if ($client->apikey) {
-                    echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
-                } ?>
+                        echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
+                    } ?>
                 </span>
             </td>
         </tr>
@@ -102,8 +102,8 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <span>
                     <?php if ($client->streamtoken) {
-                    echo $client->streamtoken;
-                } ?>
+                        echo $client->streamtoken;
+                    } ?>
                 </span>
             </td>
         </tr>
@@ -117,8 +117,8 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <span>
                     <?php if ($client->rsstoken) {
-                    echo $client->rsstoken;
-                } ?>
+                        echo $client->rsstoken;
+                    } ?>
                 </span>
             </td>
         </tr>

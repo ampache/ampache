@@ -50,7 +50,7 @@ final class PreferenceCreateMethod
      * filter      = (string) preference name
      * type        = (string) 'boolean', 'integer', 'string', 'special'
      * default     = (string|integer) default value
-     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'
+     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
      * level       = (integer) access level required to change the value (default 100) //optional
@@ -80,7 +80,7 @@ final class PreferenceCreateMethod
             return false;
         }
         $category = (string) $input['category'];
-        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'))) {
+        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'category', $input['api_format']);
 
             return false;

@@ -83,8 +83,7 @@ class Upnp_Api
         $key  = 'ampache_' . AmpConfig::get('http_host');
         $hash = hash('md5', $key);
 
-        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16,
-                4) . '-' . substr($hash, 20);
+        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
     }
 
     /* ================================== Begin SSDP functions ================================== */
@@ -1312,9 +1311,10 @@ class Upnp_Api
                 case 'upnp:genre':
                     $term['ruletype'] = 'tag';
                     break;
-                case 'upnp:artist': // Artist is not implemented unformly through the database
-                                    // If we're about to search the album table, we need to look
-                                    // for album_artist instead of artist
+                case 'upnp:artist':
+                    // Artist is not implemented unformly through the database
+                    // If we're about to search the album table, we need to look
+                    // for album_artist instead of artist
                     if ($context == 'album') {
                         $term['ruletype'] = 'album_artist';
                     } else {
@@ -1514,7 +1514,7 @@ class Upnp_Api
                     $artist->format();
                     $mediaItems[] = self::_itemArtist($artist, "amp://music/artists");
                 }
-            break;
+                break;
             case 'song':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $song_id) {
@@ -1523,7 +1523,7 @@ class Upnp_Api
                     $parent       = 'amp://music/albums/' . (string) $song->album;
                     $mediaItems[] = self::_itemSong($song, $parent);
                 }
-            break;
+                break;
             case 'album':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
@@ -1532,7 +1532,7 @@ class Upnp_Api
                     //debug_event(self::class, $album->get_fullname(), 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
-            break;
+                break;
             case 'playlist':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $pl_id) {
@@ -1540,7 +1540,7 @@ class Upnp_Api
                     $playlist->format();
                     $mediaItems[] = self::_itemPlaylist($playlist, "amp://music/playlists");
                 }
-            break;
+                break;
             case 'tag':
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $tag_id) {
@@ -1548,8 +1548,8 @@ class Upnp_Api
                     $tag->format();
                     $mediaItems[] = self::_itemTag($tag, "amp://music/tags");
                 }
-            break;
-    }
+                break;
+        }
         if ($maxCount == 0) {
             $maxCount = count($mediaItems);
         }

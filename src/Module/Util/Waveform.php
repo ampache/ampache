@@ -70,30 +70,30 @@ class Waveform
 
     /**
      * Get a song or podcast_episode waveform.
-     * @param Song|Podcast_Episode $object
+     * @param Song|Podcast_Episode $media
      * @param string $object_type
      * @return string|null|boolean
      * @throws RuntimeException
      */
-    public static function get($object, string $object_type)
+    public static function get($media, string $object_type)
     {
         $waveform = null;
 
-        if ($object->id) {
-            $object->format();
+        if ($media->id) {
+            $media->format();
             if (AmpConfig::get('album_art_store_disk')) {
-                $waveform = self::get_from_file($object->id, $object_type);
+                $waveform = self::get_from_file($media->id, $object_type);
             } else {
-                $waveform = $object->waveform;
+                $waveform = $media->waveform;
             }
             if ($waveform == null || $waveform == false) {
-                $catalog = Catalog::create_from_id($object->catalog);
+                $catalog = Catalog::create_from_id($media->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
                     $transcode_cfg = AmpConfig::get('transcode');
-                    $valid_types   = $object->get_stream_types();
+                    $valid_types   = $media->get_stream_types();
 
-                    if ($object->type != $transcode_to) {
+                    if ($media->type != $transcode_to) {
                         $basedir = Core::get_tmp_dir();
                         if ($basedir) {
                             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types)) {
@@ -106,10 +106,11 @@ class Waveform
                                     return null;
                                 }
 
-                                $transcoder  = Stream::start_transcode($object, $transcode_to);
-                                $filepointer = $transcoder['handle'];
+                                $transcode_settings = $media->get_transcode_settings($transcode_to);
+                                $transcoder         = Stream::start_transcode($media, $transcode_settings);
+                                $filepointer        = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
-                                    debug_event(self::class, "Failed to open " . $object->file . " for waveform.", 3);
+                                    debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 
                                     return null;
                                 }
@@ -137,15 +138,15 @@ class Waveform
                         }
                     } else {
                         // Already wav file, no transcode required
-                        $waveform = self::create_waveform($object->file);
+                        $waveform = self::create_waveform($media->file);
                     }
                 }
 
                 if ($waveform !== null && $waveform !== false) {
                     if (AmpConfig::get('album_art_store_disk')) {
-                        self::save_to_file($object->id, $object_type, $waveform);
+                        self::save_to_file($media->id, $object_type, $waveform);
                     } else {
-                        self::save_to_db($object->id, $object_type, $waveform);
+                        self::save_to_db($media->id, $object_type, $waveform);
                     }
                 }
             }

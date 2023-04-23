@@ -1776,7 +1776,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         if (!isset($this->artists)) {
-            self::get_artists();
+            $this->get_artists();
         }
         if (!isset($this->albumartists)) {
             $this->albumartists = self::get_parent_array($this->album, 'album');
@@ -1804,7 +1804,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->get_f_album_link();
 
         // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
+        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
@@ -1956,7 +1956,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $this->f_artist_link  = '';
             $web_path             = AmpConfig::get('web_path');
             if (!isset($this->artists)) {
-                self::get_artists();
+                $this->get_artists();
             }
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out($this->get_artist_fullname($artist_id));
@@ -2266,7 +2266,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
         // if you transcode the media mime will change
         if (empty($additional_params) && !strpos($additional_params, 'action=download')) {
-            $transcode_type = Stream::get_transcode_format($this->type, null, $player);
+            $cache_path   = (string)AmpConfig::get('cache_path', '');
+            $cache_target = (string)AmpConfig::get('cache_target', '');
+            $file_target  = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
+            if ($file_target && is_file($file_target)) {
+                $transcode_type = $cache_target;
+            } else {
+                $transcode_type = Stream::get_transcode_format($this->type, null, $player);
+            }
             if ($this->type !== $transcode_type) {
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($this->type);

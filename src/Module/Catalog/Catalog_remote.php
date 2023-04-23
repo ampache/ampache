@@ -408,7 +408,7 @@ class Catalog_remote extends Catalog
 
         $remote = AmpConfig::get('cache_remote');
         $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination, source and target format
         if (!is_dir($path) || !$remote || !$target) {
             debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);

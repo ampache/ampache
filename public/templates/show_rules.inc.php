@@ -46,12 +46,12 @@ $logic_operator = strtolower($logic_operator); ?>
     <td><?php echo T_('Match'); ?></td>
         <td>
                 <select name="operator">
-                        <option value="and" <?php if ($logic_operator == 'and') {
-    echo 'selected="selected"';
-}?>><?php echo T_('all rules'); ?></option>
-                        <option value="or" <?php if ($logic_operator == 'or') {
-    echo 'selected="selected"';
-}?>><?php echo T_('any rule'); ?></option>
+                    <option value="and" <?php if ($logic_operator == 'and') {
+                        echo 'selected="selected"';
+                    }?>><?php echo T_('all rules'); ?></option>
+                    <option value="or" <?php if ($logic_operator == 'or') {
+                        echo 'selected="selected"';
+                    }?>><?php echo T_('any rule'); ?></option>
                 </select>
         </td>
         </tr>
@@ -67,9 +67,7 @@ $logic_operator = strtolower($logic_operator); ?>
 </tbody>
 </table>
 <?php Ui::show_box_bottom(); ?>
-
-<?php
-if (isset($playlist)) {
+<?php if (isset($playlist)) {
     $out = $playlist->to_js();
 } else {
     $mysearch = new Search(null, $currentType);

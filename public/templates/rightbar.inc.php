@@ -45,7 +45,7 @@ $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -
     <li>
         <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
     </li>
-    <?php if (Access::check('interface', 25)) { ?>
+<?php if (Access::check('interface', 25)) { ?>
         <li id="pl_add">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
@@ -53,19 +53,18 @@ $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php global $dic;
-            $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
-                $user_id
-            );
-            foreach ($playlists as $playlist) { ?>
+    $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
+        $user_id
+    );
+    foreach ($playlists as $playlist) { ?>
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->get_fullname(), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php } ?>
             </ul>
         </li>
-    <?php }
-// @todo remove after refactoring
-global $dic;
+<?php }
+global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
@@ -101,10 +100,10 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 <ul id="rb_current_playlist" class="striped-rows">
 
 <?php $objects = array();
-    // FIXME :: this is kludgy
-    if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
-        $objects = Core::get_global('user')->playlist->get_items();
-    } ?>
+// FIXME :: this is kludgy
+if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+    $objects = Core::get_global('user')->playlist->get_items();
+} ?>
     <script>
         <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
              $("#content").removeClass("content-right-wild", 500);
@@ -118,31 +117,31 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
         <?php } ?>
     </script>
 <?php
-    // Limit the number of objects we show here
-    if (count($objects) > 100) {
-        $truncated = (count($objects) - 100);
-        $objects   = array_slice($objects, 0, 100, true);
-    }
+// Limit the number of objects we show here
+if (count($objects) > 100) {
+    $truncated = (count($objects) - 100);
+    $objects   = array_slice($objects, 0, 100, true);
+}
 
-    $normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
 
-    foreach ($objects as $object_data) {
-        $uid  = $object_data['track_id'];
-        $type = array_shift($object_data);
-        if (in_array($type, $normal_array)) {
-            /** @var Ampache\Repository\Model\playable_item $object */
-            $class_name = ObjectTypeToClassNameMapper::map($type);
-            $object     = new $class_name(array_shift($object_data)); ?>
+foreach ($objects as $object_data) {
+    $uid  = $object_data['track_id'];
+    $type = array_shift($object_data);
+    if (in_array($type, $normal_array)) {
+        /** @var Ampache\Repository\Model\playable_item $object */
+        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $object     = new $class_name(array_shift($object_data)); ?>
     <li>
       <?php echo $object->get_f_link();
-            echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
+        echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
-        }
-    } if (!count($objects)) { ?>
+    }
+} if (!count($objects)) { ?>
     <li><span class="nodata"><?php echo T_('No items'); ?></span></li>
 <?php }
-    if (isset($truncated)) { ?>
+if (isset($truncated)) { ?>
     <li>
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>

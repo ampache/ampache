@@ -939,9 +939,9 @@ class Art extends database_object
                 imagegif($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_GIF);
                 break;
-            // Turn bmps into pngs
             case 'bmp':
             case 'png':
+                // Turn bmps into pngs
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
                 break;

@@ -65,32 +65,32 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     </thead>
     <tbody>
         <?php global $dic;
-        $talFactory = $dic->get(TalFactoryInterface::class);
-        $guiFactory = $dic->get(GuiFactoryInterface::class);
-        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-        foreach ($object_ids as $playlist_id) {
-            $libitem = new Playlist($playlist_id);
-            $libitem->format();
+foreach ($object_ids as $playlist_id) {
+    $libitem = new Playlist($playlist_id);
+    $libitem->format();
 
-            // Don't show empty playlist if not admin or the owner
-            if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
+    // Don't show empty playlist if not admin or the owner
+    if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
-                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                ->setContext('IS_SHOW_ART', $show_art)
-                ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                ->setContext('CLASS_COVER', $cel_cover)
-                ->setTemplate('playlist_row.xhtml')
-                ->render();
+        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+        ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+        ->setContext('IS_SHOW_ART', $show_art)
+        ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+        ->setContext('CLASS_COVER', $cel_cover)
+        ->setTemplate('playlist_row.xhtml')
+        ->render();
 
-            echo $content; ?>
+        echo $content; ?>
         </tr>
         <?php
-            }
-        } // end foreach ($playlists as $playlist)?>
+    }
+} // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
@@ -117,5 +117,5 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

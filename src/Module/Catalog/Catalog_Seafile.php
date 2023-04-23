@@ -293,8 +293,8 @@ class Catalog_Seafile extends Catalog
                     if ($this->insert_song($file)) {
                         return 1;
                     }
-                    //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                    //    // TODO $this->insert_video()
+                //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
+                //    // TODO $this->insert_video()
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {

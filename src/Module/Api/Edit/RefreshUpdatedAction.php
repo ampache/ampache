@@ -112,25 +112,25 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $hide_year      = in_array('cel_year', $argument);
                 $hide_drag      = in_array('cel_drag', $argument);
                 $results        = preg_replace(
-                '/<\/?html(.|\s)*?>/',
-                '',
-                $this->talFactory->createTalView()
-                    ->setContext('BROWSE_ARGUMENT', '')
-                    ->setContext('USER_IS_REGISTERED', true)
-                    ->setContext('USING_RATINGS', $show_ratings)
-                    ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                    ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
-                    ->setContext('ARGUMENT_PARAM', $argument_param)
-                    ->setContext('IS_TABLE_VIEW', true)
-                    ->setContext('IS_SHOW_TRACK', (!empty($argument)))
-                    ->setContext('IS_SHOW_LICENSE', $show_license)
-                    ->setContext('IS_HIDE_GENRE', $hide_genres)
-                    ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                    ->setContext('IS_HIDE_ALBUM', $hide_album)
-                    ->setContext('IS_HIDE_YEAR', $hide_year)
-                    ->setContext('IS_HIDE_DRAG', $hide_drag)
-                    ->setTemplate('song_row.xhtml')
-                    ->render()
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('BROWSE_ARGUMENT', '')
+                        ->setContext('USER_IS_REGISTERED', true)
+                        ->setContext('USING_RATINGS', $show_ratings)
+                        ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('ARGUMENT_PARAM', $argument_param)
+                        ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_SHOW_TRACK', (!empty($argument)))
+                        ->setContext('IS_SHOW_LICENSE', $show_license)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
+                        ->setContext('IS_HIDE_ARTIST', $hide_artist)
+                        ->setContext('IS_HIDE_ALBUM', $hide_album)
+                        ->setContext('IS_HIDE_YEAR', $hide_year)
+                        ->setContext('IS_HIDE_DRAG', $hide_drag)
+                        ->setTemplate('song_row.xhtml')
+                        ->render()
                 );
                 break;
             case 'playlist_row':
@@ -370,7 +370,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $results = ob_get_contents();
 
                 ob_end_clean();
-    }
+        }
 
         return $this->responseFactory->createResponse()
             ->withBody(

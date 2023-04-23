@@ -79,17 +79,17 @@ if ($browse->is_show_header()) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        /** @var Ampache\Repository\Model\playable_item $media */
+        /** @var \Ampache\Repository\Model\Song $media */
         $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
         $media      = new $class_name($item['object_id']);
         $media->format(); ?>
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-            echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']);
-        } else {
-            echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']);
-        } ?>
+        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']);
+    } else {
+        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']);
+    } ?>
     </td>
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
     <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
@@ -122,5 +122,5 @@ if ($browse->is_show_header()) {
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-        require Ui::find_template('list_header.inc.php');
-    } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

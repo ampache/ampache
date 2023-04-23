@@ -2065,15 +2065,15 @@ Add a new preference to your server
 
 **ACCESS REQUIRED:** 100 (Admin)
 
-| Input         | Type    | Description                                                                      | Optional |
-|---------------|---------|----------------------------------------------------------------------------------|---------:|
-| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')                                |       NO |
-| 'type'        | string  | `boolean`, `integer`, `string`, `special`                                        |       NO |
-| 'default'     | mixed   | string or integer default value                                                  |       NO |
-| 'category'    | string  | `interface`, `internal`, `options`, `playlist`, `plugins`, `streaming`, `system` |       NO |
-| 'description' | string  |                                                                                  |      YES |
-| 'subcategory' | string  |                                                                                  |      YES |
-| 'level'       | integer | access level required to change the value (default 100)                          |      YES |
+| Input         | Type    | Description                                                            | Optional |
+|---------------|---------|------------------------------------------------------------------------|---------:|
+| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')                      |       NO |
+| 'type'        | string  | `boolean`, `integer`, `string`, `special`                              |       NO |
+| 'default'     | mixed   | string or integer default value                                        |       NO |
+| 'category'    | string  | `interface`, `internal`, `options`, `playlist`, `plugins`, `streaming` |       NO |
+| 'description' | string  |                                                                        |      YES |
+| 'subcategory' | string  |                                                                        |      YES |
+| 'level'       | integer | access level required to change the value (default 100)                |      YES |
 
 * return
 

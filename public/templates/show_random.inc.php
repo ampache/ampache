@@ -87,22 +87,23 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <tr id="search_length">
         <td><?php echo T_('Length'); ?></td>
         <td>
-                <?php $name = 'length_' . (int) (Core::get_post('length')); ${$name} = ' selected="selected"'; ?>
+                <?php $name = 'length_' . (int) (Core::get_post('length'));
+${$name}                    = ' selected="selected"'; ?>
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                (($length == 0) ? 'selected="selected"' : '') . '>' .
-                T_('Unlimited') . "</option>\n";
-        foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '" ' .
-                (($length == $i) ? 'selected="selected"' : '') . '>';
-            if ($i < 60) {
-                printf(nT_('%d minute', '%d minutes', $i), $i);
-            } else {
-                printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
-            }
-            echo "</option>\n";
-        } ?>
+(($length == 0) ? 'selected="selected"' : '') . '>' .
+T_('Unlimited') . "</option>\n";
+foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
+    echo "\t\t\t" . '<option value="' . $i . '" ' .
+        (($length == $i) ? 'selected="selected"' : '') . '>';
+    if ($i < 60) {
+        printf(nT_('%d minute', '%d minutes', $i), $i);
+    } else {
+        printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
+    }
+    echo "</option>\n";
+} ?>
                 </select>
         </td>
 </tr>
@@ -111,14 +112,14 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
         <td>
                 <select name="size_limit">
 <?php
-            echo "\t\t\t" . '<option value="0" ' .
-                (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
-                T_('Unlimited') . "</option>\n";
-        foreach (array(64, 128, 256, 512, 1024) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '"' .
-                (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
-                Ui::format_bytes($i * 1048576) . "</option>\n";
-        } ?>
+    echo "\t\t\t" . '<option value="0" ' .
+        (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
+        T_('Unlimited') . "</option>\n";
+foreach (array(64, 128, 256, 512, 1024) as $i) {
+    echo "\t\t\t" . '<option value="' . $i . '"' .
+        (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
+        Ui::format_bytes($i * 1048576) . "</option>\n";
+} ?>
                 </select>
         </td>
 </tr>

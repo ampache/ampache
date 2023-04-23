@@ -457,7 +457,7 @@ class Subsonic_Xml_Data
                 $xsong->addAttribute('coverArt', $sub_id);
             }
             $xsong->addAttribute('duration', (string)$song->time);
-            $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1000)));
+            $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
             $rating      = new Rating($song->id, "song");
             $user_rating = ($rating->get_user_rating() ?? 0);
             if ($user_rating > 0) {
@@ -605,8 +605,8 @@ class Subsonic_Xml_Data
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count();
-            $xgenre->addAttribute('songCount', (string) $counts['song'] ?? 0);
-            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?? 0);
+            $xgenre->addAttribute('songCount', (string)($counts['song'] ?? 0));
+            $xgenre->addAttribute('albumCount', (string)($counts['album'] ?? 0));
         }
     }
 

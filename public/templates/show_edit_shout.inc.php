@@ -42,8 +42,8 @@ Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>
 </tr>
 <tr>
     <td><input type="checkbox" name="sticky" <?php if ($shout->sticky == "1") {
-    echo "checked";
-} ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
+        echo "checked";
+    } ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
 <tr>
     <td><input type="submit" value="<?php echo T_('Update'); ?>" /></td>

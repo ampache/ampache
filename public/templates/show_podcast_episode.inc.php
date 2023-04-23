@@ -107,25 +107,25 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'b
     </dd>
 <?php
     $songprops[T_('Title')]                  = $episode->get_fullname();
-    $songprops[T_('Description')]            = $episode->description;
-    $songprops[T_('Category')]               = $episode->f_category;
-    $songprops[T_('Author')]                 = $episode->f_author;
-    $songprops[T_('Publication Date')]       = $episode->f_pubdate;
-    $songprops[T_('State')]                  = $episode->f_state;
-    $songprops[T_('Website')]                = $episode->f_website;
-    if ($episode->time > 0) {
-        $songprops[T_('Length')]           = $episode->f_time;
-    }
+$songprops[T_('Description')]                = $episode->description;
+$songprops[T_('Category')]                   = $episode->f_category;
+$songprops[T_('Author')]                     = $episode->f_author;
+$songprops[T_('Publication Date')]           = $episode->f_pubdate;
+$songprops[T_('State')]                      = $episode->f_state;
+$songprops[T_('Website')]                    = $episode->f_website;
+if ($episode->time > 0) {
+    $songprops[T_('Length')]           = $episode->f_time;
+}
 
-    if (!empty($episode->file)) {
-        $songprops[T_('File')] = $episode->file;
-        $songprops[T_('Size')] = $episode->f_size;
-    }
+if (!empty($episode->file)) {
+    $songprops[T_('File')] = $episode->file;
+    $songprops[T_('Size')] = $episode->f_size;
+}
 
-    foreach ($songprops as $key => $value) {
-        if (trim($value)) {
-            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
-        }
-    } ?>
+foreach ($songprops as $key => $value) {
+    if (trim($value)) {
+        echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
+    }
+} ?>
 </dl>
 <?php Ui::show_box_bottom(); ?>

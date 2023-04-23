@@ -96,8 +96,8 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     <tr id="random_results">
         <td><?php echo T_('Random'); ?></td>
         <td><input type="checkbox" name="random" value="1" <?php if ($random == 1) {
-    echo "checked";
-} ?> /></td>
+            echo "checked";
+        } ?> /></td>
     </tr>
 </table>
 

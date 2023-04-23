@@ -294,7 +294,7 @@ class Xml4_Data
                 }
 
                 return UI::clean_utf8($string);
-            }
+        }
     } // output_from_array
 
     /**

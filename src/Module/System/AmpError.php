@@ -33,7 +33,7 @@ namespace Ampache\Module\System;
 class AmpError
 {
     private static $state  = false; // set to one when an error occurs
-     public static $errors = array(); // Errors array key'd array with errors that have occurred
+    public static $errors  = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __destruct

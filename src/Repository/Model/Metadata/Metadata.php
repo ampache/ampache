@@ -176,7 +176,7 @@ trait Metadata
                 }
             }
             $this->disabledMetadataFields = array_merge(
-                    $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
+                $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
 

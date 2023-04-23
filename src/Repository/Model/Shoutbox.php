@@ -301,8 +301,7 @@ class Shoutbox
                     T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
             }
             if (Access::check('interface', 25)) {
-                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . Ui::get_icon('comment',
-                        T_('Post Shout')) . "</a>";
+                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
         }

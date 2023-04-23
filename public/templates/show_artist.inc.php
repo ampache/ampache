@@ -73,18 +73,16 @@ Ui::show_box_top($title, 'info-box'); ?>
         <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
     <?php } ?>
     </div>
-    <?php if (AmpConfig::get('lastfm_api_key')) {
+<?php if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info')); ?>
         <div id="artist_biography">
             <?php echo T_('Loading...'); ?>
         </div>
-    <?php
-} else {
-        $thumb = 32;
-        Art::display('artist', $artist->id, $title, $thumb);
-    } ?>
+<?php } else {
+    $thumb = 32;
+    Art::display('artist', $artist->id, $title, $thumb);
+} ?>
 </div>
-
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
@@ -93,30 +91,26 @@ Ui::show_box_top($title, 'info-box'); ?>
     <span id="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>
-    <?php } ?>
-<?php } ?>
-<?php if (AmpConfig::get('show_played_times')) { ?>
+    <?php }
+    }
+if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
-        /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
+            /* HINT: Number of times an object has been played */
+            sprintf(nT_('%d time', '%d times', $artist->total_count), $artist->total_count); ?>
 </div>
-<?php } ?>
-
-<?php
+<?php }
 $owner_id = $artist->get_user_owner();
 if (AmpConfig::get('sociable') && $owner_id > 0) {
     $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
     <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
 </div>
-<?php
-} ?>
-
+<?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
-        <?php if ($object_type == 'album' || $object_type == 'album_disk') { ?>
+<?php if ($object_type == 'album' || $object_type == 'album_disk') { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
@@ -129,85 +123,81 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Show All'); ?>
             </a>
         </li>
-        <?php } else { ?>
+<?php } else { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Albums')); ?>
                 <?php echo T_('Show Albums'); ?>
             </a>
         </li>
-        <?php } ?>
-        <?php if ($show_direct_play) { ?>
+<?php } ?>
+<?php if ($show_direct_play) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
         </li>
-            <?php if (Stream_Playlist::check_autoplay_next()) { ?>
+    <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_artist_' . $artist->id); ?>
         </li>
-            <?php } ?>
-            <?php if (Stream_Playlist::check_autoplay_append()) { ?>
+    <?php } ?>
+    <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
         </li>
-            <?php } ?>
-        <?php } ?>
-        <?php if ($show_playlist_add) { ?>
+    <?php } ?>
+<?php } ?>
+<?php if ($show_playlist_add) { ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=artist&id=' . $artist->id, 'add', T_('Add All to Temporary Playlist'), 'add_' . $artist->id); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
         </li>
-        <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+<?php } ?>
+<?php if (Access::check('interface', 50)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
-            <?php if ($artist->mbid && Preference::get_by_user($user->id, 'mb_overwrite_name')) { ?>
+    <?php if ($artist->mbid && Preference::get_by_user($user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
                 <?php echo T_('Update details from MusicBrainz'); ?>
             </a>
         </li>
-            <?php } ?>
-        <?php } ?>
-        <?php if (AmpConfig::get('use_rss')) { ?>
+    <?php } ?>
+<?php } ?>
+<?php if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
         </li>
-        <?php } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
-            <?php if (AmpConfig::get('sociable')) {
+<?php } ?>
+<?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+    <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('comment', $postshout); ?>
-                <?php echo $postshout; ?>
+        <?php echo Ui::get_icon('comment', $postshout); ?>
+        <?php echo $postshout; ?>
             </a>
         </li>
-            <?php
-    } ?>
-        <?php } ?>
-        <?php
-        // @todo remove after refactoring
-        global $dic;
-        $zipHandler = $dic->get(ZipHandlerInterface::class);
-        if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
-            $download = T_('Download'); ?>
+    <?php }
+    }
+global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
+    $download = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download); ?>
                 <?php echo $download; ?>
             </a>
         </li>
-        <?php
-        } ?>
-        <?php if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
+<?php }
+if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
@@ -215,11 +205,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                         <?php echo T_('Graphs'); ?>
                     </a>
                 </li>
-            <?php } ?>
-        <?php } ?>
-        <?php if (canEditArtist($artist, $gatekeeper->getUserId())) {
-            if (AmpConfig::get('allow_upload')) {
-                $t_upload = T_('Upload'); ?>
+            <?php }
+            }
+if (canEditArtist($artist, $gatekeeper->getUserId())) {
+    if (AmpConfig::get('allow_upload')) {
+        $t_upload = T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
@@ -227,25 +217,23 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                     </a>
                 </li>
             <?php
-            } ?>
+    } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo addslashes(T_('Artist Edit')) ?>', '')">
                     <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                     <?php echo T_('Edit Artist'); ?>
                 </a>
             </li>
-        <?php
-        } ?>
-        <?php if (Catalog::can_remove($artist)) {
-            $delete = T_('Delete'); ?>
+        <?php }
+if (Catalog::can_remove($artist)) {
+    $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?>
                 <?php echo $delete; ?>
             </a>
         </li>
-        <?php
-        } ?>
+        <?php } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>
@@ -256,12 +244,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <li><a id="top_tracks_link" href="#top_tracks"><?php echo T_('Top Tracks'); ?></a></li>
 <?php if ($use_wanted) { ?>
             <li><a id="missing_albums_link" href="#missing_albums"><?php echo T_('Missing Albums'); ?></a></li>
-<?php } ?>
-<?php if ($show_similar) { ?>
+<?php }
+if ($show_similar) { ?>
             <li><a id="similar_artist_link" href="#similar_artist"><?php echo T_('Similar Artists'); ?></a></li>
             <li><a id="similar_songs_link" href="#similar_songs"><?php echo T_('Similar Songs'); ?></a></li>
-<?php } ?>
-<?php if ($use_label) { ?>
+<?php }
+if ($use_label) { ?>
             <li><a id="labels_link" href="#labels"><?php echo T_('Labels'); ?></a></li>
 <?php } ?>
             <!-- Needed to avoid the 'only one' bug -->
@@ -271,8 +259,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
 <?php if (!isset($multi_object_ids) || $multi_object_ids === null) {
-            $multi_object_ids = array('' => $object_ids);
-        }
+    $multi_object_ids = array('' => $object_ids);
+}
 
     foreach ($multi_object_ids as $key => $object_ids) {
         $title  = (!empty($key)) ? ucwords($key) : '';
@@ -289,42 +277,41 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php echo Ajax::observe('top_tracks_link', 'click', Ajax::action('?page=index&action=top_tracks&artist=' . $artist->id, 'top_tracks')); ?>
         <div id="top_tracks" class="tab_content">
             <?php Ui::show_box_top(null, 'info-box');
-            echo T_('Loading...');
-            Ui::show_box_bottom(); ?>
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
         </div>
 
 <?php if ($use_wanted) {
-                echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
+    echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
         <div id="missing_albums" class="tab_content">
         <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
-                echo T_('Loading...');
-                Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
         </div>
-<?php
-            } ?>
-<?php if ($show_similar) {
-                echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
+<?php }
+if ($show_similar) {
+    echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
         <div id="similar_artist" class="tab_content">
         <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
-                echo T_('Loading...');
-                Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
         </div>
         <?php echo Ajax::observe('similar_songs_link', 'click', Ajax::action('?page=index&action=similar_songs&artist=' . $artist->id, 'similar_songs')); ?>
         <div id="similar_songs" class="tab_content">
             <?php Ui::show_box_top(null, 'info-box');
-                echo T_('Loading...');
-                Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
         </div>
 <?php
-            } ?>
-<?php if ($use_label) {
-                echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
+}
+if ($use_label) {
+    echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
         <div id="labels" class="tab_content">
         <?php Ui::show_box_top(T_('Labels'), 'info-box');
-                echo T_('Loading...');
-                Ui::show_box_bottom(); ?>
+    echo T_('Loading...');
+    Ui::show_box_bottom(); ?>
         </div>
 <?php
-            } ?>
+} ?>
     </div>
 </div>

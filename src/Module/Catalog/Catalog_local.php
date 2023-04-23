@@ -698,7 +698,7 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            if (self::update_single_item($tableName, $row['id'], true)['change'] == true) {
+            if (self::update_single_item($tableName, $row['id'], true)['change']) {
                 $changed++;
             }
         }
@@ -1236,10 +1236,10 @@ class Catalog_local extends Catalog
         $ape    = AmpConfig::get('cache_ape');
         $shn    = AmpConfig::get('cache_shn');
         $mp3    = AmpConfig::get('cache_mp3');
-        $target = AmpConfig::get('cache_target');
         $path   = (string)AmpConfig::get('cache_path', '');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
 
             return false;
@@ -1314,7 +1314,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id);
+            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
             if (is_file($old_target_file)) {
                 // check for the old path first
@@ -1322,7 +1322,7 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
             $file_exists = ($target_file !== false && is_file($target_file));
-            $song        = new Song($song_id);
+            $media       = new Song($song_id);
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
@@ -1334,15 +1334,16 @@ class Catalog_local extends Catalog
                     $this->sort_pattern,
                     $this->rename_pattern
                 );
-                if ($song->time > 0 && !$vainfo->check_time($song->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->id, 5);
+                if ($media->time > 0 && !$vainfo->check_time($media->time)) {
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);
                     unlink($target_file);
                     $file_exists = false;
                 }
             }
             if (!$file_exists) {
                 // transcode to the new path
-                Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
+                $transcode_settings = $media->get_transcode_settings($target);
+                Stream::start_transcode($media, $transcode_settings, (string)$target_file);
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }
         }

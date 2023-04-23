@@ -367,8 +367,7 @@ class Subsonic_Api
                             $tagsArray[$childTagName] = in_array($childTagName,
                                 $options['alwaysArray']) || !$options['autoArray'] ? array($childProperties) : $childProperties;
                         }
-                    } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0,
-                            count($tagsArray[$childTagName]) - 1)) {
+                    } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
                         //key already exists and is integer indexed array
                         $tagsArray[$childTagName][] = $childProperties;
                     } else {
@@ -1832,8 +1831,7 @@ class Subsonic_Api
             debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type) && !empty($object_id)) {
-                // @todo remove after refactoring
-                global $dic;
+                global $dic; // @todo remove after refactoring
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
                 $response = Subsonic_Xml_Data::addSubsonicResponse('createshare');
@@ -1935,7 +1933,7 @@ class Subsonic_Api
      */
     public static function getpodcasts($input, $user)
     {
-        $podcast_id      = $input['id'];
+        $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
         if (AmpConfig::get('podcast')) {
@@ -2907,9 +2905,9 @@ class Subsonic_Api
      */
     private static function _setStar($input, $user, $star)
     {
-        $object_id = $input['id'];
-        $albumId   = $input['albumId'];
-        $artistId  = $input['artistId'];
+        $object_id = $input['id'] ?? null;
+        $albumId   = $input['albumId'] ?? null;
+        $artistId  = $input['artistId'] ?? null;
 
         // Normalize all in one array
         $ids = array();

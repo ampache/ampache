@@ -62,49 +62,49 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
     <tbody>
     <?php
     $count    = 0;
-    foreach ($data as $row) {
-        $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
-        $row_user = new User($row_id);
-        $song     = new Song($row['object_id']);
+foreach ($data as $row) {
+    $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
+    $row_user = new User($row_id);
+    $song     = new Song($row['object_id']);
 
-        $agent              = ($is_admin) ? $row['agent'] : '';
-        $time_string        = '-';
-        $has_allowed_recent = (bool) $row['user_recent'];
-        $has_allowed_time   = (bool) $row['user_time'];
-        $is_allowed_recent  = $is_admin || $user_id == $row_id || $has_allowed_recent;
-        $is_allowed_time    = $is_admin || $user_id == $row_id || $has_allowed_time;
-        // if you don't allow now_playing don't show the whole row
-        if ($is_allowed_recent) {
-            // add the time if you've allowed it
-            if ($is_allowed_time) {
-                $interval = (int) (time() - $row['date']);
+    $agent              = ($is_admin) ? $row['agent'] : '';
+    $time_string        = '-';
+    $has_allowed_recent = (bool) $row['user_recent'];
+    $has_allowed_time   = (bool) $row['user_time'];
+    $is_allowed_recent  = $is_admin || $user_id == $row_id || $has_allowed_recent;
+    $is_allowed_time    = $is_admin || $user_id == $row_id || $has_allowed_time;
+    // if you don't allow now_playing don't show the whole row
+    if ($is_allowed_recent) {
+        // add the time if you've allowed it
+        if ($is_allowed_time) {
+            $interval = (int) (time() - $row['date']);
 
-                if ($interval < 60) {
-                    $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
-                } elseif ($interval < 3600) {
-                    $interval    = floor($interval / 60);
-                    $time_string = sprintf(nT_('%d minute ago', '%d minutes ago', $interval), $interval);
-                } elseif ($interval < 86400) {
-                    $interval    = floor($interval / 3600);
-                    $time_string = sprintf(nT_('%d hour ago', '%d hours ago', $interval), $interval);
-                } elseif ($interval < 604800) {
-                    $interval    = floor($interval / 86400);
-                    $time_string = sprintf(nT_('%d day ago', '%d days ago', $interval), $interval);
-                } elseif ($interval < 2592000) {
-                    $interval    = floor($interval / 604800);
-                    $time_string = sprintf(nT_('%d week ago', '%d weeks ago', $interval), $interval);
-                } elseif ($interval < 31556926) {
-                    $interval    = floor($interval / 2592000);
-                    $time_string = sprintf(nT_('%d month ago', '%d months ago', $interval), $interval);
-                } elseif ($interval < 631138519) {
-                    $interval    = floor($interval / 31556926);
-                    $time_string = sprintf(nT_('%d year ago', '%d years ago', $interval), $interval);
-                } else {
-                    $interval    = floor($interval / 315569260);
-                    $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
-                }
+            if ($interval < 60) {
+                $time_string = sprintf(nT_('%d second ago', '%d seconds ago', $interval), $interval);
+            } elseif ($interval < 3600) {
+                $interval    = floor($interval / 60);
+                $time_string = sprintf(nT_('%d minute ago', '%d minutes ago', $interval), $interval);
+            } elseif ($interval < 86400) {
+                $interval    = floor($interval / 3600);
+                $time_string = sprintf(nT_('%d hour ago', '%d hours ago', $interval), $interval);
+            } elseif ($interval < 604800) {
+                $interval    = floor($interval / 86400);
+                $time_string = sprintf(nT_('%d day ago', '%d days ago', $interval), $interval);
+            } elseif ($interval < 2592000) {
+                $interval    = floor($interval / 604800);
+                $time_string = sprintf(nT_('%d week ago', '%d weeks ago', $interval), $interval);
+            } elseif ($interval < 31556926) {
+                $interval    = floor($interval / 2592000);
+                $time_string = sprintf(nT_('%d month ago', '%d months ago', $interval), $interval);
+            } elseif ($interval < 631138519) {
+                $interval    = floor($interval / 31556926);
+                $time_string = sprintf(nT_('%d year ago', '%d years ago', $interval), $interval);
+            } else {
+                $interval    = floor($interval / 315569260);
+                $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
-            $song->format(); ?>
+        }
+        $song->format(); ?>
             <tr>
                 <td class="cel_play">
                     <span class="cel_play_content">&nbsp;</span>
@@ -143,19 +143,19 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
                 <?php if ($is_admin) { ?>
                     <td class="cel_agent">
                     <?php if (!empty($agent)) {
-                echo Ui::get_icon('info', $agent); ?>
+                        echo Ui::get_icon('info', $agent); ?>
                         </td>
                     <?php
-            } ?>
+                    } ?>
                     <td class="cel_delete">
                         <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
             <?php
-            ++$count;
-        }
-    } ?>
+                    ++$count;
+    }
+} ?>
     <?php if (!count($data)) { ?>
         <tr>
             <td colspan="9"><span class="nodata"><?php echo T_('No recently played items found'); ?></span></td>
@@ -183,10 +183,10 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 </table>
 <div id="recent_more">
     <?php
-    $user_id_a = '';
-    if (isset($user_id) && !empty($user_id)) {
-        $user_id_a = "&amp;user_id=" . scrub_out($user_id);
-    } ?>
+$user_id_a = '';
+if (isset($user_id) && !empty($user_id)) {
+    $user_id_a = "&amp;user_id=" . scrub_out($user_id);
+} ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
 <script>

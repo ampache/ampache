@@ -47,8 +47,7 @@ class easy_captcha
         }
 
         #-- create new
-        if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED",
-                "regenerating store")) {
+        if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED", "regenerating store")) {
             $this->generate();
         }
     }
