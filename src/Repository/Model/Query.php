@@ -2111,7 +2111,9 @@ class Query
                     case 'catalog':
                         $this->set_join('LEFT', '`podcast`', '`podcast`.`id`', '`podcast_episode`.`podcast`', 100);
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
-                        $filter_sql = " `podcast`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                        if ($value != 0) {
+                            $filter_sql = " `podcast`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                        }
                         break;
                     case 'podcast':
                         $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
