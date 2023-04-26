@@ -139,19 +139,26 @@ class Stats
     }
 
     /**
-     * Delete a user activity in object_count
+     * Delete a user activity in object_count, find related objects and reduce counts for parent/child objects
      */
     public static function delete(int $activity_id)
     {
         if ($activity_id > 0) {
             $sql        = "SELECT `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`id` = ?;";
             $db_results = Dba::read($sql, array($activity_id));
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $sql = "DELETE FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ?";
-                Dba::write($sql, array($row['date'], $row['user'], $row['agent'], $row['count_type']));
-                if (in_array($row['object_type'], array('song', 'album', 'video', 'podcast', 'podcast_episode')) && $row['count_type'] === 'stream' && $row['user'] > 0 && $row['agent'] !== 'debug') {
-                    self::count($row['object_type'], $row['object_id'], 'down');
+            if ($row = Dba::fetch_assoc($db_results)) {
+                $params     = array($row['date'], $row['user'], $row['agent'], $row['count_type']);
+                $sql        = "SELECT `object_id`, `object_type` FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ? AND `count_type` = 'stream'";
+                $db_results = Dba::read($sql, $params);
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    // reduce the counts for these objects too
+                    if (in_array($row['object_type'], array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'))) {
+                        self::count($row['object_type'], $row['object_id'], 'down');
+                    }
                 }
+                // delete the row and all related activities
+                $sql = "DELETE FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ?";
+                Dba::write($sql, $params);
             }
         }
     }
