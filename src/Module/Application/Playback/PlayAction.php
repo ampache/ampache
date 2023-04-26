@@ -627,6 +627,7 @@ final class PlayAction implements ApplicationActionInterface
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
                 $transcode_to = false;
+                $transcode    = false;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -890,28 +891,18 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-
-        if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
+        if ($transcode) {
             $maxbitrate = (empty($transcode_settings))
-                ? $media->bitrate
+                ? $media->bitrate / 1024
                 : Stream::get_max_bitrate($media, $transcode_settings);
-            if (Core::get_request('content_length') == 'required') {
-                // Content-length guessing if required by the player.
-                if ($media->time > 0 && $maxbitrate > 0) {
-                    $stream_size = ($media->time * $maxbitrate * 1024) / 8;
-                } else {
-                    $this->logger->debug(
-                        'Bad media duration / Max bitrate. Content-length calculation skipped.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                    $stream_size = null;
-                }
+            if ($media->time > 0 && $maxbitrate > 0) {
+                $stream_size = ($media->time * $maxbitrate * 1024) / 8;
             } else {
-                // mp3 seems to be the only codec that calculates properly
-                $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
-                    ? $maxbitrate
-                    : floor($media->bitrate / 1024);
-                $stream_size = ($media->time * $stream_rate * 1024) / 8;
+                $this->logger->debug(
+                    'Bad media duration / Max bitrate. Content-length calculation skipped.',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                $stream_size = null;
             }
         } else {
             $stream_size = $media->size;
@@ -1033,7 +1024,6 @@ final class PlayAction implements ApplicationActionInterface
 
         // Actually do the streaming
         $bytes_streamed = 0;
-        $buf_all        = '';
         $r_arr          = array($filepointer);
         $w_arr          = $e_arr = array();
         $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
@@ -1043,44 +1033,64 @@ final class PlayAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
         } elseif ($status > 0) {
-            do {
-                if ($buf = fread($filepointer, 8192)) {
-                    if (!empty($buf)) {
-                        $buf_all .= $buf;
+            if ($transcode) {
+                // get the content length before sending headers
+                $buf_all = '';
+                do {
+                    if ($buf = fread($filepointer, 8192)) {
+                        if (!empty($buf)) {
+                            $buf_all .= $buf;
+                        }
+                        $bytes_streamed += strlen($buf);
                     }
-                    $bytes_streamed += strlen($buf);
+                } while (!feof($filepointer) && (connection_status() == 0));
+                $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
+                header('Transfer-Encoding: chunked');
+                foreach ($headers as $headerName => $value) {
+                    header(sprintf('%s: %s', $headerName, $value));
                 }
-            } while (!feof($filepointer) && (connection_status() == 0));
+                print($buf_all);
+                if (ob_get_length()) {
+                    ob_flush();
+                    flush();
+                    ob_end_flush();
+                }
+                ob_start();
+            } else {
+                // The media size doesn't change so we know the length
+                $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+                header('Transfer-Encoding: chunked');
+                foreach ($headers as $headerName => $value) {
+                    header(sprintf('%s: %s', $headerName, $value));
+                }
+                do {
+                    if ($buf = fread($filepointer, 8192)) {
+                        if (!empty($buf)) {
+                            print($buf);
+                            if (ob_get_length()) {
+                                ob_flush();
+                                flush();
+                                ob_end_flush();
+                            }
+                            ob_start();
+                        }
+                        $bytes_streamed += strlen($buf);
+                    }
+                } while (!feof($filepointer) && (connection_status() == 0));
+            }
         }
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
-        foreach ($headers as $headerName => $value) {
-            header(sprintf('%s: %s', $headerName, $value));
-        }
-        print($buf_all);
-        if (ob_get_length()) {
-            ob_flush();
-            flush();
-            ob_end_flush();
-        }
-        ob_start();
-
-        $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent. TODO: why?
-        if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
-            print(str_repeat(' ', $stream_size - $bytes_streamed));
-            $bytes_streamed = $stream_size;
-        }
-
+        // close any leftover handle and processes
         fclose($filepointer);
         if ($transcode && isset($transcoder)) {
             Stream::kill_process($transcoder);
         }
 
         $this->logger->debug(
-            'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size,
+            'Stream ended at ' . $bytes_streamed . ' bytes out of ' . $stream_size,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
         return null;
     }
 }
+
