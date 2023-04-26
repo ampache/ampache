@@ -152,7 +152,7 @@ class Stats
                 $db_results = Dba::read($sql, $params);
                 while ($row = Dba::fetch_assoc($db_results)) {
                     // reduce the counts for these objects too
-                    if (in_array($row['object_type'], array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode')) && $row['user'] > 0) {
+                    if (in_array($row['object_type'], array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'))) {
                         self::count($row['object_type'], $row['object_id'], 'down');
                     }
                 }
