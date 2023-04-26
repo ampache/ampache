@@ -789,7 +789,7 @@ class Catalog_local extends Catalog
 
         $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? ANS `file` IS NOT NULL LIMIT $count, $chunk_size;";
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT $count, $chunk_size;";
         $db_results = Dba::read($sql, array($this->catalog_id));
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
