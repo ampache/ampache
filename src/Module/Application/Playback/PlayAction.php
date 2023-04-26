@@ -627,6 +627,7 @@ final class PlayAction implements ApplicationActionInterface
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
                 $transcode_to = false;
+                $transcode    = false;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -890,28 +891,18 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-
-        if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
+        if ($transcode) {
             $maxbitrate = (empty($transcode_settings))
-                ? $media->bitrate
+                ? $media->bitrate / 1024
                 : Stream::get_max_bitrate($media, $transcode_settings);
-            if (Core::get_request('content_length') == 'required') {
-                // Content-length guessing if required by the player.
-                if ($media->time > 0 && $maxbitrate > 0) {
-                    $stream_size = ($media->time * $maxbitrate * 1024) / 8;
-                } else {
-                    $this->logger->debug(
-                        'Bad media duration / Max bitrate. Content-length calculation skipped.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                    $stream_size = null;
-                }
+            if ($media->time > 0 && $maxbitrate > 0) {
+                $stream_size = ($media->time * $maxbitrate * 1024) / 8;
             } else {
-                // mp3 seems to be the only codec that calculates properly
-                $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
-                    ? $maxbitrate
-                    : floor($media->bitrate / 1024);
-                $stream_size = ($media->time * $stream_rate * 1024) / 8;
+                $this->logger->debug(
+                    'Bad media duration / Max bitrate. Content-length calculation skipped.',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                $stream_size = null;
             }
         } else {
             $stream_size = $media->size;
@@ -1053,6 +1044,7 @@ final class PlayAction implements ApplicationActionInterface
             } while (!feof($filepointer) && (connection_status() == 0));
         }
         $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
+        header('Transfer-Encoding: chunked');
         foreach ($headers as $headerName => $value) {
             header(sprintf('%s: %s', $headerName, $value));
         }
@@ -1064,20 +1056,13 @@ final class PlayAction implements ApplicationActionInterface
         }
         ob_start();
 
-        $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent. TODO: why?
-        if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
-            print(str_repeat(' ', $stream_size - $bytes_streamed));
-            $bytes_streamed = $stream_size;
-        }
-
         fclose($filepointer);
         if ($transcode && isset($transcoder)) {
             Stream::kill_process($transcoder);
         }
 
         $this->logger->debug(
-            'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size,
+            'Stream ended at ' . $bytes_streamed . ' bytes out of ' . $stream_size,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
