@@ -1058,12 +1058,12 @@ final class PlayAction implements ApplicationActionInterface
                 ob_start();
             } else {
                 // The media size doesn't change so we know the length
+                $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+                header('Transfer-Encoding: chunked');
+                foreach ($headers as $headerName => $value) {
+                    header(sprintf('%s: %s', $headerName, $value));
+                }
                 do {
-                    $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
-                    header('Transfer-Encoding: chunked');
-                    foreach ($headers as $headerName => $value) {
-                        header(sprintf('%s: %s', $headerName, $value));
-                    }
                     if ($buf = fread($filepointer, 8192)) {
                         if (!empty($buf)) {
                             print($buf);
