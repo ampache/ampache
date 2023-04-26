@@ -38,4 +38,9 @@ $(document).ready(function() {
         refresh();
     }, refreshInterval * 1000);
 });
+
+// remove the timer when navigating away
+$(window).on('popstate', function() {
+    clearInterval(window.reloaditv);
+});
 </script>
