@@ -140,20 +140,19 @@ class Stream
         // TARGET > PLAYER > CODEC > DEFAULT
         if ($target) {
             return $target;
-        } elseif ($has_player_target) {
+        } elseif ($has_player_target && $source !== $has_player_target) {
             $target = $has_player_target;
             debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target) {
+        } elseif ($has_codec_target && $source !== $has_codec_target) {
             $target = $has_codec_target;
             debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target) {
+        } elseif ($has_default_target && $source !== $has_default_target) {
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no default
         if (!$target) {
             $target = $source;
-            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
         self::set_output_cache($target, $source, $input_target, $player, $media_type);
 
