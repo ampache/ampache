@@ -30,31 +30,31 @@ Ui::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name'] ?? ''); ?>" />
         <?php echo AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Website'); ?></td>
-    <td><input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
+    <td><input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url'] ?? ''); ?>" />
         <?php echo AmpError::display('site_url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Stream URL'); ?></td>
-    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
+    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url'] ?? ''); ?>" />
         <?php echo AmpError::display('url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Codec'); ?></td>
-    <td><input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
+    <td><input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec'] ?? ''); ?>" />
         <?php echo AmpError::display('codec'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
-    <td><?php show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?></td>
+    <td><?php show_catalog_select('catalog', (int) ($_REQUEST['catalog'] ?? 0)); ?></td>
 </tr>
 </table>
 <div class="formValidation">
