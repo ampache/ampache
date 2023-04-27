@@ -1079,6 +1079,13 @@ final class PlayAction implements ApplicationActionInterface
                 } while (!feof($filepointer) && (connection_status() == 0));
             }
         }
+
+        // Need to make sure enough bytes were sent.
+        if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
+            // This will stop's a client requesting the same content-range repeatedly
+            print(str_repeat(' ', $stream_size - $bytes_streamed));
+        }
+
         // close any leftover handle and processes
         fclose($filepointer);
         if ($transcode && isset($transcoder)) {
