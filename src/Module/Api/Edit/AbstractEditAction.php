@@ -68,8 +68,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type = $source_object_type = filter_input(
                 INPUT_GET,
                 'object_type',
-                FILTER_SANITIZE_STRING,
-                FILTER_FLAG_NO_ENCODE_QUOTES
+                FILTER_SANITIZE_SPECIAL_CHARS
             );
         } else {
             $source_object_type = $object_type;
