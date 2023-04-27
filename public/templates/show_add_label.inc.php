@@ -30,13 +30,13 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name'] ?? ''); ?>" />
         <?php echo AmpError::display('name'); ?>
     </td>
 </tr>
     <tr>
         <td><?php echo T_('MusicBrainz ID'); ?></td>
-        <td><input type="text" name="mbid" value="<?php echo scrub_out($_REQUEST['mbid']); ?>" />
+        <td><input type="text" name="mbid" value="<?php echo scrub_out($_REQUEST['mbid'] ?? ''); ?>" />
             <?php echo AmpError::display('mbid'); ?>
         </td>
     </tr>
@@ -86,31 +86,31 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
 <tr>
     <td><?php echo T_('Summary'); ?></td>
     <td>
-        <textarea name="summary" cols="44" rows="4"><?php echo scrub_out($_REQUEST['summary']); ?></textarea>
+        <textarea name="summary" cols="44" rows="4"><?php echo scrub_out($_REQUEST['summary'] ?? ''); ?></textarea>
         <?php echo AmpError::display('summary'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Address'); ?></td>
-    <td><input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address']); ?>" />
+    <td><input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address'] ?? ''); ?>" />
         <?php echo AmpError::display('address'); ?>
     </td>
 </tr>
     <tr>
         <td><?php echo T_('Country'); ?></td>
-        <td><input type="text" name="country" value="<?php echo scrub_out($_REQUEST['country']); ?>" />
+        <td><input type="text" name="country" value="<?php echo scrub_out($_REQUEST['country'] ?? ''); ?>" />
             <?php echo AmpError::display('country'); ?>
         </td>
     </tr>
 <tr>
     <td><?php echo T_('E-mail'); ?></td>
-    <td><input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
+    <td><input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email'] ?? ''); ?>" />
         <?php echo AmpError::display('email'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Website'); ?></td>
-    <td><input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
+    <td><input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website'] ?? ''); ?>" />
         <?php echo AmpError::display('website'); ?>
     </td>
 </tr>
