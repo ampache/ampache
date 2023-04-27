@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -89,7 +88,7 @@ final class UpdateUserAction extends AbstractUserAction
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
-        $client = new User($user_id);
+        $client = $this->modelFactory->createUser($user_id);
 
         /* Verify Input */
         if (empty($username)) {
