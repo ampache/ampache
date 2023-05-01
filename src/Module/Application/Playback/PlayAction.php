@@ -878,32 +878,19 @@ final class PlayAction implements ApplicationActionInterface
                 $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
             }
         }
-
-        if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
-            // Content-length guessing if required by the player.
-            // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+        //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        if ($transcode) {
             $maxbitrate = (empty($transcode_settings))
-                ? $media->bitrate / 1024
+                ? max(($media->bitrate / 1024), (int)AmpConfig::get('transcode_bitrate', 128))
                 : Stream::get_max_bitrate($media, $transcode_settings);
-            if (Core::get_request('content_length') == 'required') {
-                if ($media->time > 0 && $maxbitrate > 0) {
-                    $stream_size = ($media->time * $maxbitrate * 1024) / 8;
-                } else {
-                    $stream_size = null;
-                }
-            } elseif ($transcode_to == 'mp3') {
-                // mp3 seems to be the only codec that calculates properly
-                $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
-                    ? $maxbitrate
-                    : floor($media->bitrate / 1024);
-                $stream_size = ($media->time * $stream_rate * 1024) / 8;
+            if ($media->time > 0 && $maxbitrate > 0) {
+                $stream_size = ($media->time * $maxbitrate * 1024) / 8;
             } else {
                 $this->logger->debug(
                     'Bad media duration / Max bitrate. Content-length calculation skipped.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 $stream_size = null;
-                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $media->size;
