@@ -240,9 +240,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
         }
-        $subtitle         = '';
-        $send_full_stream = (string)AmpConfig::get('send_full_stream');
-        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
+        $subtitle = '';
 
         if (!$type) {
             $type = 'song';
@@ -730,8 +728,10 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
 
-        $troptions = array();
+        $transcode_settings = array();
+        $troptions          = array();
         if ($transcode) {
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
             }
@@ -754,15 +754,14 @@ final class PlayAction implements ApplicationActionInterface
                     $troptions['duration'] = (float) $_REQUEST['duration'];
                 }
             } elseif (array_key_exists('segment', $_REQUEST)) {
-                // 10 seconds segment. Should it be an option?
-                $ssize            = 10;
-                $send_all_in_once = true; // Should we use temporary folder instead?
                 debug_event('play/index', 'Sending all data in one piece.', 5);
+                // 10 seconds segment. Should it be an option?
+                $ssize                 = 10;
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
 
-            $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
+            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
@@ -923,7 +922,7 @@ final class PlayAction implements ApplicationActionInterface
             do {
                 $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
                 if ($buf = fread($filepointer, $read_size)) {
-                    if ($send_all_in_once) {
+                    if ($transcode) {
                         $buf_all .= $buf;
                     } elseif (!empty($buf)) {
                         print($buf);
@@ -939,7 +938,7 @@ final class PlayAction implements ApplicationActionInterface
             } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
         }
 
-        if ($send_all_in_once && connection_status() == 0) {
+        if ($transcode && connection_status() == 0) {
             header("Content-Length: " . strlen($buf_all));
             print($buf_all);
             ob_flush();
