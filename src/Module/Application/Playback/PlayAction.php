@@ -515,9 +515,15 @@ final class PlayAction implements ApplicationActionInterface
          * if we are doing random let's pull the random object and redirect to that media files URL
          */
         if ($random === 1) {
-            if (array_key_exists('start', $_REQUEST) && (int)Core::get_request('start') > 0 && array_key_exists('random', $_SESSION) && array_key_exists('last', $_SESSION['random'])) {
+            $last_id   = (int)(User::get_user_data($user_id, 'random_song')['random_song'] ?? 0);
+            $last_time = (int)(User::get_user_data($user_id, 'random_time')['random_time'] ?? 0);
+            if ($last_id > 0 && $last_time >= $time) {
                 // continue the current object
-                $object_id = $_SESSION['random']['last'];
+                $object_id = $last_id;
+                $this->logger->debug(
+                    'Called random again too quickly sending last song id: {' . $object_id . '}',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             } else {
                 // get a new random object and redirect to that object
                 if (array_key_exists('random_type', $_REQUEST)) {
@@ -526,36 +532,35 @@ final class PlayAction implements ApplicationActionInterface
                     $rtype = $type;
                 }
                 $object_id = Random::get_single_song($rtype, $user, (int)$_REQUEST['random_id']);
-                if ($object_id > 0) {
-                    // Save this one in case we do a seek
-                    $_SESSION['random']['last'] = $object_id;
-                }
-                $media = new Song($object_id);
-                if ($media->id > 0) {
-                    // If the media is disabled
-                    if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
-                        header('HTTP/1.1 404 File disabled');
-
-                        return null;
-                    }
-
-                    // play the song instead of going through all the crap
-                    header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
+            }
+            $media = new Song($object_id);
+            if ($media->id > 0) {
+                // If the media is disabled
+                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file($media->file))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
+                    header('HTTP/1.1 404 File disabled');
 
                     return null;
                 }
-                $this->logger->warning(
-                    "Error: RANDOM song could not be found",
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                header('HTTP/1.1 404 File not found');
+                // Save this for a short time in case there are issues loading the url
+                User::set_user_data($user_id, 'random_song', $object_id);
+                User::set_user_data($user_id, 'random_time', ($time + (min(10, ($media->time)))));
+
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
 
                 return null;
             }
+            $this->logger->warning(
+                "Error: RANDOM song could not be found",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            header('HTTP/1.1 404 File not found');
+
+            return null;
         } // if random
 
         if ($type == 'video') {
