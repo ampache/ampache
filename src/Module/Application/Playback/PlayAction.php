@@ -778,14 +778,9 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_to = Stream::get_transcode_settings_for_media(
-                (string) $media->type,
-                $transcode_to,
-                $player,
-                (string) $media->type,
-                $troptions
-            )['format'];
-            $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
+            $maxbitrate = (empty($transcode_settings))
+                ? $media->bitrate / 1024
+                : Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
                     $stream_size = ($media->time * $maxbitrate * 1024) / 8;
