@@ -1044,6 +1044,8 @@ final class PlayAction implements ApplicationActionInterface
             if ($transcode && isset($transcoder)) {
                 Stream::kill_process($transcoder);
             }
+
+            return null;
         } elseif ($status > 0) {
             do {
                 $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
