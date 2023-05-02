@@ -893,7 +893,7 @@ final class PlayAction implements ApplicationActionInterface
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
             $maxbitrate = (empty($transcode_settings))
-                ? ($media->bitrate / 1024)
+                ? $media->bitrate / 1024
                 : Stream::get_max_bitrate($media, $transcode_settings);
             if ($media->time > 0 && $maxbitrate > 0) {
                 $stream_size = ($media->time * $maxbitrate * 1024) / 8;
@@ -1022,24 +1022,30 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
-
-        foreach ($headers as $headerName => $value) {
-            header(sprintf('%s: %s', $headerName, $value));
-        }
-
-        $bytes_streamed = 0;
-
         // Actually do the streaming
-        $buf_all = '';
-        $r_arr   = array($filepointer);
-        $w_arr   = $e_arr = array();
-        $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
+        if (!$transcode) {
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
+        }
+        $bytes_streamed = 0;
+        $buf_all        = '';
+        $r_arr          = array($filepointer);
+        $w_arr          = $e_arr = array();
+        $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             $this->logger->error(
                 'stream_select failed.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
+            // close any leftover handle and processes
+            fclose($filepointer);
+            if ($transcode && isset($transcoder)) {
+                Stream::kill_process($transcoder);
+            }
+
+            return null;
         } elseif ($status > 0) {
             do {
                 $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
@@ -1061,9 +1067,13 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         if ($transcode && connection_status() == 0) {
-            header("Content-Length: " . strlen($buf_all));
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, strlen($buf_all));
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
             print($buf_all);
             ob_flush();
+            flush();
         }
         // Need to make sure enough bytes were sent.
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
