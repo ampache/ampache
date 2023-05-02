@@ -220,8 +220,15 @@ class Stream
         $transcode = AmpConfig::get('transcode_' . $type);
         if ($player !== '') {
             $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
+            $player_encode    = AmpConfig::get('encode_player_' . $player . '_target');
             if ($player_transcode) {
+                // Override the default TYPE transcoding behavior on a per-player basis
+                // (e.g. transcode_player_webplayer_flac = "required")
                 $transcode = $player_transcode;
+            } elseif ($player_encode) {
+                // Override the default PLAYER output format.
+                // (e.g. encode_player_webplayer_target = "ogg")
+                $transcode = $player_encode;
             }
         }
 
