@@ -1073,6 +1073,7 @@ final class PlayAction implements ApplicationActionInterface
             }
             print($buf_all);
             ob_flush();
+            flush();
         }
         // Need to make sure enough bytes were sent.
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
