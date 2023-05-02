@@ -826,7 +826,7 @@ final class PlayAction implements ApplicationActionInterface
             } else {
                 if ($transcode_cfg != 'never') {
                     $this->logger->info(
-                        'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}',
+                        'Transcoding is not enforced for ' . $media->type,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
@@ -893,7 +893,7 @@ final class PlayAction implements ApplicationActionInterface
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
             $maxbitrate = (empty($transcode_settings))
-                ? max(($media->bitrate / 1024), (int)AmpConfig::get('transcode_bitrate', 128))
+                ? ($media->bitrate / 1024)
                 : Stream::get_max_bitrate($media, $transcode_settings);
             if ($media->time > 0 && $maxbitrate > 0) {
                 $stream_size = ($media->time * $maxbitrate * 1024) / 8;
@@ -1085,4 +1085,3 @@ final class PlayAction implements ApplicationActionInterface
         return null;
     }
 }
-
