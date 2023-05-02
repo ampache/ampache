@@ -826,7 +826,7 @@ final class PlayAction implements ApplicationActionInterface
             } else {
                 if ($transcode_cfg != 'never') {
                     $this->logger->info(
-                        'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}',
+                        'Transcoding is not enforced for ' . $media->type,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
