@@ -1023,7 +1023,14 @@ final class PlayAction implements ApplicationActionInterface
         session_write_close();
 
         // Actually do the streaming
+        if (!$transcode) {
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
+        }
         $bytes_streamed = 0;
+        $buf_all        = '';
         $r_arr          = array($filepointer);
         $w_arr          = $e_arr = array();
         $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
@@ -1032,52 +1039,38 @@ final class PlayAction implements ApplicationActionInterface
                 'stream_select failed.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-        } elseif ($status > 0) {
-            if ($transcode) {
-                // get the content length before sending headers
-                $buf_all = '';
-                do {
-                    if ($buf = fread($filepointer, 8192)) {
-                        if (!empty($buf)) {
-                            $buf_all .= $buf;
-                        }
-                        $bytes_streamed += strlen($buf);
-                    }
-                } while (!feof($filepointer) && (connection_status() == 0));
-                $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
-                header('Transfer-Encoding: chunked');
-                foreach ($headers as $headerName => $value) {
-                    header(sprintf('%s: %s', $headerName, $value));
-                }
-                print($buf_all);
-                if (ob_get_length()) {
-                    ob_flush();
-                    flush();
-                    ob_end_flush();
-                }
-                ob_start();
-            } else {
-                // The media size doesn't change so we know the length
-                $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
-                header('Transfer-Encoding: chunked');
-                foreach ($headers as $headerName => $value) {
-                    header(sprintf('%s: %s', $headerName, $value));
-                }
-                do {
-                    if ($buf = fread($filepointer, 8192)) {
-                        if (!empty($buf)) {
-                            print($buf);
-                            if (ob_get_length()) {
-                                ob_flush();
-                                flush();
-                                ob_end_flush();
-                            }
-                            ob_start();
-                        }
-                        $bytes_streamed += strlen($buf);
-                    }
-                } while (!feof($filepointer) && (connection_status() == 0));
+            // close any leftover handle and processes
+            fclose($filepointer);
+            if ($transcode && isset($transcoder)) {
+                Stream::kill_process($transcoder);
             }
+        } elseif ($status > 0) {
+            do {
+                $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+                if ($buf = fread($filepointer, $read_size)) {
+                    if ($transcode) {
+                        $buf_all .= $buf;
+                    } elseif (!empty($buf)) {
+                        print($buf);
+                        if (ob_get_length()) {
+                            ob_flush();
+                            flush();
+                            ob_end_flush();
+                        }
+                        ob_start();
+                    }
+                    $bytes_streamed += strlen($buf);
+                }
+            } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
+        }
+
+        if ($transcode && connection_status() == 0) {
+            $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, strlen($buf_all));
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
+            print($buf_all);
+            ob_flush();
         }
         // Need to make sure enough bytes were sent.
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
