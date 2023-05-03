@@ -56,7 +56,7 @@ final class CacheProcessCommand extends Command
         }
 
         debug_event('cache', 'finished cache process', 4);
-        $interactor->white(
+        $interactor->info(
             T_('Completed cache process'),
             true
         );
