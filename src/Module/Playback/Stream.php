@@ -730,12 +730,15 @@ class Stream
      */
     public static function get_base_url($local = false, $streamToken = null)
     {
-        $session_string = '';
-        $session_id     = (!empty($streamToken))
-            ? $streamToken:
-            self::get_session();
+        $base_url = '/play/index.php?';
+        if (AmpConfig::get('use_play2')) {
+            $base_url .= 'action=play2&';
+        }
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . $session_id . '&';
+            $session_id = (!empty($streamToken))
+                ? $streamToken:
+                self::get_session();
+            $base_url .= 'ssid=' . $session_id . '&';
         }
 
         $web_path = ($local)
@@ -758,6 +761,6 @@ class Stream
             }
         }
 
-        return $web_path . "/play/index.php?$session_string";
+        return $web_path . $base_url;
     } // get_base_url
 }

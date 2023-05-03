@@ -852,6 +852,9 @@ class Update
         $update_string = "* Add ui option ('show_header_login') Show the login / registration links in the site header";
         $version[]     = array('version' => '600025', 'description' => $update_string);
 
+        $update_string = "* Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music";
+        $version[]     = array('version' => '600026', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5257,6 +5260,23 @@ class Update
         $retval &= (Dba::write($sql) !== false);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_600026
+     *
+     * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
+     */
+    public static function update_600026(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
 
         return $retval;
