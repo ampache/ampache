@@ -33,7 +33,6 @@ declare(strict_types=1);
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Playback\Play2Action;
 use Ampache\Module\Application\Playback\PlayAction;
-use Ampache\Module\Application\Playback\Play2Action;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
