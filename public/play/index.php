@@ -31,6 +31,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Playback\Play2Action;
 use Ampache\Module\Application\Playback\PlayAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -45,6 +46,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         PlayAction::REQUEST_KEY => PlayAction::class,
+        Play2Action::REQUEST_KEY => Play2Action::class,
     ],
     PlayAction::REQUEST_KEY
 );
