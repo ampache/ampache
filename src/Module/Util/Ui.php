@@ -714,100 +714,100 @@ class Ui implements UiInterface
         } // if we don't have access to it
 
         switch ($name) {
-            case 'display_menu':
-            case 'download':
-            case 'quarantine':
-            case 'upload':
-            case 'access_list':
-            case 'lock_songs':
-            case 'xml_rpc':
-            case 'force_http_play':
-            case 'no_symlinks':
-            case 'use_auth':
             case 'access_control':
-            case 'allow_stream_playback':
+            case 'access_list':
+            case 'ajax_load':
+            case 'album_group':
+            case 'album_release_type':
             case 'allow_democratic_playback':
             case 'allow_localplay_playback':
-            case 'demo_mode':
-            case 'condPL':
-            case 'rio_track_stats':
-            case 'rio_global_stats':
-            case 'direct_link':
-            case 'ajax_load':
-            case 'now_playing_per_user':
-            case 'show_played_times':
-            case 'use_original_year':
-            case 'show_subtitle':
-            case 'show_original_year':
-            case 'show_header_login':
-            case 'hide_single_artist':
-            case 'hide_genres':
-            case 'show_skipped_times':
-            case 'show_playlist_username':
-            case 'show_license':
-            case 'song_page_title':
-            case 'subsonic_backend':
-            case 'webplayer_flash':
-            case 'webplayer_html5':
+            case 'allow_personal_info_agent':
             case 'allow_personal_info_now':
             case 'allow_personal_info_recent':
             case 'allow_personal_info_time':
-            case 'allow_personal_info_agent':
-            case 'ui_fixed':
-            case 'autoupdate':
-            case 'autoupdate_lastversion_new':
-            case 'webplayer_confirmclose':
-            case 'webplayer_pausetabs':
-            case 'stream_beautiful_url':
-            case 'share':
-            case 'share_social':
-            case 'broadcast_by_default':
-            case 'album_group':
-            case 'topmenu':
-            case 'demo_clear_sessions':
-            case 'demo_use_search':
-            case 'show_donate':
+            case 'allow_stream_playback':
             case 'allow_upload':
-            case 'upload_subdir':
-            case 'upload_user_artist':
-            case 'upload_allow_edit':
-            case 'daap_backend':
-            case 'upnp_backend':
-            case 'album_release_type':
-            case 'home_moment_albums':
-            case 'home_moment_videos':
-            case 'home_recently_played':
-            case 'api_hide_dupe_searches':
-            case 'home_now_playing':
-            case 'browser_notify':
             case 'allow_video':
-            case 'geolocation':
-            case 'webplayer_aurora':
-            case 'upload_allow_remove':
-            case 'webdav_backend':
-            case 'notify_email':
-            case 'libitem_contextmenu':
-            case 'upload_catalog_pattern':
-            case 'catalogfav_gridview':
-            case 'personalfav_display':
-            case 'ratingmatch_write_tags':
-            case 'ratingmatch_flags':
-            case 'catalog_check_duplicate':
-            case 'browse_filter':
-            case 'sidebar_light':
-            case 'cron_cache':
-            case 'show_lyrics':
-            case 'unique_playlist':
-            case 'tadb_overwrite_name':
-            case 'mb_overwrite_name':
-            case 'subsonic_always_download':
             case 'api_enable_3':
             case 'api_enable_4':
             case 'api_enable_5':
             case 'api_enable_6':
+            case 'api_hide_dupe_searches':
+            case 'autoupdate':
+            case 'autoupdate_lastversion_new':
+            case 'broadcast_by_default':
+            case 'browse_filter':
+            case 'browser_notify':
+            case 'catalog_check_duplicate':
+            case 'catalogfav_gridview':
+            case 'condPL':
+            case 'cron_cache':
+            case 'daap_backend':
+            case 'demo_clear_sessions':
+            case 'demo_mode':
+            case 'demo_use_search':
+            case 'direct_link':
+            case 'display_menu':
+            case 'download':
+            case 'force_http_play':
+            case 'geolocation':
+            case 'hide_genres':
+            case 'hide_single_artist':
+            case 'home_moment_albums':
+            case 'home_moment_videos':
+            case 'home_now_playing':
+            case 'home_recently_played':
+            case 'libitem_contextmenu':
+            case 'lock_songs':
+            case 'mb_overwrite_name':
+            case 'no_symlinks':
+            case 'notify_email':
+            case 'now_playing_per_user':
+            case 'personalfav_display':
+            case 'quarantine':
+            case 'ratingmatch_flags':
+            case 'ratingmatch_write_tags':
+            case 'rio_global_stats':
+            case 'rio_track_stats':
+            case 'share':
+            case 'share_social':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_donate':
+            case 'show_header_login':
+            case 'show_license':
+            case 'show_lyrics':
+            case 'show_original_year':
+            case 'show_played_times':
+            case 'show_playlist_username':
+            case 'show_skipped_times':
+            case 'show_subtitle':
+            case 'sidebar_light':
+            case 'song_page_title':
+            case 'stream_beautiful_url':
+            case 'subsonic_always_download':
+            case 'subsonic_backend':
+            case 'tadb_overwrite_name':
+            case 'topmenu':
+            case 'ui_fixed':
+            case 'unique_playlist':
+            case 'upload':
+            case 'upload_allow_edit':
+            case 'upload_allow_remove':
+            case 'upload_catalog_pattern':
+            case 'upload_subdir':
+            case 'upload_user_artist':
+            case 'upnp_backend':
+            case 'use_auth':
+            case 'use_original_year':
             case 'use_play2':
+            case 'webdav_backend':
+            case 'webplayer_aurora':
+            case 'webplayer_confirmclose':
+            case 'webplayer_flash':
+            case 'webplayer_html5':
+            case 'webplayer_pausetabs':
+            case 'xml_rpc':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
