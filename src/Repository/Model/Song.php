@@ -2276,6 +2276,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($this->type);
                 $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
+                $additional_params .= 'transcode_to=' . $transcode_type;
             }
         }
 
