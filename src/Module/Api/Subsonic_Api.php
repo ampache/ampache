@@ -1420,7 +1420,7 @@ class Subsonic_Api
     {
         $fileid = self::_check_parameter($input, 'id', true);
         $client = scrub_in($input['c'] ?? 'Subsonic');
-        $params = '&client=' . rawurlencode($client) . '&action=download&cache=1';
+        $params = '&client=' . rawurlencode($client) . '&cache=1';
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
