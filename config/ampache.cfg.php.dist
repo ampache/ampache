@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 66
+config_version = 67
 
 ;#########################################################
 ; Auto Update                                            #
@@ -1210,6 +1210,13 @@ encode_ss_frame = "-ss %TIME%"
 
 ; Encode segment duration argument
 encode_ss_duration = "-t %DURATION%"
+
+; Use segments for transcoding or send it all in one go.
+; Useful if you are having issues streaming the full track.
+; You can set it for all streams or a specific player
+; POSSIBLE VALUES: true webplayer api
+; DEFAULT: "webplayer"
+send_full_stream = "webplayer"
 
 ;#########################################################
 ; Transcode Caching                                      #
