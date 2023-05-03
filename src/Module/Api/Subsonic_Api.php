@@ -1389,7 +1389,7 @@ class Subsonic_Api
         $url = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             if (AmpConfig::get('subsonic_always_download')) {
-                $params .= '&action=download&cache=1';
+                $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
