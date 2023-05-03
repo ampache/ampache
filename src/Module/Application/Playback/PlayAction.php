@@ -1073,7 +1073,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $this->logger->debug(
-            'Stream ended at ' . $bytes_streamed . ' bytes out of ' . $stream_size,
+            'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size,
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
