@@ -69,14 +69,13 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        if ($data['mb_albumid']) {
-            $this->logger->debug(
-                "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-        } else {
+        if (!array_key_exists('mb_albumid', $data)) {
             return $images;
         }
+        $this->logger->debug(
+            "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         $includes = array(
             'url-rels'
