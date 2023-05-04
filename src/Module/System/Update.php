@@ -5267,7 +5267,7 @@ class Update
 
     /** update_600026
      *
-     * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with streaming
+     * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
      */
     public static function update_600026(): bool
     {
