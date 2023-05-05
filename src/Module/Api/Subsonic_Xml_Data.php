@@ -485,20 +485,24 @@ class Subsonic_Xml_Data
             }
             $xsong->addAttribute('suffix', (string)$song->type);
             $xsong->addAttribute('contentType', (string)$song->mime);
-            // Return a file path relative to the catalog root path
-            $xsong->addAttribute('path', (string)$catalogData['path']);
-
-            // Set transcoding information if required
+            $file_path      = (string)$catalogData['path'];
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($song->id, $song->catalog, $cache_path, $cache_target);
             $transcode_type = ($file_target && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($song->type, null, 'api');
+
             if ($song->type !== $transcode_type) {
+                // Return a file path relative to the catalog root path
+                $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
+                // Set transcoding information
                 $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
                 $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+
+                return $xsong;
             }
+            $xsong->addAttribute('path', $file_path);
 
             return $xsong;
         }
