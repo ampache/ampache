@@ -811,7 +811,7 @@ final class Play2Action implements ApplicationActionInterface
                             'Transcoding because explicit bitrate request',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
-                    } elseif (!in_array('native', $valid_types) && $action != 'download') {
+                    } elseif (!in_array('native', $valid_types) && !$is_download) {
                         $transcode = true;
                         $this->logger->debug(
                             'Transcoding because native streaming is unavailable',
@@ -968,23 +968,35 @@ final class Play2Action implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             } else {
-                if (($action != 'download') && $record_stats) {
+                if (!$is_download && $record_stats) {
                     Stream::insert_now_playing((int) $media->id, $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                    if (!$share_id && $record_stats) {
-                        $this->logger->info(
-                            'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                        );
-                        // internal scrobbling (user_activity and object_count tables)
-                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
-                            // scrobble plugins
-                            User::save_mediaplay($user, $media);
+                    if ($is_download) {
+                        if (!$share_id) {
+                            $this->logger->debug(
+                                'Registering download stats for {' . $media->get_stream_name() . '}...',
+                                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            );
+                            Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                        } else {
+                            Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
                         }
-                    } elseif ($share_id > 0) {
-                        // shares are people too
-                        $media->set_played(0, 'share.php', array(), $time);
+                    } else {
+                        if (!$share_id && $record_stats) {
+                            $this->logger->info(
+                                'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
+                                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            );
+                            // internal scrobbling (user_activity and object_count tables)
+                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
+                                // scrobble plugins
+                                User::save_mediaplay($user, $media);
+                            }
+                        } elseif ($share_id > 0) {
+                            // shares are people too
+                            $media->set_played(0, 'share.php', array(), $time);
+                        }
                     }
                 }
             }
