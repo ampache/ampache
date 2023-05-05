@@ -214,18 +214,20 @@ final class Play2Action implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
+        if ($cache == '1') {
+            $action = 'download';
+        }
         $record_stats = true;
         // allow disabling stat recording from the play url
-        if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $action       = 'download';
             $record_stats = false;
         }
         $transcode     = false;
-        $is_download   = ($action == 'download' || $cache == '1');
+        $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $quality       = 0;
