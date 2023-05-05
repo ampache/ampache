@@ -982,21 +982,19 @@ final class Play2Action implements ApplicationActionInterface
                         } else {
                             Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
                         }
-                    } else {
-                        if (!$share_id && $record_stats) {
-                            $this->logger->info(
-                                'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
-                                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                            );
-                            // internal scrobbling (user_activity and object_count tables)
-                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
-                                // scrobble plugins
-                                User::save_mediaplay($user, $media);
-                            }
-                        } elseif ($share_id > 0) {
-                            // shares are people too
-                            $media->set_played(0, 'share.php', array(), $time);
+                    } elseif (!$share_id && $record_stats) {
+                        $this->logger->info(
+                            'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
+                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        );
+                        // internal scrobbling (user_activity and object_count tables)
+                        if ($media->set_played($user_id, $agent, $location, $time) && $user->id && get_class($media) == Song::class) {
+                            // scrobble plugins
+                            User::save_mediaplay($user, $media);
                         }
+                    } elseif ($share_id > 0) {
+                        // shares are people too
+                        $media->set_played(0, 'share.php', array(), $time);
                     }
                 }
             }
