@@ -2608,7 +2608,7 @@ abstract class Catalog extends database_object
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
-        $subtitle         = self::check_length($results['subtitle'], 64);
+        $version          = self::check_length($results['version'], 64);
 
         // info for the artist_map table.
         $artists_array          = $results['artists'] ?? array();
@@ -2656,7 +2656,7 @@ abstract class Catalog extends database_object
         // check whether this album exists
         $new_song->album = ($is_upload_albumartist)
             ? $song->album
-            : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $subtitle);
+            : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
@@ -4279,14 +4279,14 @@ abstract class Catalog extends database_object
         $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
         $release_type   = self::sort_clean_name($album_object->release_type, '%r');
         $release_status = self::sort_clean_name($album_object->release_status, '%R');
-        $subtitle       = self::sort_clean_name($album_object->subtitle, '%s');
+        $version        = self::sort_clean_name($album_object->version, '%s');
         $genre          = (!empty($album_object->tags))
             ? Tag::get_display($album_object->tags)
             : '%b';
 
         // Replace everything we can find
         $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $version, $disk, $genre, $barcode);
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         // Remove non A-Z0-9 chars

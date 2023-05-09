@@ -92,7 +92,7 @@ use Ampache\Module\Api\Ajax;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Comment') ?></td>
-                <td><input type="text" name="subtitle" value="<?php echo $libitem->subtitle; ?>" /></td>
+                <td><input type="text" name="subtitle" value="<?php echo $libitem->version; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number') ?></td>
