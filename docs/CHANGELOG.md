@@ -40,7 +40,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600026
+* Database 600027
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -55,7 +55,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
   * Add `song_artist` and `album_artist` maps to catalog_map
   * Add ui option `api_enable_6` to enable/disable API6
-  * Add `subtitle` to the album table
+  * Add `version` to the album table
   * Add `streamtoken` to user table allowing permalink music stream access
   * Add `object_type_IDX` to artist_map table
   * Add `object_type_IDX` to catalog_map table
@@ -138,6 +138,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Update Requests module to WpOrg\Requests
 * Show 20 genres in Song, Artist & Album edit windows (up from 10)
 * Process stream output and then send the content to the player
+* Play urls will rename the file name to the transcode output format
+* open RSS links in a new tab
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
