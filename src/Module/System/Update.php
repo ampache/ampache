@@ -855,6 +855,9 @@ class Update
         $update_string = "* Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music";
         $version[]     = array('version' => '600026', 'description' => $update_string);
 
+        $update_string = "* Rename `subtitle` to `version` in the `album` table";
+        $version[]     = array('version' => '600027', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5278,6 +5281,21 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600027
+     *
+     * Rename `subtitle` to `version` in the `album` table
+     */
+    public static function update_600027(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $sql       = "ALTER TABLE `album` CHANGE `subtitle` `version` varchar(64) COLLATE $collation DEFAULT NULL";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }

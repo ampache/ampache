@@ -461,10 +461,10 @@ class Album extends database_object implements library_item
             $sql .= 'AND `album`.`catalog_number` IS NULL ';
         }
         if ($version) {
-            $sql .= 'AND `album`.`subtitle` = ? ';
+            $sql .= 'AND `album`.`version` = ? ';
             $params[] = $version;
         } else {
-            $sql .= 'AND `album`.`subtitle` IS NULL ';
+            $sql .= 'AND `album`.`version` IS NULL ';
         }
         $sql .= 'AND `album`.`catalog` = ? ';
         $params[] = $catalog;
@@ -485,7 +485,7 @@ class Album extends database_object implements library_item
             return 0;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `subtitle`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $name,
@@ -1154,7 +1154,7 @@ class Album extends database_object implements library_item
                 self::update_field('catalog_number', $catalog_number, $this->id);
             }
             if ($version != $this->version) {
-                self::update_field('subtitle', $version, $this->id);
+                self::update_field('version', $version, $this->id);
             }
         }
 
