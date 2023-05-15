@@ -3946,14 +3946,14 @@ abstract class Catalog extends database_object
      * Return full path of the cached music file.
      * @param integer $object_id
      * @param string $catalog_id
+     * @param string $path
+     * @param string $target
      * @return false|string
      */
-    public static function get_cache_path($object_id, $catalog_id)
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
     {
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             return false;
         }
         // make a folder per catalog

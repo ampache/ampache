@@ -134,17 +134,15 @@ final class PlayAction implements ApplicationActionInterface
             $player       = (string)scrub_in($new_request['player'] ?? '');
             $format       = (string)scrub_in($new_request['format'] ?? '');
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '')
-                ? $format
-                : (string)scrub_in($new_request['transcode_to'] ?? '');
+            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
 
             // Share id and secret if used
             $share_id = (int)scrub_in((int)$new_request['share_id'] ?? 0);
             $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
 
             // This is specifically for tmp playlist requests
-            $demo_id = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
-            $random  = (int)scrub_in((int)$new_request['random'] ?? 0);
+            $demo_id      = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
+            $random       = (int)scrub_in((int)$new_request['random'] ?? 0);
 
             // don't put this one here
             $cpaction     = null;
@@ -162,46 +160,20 @@ final class PlayAction implements ApplicationActionInterface
             $player       = (string)scrub_in(filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
             $format       = (string)scrub_in(filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '')
-                ? $format
-                : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Share id and secret if used
             $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
             $secret   = (string)scrub_in(filter_input(INPUT_GET, 'share_secret', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // This is specifically for tmp playlist requests
-            $demo_id = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
-            $random  = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
+            $demo_id      = (int)filter_input(INPUT_GET, 'demo_id', FILTER_SANITIZE_NUMBER_INT);
+            $random       = (int)filter_input(INPUT_GET, 'random', FILTER_SANITIZE_NUMBER_INT);
 
             // run_custom_play_action... whatever that is
-            $cpaction = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
+            $cpaction     = filter_input(INPUT_GET, 'custom_play_action', FILTER_SANITIZE_SPECIAL_CHARS);
         }
-        //$this->logger->debug('Called for action: {' . Core::get_request('action') . '}', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         //$this->logger->debug('REQUEST: ' . print_r($_REQUEST, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-        //$debug = array(
-        //    'action' => $action,
-        //    'name' => $stream_name,
-        //    'oid' => $object_id,
-        //    'uid' => $user_id,
-        //    'ssid' => $session_id,
-        //    'type' => $type,
-        //    'client' => $client,
-        //    'cache' => $cache,
-        //    'bitrate' => $bitrate,
-        //    'player' => $player,
-        //    'format' => $format,
-        //    'original' => $original,
-        //    'transcode_to' => $transcode_to,
-        //    'share_id' => $share_id,
-        //    'share_secret' => $secret,
-        //    'demo_id' => $demo_id,
-        //    'random' => $random
-        //);
-        //foreach ($debug as $key => $value) {
-        //    $this->logger->debug($key . ': ' . $value, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-        //}
-
         // democratic play url doesn't include these
         if ($demo_id > 0) {
             $type = 'song';
@@ -214,25 +186,28 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
+        if ($cache == '1') {
+            $action = 'download';
+        }
         $record_stats = true;
         // allow disabling stat recording from the play url
-        if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $action       = 'download';
             $record_stats = false;
         }
-        $is_download   = ($action == 'download' || $cache == '1');
+        $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
-        $quality       = 0;
         $resolution    = '';
-        $subtitle      = '';
+        $quality       = 0;
         $time          = time();
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
+            $transcode_to = $transcode_to ?? (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+
             // Trick to avoid LimitInternalRecursion reconfiguration
             $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
             if (!empty($vsettings)) {
@@ -253,6 +228,9 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
         }
+        $subtitle         = '';
+        $send_full_stream = (string)AmpConfig::get('send_full_stream');
+        $send_all_in_once = ($send_full_stream == 'true' || $send_full_stream == $player);
 
         if (!$type) {
             $type = 'song';
@@ -572,9 +550,7 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
-        $mediaCatalogId = ($media instanceof Song_Preview)
-            ? null
-            : $media->catalog;
+        $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
@@ -592,8 +568,8 @@ final class PlayAction implements ApplicationActionInterface
                     return null;
                 }
             }
-            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId);
-            if (!$is_download && !empty($cache_path) && !empty($cache_target) && ($file_target && is_file($file_target))) {
+            $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
+            if (!$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -620,9 +596,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         // load the cache file or the local file
-        $stream_file = ($cache_file && $file_target)
-            ? $file_target
-            : $media->file;
+        $stream_file = ($cache_file && $file_target) ? $file_target : $media->file;
 
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file($stream_file))) {
@@ -639,7 +613,7 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
+        $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
         $transcode_to = ($is_download && !$transcode_to)
             ? false
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
@@ -691,7 +665,7 @@ final class PlayAction implements ApplicationActionInterface
             // Check to see if we should be throttling because we can get away with it
             if (AmpConfig::get('rate_limit') > 0) {
                 while (!feof($filepointer)) {
-                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit') * 1024)));
+                    echo fread($filepointer, (int)(round(AmpConfig::get('rate_limit', 8192) * 1024)));
                     flush();
                     sleep(1);
                 }
@@ -741,9 +715,7 @@ final class PlayAction implements ApplicationActionInterface
         // Determine whether to transcode
         $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = ($transcode_to == $media->type)
-            ? null
-            : $transcode_to;
+        $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -787,7 +759,7 @@ final class PlayAction implements ApplicationActionInterface
                             'Transcoding because explicit bitrate request',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
-                    } elseif (!in_array('native', $valid_types) && $action != 'download') {
+                    } elseif (!in_array('native', $valid_types) && !$is_download) {
                         $transcode = true;
                         $this->logger->debug(
                             'Transcoding because native streaming is unavailable',
@@ -804,7 +776,7 @@ final class PlayAction implements ApplicationActionInterface
             } else {
                 if ($transcode_cfg != 'never') {
                     $this->logger->info(
-                        'Transcoding is not enabled for this media type. Valid types: {' . json_encode($valid_types) . '}',
+                        'Transcoding is not enforced for ' . $media->type,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
@@ -818,10 +790,9 @@ final class PlayAction implements ApplicationActionInterface
 
         $troptions = array();
         if ($transcode) {
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
-                    ? $maxbitrate
-                    : $bitrate;
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
             }
             if ($maxbitrate > 0) {
                 $troptions['maxbitrate'] = $maxbitrate;
@@ -843,18 +814,17 @@ final class PlayAction implements ApplicationActionInterface
                 }
             } elseif (array_key_exists('segment', $_REQUEST)) {
                 // 10 seconds segment. Should it be an option?
-                $ssize = 10;
+                $ssize            = 10;
+                $send_all_in_once = true; // Should we use temporary folder instead?
                 $this->logger->debug(
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
-                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
-                    ? $ssize
-                    : ($media->time - $troptions['frame']);
+                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
 
-            $transcoder  = Stream::start_transcode($media, $transcode_to, $player, $troptions);
+            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } else {
@@ -867,18 +837,18 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_to = Song::get_transcode_settings_for_media(
+            $transcode_settings = Song::get_transcode_settings_for_media(
                 (string) $media->type,
                 $transcode_to,
                 $player,
                 (string) $media->type,
                 $troptions
-            )['format'];
-            $maxbitrate   = Stream::get_max_bitrate($media, $transcode_to, $player, $troptions);
+            );
+            $transcode_to = $transcode_settings['format'];
+            $maxbitrate   = Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
                     $stream_size = ($media->time * $maxbitrate * 1024) / 8;
@@ -889,12 +859,15 @@ final class PlayAction implements ApplicationActionInterface
                     );
                     $stream_size = null;
                 }
-            } else {
+            } elseif ($transcode_to == 'mp3') {
                 // mp3 seems to be the only codec that calculates properly
                 $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
                     ? $maxbitrate
                     : floor($media->bitrate / 1024);
                 $stream_size = ($media->time * $stream_rate * 1024) / 8;
+            } else {
+                $stream_size = null;
+                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $media->size;
@@ -958,11 +931,21 @@ final class PlayAction implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             } else {
-                if (($action != 'download') && $record_stats) {
+                if (!$is_download && $record_stats) {
                     Stream::insert_now_playing((int) $media->id, $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                    if (!$share_id && $record_stats) {
+                    if ($is_download) {
+                        if (!$share_id) {
+                            $this->logger->debug(
+                                'Registering download stats for {' . $media->get_stream_name() . '}...',
+                                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            );
+                            Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                        } else {
+                            Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
+                        }
+                    } elseif (!$share_id && $record_stats) {
                         $this->logger->info(
                             'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -1014,46 +997,66 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        // Actually do the streaming
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+
+        foreach ($headers as $headerName => $value) {
+            header(sprintf('%s: %s', $headerName, $value));
+        }
+
         $bytes_streamed = 0;
-        $buf_all        = '';
-        $r_arr          = array($filepointer);
-        $w_arr          = $e_arr = array();
-        $status         = stream_select($r_arr, $w_arr, $e_arr, 2);
+
+        // Actually do the streaming
+        $buf_all = '';
+        $r_arr   = array($filepointer);
+        $w_arr   = $e_arr = array();
+        $status  = stream_select($r_arr, $w_arr, $e_arr, 2);
         if ($status === false) {
             $this->logger->error(
                 'stream_select failed.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
+            // close any leftover handle and processes
+            fclose($filepointer);
+            if ($transcode && isset($transcoder)) {
+                Stream::kill_process($transcoder);
+            }
+
+            return null;
         } elseif ($status > 0) {
             do {
-                if ($buf = fread($filepointer, 8192)) {
-                    if (!empty($buf)) {
+                $read_size = $transcode ? 2048 : min(2048, $stream_size - $bytes_streamed);
+                if ($buf = fread($filepointer, $read_size)) {
+                    if ($send_all_in_once) {
                         $buf_all .= $buf;
+                    } elseif (!empty($buf)) {
+                        print($buf);
+                        if (ob_get_length()) {
+                            ob_flush();
+                            flush();
+                            ob_end_flush();
+                        }
+                        ob_start();
                     }
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0));
+            } while (!feof($filepointer) && (connection_status() == 0) && ($transcode || $bytes_streamed < $stream_size));
         }
-        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $bytes_streamed);
-        foreach ($headers as $headerName => $value) {
-            header(sprintf('%s: %s', $headerName, $value));
-        }
-        print($buf_all);
-        if (ob_get_length()) {
+
+        if ($send_all_in_once && connection_status() == 0) {
+            header("Content-Length: " . strlen($buf_all));
+            print($buf_all);
             ob_flush();
-            flush();
-            ob_end_flush();
         }
-        ob_start();
 
         $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent. TODO: why?
+        // Need to make sure enough bytes were sent.
         if ($bytes_streamed < $stream_size && (connection_status() == 0)) {
+            // This stop's a client requesting the same content-range repeatedly
             print(str_repeat(' ', $stream_size - $bytes_streamed));
             $bytes_streamed = $stream_size;
         }
 
+        // close any leftover handle and processes
         fclose($filepointer);
         if ($transcode && isset($transcoder)) {
             Stream::kill_process($transcoder);
