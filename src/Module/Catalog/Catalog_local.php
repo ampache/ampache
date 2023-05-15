@@ -1280,7 +1280,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->id);
+            $target_file     = Catalog::get_cache_path($song_id, $this->id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
             if (is_file($old_target_file)) {
                 // check for the old path first

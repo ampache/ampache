@@ -426,7 +426,7 @@ class Catalog_subsonic extends Catalog
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            $target_file = Catalog::get_cache_path($row['id'], $this->id);
+            $target_file = Catalog::get_cache_path($row['id'], $this->id, $path, $target);
             $file_exists = ($target_file !== false && is_file($target_file));
             $remote_url  = $subsonic->parameterize($row['file'] . '&', $options);
             if (!$file_exists || (int)Core::get_filesize($target_file) == 0) {

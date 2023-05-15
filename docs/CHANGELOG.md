@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## Ampache 5.6.1-release
+
+### Added
+
+* Subsonic
+  * Add `type` and `serverVersion` to `<subsonic-response>` objects
+
+### Changed
+
+* Clean up the PlayAction class to make it a bit less complicated
+* Encode URL's with a + for segmented play urls
+
+### Removed
+
+* Soundcloud catalogs
+
+### Fixed
+
+* mptre/php-soundcloud has been removed from github
+* Podcast Episode download link
+* Filtering passwords in some places before hashing
+* Catalog caches delete and add immediately when changed
+
+## API 5.6.1
+
+### Fixed
+
+* ALL
+  * share_create and share_edit methods broken when setting expiry days
+
 ## Ampache 5.6.0-release
 
 ### Added
