@@ -1704,7 +1704,6 @@ final class VaInfo implements VaInfoInterface
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'releasecomment':
-                case 'setsubtitle':
                 case 'version':
                     $parsed['version'] = $data[0];
                     break;
