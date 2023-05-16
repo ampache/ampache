@@ -40,7 +40,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600027
+* Database 600028
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -67,6 +67,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
   * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
+  * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
 * Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
@@ -212,6 +213,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Do not scrub title for RSS output
 * Repeating random play URL's could skip the first song
 * Send the final url for play_url's instead of figuring it on the fly
+* Don't verify Podcast Episodes that don't have a file
+* Update song channels on tag update
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
