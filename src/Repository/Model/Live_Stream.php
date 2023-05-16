@@ -395,14 +395,14 @@ class Live_Stream extends database_object implements Media, library_item
      * get_transcode_settings
      *
      * This will probably never be implemented
-     * @param string $target
+     * @param string|null $target
      * @param string $player
      * @param array $options
-     * @return false
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return false;
+        return array();
     }
 
     /**

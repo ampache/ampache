@@ -60,9 +60,10 @@ interface Media
      * Returns a raw transcode command for this item; the optional target
      * parameter can be used to request a specific format instead of the
      * default from the configuration file.
-     * @param string $target
+     * @param string|null $target
      * @param string $player
      * @param array $options
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array());
 

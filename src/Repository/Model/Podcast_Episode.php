@@ -479,7 +479,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * Get transcode settings.
-     * @param string $target
+     * @param string|null $target
      * @param string $player
      * @param array $options
      * @return array
