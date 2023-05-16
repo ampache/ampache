@@ -73,6 +73,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_description;
     public $f_author;
     public $f_artist_full;
+    public $f_bitrate;
     public $f_category;
     public $f_website;
     public $f_pubdate;
@@ -172,6 +173,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
+
+        // Format the Bitrate
+        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
