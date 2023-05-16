@@ -21,6 +21,7 @@
 * Podcast Episode download link
 * Filtering passwords in some places before hashing
 * Catalog caches delete and add immediately when changed
+* Check isfinite before trying to apply replaygain on webplayer
 
 ## API 5.6.1
 
