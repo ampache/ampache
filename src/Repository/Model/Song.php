@@ -2388,7 +2388,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
     /**
      * Get transcode settings.
-     * @param string|false|null $target
+     * @param string $target
      * @param string $player
      * @param array $options
      * @return array

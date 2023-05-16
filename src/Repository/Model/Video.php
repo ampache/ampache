@@ -605,7 +605,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     /**
      * get_transcode_settings
-     * @param string|false|null $target
+     * @param string $target
      * @param array $options
      * @param string $player
      * @return array
