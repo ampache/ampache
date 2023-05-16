@@ -25,10 +25,7 @@
 
 ## API 5.6.1
 
-### Fixed
-
-* ALL
-  * share_create and share_edit methods broken when setting expiry days
+**NO CHANGE**
 
 ## Ampache 5.6.0-release
 
