@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
 
-Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
@@ -118,8 +118,10 @@ if ($episode->time > 0) {
 }
 
 if (!empty($episode->file)) {
-    $songprops[T_('File')] = $episode->file;
-    $songprops[T_('Size')] = $episode->f_size;
+    $songprops[T_('File')]     = $episode->file;
+    $songprops[T_('Size')]     = $episode->f_size;
+    $songprops[T_('Bitrate')]  = scrub_out($episode->f_bitrate);
+    $songprops[T_('Channels')] = scrub_out($episode->channels);
 }
 
 foreach ($songprops as $key => $value) {

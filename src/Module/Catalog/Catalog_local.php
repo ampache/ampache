@@ -658,7 +658,7 @@ class Catalog_local extends Catalog
                 $sql = "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->catalog_id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size";
                 break;
             case 'podcast_episode':
-                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
+                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
                 break;
             case 'video':
             default:
@@ -742,7 +742,7 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000);
+            $chunks = floor($total / 10000) + 1;
             $chunk  = $chunks;
         }
         while ($chunk >= 0) {

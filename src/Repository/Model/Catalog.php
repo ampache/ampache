@@ -2518,13 +2518,14 @@ abstract class Catalog extends database_object
         $new_song->year = (strlen((string)$results['year']) > 4)
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
-        $new_song->disk    = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->title   = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate = $results['bitrate'];
-        $new_song->rate    = $results['rate'];
-        $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size    = $results['size'];
-        $new_song->time    = (strlen((string)$results['time']) > 5)
+        $new_song->disk     = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
+        $new_song->bitrate  = $results['bitrate'];
+        $new_song->rate     = $results['rate'];
+        $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $new_song->channels = $results['channels'];
+        $new_song->size     = $results['size'];
+        $new_song->time     = (strlen((string)$results['time']) > 5)
             ? (int)substr($results['time'], -5, 5)
             : (int)($results['time']);
         if ($new_song->time < 0) {
@@ -2948,11 +2949,15 @@ abstract class Catalog extends database_object
      */
     public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode)
     {
-        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $podcast_episode->id));
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id));
 
-        $podcast_episode->size = $results['size'];
-        $podcast_episode->time = $results['time'];
+        $podcast_episode->size     = $results['size'];
+        $podcast_episode->time     = $results['time'];
+        $podcast_episode->bitrate  = $results['bitrate'];
+        $podcast_episode->rate     = $results['rate'];
+        $podcast_episode->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $podcast_episode->channels = $results['channels'];
 
         $array            = array();
         $array['change']  = true;
@@ -4045,6 +4050,8 @@ abstract class Catalog extends database_object
      * Return full path of the cached music file.
      * @param integer $object_id
      * @param string $catalog_id
+     * @param string $path
+     * @param string $target
      * @return false|string
      */
     public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')

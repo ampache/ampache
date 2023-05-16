@@ -1287,16 +1287,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $newMediaData = $new_media->$key;
             }
 
-            // If it's a string thing
             if (in_array($key, $string_array)) {
+                // If it's a string thing
                 $mediaData    = self::clean_string_field_value($mediaData);
                 $newMediaData = self::clean_string_field_value($newMediaData);
                 if ($mediaData != $newMediaData) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
-            } // in array of strings
-            elseif ($newMediaData !== null) {
+            } elseif ($newMediaData !== null) {
+                // in array of strings
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
@@ -1422,9 +1422,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
+        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist,
-                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
+                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels,
                                 (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
 

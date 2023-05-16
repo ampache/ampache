@@ -44,9 +44,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $state;
     public $file;
     public $source;
-    public $bitrate;
-    public $rate;
-    public $mode;
     public $size;
     public $time;
     public $played;
@@ -62,6 +59,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $total_count;
     public $total_skip;
     public $catalog;
+    public $bitrate;
+    public $rate;
+    public $mode;
+    public $channels;
     public $waveform;
     public $has_art;
     public $f_name;
@@ -72,6 +73,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $f_description;
     public $f_author;
     public $f_artist_full;
+    public $f_bitrate;
     public $f_category;
     public $f_website;
     public $f_pubdate;
@@ -171,6 +173,9 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
+
+        // Format the Bitrate
+        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
