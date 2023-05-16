@@ -848,6 +848,7 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions
             );
             $transcode_to = $transcode_settings['format'];
+            /** @var Song|Video $media */
             $maxbitrate   = Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {
