@@ -371,10 +371,10 @@ if ($iframed) { ?>
                 var replaygain = 0;
                 var peakamplitude = 1;
                 if (replaygainEnabled && currentjpitem != null) {
-                    var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
+                    var replaygain_track_gain = currentjpitem.attr("data-replaygain_track_gain");
                     var r128_track_gain = currentjpitem.attr("data-r128_track_gain");
 
-                    if (r128_track_gain !== 'null') {
+                    if (typeof r128_track_gain !== 'undefined' && r128_track_gain !== 'null') {
                         // R128 PREFERRED
                         replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
                         var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
@@ -387,9 +387,9 @@ if ($iframed) { ?>
                         // REPLAYGAIN FALLBACK
                         replaygain = parseFloat(replaygain_track_gain);
 
-                        if (replaygain != null) {
+                        if (typeof replaygain_track_gain !== 'undefined' && replaygain != null) {
                             var track_peak = currentjpitem.attr("data-replaygain_track_peak");
-                            if (track_peak !== 'null') {
+                            if (typeof track_peak !== 'undefined' && track_peak !== 'null') {
                                 peakamplitude = parseFloat(track_peak);
                             }
                             gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
