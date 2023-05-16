@@ -4,8 +4,7 @@
 
 ### Added
 
-* Subsonic
-  * Add `type` and `serverVersion` to `<subsonic-response>` objects
+* Simplified transcode settings checks
 
 ### Changed
 
