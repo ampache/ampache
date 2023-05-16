@@ -858,6 +858,9 @@ class Update
         $update_string = "* Rename `subtitle` to `version` in the `album` table";
         $version[]     = array('version' => '600027', 'description' => $update_string);
 
+        $update_string = "* Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table";
+        $version[]     = array('version' => '600028', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5295,6 +5298,26 @@ class Update
         $retval    = true;
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $sql       = "ALTER TABLE `album` CHANGE `subtitle` `version` varchar(64) COLLATE $collation DEFAULT NULL";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600028
+     *
+     * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
+     */
+    public static function update_600028(): bool
+    {
+        $retval    = true;
+        $sql       = "ALTER TABLE `podcast_episode` ADD `channels` mediumint(9) DEFAULT NULL AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;

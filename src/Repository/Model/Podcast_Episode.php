@@ -44,9 +44,6 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $state;
     public $file;
     public $source;
-    public $bitrate;
-    public $rate;
-    public $mode;
     public $size;
     public $time;
     public $played;
@@ -62,6 +59,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $total_count;
     public $total_skip;
     public $catalog;
+    public $bitrate;
+    public $rate;
+    public $mode;
+    public $channels;
     public $waveform;
     public $has_art;
     public $f_name;
