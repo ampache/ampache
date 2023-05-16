@@ -628,7 +628,7 @@ final class Play2Action implements ApplicationActionInterface
                 $media->file  = $file_target;
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
-                $transcode_to = false;
+                $transcode_to = null;
                 $transcode    = false;
             } else {
                 // Build up the catalog for our current object
@@ -667,7 +667,7 @@ final class Play2Action implements ApplicationActionInterface
         // Format the media name
         $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
         $transcode_to = ($cache_file || ($is_download && !$transcode_to))
-            ? false
+            ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');

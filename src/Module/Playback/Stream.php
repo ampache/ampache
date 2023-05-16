@@ -420,9 +420,6 @@ class Stream
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
-     * @param string $type
-     * @param string $player
-     * @param array $options
      * @return integer
      */
     public static function get_max_bitrate($media, $transcode_settings)
