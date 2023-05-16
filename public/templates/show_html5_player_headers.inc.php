@@ -396,7 +396,7 @@ if ($iframed) { ?>
                         }
                     }
                 }
-                if (Number.isFinite(gainlevel) {
+                if (Number.isFinite(gainlevel)) {
                     replaygainNode.gain.value = gainlevel;
                 }
             }
