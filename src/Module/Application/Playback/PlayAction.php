@@ -789,7 +789,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $troptions = array();
-        if ($transcode) {
+        if ($transcode && in_array($type, array('song', 'video', 'podcast_episode'))) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
@@ -823,7 +823,7 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
-
+            /** @var Song|Video|Podcast_Episode $media */
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
