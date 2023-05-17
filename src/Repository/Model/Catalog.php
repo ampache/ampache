@@ -2653,9 +2653,6 @@ abstract class Catalog extends database_object
         if (!$new_song->artist) {
             $new_song->artist = $song->artist;
         }
-        if ((int)$song->artist === 0) {
-            $song->artist = $new_song->artist;
-        }
 
         // check whether this album exists
         $new_song->album = ($is_upload_albumartist)
@@ -2663,9 +2660,6 @@ abstract class Catalog extends database_object
             : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if (!$new_song->album) {
             $new_song->album = $song->album;
-        }
-        if ((int)$song->album === 0) {
-            $song->album = $new_song->album;
         }
 
         // get the artists / album_artists for this song
@@ -2818,17 +2812,17 @@ abstract class Catalog extends database_object
         }
 
         // Duplicate arts if required
-        if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
+        if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
                 Art::duplicate('artist', $song->artist, $new_song->artist);
             }
         }
-        if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
+        if (($song->albumartist > 0 && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
                 Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
-        if (($song->album && $new_song->album) && $song->album != $new_song->album) {
+        if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
             }
@@ -2857,10 +2851,10 @@ abstract class Catalog extends database_object
             Song::update_song($song->id, $new_song);
 
             // If you've migrated the album/artist you need to migrate their data here
-            if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
+            if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
                 self::migrate('artist', $song->artist, $new_song->artist, $song->id);
             }
-            if (($song->album && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
+            if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
             }
