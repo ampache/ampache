@@ -2653,6 +2653,9 @@ abstract class Catalog extends database_object
         if (!$new_song->artist) {
             $new_song->artist = $song->artist;
         }
+        if ((int)$song->artist === 0) {
+            $song->artist = $new_song->artist;
+        }
 
         // check whether this album exists
         $new_song->album = ($is_upload_albumartist)
@@ -2854,7 +2857,9 @@ abstract class Catalog extends database_object
             Song::update_song($song->id, $new_song);
 
             // If you've migrated the album/artist you need to migrate their data here
-            self::migrate('artist', $song->artist, $new_song->artist, $song->id);
+            if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
+                self::migrate('artist', $song->artist, $new_song->artist, $song->id);
+            }
             if (($song->album && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
