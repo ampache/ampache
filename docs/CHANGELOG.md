@@ -259,6 +259,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
   * Add all mapped artists to song and album objects (JSON added an `artists` element)
+  * Add `bitrate`, `stream_bitrate`, `rate`, `mode`, `channels` to Podcast Episode objects
 * JSON responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects
