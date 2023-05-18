@@ -37,6 +37,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
+  * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
