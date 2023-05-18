@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
+define('API', 1);
 final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements UpdateSingleCatalogFolderInterface
 {
     public function update(
@@ -109,12 +110,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     );
                     if ($media->id && $verificationMode == 1) {
                         // Verify Existing files
-                        $info = Catalog::update_media_from_tags($media);
-                        if (array_key_exists('element', $info) && is_array($info['element']) && !empty($info['element'])) {
-                            // update counts after adding/verifying
-                            Album::update_table_counts();
-                            Artist::update_table_counts();
-                        }
+                        Catalog::update_media_from_tags($media);
                     }
                     if ($searchArtMode == 1 && $file_id) {
                         // Look for media art after adding new files
@@ -147,9 +143,11 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     'gather_art' => ($searchArtMode == 1)
                 );
                 // Look for new files
-                $catalog->add_files($folderPath, $options);
+                if (!$catalog->add_files($folderPath, $options)) {
+                    $addMode = 0;
+                }
             }
-            if ($verificationMode == 1 || $addMode == 1) {
+            if (($verificationMode == 1 && !empty($file_ids)) || $addMode == 1) {
                 // update counts after adding/verifying
                 Album::update_table_counts();
                 Artist::update_table_counts();
