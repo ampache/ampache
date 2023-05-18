@@ -177,10 +177,16 @@ abstract class database_object
      * @param string $index
      * @param integer $object_id
      */
-    public static function remove_from_cache($index, $object_id)
+    public static function remove_from_cache($index, $object_id = false)
     {
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
-            unset(self::$object_cache[$index][$object_id]);
+        if (isset(self::$object_cache[$index])) {
+            if ($object_id === false) {
+                // unset the whole index
+                unset(self::$object_cache[$index]);
+            } elseif (isset(self::$object_cache[$index][$object_id])) {
+                // unset a single value
+                unset(self::$object_cache[$index][$object_id]);
+            }
         }
     } // remove_from_cache
 }

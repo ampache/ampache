@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## Ampache 5.6.1-release
+
+### Added
+
+* Simplified transcode settings checks
+
+### Changed
+
+* Clean up the PlayAction class to make it a bit less complicated
+* Encode URL's with a + for segmented play urls
+
+### Removed
+
+* Soundcloud catalogs
+
+### Fixed
+
+* mptre/php-soundcloud has been removed from github
+* Podcast Episode download link
+* Filtering passwords in some places before hashing
+* Catalog caches delete and add immediately when changed
+* Check isfinite before trying to apply replaygain on webplayer
+
+## API 5.6.1
+
+**NO CHANGE**
+
 ## Ampache 5.6.0-release
 
 ### Added

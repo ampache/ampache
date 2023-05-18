@@ -82,8 +82,8 @@ final class UpdateUserAction extends AbstractUserAction
         $website              = scrub_in(filter_input(INPUT_POST, 'website', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $access               = scrub_in(filter_input(INPUT_POST, 'access', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $catalog_filter_group = (int) scrub_in(filter_input(INPUT_POST, 'catalog_filter_group', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-        $pass1                = filter_input(INPUT_POST, 'password_1', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $pass2                = filter_input(INPUT_POST, 'password_2', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $pass1                = Core::get_post('password_1');
+        $pass2                = Core::get_post('password_2');
         $state                = scrub_in(filter_input(INPUT_POST, 'state', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $city                 = scrub_in(filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $fullname_public      = isset($_POST['fullname_public']);
@@ -94,12 +94,8 @@ final class UpdateUserAction extends AbstractUserAction
         /* Verify Input */
         if (empty($username)) {
             AmpError::add('username', T_("A Username is required"));
-        } else {
-            if ($username != $client->username) {
-                if ($this->userRepository->idByUsername($username) > 0) {
-                    AmpError::add('username', T_("That Username already exists"));
-                }
-            }
+        } elseif ($username != $client->username && $this->userRepository->idByUsername($username) > 0) {
+            AmpError::add('username', T_("That Username already exists"));
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
             AmpError::add('password', T_("Your Passwords don't match"));
