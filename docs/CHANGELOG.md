@@ -283,6 +283,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 * Api6
   * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
+* Api5
+  * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
   * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'

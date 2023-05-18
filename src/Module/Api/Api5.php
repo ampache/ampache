@@ -116,6 +116,7 @@ class Api5
         Method\Api5\UserPreference5Method::ACTION => Method\Api5\UserPreference5Method::class,
         Method\Api5\UserCreate5Method::ACTION => Method\Api5\UserCreate5Method::class,
         Method\Api5\UserUpdate5Method::ACTION => Method\Api5\UserUpdate5Method::class,
+        Method\Api5\UserEdit5Method::ACTION => Method\Api5\UserEdit5Method::class,
         Method\Api5\UserDelete5Method::ACTION => Method\Api5\UserDelete5Method::class,
         Method\Api5\Followers5Method::ACTION => Method\Api5\Followers5Method::class,
         Method\Api5\Following5Method::ACTION => Method\Api5\Following5Method::class,
