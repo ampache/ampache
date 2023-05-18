@@ -65,7 +65,7 @@ final class UpdateCatalogCommand extends Command
             $values['add']     = true;
             $values['art']     = true;
             $values['garbage'] = true;
-            //$values['verify']  = false;
+            $values['verify']  = true;
         }
 
         $this->updateCatalog->update(
