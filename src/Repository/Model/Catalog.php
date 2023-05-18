@@ -2511,6 +2511,7 @@ abstract class Catalog extends database_object
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
         }
+        /** @var array $update */
         $update = $callable($results, $media);
 
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog

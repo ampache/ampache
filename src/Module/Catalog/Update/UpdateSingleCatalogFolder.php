@@ -147,9 +147,11 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     'gather_art' => ($searchArtMode == 1)
                 );
                 // Look for new files
-                $catalog->add_files($folderPath, $options);
+                if (!$catalog->add_files($folderPath, $options)) {
+                    $addMode = 0;
+                }
             }
-            if ($verificationMode == 1 || $addMode == 1) {
+            if (($verificationMode == 1 && !empty($file_ids)) || $addMode == 1) {
                 // update counts after adding/verifying
                 Album::update_table_counts();
                 Artist::update_table_counts();
