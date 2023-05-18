@@ -45,7 +45,8 @@ final class UpdateCatalogFileCommand extends Command
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<filePath>', T_('File Path'))
-            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . T_('Update /tmp/some-file.mp3 in the catalog `some-catalog`') . '<eol/>');
+            /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
+            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '<eol/>');
     }
 
     public function execute(
