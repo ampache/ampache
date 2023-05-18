@@ -763,7 +763,7 @@ class User extends database_object
         $sql             = "SELECT `id` FROM `user`";
         $db_results      = Dba::read($sql);
         $user_list       = array();
-        while ($results  = Dba::fetch_assoc($db_results)) {
+        while ($results = Dba::fetch_assoc($db_results)) {
             $user_list[] = (int)$results['id'];
         }
         // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well

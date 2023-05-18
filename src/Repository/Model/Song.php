@@ -2193,31 +2193,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_fields
 
     /**
-     * get_from_path
-     * This returns all of the songs that exist under the specified path
-     * @param string $path
-     * @return integer[]
-     */
-    public static function get_from_path($path)
-    {
-        $path = Dba::escape($path);
-
-        $sql        = "SELECT * FROM `song` WHERE `file` LIKE '$path%'";
-        $db_results = Dba::read($sql);
-
-        $songs = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = (int)$row['id'];
-        }
-
-        return $songs;
-    } // get_from_path
-
-    /**
-     * @function    get_rel_path
-     * @discussion    returns the path of the song file stripped of the catalog path
-     *        used for mpd playback
+     * get_rel_path
+     * returns the path of the song file stripped of the catalog path used for mpd playback
      * @param string $file_path
      * @param integer $catalog_id
      * @return string

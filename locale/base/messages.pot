@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-05-18 11:03+1000\n"
+"POT-Creation-Date: 2023-05-18 11:38+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -283,7 +283,7 @@ msgstr ""
 #: ../../public/templates/test_error_page.inc.php:55
 #: ../../src/Config/functions.php:566
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:63
-#: ../../src/Repository/Model/Catalog.php:2370
+#: ../../src/Repository/Model/Catalog.php:2393
 msgid "Error"
 msgstr ""
 
@@ -628,7 +628,7 @@ msgstr ""
 #: ../../public/templates/show_recently_skipped.inc_user.php:165
 #: ../../public/templates/show_tagcloud_hidden.inc.php:33
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Repository/Model/Catalog.php:2346
+#: ../../src/Repository/Model/Catalog.php:2369
 msgid "Song"
 msgstr ""
 
@@ -1408,6 +1408,7 @@ msgstr ""
 
 #: ../../public/templates/show_add_catalog.inc.php:45
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:46
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:46
 msgid "Catalog Name"
 msgstr ""
 
@@ -1814,7 +1815,7 @@ msgstr ""
 #: ../../public/templates/show_test.inc.php:62
 #: ../../public/templates/show_user.inc.php:109
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:2346
+#: ../../src/Repository/Model/Catalog.php:2369
 msgid "Status"
 msgstr ""
 
@@ -2771,6 +2772,7 @@ msgstr ""
 #: ../../src/Gui/Song/SongViewAdapter.php:405
 #: ../../src/Module/Catalog/Catalog_dropbox.php:148
 #: ../../src/Module/Catalog/Catalog_local.php:146
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:47
 msgid "Path"
 msgstr ""
 
@@ -7366,7 +7368,7 @@ msgid "Your search has been saved as a Playlist with the name %s"
 msgstr ""
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:3657
+#: ../../src/Repository/Model/Catalog.php:3683
 msgid "Failed to create playlist"
 msgstr ""
 
@@ -7725,7 +7727,7 @@ msgstr ""
 #: ../../src/Module/Catalog/Catalog_remote.php:323
 #: ../../src/Module/Catalog/Catalog_subsonic.php:308
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:117
-#: ../../src/Repository/Model/Catalog.php:2368
+#: ../../src/Repository/Model/Catalog.php:2391
 #: ../../src/Repository/Model/Search.php:672
 msgid "Updated"
 msgstr ""
@@ -7951,16 +7953,19 @@ msgid "There is an error with your parameters"
 msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:63
+#: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:63
 #, php-format
 msgid "Catalog `%s` not found"
 msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:96
+#: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:100
 #, php-format
 msgid "Removing File: \"%s\""
 msgstr ""
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:108
+#: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:107
 #: ../../src/Module/Cli/PrintTagsCommand.php:56
 #, php-format
 msgid "Reading File: \"%s\""
@@ -8385,21 +8390,25 @@ msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:42
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:42
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:42
 msgid "Removes missing files from the database"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:43
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:44
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:44
 msgid "Adds new media files to the database"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:44
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:45
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:45
 msgid "Gathers media Art"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:45
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:43
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:43
 msgid "Reads your files and updates the database to match changes"
 msgstr ""
 
@@ -8433,8 +8442,13 @@ msgstr ""
 
 #. HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album)
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:49
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:49
 #, php-format
 msgid "Update %s in the catalog `some-catalog`"
+msgstr ""
+
+#: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:37
+msgid "Perform catalog actions for a single folder"
 msgstr ""
 
 #: ../../src/Module/Cli/UpdateDbCommand.php:42
@@ -8574,7 +8588,7 @@ msgstr ""
 
 #: ../../src/Module/Song/SongSorter.php:109
 #: ../../src/Module/Song/SongSorter.php:183
-#: ../../src/Repository/Model/Catalog.php:3381
+#: ../../src/Repository/Model/Catalog.php:3407
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -9560,30 +9574,30 @@ msgstr[1] ""
 msgid "Failed to create the catalog, check the debug logs"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:2372
+#: ../../src/Repository/Model/Catalog.php:2395
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3352
+#: ../../src/Repository/Model/Catalog.php:3378
 msgid "Catalog Cleaned"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3353
+#: ../../src/Repository/Model/Catalog.php:3379
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:3380
+#: ../../src/Repository/Model/Catalog.php:3406
 msgid "Catalog Verified"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3675
+#: ../../src/Repository/Model/Catalog.php:3701
 msgid "No valid songs found in playlist file"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:4185
+#: ../../src/Repository/Model/Catalog.php:4211
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
