@@ -34,7 +34,7 @@ final class UpdateCatalogFolderCommand extends Command
     public function __construct(
         UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder
     ) {
-        parent::__construct('run:updateCatalogFolder', T_('Perform catalog actions for a single file'));
+        parent::__construct('run:updateCatalogFolder', T_('Perform catalog actions for a single folder'));
 
         $this->updateSingleCatalogFolder = $updateSingleCatalogFolder;
 
