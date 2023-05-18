@@ -109,8 +109,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     );
                     if ($media->id && $verificationMode == 1) {
                         // Verify Existing files
-                        $catalog = $media->catalog;
-                        $info    = Catalog::update_media_from_tags($media);
+                        $info = Catalog::update_media_from_tags($media);
                         if (array_key_exists('element', $info) && is_array($info['element']) && !empty($info['element'])) {
                             // update counts after adding/verifying
                             Album::update_table_counts();
