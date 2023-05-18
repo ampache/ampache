@@ -31,11 +31,12 @@ use Ampache\Module\Util\Ui;
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
-/** @var Search $search */
 /** @var array $object_ids */
+/** @var bool $argument */
 
-// playlists and searches come from the same 'playlist_media' browse
-$playlist     = $playlist ?? $search;
+// playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
+$playlist_id  = $playlist->id ?? '';
+$argument     = $argument ?? false;
 $web_path     = AmpConfig::get('web_path');
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
@@ -50,7 +51,7 @@ $count     = 1; ?>
     require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
-    <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
+    <form method="post" id="reorder_playlist_<?php echo $playlist_id; ?>">
         <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start() ?>">
             <thead>
             <tr class="th-top">
@@ -66,7 +67,7 @@ $count     = 1; ?>
                 <th class="cel_drag essential"></th>
             </tr>
             </thead>
-            <tbody id="sortableplaylist_<?php echo $playlist->id; ?>">
+            <tbody id="sortableplaylist_<?php echo $playlist_id; ?>">
             <?php foreach ($object_ids as $object) {
                 if (!is_array($object)) {
                     $object = (array) $object;

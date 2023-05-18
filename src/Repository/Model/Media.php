@@ -63,6 +63,7 @@ interface Media
      * @param string $target
      * @param string $player
      * @param array $options
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array());
 

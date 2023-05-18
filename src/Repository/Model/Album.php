@@ -94,9 +94,9 @@ class Album extends database_object implements library_item
     public $release_status;
 
     /**
-     * @var string $subtitle
+     * @var string $version
      */
-    public $subtitle;
+    public $version;
 
     /**
      * @var string $catalog_number
@@ -372,11 +372,11 @@ class Album extends database_object implements library_item
      * @param integer $original_year
      * @param string $barcode
      * @param string $catalog_number
-     * @param string $subtitle
+     * @param string $version
      * @param boolean $readonly
      * @return integer
      */
-    public static function check($catalog, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $subtitle = null, $readonly = false)
+    public static function check($catalog, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = 0, $barcode = null, $catalog_number = null, $version = null, $readonly = false)
     {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
@@ -390,7 +390,7 @@ class Album extends database_object implements library_item
         $original_year  = ((int)substr((string)$original_year, 0, 4) < 1) ? null : substr((string)$original_year, 0, 4);
         $barcode        = empty($barcode) ? null : $barcode;
         $catalog_number = empty($catalog_number) ? null : $catalog_number;
-        $subtitle       = empty($subtitle) ? null : $subtitle;
+        $version        = empty($version) ? null : $version;
 
         if (!$name) {
             $name          = T_('Unknown (Orphaned)');
@@ -399,8 +399,8 @@ class Album extends database_object implements library_item
             $album_artist  = Artist::check(T_('Unknown (Orphaned)'));
             $catalog       = 0;
         }
-        if (isset(self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$subtitle])) {
-            return self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$subtitle];
+        if (isset(self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version])) {
+            return self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version];
         }
 
         $sql    = "SELECT DISTINCT(`album`.`id`) AS `id` FROM `album` WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) AND `album`.`year` = ? ";
@@ -460,13 +460,13 @@ class Album extends database_object implements library_item
         } else {
             $sql .= 'AND `album`.`catalog_number` IS NULL ';
         }
-        if ($subtitle) {
-            $sql .= 'AND `album`.`subtitle` = ? ';
-            $params[] = $subtitle;
+        if ($version) {
+            $sql .= 'AND `album`.`version` = ? ';
+            $params[] = $version;
         } else {
-            $sql .= 'AND `album`.`subtitle` IS NULL ';
+            $sql .= 'AND `album`.`version` IS NULL ';
         }
-        $sql .= 'AND `album`.`catalog` = ? ';
+        $sql .= 'AND `album`.`catalog` = ?;';
         $params[] = $catalog;
 
         $db_results = Dba::read($sql, $params);
@@ -475,7 +475,7 @@ class Album extends database_object implements library_item
             $album_id = (int)$row['id'];
             if ($album_id > 0) {
                 // cache the album id against it's details
-                self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$subtitle] = $album_id;
+                self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
 
                 return $album_id;
             }
@@ -485,7 +485,7 @@ class Album extends database_object implements library_item
             return 0;
         }
 
-        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `subtitle`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `mbid`, `mbid_group`, `release_type`, `release_status`, `album_artist`, `original_year`, `barcode`, `catalog_number`, `version`, `catalog`, `addition_time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $name,
@@ -499,7 +499,7 @@ class Album extends database_object implements library_item
             $original_year,
             $barcode,
             $catalog_number,
-            $subtitle,
+            $version,
             $catalog,
             time()
         ));
@@ -520,7 +520,7 @@ class Album extends database_object implements library_item
             }
         }
 
-        self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$subtitle] = $album_id;
+        self::$_mapcache[$name][$year][$album_artist][$mbid][$mbid_group][$release_type][$release_status][$original_year][$barcode][$catalog_number][$version] = $album_id;
 
         return $album_id;
     }
@@ -627,8 +627,8 @@ class Album extends database_object implements library_item
         }
         if ($force_year) {
             $f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
-            if ($this->subtitle && AmpConfig::get('show_subtitle')) {
-                $f_name .= " [" . $this->subtitle . "]";
+            if ($this->version && AmpConfig::get('show_subtitle')) {
+                $f_name .= " [" . $this->version . "]";
             }
             if ($this->year > 0) {
                 $f_name .= " (" . $this->year . ")";
@@ -639,8 +639,8 @@ class Album extends database_object implements library_item
         // don't do anything if it's formatted
         if (!isset($this->f_name)) {
             $this->f_name = trim(trim($this->prefix ?? '') . ' ' . trim($this->name ?? ''));
-            if ($this->subtitle && AmpConfig::get('show_subtitle')) {
-                $this->f_name .= " [" . $this->subtitle . "]";
+            if ($this->version && AmpConfig::get('show_subtitle')) {
+                $this->f_name .= " [" . $this->version . "]";
             }
             // Album pages should show a year and looking if we need to display the release year
             if ($this->original_year && AmpConfig::get('show_original_year') && $this->original_year != $this->year && $this->year > 0) {
@@ -1077,7 +1077,7 @@ class Album extends database_object implements library_item
         $original_year  = $data['original_year'] ?? null;
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
-        $subtitle       = $data['subtitle'] ?? null;
+        $version        = $data['version'] ?? null;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {
@@ -1092,7 +1092,7 @@ class Album extends database_object implements library_item
         $changed    = array();
         $songs      = $this->getSongRepository()->getByAlbum($this->getId());
         // run an album check on the current object READONLY means that it won't insert a new album
-        $album_id   = self::check($this->catalog, $name, $year, $mbid, $mbid_group, $album_artist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $subtitle, true);
+        $album_id   = self::check($this->catalog, $name, $year, $mbid, $mbid_group, $album_artist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version, true);
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
             debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
@@ -1153,8 +1153,8 @@ class Album extends database_object implements library_item
             if ($catalog_number != $this->catalog_number) {
                 self::update_field('catalog_number', $catalog_number, $this->id);
             }
-            if ($subtitle != $this->subtitle) {
-                self::update_field('subtitle', $subtitle, $this->id);
+            if ($version != $this->version) {
+                self::update_field('version', $version, $this->id);
             }
         }
 
@@ -1167,7 +1167,7 @@ class Album extends database_object implements library_item
         $this->original_year  = $original_year;
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
-        $this->subtitle       = $subtitle;
+        $this->version        = $version;
 
         if ($updated && is_array($songs)) {
             foreach ($songs as $song_id) {

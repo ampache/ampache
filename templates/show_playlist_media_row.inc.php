@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Playlist|Search $playlist */
+/** @var Playlist $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
 /** @var array $object */
@@ -99,14 +99,12 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             echo Share::display_ui($object_type, $libitem->id, false);
         }
     }
-    if ($playlist) {
-        if (get_class($playlist) == Playlist::class && $playlist->has_access()) {
-            echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
+    if (isset($playlist) && $playlist->has_access()) {
+        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
         <?php echo Ui::get_icon('drag', T_('Reorder')) ?>
             </td>
-        <?php
-        }
+    <?php
     }
 } ?>

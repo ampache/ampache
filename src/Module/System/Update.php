@@ -852,6 +852,15 @@ class Update
         $update_string = "* Add ui option ('show_header_login') Show the login / registration links in the site header";
         $version[]     = array('version' => '600025', 'description' => $update_string);
 
+        $update_string = "* Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music";
+        $version[]     = array('version' => '600026', 'description' => $update_string);
+
+        $update_string = "* Rename `subtitle` to `version` in the `album` table";
+        $version[]     = array('version' => '600027', 'description' => $update_string);
+
+        $update_string = "* Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table";
+        $version[]     = array('version' => '600028', 'description' => $update_string);
+
         return $version;
     }
 
@@ -3869,7 +3878,7 @@ class Update
         $sql             = "SELECT `id` FROM `user`";
         $db_users        = Dba::read($sql);
         $user_list       = array();
-        while ($results  = Dba::fetch_assoc($db_users)) {
+        while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
         // Calculate their total Bandwidth Usage
@@ -3878,17 +3887,17 @@ class Update
             $total  = 0;
             $sql_s  = "SELECT SUM(`song`.`size`) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
             $db_s   = Dba::read($sql_s, $params);
-            while ($results  = Dba::fetch_assoc($db_s)) {
+            while ($results = Dba::fetch_assoc($db_s)) {
                 $total = $total + (int)$results['size'];
             }
             $sql_v = "SELECT SUM(`video`.`size`) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
             $db_v  = Dba::read($sql_v, $params);
-            while ($results  = Dba::fetch_assoc($db_v)) {
+            while ($results = Dba::fetch_assoc($db_v)) {
                 $total = $total + (int)$results['size'];
             }
             $sql_p = "SELECT SUM(`podcast_episode`.`size`) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
             $db_p  = Dba::read($sql_p, $params);
-            while ($results  = Dba::fetch_assoc($db_p)) {
+            while ($results = Dba::fetch_assoc($db_p)) {
                 $total = $total + (int)$results['size'];
             }
             $retval &= (Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total)) !== false);
@@ -4102,7 +4111,7 @@ class Update
         $sql             = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
         $dupe_prefs      = Dba::read($sql);
         $pref_list       = array();
-        while ($results  = Dba::fetch_assoc($dupe_prefs)) {
+        while ($results = Dba::fetch_assoc($dupe_prefs)) {
             $pref_list[] = (int)$results['id'];
         }
         // delete duplicates (if they exist)
@@ -5258,6 +5267,58 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
         $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /** update_600026
+     *
+     * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
+     */
+    public static function update_600026(): bool
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player')";
+        $retval &= (Dba::write($sql) !== false);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
+        $retval &= (Dba::write($sql, array($row_id)) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600027
+     *
+     * Rename `subtitle` to `version` in the `album` table
+     */
+    public static function update_600027(): bool
+    {
+        $retval    = true;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $sql       = "ALTER TABLE `album` CHANGE `subtitle` `version` varchar(64) COLLATE $collation DEFAULT NULL";
+        $retval &= (Dba::write($sql) !== false);
+
+        return $retval;
+    }
+
+    /**
+     * update_600028
+     *
+     * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
+     */
+    public static function update_600028(): bool
+    {
+        $retval    = true;
+        $sql       = "ALTER TABLE `podcast_episode` ADD `channels` mediumint(9) DEFAULT NULL AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
+        $sql       = "ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
+        $retval &= (Dba::write($sql) !== false);
 
         return $retval;
     }

@@ -258,11 +258,10 @@ class Catalog_local extends Catalog
         if (isset($options['subdirectory'])) {
             $path = $options['subdirectory'];
             unset($options['subdirectory']);
-
-            // Make sure the path doesn't end in a / or \
-            $path = rtrim($path, '/');
-            $path = rtrim($path, '\\');
         }
+        // Make sure the path doesn't end in a / or \
+        $path = rtrim($path, '/');
+        $path = rtrim($path, '\\');
 
         // Correctly detect the slash we need to use here
         if (strpos($path, '/') !== false) {
@@ -419,9 +418,7 @@ class Catalog_local extends Catalog
                     $convok = (strcmp($enc_full_file, $full_file) == 0);
                 }
                 if (!$convok) {
-                    debug_event('local.catalog',
-                        $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
-                        1);
+                    debug_event('local.catalog',  $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
 
@@ -658,7 +655,7 @@ class Catalog_local extends Catalog
                 $sql = "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . $this->catalog_id . ") GROUP BY `song`.`album` ORDER BY `min_update_time` LIMIT $count, $chunk_size";
                 break;
             case 'podcast_episode':
-                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
+                $sql = "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . $this->catalog_id . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`pubdate` DESC, `podcast_episode`.`file` LIMIT $count, $chunk_size";
                 break;
             case 'video':
             default:
@@ -742,7 +739,7 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000);
+            $chunks = floor($total / 10000) + 1;
             $chunk  = $chunks;
         }
         while ($chunk >= 0) {
@@ -789,9 +786,8 @@ class Catalog_local extends Catalog
 
         $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
 
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
+        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT $count, $chunk_size;";
         $db_results = Dba::read($sql, array($this->catalog_id));
-
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
             $count++;
@@ -1236,10 +1232,10 @@ class Catalog_local extends Catalog
         $ape    = AmpConfig::get('cache_ape');
         $shn    = AmpConfig::get('cache_shn');
         $mp3    = AmpConfig::get('cache_mp3');
-        $target = AmpConfig::get('cache_target');
         $path   = (string)AmpConfig::get('cache_path', '');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
 
             return false;
@@ -1314,7 +1310,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id);
+            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $target;
             if (is_file($old_target_file)) {
                 // check for the old path first
@@ -1322,7 +1318,7 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
             $file_exists = ($target_file !== false && is_file($target_file));
-            $song        = new Song($song_id);
+            $media       = new Song($song_id);
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
@@ -1334,15 +1330,16 @@ class Catalog_local extends Catalog
                     $this->sort_pattern,
                     $this->rename_pattern
                 );
-                if ($song->time > 0 && !$vainfo->check_time($song->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->id, 5);
+                if ($media->time > 0 && !$vainfo->check_time($media->time)) {
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);
                     unlink($target_file);
                     $file_exists = false;
                 }
             }
             if (!$file_exists) {
                 // transcode to the new path
-                Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
+                $transcode_settings = $media->get_transcode_settings($target);
+                Stream::start_transcode($media, $transcode_settings, (string)$target_file);
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }
         }

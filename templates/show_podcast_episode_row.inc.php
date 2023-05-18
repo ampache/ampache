@@ -76,7 +76,7 @@ if (Access::check('interface', 25)) { ?>
     </span>
 </td>
 <?php if (!$is_table) { ?>
-<td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
+<td class="cel_podcast"><?php echo $libitem->get_f_podcast_link(); ?></td>
 <?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>

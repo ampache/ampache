@@ -1087,8 +1087,8 @@ abstract class Catalog extends database_object
      */
     public static function cache_catalogs()
     {
-        $target = AmpConfig::get('cache_target');
         $path   = (string)AmpConfig::get('cache_path', '');
+        $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
         if (is_dir($path) && $target) {
             $catalogs = self::get_catalogs('music');
@@ -1097,9 +1097,9 @@ abstract class Catalog extends database_object
                 $catalog = self::create_from_id($catalogid);
                 $catalog->cache_catalog_proc();
             }
-            $catalog_dirs  = new RecursiveDirectoryIterator($path);
-            $dir_files     = new RecursiveIteratorIterator($catalog_dirs);
-            $cache_files   = new RegexIterator($dir_files, "/\.$target/i");
+            $catalog_dirs = new RecursiveDirectoryIterator($path);
+            $dir_files    = new RecursiveIteratorIterator($catalog_dirs);
+            $cache_files  = new RegexIterator($dir_files, "/\.$target/i");
             debug_event(__CLASS__, 'cache_catalogs: cleaning old files', 5);
             foreach ($cache_files as $file) {
                 $path    = pathinfo($file);
@@ -1718,6 +1718,29 @@ abstract class Catalog extends database_object
         }
 
         return 0;
+    }
+
+    /**
+     * get_ids_from_folder
+     *
+     * Get media id's from a base folder path
+     *
+     * @param string $folder_path
+     * @param string $media_type
+     * @return integer[]
+     */
+    public static function get_ids_from_folder($folder_path, $media_type)
+    {
+        $objects     = array();
+        $folder_path = Dba::escape($folder_path);
+        $media_type  = Dba::escape($media_type);
+        $sql         = "SELECT `id` FROM `$media_type` WHERE `file` LIKE '$folder_path%'";
+        $db_results  = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $objects[] = (int)$row['id'];
+        }
+
+        return $objects;
     }
 
     /**
@@ -2488,6 +2511,7 @@ abstract class Catalog extends database_object
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
         }
+        /** @var array $update */
         $update = $callable($results, $media);
 
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
@@ -2518,13 +2542,14 @@ abstract class Catalog extends database_object
         $new_song->year = (strlen((string)$results['year']) > 4)
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
-        $new_song->disk    = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->title   = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate = $results['bitrate'];
-        $new_song->rate    = $results['rate'];
-        $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size    = $results['size'];
-        $new_song->time    = (strlen((string)$results['time']) > 5)
+        $new_song->disk     = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
+        $new_song->bitrate  = $results['bitrate'];
+        $new_song->rate     = $results['rate'];
+        $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $new_song->channels = $results['channels'];
+        $new_song->size     = $results['size'];
+        $new_song->time     = (strlen((string)$results['time']) > 5)
             ? (int)substr($results['time'], -5, 5)
             : (int)($results['time']);
         if ($new_song->time < 0) {
@@ -2608,7 +2633,7 @@ abstract class Catalog extends database_object
         $original_year    = $results['original_year'];
         $barcode          = self::check_length($results['barcode'], 64);
         $catalog_number   = self::check_length($results['catalog_number'], 64);
-        $subtitle         = self::check_length($results['subtitle'], 64);
+        $version          = self::check_length($results['version'], 64);
 
         // info for the artist_map table.
         $artists_array          = $results['artists'] ?? array();
@@ -2656,7 +2681,7 @@ abstract class Catalog extends database_object
         // check whether this album exists
         $new_song->album = ($is_upload_albumartist)
             ? $song->album
-            : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $subtitle);
+            : Album::check($song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
@@ -2811,17 +2836,17 @@ abstract class Catalog extends database_object
         }
 
         // Duplicate arts if required
-        if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
+        if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
                 Art::duplicate('artist', $song->artist, $new_song->artist);
             }
         }
-        if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
+        if (($song->albumartist > 0 && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
                 Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
-        if (($song->album && $new_song->album) && $song->album != $new_song->album) {
+        if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
             }
@@ -2849,9 +2874,12 @@ abstract class Catalog extends database_object
             // Update the song and song_data table
             Song::update_song($song->id, $new_song);
 
-            // If you've migrated the album/artist you need to migrate their data here
-            self::migrate('artist', $song->artist, $new_song->artist, $song->id);
-            if (self::migrate('album', $song->album, $new_song->album, $song->id)) {
+            // If you've migrated from an existing artist you need to migrate their data
+            if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
+                self::migrate('artist', $song->artist, $new_song->artist, $song->id);
+            }
+            // albums changes also require album_disk changes
+            if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
             }
@@ -2948,11 +2976,15 @@ abstract class Catalog extends database_object
      */
     public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode)
     {
-        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $podcast_episode->id));
+        $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
+        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id));
 
-        $podcast_episode->size = $results['size'];
-        $podcast_episode->time = $results['time'];
+        $podcast_episode->size     = $results['size'];
+        $podcast_episode->time     = $results['time'];
+        $podcast_episode->bitrate  = $results['bitrate'];
+        $podcast_episode->rate     = $results['rate'];
+        $podcast_episode->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $podcast_episode->channels = $results['channels'];
 
         $array            = array();
         $array['change']  = true;
@@ -3856,7 +3888,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Track Number'] = (int) ($song->track);
                     $xml['dict']['Year']         = (int) ($song->year);
                     $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
-                    $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
+                    $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1024);
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
                     $xml['dict']['Track Type']   = "URL";
@@ -4045,14 +4077,14 @@ abstract class Catalog extends database_object
      * Return full path of the cached music file.
      * @param integer $object_id
      * @param string $catalog_id
+     * @param string $path
+     * @param string $target
      * @return false|string
      */
-    public static function get_cache_path($object_id, $catalog_id)
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
     {
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             return false;
         }
         // make a folder per catalog
@@ -4168,7 +4200,7 @@ abstract class Catalog extends database_object
                 // Now check for an update
                 if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = Song::get_from_path($options['update_path']);
+                        $songs = Catalog::get_ids_from_folder($options['update_path'], 'song');
                         foreach ($songs as $song_id) {
                             self::update_single_item('song', $song_id);
                         }
@@ -4281,14 +4313,14 @@ abstract class Catalog extends database_object
         $original_year  = self::sort_clean_name($album_object->original_year, '%Y');
         $release_type   = self::sort_clean_name($album_object->release_type, '%r');
         $release_status = self::sort_clean_name($album_object->release_status, '%R');
-        $subtitle       = self::sort_clean_name($album_object->subtitle, '%s');
+        $version        = self::sort_clean_name($album_object->version, '%s');
         $genre          = (!empty($album_object->tags))
             ? Tag::get_display($album_object->tags)
             : '%b';
 
         // Replace everything we can find
         $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $subtitle, $disk, $genre, $barcode);
+        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $version, $disk, $genre, $barcode);
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         // Remove non A-Z0-9 chars

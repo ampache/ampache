@@ -28,6 +28,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Add the Owner to playlist rows
 * Button and color Light theme fixes for the webplayer
 * Get album info from last.fm for similar & related objects
+* Try to bypass bad xml for podcast feeds if it can't load
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -36,10 +37,11 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
+  * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600025
+* Database 600028
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -54,7 +56,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
   * Add `song_artist` and `album_artist` maps to catalog_map
   * Add ui option `api_enable_6` to enable/disable API6
-  * Add `subtitle` to the album table
+  * Add `version` to the album table
   * Add `streamtoken` to user table allowing permalink music stream access
   * Add `object_type_IDX` to artist_map table
   * Add `object_type_IDX` to catalog_map table
@@ -65,14 +67,15 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add preference `show_subtitle`, Show Album subtitle on links
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
-* Config version 66
+  * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
+  * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
+* Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
   * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
-  * Removed `send_full_stream`
   * Update your `encode_args_opus` settings
 * Search
   * Add `album_disk` as a search type (uses album rules)
@@ -137,6 +140,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Update Requests module to WpOrg\Requests
 * Show 20 genres in Song, Artist & Album edit windows (up from 10)
 * Process stream output and then send the content to the player
+* Play urls will rename the file name to the transcode output format
+* open RSS links in a new tab
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
@@ -207,7 +212,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * WebDav browsing issues
 * Ampache Debug page didn't have all the possible boolean values to make pretty
 * Do not scrub title for RSS output
-* Repeating random play URL's could skip the first song.
+* Repeating random play URL's could skip the first song
+* Send the final url for play_url's instead of figuring it on the fly
+* Don't verify Podcast Episodes that don't have a file
+* Update song channels on tag update
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
@@ -252,6 +260,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
   * Add all mapped artists to song and album objects (JSON added an `artists` element)
+  * Add `bitrate`, `stream_bitrate`, `rate`, `mode`, `channels` to Podcast Episode objects
 * JSON responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects

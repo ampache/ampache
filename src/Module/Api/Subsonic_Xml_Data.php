@@ -457,7 +457,7 @@ class Subsonic_Xml_Data
                 $xsong->addAttribute('coverArt', $sub_id);
             }
             $xsong->addAttribute('duration', (string)$song->time);
-            $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1000)));
+            $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
             $rating      = new Rating($song->id, "song");
             $user_rating = ($rating->get_user_rating() ?? 0);
             if ($user_rating > 0) {
@@ -485,18 +485,24 @@ class Subsonic_Xml_Data
             }
             $xsong->addAttribute('suffix', (string)$song->type);
             $xsong->addAttribute('contentType', (string)$song->mime);
-            // Return a file path relative to the catalog root path
-            $xsong->addAttribute('path', (string)$catalogData['path']);
+            $file_path      = (string)$catalogData['path'];
+            $cache_path     = (string)AmpConfig::get('cache_path', '');
+            $cache_target   = (string)AmpConfig::get('cache_target', '');
+            $file_target    = Catalog::get_cache_path($song->id, $song->catalog, $cache_path, $cache_target);
+            $transcode_type = ($file_target && is_file($file_target))
+                ? $cache_target
+                : Stream::get_transcode_format($song->type, null, 'api');
 
-            // Set transcoding information if required
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Stream::get_stream_types_for_type($song->type, 'api');
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                // $transcode_settings = Stream::get_transcode_settings_for_media(null, null, 'api', 'song');
-                $transcode_type = Stream::get_transcode_format($song->type, null, 'api');
+            if ($song->type !== $transcode_type) {
+                // Return a file path relative to the catalog root path
+                $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
+                // Set transcoding information
                 $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
                 $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+
+                return $xsong;
             }
+            $xsong->addAttribute('path', $file_path);
 
             return $xsong;
         }
@@ -605,8 +611,8 @@ class Subsonic_Xml_Data
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count();
-            $xgenre->addAttribute('songCount', (string) $counts['song'] ?? 0);
-            $xgenre->addAttribute('albumCount', (string) $counts['album'] ?? 0);
+            $xgenre->addAttribute('songCount', (string)($counts['song'] ?? 0));
+            $xgenre->addAttribute('albumCount', (string)($counts['album'] ?? 0));
         }
     }
 

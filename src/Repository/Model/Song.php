@@ -484,7 +484,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
         $barcode               = Catalog::check_length($results['barcode'], 64);
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
-        $subtitle              = Catalog::check_length($results['subtitle'], 64);
+        $version               = Catalog::check_length($results['version'], 64);
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
             debug_event(self::class, 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
@@ -506,7 +506,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $artist_id = (int)($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $subtitle);
+            $album_id = Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         } else {
             $album_id = (int)($results['album_id']);
         }
@@ -1287,16 +1287,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $newMediaData = $new_media->$key;
             }
 
-            // If it's a string thing
             if (in_array($key, $string_array)) {
+                // If it's a string thing
                 $mediaData    = self::clean_string_field_value($mediaData);
                 $newMediaData = self::clean_string_field_value($newMediaData);
                 if ($mediaData != $newMediaData) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
-            } // in array of strings
-            elseif ($newMediaData !== null) {
+            } elseif ($newMediaData !== null) {
+                // in array of strings
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
@@ -1422,9 +1422,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
+        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist,
-                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
+                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels,
                                 (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
                                 $update_time, $song_id));
 
@@ -1804,7 +1804,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $this->get_f_album_link();
 
         // Format the Bitrate
-        $this->f_bitrate = (int)($this->bitrate / 1000) . "-" . strtoupper((string)$this->mode);
+        $this->f_bitrate = (int)($this->bitrate / 1024) . "-" . strtoupper((string)$this->mode);
 
         // Format the Time
         $min            = floor($this->time / 60);
@@ -2193,31 +2193,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     } // get_fields
 
     /**
-     * get_from_path
-     * This returns all of the songs that exist under the specified path
-     * @param string $path
-     * @return integer[]
-     */
-    public static function get_from_path($path)
-    {
-        $path = Dba::escape($path);
-
-        $sql        = "SELECT * FROM `song` WHERE `file` LIKE '$path%'";
-        $db_results = Dba::read($sql);
-
-        $songs = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $songs[] = (int)$row['id'];
-        }
-
-        return $songs;
-    } // get_from_path
-
-    /**
-     * @function    get_rel_path
-     * @discussion    returns the path of the song file stripped of the catalog path
-     *        used for mpd playback
+     * get_rel_path
+     * returns the path of the song file stripped of the catalog path used for mpd playback
      * @param string $file_path
      * @param integer $catalog_id
      * @return string
@@ -2265,12 +2242,20 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $uid = -1;
         }
         // if you transcode the media mime will change
-        if (empty($additional_params) && !strpos($additional_params, 'action=download')) {
-            $transcode_type = Stream::get_transcode_format($this->type, null, $player);
+        if (empty($additional_params) || !strpos($additional_params, 'action=download')) {
+            $cache_path     = (string)AmpConfig::get('cache_path', '');
+            $cache_target   = (string)AmpConfig::get('cache_target', '');
+            $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
+            $transcode_type = ($file_target && is_file($file_target))
+                ? $cache_target
+                : Stream::get_transcode_format($this->type, null, $player);
             if ($this->type !== $transcode_type) {
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($this->type);
                 $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
+                $additional_params .= (!empty($additional_params))
+                    ? '&transcode_to=' . $transcode_type
+                    : 'transcode_to=' . $transcode_type;
             }
         }
 

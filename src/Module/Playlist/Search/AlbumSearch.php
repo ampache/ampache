@@ -74,7 +74,7 @@ final class AlbumSearch implements SearchInterface
                 case 'release_status':
                 case 'barcode':
                 case 'catalog_number':
-                case 'subtitle':
+                case 'version':
                     $where[]      = "`album`.`" . $rule[0] . "` $operator_sql ?";
                     $parameters[] = $input;
                     break;

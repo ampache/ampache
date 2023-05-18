@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -138,20 +140,19 @@ class Stream
         // TARGET > PLAYER > CODEC > DEFAULT
         if ($target) {
             return $target;
-        } elseif ($has_player_target) {
+        } elseif ($has_player_target && $source !== $has_player_target) {
             $target = $has_player_target;
             debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target) {
+        } elseif ($has_codec_target && $source !== $has_codec_target) {
             $target = $has_codec_target;
             debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target) {
+        } elseif ($has_default_target && $source !== $has_default_target) {
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no default
         if (!$target) {
             $target = $source;
-            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
         self::set_output_cache($target, $source, $input_target, $player, $media_type);
 
@@ -219,8 +220,15 @@ class Stream
         $transcode = AmpConfig::get('transcode_' . $type);
         if ($player !== '') {
             $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
+            $player_encode    = AmpConfig::get('encode_player_' . $player . '_target');
             if ($player_transcode) {
+                // Override the default TYPE transcoding behavior on a per-player basis
+                // (e.g. transcode_player_webplayer_flac = "required")
                 $transcode = $player_transcode;
+            } elseif ($player_encode) {
+                // Override the default PLAYER output format.
+                // (e.g. encode_player_webplayer_target = "ogg")
+                $transcode = $player_encode;
             }
         }
 
@@ -323,44 +331,45 @@ class Stream
      *
      * This is a rather complex function that starts the transcoding or
      * resampling of a media and returns the opened file handle.
-     * @param $media
-     * @param string $type
-     * @param string $player
-     * @param array $options
+     * @param Song|Podcast_Episode|Video $media
+     * @param array $transcode_settings
+     * @param array|string $options
      * @return array|false
      */
-    public static function start_transcode($media, $type = null, $player = null, $options = array())
+    public static function start_transcode($media, $transcode_settings, $options = array())
     {
         $out_file = false;
-        if ($player == 'cache_catalog_proc') {
-            $out_file = $options[0];
-            $player   = 'api';
+        if (is_string($options)) {
+            $out_file = $options;
             $options  = array();
         }
-        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
         // Bail out early if we're unutterably broken
-        if ($transcode_settings === false) {
+        if (empty($transcode_settings)) {
             debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
 
             return false;
         }
-        $bit_rate  = self::get_max_bitrate($media, $type, $player, $options);
         $song_file = self::scrub_arg($media->file);
-
+        $bit_rate  = self::get_max_bitrate($media, $transcode_settings);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Finalise the command line
-        $command = $transcode_settings['command'];
-
+        $command    = $transcode_settings['command'];
         $string_map = array(
             '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
         );
-        if (isset($options['maxbitrate'])) {
-            $string_map['%MAXBITRATE%'] = $options['maxbitrate'];
-        } else {
-            $string_map['%MAXBITRATE%'] = 8000;
+        $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
+            ? $options['maxbitrate']
+            : 8000;
+        if ($media instanceof Video) {
+            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
+                ? $options['resolution']
+                : $media->f_resolution ?? '1280x720';
+            $string_map['%QUALITY%'] = (isset($options['quality']))
+                ? (31 * (101 - $options['quality'])) / 100
+                : 10;
         }
         if (isset($options['frame'])) {
             $frame                = gmdate("H:i:s", $options['frame']);
@@ -369,16 +378,6 @@ class Stream
         if (isset($options['duration'])) {
             $duration                 = gmdate("H:i:s", $options['duration']);
             $string_map['%DURATION%'] = $duration;
-        }
-        if (isset($options['resolution'])) {
-            $string_map['%RESOLUTION%'] = $options['resolution'];
-        } else {
-            $string_map['%RESOLUTION%'] = $media->f_resolution ?? '1280x720';
-        }
-        if (isset($options['quality'])) {
-            $string_map['%QUALITY%'] = (31 * (101 - $options['quality'])) / 100;
-        } else {
-            $string_map['%QUALITY%'] = 10;
         }
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
@@ -421,37 +420,27 @@ class Stream
      * get_max_bitrate
      *
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
-     * @param $media
-     * @param string $type
-     * @param string $player
-     * @param array $options
+     * @param Song|Podcast_Episode|Video $media
+     * @param array $transcode_settings
      * @return integer
      */
-    public static function get_max_bitrate($media, $type = null, $player = null, $options = array())
+    public static function get_max_bitrate($media, $transcode_settings)
     {
-        $transcode_settings = $media->get_transcode_settings($type, $player, $options);
-        // Bail out early if we're unutterably broken
-        if ($transcode_settings === false) {
-            debug_event(self::class, 'Transcode requested, but get_transcode_settings failed', 2);
-
-            return $media->bitrate;
-        }
-
         // don't ignore user bitrates
         $bit_rate = (int)self::get_allowed_bitrate();
-        if (!array_key_exists('bitrate', $options)) {
+        if (!array_key_exists('bitrate', $transcode_settings)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > (int)$options['bitrate'] || $bit_rate == 0) {
+        } elseif ($bit_rate > (int)$transcode_settings['bitrate'] || $bit_rate == 0) {
             // use the file bitrate if lower than the gathered
-            $bit_rate = $options['bitrate'];
+            $bit_rate = $transcode_settings['bitrate'];
         }
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1000) > $media->bitrate && $media->bitrate > 0) {
+        if (isset($media->bitrate) && $media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate($media->bitrate / 1000);
+            $bit_rate = self::validate_bitrate($media->bitrate / 1024);
         }
 
         return $bit_rate;
@@ -740,19 +729,20 @@ class Stream
      */
     public static function get_base_url($local = false, $streamToken = null)
     {
-        $session_string = '';
-        $session_id     = (!empty($streamToken))
-            ? $streamToken:
-            self::get_session();
+        $base_url = '/play/index.php?';
+        if (AmpConfig::get('use_play2')) {
+            $base_url .= 'action=play2&';
+        }
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . $session_id . '&';
+            $session_id = (!empty($streamToken))
+                ? $streamToken:
+                self::get_session();
+            $base_url .= 'ssid=' . $session_id . '&';
         }
 
-        if ($local) {
-            $web_path = AmpConfig::get('local_web_path');
-        } else {
-            $web_path = AmpConfig::get('web_path');
-        }
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get('web_path');
         if (empty($web_path)) {
             $web_path = AmpConfig::get('fallback_url');
         }
@@ -770,6 +760,6 @@ class Stream
             }
         }
 
-        return $web_path . "/play/index.php?$session_string";
+        return $web_path . $base_url;
     } // get_base_url
 }

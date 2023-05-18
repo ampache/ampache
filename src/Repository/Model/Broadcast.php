@@ -84,6 +84,10 @@ class Broadcast extends database_object implements library_item
      * @var boolean $is_private
      */
     public $is_private;
+    /**
+     * @var string $link
+     */
+    public $link;
 
     /**
      * Constructor

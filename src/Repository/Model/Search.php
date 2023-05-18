@@ -806,7 +806,7 @@ class Search extends playlist_object
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
         $this->_add_type_text('release_type', T_('Release Type'), $t_album_data);
         $this->_add_type_text('release_status', T_('Release Status'), $t_album_data);
-        $this->_add_type_text('subtitle', T_('Release Comment'), $t_album_data);
+        $this->_add_type_text('version', T_('Release Comment'), $t_album_data);
         $this->_add_type_text('barcode', T_('Barcode'), $t_album_data);
         $this->_add_type_text('catalog_number', T_('Catalog Number'), $t_album_data);
         $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
@@ -1483,7 +1483,8 @@ class Search extends playlist_object
                         $name = 'possible_duplicate';
                         break;
                     case 'release_comment':
-                        $name = 'subtitle';
+                    case 'subtitle':
+                        $name = 'version';
                         break;
                     default:
                         break;

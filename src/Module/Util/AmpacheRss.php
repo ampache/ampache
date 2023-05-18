@@ -192,7 +192,7 @@ class AmpacheRss
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . Ui::get_icon('feed', T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -255,11 +255,10 @@ class AmpacheRss
     public static function pubdate_now_playing()
     {
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
-        $data = Stream::get_now_playing();
-
+        $data    = Stream::get_now_playing();
         $element = array_shift($data);
 
-        return $element['expire'];
+        return $element['expire'] ?? null;
     } // pubdate_now_playing
 
     /**

@@ -1389,7 +1389,7 @@ class Subsonic_Api
         $url = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             if (AmpConfig::get('subsonic_always_download')) {
-                $params .= '&action=download&cache=1';
+                $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
@@ -1420,7 +1420,7 @@ class Subsonic_Api
     {
         $fileid = self::_check_parameter($input, 'id', true);
         $client = scrub_in($input['c'] ?? 'Subsonic');
-        $params = '&client=' . rawurlencode($client) . '&action=download&cache=1';
+        $params = '&client=' . rawurlencode($client) . '&cache=1';
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
@@ -1933,7 +1933,7 @@ class Subsonic_Api
      */
     public static function getpodcasts($input, $user)
     {
-        $podcast_id      = $input['id'];
+        $podcast_id      = $input['id'] ?? null;
         $includeEpisodes = !isset($input['includeEpisodes']) || $input['includeEpisodes'] === "true";
 
         if (AmpConfig::get('podcast')) {
@@ -2905,9 +2905,9 @@ class Subsonic_Api
      */
     private static function _setStar($input, $user, $star)
     {
-        $object_id = $input['id'];
-        $albumId   = $input['albumId'];
-        $artistId  = $input['artistId'];
+        $object_id = $input['id'] ?? null;
+        $albumId   = $input['albumId'] ?? null;
+        $artistId  = $input['artistId'] ?? null;
 
         // Normalize all in one array
         $ids = array();

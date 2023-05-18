@@ -47,6 +47,7 @@ class Podcast extends database_object implements library_item
     public $lastbuilddate;
     public $lastsync;
     public $total_count;
+    public $total_skip;
     public $episodes;
     public $has_art;
 
@@ -403,6 +404,10 @@ class Podcast extends database_object implements library_item
         } else {
             $xml = simplexml_load_string($xmlstr);
             if ($xml === false) {
+                // I've seems some &'s in feeds that screw up
+                $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
+            }
+            if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {
                 $title            = html_entity_decode((string)$xml->channel->title);
@@ -640,6 +645,10 @@ class Podcast extends database_object implements library_item
             return false;
         }
         $xml = simplexml_load_string($xmlstr);
+        if ($xml === false) {
+            // I've seems some &'s in feeds that screw up
+            $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
+        }
         if ($xml === false) {
             debug_event(self::class, 'Cannot read feed ' . $this->feed, 1);
 
