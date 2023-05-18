@@ -28,10 +28,12 @@ use Ampache\Module\Catalog\Update\UpdateCatalog;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
+use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
 use function DI\autowire;
 
 return [
     UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
+    UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolderInterface::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
     GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
 ];
