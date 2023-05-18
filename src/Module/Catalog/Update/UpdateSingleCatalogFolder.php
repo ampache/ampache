@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
+define('API', 1);
 final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements UpdateSingleCatalogFolderInterface
 {
     public function update(
