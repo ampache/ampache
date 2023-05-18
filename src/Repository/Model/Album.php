@@ -466,7 +466,7 @@ class Album extends database_object implements library_item
         } else {
             $sql .= 'AND `album`.`version` IS NULL ';
         }
-        $sql .= 'AND `album`.`catalog` = ? ';
+        $sql .= 'AND `album`.`catalog` = ?;';
         $params[] = $catalog;
 
         $db_results = Dba::read($sql, $params);

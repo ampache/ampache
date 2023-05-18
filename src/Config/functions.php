@@ -1274,9 +1274,8 @@ function get_themes()
 } // get_themes
 
 /**
- * @function get_theme
- * @discussion get a single theme and read the config file
- * then return the results
+ * get_theme
+ * get a single theme and read the config file then return the results
  * @param string $name
  * @return array|boolean|false|mixed|null
  */
@@ -1313,8 +1312,8 @@ function get_theme($name)
 } // get_theme
 
 /**
- * @function get_theme_author
- * @discussion returns the author of this theme
+ * get_theme_author
+ * returns the author of this theme
  * @param string $theme_name
  * @return string
  */
@@ -1327,8 +1326,8 @@ function get_theme_author($theme_name)
 } // get_theme_author
 
 /**
- * @function theme_exists
- * @discussion this function checks to make sure that a theme actually exists
+ * theme_exists
+ * this function checks to make sure that a theme actually exists
  * @param string $theme_name
  * @return boolean
  */

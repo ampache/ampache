@@ -1721,6 +1721,29 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_ids_from_folder
+     *
+     * Get media id's from a base folder path
+     *
+     * @param string $folder_path
+     * @param string $media_type
+     * @return integer[]
+     */
+    public static function get_ids_from_folder($folder_path, $media_type)
+    {
+        $objects     = array();
+        $folder_path = Dba::escape($folder_path);
+        $media_type  = Dba::escape($media_type);
+        $sql         = "SELECT `id` FROM `$media_type` WHERE `file` LIKE '$folder_path%'";
+        $db_results  = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $objects[] = (int)$row['id'];
+        }
+
+        return $objects;
+    }
+
+    /**
      * get_label_ids
      *
      * This returns an array of ids of labels
@@ -2850,10 +2873,11 @@ abstract class Catalog extends database_object
             // Update the song and song_data table
             Song::update_song($song->id, $new_song);
 
-            // If you've migrated the album/artist you need to migrate their data here
+            // If you've migrated from an existing artist you need to migrate their data
             if (($song->artist > 0 && $new_song->artist) && $song->artist != $new_song->artist) {
                 self::migrate('artist', $song->artist, $new_song->artist, $song->id);
             }
+            // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
@@ -4175,7 +4199,7 @@ abstract class Catalog extends database_object
                 // Now check for an update
                 if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = Song::get_from_path($options['update_path']);
+                        $songs = Catalog::get_ids_from_folder($options['update_path'], 'song');
                         foreach ($songs as $song_id) {
                             self::update_single_item('song', $song_id);
                         }

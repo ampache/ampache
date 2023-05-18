@@ -25,18 +25,18 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
+use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
 
-final class UpdateCatalogFileCommand extends Command
+final class UpdateCatalogFolderCommand extends Command
 {
-    private UpdateSingleCatalogFileInterface $updateSingleCatalogFile;
+    private UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder;
 
     public function __construct(
-        UpdateSingleCatalogFileInterface $updateSingleCatalogFile
+        UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder
     ) {
-        parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
+        parent::__construct('run:updateCatalogFolder', T_('Perform catalog actions for a single file'));
 
-        $this->updateSingleCatalogFile = $updateSingleCatalogFile;
+        $this->updateSingleCatalogFolder = $updateSingleCatalogFolder;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
@@ -44,21 +44,21 @@ final class UpdateCatalogFileCommand extends Command
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
-            ->argument('<filePath>', T_('File Path'))
+            ->argument('<folderPath>', T_('Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
-            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '<eol/>');
+            ->usage('<bold>  run:updateCatalogFolder some-catalog /tmp/Artist/Album</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/Artist/Album') . '<eol/>');
     }
 
     public function execute(
         string $catalogName,
-        string $filePath
+        string $folderPath
     ): void {
         $values = $this->values();
 
-        $this->updateSingleCatalogFile->update(
+        $this->updateSingleCatalogFolder->update(
             $this->io(),
             $catalogName,
-            $filePath,
+            $folderPath,
             $values['verify'],
             $values['add'],
             $values['cleanup'],
