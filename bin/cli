@@ -64,6 +64,7 @@ $app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
 $app->add($dic->get(Cli\MoveCatalogPathCommand::class));
+$app->add($dic->get(Cli\ShowVersionCommand::class));
 
 $logo = <<<LOGO
     _                               _          
