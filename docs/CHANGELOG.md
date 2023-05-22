@@ -35,6 +35,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
+  * Add -w|--web to export:playlist (Get a play URL instead of the file name)
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
   * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
 * webplayer
@@ -74,7 +75,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
-  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
+  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "/", "\", "|", "," and ";")
   * Update your `encode_args_opus` settings
 * Search
   * Add `album_disk` as a search type (uses album rules)
@@ -161,13 +162,12 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Removed
 
+* Dropped the `-release` part of releases.
 * Combined a lot of duplicate properties, functions and process all over the place
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
-* Catalogs
-  * Soundcloud catalogs
 * Plugins
   * The Movie Database (TMDB) plugin
 * Subsonic
