@@ -16,7 +16,6 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
-* Add php8.2 to composer (composer_php8.2.json)
 * Create Dockerfilephp82
 * Add custom `listenbrainz_api_url` to listenbrainz plugin
 * Add header to allow browser cache on waveform
@@ -121,11 +120,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Download url parameter order matching "client, action, cache"
-* Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
+* Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
-* Album::check() add barcode, catalog number and subtitle for comparison checks
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
@@ -265,7 +263,6 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects
 * advanced_search
-  * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
   * Add `possible_duplicate_album` to song search
   * Add `mbid_artist` to album search
