@@ -69,7 +69,7 @@ final class AdminUpdateDatabaseCommand extends Command
         }
         /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
-            sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())) . "\n",
+            sprintf(T_('Database version: %s'), Update::format_version(Update::get_version())),
             true
         );
 
@@ -94,12 +94,19 @@ final class AdminUpdateDatabaseCommand extends Command
 
         if (Update::need_update() && $execute) {
             $interactor->info(
-                T_('Update Now!'),
+                "\n" . T_('Update Now!'),
                 true
             );
             $interactor->eol();
             $updated = true;
-            Update::run_update();
+            if (!Update::run_update($interactor)) {
+                $interactor->info(
+                    "\n" . T_('Error'),
+                    true
+                );
+
+                return;
+            }
         }
 
         if (Update::need_update()) {
@@ -131,11 +138,11 @@ final class AdminUpdateDatabaseCommand extends Command
         } else {
             foreach ($result as $updateInfo) {
                 $interactor->info(
-                    $updateInfo['version'],
+                    "\n" . $updateInfo['version'],
                     true
                 );
                 $interactor->info(
-                    "\n" . str_replace(array("<b>", "</b>"), "", (str_replace(array("<br />"), "\n", $updateInfo['description']))),
+                    str_replace(array("<b>", "</b>"), "", (str_replace(array("<br />"), "\n", $updateInfo['description']))),
                     true
                 );
             }
