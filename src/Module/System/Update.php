@@ -8439,10 +8439,10 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $rsstoken  = false;
-        $sql       = "DESCRIBE `user`";
+        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $rsstoken   = false;
+        $sql        = "DESCRIBE `user`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['Field'] == 'rsstoken') {
