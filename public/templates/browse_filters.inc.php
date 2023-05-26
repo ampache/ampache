@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -79,11 +79,12 @@ if (!empty($allowed_filters)) { ?>
             }
             if (in_array('catalog', $allowed_filters)) { ?>
                 <form method="post" id="catalog_choice" action="javascript.void(0);">
+                    <?php //TODO: FIX THIS <input type="hidden" name="hide" value="cel_you" /> each type needs a hide value if the object_type has hidden columns?>
                     <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
                     <select id="catalog_select" name="catalog_key">
                         <option value="0"><?php echo T_('All'); ?></option>
-                        <?php $results = array();
-                        $catalogs      = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
+                        <?php $results  = array();
+                        $catalogs               = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
                         if (!empty($catalogs)) {
                             // Only show the catalogs this user is allowed to access
                             $sql               = 'SELECT `id`, `name` FROM `catalog` WHERE `id` IN (' . $catalogs . ') ORDER BY `name`';
