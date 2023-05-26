@@ -1340,6 +1340,10 @@ class Update
      */
     public static function update_360009(Interactor $interactor = null): bool
     {
+        if ($interactor) {
+            $interactor->info(__FUNCTION__, true);
+        }
+
         return (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(64);") !== false);
     }
 
