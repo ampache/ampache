@@ -36,8 +36,8 @@ $user_id        = ($catalog_filter && !empty(Core::get_global('user')))
     : null;
 
 require_once Ui::find_template('show_form_mashup.inc.php');
-Ui::show_box_top(T_('Trending'));
-$object_ids = Stats::get_top($object_type, $limit, $threshold);
+echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">" . Ui::show_box_top(T_('Newest')) . "</a>";
+$object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -54,8 +54,8 @@ $browse->set_grid_view(false, false);
 $browse->set_mashup(true);
 $browse->show_objects($object_ids);
 Ui::show_box_bottom();
-echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">" . Ui::show_box_top(T_('Newest')) . "</a>";
-$object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
+Ui::show_box_top(T_('Trending'));
+$object_ids = Stats::get_top($object_type, $limit, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
