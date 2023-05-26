@@ -32,8 +32,9 @@ use Ampache\Repository\Model\User;
 if (!Core::is_session_started()) {
     session_start();
 }
-$allowed_filters = Browse::get_allowed_filters($browse->get_type());
-if (!empty($allowed_filters)) { ?>
+$browse_type     = $browse->get_type();
+$allowed_filters = Browse::get_allowed_filters($browse_type);
+if (!empty($allowed_filters) && $browse_type !== 'catalog') { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
     <div class="sb3">
