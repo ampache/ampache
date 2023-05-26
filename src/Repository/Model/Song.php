@@ -343,11 +343,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_license;
 
-    /** @var int */
+    /** @var int $total_count */
     public $total_count;
 
-    /** @var int */
+    /** @var int $total_skip */
     public $total_skip;
+
+    /** @var int */
+    public $tag_id;
 
     /* Setting Variables */
     /**
