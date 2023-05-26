@@ -12,7 +12,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Translations 2023-04
+* Translations 2023-05
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
@@ -28,6 +28,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Button and color Light theme fixes for the webplayer
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
+* Add more tables to the missing table checks
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -38,6 +39,8 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add -w|--web to export:playlist (Get a play URL instead of the file name)
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
   * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
+  * New cli command `bin/cli show:version` (Print the Ampache version number)
+  * When an error occurs using `bin/cli admin:updateDatabase` print out the SQL and the update function
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
@@ -141,6 +144,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Process stream output and then send the content to the player
 * Play urls will rename the file name to the transcode output format
 * open RSS links in a new tab
+* Dashboard pages have Newest on top now
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
