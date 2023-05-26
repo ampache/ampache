@@ -979,7 +979,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` ADD `mbid` CHAR (36) AFTER `prefix`";
+        $sql = "ALTER TABLE `album` ADD `mbid` CHAR (36) AFTER `prefix`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1234,7 +1234,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DROP TABLE IF EXISTS `tmp_browse`";
+        $sql = "DROP TABLE IF EXISTS `tmp_browse`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1487,7 +1487,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('now_playing_per_user', '1', 'Now playing filtered per user', 50, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1535,7 +1535,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_sort', '0', 'Album Default Sort', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_sort', '0', 'Album Default Sort', 25, 'string', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1567,7 +1567,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_played_times', '0', 'Show # played', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_played_times', '0', 'Show # played', 25, 'string', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1703,7 +1703,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`";
+        $sql = "ALTER TABLE `now_playing` ADD `insertion` INT (11) AFTER `expire`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1746,7 +1746,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `live_stream` ADD `codec` varchar(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
+        $sql = "ALTER TABLE `live_stream` ADD `codec` varchar(32) NULL AFTER `catalog`, DROP `frequency`, DROP `call_sign`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1782,7 +1782,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('subsonic_backend', '1', 'Use SubSonic backend', 100, 'boolean', 'system')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1848,7 +1848,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_flash', '1', 'Authorize Flash Web Player(s)', 25, 'boolean', 'streaming')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -1916,7 +1916,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_personal_info', '1', 'Allow to show my personal info to other users (now playing, recently played)', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2077,7 +2077,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2111,7 +2111,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2149,7 +2149,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
+        $sql = "ALTER TABLE `song_data` ADD `waveform` MEDIUMBLOB NULL AFTER `language`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2185,7 +2185,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2244,7 +2244,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('stream_beautiful_url', '0', 'Use beautiful stream url', 100, 'boolean', 'streaming')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2278,7 +2278,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%'";
+        $sql = "DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%'";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2415,7 +2415,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`";
+        $sql = "ALTER TABLE `wanted` ADD `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2547,7 +2547,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2645,7 +2645,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2694,7 +2694,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2748,7 +2748,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_group', '0', 'Album - Group multiple disks', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2782,7 +2782,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('topmenu', '0', 'Top menu', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('topmenu', '0', 'Top menu', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -2909,7 +2909,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3366,7 +3366,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3647,7 +3647,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE FROM `preference` WHERE `name` = 'iframes'";
+        $sql = "DELETE FROM `preference` WHERE `name` = 'iframes'";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3722,7 +3722,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3756,7 +3756,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('home_moment_albums', '1', 'Show Albums of the moment at home page', 25, 'integer', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3870,7 +3870,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DROP TABLE IF EXISTS `tag_merge`;";
+        $sql = "DROP TABLE IF EXISTS `tag_merge`;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3952,7 +3952,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type Sort', 25, 'string', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -3986,7 +3986,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('browser_notify', '1', 'WebPlayer browser notifications', 25, 'integer', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4054,7 +4054,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` varchar(255) NULL";
+        $sql = "ALTER TABLE `session` ADD COLUMN `geo_latitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_longitude` DECIMAL(10,6) NULL, ADD COLUMN `geo_name` varchar(255) NULL";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4110,7 +4110,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', 25, 'boolean', 'streaming')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4187,7 +4187,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `release_type`";
+        $sql = "ALTER TABLE `album` ADD `album_artist` int(11) unsigned DEFAULT NULL AFTER `release_type`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4294,7 +4294,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('upload_allow_remove', '1', 'Upload: allow users to remove uploaded songs', 100, 'boolean', 'system')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4328,7 +4328,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4402,7 +4402,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4576,7 +4576,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('theme_color', 'dark', 'Theme color',0, 'special', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('theme_color', 'dark', 'Theme color',0, 'special', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4869,7 +4869,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_contextmenu', '1', 'Library item context menu',0, 'boolean', 'interface', 'library')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4903,7 +4903,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -4958,7 +4958,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5027,7 +5027,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5103,7 +5103,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE session MODIFY username varchar(255)";
+        $sql = "ALTER TABLE session MODIFY username varchar(255)";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5166,7 +5166,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
+        $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5206,7 +5206,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast` MODIFY `copyright` varchar(255)";
+        $sql = "ALTER TABLE `podcast` MODIFY `copyright` varchar(255)";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5399,7 +5399,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5678,7 +5678,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;";
+        $sql = "UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -5727,7 +5727,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play' ";
+        $sql = "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play' ";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6232,7 +6232,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'upload_user_artist');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'upload_user_artist');";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6269,7 +6269,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
+        $sql = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6294,7 +6294,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'shoutcast_active');";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'shoutcast_active');";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6344,7 +6344,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6399,7 +6399,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6463,7 +6463,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null)";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6497,7 +6497,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
+        $sql = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6523,7 +6523,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `song` SET `track` = 0 WHERE `track` > 32767;";
+        $sql = "UPDATE `song` SET `track` = 0 WHERE `track` > 32767;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6560,7 +6560,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;";
+        $sql = "ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6585,7 +6585,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6611,7 +6611,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
+        $sql = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6660,7 +6660,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6685,7 +6685,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6732,7 +6732,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
+        $sql = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6769,7 +6769,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6803,7 +6803,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6837,7 +6837,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `song_data` ADD `r128_track_gain` smallint(5) DEFAULT NULL, ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
+        $sql = "ALTER TABLE `song_data` ADD `r128_track_gain` smallint(5) DEFAULT NULL, ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6862,7 +6862,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
+        $sql = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6887,7 +6887,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future'));";
+        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future'));";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6924,7 +6924,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `artist` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `artist` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info(
@@ -6971,7 +6971,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
+        $sql = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -6996,7 +6996,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` ADD `release_status` varchar(32) DEFAULT NULL;";
+        $sql = "ALTER TABLE `album` ADD `release_status` varchar(32) DEFAULT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7113,7 +7113,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $sql = "ALTER TABLE `podcast_episode` ADD `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7195,7 +7195,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `album` ADD `song_count` smallint(5) unsigned DEFAULT 0 NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7265,7 +7265,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')";
+        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7305,7 +7305,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;";
+        $sql = "ALTER TABLE `catalog` ADD `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7350,7 +7350,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7381,7 +7381,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7412,7 +7412,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $sql = "ALTER TABLE `podcast` ADD `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7436,9 +7436,9 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql             = "SELECT `id` FROM `user`";
-        $db_users        = Dba::read($sql);
-        $user_list       = array();
+        $sql       = "SELECT `id` FROM `user`";
+        $db_users  = Dba::read($sql);
+        $user_list = array();
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
@@ -7559,7 +7559,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast` ADD `episodes` int(11) UNSIGNED NOT NULL DEFAULT '0';";
+        $sql = "ALTER TABLE `podcast` ADD `episodes` int(11) UNSIGNED NOT NULL DEFAULT '0';";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7583,7 +7583,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7614,7 +7614,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7636,7 +7636,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode');";
+        $sql = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode');";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7676,7 +7676,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','artist','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode');";
+        $sql = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','artist','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode');";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7698,7 +7698,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;";
+        $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7720,7 +7720,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7752,7 +7752,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_3', '1', 'Enable API3 responses', 25, 'boolean', 'options')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7831,9 +7831,9 @@ class Update
      */
     public static function update_520001(Interactor $interactor = null): bool
     {
-        $sql             = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
-        $dupe_prefs      = Dba::read($sql);
-        $pref_list       = array();
+        $sql        = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
+        $dupe_prefs = Dba::read($sql);
+        $pref_list  = array();
         while ($results = Dba::fetch_assoc($dupe_prefs)) {
             $pref_list[] = (int)$results['id'];
         }
@@ -7844,7 +7844,7 @@ class Update
         }
         $sql = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);";
         Dba::write($sql);
-        $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
+        $sql = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7866,7 +7866,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7897,7 +7897,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7928,7 +7928,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
+        $sql = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -7950,7 +7950,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8051,7 +8051,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` ADD `song_artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
+        $sql = "ALTER TABLE `album` ADD `song_artist_count` smallint(5) unsigned DEFAULT 0 NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8078,7 +8078,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `catalog_map` DROP COLUMN `id`;";
+        $sql = "ALTER TABLE `catalog_map` DROP COLUMN `id`;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8108,7 +8108,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $sql = "ALTER TABLE `album_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8138,7 +8138,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `artist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $sql = "ALTER TABLE `artist_map` ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8168,7 +8168,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL AND `song`.`album` IS NOT NULL;";
+        $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL AND `song`.`album` IS NOT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8333,7 +8333,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8419,10 +8419,10 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $collation  = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset    = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $rsstoken   = false;
-        $sql        = "DESCRIBE `user`";
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $rsstoken  = false;
+        $sql       = "DESCRIBE `user`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['Field'] == 'rsstoken') {
@@ -8496,7 +8496,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_full_index`;";
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_full_index`;";
         Dba::write($sql);
         $sql = "ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;";
         Dba::write($sql);
@@ -8552,7 +8552,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
+        $sql = "ALTER TABLE `cache_object_count` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8582,7 +8582,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;";
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;";
         Dba::write($sql);
         // delete duplicates and make sure they're gone
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `object_id` IN (SELECT `object_id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1) AND `id` NOT IN (SELECT MIN(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type`)) AS `count`);";
@@ -8609,7 +8609,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -8672,7 +8672,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
+        $sql = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `title_enabled_IDX` USING BTREE ON `song` (`title`, `enabled`);";
         if (Dba::write($sql) === false) {
@@ -8696,7 +8696,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `album` DROP KEY `catalog_IDX`;";
+        $sql = "ALTER TABLE `album` DROP KEY `catalog_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `catalog_IDX` USING BTREE ON `album` (`catalog`);";
         if (Dba::write($sql) === false) {
@@ -8780,7 +8780,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
+        $sql = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
         if (Dba::write($sql) === false) {
@@ -8965,7 +8965,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'playlist')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9050,7 +9050,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9080,7 +9080,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "DROP TABLE IF EXISTS `channel`";
+        $sql = "DROP TABLE IF EXISTS `channel`";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9101,7 +9101,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;";
+        $sql = "ALTER TABLE `podcast` ADD `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `total_count`;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9316,7 +9316,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE `album`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `album_disk` SET `album`.`disk_count` = `album_disk`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;";
+        $sql = "UPDATE `album`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `album_disk` SET `album`.`disk_count` = `album_disk`.`disk_count` WHERE `album`.`disk_count` != `album_disk`.`disk_count` AND `album`.`id` = `album_disk`.`album_id`;";
         Dba::write($sql);
         $sql = "UPDATE `album_disk`, (SELECT COUNT(DISTINCT `album_disk`.`disk`) AS `disk_count`, `album_id` FROM `album_disk` GROUP BY `album_disk`.`album_id`) AS `disk_count` SET `album_disk`.`disk_count` = `disk_count`.`disk_count` WHERE `album_disk`.`disk_count` != `disk_count`.`disk_count` AND `album_disk`.`album_id` = `disk_count`.`album_id`;";
         Dba::write($sql);
@@ -9405,7 +9405,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
+        $sql = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9471,7 +9471,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('api_enable_6', '1', 'Enable API6 responses', 25, 'boolean', 'options')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9540,7 +9540,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `artist_map` DROP KEY `object_type_IDX`;";
+        $sql = "ALTER TABLE `artist_map` DROP KEY `object_type_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);";
         if (Dba::write($sql) === false) {
@@ -9605,7 +9605,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "UPDATE IGNORE `rating` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
+        $sql = "UPDATE IGNORE `rating` SET `object_type` = 'album_disk' WHERE `object_type` = '';";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9659,7 +9659,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
+        $sql = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9680,7 +9680,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
+        $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9702,7 +9702,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9734,7 +9734,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9754,7 +9754,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9785,7 +9785,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9815,7 +9815,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
@@ -9869,7 +9869,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "ALTER TABLE `podcast_episode` ADD `channels` mediumint(9) DEFAULT NULL AFTER `catalog`;";
+        $sql = "ALTER TABLE `podcast_episode` ADD `channels` mediumint(9) DEFAULT NULL AFTER `catalog`;";
         if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
