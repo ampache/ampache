@@ -1414,9 +1414,30 @@ class Update
             $interactor->info(__FUNCTION__, true);
         }
 
-        $retval &= (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` varchar(256);") !== false);
-        $retval &= (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(256);") !== false);
-        $retval &= (Dba::write("ALTER TABLE `session` CHANGE `id` `id` varchar(256) NOT NULL;") !== false);
+        $sql = (Dba::write("ALTER TABLE `stream_playlist` CHANGE `sid` `sid` varchar(256);") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `tmp_playlist` CHANGE `session` `session` varchar(256);") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `session` CHANGE `id` `id` varchar(256) NOT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
 
         return true;
     }
@@ -1431,23 +1452,22 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $sql    = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('iframes', '1', 'Iframes', 25, 'boolean', 'interface')";
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('iframes', '1', 'Iframes', 25, 'boolean', 'interface')";
         if (Dba::write($sql) === false) {
             if ($interactor) {
-                $interactor->info(
-                    $sql,
-                    true
-                );
+                $interactor->info($sql, true);
             }
 
             return false;
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (Dba::write($sql) === false) {
+        if (Dba::write($sql, array($row_id)) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
             }
+
+            return false;
         }
 
         return true;
@@ -1589,10 +1609,24 @@ class Update
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['catalog_type'] == 'local') {
                 $sql = "INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)";
-                $retval &= (Dba::write($sql, array($results['path'], $results['id'])) !== false);
+                $sql = (Dba::write($sql, array($results['path'], $results['id'])) !== false);
+                if (Dba::write($sql) === false) {
+                    if ($interactor) {
+                        $interactor->info($sql, true);
+                    }
+
+                    return false;
+                }
             } elseif ($results['catalog_type'] == 'remote') {
                 $sql = "INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)";
-                $retval &= (Dba::write($sql, array($results['path'], $results['remote_username'], $results['remote_password'], $results['id'])) !== false);
+                $sql = (Dba::write($sql, array($results['path'], $results['remote_username'], $results['remote_password'], $results['id'])) !== false);
+                if (Dba::write($sql) === false) {
+                    if ($interactor) {
+                        $interactor->info($sql, true);
+                    }
+
+                    return false;
+                }
             }
         }
 
@@ -3870,19 +3904,17 @@ class Update
 
                     return false;
                 }
-                if ($retval) {
-                    // don't drop until you've confirmed a merge
-                    $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
-                    if (Dba::write($sql) === false) {
-                        if ($interactor) {
-                            $interactor->info(
-                                $sql,
-                                true
-                            );
-                        }
-
-                        return false;
+                // don't drop until you've confirmed a merge
+                $sql = "ALTER TABLE `tag` DROP COLUMN `merged_to`";
+                if (Dba::write($sql) === false) {
+                    if ($interactor) {
+                        $interactor->info(
+                            $sql,
+                            true
+                        );
                     }
+
+                    return false;
                 }
             }
             if ($row['Field'] == 'is_hidden') {
@@ -7425,7 +7457,14 @@ class Update
             while ($results = Dba::fetch_assoc($db_p)) {
                 $total = $total + (int)$results['size'];
             }
-            $retval &= (Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total)) !== false);
+            $sql = (Dba::write("REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;", array($user_id, 'play_size', $total)) !== false);
+            if (Dba::write($sql) === false) {
+                if ($interactor) {
+                    $interactor->info($sql, true);
+                }
+
+                return false;
+            }
         }
 
         return true;
@@ -7802,7 +7841,7 @@ class Update
         $sql = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);";
         Dba::write($sql);
         $sql    = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
-        if (Dba::write($sql, array($row_id)) === false) {
+        if (Dba::write($sql) === false) {
             if ($interactor) {
                 $interactor->info($sql, true);
             }
@@ -8158,13 +8197,62 @@ class Update
         Dba::write("UPDATE `album` SET `mbid` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
         Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE CHAR_LENGTH(`mbid`) > 36;");
 
-        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','artist','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        $sql = (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `album` MODIFY COLUMN `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','artist','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_shout` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
 
         return true;
     }
@@ -8179,12 +8267,54 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_track`;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_artist`;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_album`;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_track`;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_artist`;") !== false);
-        $retval &= (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;") !== false);
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_track`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_artist`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `name_album`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_track`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_artist`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
+        $sql = (Dba::write("ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;") !== false);
+        if (Dba::write($sql) === false) {
+            if ($interactor) {
+                $interactor->info($sql, true);
+            }
+
+            return false;
+        }
 
         return true;
     }
