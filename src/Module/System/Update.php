@@ -1220,6 +1220,7 @@ class Update
         if ($interactor) {
             $interactor->info(__FUNCTION__, true);
         }
+
         return (Dba::write("CREATE UNIQUE INDEX `unique_rating` ON `rating` (`user`, `object_type`, `object_id`);") !== false);
     }
 
