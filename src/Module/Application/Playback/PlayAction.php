@@ -591,7 +591,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
-            if (!$is_download && ($file_target && is_file($file_target))) {
+            if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
