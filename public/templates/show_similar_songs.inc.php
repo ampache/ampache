@@ -35,7 +35,6 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
-/** @var string $limit_threshold */
 
 $web_path     = AmpConfig::get('web_path');
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -90,7 +89,7 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 foreach ($object_ids as $song_id) {
-    $libitem = new Song($song_id, $limit_threshold);
+    $libitem = new Song($song_id);
     $libitem->format(); ?>
 
             <tr id="song_<?php echo $libitem->id; ?>">

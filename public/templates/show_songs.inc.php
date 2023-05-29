@@ -36,15 +36,11 @@ use Ampache\Module\Util\Ui;
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
-/** @var string $limit_threshold */
-$web_path        = AmpConfig::get('web_path');
-$show_ratings    = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres     = AmpConfig::get('hide_genres');
-$thcount         = 7;
-$is_table        = $browse->is_grid_view();
-$limit_threshold = (!isset($limit_threshold))
-    ? AmpConfig::get('stats_threshold', 7)
-    : $limit_threshold;
+$web_path     = AmpConfig::get('web_path');
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres  = AmpConfig::get('hide_genres');
+$thcount      = 7;
+$is_table     = $browse->is_grid_view();
 // hide columns you don't always need
 $hide_artist  = in_array('cel_artist', $hide_columns);
 $hide_album   = in_array('cel_album', $hide_columns);
@@ -129,7 +125,7 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 foreach ($object_ids as $song_id) {
-    $libitem = new Song($song_id, $limit_threshold);
+    $libitem = new Song($song_id);
     $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php if ($libitem->enabled || Access::check('interface', 50)) {

@@ -25,14 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\User\UserStateTogglerInterface;
-use Ampache\Module\Util\Mailer;
 
 /**
  * Class UserUpdateMethod
