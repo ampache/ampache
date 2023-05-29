@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -343,11 +343,14 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $f_license;
 
-    /** @var int */
+    /** @var int $total_count */
     public $total_count;
 
-    /** @var int */
+    /** @var int $total_skip */
     public $total_skip;
+
+    /** @var int */
+    public $tag_id;
 
     /* Setting Variables */
     /**
@@ -2242,7 +2245,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $uid = -1;
         }
         // if you transcode the media mime will change
-        if (empty($additional_params) || !strpos($additional_params, 'action=download')) {
+        if (AmpConfig::get('transcode') != 'never' && (empty($additional_params) || !strpos($additional_params, 'action=download'))) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);

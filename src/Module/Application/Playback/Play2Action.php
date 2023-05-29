@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -214,18 +214,19 @@ final class Play2Action implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
+        if ($cache == '1') {
+            $action = 'download';
+        }
         $record_stats = true;
         // allow disabling stat recording from the play url
-        if (($action == 'download' || $cache == '1') && !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $action       = 'download';
             $record_stats = false;
         }
-        $transcode     = false;
-        $is_download   = ($action == 'download' || $cache == '1');
+        $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
         $quality       = 0;
@@ -591,6 +592,8 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
 
+        $transcode      = false;
+        $transcode_cfg  = AmpConfig::get('transcode');
         $cache_path     = (string)AmpConfig::get('cache_path', '');
         $cache_target   = (string)AmpConfig::get('cache_target', '');
         $cache_file     = false;
@@ -626,8 +629,7 @@ final class Play2Action implements ApplicationActionInterface
                 $media->file  = $file_target;
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
-                $transcode_to = false;
-                $transcode    = false;
+                $transcode_to = null;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -664,8 +666,8 @@ final class Play2Action implements ApplicationActionInterface
 
         // Format the media name
         $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($cache_file || ($is_download && !$transcode_to))
-            ? false
+        $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
+            ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
@@ -763,7 +765,7 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = ($transcode_to == $media->type)
+        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
             ? null
             : $transcode_to;
         if ($transcode_to) {
@@ -775,8 +777,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = $media->get_stream_types($player);
+            $valid_types = $media->get_stream_types($player);
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }
@@ -809,7 +810,7 @@ final class Play2Action implements ApplicationActionInterface
                             'Transcoding because explicit bitrate request',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );
-                    } elseif (!in_array('native', $valid_types) && $action != 'download') {
+                    } elseif (!in_array('native', $valid_types) && !$is_download) {
                         $transcode = true;
                         $this->logger->debug(
                             'Transcoding because native streaming is unavailable',
@@ -966,11 +967,21 @@ final class Play2Action implements ApplicationActionInterface
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
             } else {
-                if (($action != 'download') && $record_stats) {
+                if (!$is_download && $record_stats) {
                     Stream::insert_now_playing((int) $media->id, $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
                 }
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                    if (!$share_id && $record_stats) {
+                    if ($is_download) {
+                        if (!$share_id) {
+                            $this->logger->debug(
+                                'Registering download stats for {' . $media->get_stream_name() . '}...',
+                                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            );
+                            Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                        } else {
+                            Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
+                        }
+                    } elseif (!$share_id && $record_stats) {
                         $this->logger->info(
                             'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
