@@ -161,7 +161,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Only send songs (for now) to the 'Add all to playlist' button
   * Added an option `loopBack` which restarts the playlist after finishing
 * Subsonic
-  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned. 
+  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned.
   * Pass the authenticated user to method calls
 
 ### Removed
