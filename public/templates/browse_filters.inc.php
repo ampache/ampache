@@ -33,7 +33,8 @@ if (!Core::is_session_started()) {
     session_start();
 }
 $allowed_filters = Browse::get_allowed_filters($browse->get_type());
-if (!empty($allowed_filters)) { ?>
+if (!empty($allowed_filters)) {
+    print_r($allowed_filters); ?>
     <li>
         <h4><?php echo T_('Filters'); ?></h4>
         <div class="sb3">
@@ -44,29 +45,29 @@ if (!empty($allowed_filters)) { ?>
                     echo scrub_out($browse->get_filter('starts_with')); ?>" onBlur="delayRun(this, '400', 'ajaxState', '<?php echo Ajax::url('?page=browse&action=browse&browse_id=' . $browse->id . '&key=starts_with'); ?>', 'multi_alpha_filter');">
                 </form>
             <?php }
-            if (in_array('minimum_count', $allowed_filters)) { ?>
+    if (in_array('minimum_count', $allowed_filters)) { ?>
                 <input id="mincountCB" type="checkbox" value="1" />
                 <label id="mincountLabel" for="mincountCB"><?php echo T_('Minimum Count'); ?></label><br />
                 <?php echo Ajax::observe('mincountCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=min_count&value=1', ''));
             }
-            if (in_array('rated', $allowed_filters)) { ?>
+    if (in_array('rated', $allowed_filters)) { ?>
                 <input id="ratedCB" type="checkbox" value="1" />
                 <label id="ratedLabel" for="ratedCB"><?php echo T_('Rated'); ?></label><br />
                 <?php echo Ajax::observe('ratedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=rated&value=1', ''));
             }
-            if (in_array('unplayed', $allowed_filters)) { ?>
+    if (in_array('unplayed', $allowed_filters)) { ?>
                 <input id="unplayedCB" type="checkbox" <?php echo $string = ($browse->get_filter('unplayed')) ? 'checked="checked"' : ''; ?>/>
                 <label id="unplayedLabel" for="unplayedCB"><?php echo T_('Unplayed'); ?></label><br />
                 <?php echo Ajax::observe('unplayedCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=unplayed&value=1', ''));
             }
-            if (in_array('playlist_type', $allowed_filters)) { ?>
+    if (in_array('playlist_type', $allowed_filters)) { ?>
                 <input id="show_allplCB" type="checkbox" <?php echo $string = ($browse->get_filter('playlist_type')) ? 'checked="checked"' : ''; ?>/>
                 <label id="show_allplLabel" for="showallplCB"><?php echo T_('All Playlists'); ?></label><br />
                 <?php echo Ajax::observe('show_allplCB', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=playlist_type&value=1', ''));
             }
-            if (in_array('object_type', $allowed_filters)) {
-                $string       = 'otype_' . $browse->get_filter('object_type');
-                ${$string}    = 'selected="selected"'; ?>
+    if (in_array('object_type', $allowed_filters)) {
+        $string       = 'otype_' . $browse->get_filter('object_type');
+        ${$string}    = 'selected="selected"'; ?>
                 <input id="typeSongRadio" type="radio" name="object_type" value="1" <?php echo $otype_song; ?>/>
                 <label id="typeSongLabel" for="typeSongRadio"><?php echo T_('Song Title'); ?></label><br />
                 <?php echo Ajax::observe('typeSongRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=song', '')); ?>
@@ -76,8 +77,8 @@ if (!empty($allowed_filters)) { ?>
                 <input id="typeArtistRadio" type="radio" name="object_type" value="1" />
                 <label id="typeArtistLabel" for="typeArtistRadio"><?php echo T_('Artist'); ?></label><br />
                 <?php echo Ajax::observe('typeArtistRadio', 'click', Ajax::action('?page=tag&action=browse_type&browse_id=' . $browse->id . '&type=artist', ''));
-            }
-            if (in_array('catalog', $allowed_filters)) { ?>
+    }
+    if (in_array('catalog', $allowed_filters)) { ?>
                 <form method="post" id="catalog_choice" action="javascript.void(0);">
                     <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
                     <select id="catalog_select" name="catalog_key">
@@ -104,10 +105,11 @@ if (!empty($allowed_filters)) { ?>
                     <?php echo Ajax::observe('catalog_select', 'change', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id, 'catalog_select', 'catalog_choice')); ?>
                 </form>
             <?php }
-            if (in_array('show_art', $allowed_filters)) { ?>
+    if (in_array('show_art', $allowed_filters)) { ?>
                 <?php echo T_('Toggle Artwork'); ?>&nbsp;<input id="show_artCB" type="checkbox" checked="checked"/>
                 <?php echo Ajax::observe('show_artCB', 'click', Ajax::action('?page=browse&action=show_art&browse_id=' . $browse->id, ''));
             } ?>
         </div>
     </li>
-<?php } ?>
+<?php
+} ?>
