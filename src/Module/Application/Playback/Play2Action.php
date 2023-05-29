@@ -226,7 +226,6 @@ final class Play2Action implements ApplicationActionInterface
             );
             $record_stats = false;
         }
-        $transcode     = false;
         $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
@@ -593,6 +592,8 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
 
+        $transcode      = false;
+        $transcode_cfg  = AmpConfig::get('transcode');
         $cache_path     = (string)AmpConfig::get('cache_path', '');
         $cache_target   = (string)AmpConfig::get('cache_target', '');
         $cache_file     = false;
@@ -629,7 +630,6 @@ final class Play2Action implements ApplicationActionInterface
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
                 $transcode_to = null;
-                $transcode    = false;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -666,7 +666,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // Format the media name
         $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($cache_file || ($is_download && !$transcode_to))
+        $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
@@ -765,7 +765,7 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = ($transcode_to == $media->type)
+        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
             ? null
             : $transcode_to;
         if ($transcode_to) {
@@ -777,8 +777,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = $media->get_stream_types($player);
+            $valid_types = $media->get_stream_types($player);
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }
