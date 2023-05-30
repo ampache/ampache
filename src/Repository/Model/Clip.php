@@ -80,10 +80,10 @@ class Clip extends Video
      */
     private static function _get_artist_id($data)
     {
-        if (isset($data['artist_id']) && !empty($data['artist_id'])) {
+        if (array_key_exists('artist_id', $data) && !empty($data['artist_id'])) {
             return $data['artist_id'];
         }
-        if (!isset($data['artist']) || empty($data['artist'])) {
+        if (!array_key_exists('artist_id', $data) || empty($data['artist'])) {
             return null;
         }
         $artist_mbid = $data['mbid_artistid'] ?? null;

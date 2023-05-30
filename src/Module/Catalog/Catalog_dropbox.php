@@ -348,22 +348,17 @@ class Catalog_dropbox extends Catalog
             $is_video_file = Catalog::is_video_file($path);
 
             if ($is_audio_file) {
-                if (count($this->get_gather_types('music')) > 0) {
-                    $this->insert_song($dropbox, $path);
+                if (count($this->get_gather_types('music')) > 0 && $this->insert_song($dropbox, $path)) {
+                    return true;
                 } else {
                     debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
-
-                    return false;
                 }
             } else {
                 if (count($this->get_gather_types('video')) > 0) {
-                    if ($is_video_file) {
-                        $this->insert_video($dropbox, $path);
+                    if ($is_video_file && $this->insert_video($dropbox, $path)) {
+                        return true;
                     } else {
-                        debug_event('dropbox.catalog',
-                            "read " . $path . " ignored, bad media type for this video catalog.", 5);
-
-                        return false;
+                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
                     }
                 }
             }
@@ -371,7 +366,7 @@ class Catalog_dropbox extends Catalog
             debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -388,9 +383,8 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
-            $readfile = true;
-            $meta     = $dropbox->getMetadata($path);
-            $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $meta    = $dropbox->getMetadata($path);
+            $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
@@ -401,8 +395,7 @@ class Catalog_dropbox extends Catalog
                 '',
                 '',
                 $this->sort_pattern,
-                $this->rename_pattern,
-                $readfile
+                $this->rename_pattern
             );
             $vainfo->gather_tags();
 
@@ -549,7 +542,6 @@ class Catalog_dropbox extends Catalog
                 $updated['total']++;
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
-                $readfile = true;
                 $filesize = 40960;
                 $meta     = $dropbox->getMetadata($path);
                 $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
@@ -565,8 +557,7 @@ class Catalog_dropbox extends Catalog
                         '',
                         '',
                         $this->sort_pattern,
-                        $this->rename_pattern,
-                        $readfile
+                        $this->rename_pattern
                     );
                     $vainfo->forceSize($filesize);
                     $vainfo->gather_tags();
@@ -691,7 +682,7 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @param string $file_path
-     * @return false|string
+     * @return string
      */
     public function get_rel_path($file_path)
     {

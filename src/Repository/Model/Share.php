@@ -123,7 +123,7 @@ class Share extends database_object
      * @param integer $object_id
      * @param boolean $allow_stream
      * @param boolean $allow_download
-     * @param integer $expire
+     * @param int $expire_days
      * @param string $secret
      * @param integer $max_counter
      * @param string $description

@@ -477,7 +477,7 @@ class AmpacheUPnP extends localplay_controller
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
                 $song = new Song($url_data['id']);
-                if ($song != null) {
+                if ($song->id) {
                     $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
                 }
             }

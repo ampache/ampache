@@ -457,8 +457,7 @@ class Art extends database_object
             } // foreach song
         } // write_id3
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         // Insert it!
@@ -774,8 +773,7 @@ class Art extends database_object
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";

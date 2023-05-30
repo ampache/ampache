@@ -438,22 +438,19 @@ class Catalog_local extends Catalog
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
-                    if ($is_audio_file) {
-                        debug_event('local.catalog', 'Found song file to import: ' . $full_file, 5);
-                        $this->insert_local_song($full_file, $options);
+                    if ($is_audio_file && $this->insert_local_song($full_file, $options)) {
+                        debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
-                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.", 5);
+                        debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
 
                         return false;
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file) {
-                            debug_event('local.catalog', 'Found video file to import: ' . $full_file, 5);
-                            $this->insert_local_video($full_file, $options);
+                        if ($is_video_file && $this->insert_local_video($full_file, $options)) {
+                            debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                         } else {
-                            debug_event('local.catalog',
-                                $full_file . " ignored, bad media type for this video catalog.", 5);
+                            debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
                             return false;
                         }
@@ -731,7 +728,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0 || !isset($media_type)) {
+        if ($total == 0) {
             return $dead_total;
         }
         $dead   = array();
@@ -1174,7 +1171,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0 || !isset($media_type)) {
+        if ($total == 0) {
             return $missing;
         }
         $chunks = floor($total / 10000);

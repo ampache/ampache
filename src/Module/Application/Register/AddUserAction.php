@@ -108,16 +108,6 @@ final class AddUserAction implements ApplicationActionInterface
         $state          = (string) scrub_in(Core::get_post('state'));
         $city           = (string) scrub_in(Core::get_post('city'));
 
-        if ($website === null) {
-            $website = '';
-        }
-        if ($state === null) {
-            $state = '';
-        }
-        if ($city === null) {
-            $city = '';
-        }
-
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
             $captcha = captcha::solved();

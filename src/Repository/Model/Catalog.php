@@ -993,9 +993,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
-
-        return true;
+        return self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
     } // update_enabled
 
     /**
@@ -3646,7 +3644,6 @@ abstract class Catalog extends database_object
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {
-                            $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
                             $db_results = Dba::read($sql, array($file));
                             $results    = Dba::fetch_assoc($db_results);
 

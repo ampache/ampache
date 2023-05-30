@@ -109,7 +109,6 @@ final class DefaultAction implements ApplicationActionInterface
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
             }
-            $media_ids = [];
             foreach ($object_id as $item) {
                 $this->logger->debug(
                     'Requested item ' . $item,

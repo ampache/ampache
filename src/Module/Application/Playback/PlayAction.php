@@ -635,7 +635,9 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
+        $media_name   = (!empty($stream_name))
+            ? $stream_name
+            : $media->get_stream_name() . "." . $media->type;
         $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
