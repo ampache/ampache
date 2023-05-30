@@ -36,8 +36,7 @@ interface ModelFactoryInterface
     ): Browse;
 
     public function createSong(
-        ?int $songId = null,
-        string $limitThreshold = ''
+        ?int $songId = null
     ): Song;
 
     public function createRating(

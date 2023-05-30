@@ -48,12 +48,10 @@ final class ModelFactory implements ModelFactoryInterface
     }
 
     public function createSong(
-        ?int $songId = null,
-        string $limitThreshold = ''
+        ?int $songId = null
     ): Song {
         return new Song(
-            $songId,
-            $limitThreshold
+            $songId
         );
     }
 

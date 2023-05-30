@@ -156,7 +156,7 @@ final class CatalogFileMethod
                 Album::update_album_count($media->album);
                 Artist::update_table_counts();
             }
-            Api::message('successfully started: ' . print_r($task, true) . ' for ' . $file, $input['api_format']);
+            Api::message('successfully started: ' . (string)$input['task'] . ' for ' . $file, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
