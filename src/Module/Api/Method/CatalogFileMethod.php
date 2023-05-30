@@ -85,6 +85,7 @@ final class CatalogFileMethod
 
             return false;
         }
+        $output_task = '';
         foreach ($task as $item) {
             if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,9 +93,11 @@ final class CatalogFileMethod
 
                 return false;
             }
+            $output_task .= $item . ', ';
         }
-        $catalog_id = (int) $input['catalog'];
-        $catalog    = Catalog::create_from_id($catalog_id);
+        $output_task = rtrim($output_task, ', ');
+        $catalog_id  = (int) $input['catalog'];
+        $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
@@ -156,7 +159,7 @@ final class CatalogFileMethod
                 Album::update_album_count($media->album);
                 Artist::update_table_counts();
             }
-            Api::message('successfully started: ' . (string)$input['task'] . ' for ' . $file, $input['api_format']);
+            Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
