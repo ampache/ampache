@@ -60,7 +60,7 @@ class TvShow extends database_object implements library_item
      */
     public function __construct($show_id)
     {
-        $info = $this->get_info($show_id);
+        $info = $this->get_info($show_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

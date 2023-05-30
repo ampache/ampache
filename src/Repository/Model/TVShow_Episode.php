@@ -51,7 +51,7 @@ class TVShow_Episode extends Video
     {
         parent::__construct($episode_id);
 
-        $info = $this->get_info($episode_id);
+        $info = $this->get_info($episode_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

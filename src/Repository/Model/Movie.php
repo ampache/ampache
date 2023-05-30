@@ -48,7 +48,7 @@ class Movie extends Video
     {
         parent::__construct($movie_id);
 
-        $info = $this->get_info($movie_id);
+        $info = $this->get_info($movie_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

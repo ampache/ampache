@@ -49,7 +49,7 @@ abstract class database_object
      * @param string $table_name
      * @return array
      */
-    public function get_info($object_id, $table_name = '')
+    public function get_info($object_id, $table_name = ''): array
     {
         $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;

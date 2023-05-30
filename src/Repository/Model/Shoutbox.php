@@ -38,6 +38,8 @@ use Ampache\Module\Util\Ui;
 
 class Shoutbox
 {
+    protected const DB_TABLENAME = 'user_shout';
+
     public $id;
     public $object_type;
     public $object_id;

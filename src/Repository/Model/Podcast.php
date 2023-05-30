@@ -75,7 +75,7 @@ class Podcast extends database_object implements library_item
             return false;
         }
 
-        $info = $this->get_info($podcast_id);
+        $info = $this->get_info($podcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

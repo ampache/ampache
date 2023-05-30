@@ -57,7 +57,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function __construct($show_id)
     {
-        $info = $this->get_info($show_id);
+        $info = $this->get_info($show_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

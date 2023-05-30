@@ -201,7 +201,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             return false;
         }
 
-        $info = $this->get_info($artist_id);
+        $info = $this->get_info($artist_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

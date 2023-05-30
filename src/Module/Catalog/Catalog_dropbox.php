@@ -184,7 +184,7 @@ class Catalog_dropbox extends Catalog
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -404,7 +404,7 @@ class Catalog_dropbox extends Catalog
                 $this->rename_pattern,
                 $readfile
             );
-            $vainfo->get_info();
+            $vainfo->gather_tags();
 
             $key     = VaInfo::get_tag_type($vainfo->tags);
             $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
@@ -471,7 +471,7 @@ class Catalog_dropbox extends Catalog
                     $this->rename_pattern,
                     $readfile
                 );
-                $vainfo->get_info();
+                $vainfo->gather_tags();
 
                 $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
                 $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
@@ -569,7 +569,7 @@ class Catalog_dropbox extends Catalog
                         $readfile
                     );
                     $vainfo->forceSize($filesize);
-                    $vainfo->get_info();
+                    $vainfo->gather_tags();
 
                     $key     = VaInfo::get_tag_type($vainfo->tags);
                     $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);

@@ -60,7 +60,7 @@ class Bookmark extends database_object
         }
 
         if ($object_type === null) {
-            $info = $this->get_info($object_id);
+            $info = $this->get_info($object_id, static::DB_TABLENAME);
         } else {
             if ($user_id === null) {
                 $user    = Core::get_global('user');

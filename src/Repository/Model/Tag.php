@@ -56,7 +56,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
 
-        $info = $this->get_info($tag_id);
+        $info = $this->get_info($tag_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

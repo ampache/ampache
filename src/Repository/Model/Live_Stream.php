@@ -103,7 +103,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function __construct($stream_id)
     {
-        $info = $this->get_info($stream_id, 'live_stream');
+        $info = $this->get_info($stream_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

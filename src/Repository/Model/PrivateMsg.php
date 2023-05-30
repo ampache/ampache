@@ -75,7 +75,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
      */
     public function __construct($pm_id)
     {
-        $info = $this->get_info($pm_id, 'user_pvmsg');
+        $info = $this->get_info($pm_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

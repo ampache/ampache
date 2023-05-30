@@ -116,7 +116,7 @@ class Repository
     /**
      * @return string
      */
-    private function getTableName()
+    private function getTableName(): string
     {
         $className = get_called_class();
         $nameParts = explode('\\', $className);

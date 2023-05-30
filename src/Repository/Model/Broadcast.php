@@ -95,7 +95,7 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($broadcast_id)
     {
-        $info = $this->get_info($broadcast_id);
+        $info = $this->get_info($broadcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

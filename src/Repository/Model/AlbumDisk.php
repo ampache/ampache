@@ -246,7 +246,7 @@ class AlbumDisk extends database_object implements library_item
      */
     public function __construct($album_disk_id)
     {
-        $info = $this->get_info($album_disk_id);
+        $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

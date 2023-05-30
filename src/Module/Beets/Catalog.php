@@ -80,7 +80,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }

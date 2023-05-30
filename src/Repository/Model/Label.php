@@ -117,7 +117,7 @@ class Label extends database_object implements library_item
      */
     public function __construct($label_id)
     {
-        $info = $this->get_info($label_id);
+        $info = $this->get_info($label_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

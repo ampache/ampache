@@ -239,7 +239,7 @@ class Catalog_Seafile extends Catalog
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -410,7 +410,7 @@ class Catalog_Seafile extends Catalog
         if (!$is_cached) {
             $vainfo->forceSize($file->size);
         }
-        $vainfo->get_info();
+        $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
         if (!$is_cached) {

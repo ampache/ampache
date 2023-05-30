@@ -82,7 +82,7 @@ final class PrintTagsCommand extends Command
             );
         }
         try {
-            $vainfo->get_info();
+            $vainfo->gather_tags();
             $results         = $vainfo->tags;
             $keys            = VaInfo::get_tag_type($results);
             $ampache_results = VaInfo::clean_tag_info($results, $keys, $filename);

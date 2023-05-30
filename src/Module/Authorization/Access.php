@@ -37,6 +37,8 @@ use Ampache\Module\System\Dba;
  */
 class Access
 {
+    protected const DB_TABLENAME = 'access_list';
+
     // Variables from DB
     /**
      * @var integer $id
@@ -88,7 +90,7 @@ class Access
      */
     public function __construct($access_id)
     {
-        /* Assign id for use in get_info() */
+        /* Assign id for use in has_info() */
         $this->id = (int)$access_id;
         $info     = $this->has_info();
         foreach ($info as $key => $value) {

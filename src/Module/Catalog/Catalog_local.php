@@ -158,7 +158,7 @@ class Catalog_local extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id);
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -898,7 +898,7 @@ class Catalog_local extends Catalog
             $this->sort_pattern,
             $this->rename_pattern
         );
-        $vainfo->get_info();
+        $vainfo->gather_tags();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
 
@@ -1048,7 +1048,7 @@ class Catalog_local extends Catalog
             $this->sort_pattern,
             $this->rename_pattern
         );
-        $vainfo->get_info();
+        $vainfo->gather_tags();
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
         $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $file);

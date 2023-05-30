@@ -146,7 +146,7 @@ class Catalog_remote extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id);
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }

@@ -87,7 +87,7 @@ class Search extends playlist_object
             ? strtolower($object_type)
             : 'song';
         if ($search_id > 0) {
-            $info = $this->get_info($search_id);
+            $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 if ($key == 'rules') {
                     $this->rules = json_decode((string)$value, true);

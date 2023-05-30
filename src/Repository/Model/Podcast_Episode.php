@@ -96,7 +96,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         }
 
         $this->id = (int)$episode_id;
-        $info     = $this->get_info($this->id);
+        $info     = $this->get_info($this->id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

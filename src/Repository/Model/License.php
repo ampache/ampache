@@ -28,6 +28,8 @@ use Ampache\Module\System\Dba;
 
 class License
 {
+    protected const DB_TABLENAME = 'license';
+
     /**
      * @var integer $id
      */

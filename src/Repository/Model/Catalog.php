@@ -761,14 +761,13 @@ abstract class Catalog extends database_object
      * @param string $table_name
      * @return array
      */
-    public function get_info($object_id, $table_name = 'catalog')
+    public function get_info($object_id, $table_name = 'catalog'): array
     {
         $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = "SELECT `id` FROM `$table` WHERE `catalog_id` = ?";
         $db_results = Dba::read($sql, array($object_id));
-
         if ($results = Dba::fetch_assoc($db_results)) {
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
@@ -3234,7 +3233,7 @@ abstract class Catalog extends database_object
             $rename_pattern
         );
         try {
-            $vainfo->get_info();
+            $vainfo->gather_tags();
         } catch (Exception $error) {
             debug_event(__CLASS__, 'Error ' . $error->getMessage(), 1);
 

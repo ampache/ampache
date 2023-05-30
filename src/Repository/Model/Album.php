@@ -260,7 +260,7 @@ class Album extends database_object implements library_item
      */
     public function __construct($album_id)
     {
-        $info = $this->get_info($album_id);
+        $info = $this->get_info($album_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }

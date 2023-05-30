@@ -324,9 +324,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * get_info
      *
-     * This function runs the various steps to gathering the metadata
+     * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function get_info()
+    public function gather_tags()
     {
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
@@ -369,7 +369,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function check_time($time)
     {
-        $this->get_info();
+        $this->gather_tags();
         foreach ($this->tags as $results) {
             if (isset($results['time'])) {
                 return ($time >= $results['time'] - 2);

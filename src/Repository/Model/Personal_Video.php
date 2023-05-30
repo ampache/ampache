@@ -46,7 +46,7 @@ class Personal_Video extends Video
     {
         parent::__construct($object_id);
 
-        $info = $this->get_info($object_id);
+        $info = $this->get_info($object_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
