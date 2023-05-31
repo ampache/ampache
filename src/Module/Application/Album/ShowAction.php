@@ -81,8 +81,8 @@ final class ShowAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
-        // allow single disks to not be shown as multi's
         } elseif ($album->disk_count == 1) {
+            // Single disk albums
             $this->ui->show(
                 'show_album.inc.php',
                 [
@@ -94,6 +94,7 @@ final class ShowAction implements ApplicationActionInterface
                 ]
             );
         } else {
+            // Multi disk albums
             $this->ui->show(
                 'show_album_group_disks.inc.php',
                 [

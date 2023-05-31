@@ -671,8 +671,8 @@ final class InstallationHelper implements InstallationHelperInterface
                     if ($secret_key !== false) {
                         $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
                     }
-                // Else, unable to generate a cryptographically secure token, use the default one
                 } elseif (isset($current[$key])) {
+                    // unable to generate a cryptographically secure token, use the default one
                     $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
                     unset($current[$key]);
                 }

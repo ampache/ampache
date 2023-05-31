@@ -1056,53 +1056,22 @@ class Update
     private static function _update_360002(Interactor $interactor = null): bool
     {
         // Drop the key from catalog and ACL
-        $sql = "ALTER TABLE `catalog` DROP `key`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `access_list` DROP `key`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        // Add in Username / Password for catalog - to be used for remote catalogs
-        $sql = "ALTER TABLE `catalog` ADD `remote_username` VARCHAR (255) AFTER `catalog_type`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `catalog` ADD `remote_password` VARCHAR (255) AFTER `remote_username`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        // Adjust the Filename field in song, make it gi-normous. If someone has
-        // anything close to this file length, they seriously need to reconsider
-        // what they are doing.
-        $sql = "ALTER TABLE `song` CHANGE `file` `file` VARCHAR (4096)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `video` CHANGE `file` `file` VARCHAR (4096)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR (4096)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        // Index the Artist, Album, and Song tables for fulltext searches.
-        $sql = "ALTER TABLE `artist` ADD FULLTEXT(`name`)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `album` ADD FULLTEXT(`name`)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `song` ADD FULLTEXT(`title`)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "ALTER TABLE `catalog` DROP `key`",
+            "ALTER TABLE `access_list` DROP `key`",
+            "ALTER TABLE `catalog` ADD `remote_username` VARCHAR (255) AFTER `catalog_type`",
+            "ALTER TABLE `catalog` ADD `remote_password` VARCHAR (255) AFTER `remote_username`",
+            "ALTER TABLE `song` CHANGE `file` `file` VARCHAR (4096)",
+            "ALTER TABLE `video` CHANGE `file` `file` VARCHAR (4096)",
+            "ALTER TABLE `live_stream` CHANGE `url` `url` VARCHAR (4096)",
+            "ALTER TABLE `artist` ADD FULLTEXT(`name`)",
+            "ALTER TABLE `album` ADD FULLTEXT(`name`)",
+            "ALTER TABLE `song` ADD FULLTEXT(`title`)"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         // Now add in the min_object_count preference and the random_method
@@ -2236,73 +2205,29 @@ class Update
         if (self::_write($interactor, $sql, array($row_id)) === false) {
             return false;
         }
-        $sql = "ALTER TABLE `artist` ADD `user` int(11) NULL AFTER `last_update`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('0 - default', '')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `license`(`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "ALTER TABLE `artist` ADD `user` int(11) NULL AFTER `last_update`",
+            "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('0 - default', '')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY', 'https://creativecommons.org/licenses/by/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC', 'https://creativecommons.org/licenses/by-nc/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC ND', 'https://creativecommons.org/licenses/by-nc-nd/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY NC SA', 'https://creativecommons.org/licenses/by-nc-sa/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY ND', 'https://creativecommons.org/licenses/by-nd/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('CC BY SA', 'https://creativecommons.org/licenses/by-sa/3.0/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Licence Art Libre', 'http://artlibre.org/licence/lal/')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Yellow OpenMusic', 'http://openmusic.linuxtag.org/yellow.html')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Green OpenMusic', 'http://openmusic.linuxtag.org/green.html')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('Gnu GPL Art', 'http://gnuart.org/english/gnugpl.html')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('WTFPL', 'https://en.wikipedia.org/wiki/WTFPL')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
+            "INSERT INTO `license`(`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
+            "ALTER TABLE `song` ADD `user_upload` int(11) NULL AFTER `addition_time`, ADD `license` int(11) NULL AFTER `user_upload`"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -2397,33 +2322,19 @@ class Update
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, ADD `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `season_number` int(11) unsigned NOT NULL, `tvshow` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `season` int(11) unsigned NOT NULL, `episode_number` int(11) unsigned NOT NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) unsigned NOT NULL, `location` varchar(256) NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "ALTER TABLE `video` ADD `release_date` date NULL AFTER `enabled`, ADD `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`",
+            "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `season_number` int(11) unsigned NOT NULL, `tvshow` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `season` int(11) unsigned NOT NULL, `episode_number` int(11) unsigned NOT NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) unsigned NOT NULL, `location` varchar(256) NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
+            "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('allow_video', '1', 'Allow video features', 75, 'integer', 'options')";
         if (self::_write($interactor, $sql) === false) {
@@ -3494,114 +3405,34 @@ class Update
      */
     private static function _update_400001(Interactor $interactor = null): bool
     {
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'backend' WHERE `preference`.`name` in ('subsonic_backend', 'daap_backend', 'daap_pass', 'upnp_backend', 'webdav_backend') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'catalog' WHERE `preference`.`name` = 'catalog_check_duplicate' AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'custom' WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'feature' WHERE `preference`.`name` in ('download', 'allow_stream_playback', 'allow_democratic_playback', 'share', 'allow_video', 'geolocation') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'home' WHERE `preference`.`name` in ('now_playing_per_user', 'home_moment_albums', 'home_moment_videos', 'home_recently_played', 'home_now_playing') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'httpq' WHERE `preference`.`name` = 'httpq_active' AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'lastfm' WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'localplay' WHERE `preference`.`name` in ('localplay_controller', 'localplay_level', 'allow_localplay_playback') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'metadata' WHERE `preference`.`name` in ('disabled_custom_metadata_fields', 'disabled_custom_metadata_fields_input') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'mpd' WHERE `preference`.`name` = 'mpd_active' AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'notification' WHERE `preference`.`name` in ('browser_notify', 'browser_notify_timeout') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'player' WHERE `preference`.`name` in ('show_lyrics', 'song_page_title', 'webplayer_flash', 'webplayer_html5', 'webplayer_confirmclose', 'webplayer_pausetabs', 'slideshow_time', 'broadcast_by_default', 'direct_play_limit', 'webplayer_aurora') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'podcast' WHERE `preference`.`name` in ('podcast_keep', 'podcast_new_download') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'privacy' WHERE `preference`.`name` in ('allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_personal_info_agent') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'query' WHERE `preference`.`name` in ('popular_threshold', 'offset_limit', 'stats_threshold', 'concerts_limit_future', 'concerts_limit_past') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'share' WHERE `preference`.`name` = 'share_expire' AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'shoutcast' WHERE `preference`.`name` = 'shoutcast_active' AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'theme' WHERE `preference`.`name` in ('theme_name', 'ui_fixed', 'topmenu', 'theme_color', 'sidebar_light') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'transcoding' WHERE `preference`.`name` in ('transcode_bitrate', 'rate_limit', 'transcode') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'update' WHERE `preference`.`name` in ('autoupdate', 'autoupdate_lastcheck', 'autoupdate_lastversion', 'autoupdate_lastversion_new') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`subcatagory` = 'upload' WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND `preference`.`subcatagory` IS NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'library' WHERE `preference`.`name` in ('album_sort', 'show_played_times', 'album_group', 'album_release_type', 'album_release_type_sort', 'libitem_contextmenu', 'browse_filter', 'libitem_browse_alpha') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'backend' WHERE `preference`.`name` in ('subsonic_backend', 'daap_backend', 'daap_pass', 'upnp_backend', 'webdav_backend') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'catalog' WHERE `preference`.`name` = 'catalog_check_duplicate' AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'custom' WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'feature' WHERE `preference`.`name` in ('download', 'allow_stream_playback', 'allow_democratic_playback', 'share', 'allow_video', 'geolocation') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'home' WHERE `preference`.`name` in ('now_playing_per_user', 'home_moment_albums', 'home_moment_videos', 'home_recently_played', 'home_now_playing') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'httpq' WHERE `preference`.`name` = 'httpq_active' AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'lastfm' WHERE `preference`.`name` in ('lastfm_grant_link', 'lastfm_challenge') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'localplay' WHERE `preference`.`name` in ('localplay_controller', 'localplay_level', 'allow_localplay_playback') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'metadata' WHERE `preference`.`name` in ('disabled_custom_metadata_fields', 'disabled_custom_metadata_fields_input') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'mpd' WHERE `preference`.`name` = 'mpd_active' AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'notification' WHERE `preference`.`name` in ('browser_notify', 'browser_notify_timeout') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'player' WHERE `preference`.`name` in ('show_lyrics', 'song_page_title', 'webplayer_flash', 'webplayer_html5', 'webplayer_confirmclose', 'webplayer_pausetabs', 'slideshow_time', 'broadcast_by_default', 'direct_play_limit', 'webplayer_aurora') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'podcast' WHERE `preference`.`name` in ('podcast_keep', 'podcast_new_download') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'privacy' WHERE `preference`.`name` in ('allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_personal_info_agent') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'query' WHERE `preference`.`name` in ('popular_threshold', 'offset_limit', 'stats_threshold', 'concerts_limit_future', 'concerts_limit_past') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'share' WHERE `preference`.`name` = 'share_expire' AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'shoutcast' WHERE `preference`.`name` = 'shoutcast_active' AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'theme' WHERE `preference`.`name` in ('theme_name', 'ui_fixed', 'topmenu', 'theme_color', 'sidebar_light') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'transcoding' WHERE `preference`.`name` in ('transcode_bitrate', 'rate_limit', 'transcode') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'update' WHERE `preference`.`name` in ('autoupdate', 'autoupdate_lastcheck', 'autoupdate_lastversion', 'autoupdate_lastversion_new') AND `preference`.`subcatagory` IS NULL;",
+            "UPDATE `preference` SET `preference`.`subcatagory` = 'upload' WHERE `preference`.`name` in ('upload_catalog', 'allow_upload', 'upload_subdir', 'upload_user_artist', 'upload_script', 'upload_allow_edit', 'upload_allow_remove', 'upload_catalog_pattern') AND `preference`.`subcatagory` IS NULL;"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -3641,209 +3472,53 @@ class Update
      */
     private static function _update_400003(Interactor $interactor = null): bool
     {
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Playback Type' WHERE `preference`.`name` = 'play_type' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'httpQ Active Instance' WHERE `preference`.`name` = 'httpq_active' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Now Playing filtered per user' WHERE `preference`.`name` = 'now_playing_per_user' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Use Subsonic backend' WHERE `preference`.`name` = 'subsonic_backend' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Now Playing information' WHERE `preference`.`name` = 'allow_personal_info_now' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information' WHERE `preference`.`name` = 'allow_personal_info_recent' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming date/time' WHERE `preference`.`name` = 'allow_personal_info_time' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming agent' WHERE `preference`.`name` = 'allow_personal_info_agent' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Enable URL Rewriting' WHERE `preference`.`name` = 'stream_beautiful_url' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Destination catalog' WHERE `preference`.`name` = 'upload_catalog' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow user uploads' WHERE `preference`.`name` = 'allow_upload' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Create a subdirectory per user' WHERE `preference`.`name` = 'upload_subdir' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Consider the user sender as the track''s artist' WHERE `preference`.`name` = 'upload_user_artist' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Post-upload script (current directory = upload target directory)' WHERE `preference`.`name` = 'upload_script' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow users to edit uploaded songs' WHERE `preference`.`name` = 'upload_allow_edit' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow users to remove uploaded songs' WHERE `preference`.`name` = 'upload_allow_remove' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Albums of the Moment' WHERE `preference`.`name` = 'home_moment_albums' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Videos of the Moment' WHERE `preference`.`name` = 'home_moment_videos' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Logo' WHERE `preference`.`name` = 'custom_logo' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Login page logo' WHERE `preference`.`name` = 'custom_login_logo' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Favicon' WHERE `preference`.`name` = 'custom_favicon' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Album - Default sort' WHERE `preference`.`name` = 'album_sort' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Geolocation' WHERE `preference`.`name` = 'Geolocation' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Video Features' WHERE `preference`.`name` = 'allow_video' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' WHERE `preference`.`name` = 'demo_clear_sessions' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcoding' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize Flash Web Player' WHERE `preference`.`name` = 'webplayer_flash' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize HTML5 Web Player' WHERE `preference`.`name` = 'webplayer_html5' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications' WHERE `preference`.`name` = 'browser_notify' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' WHERE `preference`.`name` = 'browser_notify_timeout' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' WHERE `preference`.`name` = 'webplayer_aurora' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Now Playing' WHERE `preference`.`name` = 'home_now_playing' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Show Recently Played' WHERE `preference`.`name` = 'home_recently_played' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = '# latest episodes to keep' WHERE `preference`.`name` = 'podcast_keep' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = '# episodes to download when new episodes are available' WHERE `preference`.`name` = 'podcast_new_download' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcode' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Allow E-mail notifications' WHERE `preference`.`name` = 'notify_email' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Disable these fields' WHERE `preference`.`name` = 'disabled_custom_metadata_fields' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Define field list' WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "UPDATE `preference` SET `preference`.`description` = 'Auto-pause between tabs' WHERE `preference`.`name` = 'webplayer_pausetabs' ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "UPDATE `preference` SET `preference`.`description` = 'Force HTTP playback regardless of port' WHERE `preference`.`name` = 'force_http_play';",
+            "UPDATE `preference` SET `preference`.`description` = 'Playback Type' WHERE `preference`.`name` = 'play_type';",
+            "UPDATE `preference` SET `preference`.`description` = 'httpQ Active Instance' WHERE `preference`.`name` = 'httpq_active';",
+            "UPDATE `preference` SET `preference`.`description` = 'Now Playing filtered per user' WHERE `preference`.`name` = 'now_playing_per_user';",
+            "UPDATE `preference` SET `preference`.`description` = 'Use Subsonic backend' WHERE `preference`.`name` = 'subsonic_backend';",
+            "UPDATE `preference` SET `preference`.`description` = 'Share Now Playing information' WHERE `preference`.`name` = 'allow_personal_info_now';",
+            "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information' WHERE `preference`.`name` = 'allow_personal_info_recent';",
+            "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming date/time' WHERE `preference`.`name` = 'allow_personal_info_time';",
+            "UPDATE `preference` SET `preference`.`description` = 'Share Recently Played information - Allow access to streaming agent' WHERE `preference`.`name` = 'allow_personal_info_agent';",
+            "UPDATE `preference` SET `preference`.`description` = 'Enable URL Rewriting' WHERE `preference`.`name` = 'stream_beautiful_url';",
+            "UPDATE `preference` SET `preference`.`description` = 'Destination catalog' WHERE `preference`.`name` = 'upload_catalog';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow user uploads' WHERE `preference`.`name` = 'allow_upload';",
+            "UPDATE `preference` SET `preference`.`description` = 'Create a subdirectory per user' WHERE `preference`.`name` = 'upload_subdir';",
+            "UPDATE `preference` SET `preference`.`description` = 'Consider the user sender as the track''s artist' WHERE `preference`.`name` = 'upload_user_artist';",
+            "UPDATE `preference` SET `preference`.`description` = 'Post-upload script (current directory = upload target directory)' WHERE `preference`.`name` = 'upload_script';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow users to edit uploaded songs' WHERE `preference`.`name` = 'upload_allow_edit';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow users to remove uploaded songs' WHERE `preference`.`name` = 'upload_allow_remove';",
+            "UPDATE `preference` SET `preference`.`description` = 'Show Albums of the Moment' WHERE `preference`.`name` = 'home_moment_albums';",
+            "UPDATE `preference` SET `preference`.`description` = 'Show Videos of the Moment' WHERE `preference`.`name` = 'home_moment_videos';",
+            "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Logo' WHERE `preference`.`name` = 'custom_logo';",
+            "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Login page logo' WHERE `preference`.`name` = 'custom_login_logo';",
+            "UPDATE `preference` SET `preference`.`description` = 'Custom URL - Favicon' WHERE `preference`.`name` = 'custom_favicon';",
+            "UPDATE `preference` SET `preference`.`description` = 'Album - Default sort' WHERE `preference`.`name` = 'album_sort';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow Geolocation' WHERE `preference`.`name` = 'Geolocation';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow Video Features' WHERE `preference`.`name` = 'allow_video';",
+            "UPDATE `preference` SET `preference`.`description` = 'Democratic - Clear votes for expired user sessions' WHERE `preference`.`name` = 'demo_clear_sessions';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcoding';",
+            "UPDATE `preference` SET `preference`.`description` = 'Authorize Flash Web Player' WHERE `preference`.`name` = 'webplayer_flash';",
+            "UPDATE `preference` SET `preference`.`description` = 'Authorize HTML5 Web Player' WHERE `preference`.`name` = 'webplayer_html5';",
+            "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications' WHERE `preference`.`name` = 'browser_notify';",
+            "UPDATE `preference` SET `preference`.`description` = 'Web Player browser notifications timeout (seconds)' WHERE `preference`.`name` = 'browser_notify_timeout';",
+            "UPDATE `preference` SET `preference`.`description` = 'Authorize JavaScript decoder (Aurora.js) in Web Player' WHERE `preference`.`name` = 'webplayer_aurora';",
+            "UPDATE `preference` SET `preference`.`description` = 'Show Now Playing' WHERE `preference`.`name` = 'home_now_playing';",
+            "UPDATE `preference` SET `preference`.`description` = 'Show Recently Played' WHERE `preference`.`name` = 'home_recently_played';",
+            "UPDATE `preference` SET `preference`.`description` = '# latest episodes to keep' WHERE `preference`.`name` = 'podcast_keep';",
+            "UPDATE `preference` SET `preference`.`description` = '# episodes to download when new episodes are available' WHERE `preference`.`name` = 'podcast_new_download';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow Transcoding' WHERE `preference`.`name` = 'transcode';",
+            "UPDATE `preference` SET `preference`.`description` = 'Allow E-mail notifications' WHERE `preference`.`name` = 'notify_email';",
+            "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Disable these fields' WHERE `preference`.`name` = 'disabled_custom_metadata_fields';",
+            "UPDATE `preference` SET `preference`.`description` = 'Custom metadata - Define field list' WHERE `preference`.`name` = 'disabled_custom_metadata_fields_input';",
+            "UPDATE `preference` SET `preference`.`description` = 'Auto-pause between tabs' WHERE `preference`.`name` = 'webplayer_pausetabs';"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         return true;

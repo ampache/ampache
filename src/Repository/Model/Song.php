@@ -2492,9 +2492,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (Dba::write($sql, array($new_album, $old_album)) === false) {
             return false;
         }
-        $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
-        if (Dba::write($sql, array($new_album, $old_album, $song_id)) === false) {
-            return false;
+        if ($song_id > 0) {
+            $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
+            if (Dba::write($sql, array($new_album, $old_album, $song_id)) === false) {
+                return false;
+            }
+        } else {
+            $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'";
+            if (Dba::write($sql, array($new_album, $old_album)) === false) {
+                return false;
+            }
         }
         $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         if (Dba::write($sql, array($new_album, 'album', $old_album)) === false) {
