@@ -80,7 +80,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'),
             '<strong>3.3.3.5</strong>',
             '<strong>' . $this->configContainer->get(ConfigurationKeyEnum::VERSION) . '</strong>',
-            '<strong>' . Update::format_version(Update::get_version()) . '</strong>'
+            '<strong>' . Update::format_version() . '</strong>'
         );
     }
 

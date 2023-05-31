@@ -86,7 +86,7 @@ final class UpdateAction implements ApplicationActionInterface
                     'Location',
                     $this->configContainer->getWebPath()
                 );
-        } else {
+        } elseif (Update::need_update()) {
             Update::run_update();
         }
 
