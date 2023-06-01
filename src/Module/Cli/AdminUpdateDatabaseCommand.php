@@ -121,7 +121,7 @@ final class AdminUpdateDatabaseCommand extends Command
             if ($updated) {
                 // tell the user that the database was updated and the version
                 $interactor->info(
-                    T_('Updated'),
+                    "\n" . T_('Updated'),
                     true
                 );
                 /* HINT: db version string (e.g. 5.2.0 Build: 006) */
