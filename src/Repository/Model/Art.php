@@ -1184,14 +1184,21 @@ class Art extends database_object
     {
         $types = array(
             'album',
+            'album_disk',
             'artist',
-            'tvshow',
-            'tvshow_season',
-            'video',
-            'user',
+            'catalog',
+            'genre',
+            'label',
             'live_stream',
             'playlist',
-            'song'
+            'podcast',
+            'podcast_episode',
+            'song',
+            'stream',
+            'tvshow',
+            'tvshow_season',
+            'user',
+            'video'
         );
 
         if ($object_type !== null) {

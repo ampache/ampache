@@ -885,6 +885,15 @@ class Update
         $update_string = "* Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table";
         $version[]     = array('version' => '600028', 'description' => $update_string);
 
+        $update_string = "* Extend `object_type` enum list on `rating` table";
+        $version[]     = array('version' => '600029', 'description' => $update_string);
+
+        $update_string = "* Convert `object_type` to an enum on `user_flag` table";
+        $version[]     = array('version' => '600030', 'description' => $update_string);
+
+        $update_string = "* Convert `object_type` to an enum on `image` table";
+        $version[]     = array('version' => '600031', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5471,5 +5480,42 @@ class Update
         $sql = "ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
 
         return (self::_write($interactor, $sql) !== false);
+    }
+
+    /**
+     * update 600029
+     *
+     * Extend `object_type` enum list on `rating` table
+     */
+    private static function _update_600029(Interactor $interactor = null): bool
+    {
+        $sql = "DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') NOT NULL;") !== false);
+    }
+    /**
+     * update 600030
+     *
+     * Convert `object_type` to an enum on `user_flag` table
+     */
+    private static function _update_600030(Interactor $interactor = null): bool
+    {
+        $sql = "DELETE FROM `user_flag` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `user_flag` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') NOT NULL;") !== false);
+    }
+    /**
+     * update 600031
+     *
+     * Convert `object_type` to an enum on `image` table
+     */
+    private static function _update_600031(Interactor $interactor = null): bool
+    {
+        $sql = "DELETE FROM `image` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        Dba::write($sql);
+
+        return (self::_write($interactor, "ALTER TABLE `image` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') NOT NULL;") !== false);
     }
 } // end update.class
