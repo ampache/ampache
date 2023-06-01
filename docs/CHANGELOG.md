@@ -29,6 +29,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
 * Add more tables to the missing table checks
+* Fork https://github.com/scaron/prettyphoto and update for jquery3
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -172,6 +173,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
+* Replace scaron/prettyphoto with fork to allow updates
 * Plugins
   * The Movie Database (TMDB) plugin
 * Subsonic
