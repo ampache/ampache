@@ -30,7 +30,7 @@ It's easy to use a program like github desktop to compare between branches.
 * ~~Add pchart to composer~~ (part of the dev requirements so it's included in releases)
   * ~~composer require --update-no-dev szymach/c-pchart "3.*"~~
 * ~~Run composer install~~ (adding pchart updates everything)
-* Check `public/lib/components/prettyphoto/images` exists
+* Grab the latest prettyphoto (if available/different from https://github.com/lachlan-00/prettyphoto)
 * Get missing map files
 
 ```shell
