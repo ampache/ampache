@@ -1136,11 +1136,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1267,11 +1264,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `session` CHANGE `id` `id` varchar(256) NOT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1287,11 +1281,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /*
@@ -1307,11 +1298,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1340,11 +1328,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1360,11 +1345,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1399,25 +1381,17 @@ class Update
             }
         }
 
-        $sql = "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $sql = "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        $sql_array = array(
+            "ALTER TABLE `catalog` DROP `path`, DROP `remote_username`, DROP `remote_password`",
+            "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)",
+            "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''",
+            "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''",
+            "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -1440,11 +1414,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1459,11 +1430,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `stream_playlist` ADD `codec` varchar(32) NULL AFTER `time`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1488,11 +1456,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1527,11 +1492,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1557,11 +1519,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1608,11 +1567,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1654,11 +1610,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1697,11 +1650,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `user_shout` ADD `data` varchar(256) NULL AFTER `object_type`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1726,11 +1676,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1751,11 +1698,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1782,11 +1726,8 @@ class Update
             return false;
         }
         $sql = "DELETE FROM `preference` WHERE `name` = 'tags_userlist'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1818,11 +1759,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '7')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1845,11 +1783,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1896,11 +1831,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `player_control` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `cmd` varchar(32) CHARACTER SET $charset NOT NULL, `value` varchar(256) CHARACTER SET $charset NULL, `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `send_date` int(11) unsigned NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1916,11 +1848,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -1942,11 +1871,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `recommendation_item` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `recommendation` int(11) unsigned NOT NULL, `recommendation_id` int(11) unsigned NULL, `name` varchar(256) NULL, `rel` varchar(256) NULL, `mbid` varchar(36) NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -1972,11 +1898,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2013,11 +1936,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2033,11 +1953,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2053,11 +1970,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2104,11 +2018,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2134,11 +2045,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2284,11 +2192,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -2305,11 +2210,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2346,11 +2248,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `image` ADD `kind` varchar(32) NULL DEFAULT 'default' AFTER `object_id`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -2379,11 +2278,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `movie` ADD `prefix` varchar(32) CHARACTER SET $charset NULL";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -2413,11 +2309,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2437,11 +2330,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2480,11 +2370,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2536,11 +2423,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /*
@@ -2600,11 +2484,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'album,ep,live,single')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2629,11 +2510,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '10')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2667,11 +2545,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2687,11 +2562,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2741,11 +2613,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `song` DROP COLUMN `album_artist`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -2800,11 +2669,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2814,32 +2680,20 @@ class Update
      */
     private static function _update_370031(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
+        $sql_array = array(
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_login_logo', '', 'Custom login page logo url', 75, 'string', 'interface')",
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_favicon', '', 'Custom favicon url', 75, 'string', 'interface')",
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`) VALUES ('custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface')"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
+            $row_id = Dba::insert_id();
+            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+            if (self::_write($interactor, $sql, array($row_id)) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -2858,11 +2712,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2880,11 +2731,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `label_asso` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` int(11) unsigned NOT NULL, `artist` int(11) unsigned NOT NULL, `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -2911,11 +2759,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -2961,11 +2806,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, 'dark')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3025,11 +2867,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3069,11 +2908,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('artist','album','song','stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') NULL";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3134,11 +2970,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3164,11 +2997,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3194,11 +3024,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3218,34 +3045,20 @@ class Update
      */
     private static function _update_380010(Interactor $interactor = null): bool
     {
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
-
-        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library')";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-        $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
+        $sql_array = array(
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom')",
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom')",
+            "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library')"
+        );
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
+            $row_id = Dba::insert_id();
+            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+            if (self::_write($interactor, $sql, array($row_id)) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -3274,11 +3087,8 @@ class Update
         }
 
         $sql = "ALTER TABLE user MODIFY fullname varchar(255)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3291,11 +3101,8 @@ class Update
     private static function _update_380012(Interactor $interactor = null): bool
     {
         $sql = "UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3320,79 +3127,28 @@ class Update
      */
     private static function _update_400000(Interactor $interactor = null): bool
     {
-        $sql = "ALTER TABLE `podcast` MODIFY `copyright` varchar(255)";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
+        $sql_array = array(
+            "ALTER TABLE `podcast` MODIFY `copyright` varchar(255)",
+            "ALTER TABLE `user_activity` ADD COLUMN `name_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_album` varchar(255) NULL DEFAULT NULL;",
+            "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` varchar(255) NULL DEFAULT NULL;",
+            "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES (-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_backend');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_username');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_authtoken');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_published');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_uniqid');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_servername');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_address');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_port');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_local_auth');",
+            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_match_email');",
+            "DELETE FROM `preference` WHERE `preference`.`name` IN ('plex_backend', 'myplex_username', 'myplex_authtoken', 'myplex_published', 'plex_uniqid', 'plex_servername', 'plex_public_address', 'plex_public_port ', 'plex_local_auth', 'plex_match_email');"
+        );
 
-        $sql = "ALTER TABLE `user_activity` ADD COLUMN `name_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_album` varchar(255) NULL DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` varchar(255) NULL DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES (-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_backend');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_username');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_authtoken');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_published');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_uniqid');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_servername');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_address');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_port');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_local_auth');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_match_email');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
-
-        $sql = "DELETE FROM `preference` WHERE `preference`.`name` IN ('plex_backend', 'myplex_username', 'myplex_authtoken', 'myplex_published', 'plex_uniqid', 'plex_servername', 'plex_public_address', 'plex_public_port ', 'plex_local_auth', 'plex_match_email');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
+        foreach ($sql_array as $sql) {
+            if (self::_write($interactor, $sql) === false) {
+                return false;
+            }
         }
 
         return true;
@@ -3458,11 +3214,8 @@ class Update
         }
 
         $sql = "ALTER TABLE `song_data` DROP `catalog_number`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3537,11 +3290,8 @@ class Update
         }
 
         $sql = "DELETE FROM `preference` WHERE `preference`.`name` = 'upload_user_artist';";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3552,11 +3302,8 @@ class Update
     private static function _update_400005(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `search` ADD `last_count` INT(11) NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3577,11 +3324,8 @@ class Update
         }
 
         $sql = "DROP TABLE IF EXISTS `localplay_shoutcast`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3608,11 +3352,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3644,11 +3385,8 @@ class Update
         }
 
         $sql = "UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3664,11 +3402,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3679,11 +3414,8 @@ class Update
     private static function _update_400010(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `search` ADD `last_duration` INT(11) NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3700,11 +3432,8 @@ class Update
         }
 
         $sql = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3715,11 +3444,8 @@ class Update
     private static function _update_400012(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `user` ADD `rsstoken` varchar(255) NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3730,11 +3456,8 @@ class Update
     private static function _update_400013(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3756,11 +3479,8 @@ class Update
         }
 
         $sql = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     } //
 
     /**
@@ -3771,11 +3491,8 @@ class Update
     private static function _update_400015(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3791,11 +3508,8 @@ class Update
         }
 
         $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3828,11 +3542,8 @@ class Update
         }
 
         $sql = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3848,11 +3559,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '6')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3868,11 +3576,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -3883,11 +3588,8 @@ class Update
     private static function _update_400021(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `song_data` ADD `r128_track_gain` smallint(5) DEFAULT NULL, ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3898,11 +3600,8 @@ class Update
     private static function _update_400022(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3918,11 +3617,8 @@ class Update
         }
 
         $sql = "DELETE FROM `preference` WHERE `preference`.`name` IN ('concerts_limit_past', 'concerts_limit_future');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3941,11 +3637,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `artist` ADD `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -3956,11 +3649,8 @@ class Update
     private static function _update_500000(Interactor $interactor = null): bool
     {
         $sql = "DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4085,11 +3775,8 @@ class Update
             return false;
         }
         $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `album`.`catalog`, 'artist', `artist`.`id` FROM `artist` LEFT JOIN `album` ON `album`.`album_artist` = `artist`.`id`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4132,11 +3819,8 @@ class Update
             return false;
         }
         $sql = "CREATE TABLE IF NOT EXISTS `user_data` (`user` int(11) DEFAULT NULL, `key` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, `value` varchar(255) CHARACTER SET $charset COLLATE $collation DEFAULT NULL, KEY `user` (`user`), KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4158,11 +3842,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4185,11 +3866,8 @@ class Update
             }
         }
         $sql = "ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`, `key`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4205,11 +3883,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4225,11 +3900,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4372,11 +4044,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4387,11 +4056,8 @@ class Update
     private static function _update_510000(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4406,11 +4072,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4438,11 +4101,8 @@ class Update
     private static function _update_510003(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','artist','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode');";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4453,11 +4113,8 @@ class Update
     private static function _update_510004(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4473,11 +4130,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4521,11 +4175,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4549,11 +4200,8 @@ class Update
         $sql = "DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);";
         Dba::write($sql);
         $sql = "ALTER TABLE `preference` ADD CONSTRAINT preference_UN UNIQUE KEY (`name`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4569,11 +4217,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4589,11 +4234,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4604,11 +4246,8 @@ class Update
     private static function _update_520004(Interactor $interactor = null): bool
     {
         $sql = "UPDATE `preference` SET `preference`.`catagory` = 'plugins' WHERE `preference`.`name` = 'lastfm_challenge'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4624,11 +4263,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -4648,11 +4284,8 @@ class Update
         }
         // fill the data
         $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` > 0 UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4672,11 +4305,8 @@ class Update
         }
         // fill the data
         $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` > 0 UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` > 0 UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4711,11 +4341,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4730,11 +4357,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `album_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4749,11 +4373,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `artist_map` MODIFY COLUMN `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4768,11 +4389,8 @@ class Update
             return false;
         }
         $sql = "INSERT INTO `object_count` (object_type, object_id, `date`, `user`, agent, geo_latitude, geo_longitude, geo_name, count_type) SELECT 'artist', `song`.`artist`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_count`.`date` AND `object_count`.`user` = `artist_count`.`user` AND `object_count`.`agent` = `artist_count`.`agent` AND `object_count`.`count_type` = `artist_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `artist_count`.`id` IS NULL AND `song`.`artist` IS NOT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4810,11 +4428,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `video` MODIFY COLUMN `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4845,11 +4460,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `user_activity` DROP COLUMN `mbid_album`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4868,11 +4480,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `object_count` MODIFY COLUMN `geo_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4897,11 +4506,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `wanted` MODIFY COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4944,11 +4550,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `user` MODIFY COLUMN `username` varchar(128) CHARACTER SET $charset COLLATE $collation DEFAULT NULL NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -4981,11 +4584,8 @@ class Update
             return false;
         }
         $sql = "CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5000,11 +4600,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `cache_object_count_run` MODIFY COLUMN `count_type` enum('download','stream','skip') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5020,11 +4617,8 @@ class Update
         $sql = "DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `object_id` IN (SELECT `object_id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1) AND `id` NOT IN (SELECT MIN(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type`)) AS `count`);";
         Dba::write($sql);
         $sql = "CREATE UNIQUE INDEX `object_count_UNIQUE_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5050,11 +4644,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -5077,11 +4668,8 @@ class Update
         $sql = "ALTER TABLE `song` DROP KEY `title_enabled_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `title_enabled_IDX` USING BTREE ON `song` (`title`, `enabled`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5130,11 +4718,8 @@ class Update
         $sql = "ALTER TABLE `album` DROP KEY `mbid_group_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5147,11 +4732,8 @@ class Update
         $sql = "ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_550001
@@ -5194,11 +4776,8 @@ class Update
 
         // Add the default access group to the user table
         $sql = "ALTER TABLE `user` ADD `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_550002
@@ -5279,11 +4858,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /** _update_550004
@@ -5294,11 +4870,8 @@ class Update
     {
         // Update previous update preference
         $sql = "UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search'";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_550005
@@ -5318,11 +4891,8 @@ class Update
         Dba::write($sql);
         // insert catalog_map artists
         $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_600001
@@ -5337,11 +4907,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /** _update_600002
@@ -5351,11 +4918,8 @@ class Update
     private static function _update_600002(Interactor $interactor = null): bool
     {
         $sql = "DROP TABLE IF EXISTS `channel`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_600003
@@ -5619,11 +5183,8 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_600012
@@ -5667,11 +5228,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -5683,11 +5241,8 @@ class Update
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $sql       = "ALTER TABLE `album` ADD `subtitle` varchar(64) COLLATE $collation DEFAULT NULL AFTER `catalog_number`";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5717,11 +5272,8 @@ class Update
         $sql = "ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`;";
         Dba::write($sql);
         $sql = "CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`);";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5741,11 +5293,8 @@ class Update
         $sql       = "DROP TABLE IF EXISTS `user_playlist`";
         Dba::write($sql);
         $sql = "CREATE TABLE IF NOT EXISTS `user_playlist` (`playqueue_time` int(11) UNSIGNED NOT NULL, `playqueue_client` varchar(255) CHARACTER SET $charset COLLATE $collation, user int(11) DEFAULT 0, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci, `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0, `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY (`playqueue_time`, `playqueue_client`, `user`, `track`), KEY `user` (`user`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5795,11 +5344,8 @@ class Update
     private static function _update_600021(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /** _update_600022
@@ -5809,11 +5355,8 @@ class Update
     private static function _update_600022(Interactor $interactor = null): bool
     {
         $sql = "ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5829,11 +5372,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '25')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -5859,11 +5399,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -5879,11 +5416,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '1')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /** _update_600026
@@ -5898,11 +5432,8 @@ class Update
         }
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
-        if (self::_write($interactor, $sql, array($row_id)) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
     }
 
     /**
@@ -5914,11 +5445,8 @@ class Update
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $sql       = "ALTER TABLE `album` CHANGE `subtitle` `version` varchar(64) COLLATE $collation DEFAULT NULL";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 
     /**
@@ -5941,10 +5469,7 @@ class Update
             return false;
         }
         $sql = "ALTER TABLE `podcast_episode` ADD `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `catalog`;";
-        if (self::_write($interactor, $sql) === false) {
-            return false;
-        }
 
-        return true;
+        return (self::_write($interactor, $sql) !== false);
     }
 } // end update.class
