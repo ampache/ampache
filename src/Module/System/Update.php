@@ -408,9 +408,6 @@ class Update
         $update_string = "* Add top menu setting.<br />";
         $version[]     = array('version' => '360050', 'description' => $update_string);
 
-        $update_string = "* Copy default .htaccess configurations.<br />";
-        $version[]     = array('version' => '360051', 'description' => $update_string);
-
         $update_string = "* Drop unused dynamic_playlist tables and add session id to votes.<br />";
         $version[]     = array('version' => '370001', 'description' => $update_string);
 
@@ -621,9 +618,6 @@ class Update
         $update_string = "* Extend album and make artist even bigger. This should cover everyone.<br/ > ";
         $version[]     = array('version' => '400016', 'description' => $update_string);
 
-        $update_string = ""; // REMOVED update
-        $version[]     = array('version' => '400017', 'description' => $update_string);
-
         $update_string = "* Extend video bitrate to unsigned. There's no reason for a negative bitrate.<br/ > ";
         $version[]     = array('version' => '400018', 'description' => $update_string);
 
@@ -698,9 +692,6 @@ class Update
 
         $update_string = "* Add podcast to the cache_object_count tables";
         $version[]     = array('version' => '510001', 'description' => $update_string);
-
-        $update_string = ""; // REMOVED update
-        $version[]     = array('version' => '510002', 'description' => $update_string);
 
         $update_string = "* Add live_stream to the rating table";
         $version[]     = array('version' => '510003', 'description' => $update_string);
@@ -886,13 +877,13 @@ class Update
         $version[]     = array('version' => '600028', 'description' => $update_string);
 
         $update_string = "* Extend `object_type` enum list on `rating` table";
-        $version[]     = array('version' => '600029', 'description' => $update_string);
+        $version[]     = array('version' => '600032', 'description' => $update_string);
 
         $update_string = "* Convert `object_type` to an enum on `user_flag` table";
-        $version[]     = array('version' => '600030', 'description' => $update_string);
+        $version[]     = array('version' => '600033', 'description' => $update_string);
 
         $update_string = "* Convert `object_type` to an enum on `image` table";
-        $version[]     = array('version' => '600031', 'description' => $update_string);
+        $version[]     = array('version' => '600034', 'description' => $update_string);
 
         return $version;
     }
@@ -1809,10 +1800,6 @@ class Update
     }
 
     /**
-     * _update_360040 skipped.
-     */
-
-    /**
      * _update_360041
      *
      * Add channels
@@ -1981,23 +1968,6 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
 
         return (self::_write($interactor, $sql, array($row_id)) !== false);
-    }
-
-    /**
-     * _update_360051
-     *
-     * REMOVED
-     */
-    private static function _update_360051(Interactor $interactor = null): bool
-    {
-        if ($interactor) {
-            $interactor->info(
-                T_('Skipped'),
-                true
-            );
-        }
-
-        return true;
     }
 
     /**
@@ -3153,7 +3123,6 @@ class Update
             "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_match_email');",
             "DELETE FROM `preference` WHERE `preference`.`name` IN ('plex_backend', 'myplex_username', 'myplex_authtoken', 'myplex_published', 'plex_uniqid', 'plex_servername', 'plex_public_address', 'plex_public_port ', 'plex_local_auth', 'plex_match_email');"
         );
-
         foreach ($sql_array as $sql) {
             if (self::_write($interactor, $sql) === false) {
                 return false;
@@ -3519,23 +3488,6 @@ class Update
         $sql = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
 
         return (self::_write($interactor, $sql) !== false);
-    }
-
-    /**
-     * _update_400017
-     *
-     * Removed.
-     */
-    private static function _update_400017(Interactor $interactor = null): bool
-    {
-        if ($interactor) {
-            $interactor->info(
-                T_('Skipped'),
-                true
-            );
-        }
-
-        return true;
     }
 
     /**
@@ -4083,23 +4035,6 @@ class Update
         $sql = "ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode');";
 
         return (self::_write($interactor, $sql) !== false);
-    }
-
-    /**
-     * _update_510002
-     *
-     * Removed.
-     */
-    private static function _update_510002(Interactor $interactor = null): bool
-    {
-        if ($interactor) {
-            $interactor->info(
-                T_('Skipped'),
-                true
-            );
-        }
-
-        return true;
     }
 
     /**
@@ -5483,39 +5418,39 @@ class Update
     }
 
     /**
-     * update 600029
+     * update 600032
      *
      * Extend `object_type` enum list on `rating` table
      */
-    private static function _update_600029(Interactor $interactor = null): bool
+    private static function _update_600032(Interactor $interactor = null): bool
     {
-        $sql = "DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        $sql = "DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
     /**
-     * update 600030
+     * update 600033
      *
      * Convert `object_type` to an enum on `user_flag` table
      */
-    private static function _update_600030(Interactor $interactor = null): bool
+    private static function _update_600033(Interactor $interactor = null): bool
     {
-        $sql = "DELETE FROM `user_flag` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        $sql = "DELETE FROM `user_flag` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
     /**
-     * update 600031
+     * update 600034
      *
      * Convert `object_type` to an enum on `image` table
      */
-    private static function _update_600031(Interactor $interactor = null): bool
+    private static function _update_600034(Interactor $interactor = null): bool
     {
-        $sql = "DELETE FROM `image` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
+        $sql = "DELETE FROM `image` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
 } // end update.class
