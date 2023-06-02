@@ -156,6 +156,13 @@ class Api
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
     ];
 
+    public const API_VERSIONS = array(
+        3,
+        4,
+        5,
+        6
+    );
+
     /**
      * @var string $auth_version
      */

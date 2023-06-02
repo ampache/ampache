@@ -95,7 +95,7 @@ final class ApiHandler implements ApiHandlerInterface
         $user          = $gatekeeper->getUser();
         $userId        = $user->id ?? -1;
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
-        if ($api_version == 0) {
+        if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)
