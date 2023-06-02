@@ -153,6 +153,12 @@ class Api
         Method\DeletedPodcastEpisodesMethod::ACTION => Method\DeletedPodcastEpisodesMethod::class,
     ];
 
+    public const API_VERSIONS = array(
+        3,
+        4,
+        5
+    );
+
     /**
      * @var string $auth_version
      */
