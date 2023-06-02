@@ -5492,7 +5492,7 @@ class Update
         $sql = "DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `rating` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
     /**
      * update 600030
@@ -5504,7 +5504,7 @@ class Update
         $sql = "DELETE FROM `user_flag` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `user_flag` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
     /**
      * update 600031
@@ -5516,6 +5516,6 @@ class Update
         $sql = "DELETE FROM `image` WHERE `object_type` IS NULL OR `object_type` NOT IN ('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video')";
         Dba::write($sql);
 
-        return (self::_write($interactor, "ALTER TABLE `image` CHANGE `object_type` `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+        return (self::_write($interactor, "ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'genre', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'stream', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
 } // end update.class
