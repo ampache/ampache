@@ -739,7 +739,7 @@ class Catalog_local extends Catalog
             $chunks = floor($total / 10000) + 1;
             $chunk  = $chunks;
         }
-        while ($chunk >= 0) {
+        while ($chunk >= 1) {
             debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk--;

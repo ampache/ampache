@@ -45,7 +45,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600031
+* Database 600034
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
