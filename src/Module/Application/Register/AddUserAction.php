@@ -172,7 +172,6 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         /* Attempt to create the new user */
-        $access = 5;
         switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
             case 'admin':
                 $access = 100;

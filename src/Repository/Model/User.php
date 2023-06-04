@@ -614,8 +614,6 @@ class User extends database_object
                 case 'clear_stats':
                     Stats::clear($this->id);
                     break;
-                default:
-                    break;
             }
         }
 

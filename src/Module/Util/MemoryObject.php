@@ -63,6 +63,6 @@ class MemoryObject
             return false;
         }
 
-        return isset($this->_data[$name]) ? $this->_data[$name] : null;
+        return $this->_data[$name] ?? null;
     }
 }

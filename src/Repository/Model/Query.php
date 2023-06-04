@@ -813,8 +813,6 @@ class Query
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
                 break;
-            default:
-                break;
         } // end type whitelist
     } // set_type
 
@@ -1542,8 +1540,6 @@ class Query
                     case 'enabled':
                         $filter_sql = " `song`.`enabled`= '$value' AND ";
                         break;
-                    default:
-                        break;
                 } // end list of sqlable filters
                 break;
             case 'album':
@@ -1612,8 +1608,6 @@ class Query
                         if ((int)$value == 1) {
                             $filter_sql = " `album`.`total_count`='0' AND ";
                         }
-                        break;
-                    default:
                         break;
                 }
                 break;
@@ -1684,8 +1678,6 @@ class Query
                         if ((int)$value == 1) {
                             $filter_sql = " `album_disk`.`total_count`='0' AND ";
                         }
-                        break;
-                    default:
                         break;
                 }
                 break;
@@ -1772,8 +1764,6 @@ class Query
                             $filter_sql = " `artist`.`total_count`='0' AND ";
                         }
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'live_stream':
@@ -1801,8 +1791,6 @@ class Query
                         $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'playlist':
@@ -1829,8 +1817,6 @@ class Query
                     case 'playlist_type':
                         $user_id    = ((int) Core::get_global('user')->id > 0) ? Core::get_global('user')->id : $value;
                         $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -1885,8 +1871,6 @@ class Query
                     case 'hidden':
                         $filter_sql = " `tag`.`is_hidden` = " . Dba::escape($value) . " AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'video':
@@ -1919,8 +1903,6 @@ class Query
                     case 'starts_with':
                         $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'license':
@@ -1943,8 +1925,6 @@ class Query
                         break;
                     case 'starts_with':
                         $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -1978,8 +1958,6 @@ class Query
                     case 'starts_with':
                         $filter_sql = " `tvshow`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'tvshow_season':
@@ -1992,8 +1970,6 @@ class Query
                         break;
                     case 'season_eq':
                         $filter_sql = " `tvshow_season`.`season_number` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -2032,8 +2008,6 @@ class Query
                     case 'starts_with':
                         $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'pvmsg':
@@ -2060,8 +2034,6 @@ class Query
                     case 'to_user':
                         $filter_sql = " `user_pvmsg`.`to_user` = '" . Dba::escape($value) . "' AND ";
                         break;
-                    default:
-                        break;
                 } // end filter
                 break;
             case 'follower':
@@ -2071,8 +2043,6 @@ class Query
                         break;
                     case 'to_user':
                         $filter_sql = " `user_follower`.`follow_user` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -2101,8 +2071,6 @@ class Query
                         if ((int)$value == 1) {
                             $filter_sql = " `podcast`.`total_count`='0' AND ";
                         }
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -2141,8 +2109,6 @@ class Query
                         if ((int)$value == 1) {
                             $filter_sql = " `podcast_episode`.`played`='0' AND ";
                         }
-                        break;
-                    default:
                         break;
                 } // end filter
                 break;
@@ -2209,8 +2175,6 @@ class Query
                     case 'rating':
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (int)$this->user_id, 100);
-                        break;
-                    default:
                         break;
                 } // end switch
                 break;
@@ -2515,8 +2479,6 @@ class Query
                         $sql = "`podcast_episode`.`$field`";
                         break;
                 }
-                break;
-            default:
                 break;
         } // end switch
 

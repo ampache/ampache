@@ -757,9 +757,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
                     return Clip::insert($data, $gtypes, $options);
                 case 'personal_video':
                     return Personal_Video::insert($data, $gtypes, $options);
-                default:
-                    // Do nothing, video entry already created and no additional data for now
-                    break;
             }
         }
 

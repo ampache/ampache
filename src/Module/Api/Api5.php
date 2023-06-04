@@ -276,8 +276,6 @@ class Api5
             case 'enabled':
                 $browse->set_filter('enabled', $value);
                 break;
-            default:
-                break;
         } // end filter
 
         return true;

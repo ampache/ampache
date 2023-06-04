@@ -70,8 +70,6 @@ final class LabelSearch implements SearchInterface
                     $where[]      = "`label`.`category` $operator_sql ?";
                     $parameters[] = $input;
                     break;
-                default:
-                    break;
             } // switch on ruletype
         } // foreach rule
 

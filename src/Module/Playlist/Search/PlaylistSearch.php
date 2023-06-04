@@ -80,8 +80,6 @@ final class PlaylistSearch implements SearchInterface
                     $where[]      = "`playlist`.`user` $operator_sql ?";
                     $parameters[] = $input;
                     break;
-                default:
-                    break;
             } // switch on ruletype
         } // foreach rule
 

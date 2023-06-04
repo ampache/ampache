@@ -470,8 +470,6 @@ final class SongSearch implements SearchInterface
                         $parameters[]       = $parsedInput;
                     }
                     break;
-                default:
-                    break;
             } // switch on ruletype song
         } // foreach over rules
 

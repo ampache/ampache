@@ -1401,8 +1401,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                         $this->updateMetadata($value);
                     }
                     break;
-                default:
-                    break;
             } // end whitelist
         } // end foreach
 

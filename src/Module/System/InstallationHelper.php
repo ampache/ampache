@@ -574,8 +574,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['home_now_playing']     = '0';
                 $dbconfig['home_recently_played'] = '0';
                 break;
-            default:
-                break;
         }
 
         AmpConfig::set_by_array($trconfig, true);

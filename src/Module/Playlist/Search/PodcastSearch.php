@@ -178,8 +178,6 @@ final class PodcastSearch implements SearchInterface
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;
-                default:
-                    break;
             } // switch on ruletype
         } // foreach rule
 

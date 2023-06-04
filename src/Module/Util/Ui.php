@@ -277,7 +277,7 @@ class Ui implements UiInterface
 
         $title    = $title ?: T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
-        $icontype = pathinfo($icon_url, 4);
+        $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
@@ -345,7 +345,7 @@ class Ui implements UiInterface
             $filename = 'icon_' . $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -374,7 +374,7 @@ class Ui implements UiInterface
         $title = $title ?: ucfirst($name);
 
         $image_url = self::_find_image($name);
-        $imagetype = pathinfo($image_url, 4);
+        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_image($hover_name);
         }
@@ -444,7 +444,7 @@ class Ui implements UiInterface
             $filename = $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching

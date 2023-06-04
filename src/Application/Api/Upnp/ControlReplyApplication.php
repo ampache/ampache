@@ -197,8 +197,6 @@ final class ControlReplyApplication implements ApplicationInterface
                     }
                 }
                 break;
-            default:
-                break;
         }
 
         if ($soapXML == "") {

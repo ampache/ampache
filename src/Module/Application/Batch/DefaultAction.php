@@ -153,8 +153,6 @@ final class DefaultAction implements ApplicationActionInterface
                     } // foreach media_id
                     $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
                     break;
-                default:
-                    break;
             }
         }
 

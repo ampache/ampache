@@ -63,8 +63,6 @@ final class UserSearch implements SearchInterface
                     $where[]      = "`user`.`username` $operator_sql ?";
                     $parameters[] = $input;
                     break;
-                default:
-                    break;
             } // switch on ruletype
         } // foreach rule
 

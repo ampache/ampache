@@ -5429,6 +5429,7 @@ class Update
 
         return (self::_write($interactor, "ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
+
     /**
      * update 600033
      *
@@ -5441,6 +5442,7 @@ class Update
 
         return (self::_write($interactor, "ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
     }
+
     /**
      * update 600034
      *

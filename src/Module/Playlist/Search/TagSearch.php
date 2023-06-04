@@ -70,8 +70,6 @@ final class TagSearch implements SearchInterface
                     $where[]      = "`tag`.`name` $operator_sql ?";
                     $parameters[] = $input;
                     break;
-                default:
-                    break;
             } // switch on ruletype
         } // foreach rule
 

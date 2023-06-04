@@ -84,8 +84,6 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 case 'transcode_bitrate':
                     $value = (string) Stream::validate_bitrate($value);
                     break;
-                default:
-                    break;
             }
 
             if (preg_match('/_pass$/', $name)) {

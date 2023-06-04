@@ -125,7 +125,6 @@ class Wanted extends database_object
      * @param Artist|null $artist
      * @param string $mbid
      * @return array
-     * @throws \MusicBrainz\Exception
      */
     public static function get_missing_albums($artist, $mbid = '')
     {

@@ -427,8 +427,6 @@ class Browse extends Query
                 $box_title = T_('Podcast Episodes');
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;
-            default:
-                break;
         } // end switch on type
 
         Ajax::start_container($this->get_content_div(), 'browse_content');

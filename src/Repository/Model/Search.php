@@ -1447,8 +1447,6 @@ class Search extends playlist_object
                     case 'mbid_song':
                         $name = 'mbid';
                         break;
-                    default:
-                        break;
                 }
                 break;
             case 'album':
@@ -1486,8 +1484,6 @@ class Search extends playlist_object
                     case 'subtitle':
                         $name = 'version';
                         break;
-                    default:
-                        break;
                 }
                 break;
             case 'artist':
@@ -1516,8 +1512,6 @@ class Search extends playlist_object
                     case 'mbid_artist':
                         $name = 'mbid';
                         break;
-                    default:
-                        break;
                 }
                 break;
             case 'podcast':
@@ -1527,8 +1521,6 @@ class Search extends playlist_object
                         break;
                     case 'podcast_episode_title':
                         $name = 'podcast_episode';
-                        break;
-                    default:
                         break;
                 }
                 break;
@@ -1540,8 +1532,6 @@ class Search extends playlist_object
                     case 'podcast_title':
                         $name = 'podcast';
                         break;
-                    default:
-                        break;
                 }
                 break;
             case 'genre':
@@ -1551,8 +1541,6 @@ class Search extends playlist_object
                 switch ($name) {
                     case 'name':
                         $name = 'title';
-                        break;
-                    default:
                         break;
                 }
                 break;
