@@ -191,7 +191,7 @@ if (isset($user_id) && !empty($user_id)) {
 </div>
 <script>
     $(document).ready(function () {
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false, deeplinking:false});
     });
 </script>
 <?php Ui::show_box_bottom(); ?>

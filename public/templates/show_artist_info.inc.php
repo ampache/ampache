@@ -52,6 +52,6 @@ if (count($dcol) > 0) {
 </div>
 <script>
     $(document).ready(function(){
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false, deeplinking:false});
     });
 </script>

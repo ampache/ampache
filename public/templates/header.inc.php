@@ -124,7 +124,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
         <script>
             $(document).ready(function(){
-                $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+                $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false, deeplinking:false});
                 <?php if (AmpConfig::get('geolocation')) { ?>
                     geolocate_user();
                 <?php } ?>
