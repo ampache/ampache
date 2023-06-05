@@ -5,6 +5,7 @@
 /* ----------------------------------
     Default Theme
 ----------------------------------- */
+
 div.pp_default .pp_top,
 div.pp_default .pp_top .pp_middle,
 div.pp_default .pp_top .pp_left,
@@ -23,7 +24,10 @@ div.pp_default .pp_top .pp_middle { background: url(../images/prettyPhoto/defaul
 /* Top right corner */
 div.pp_default .pp_top .pp_right { background: url(../images/prettyPhoto/default/sprite.png) -112px -93px no-repeat; }
 
+/* Content background */
+div.pp_default .pp_content { background-color: #fff; }
 div.pp_default .pp_content .ppt { color: #f8f8f8; }
+
 div.pp_default .pp_content_container .pp_left {
     background: url(../images/prettyPhoto/default/sprite_y.png) -7px 0 repeat-y;
     padding-left: 13px;
@@ -32,9 +36,6 @@ div.pp_default .pp_content_container .pp_right {
     background: url(../images/prettyPhoto/default/sprite_y.png) top right repeat-y;
     padding-right: 13px;
 }
-
-/* Content background */
-div.pp_default .pp_content { background-color: #fff; }
 
 /* Next button */
 div.pp_default .pp_next:hover {
@@ -84,10 +85,12 @@ div.pp_default .pp_close {
     cursor: pointer;
 }
 div.pp_default #pp_full_res .pp_inline { color: #000; }
+
 div.pp_default .pp_gallery ul li a {
     background: url(../images/prettyPhoto/default/default_thumb.png) center center #f8f8f8;
-    border:1px solid #aaa;
+    border: 1px solid #aaa;
 }
+
 div.pp_default .pp_gallery ul li a:hover,
 div.pp_default .pp_gallery ul li.selected a { border-color: #fff; }
 div.pp_default .pp_social { margin-top: 7px; }
@@ -97,14 +100,16 @@ div.pp_default .pp_gallery a.pp_arrow_next {
     position: static;
     left: auto;
 }
+
 div.pp_default .pp_nav .pp_play,
 div.pp_default .pp_nav .pp_pause {
     background: url(../images/prettyPhoto/default/sprite.png) -51px 1px no-repeat;
-    height:30px;
-    width:30px;
+    height: 30px;
+    width: 30px;
 }
 div.pp_default .pp_nav .pp_pause { background-position: -51px -29px; }
 div.pp_default .pp_details { position: relative; }
+
 div.pp_default a.pp_arrow_previous,
 div.pp_default a.pp_arrow_next {
     background: url(../images/prettyPhoto/default/sprite.png) -31px -3px no-repeat;
@@ -118,16 +123,20 @@ div.pp_default a.pp_arrow_next {
     left: 52px;
     background-position: -82px -3px;
 }
+
 div.pp_default .pp_content_container .pp_details { margin-top: 5px; }
-div.pp_default .pp_nav { clear: none;
+
+div.pp_default .pp_nav {
+    clear: none;
     height: 30px;
     width: 110px;
     position: relative;
 }
-div.pp_default .pp_nav .currentTextHolder{
+
+div.pp_default .pp_nav .currentTextHolder {
     font-family: Georgia;
     font-style: italic;
-    color:#999;
+    color: #999;
     font-size: 11px;
     left: 75px;
     line-height: 25px;
@@ -142,10 +151,10 @@ div.pp_default .pp_nav .pp_play:hover,
 div.pp_default .pp_nav .pp_pause:hover,
 div.pp_default .pp_arrow_next:hover,
 div.pp_default .pp_arrow_previous:hover {
-    opacity:0.7;
+    opacity: 0.7;
 }
 
-div.pp_default .pp_description{
+div.pp_default .pp_description {
     color: #000;
     font-size: 11px;
     font-weight: bold;
@@ -168,6 +177,7 @@ div.pp_default .pp_loaderIcon { background: url(../images/prettyPhoto/default/lo
 /* ----------------------------------
     Light Rounded Theme
 ----------------------------------- */
+
 /* Top left corner */
 div.light_rounded .pp_top .pp_left { background: url(../images/prettyPhoto/light_rounded/sprite.png) -88px -53px no-repeat; }
 
@@ -209,17 +219,20 @@ div.light_rounded .pp_expand:hover {
 }
 
 /* Contract button */
-div.light_rounded .pp_contract { background: url(../images/prettyPhoto/light_rounded/sprite.png) 0 -26px no-repeat;
+div.light_rounded .pp_contract {
+    background: url(../images/prettyPhoto/light_rounded/sprite.png) 0 -26px no-repeat;
     cursor: pointer;
 }
 
 /* Contract button hover */
-div.light_rounded .pp_contract:hover { background: url(../images/prettyPhoto/light_rounded/sprite.png) 0 -47px no-repeat;
+div.light_rounded .pp_contract:hover {
+    background: url(../images/prettyPhoto/light_rounded/sprite.png) 0 -47px no-repeat;
     cursor: pointer;
 }
 
 /* Close button */
-div.light_rounded .pp_close { width: 75px;
+div.light_rounded .pp_close {
+    width: 75px;
     height: 22px;
     background: url(../images/prettyPhoto/light_rounded/sprite.png) -1px -1px no-repeat;
     cursor: pointer;
@@ -227,13 +240,16 @@ div.light_rounded .pp_close { width: 75px;
 div.light_rounded .pp_details { position: relative; }
 div.light_rounded .pp_description { margin-right: 85px; }
 div.light_rounded #pp_full_res .pp_inline { color: #000; }
+
 div.light_rounded .pp_gallery a.pp_arrow_previous,
 div.light_rounded .pp_gallery a.pp_arrow_next { margin-top: 12px !important; }
+
 div.light_rounded .pp_nav .pp_play {
     background: url(../images/prettyPhoto/light_rounded/sprite.png) -1px -100px no-repeat;
     height: 15px;
     width: 14px;
 }
+
 div.light_rounded .pp_nav .pp_pause {
     background: url(../images/prettyPhoto/light_rounded/sprite.png) -24px -100px no-repeat;
     height: 15px;
@@ -242,6 +258,7 @@ div.light_rounded .pp_nav .pp_pause {
 
 /* The previous arrow in the bottom nav */
 div.light_rounded .pp_arrow_previous { background: url(../images/prettyPhoto/light_rounded/sprite.png) 0 -71px no-repeat; }
+
 div.light_rounded .pp_arrow_previous.disabled {
     background-position: 0 -87px;
     cursor: default;
@@ -269,6 +286,7 @@ div.light_rounded .pp_loaderIcon { background: url(../images/prettyPhoto/light_r
 /* ----------------------------------
     Dark Rounded Theme
 ----------------------------------- */
+
 /* Top left corner */
 div.dark_rounded .pp_top .pp_left { background: url(../images/prettyPhoto/dark_rounded/sprite.png) -88px -53px no-repeat; }
 
@@ -335,13 +353,16 @@ div.dark_rounded .pp_description { margin-right: 85px; }
 div.dark_rounded .currentTextHolder { color: #c4c4c4; }
 div.dark_rounded .pp_description { color: #fff; }
 div.dark_rounded #pp_full_res .pp_inline { color: #fff; }
+
 div.dark_rounded .pp_gallery a.pp_arrow_previous,
 div.dark_rounded .pp_gallery a.pp_arrow_next { margin-top: 12px !important; }
+
 div.dark_rounded .pp_nav .pp_play {
     background: url(../images/prettyPhoto/dark_rounded/sprite.png) -1px -100px no-repeat;
     height: 15px;
     width: 14px;
 }
+
 div.dark_rounded .pp_nav .pp_pause {
     background: url(../images/prettyPhoto/dark_rounded/sprite.png) -24px -100px no-repeat;
     height: 15px;
@@ -377,6 +398,7 @@ div.dark_rounded .pp_loaderIcon { background: url(../images/prettyPhoto/dark_rou
 /* ----------------------------------
     Dark Square Theme
 ----------------------------------- */
+
 div.dark_square .pp_left ,
 div.dark_square .pp_middle,
 div.dark_square .pp_right,
@@ -465,6 +487,7 @@ div.dark_square .pp_previous:hover {
 /* ----------------------------------
     Light Square Theme
 ----------------------------------- */
+
 div.light_square .pp_left ,
 div.light_square .pp_middle,
 div.light_square .pp_right,
@@ -550,6 +573,7 @@ div.light_square .pp_loaderIcon { background: url(../images/prettyPhoto/light_ro
 /* ----------------------------------
     Facebook style Theme
 ----------------------------------- */
+
 /* Top left corner */
 div.facebook .pp_top .pp_left { background: url(../images/prettyPhoto/facebook/sprite.png) -88px -53px no-repeat; }
 
@@ -672,7 +696,7 @@ div.facebook .pp_bottom .pp_right { background: url(../images/prettyPhoto/facebo
 DO NOT CHANGE
 ------------------------------------------------------------------------- */
 
-div.pp_pic_holder a:focus { outline:none; }
+div.pp_pic_holder a:focus { outline: none; }
 
 div.pp_overlay {
     background: #000;
@@ -690,7 +714,6 @@ div.pp_pic_holder {
     width: 100px;
     z-index: 10000;
 }
-
 
 .pp_top {
     height: 20px;
@@ -893,7 +916,7 @@ a.pp_close {
     right: 0;
     top: 0;
     display: block;
-    line-height:22px;
+    line-height: 22px;
     text-indent: -10000px;
 }
 
