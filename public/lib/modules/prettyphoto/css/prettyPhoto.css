@@ -352,6 +352,7 @@ div.dark_rounded .pp_close {
     cursor: pointer;
 }
 div.dark_rounded .pp_details { position: relative; }
+
 div.dark_rounded .pp_description {
     margin-right: 85px;
     color: #fff;
@@ -412,6 +413,7 @@ div.dark_square .pp_right,
 div.dark_square .pp_content { background: #000; }
 
 div.dark_square .currentTextHolder { color: #c4c4c4; }
+
 div.dark_square .pp_description {
     color: #fff;
     margin: 0 85px 0 0;
@@ -552,6 +554,7 @@ div.light_square .pp_nav .pp_play {
     height: 15px;
     width: 14px;
 }
+
 div.light_square .pp_nav .pp_pause {
     background: url(../images/prettyPhoto/light_square/sprite.png) -24px -100px no-repeat;
     height: 15px;
@@ -568,6 +571,7 @@ div.light_square .pp_arrow_previous.disabled {
 
 /* The next arrow in the bottom nav */
 div.light_square .pp_arrow_next { background: url(../images/prettyPhoto/light_square/sprite.png) -22px -71px no-repeat; }
+
 div.light_square .pp_arrow_next.disabled {
     background-position: -22px -87px;
     cursor: default;
@@ -635,6 +639,7 @@ div.facebook .pp_contract:hover {
     background: url(../images/prettyPhoto/facebook/sprite.png) 0 -47px no-repeat;
     cursor: pointer;
 }
+
 div.facebook .pp_close {
     width: 22px;
     height: 22px;
