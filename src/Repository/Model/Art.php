@@ -49,7 +49,16 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
-    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
+
+    public const VALID_TYPES = array(
+        'bmp',
+        'gif',
+        'jp2',
+        'jpeg',
+        'jpg',
+        'png',
+        'webp'
+    );
 
     /**
      * @var integer $id
