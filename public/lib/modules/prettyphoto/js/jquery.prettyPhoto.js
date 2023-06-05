@@ -9,11 +9,11 @@
 
     $.fn.prettyPhoto = function(pp_settings) {
         pp_settings = jQuery.extend({
-            hook: 'rel', /* the attribute tag to use for prettyPhoto hooks. default: 'rel'. For HTML5, use "data-rel" or similar. */
-            animation_speed: 'fast', /* fast/slow/normal */
+            hook: 'rel',
+            animation_speed: 'fast',
             ajaxcallback: function() {},
-            slideshow: 5000, /* false OR interval time in ms */
-            autoplay_slideshow: false, /* true/false */
+            slideshow: 5000,
+            autoplay_slideshow: false,
             opacity: 0.80, /* Value between 0 and 1 */
             show_title: true, /* true/false */
             allow_resize: true, /* Resize the photos bigger than viewport. true/false */
@@ -105,15 +105,16 @@
         // Global elements
         pp_slideshow;
 
-        doresize = true, scroll_pos = _get_scroll();
+        doresize = true
+        scroll_pos = _get_scroll();
 
         // Window/Keyboard events
         $(window).unbind('resize.prettyphoto').bind('resize.prettyphoto',function(){ _center_overlay(); _resize_overlay(); });
 
-        if(pp_settings.keyboard_shortcuts) {
+        if (pp_settings.keyboard_shortcuts) {
             $(document).unbind('keydown.prettyphoto').bind('keydown.prettyphoto',function(e){
-                if(typeof $pp_pic_holder != 'undefined'){
-                    if($pp_pic_holder.is(':visible')){
+                if (typeof $pp_pic_holder != 'undefined') {
+                    if ($pp_pic_holder.is(':visible')) {
                         switch(e.keyCode){
                             case 37:
                                 $.prettyPhoto.changePage('previous');
@@ -124,16 +125,17 @@
                                 e.preventDefault();
                                 break;
                             case 27:
-                                if(!settings.modal)
-                                $.prettyPhoto.close();
-                                e.preventDefault();
+                                if (!settings.modal) {
+                                    $.prettyPhoto.close();
+                                    e.preventDefault();
+                                }
                                 break;
-                        };
+                        }
                         // return false;
-                    };
-                };
+                    }
+                }
             });
-        };
+        }
 
         /**
         * Initialize prettyPhoto.
@@ -142,7 +144,9 @@
 
             settings = pp_settings;
 
-            if(settings.theme == 'pp_default') settings.horizontal_padding = 16;
+            if (settings.theme == 'pp_default') {
+                settings.horizontal_padding = 16;
+            }
 
             // Find out if the picture is part of a set
             theRel = $(this).attr(settings.hook);
@@ -154,16 +158,20 @@
             pp_titles = (isSet) ? jQuery.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).find('img').attr('alt')) ? $(n).find('img').attr('alt') : ""; }) : $.makeArray($(this).find('img').attr('alt'));
             pp_descriptions = (isSet) ? jQuery.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).attr('title')) ? $(n).attr('title') : ""; }) : $.makeArray($(this).attr('title'));
 
-            if(pp_images.length > settings.overlay_gallery_max) settings.overlay_gallery = false;
+            if (pp_images.length > settings.overlay_gallery_max) {
+                settings.overlay_gallery = false;
+            }
 
-            set_position = jQuery.inArray($(this).attr('href'), pp_images); // Define where in the array the clicked item is positionned
+            // Define where in the array the clicked item is positionned
+            set_position = jQuery.inArray($(this).attr('href'), pp_images);
             rel_index = (isSet) ? set_position : $("a["+settings.hook+"^='"+theRel+"']").index($(this));
 
-            _build_overlay(this); // Build the overlay {this} being the caller
+            // Build the overlay {this} being the caller
+            _build_overlay(this);
 
-            if(settings.allow_resize)
+            if (settings.allow_resize) {
                 $(window).bind('scroll.prettyphoto',function(){ _center_overlay(); });
-
+            }
 
             $.prettyPhoto.open();
 
@@ -178,42 +186,51 @@
         * @param description {String,Array} The description to be displayed with the picture, can also be an array containing all the descriptions.
         */
         $.prettyPhoto.open = function(event) {
-            if(typeof settings == "undefined"){ // Means it's an API call, need to manually get the settings and set the variables
+            // Means it's an API call, need to manually get the settings and set the variables
+            if (typeof settings == "undefined") {
                 settings = pp_settings;
                 pp_images = $.makeArray(arguments[0]);
                 pp_titles = (arguments[1]) ? $.makeArray(arguments[1]) : $.makeArray("");
                 pp_descriptions = (arguments[2]) ? $.makeArray(arguments[2]) : $.makeArray("");
                 isSet = (pp_images.length > 1) ? true : false;
                 set_position = (arguments[3])? arguments[3]: 0;
-                _build_overlay(event.target); // Build the overlay {this} being the caller
+                // Build the overlay {this} being the caller
+                _build_overlay(event.target);
             }
 
-            if(settings.hideflash) $('object,embed,iframe[src*=youtube],iframe[src*=vimeo]').css('visibility','hidden'); // Hide the flash
+            // Hide the flash
+            if (settings.hideflash) {
+                $('object,embed,iframe[src*=youtube],iframe[src*=vimeo]').css('visibility','hidden');
+            }
 
-            _checkPosition($(pp_images).length); // Hide the next/previous links if on first or last images.
+            // Hide the next/previous links if on first or last images.
+            _checkPosition($(pp_images).length);
 
             $('.pp_loaderIcon').show();
 
-            if(settings.deeplinking)
+            if (settings.deeplinking) {
                 setHashtag();
+            }
 
             // Rebuild Facebook Like Button with updated href
-            if(settings.social_tools){
+            if (settings.social_tools) {
                 facebook_like_link = settings.social_tools.replace('{location_href}', encodeURIComponent(location.href));
                 $pp_pic_holder.find('.pp_social').html(facebook_like_link);
             }
 
             // Fade the content in
-            if($ppt.is(':hidden')) $ppt.css('opacity',0).show();
-            $pp_overlay.show().fadeTo(settings.animation_speed,settings.opacity);
+            if ($ppt.is(':hidden')) {
+                $ppt.css('opacity',0).show();
+                $pp_overlay.show().fadeTo(settings.animation_speed,settings.opacity);
+            }
 
             // Display the current position
             $pp_pic_holder.find('.currentTextHolder').text((set_position+1) + settings.counter_separator_label + $(pp_images).length);
 
             // Set the description
-            if(typeof pp_descriptions[set_position] != 'undefined' && pp_descriptions[set_position] != ""){
+            if (typeof pp_descriptions[set_position] != 'undefined' && pp_descriptions[set_position] != "") {
                 $pp_pic_holder.find('.pp_description').show().html(unescape(pp_descriptions[set_position]));
-            }else{
+            } else {
                 $pp_pic_holder.find('.pp_description').hide();
             }
 
@@ -223,8 +240,12 @@
 
             // If the size is % based, calculate according to window dimensions
             percentBased=false;
-            if(movie_height.indexOf('%') != -1) { movie_height = parseFloat(($(window).height() * parseFloat(movie_height) / 100) - 150); percentBased = true; }
-            if(movie_width.indexOf('%') != -1) { movie_width = parseFloat(($(window).width() * parseFloat(movie_width) / 100) - 150); percentBased = true; }
+            if (movie_height.indexOf('%') != -1) {
+                movie_height = parseFloat(($(window).height() * parseFloat(movie_height) / 100) - 150); percentBased = true;
+            }
+            if (movie_width.indexOf('%') != -1) {
+                movie_width = parseFloat(($(window).width() * parseFloat(movie_width) / 100) - 150); percentBased = true;
+            }
 
             // Fade the holder
             $pp_pic_holder.fadeIn(function(){
@@ -235,15 +256,19 @@
                 skipInjection = false;
 
                 // Inject the proper content
-                switch(_getFileType(pp_images[set_position])){
+                switch(_getFileType(pp_images[set_position])) {
                     case 'image':
                         imgPreloader = new Image();
 
                         // Preload the neighbour images
                         nextImage = new Image();
-                        if(isSet && set_position < $(pp_images).length -1) nextImage.src = pp_images[set_position + 1];
+                        if (isSet && set_position < $(pp_images).length -1) {
+                            nextImage.src = pp_images[set_position + 1];
+                        }
                         prevImage = new Image();
-                        if(isSet && pp_images[set_position - 1]) prevImage.src = pp_images[set_position - 1];
+                        if (isSet && pp_images[set_position - 1]) {
+                            prevImage.src = pp_images[set_position - 1];
+                        }
 
                         $pp_pic_holder.find('#pp_full_res')[0].innerHTML = settings.image_markup.replace(/{path}/g,pp_images[set_position]);
 
@@ -263,39 +288,48 @@
                     break;
 
                     case 'youtube':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         // Regular youtube link
                         movie_id = getParam('v',pp_images[set_position]);
 
                         // youtu.be link
-                        if(movie_id == ""){
+                        if (movie_id == "") {
                             movie_id = pp_images[set_position].split('youtu.be/');
                             movie_id = movie_id[1];
-                            if(movie_id.indexOf('?') > 0)
-                                movie_id = movie_id.substr(0,movie_id.indexOf('?')); // Strip anything after the ?
-
-                            if(movie_id.indexOf('&') > 0)
-                                movie_id = movie_id.substr(0,movie_id.indexOf('&')); // Strip anything after the &
+                            if (movie_id.indexOf('?') > 0) {
+                                // Strip anything after the ?
+                                movie_id = movie_id.substr(0, movie_id.indexOf('?'));
+                            }
+                            if (movie_id.indexOf('&') > 0) {
+                                // Strip anything after the &
+                                movie_id = movie_id.substr(0, movie_id.indexOf('&'));
+                            }
                         }
 
                         movie = 'http://www.youtube.com/embed/'+movie_id;
                         (getParam('rel',pp_images[set_position])) ? movie+="?rel="+getParam('rel',pp_images[set_position]) : movie+="?rel=1";
 
-                        if(settings.autoplay) movie += "&autoplay=1";
+                        if (settings.autoplay) {
+                            movie += "&autoplay=1";
+                        }
 
                         toInject = settings.iframe_markup.replace(/{width}/g,pp_dimensions['width']).replace(/{height}/g,pp_dimensions['height']).replace(/{wmode}/g,settings.wmode).replace(/{path}/g,movie);
                     break;
 
                     case 'vimeo':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         movie_id = pp_images[set_position];
                         var regExp = /http(s?):\/\/(www\.)?vimeo.com\/(\d+)/;
                         var match = movie_id.match(regExp);
 
                         movie = 'http://player.vimeo.com/video/'+ match[3] +'?title=0&amp;byline=0&amp;portrait=0';
-                        if(settings.autoplay) movie += "&autoplay=1;";
+                        if (settings.autoplay) {
+                            movie += "&autoplay=1;";
+                        }
 
                         vimeo_width = pp_dimensions['width'] + '/embed/?moog_width='+ pp_dimensions['width'];
 
@@ -303,14 +337,17 @@
                     break;
 
                     case 'quicktime':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
-                        pp_dimensions['height']+=15; pp_dimensions['contentHeight']+=15; pp_dimensions['containerHeight']+=15; // Add space for the control bar
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
+                        // Add space for the control bar
+                        pp_dimensions['height']+=15; pp_dimensions['contentHeight']+=15; pp_dimensions['containerHeight']+=15;
 
                         toInject = settings.quicktime_markup.replace(/{width}/g,pp_dimensions['width']).replace(/{height}/g,pp_dimensions['height']).replace(/{wmode}/g,settings.wmode).replace(/{path}/g,pp_images[set_position]).replace(/{autoplay}/g,settings.autoplay);
                     break;
 
                     case 'flash':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         flash_vars = pp_images[set_position];
                         flash_vars = flash_vars.substring(pp_images[set_position].indexOf('flashvars') + 10,pp_images[set_position].length);
@@ -322,7 +359,8 @@
                     break;
 
                     case 'iframe':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         frame_url = pp_images[set_position];
                         frame_url = frame_url.substr(0,frame_url.indexOf('iframe')-1);
@@ -331,9 +369,11 @@
                     break;
 
                     case 'ajax':
-                        doresize = false; // Make sure the dimensions are not resized.
+                        // Make sure the dimensions are not resized.
+                        doresize = false;
                         pp_dimensions = _fitToViewport(movie_width,movie_height);
-                        doresize = true; // Reset the dimensions
+                        // Reset the dimensions
+                        doresize = true;
 
                         skipInjection = true;
                         $.get(pp_images[set_position],function(responseHTML){
@@ -345,7 +385,8 @@
                     break;
 
                     case 'custom':
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); // Fit item to viewport
+                        // Fit item to viewport
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         toInject = settings.custom_markup;
                     break;
@@ -353,20 +394,22 @@
                     case 'inline':
                         // to get the item height clone it, apply default width, wrap it in the prettyPhoto containers , then delete
                         myClone = $(pp_images[set_position]).clone().append('<br clear="all" />').css({'width':settings.default_width}).wrapInner('<div id="pp_full_res"><div class="pp_inline"></div></div>').appendTo($('body')).show();
-                        doresize = false; // Make sure the dimensions are not resized.
+                        // Make sure the dimensions are not resized.
+                        doresize = false;
                         pp_dimensions = _fitToViewport($(myClone).width(),$(myClone).height());
-                        doresize = true; // Reset the dimensions
+                        // Reset the dimensions
+                        doresize = true;
                         $(myClone).remove();
                         toInject = settings.inline_markup.replace(/{content}/g,$(pp_images[set_position]).html());
                     break;
-                };
+                }
 
-                if(!imgPreloader && !skipInjection){
+                if (!imgPreloader && !skipInjection) {
                     $pp_pic_holder.find('#pp_full_res')[0].innerHTML = toInject;
 
                     // Show content
                     _showContent();
-                };
+                }
             });
 
             return false;
@@ -380,20 +423,25 @@
         $.prettyPhoto.changePage = function(direction){
             currentGalleryPage = 0;
 
-            if(direction == 'previous') {
+            if (direction == 'previous') {
                 set_position--;
                 if (set_position < 0) set_position = $(pp_images).length-1;
-            }else if(direction == 'next'){
+            } else if (direction == 'next') {
                 set_position++;
-                if(set_position > $(pp_images).length-1) set_position = 0;
-            }else{
+                if (set_position > $(pp_images).length-1) {
+                    set_position = 0;
+                }
+            } else {
                 set_position=direction;
-            };
+            }
 
             rel_index = set_position;
 
-            if(!doresize) doresize = true; // Allow the resizing of the images
-            if(settings.allow_expand) {
+            if (!doresize) {
+                // Allow the resizing of the images
+                doresize = true;
+            }
+            if (settings.allow_expand) {
                 $('.pp_contract').removeClass('pp_contract').addClass('pp_expand');
             }
 
@@ -406,17 +454,19 @@
         * @param direction {String} Direction of the paging, previous or next.
         */
         $.prettyPhoto.changeGalleryPage = function(direction){
-            if(direction=='next'){
+            if (direction=='next') {
                 currentGalleryPage ++;
-
-                if(currentGalleryPage > totalPage) currentGalleryPage = 0;
-            }else if(direction=='previous'){
+                if (currentGalleryPage > totalPage) {
+                    currentGalleryPage = 0;
+                }
+            } else if(direction=='previous'){
                 currentGalleryPage --;
-
-                if(currentGalleryPage < 0) currentGalleryPage = totalPage;
-            }else{
+                if (currentGalleryPage < 0) {
+                    currentGalleryPage = totalPage;
+                }
+            } else {
                 currentGalleryPage = direction;
-            };
+            }
 
             slide_speed = (direction == 'next' || direction == 'previous') ? settings.animation_speed : 0;
 
@@ -430,15 +480,15 @@
         * Start the slideshow...
         */
         $.prettyPhoto.startSlideshow = function(){
-            if(typeof pp_slideshow == 'undefined'){
+            if (typeof pp_slideshow == 'undefined') {
                 $pp_pic_holder.find('.pp_play').unbind('click').removeClass('pp_play').addClass('pp_pause').click(function(){
                     $.prettyPhoto.stopSlideshow();
                     return false;
                 });
                 pp_slideshow = setInterval($.prettyPhoto.startSlideshow,settings.slideshow);
-            }else{
+            } else {
                 $.prettyPhoto.changePage('next');
-            };
+            }
         }
 
 
@@ -459,7 +509,9 @@
         * Closes prettyPhoto.
         */
         $.prettyPhoto.close = function(){
-            if($pp_overlay.is(":animated")) return;
+            if ($pp_overlay.is(":animated")) {
+                return;
+            }
 
             $.prettyPhoto.stopSlideshow();
 
@@ -468,10 +520,13 @@
             $('div.pp_pic_holder,div.ppt,.pp_fade').fadeOut(settings.animation_speed,function(){ $(this).remove(); });
 
             $pp_overlay.fadeOut(settings.animation_speed, function(){
+                if (settings.hideflash) {
+                    // Show the flash
+                    $('object,embed,iframe[src*=youtube],iframe[src*=vimeo]').css('visibility','visible');
+                }
 
-                if(settings.hideflash) $('object,embed,iframe[src*=youtube],iframe[src*=vimeo]').css('visibility','visible'); // Show the flash
-
-                $(this).remove(); // No more need for the prettyPhoto markup
+                // No more need for the prettyPhoto markup
+                $(this).remove();
 
                 $(window).unbind('scroll.prettyphoto');
 
@@ -495,7 +550,9 @@
 
             // Calculate the opened top position of the pic holder
             projectedTop = scroll_pos['scrollTop'] + ((windowHeight/2) - (pp_dimensions['containerHeight']/2));
-            if(projectedTop < 0) projectedTop = 0;
+            if (projectedTop < 0) {
+                projectedTop = 0;
+            }
 
             $ppt.fadeTo(settings.animation_speed,1);
 
@@ -514,29 +571,37 @@
             },settings.animation_speed,function(){
                 $pp_pic_holder.find('.pp_hoverContainer,#fullResImage').height(pp_dimensions['height']).width(pp_dimensions['width']);
 
-                $pp_pic_holder.find('.pp_fade').fadeIn(settings.animation_speed); // Fade the new content
+                // Fade the new content
+                $pp_pic_holder.find('.pp_fade').fadeIn(settings.animation_speed);
 
                 // Show the nav
-                if(isSet && _getFileType(pp_images[set_position])=="image") { $pp_pic_holder.find('.pp_hoverContainer').show(); }else{ $pp_pic_holder.find('.pp_hoverContainer').hide(); }
+                if (isSet && _getFileType(pp_images[set_position])=="image") {
+                    $pp_pic_holder.find('.pp_hoverContainer').show();
+                } else {
+                    $pp_pic_holder.find('.pp_hoverContainer').hide();
+                }
 
-                if(settings.allow_expand) {
-                    if(pp_dimensions['resized']){ // Fade the resizing link if the image is resized
+                if (settings.allow_expand) {
+                    if (pp_dimensions['resized']){
+                        // Fade the resizing link if the image is resized
                         $('a.pp_expand,a.pp_contract').show();
-                    }else{
+                    } else {
                         $('a.pp_expand').hide();
                     }
                 }
 
-                if(settings.autoplay_slideshow && !pp_slideshow && !pp_open) $.prettyPhoto.startSlideshow();
-
-                settings.changepicturecallback(); // Callback!
+                if (settings.autoplay_slideshow && !pp_slideshow && !pp_open) {
+                    $.prettyPhoto.startSlideshow();
+                }
+                // Callback!
+                settings.changepicturecallback();
 
                 pp_open = true;
             });
 
             _insert_gallery();
             pp_settings.ajaxcallback();
-        };
+        }
 
         /**
         * Hide the content...DUH!
@@ -549,20 +614,21 @@
 
                 callback();
             });
-        };
+        }
 
         /**
         * Check the item position in the gallery array, hide or show the navigation links
-        * @param setCount {integer} The total number of items in the set
+        * @param setCount {int} The total number of items in the set
         */
         function _checkPosition(setCount){
-            (setCount > 1) ? $('.pp_nav').show() : $('.pp_nav').hide(); // Hide the bottom nav if it's not a set.
-        };
+            // Hide the bottom nav if it's not a set.
+            (setCount > 1) ? $('.pp_nav').show() : $('.pp_nav').hide();
+        }
 
         /**
         * Resize the item dimensions if it's bigger than the viewport
-        * @param width {integer} Width of the item to be opened
-        * @param height {integer} Height of the item to be opened
+        * @param width {int} Width of the item to be opened
+        * @param height {int} Height of the item to be opened
         * @return An array containin the "fitted" dimensions
         */
         function _fitToViewport(width,height){
@@ -571,33 +637,35 @@
             _getDimensions(width,height);
 
             // Define them in case there's no resize needed
-            imageWidth = width, imageHeight = height;
+            imageWidth = width
+            imageHeight = height;
 
-            if( ((pp_containerWidth > windowWidth) || (pp_containerHeight > windowHeight)) && doresize && settings.allow_resize && !percentBased) {
-                resized = true, fitting = false;
-
+            if (((pp_containerWidth > windowWidth) || (pp_containerHeight > windowHeight)) && doresize && settings.allow_resize && !percentBased) {
+                resized = true
+                fitting = false;
                 while (!fitting){
-                    if((pp_containerWidth > windowWidth)){
+                    if ((pp_containerWidth > windowWidth)) {
                         imageWidth = (windowWidth - 200);
                         imageHeight = (height/width) * imageWidth;
-                    }else if((pp_containerHeight > windowHeight)){
+                    } else if ((pp_containerHeight > windowHeight)) {
                         imageHeight = (windowHeight - 200);
                         imageWidth = (width/height) * imageHeight;
-                    }else{
+                    } else {
                         fitting = true;
-                    };
+                    }
 
-                    pp_containerHeight = imageHeight, pp_containerWidth = imageWidth;
-                };
+                    pp_containerHeight = imageHeight
+                    pp_containerWidth = imageWidth;
+                }
 
 
 
-                if((pp_containerWidth > windowWidth) || (pp_containerHeight > windowHeight)){
+                if ((pp_containerWidth > windowWidth) || (pp_containerHeight > windowHeight)) {
                     _fitToViewport(pp_containerWidth,pp_containerHeight)
-                };
+                }
 
                 _getDimensions(imageWidth,imageHeight);
-            };
+            }
 
             return {
                 width:Math.floor(imageWidth),
@@ -608,12 +676,12 @@
                 contentWidth:Math.floor(pp_contentWidth),
                 resized:resized
             };
-        };
+        }
 
         /**
         * Get the containers dimensions according to the item size
-        * @param width {integer} Width of the item to be opened
-        * @param height {integer} Height of the item to be opened
+        * @param width {int} Width of the item to be opened
+        * @param height {int} Height of the item to be opened
         */
         function _getDimensions(width,height){
             width = parseFloat(width);
@@ -629,7 +697,8 @@
                 'top':-10000
             });
             detailsHeight += $pp_details.height();
-            detailsHeight = (detailsHeight <= 34) ? 36 : detailsHeight; // Min-height for the details
+            // Min-height for the details
+            detailsHeight = (detailsHeight <= 34) ? 36 : detailsHeight;
             $pp_details.remove();
 
             // Get the titles height, to do so, I need to clone it since it's invisible
@@ -653,75 +722,87 @@
         function _getFileType(itemSrc){
             if (itemSrc.match(/youtube\.com\/watch/i) || itemSrc.match(/youtu\.be/i)) {
                 return 'youtube';
-            }else if (itemSrc.match(/vimeo\.com/i)) {
+            } else if (itemSrc.match(/vimeo\.com/i)) {
                 return 'vimeo';
-            }else if(itemSrc.match(/\b.mov\b/i)){
+            } else if (itemSrc.match(/\b.mov\b/i)) {
                 return 'quicktime';
-            }else if(itemSrc.match(/\b.swf\b/i)){
+            } else if (itemSrc.match(/\b.swf\b/i)) {
                 return 'flash';
-            }else if(itemSrc.match(/\biframe=true\b/i)){
+            } else if (itemSrc.match(/\biframe=true\b/i)) {
                 return 'iframe';
-            }else if(itemSrc.match(/\bajax=true\b/i)){
+            } else if (itemSrc.match(/\bajax=true\b/i)) {
                 return 'ajax';
-            }else if(itemSrc.match(/\bcustom=true\b/i)){
+            } else if (itemSrc.match(/\bcustom=true\b/i)) {
                 return 'custom';
-            }else if(itemSrc.substr(0,1) == '#'){
+            } else if (itemSrc.substr(0,1) == '#') {
                 return 'inline';
-            }else{
+            } else {
                 return 'image';
-            };
-        };
+            }
+        }
 
         function _center_overlay(){
-            if(doresize && typeof $pp_pic_holder != 'undefined') {
+            if (doresize && typeof $pp_pic_holder != 'undefined') {
                 scroll_pos = _get_scroll();
-                contentHeight = $pp_pic_holder.height(), contentwidth = $pp_pic_holder.width();
+                contentHeight = $pp_pic_holder.height()
+                contentwidth = $pp_pic_holder.width();
 
                 projectedTop = (windowHeight/2) + scroll_pos['scrollTop'] - (contentHeight/2);
-                if(projectedTop < 0) projectedTop = 0;
+                if (projectedTop < 0) {
+                    projectedTop = 0;
+                }
 
-                if(contentHeight > windowHeight)
+                if (contentHeight > windowHeight) {
                     return;
+                }
 
                 $pp_pic_holder.css({
                     'top': projectedTop,
                     'left': (windowWidth/2) + scroll_pos['scrollLeft'] - (contentwidth/2)
                 });
-            };
-        };
+            }
+        }
 
         function _get_scroll(){
             if (self.pageYOffset) {
                 return {scrollTop:self.pageYOffset,scrollLeft:self.pageXOffset};
-            } else if (document.documentElement && document.documentElement.scrollTop) { // Explorer 6 Strict
+            } else if (document.documentElement && document.documentElement.scrollTop) {
+                // Explorer 6 Strict
                 return {scrollTop:document.documentElement.scrollTop,scrollLeft:document.documentElement.scrollLeft};
-            } else if (document.body) {// all other Explorers
+            } else if (document.body) {
+                // all other Explorers
                 return {scrollTop:document.body.scrollTop,scrollLeft:document.body.scrollLeft};
-            };
-        };
+            }
+        }
 
         function _resize_overlay() {
-            windowHeight = $(window).height(), windowWidth = $(window).width();
+            windowHeight = $(window).height()
+            windowWidth = $(window).width();
 
-            if(typeof $pp_overlay != "undefined") $pp_overlay.height($(document).height()).width(windowWidth);
-        };
+            if (typeof $pp_overlay != "undefined") {
+                $pp_overlay.height($(document).height()).width(windowWidth);
+            }
+        }
 
         function _insert_gallery(){
-            if(isSet && settings.overlay_gallery && _getFileType(pp_images[set_position])=="image") {
-                itemWidth = 52+5; // 52 beign the thumb width, 5 being the right margin.
-                navWidth = (settings.theme == "facebook" || settings.theme == "pp_default") ? 50 : 30; // Define the arrow width depending on the theme
+            if (isSet && settings.overlay_gallery && _getFileType(pp_images[set_position])=="image") {
+                // 52 beign the thumb width, 5 being the right margin.
+                itemWidth = 52+5;
+                // Define the arrow width depending on the theme
+                navWidth = (settings.theme == "facebook" || settings.theme == "pp_default") ? 50 : 30;
 
                 itemsPerPage = Math.floor((pp_dimensions['containerWidth'] - 100 - navWidth) / itemWidth);
                 itemsPerPage = (itemsPerPage < pp_images.length) ? itemsPerPage : pp_images.length;
                 totalPage = Math.ceil(pp_images.length / itemsPerPage) - 1;
 
                 // Hide the nav in the case there's no need for links
-                if(totalPage == 0){
-                    navWidth = 0; // No nav means no width!
+                if (totalPage == 0) {
+                    // No nav means no width!
+                    navWidth = 0;
                     $pp_gallery.find('.pp_arrow_next,.pp_arrow_previous').hide();
-                }else{
+                } else {
                     $pp_gallery.find('.pp_arrow_next,.pp_arrow_previous').show();
-                };
+                }
 
                 galleryWidth = itemsPerPage * itemWidth;
                 fullGalleryWidth = pp_images.length * itemWidth;
@@ -746,35 +827,42 @@
 
         function _build_overlay(caller){
             // Inject Social Tool markup into General markup
-            if(settings.social_tools)
+            if (settings.social_tools) {
                 facebook_like_link = settings.social_tools.replace('{location_href}', encodeURIComponent(location.href));
+            }
 
             settings.markup = settings.markup.replace('{pp_social}','');
 
-            $('body').append(settings.markup); // Inject the markup
+            // Inject the markup
+            $('body').append(settings.markup);
 
-            $pp_pic_holder = $('.pp_pic_holder') , $ppt = $('.ppt'), $pp_overlay = $('div.pp_overlay'); // Set my global selectors
+            $pp_pic_holder = $('.pp_pic_holder')
+            $ppt = $('.ppt')
+            // Set my global selectors
+            $pp_overlay = $('div.pp_overlay');
 
             // Inject the inline gallery!
-            if(isSet && settings.overlay_gallery) {
+            if (isSet && settings.overlay_gallery) {
                 currentGalleryPage = 0;
                 toInject = "";
                 for (var i=0; i < pp_images.length; i++) {
-                    if(!pp_images[i].match(/\b(jpg|jpeg|png|gif)\b/gi)){
+                    if (!pp_images[i].match(/\b(jpg|jpeg|png|gif)\b/gi)) {
                         classname = 'default';
                         img_src = '';
-                    }else{
+                    } else {
                         classname = '';
                         img_src = pp_images[i];
                     }
                     toInject += "<li class='"+classname+"'><a href='#'><img src='" + img_src + "' width='50' alt='' /></a></li>";
-                };
+                }
 
                 toInject = settings.gallery_markup.replace(/{gallery}/g,toInject);
 
                 $pp_pic_holder.find('#pp_full_res').after(toInject);
 
-                $pp_gallery = $('.pp_pic_holder .pp_gallery'), $pp_gallery_li = $pp_gallery.find('li'); // Set the gallery selectors
+                $pp_gallery = $('.pp_pic_holder .pp_gallery')
+                // Set the gallery selectors
+                $pp_gallery_li = $pp_gallery.find('li');
 
                 $pp_gallery.find('.pp_arrow_next').click(function(){
                     $.prettyPhoto.changeGalleryPage('next');
@@ -796,7 +884,8 @@
                         $pp_pic_holder.find('.pp_gallery:not(.disabled)').fadeOut();
                     });
 
-                itemWidth = 52+5; // 52 beign the thumb width, 5 being the right margin.
+                // 52 beign the thumb width, 5 being the right margin.
+                itemWidth = 52+5;
                 $pp_gallery_li.each(function(i){
                     $(this)
                         .find('a')
@@ -806,11 +895,11 @@
                             return false;
                         });
                 });
-            };
+            }
 
 
             // Inject the play/pause if it's a slideshow
-            if(settings.slideshow){
+            if (settings.slideshow) {
                 $pp_pic_holder.find('.pp_nav').prepend('<a href="#" class="pp_play">Play</a>')
                 $pp_pic_holder.find('.pp_nav .pp_play').click(function(){
                     $.prettyPhoto.startSlideshow();
@@ -818,7 +907,8 @@
                 });
             }
 
-            $pp_pic_holder.attr('class','pp_pic_holder ' + settings.theme); // Set the proper theme
+            // Set the proper theme
+            $pp_pic_holder.attr('class','pp_pic_holder ' + settings.theme);
 
             $pp_overlay
                 .css({
@@ -827,22 +917,24 @@
                     'width':$(window).width()
                     })
                 .bind('click',function(){
-                    if(!settings.modal) $.prettyPhoto.close();
+                    if (!settings.modal) {
+                        $.prettyPhoto.close();
+                    }
                 });
 
             $('a.pp_close').bind('click',function(){ $.prettyPhoto.close(); return false; });
 
 
-            if(settings.allow_expand) {
+            if (settings.allow_expand) {
                 $('a.pp_expand').bind('click',function(e){
                     // Expand the image
-                    if($(this).hasClass('pp_expand')){
+                    if ($(this).hasClass('pp_expand')) {
                         $(this).removeClass('pp_expand').addClass('pp_contract');
                         doresize = false;
-                    }else{
+                    } else {
                         $(this).removeClass('pp_contract').addClass('pp_expand');
                         doresize = true;
-                    };
+                    }
 
                     _hideContent(function(){ $.prettyPhoto.open(); });
 
@@ -861,11 +953,11 @@
                 $.prettyPhoto.stopSlideshow();
                 return false;
             });
+            // Center it
+            _center_overlay();
+        }
 
-            _center_overlay(); // Center it
-        };
-
-        if(!pp_alreadyInitialized && getHashtag()){
+        if (!pp_alreadyInitialized && getHashtag()) {
             pp_alreadyInitialized = true;
 
             // Grab the rel index to trigger the click on the correct element
@@ -878,21 +970,26 @@
             // Useful in the event the page contain several init scripts.
             setTimeout(function(){ $("a["+pp_settings.hook+"^='"+hashRel+"']:eq("+hashIndex+")").trigger('click'); },50);
         }
-
-        return this.unbind('click.prettyphoto').bind('click.prettyphoto',$.prettyPhoto.initialize); // Return the jQuery object for chaining. The unbind method is used to avoid click conflict when the plugin is called more than once
+        // Return the jQuery object for chaining. The unbind method is used to avoid click conflict when the plugin is called more than once
+        return this.unbind('click.prettyphoto').bind('click.prettyphoto',$.prettyPhoto.initialize);
     };
 
     function getHashtag(){
         var url = location.href;
         hashtag = (url.indexOf('#prettyPhoto') !== -1) ? decodeURI(url.substring(url.indexOf('#prettyPhoto')+1,url.length)) : false;
-        if(hashtag){  hashtag = hashtag.replace(/<|>/g,''); }
+        if (hashtag) {
+            hashtag = hashtag.replace(/<|>/g,'');
+        }
         return hashtag;
-    };
+    }
 
     function setHashtag(){
-        if(typeof theRel == 'undefined') return; // theRel is set on normal calls, it's impossible to deeplink using the API
+        // theRel is set on normal calls, it's impossible to deeplink using the API
+        if (typeof theRel == 'undefined') {
+            return;
+        }
         location.hash = theRel + '/'+rel_index+'/';
-    };
+    }
 
     function clearHashtag(){
         if ( location.href.indexOf('#prettyPhoto') !== -1 ) location.hash = "prettyPhoto";
@@ -907,5 +1004,5 @@
     }
 
 })(jQuery);
-
-var pp_alreadyInitialized = false; // Used for the deep linking to make sure not to call the same function several times.
+// Used for the deep linking to make sure not to call the same function several times.
+var pp_alreadyInitialized = false;
