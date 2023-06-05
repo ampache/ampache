@@ -96,6 +96,14 @@ div.pp_default .pp_gallery ul li a:hover,
 div.pp_default .pp_gallery ul li.selected a { border-color: #fff; }
 div.pp_default .pp_social { margin-top: 7px; }
 
+div.pp_default a.pp_arrow_previous,
+div.pp_default a.pp_arrow_next {
+    background: url(../images/prettyPhoto/default/sprite.png) -31px -3px no-repeat;
+    height: 20px;
+    margin: 4px 0 0 0;
+    width: 20px;
+}
+
 div.pp_default .pp_gallery a.pp_arrow_previous,
 div.pp_default .pp_gallery a.pp_arrow_next {
     position: static;
@@ -110,14 +118,6 @@ div.pp_default .pp_nav .pp_pause {
 }
 div.pp_default .pp_nav .pp_pause { background-position: -51px -29px; }
 div.pp_default .pp_details { position: relative; }
-
-div.pp_default a.pp_arrow_previous,
-div.pp_default a.pp_arrow_next {
-    background: url(../images/prettyPhoto/default/sprite.png) -31px -3px no-repeat;
-    height: 20px;
-    margin: 4px 0 0 0;
-    width: 20px;
-}
 
 /* The next arrow in the bottom nav */
 div.pp_default a.pp_arrow_next {
@@ -352,9 +352,11 @@ div.dark_rounded .pp_close {
     cursor: pointer;
 }
 div.dark_rounded .pp_details { position: relative; }
-div.dark_rounded .pp_description { margin-right: 85px; }
+div.dark_rounded .pp_description {
+    margin-right: 85px;
+    color: #fff;
+}
 div.dark_rounded .currentTextHolder { color: #c4c4c4; }
-div.dark_rounded .pp_description { color: #fff; }
 div.dark_rounded #pp_full_res .pp_inline { color: #fff; }
 
 div.dark_rounded .pp_gallery a.pp_arrow_previous,
@@ -410,7 +412,10 @@ div.dark_square .pp_right,
 div.dark_square .pp_content { background: #000; }
 
 div.dark_square .currentTextHolder { color: #c4c4c4; }
-div.dark_square .pp_description { color: #fff; }
+div.dark_square .pp_description {
+    color: #fff;
+    margin: 0 85px 0 0;
+}
 
 /* Loader icon */
 div.dark_square .pp_loaderIcon { background: url(../images/prettyPhoto/dark_square/loader.gif) center center no-repeat; }
@@ -447,7 +452,6 @@ div.dark_square .pp_close {
     cursor: pointer;
 }
 div.dark_square .pp_details { position: relative; }
-div.dark_square .pp_description { margin: 0 85px 0 0; }
 div.dark_square #pp_full_res .pp_inline { color: #fff; }
 
 div.dark_square .pp_gallery a.pp_arrow_previous,
@@ -539,8 +543,10 @@ div.light_square .pp_close {
 div.light_square .pp_details { position: relative; }
 div.light_square .pp_description { margin-right: 85px; }
 div.light_square #pp_full_res .pp_inline { color: #000; }
+
 div.light_square .pp_gallery a.pp_arrow_previous,
 div.light_square .pp_gallery a.pp_arrow_next { margin-top: 12px !important; }
+
 div.light_square .pp_nav .pp_play {
     background: url(../images/prettyPhoto/light_square/sprite.png) -1px -100px no-repeat;
     height: 15px;
@@ -554,6 +560,7 @@ div.light_square .pp_nav .pp_pause {
 
 /* The previous arrow in the bottom nav */
 div.light_square .pp_arrow_previous { background: url(../images/prettyPhoto/light_square/sprite.png) 0 -71px no-repeat; }
+
 div.light_square .pp_arrow_previous.disabled {
     background-position: 0 -87px;
     cursor: default;
