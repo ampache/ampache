@@ -195,7 +195,7 @@
                 isSet = (pp_images.length > 1) ? true : false;
                 set_position = (arguments[3])? arguments[3]: 0;
                 // Build the overlay {this} being the caller
-                _build_overlay(event.target); 
+                _build_overlay(event.target);
             }
 
             // Hide the flash
@@ -289,7 +289,7 @@
 
                     case 'youtube':
                         // Fit item to viewport
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); 
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         // Regular youtube link
                         movie_id = getParam('v',pp_images[set_position]);
@@ -300,11 +300,11 @@
                             movie_id = movie_id[1];
                             if (movie_id.indexOf('?') > 0) {
                                 // Strip anything after the ?
-                                movie_id = movie_id.substr(0, movie_id.indexOf('?')); 
+                                movie_id = movie_id.substr(0, movie_id.indexOf('?'));
                             }
                             if (movie_id.indexOf('&') > 0) {
                                 // Strip anything after the &
-                                movie_id = movie_id.substr(0, movie_id.indexOf('&')); 
+                                movie_id = movie_id.substr(0, movie_id.indexOf('&'));
                             }
                         }
 
@@ -347,7 +347,7 @@
 
                     case 'flash':
                         // Fit item to viewport
-                        pp_dimensions = _fitToViewport(movie_width,movie_height); 
+                        pp_dimensions = _fitToViewport(movie_width,movie_height);
 
                         flash_vars = pp_images[set_position];
                         flash_vars = flash_vars.substring(pp_images[set_position].indexOf('flashvars') + 10,pp_images[set_position].length);
