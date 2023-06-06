@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 6.0.0
+## Ampache develop
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
@@ -242,7 +242,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Sharing some types of object
   * Filtering user and password
 
-## API 6.0.0
+## API develop
 
 ### Added
 
