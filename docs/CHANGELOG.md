@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## Ampache 5.6.2-release
+
+### Added
+
+* Fork https://github.com/scaron/prettyphoto and update for jquery3
+* CLI
+  * New cli command `bin/cli show:version` (Print the Ampache version number)
+
+### Removed
+
+* Replace scaron/prettyphoto with fork to allow updates
+
+### Fixed
+
+* Being unable to view all your catalogs in the filter box
+* Prettyphoto would rewrite your link when clicking on pictures
+* Don't show an empty filter box if there are no valid filters
+* Some dynamic class properties
+
+## API 5.6.2
+
+### Fixed
+
+* ALL
+  * Require and set a valid version for `api_force_version`
+
 ## Ampache 5.6.1-release
 
 ### Added
