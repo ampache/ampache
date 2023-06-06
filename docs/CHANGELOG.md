@@ -283,6 +283,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 * Api6
   * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
+* Api5
+  * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
   * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'
@@ -319,6 +321,33 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Api3
   * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
   * Artists method parameters were incorrect
+
+## Ampache 5.6.1-release
+
+### Added
+
+* Simplified transcode settings checks
+
+### Changed
+
+* Clean up the PlayAction class to make it a bit less complicated
+* Encode URL's with a + for segmented play urls
+
+### Removed
+
+* Soundcloud catalogs
+
+### Fixed
+
+* mptre/php-soundcloud has been removed from github
+* Podcast Episode download link
+* Filtering passwords in some places before hashing
+* Catalog caches delete and add immediately when changed
+* Check isfinite before trying to apply replaygain on webplayer
+
+## API 5.6.1
+
+**NO CHANGE**
 
 ## Ampache 5.6.0-release
 
