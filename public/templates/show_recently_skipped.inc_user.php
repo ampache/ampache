@@ -180,7 +180,10 @@ foreach ($data as $row) {
 </table>
 <script>
     $(document).ready(function () {
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false, deeplinking:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false,
+            deeplinking: false
+        });
     });
 </script>
 <?php Ui::show_box_bottom(); ?>

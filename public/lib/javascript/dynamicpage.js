@@ -34,7 +34,10 @@ function loadContentData(data, status, jqXHR)
                 height: $mainContent.height() + "px"
             });
         });
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false,
+            deeplinking: false
+        });
         initTabs();
     }
 }
