@@ -5529,7 +5529,6 @@ class Update
     private static function _update_600037(Interactor $interactor = null): bool
     {
         // update server total counts
-        debug_event(__CLASS__, 'update_counts server total counts', 5);
         $catalog_disable = AmpConfig::get('catalog_disable');
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
