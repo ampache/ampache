@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -191,7 +191,10 @@ if (isset($user_id) && !empty($user_id)) {
 </div>
 <script>
     $(document).ready(function () {
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false,
+            deeplinking: false
+        });
     });
 </script>
 <?php Ui::show_box_bottom(); ?>

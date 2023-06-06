@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -614,8 +614,6 @@ class User extends database_object
                 case 'clear_stats':
                     Stats::clear($this->id);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -806,9 +804,9 @@ class User extends database_object
                 if (empty($catalog_array)) {
                     continue;
                 }
-                $sql        = ($catalog_disable && $table !== 'podcast_episode')
-                    ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
-                    : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
+                $sql        = ($catalog_disable)
+                    ? "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ") AND `$table`.`enabled`='1';"
+                    : "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table` WHERE `catalog` IN (" . implode(',', $catalog_array) . ");";
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
@@ -1080,19 +1078,31 @@ class User extends database_object
         $this->get_f_link();
 
         if ($details) {
-            $user_data = self::get_user_data($this->id);
+            $user_data = self::get_user_data($this->id, 'play_size');
             if (!isset($user_data['play_size'])) {
-                // Calculate their total Bandwidth Usage
-                $sql        = "SELECT SUM(`song`.`size`) AS `play_size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') GROUP BY `user`;";
-                $db_results = Dba::read($sql, array($this->id));
-                $result     = Dba::fetch_assoc($db_results);
-                $play_size  = $result['play_size'] ?? 0;
+                $params = array($this->id);
+                $total  = 0;
+                $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+                $db_s   = Dba::read($sql_s, $params);
+                while ($results = Dba::fetch_assoc($db_s)) {
+                    $total = $total + (int)$results['size'];
+                }
+                $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+                $db_v  = Dba::read($sql_v, $params);
+                while ($results = Dba::fetch_assoc($db_v)) {
+                    $total = $total + (int)$results['size'];
+                }
+                $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+                $db_p  = Dba::read($sql_p, $params);
+                while ($results = Dba::fetch_assoc($db_p)) {
+                    $total = $total + (int)$results['size'];
+                }
                 // set the value for next time
-                self::set_user_data($this->id, 'play_size', (int)$play_size);
-                $user_data['play_size'] = $play_size;
+                self::set_user_data($this->id, 'play_size', $total);
+                $user_data['play_size'] = $total;
             }
 
-            $this->f_usage = Ui::format_bytes((int)$user_data['play_size']);
+            $this->f_usage = Ui::format_bytes($user_data['play_size'], 2, 2);
 
             // Get Users Last ip
             if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId()))) {
@@ -1189,10 +1199,10 @@ class User extends database_object
             $increment  = (int)($row['filter_count'] ?? 0) + 1;
             $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = $increment;";
             Dba::write($sql);
-            // Make sure all current catalogs are in the default group
-            $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog`;";
-            Dba::write($sql);
         }
+        // Make sure all current catalogs are in the default group map
+        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);";
+        Dba::write($sql);
 
         /* Get All Preferences for the current user */
         $sql          = "SELECT * FROM `user_preference` WHERE `user` = ?";

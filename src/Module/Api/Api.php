@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -156,6 +156,13 @@ class Api
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
     ];
 
+    public const API_VERSIONS = array(
+        3,
+        4,
+        5,
+        6
+    );
+
     /**
      * @var string $auth_version
      */
@@ -291,8 +298,6 @@ class Api
                 break;
             case 'enabled':
                 $browse->set_filter('enabled', $value);
-                break;
-            default:
                 break;
         } // end filter
 

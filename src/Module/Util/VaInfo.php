@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -324,9 +324,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * get_info
      *
-     * This function runs the various steps to gathering the metadata
+     * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function get_info()
+    public function gather_tags()
     {
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
@@ -369,7 +369,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function check_time($time)
     {
-        $this->get_info();
+        $this->gather_tags();
         foreach ($this->tags as $results) {
             if (isset($results['time'])) {
                 return ($time >= $results['time'] - 2);

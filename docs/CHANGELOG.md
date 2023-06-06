@@ -12,11 +12,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Translations 2023-04
+* Translations 2023-05
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
-* Add php8.2 to composer (composer_php8.2.json)
 * Create Dockerfilephp82
 * Add custom `listenbrainz_api_url` to listenbrainz plugin
 * Add header to allow browser cache on waveform
@@ -29,6 +28,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Button and color Light theme fixes for the webplayer
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
+* Add more tables to the missing table checks
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -36,12 +36,14 @@ You can find example Subsonic responses from an official server and Ampache serv
   * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
+  * Add -w|--web to export:playlist (Get a play URL instead of the file name)
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
   * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
+  * When an error occurs using `bin/cli admin:updateDatabase` print out the SQL and the update function
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600028
+* Database 600037
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -69,13 +71,18 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
   * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
   * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
+  * Extend `object_type` enum list on `rating` table
+  * Convert `object_type` to an enum on `user_flag` table
+  * Convert `object_type` to an enum on `image` table
+  * Add `enabled` to podcast_episode table
+  * Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)
 * Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
-  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
+  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "/", "\", "|", "," and ";")
   * Update your `encode_args_opus` settings
 * Search
   * Add `album_disk` as a search type (uses album rules)
@@ -121,11 +128,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Download url parameter order matching "client, action, cache"
-* Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
+* Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
-* Album::check() add barcode, catalog number and subtitle for comparison checks
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
@@ -142,6 +148,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Process stream output and then send the content to the player
 * Play urls will rename the file name to the transcode output format
 * open RSS links in a new tab
+* Dashboard pages have Newest on top now
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
@@ -158,18 +165,18 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Only send songs (for now) to the 'Add all to playlist' button
   * Added an option `loopBack` which restarts the playlist after finishing
 * Subsonic
-  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned. 
+  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned.
   * Pass the authenticated user to method calls
 
 ### Removed
 
+* Dropped the `-release` part of releases.
 * Combined a lot of duplicate properties, functions and process all over the place
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
-* Catalogs
-  * Soundcloud catalogs
+* Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
 * Subsonic
@@ -265,7 +272,6 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects
 * advanced_search
-  * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
   * Add `possible_duplicate_album` to song search
   * Add `mbid_artist` to album search
@@ -315,6 +321,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Fixed
 
 * ALL
+  * Require and set a valid version for `api_force_version`
   * advanced_search methods were breaking with various offset and limits
 * Api6 JSON
   * Share and Bookmark object id's were not strings

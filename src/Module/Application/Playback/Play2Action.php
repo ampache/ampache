@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -226,7 +226,6 @@ final class Play2Action implements ApplicationActionInterface
             );
             $record_stats = false;
         }
-        $transcode     = false;
         $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
@@ -593,6 +592,8 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
 
+        $transcode      = false;
+        $transcode_cfg  = AmpConfig::get('transcode');
         $cache_path     = (string)AmpConfig::get('cache_path', '');
         $cache_target   = (string)AmpConfig::get('cache_target', '');
         $cache_file     = false;
@@ -618,7 +619,7 @@ final class Play2Action implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
-            if (!$is_download && ($file_target && is_file($file_target))) {
+            if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -629,7 +630,6 @@ final class Play2Action implements ApplicationActionInterface
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
                 $transcode_to = null;
-                $transcode    = false;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
@@ -665,8 +665,10 @@ final class Play2Action implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name   = (!empty($stream_name)) ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($cache_file || ($is_download && !$transcode_to))
+        $media_name   = (!empty($stream_name))
+            ? $stream_name
+            : $media->get_stream_name() . "." . $media->type;
+        $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
@@ -765,7 +767,7 @@ final class Play2Action implements ApplicationActionInterface
             );
         }
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = ($transcode_to == $media->type)
+        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
             ? null
             : $transcode_to;
         if ($transcode_to) {
@@ -777,8 +779,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = $media->get_stream_types($player);
+            $valid_types = $media->get_stream_types($player);
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }

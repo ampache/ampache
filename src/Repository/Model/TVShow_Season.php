@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,7 +57,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
      */
     public function __construct($show_id)
     {
-        $info = $this->get_info($show_id);
+        $info = $this->get_info($show_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }

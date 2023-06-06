@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,27 +43,28 @@ $app = new Ahc\Cli\Application(
     'Ampache CLI',
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
-$app->add($dic->get(Cli\BroadcastCommand::class));
-$app->add($dic->get(Cli\ComputeCacheCommand::class));
-$app->add($dic->get(Cli\CronProcessCommand::class));
-$app->add($dic->get(Cli\CacheProcessCommand::class));
-$app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
-$app->add($dic->get(Cli\PrintTagsCommand::class));
-$app->add($dic->get(Cli\SongCleanupCommand::class));
-$app->add($dic->get(Cli\SortFilesCommand::class));
-$app->add($dic->get(Cli\ExportPlaylistCommand::class));
-$app->add($dic->get(Cli\ExportAlbumArtCommand::class));
-$app->add($dic->get(Cli\ExportArtCommand::class));
-$app->add($dic->get(Cli\ArtCleanupCommand::class));
-$app->add($dic->get(Cli\RunWebsocketCommand::class));
-$app->add($dic->get(Cli\UpdateDbCommand::class));
-$app->add($dic->get(Cli\ConvertFileNamesCommand::class));
-$app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
-$app->add($dic->get(Cli\UpdateCatalogFolderCommand::class));
-$app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
+$app->add($dic->get(Cli\ArtCleanupCommand::class));
+$app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
+$app->add($dic->get(Cli\BroadcastCommand::class));
+$app->add($dic->get(Cli\CacheProcessCommand::class));
+$app->add($dic->get(Cli\ComputeCacheCommand::class));
+$app->add($dic->get(Cli\ConvertFileNamesCommand::class));
+$app->add($dic->get(Cli\CronProcessCommand::class));
+$app->add($dic->get(Cli\ExportAlbumArtCommand::class));
+$app->add($dic->get(Cli\ExportArtCommand::class));
+$app->add($dic->get(Cli\ExportPlaylistCommand::class));
 $app->add($dic->get(Cli\MoveCatalogPathCommand::class));
+$app->add($dic->get(Cli\PrintTagsCommand::class));
+$app->add($dic->get(Cli\RunWebsocketCommand::class));
+$app->add($dic->get(Cli\ShowVersionCommand::class));
+$app->add($dic->get(Cli\SongCleanupCommand::class));
+$app->add($dic->get(Cli\SortFilesCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogFolderCommand::class));
+$app->add($dic->get(Cli\UpdateDbCommand::class));
 
 $logo = <<<LOGO
     _                               _          

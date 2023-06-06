@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,6 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 /** @var array $object_ids */
 /** @var array $hide_columns */
 /** @var string $argument_param */
-/** @var string $limit_threshold */
 /** @var Artist $artist */
 
 $web_path     = AmpConfig::get('web_path');
@@ -91,7 +90,7 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 foreach ($object_ids as $song_id) {
-    $libitem = new Song($song_id, $limit_threshold);
+    $libitem = new Song($song_id);
     $libitem->format(); ?>
 
             <tr id="song_<?php echo $libitem->id; ?>">

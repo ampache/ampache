@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,6 +85,7 @@ final class CatalogFileMethod
 
             return false;
         }
+        $output_task = '';
         foreach ($task as $item) {
             if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,9 +93,11 @@ final class CatalogFileMethod
 
                 return false;
             }
+            $output_task .= $item . ', ';
         }
-        $catalog_id = (int) $input['catalog'];
-        $catalog    = Catalog::create_from_id($catalog_id);
+        $output_task = rtrim($output_task, ', ');
+        $catalog_id  = (int) $input['catalog'];
+        $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
@@ -156,7 +159,7 @@ final class CatalogFileMethod
                 Album::update_album_count($media->album);
                 Artist::update_table_counts();
             }
-            Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
+            Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }

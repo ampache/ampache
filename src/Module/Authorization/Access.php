@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,6 +37,8 @@ use Ampache\Module\System\Dba;
  */
 class Access
 {
+    protected const DB_TABLENAME = 'access_list';
+
     // Variables from DB
     /**
      * @var integer $id
@@ -88,7 +90,7 @@ class Access
      */
     public function __construct($access_id)
     {
-        /* Assign id for use in get_info() */
+        /* Assign id for use in has_info() */
         $this->id = (int)$access_id;
         $info     = $this->has_info();
         foreach ($info as $key => $value) {

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -239,7 +239,7 @@ class Catalog_Seafile extends Catalog
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -410,7 +410,7 @@ class Catalog_Seafile extends Catalog
         if (!$is_cached) {
             $vainfo->forceSize($file->size);
         }
-        $vainfo->get_info();
+        $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
         if (!$is_cached) {

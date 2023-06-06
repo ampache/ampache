@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ use WpOrg\Requests\Requests;
 /**
  * AutoUpdate Class
  *
- * This class handles autoupdate check from Github.
+ * This class handles autoupdate check from GitHub.
  */
 class AutoUpdate
 {
@@ -99,7 +99,7 @@ class AutoUpdate
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
-                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
 
                 return null;
             }
@@ -135,7 +135,7 @@ class AutoUpdate
     public static function get_latest_version($force = false)
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
-        // Forced or last check expired, check latest version from Github
+        // Forced or last check expired, check latest version from GitHub
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time       = time();

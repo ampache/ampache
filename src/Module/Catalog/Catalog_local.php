@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -158,7 +158,7 @@ class Catalog_local extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id);
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -438,22 +438,19 @@ class Catalog_local extends Catalog
                 $this->_playlists[] = $full_file;
             } else {
                 if (count($this->get_gather_types('music')) > 0) {
-                    if ($is_audio_file) {
-                        debug_event('local.catalog', 'Found song file to import: ' . $full_file, 5);
-                        $this->insert_local_song($full_file, $options);
+                    if ($is_audio_file && $this->insert_local_song($full_file, $options)) {
+                        debug_event('local.catalog', 'Imported song file: ' . $full_file, 5);
                     } else {
-                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.", 5);
+                        debug_event('local.catalog', 'Skipped song file: ' . $full_file, 5);
 
                         return false;
                     }
                 } else {
                     if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file) {
-                            debug_event('local.catalog', 'Found video file to import: ' . $full_file, 5);
-                            $this->insert_local_video($full_file, $options);
+                        if ($is_video_file && $this->insert_local_video($full_file, $options)) {
+                            debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
                         } else {
-                            debug_event('local.catalog',
-                                $full_file . " ignored, bad media type for this video catalog.", 5);
+                            debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
                             return false;
                         }
@@ -731,7 +728,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0 || !isset($media_type)) {
+        if ($total == 0) {
             return $dead_total;
         }
         $dead   = array();
@@ -742,7 +739,7 @@ class Catalog_local extends Catalog
             $chunks = floor($total / 10000) + 1;
             $chunk  = $chunks;
         }
-        while ($chunk >= 0) {
+        while ($chunk >= 1) {
             debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk--;
@@ -898,7 +895,7 @@ class Catalog_local extends Catalog
             $this->sort_pattern,
             $this->rename_pattern
         );
-        $vainfo->get_info();
+        $vainfo->gather_tags();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
 
@@ -1048,7 +1045,7 @@ class Catalog_local extends Catalog
             $this->sort_pattern,
             $this->rename_pattern
         );
-        $vainfo->get_info();
+        $vainfo->gather_tags();
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
         $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $file);
@@ -1174,7 +1171,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
-        if ($total == 0 || !isset($media_type)) {
+        if ($total == 0) {
             return $missing;
         }
         $chunks = floor($total / 10000);
