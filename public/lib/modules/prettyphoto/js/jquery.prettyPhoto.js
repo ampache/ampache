@@ -154,9 +154,9 @@
             isSet = (galleryRegExp.exec(theRel)) ? true : false;
 
             // Put the SRCs, TITLEs, ALTs into an array.
-            pp_images = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return $(n).attr('href'); }) : $.makeArray($(this).attr('href'));
-            pp_titles = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).find('img').attr('alt')) ? $(n).find('img').attr('alt') : ""; }) : $.makeArray($(this).find('img').attr('alt'));
-            pp_descriptions = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).attr('title')) ? $(n).attr('title') : ""; }) : $.makeArray($(this).attr('title'));
+            pp_images = (isSet) ? $.map(matchedObjects, function(n, i){ if ($(n).attr(settings.hook).indexOf(theRel) != -1) return $(n).attr('href'); }) : $.makeArray($(this).attr('href'));
+            pp_titles = (isSet) ? $.map(matchedObjects, function(n, i){ if ($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).find('img').attr('alt')) ? $(n).find('img').attr('alt') : ""; }) : $.makeArray($(this).find('img').attr('alt'));
+            pp_descriptions = (isSet) ? $.map(matchedObjects, function(n, i){ if ($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).attr('title')) ? $(n).attr('title') : ""; }) : $.makeArray($(this).attr('title'));
 
             if (pp_images.length > settings.overlay_gallery_max) {
                 settings.overlay_gallery = false;
@@ -235,8 +235,8 @@
             }
 
             // Get the dimensions
-            movie_width = ( parseFloat(getParam('width',pp_images[set_position])) ) ? getParam('width',pp_images[set_position]) : settings.default_width.toString();
-            movie_height = ( parseFloat(getParam('height',pp_images[set_position])) ) ? getParam('height',pp_images[set_position]) : settings.default_height.toString();
+            movie_width = (parseFloat(getParam('width',pp_images[set_position]))) ? getParam('width',pp_images[set_position]) : settings.default_width.toString();
+            movie_height = (parseFloat(getParam('height',pp_images[set_position]))) ? getParam('height',pp_images[set_position]) : settings.default_height.toString();
 
             // If the size is % based, calculate according to window dimensions
             percentBased=false;
@@ -425,7 +425,9 @@
 
             if (direction == 'previous') {
                 set_position--;
-                if (set_position < 0) set_position = $(pp_images).length-1;
+                if (set_position < 0) {
+                    set_position = $(pp_images).length-1;
+                }
             } else if (direction == 'next') {
                 set_position++;
                 if (set_position > $(pp_images).length-1) {
@@ -459,7 +461,7 @@
                 if (currentGalleryPage > totalPage) {
                     currentGalleryPage = 0;
                 }
-            } else if(direction=='previous'){
+            } else if (direction=='previous') {
                 currentGalleryPage --;
                 if (currentGalleryPage < 0) {
                     currentGalleryPage = totalPage;
@@ -992,18 +994,19 @@
     }
 
     function clearHashtag(){
-        if ( location.href.indexOf('#prettyPhoto') !== -1 ) location.hash = "";
+        if (location.href.indexOf('#prettyPhoto') !== -1) {
+            location.hash = "";
+        }
     }
 
     function getParam(name,url){
       name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
       var regexS = "[\\?&]"+name+"=([^&#]*)";
-      var regex = new RegExp( regexS );
-      var results = regex.exec( url );
-      return ( results == null ) ? "" : results[1];
+      var regex = new RegExp(regexS);
+      var results = regex.exec(url);
+      return (results == null) ? "" : results[1];
     }
 
 })(jQuery);
 // Used for the deep linking to make sure not to call the same function several times.
 var pp_alreadyInitialized = false;
-
