@@ -8,7 +8,7 @@
     $.prettyPhoto = {version: '3.1.6'};
 
     $.fn.prettyPhoto = function(pp_settings) {
-        pp_settings = jQuery.extend({
+        pp_settings = $.extend({
             hook: 'rel', /* the attribute tag to use for prettyPhoto hooks. default: 'rel'. For HTML5, use "data-rel" or similar. */
             animation_speed: 'fast', /* fast/slow/normal */
             ajaxcallback: function() {},
@@ -154,16 +154,16 @@
             isSet = (galleryRegExp.exec(theRel)) ? true : false;
 
             // Put the SRCs, TITLEs, ALTs into an array.
-            pp_images = (isSet) ? jQuery.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return $(n).attr('href'); }) : $.makeArray($(this).attr('href'));
-            pp_titles = (isSet) ? jQuery.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).find('img').attr('alt')) ? $(n).find('img').attr('alt') : ""; }) : $.makeArray($(this).find('img').attr('alt'));
-            pp_descriptions = (isSet) ? jQuery.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).attr('title')) ? $(n).attr('title') : ""; }) : $.makeArray($(this).attr('title'));
+            pp_images = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return $(n).attr('href'); }) : $.makeArray($(this).attr('href'));
+            pp_titles = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).find('img').attr('alt')) ? $(n).find('img').attr('alt') : ""; }) : $.makeArray($(this).find('img').attr('alt'));
+            pp_descriptions = (isSet) ? $.map(matchedObjects, function(n, i){ if($(n).attr(settings.hook).indexOf(theRel) != -1) return ($(n).attr('title')) ? $(n).attr('title') : ""; }) : $.makeArray($(this).attr('title'));
 
             if (pp_images.length > settings.overlay_gallery_max) {
                 settings.overlay_gallery = false;
             }
 
             // Define where in the array the clicked item is positionned
-            set_position = jQuery.inArray($(this).attr('href'), pp_images);
+            set_position = $.inArray($(this).attr('href'), pp_images);
             rel_index = (isSet) ? set_position : $("a["+settings.hook+"^='"+theRel+"']").index($(this));
 
             // Build the overlay {this} being the caller
@@ -992,7 +992,7 @@
     }
 
     function clearHashtag(){
-        if ( location.href.indexOf('#prettyPhoto') !== -1 ) location.hash = "prettyPhoto";
+        if ( location.href.indexOf('#prettyPhoto') !== -1 ) location.hash = "";
     }
 
     function getParam(name,url){
