@@ -177,6 +177,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Combined a lot of duplicate functions into one
 * Art from share page
 * Replace scaron/prettyphoto with fork to allow updates
+* Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
 * Subsonic
@@ -321,6 +322,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Fixed
 
 * ALL
+  * Require and set a valid version for `api_force_version`
   * advanced_search methods were breaking with various offset and limits
 * Api6 JSON
   * Share and Bookmark object id's were not strings
