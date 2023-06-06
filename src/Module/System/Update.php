@@ -891,6 +891,9 @@ class Update
         $update_string = "* Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)";
         $version[]     = array('version' => '600036', 'description' => $update_string);
 
+        $update_string = "* Update user server and user counts now that the scaling has changed";
+        $version[]     = array('version' => '600037', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5490,7 +5493,6 @@ class Update
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
-        $catalog_disable = AmpConfig::get('catalog_disable');
         // Calculate their total Bandwidth Usage
         foreach ($user_list as $user_id) {
             $params = array($user_id);
@@ -5515,6 +5517,39 @@ class Update
                 return false;
             }
         }
+
+        return true;
+    }
+
+    /**
+     * _update_600037
+     *
+     * Update user server and user counts now that the scaling has changed
+     */
+    private static function _update_600037(Interactor $interactor = null): bool
+    {
+        // update server total counts
+        debug_event(__CLASS__, 'update_counts server total counts', 5);
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        // tables with media items to count, song-related tables and the rest
+        $media_tables = array('song', 'video', 'podcast_episode');
+        $items        = 0;
+        $time         = 0;
+        $size         = 0;
+        foreach ($media_tables as $table) {
+            $enabled_sql = ($catalog_disable) ? " WHERE `$table`.`enabled` = '1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table`" . $enabled_sql;
+            $db_results  = Dba::read($sql);
+            $row         = Dba::fetch_row($db_results);
+            // save the object and add to the current size
+            $items += (int)($row[0] ?? 0);
+            $time += (int)($row[1] ?? 0);
+            $size += $row[2] ?? 0;
+            Catalog::set_update_info($table, (int)($row[0] ?? 0));
+        }
+        Catalog::set_update_info('items', $items);
+        Catalog::set_update_info('time', $time);
+        Catalog::set_update_info('size', $size);
         User::update_counts();
 
         return true;
