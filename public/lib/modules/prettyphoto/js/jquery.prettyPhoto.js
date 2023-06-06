@@ -9,11 +9,11 @@
 
     $.fn.prettyPhoto = function(pp_settings) {
         pp_settings = jQuery.extend({
-            hook: 'rel',
-            animation_speed: 'fast',
+            hook: 'rel', /* the attribute tag to use for prettyPhoto hooks. default: 'rel'. For HTML5, use "data-rel" or similar. */
+            animation_speed: 'fast', /* fast/slow/normal */
             ajaxcallback: function() {},
-            slideshow: 5000,
-            autoplay_slideshow: false,
+            slideshow: 5000, /* false OR interval time in ms */
+            autoplay_slideshow: false, /* true/false */
             opacity: 0.80, /* Value between 0 and 1 */
             show_title: true, /* true/false */
             allow_resize: true, /* Resize the photos bigger than viewport. true/false */
