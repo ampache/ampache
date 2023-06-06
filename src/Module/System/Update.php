@@ -885,6 +885,12 @@ class Update
         $update_string = "* Convert `object_type` to an enum on `image` table";
         $version[]     = array('version' => '600034', 'description' => $update_string);
 
+        $update_string = "* Add `enabled` to `podcast_episode` table";
+        $version[]     = array('version' => '600035', 'description' => $update_string);
+
+        $update_string = "* Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)";
+        $version[]     = array('version' => '600036', 'description' => $update_string);
+
         return $version;
     }
 
@@ -3899,20 +3905,20 @@ class Update
         foreach ($user_list as $user_id) {
             $params = array($user_id);
             $total  = 0;
-            $sql_s  = "SELECT SUM(`song`.`size`) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+            $sql_s  = "SELECT IFNULL(SUM(`size`), 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
             $db_s   = Dba::read($sql_s, $params);
             while ($results = Dba::fetch_assoc($db_s)) {
-                $total = $total + (int)$results['size'];
+                $total = $total + $results['size'];
             }
-            $sql_v = "SELECT SUM(`video`.`size`) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+            $sql_v = "SELECT IFNULL(SUM(`size`), 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
             $db_v  = Dba::read($sql_v, $params);
             while ($results = Dba::fetch_assoc($db_v)) {
-                $total = $total + (int)$results['size'];
+                $total = $total + $results['size'];
             }
-            $sql_p = "SELECT SUM(`podcast_episode`.`size`) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+            $sql_p = "SELECT IFNULL(SUM(`size`), 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
             $db_p  = Dba::read($sql_p, $params);
             while ($results = Dba::fetch_assoc($db_p)) {
-                $total = $total + (int)$results['size'];
+                $total = $total + $results['size'];
             }
             $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
@@ -5454,5 +5460,63 @@ class Update
         Dba::write($sql);
 
         return (self::_write($interactor, "ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'song', 'tvshow', 'tvshow_season', 'user', 'video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;") !== false);
+    }
+
+    /**
+     * _update_600035
+     *
+     * Add `enabled` to `podcast_episode` table
+     */
+    private static function _update_600035(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `podcast_episode` ADD COLUMN `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 AFTER `played`;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * _update_600036
+     *
+     * Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)
+     */
+    private static function _update_600036(Interactor $interactor = null): bool
+    {
+        $sql       = "SELECT `id` FROM `user`";
+        $db_users  = Dba::read($sql);
+        $user_list = array();
+        while ($results = Dba::fetch_assoc($db_users)) {
+            $user_list[] = (int)$results['id'];
+        }
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        // Calculate their total Bandwidth Usage
+        foreach ($user_list as $user_id) {
+            $params = array($user_id);
+            $total  = 0;
+            $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+            $db_s   = Dba::read($sql_s, $params);
+            while ($results = Dba::fetch_assoc($db_s)) {
+                $total = $total + $results['size'];
+            }
+            $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+            $db_v  = Dba::read($sql_v, $params);
+            while ($results = Dba::fetch_assoc($db_v)) {
+                $total = $total + $results['size'];
+            }
+            $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+            $db_p  = Dba::read($sql_p, $params);
+            while ($results = Dba::fetch_assoc($db_p)) {
+                $total = $total + $results['size'];
+            }
+            $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
+                return false;
+            }
+        }
+        User::update_counts();
+
+        return true;
     }
 } // end update.class

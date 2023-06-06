@@ -973,9 +973,9 @@ abstract class Catalog extends database_object
      *
      * write the total_counts to update_info
      * @param string $key
-     * @param int $value
+     * @param int|float $value
      */
-    public static function set_update_info(string $key, int $value)
+    public static function set_update_info(string $key, int|float $value)
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     } // set_update_info
@@ -1151,7 +1151,7 @@ abstract class Catalog extends database_object
         $counts         = array_merge(User::count(), $counts);
         $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
-        $counts['formatted_size'] = Ui::format_bytes($counts['size']);
+        $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
 
         $hours = floor($counts['time'] / 3600);
         $days  = floor($hours / 24);
@@ -1356,7 +1356,7 @@ abstract class Catalog extends database_object
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
-            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
+            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
             $row              = Dba::fetch_row($db_results);
             $results['items'] = ($row[0] ?? 0);
@@ -3151,14 +3151,14 @@ abstract class Catalog extends database_object
         $time         = 0;
         $size         = 0;
         foreach ($media_tables as $table) {
-            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled` = '1'" : '';
-            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
+            $enabled_sql = ($catalog_disable) ? " WHERE `$table`.`enabled` = '1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
             // save the object and add to the current size
             $items += (int)($row[0] ?? 0);
             $time += (int)($row[1] ?? 0);
-            $size += (int)($row[2] ?? 0);
+            $size += $row[2] ?? 0;
             self::set_update_info($table, (int)($row[0] ?? 0));
         }
         self::set_update_info('items', $items);

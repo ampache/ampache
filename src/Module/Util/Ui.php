@@ -182,15 +182,15 @@ class Ui implements UiInterface
      *
      * Turns a size in bytes into the best human-readable value
      * @param $value
-     * @param integer $precision
+     * @param int $precision
+     * @param int $pass
      * @return string
      */
-    public static function format_bytes($value, $precision = 2)
+    public static function format_bytes($value, $precision = 2, $pass = 0)
     {
         if (!$value) {
             return '';
         }
-        $pass = 0;
         while (strlen((string)floor($value)) > 3) {
             $value /= 1024;
             $pass++;
