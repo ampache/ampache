@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 6.0.0
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
@@ -29,7 +29,6 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
 * Add more tables to the missing table checks
-* Fork https://github.com/scaron/prettyphoto and update for jquery3
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -40,7 +39,6 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add -w|--web to export:playlist (Get a play URL instead of the file name)
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
   * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
-  * New cli command `bin/cli show:version` (Print the Ampache version number)
   * When an error occurs using `bin/cli admin:updateDatabase` print out the SQL and the update function
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
@@ -176,7 +174,6 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
-* Replace scaron/prettyphoto with fork to allow updates
 * Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
@@ -242,7 +239,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Sharing some types of object
   * Filtering user and password
 
-## API develop
+## API 6.0.0
 
 ### Added
 
