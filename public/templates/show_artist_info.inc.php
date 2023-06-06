@@ -55,6 +55,9 @@ use Ampache\Module\Util\Ui;
 </div>
 <script>
     $(document).ready(function(){
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false, deeplinking:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false,
+            deeplinking: false
+        });
     });
 </script>
