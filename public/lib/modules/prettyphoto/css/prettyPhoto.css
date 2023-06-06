@@ -662,6 +662,7 @@ div.facebook .pp_arrow_previous {
     margin-top: 0;
     width: 22px;
 }
+
 div.facebook .pp_arrow_previous.disabled {
     background-position: 0 -96px;
     cursor: default;
@@ -674,6 +675,7 @@ div.facebook .pp_arrow_next {
     margin-top: 0;
     width: 22px;
 }
+
 div.facebook .pp_arrow_next.disabled {
     background-position: -32px -96px;
     cursor: default;
