@@ -1045,6 +1045,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                     Song::update_artist($artist_id, $song_id, $this->id, false);
                     Song::update_utime($song_id, $time);
                 }
+                Song::migrate_artist($artist_id, $this->id);
                 self::update_table_counts();
                 $updated    = true;
                 $current_id = $artist_id;

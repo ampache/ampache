@@ -1620,13 +1620,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function update_artist($new_artist, $song_id, $old_artist, $update_counts = true)
     {
-        if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
-            self::migrate_artist($new_artist, $song_id, $old_artist);
-            if ($update_counts) {
-                Artist::update_table_counts();
-            }
+        if ($old_artist != $new_artist) {
+            if (self::_update_item('artist', $new_artist, $song_id, 50) !== false) {
+                if ($update_counts) {
+                    self::migrate_artist($new_artist, $old_artist);
+                    Artist::update_table_counts();
+                }
 
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -1643,13 +1645,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function update_album($new_album, $song_id, $old_album, $update_counts = true)
     {
-        if (self::_update_item('album', $new_album, $song_id, 50, true) !== false) {
-            self::migrate_album($new_album, $song_id, $old_album);
-            if ($update_counts) {
-                Album::update_table_counts();
-            }
+        if ($old_album != $new_album) {
+            if (self::_update_item('album', $new_album, $song_id, 50, true) !== false) {
+                self::migrate_album($new_album, $song_id, $old_album);
+                if ($update_counts) {
+                    Album::update_table_counts();
+                }
 
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -2424,43 +2428,43 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * Migrate an artist data to a new object
      * @param int $new_artist
-     * @param int $song_id
      * @param int $old_artist
      */
-    public static function migrate_artist($new_artist, $song_id, $old_artist)
+    public static function migrate_artist($new_artist, $old_artist)
     {
-        // migrate stats for the old artist
-        Stats::migrate('artist', $old_artist, $new_artist, $song_id);
-        Useractivity::migrate('artist', $old_artist, $new_artist);
-        Recommendation::migrate('artist', $old_artist);
-        Share::migrate('artist', $old_artist, $new_artist);
-        Shoutbox::migrate('artist', $old_artist, $new_artist);
-        Tag::migrate('artist', $old_artist, $new_artist);
-        Userflag::migrate('artist', $old_artist, $new_artist);
-        Rating::migrate('artist', $old_artist, $new_artist);
-        Art::duplicate('artist', $old_artist, $new_artist);
-        Wanted::migrate('artist', $old_artist, $new_artist);
-        Catalog::migrate_map('artist', $old_artist, $new_artist);
-        // update mapping tables
-        $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
-        if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
-            return false;
+        if ($old_artist != $new_artist) {
+            // migrate stats for the old artist
+            Useractivity::migrate('artist', $old_artist, $new_artist);
+            Recommendation::migrate('artist', $old_artist);
+            Share::migrate('artist', $old_artist, $new_artist);
+            Shoutbox::migrate('artist', $old_artist, $new_artist);
+            Tag::migrate('artist', $old_artist, $new_artist);
+            Userflag::migrate('artist', $old_artist, $new_artist);
+            Rating::migrate('artist', $old_artist, $new_artist);
+            Art::duplicate('artist', $old_artist, $new_artist);
+            Wanted::migrate('artist', $old_artist, $new_artist);
+            Catalog::migrate_map('artist', $old_artist, $new_artist);
+            // update mapping tables
+            $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
+            if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+                return false;
+            }
+            $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
+            if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+                return false;
+            }
+            $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+            if (Dba::write($sql, array($new_artist, 'artist', $old_artist)) === false) {
+                return false;
+            }
+            // delete leftovers duplicate maps
+            $sql = "DELETE FROM `album_map` WHERE `object_id` = ?";
+            Dba::write($sql, array($old_artist));
+            $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?";
+            Dba::write($sql, array($old_artist));
+            $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
+            Dba::write($sql, array('artist', $old_artist));
         }
-        $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
-        if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
-            return false;
-        }
-        $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, array($new_artist, 'artist', $old_artist)) === false) {
-            return false;
-        }
-        // delete leftovers duplicate maps
-        $sql = "DELETE FROM `album_map` WHERE `object_id` = ?";
-        Dba::write($sql, array($old_artist));
-        $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?";
-        Dba::write($sql, array($old_artist));
-        $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, array('artist', $old_artist));
 
         return true;
     }
