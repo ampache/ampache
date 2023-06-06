@@ -2,6 +2,6 @@
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-s
-    RewriteRule ^(.+)\.view$ /rest/index.php?ssaction=$1 [PT,L,QSA]
-    RewriteRule ^fake/(.+)$ /play/$1 [PT,L,QSA]
+    RewriteRule ^(.+)\.view$ /rest/index.php?ssaction=$1 "[PT,L,QSA,B= ?,BNP]"
+    RewriteRule ^fake/(.+)$ /play/$1 "[PT,L,QSA,B= ?,BNP]"
 </IfModule>
