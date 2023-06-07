@@ -878,7 +878,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             case 'ra':
                 return 'audio/x-realaudio';
             case 'flac':
-                return 'audio/x-flac';
+                return 'audio/flac';
             case 'wv':
                 return 'audio/x-wavpack';
             case 'aac':
