@@ -2245,13 +2245,12 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        $transcode_cfg = AmpConfig::get('transcode');
         // if you transcode the media mime will change
-        if ($transcode_cfg != 'never' && (empty($additional_params) || !strpos($additional_params, 'action=download'))) {
+        if (AmpConfig::get('transcode') != 'never' && (empty($additional_params) || !strpos($additional_params, 'action=download'))) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
-            $transcode_type = ($transcode_cfg != 'never' && $file_target && is_file($file_target))
+            $transcode_type = ($file_target && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
             if ($this->type !== $transcode_type) {
