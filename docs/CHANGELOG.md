@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache develop
+## Ampache 6.0.0
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
@@ -12,11 +12,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Translations 2023-04
+* Translations 2023-05
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
-* Add php8.2 to composer (composer_php8.2.json)
 * Create Dockerfilephp82
 * Add custom `listenbrainz_api_url` to listenbrainz plugin
 * Add header to allow browser cache on waveform
@@ -29,6 +28,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Button and color Light theme fixes for the webplayer
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
+* Add more tables to the missing table checks
+* Remove all reference to deleted database updates (not required)
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -36,11 +37,14 @@ You can find example Subsonic responses from an official server and Ampache serv
   * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
   * Add playlistid to export:playlist (export a single playlist instead of all of them)
   * smartplaylist export. e.g. `bin/cli export:playlist ~/playlists/ smartlists`
+  * Add -w|--web to export:playlist (Get a play URL instead of the file name)
   * Add -t|--garbage to run:updateCatalog (Separates table updates from Add / clean / Verify actions)
+  * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
+  * When an error occurs using `bin/cli admin:updateDatabase` print out the SQL and the update function
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600025
+* Database 600037
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -55,7 +59,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `album_disk` to enum types for `object_count`, `rating` and `cache_object_count` tables
   * Add `song_artist` and `album_artist` maps to catalog_map
   * Add ui option `api_enable_6` to enable/disable API6
-  * Add `subtitle` to the album table
+  * Add `version` to the album table
   * Add `streamtoken` to user table allowing permalink music stream access
   * Add `object_type_IDX` to artist_map table
   * Add `object_type_IDX` to catalog_map table
@@ -66,14 +70,20 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add preference `show_subtitle`, Show Album subtitle on links
   * Add preference `show_original_year`, Show Album original year on links (Separate from use_original_year)
   * Add ui option `show_header_login`, Show the login / registration links in the site header (Separate from simple_user_mode)
-* Config version 66
+  * Add user preference `use_play2`, Use an alternative playback action for streaming if you have issues with playing music
+  * Add `bitrate`, `rate`, `mode` and `channels` to the `podcast_episode` table
+  * Extend `object_type` enum list on `rating` table
+  * Convert `object_type` to an enum on `user_flag` table
+  * Convert `object_type` to an enum on `image` table
+  * Add `enabled` to podcast_episode table
+  * Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)
+* Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
   * Set a default `album_art_min_width` and `album_art_min_height` (30px)
   * Add `album_disk` to allow_zip_types
   * Add `fallback_url` for CLI actions which can't detect the URL from web requests
-  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "_", "/", "\", "|", "," and ";")
-  * Removed `send_full_stream`
+  * Update `additional_genre_delimiters` to `"[/]{2}|[/\\|,;]"` (Split on "//", "/", "\", "|", "," and ";")
   * Update your `encode_args_opus` settings
 * Search
   * Add `album_disk` as a search type (uses album rules)
@@ -113,17 +123,17 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Changed
 
 * Moved composer to php8.2 minimum by default. Use `composer_old.json` for older PHP versions
+* Automated the JS minify on jplayer and prettyPhoto
 * Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
 * Combined all Albums into single Album objects
 * Remove Channels from Ampache (Use [icecast](https://github.com/ampache/ampache/wiki/Ampache-Icecast-and-Liquidsoap) instead)
 * Download url parameter order matching "client, action, cache"
-* Add `barcode`, `catalog_number` and  `subtitle` to Album::check()
+* Add `barcode`, `catalog_number` and `subtitle` to Album::check() for comparison checks
 * Rework user_playlists (used for Now Playing & Play Queue operations)
 * Workaround time for dsub playqueue by converting to UTC
 * An upload_catalog should only be a music catalog
-* Album::check() add barcode, catalog number and subtitle for comparison checks
 * Redirect Democratic and Random Play actions with a http 308 response (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308)
 * Add username column to playlist and search rows and allow sorting
 * Show empty properties on song pages
@@ -138,6 +148,10 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Update Requests module to WpOrg\Requests
 * Show 20 genres in Song, Artist & Album edit windows (up from 10)
 * Process stream output and then send the content to the player
+* Play urls will rename the file name to the transcode output format
+* open RSS links in a new tab
+* Dashboard pages have Newest on top now
+* Updated the default `.htaccess.dist` files
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
@@ -154,18 +168,18 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Only send songs (for now) to the 'Add all to playlist' button
   * Added an option `loopBack` which restarts the playlist after finishing
 * Subsonic
-  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned. 
+  * Since 1.14.0 the newly created/updated playlist is returned. In earlier versions an empty `<subsonic-response>` element is returned.
   * Pass the authenticated user to method calls
 
 ### Removed
 
+* Dropped the `-release` part of releases.
 * Combined a lot of duplicate properties, functions and process all over the place
 * Travic CI config file
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
-* Catalogs
-  * Soundcloud catalogs
+* Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
 * Subsonic
@@ -210,6 +224,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Do not scrub title for RSS output
 * Repeating random play URL's could skip the first song
 * Send the final url for play_url's instead of figuring it on the fly
+* Don't verify Podcast Episodes that don't have a file
+* Update song channels on tag update
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
@@ -228,7 +244,9 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Sharing some types of object
   * Filtering user and password
 
-## API develop
+## API 6.0.0
+
+Stream token's will let you design permalinked streams and allow users to stream iwhtout re authenticating to the server. [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)
 
 ### Added
 
@@ -254,11 +272,11 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Add `format` to Song and Democratic objects
   * Add `stream_format`, `stream_bitrate`, `stream_mime` to Song objects (This is the transcoded output for a stream)
   * Add all mapped artists to song and album objects (JSON added an `artists` element)
+  * Add `bitrate`, `stream_bitrate`, `rate`, `mode`, `channels` to Podcast Episode objects
 * JSON responses
   * Cast bool fields to `true` and `false` instead of "1" & "0"
   * Add `total_count` to responses to give clients an idea of the total possible objects
 * advanced_search
-  * Add `album_disk` as a search type (uses album rules)
   * Add `song_genre` to album and artist searches
   * Add `possible_duplicate_album` to song search
   * Add `mbid_artist` to album search
@@ -276,6 +294,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 * Api6
   * Renamed `user_update` to `user_edit` (user_update still works and will be depreciated in API7)
+* Api5
+  * Add backwards compatible `user_edit` method to point to `user_update`
 * ALL
   * Add all possible plugin preferences to the system list so they can't be deleted
   * Albums with no album_artist may now return 0 artist called 'Various'
@@ -312,6 +332,61 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Api3
   * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
   * Artists method parameters were incorrect
+
+## Ampache 5.6.2-release
+
+### Added
+
+* Fork https://github.com/scaron/prettyphoto and add jquery3 support
+* Added an empty example plugin to the docs folder AmpacheExample.php
+* CLI
+  * New cli command `bin/cli show:version` (Print the Ampache version number)
+
+### Removed
+
+* Replace scaron/prettyphoto with fork to allow updates
+
+### Fixed
+
+* Update webplayer to fix a longstanding Google Chrome issue with playing flac
+* Being unable to view all your catalogs in the filter box
+* prettyPhoto would rewrite your link when clicking on pictures
+* Don't show an empty filter box if there are no valid filters
+* Added some dynamic class properties
+
+## API 5.6.2
+
+### Fixed
+
+* ALL
+  * Require and set a valid version for `api_force_version`
+
+## Ampache 5.6.1-release
+
+### Added
+
+* Simplified transcode settings checks
+
+### Changed
+
+* Clean up the PlayAction class to make it a bit less complicated
+* Encode URL's with a + for segmented play urls
+
+### Removed
+
+* Soundcloud catalogs
+
+### Fixed
+
+* mptre/php-soundcloud has been removed from github
+* Podcast Episode download link
+* Filtering passwords in some places before hashing
+* Catalog caches delete and add immediately when changed
+* Check isfinite before trying to apply replaygain on webplayer
+
+## API 5.6.1
+
+**NO CHANGE**
 
 ## Ampache 5.6.0-release
 

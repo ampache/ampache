@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,7 @@ class Share extends database_object
      */
     public function __construct($share_id)
     {
-        $info = $this->get_info($share_id);
+        $info = $this->get_info($share_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -123,7 +123,7 @@ class Share extends database_object
      * @param integer $object_id
      * @param boolean $allow_stream
      * @param boolean $allow_download
-     * @param integer $expire
+     * @param int $expire_days
      * @param string $secret
      * @param integer $max_counter
      * @param string $description

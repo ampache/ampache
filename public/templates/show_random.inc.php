@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var array $object_ids */
 
 $web_path     = AmpConfig::get('web_path');
-$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
 $random_count = $_POST['random'] ?? 1;

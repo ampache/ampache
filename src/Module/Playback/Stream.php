@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -363,12 +363,14 @@ class Stream
         $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
             ? $options['maxbitrate']
             : 8000;
-        $string_map['%RESOLUTION%'] = (isset($options['resolution']))
-            ? $options['resolution']
-            : $media->f_resolution ?? '1280x720';
-        $string_map['%QUALITY%'] = (isset($options['quality']))
-            ? (31 * (101 - $options['quality'])) / 100
-            : 10;
+        if ($media instanceof Video) {
+            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
+                ? $options['resolution']
+                : $media->f_resolution ?? '1280x720';
+            $string_map['%QUALITY%'] = (isset($options['quality']))
+                ? (31 * (101 - $options['quality'])) / 100
+                : 10;
+        }
         if (isset($options['frame'])) {
             $frame                = gmdate("H:i:s", $options['frame']);
             $string_map['%TIME%'] = $frame;
@@ -420,9 +422,6 @@ class Stream
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding
      * @param Song|Podcast_Episode|Video $media
      * @param array $transcode_settings
-     * @param string $type
-     * @param string $player
-     * @param array $options
      * @return integer
      */
     public static function get_max_bitrate($media, $transcode_settings)
@@ -439,7 +438,7 @@ class Stream
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
+        if (isset($media->bitrate) && $media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1024);
         }

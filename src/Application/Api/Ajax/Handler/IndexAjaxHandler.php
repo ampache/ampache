@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -94,11 +94,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist          = new Artist($this->requestParser->getFromRequest('artist'));
-                $object_ids      = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
-                $browse          = new Browse();
-                $hide_columns    = array('cel_artist');
-                $limit_threshold = AmpConfig::get('stats_threshold', 7);
+                $artist       = new Artist($this->requestParser->getFromRequest('artist'));
+                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
+                $browse       = new Browse();
+                $hide_columns = array('cel_artist');
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -210,10 +209,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 // randomize and slice
                 shuffle($object_ids);
-                $object_ids      = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
-                $browse          = new Browse();
-                $hide_columns    = array();
-                $limit_threshold = AmpConfig::get('stats_threshold', 7);
+                $object_ids   = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
+                $browse       = new Browse();
+                $hide_columns = array();
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
                 $results['similar_songs'] = ob_get_clean();

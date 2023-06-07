@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -116,6 +116,7 @@ class Api5
         Method\Api5\UserPreference5Method::ACTION => Method\Api5\UserPreference5Method::class,
         Method\Api5\UserCreate5Method::ACTION => Method\Api5\UserCreate5Method::class,
         Method\Api5\UserUpdate5Method::ACTION => Method\Api5\UserUpdate5Method::class,
+        Method\Api5\UserEdit5Method::ACTION => Method\Api5\UserEdit5Method::class,
         Method\Api5\UserDelete5Method::ACTION => Method\Api5\UserDelete5Method::class,
         Method\Api5\Followers5Method::ACTION => Method\Api5\Followers5Method::class,
         Method\Api5\Following5Method::ACTION => Method\Api5\Following5Method::class,
@@ -274,8 +275,6 @@ class Api5
                 break;
             case 'enabled':
                 $browse->set_filter('enabled', $value);
-                break;
-            default:
                 break;
         } // end filter
 

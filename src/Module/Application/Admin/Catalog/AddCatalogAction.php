@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,7 +67,7 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         ob_end_flush();
 
-        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'none') {
+        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'none') {
             AmpError::add('general', T_('Please select a Catalog type'));
         }
 

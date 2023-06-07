@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -761,14 +761,13 @@ abstract class Catalog extends database_object
      * @param string $table_name
      * @return array
      */
-    public function get_info($object_id, $table_name = 'catalog')
+    public function get_info($object_id, $table_name = 'catalog'): array
     {
         $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = "SELECT `id` FROM `$table` WHERE `catalog_id` = ?";
         $db_results = Dba::read($sql, array($object_id));
-
         if ($results = Dba::fetch_assoc($db_results)) {
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
@@ -974,9 +973,9 @@ abstract class Catalog extends database_object
      *
      * write the total_counts to update_info
      * @param string $key
-     * @param int $value
+     * @param int|float $value
      */
-    public static function set_update_info(string $key, int $value)
+    public static function set_update_info(string $key, int|float $value)
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     } // set_update_info
@@ -994,9 +993,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
-
-        return true;
+        return self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
     } // update_enabled
 
     /**
@@ -1154,7 +1151,7 @@ abstract class Catalog extends database_object
         $counts         = array_merge(User::count(), $counts);
         $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
-        $counts['formatted_size'] = Ui::format_bytes($counts['size']);
+        $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
 
         $hours = floor($counts['time'] / 3600);
         $days  = floor($hours / 24);
@@ -1359,7 +1356,7 @@ abstract class Catalog extends database_object
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
-            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
+            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
             $row              = Dba::fetch_row($db_results);
             $results['items'] = ($row[0] ?? 0);
@@ -3154,14 +3151,14 @@ abstract class Catalog extends database_object
         $time         = 0;
         $size         = 0;
         foreach ($media_tables as $table) {
-            $enabled_sql = ($catalog_disable && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled` = '1'" : '';
-            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
+            $enabled_sql = ($catalog_disable) ? " WHERE `$table`.`enabled` = '1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
             // save the object and add to the current size
             $items += (int)($row[0] ?? 0);
             $time += (int)($row[1] ?? 0);
-            $size += (int)($row[2] ?? 0);
+            $size += $row[2] ?? 0;
             self::set_update_info($table, (int)($row[0] ?? 0));
         }
         self::set_update_info('items', $items);
@@ -3234,7 +3231,7 @@ abstract class Catalog extends database_object
             $rename_pattern
         );
         try {
-            $vainfo->get_info();
+            $vainfo->gather_tags();
         } catch (Exception $error) {
             debug_event(__CLASS__, 'Error ' . $error->getMessage(), 1);
 
@@ -3647,7 +3644,6 @@ abstract class Catalog extends database_object
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {
-                            $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
                             $db_results = Dba::read($sql, array($file));
                             $results    = Dba::fetch_assoc($db_results);
 

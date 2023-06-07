@@ -388,8 +388,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ;allow_zip_types = "album, album_disk"
 
 ; Art Zip Add
-; This settings allows/disallows to include Album Art to the Zip 
-; If 'album_art_preferred_filename' exists this is included 
+; This settings allows/disallows to include Album Art to the Zip
+; If 'album_art_preferred_filename' exists this is included
 ; DEFAULT: "false"
 ;art_zip_add = "true"
 

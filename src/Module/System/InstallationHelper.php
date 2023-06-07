@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -574,8 +574,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['home_now_playing']     = '0';
                 $dbconfig['home_recently_played'] = '0';
                 break;
-            default:
-                break;
         }
 
         AmpConfig::set_by_array($trconfig, true);
@@ -671,8 +669,8 @@ final class InstallationHelper implements InstallationHelperInterface
                     if ($secret_key !== false) {
                         $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
                     }
-                // Else, unable to generate a cryptographically secure token, use the default one
                 } elseif (isset($current[$key])) {
+                    // unable to generate a cryptographically secure token, use the default one
                     $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
                     unset($current[$key]);
                 }

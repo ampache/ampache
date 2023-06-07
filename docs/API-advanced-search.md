@@ -24,7 +24,7 @@ This is passed as a type argument and will only return this object in results
 * [label](https://ampache.org/api/advanced-search/label-advanced-search)
 * [playlist](https://ampache.org/api/advanced-search/playlist-advanced-search)
 * [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache 5.5.0+**)
-* [podcast_episode](https://ampache.org/api/advanced-search/podcast_episode-advanced-search) (**Ampache 5.5.0+**)
+* [podcast_episode](https://ampache.org/api/advanced-search/podcast-episode-advanced-search) (**Ampache 5.5.0+**)
 * [genre](https://ampache.org/api/advanced-search/genre-advanced-search)
 * tag (*Alias of genre)
 * [user](https://ampache.org/api/advanced-search/user-advanced-search)

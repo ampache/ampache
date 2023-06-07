@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,17 +96,21 @@ class Rating extends database_object
     public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array(
-            'song',
             'album',
             'album_disk',
             'artist',
-            'video',
+            'catalog',
+            'tag',
+            'label',
+            'live_stream',
+            'playlist',
+            'podcast',
+            'podcast_episode',
+            'song',
             'tvshow',
             'tvshow_season',
-            'playlist',
-            'label',
-            'podcast',
-            'podcast_episode'
+            'user',
+            'video'
         );
 
         if ($object_type !== null && $object_type !== '') {

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,14 +69,13 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        if ($data['mb_albumid']) {
-            $this->logger->debug(
-                "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-        } else {
+        if (!array_key_exists('mb_albumid', $data)) {
             return $images;
         }
+        $this->logger->debug(
+            "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
         $includes = array(
             'url-rels'

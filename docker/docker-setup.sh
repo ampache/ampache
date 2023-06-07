@@ -23,7 +23,7 @@ chmod 775 ./log
 chown $UID:33 ./media
 chmod 775 ./media
 
-chown $UID:33 ../composer.json 
+chown $UID:33 ../composer.json
 chmod 775 ../composer.json
 chown -R $UID:33 ../config
 chmod -R 775 ../config

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -485,18 +485,26 @@ class Subsonic_Xml_Data
             }
             $xsong->addAttribute('suffix', (string)$song->type);
             $xsong->addAttribute('contentType', (string)$song->mime);
-            // Return a file path relative to the catalog root path
-            $xsong->addAttribute('path', (string)$catalogData['path']);
+            $file_path = (string)$catalogData['path'];
+            if (AmpConfig::get('transcode') != 'never') {
+                $cache_path     = (string)AmpConfig::get('cache_path', '');
+                $cache_target   = (string)AmpConfig::get('cache_target', '');
+                $file_target    = Catalog::get_cache_path($song->id, $song->catalog, $cache_path, $cache_target);
+                $transcode_type = ($file_target && is_file($file_target))
+                    ? $cache_target
+                    : Stream::get_transcode_format($song->type, null, 'api');
 
-            // Set transcoding information if required
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Stream::get_stream_types_for_type($song->type, 'api');
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                // $transcode_settings = Stream::get_transcode_settings_for_media(null, null, 'api', 'song');
-                $transcode_type = Stream::get_transcode_format($song->type, null, 'api');
-                $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
-                $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+                if ($song->type !== $transcode_type) {
+                    // Return a file path relative to the catalog root path
+                    $xsong->addAttribute('path', preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
+                    // Set transcoding information
+                    $xsong->addAttribute('transcodedSuffix', (string)$transcode_type);
+                    $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+
+                    return $xsong;
+                }
             }
+            $xsong->addAttribute('path', $file_path);
 
             return $xsong;
         }

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -184,7 +184,7 @@ class Catalog_dropbox extends Catalog
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -348,22 +348,17 @@ class Catalog_dropbox extends Catalog
             $is_video_file = Catalog::is_video_file($path);
 
             if ($is_audio_file) {
-                if (count($this->get_gather_types('music')) > 0) {
-                    $this->insert_song($dropbox, $path);
+                if (count($this->get_gather_types('music')) > 0 && $this->insert_song($dropbox, $path)) {
+                    return true;
                 } else {
                     debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
-
-                    return false;
                 }
             } else {
                 if (count($this->get_gather_types('video')) > 0) {
-                    if ($is_video_file) {
-                        $this->insert_video($dropbox, $path);
+                    if ($is_video_file && $this->insert_video($dropbox, $path)) {
+                        return true;
                     } else {
-                        debug_event('dropbox.catalog',
-                            "read " . $path . " ignored, bad media type for this video catalog.", 5);
-
-                        return false;
+                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
                     }
                 }
             }
@@ -371,7 +366,7 @@ class Catalog_dropbox extends Catalog
             debug_event('dropbox.catalog', "read " . $path . " ignored, 0 bytes", 5);
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -388,9 +383,8 @@ class Catalog_dropbox extends Catalog
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
-            $readfile = true;
-            $meta     = $dropbox->getMetadata($path);
-            $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $meta    = $dropbox->getMetadata($path);
+            $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
@@ -401,10 +395,9 @@ class Catalog_dropbox extends Catalog
                 '',
                 '',
                 $this->sort_pattern,
-                $this->rename_pattern,
-                $readfile
+                $this->rename_pattern
             );
-            $vainfo->get_info();
+            $vainfo->gather_tags();
 
             $key     = VaInfo::get_tag_type($vainfo->tags);
             $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
@@ -471,7 +464,7 @@ class Catalog_dropbox extends Catalog
                     $this->rename_pattern,
                     $readfile
                 );
-                $vainfo->get_info();
+                $vainfo->gather_tags();
 
                 $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
                 $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
@@ -549,7 +542,6 @@ class Catalog_dropbox extends Catalog
                 $updated['total']++;
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
-                $readfile = true;
                 $filesize = 40960;
                 $meta     = $dropbox->getMetadata($path);
                 $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
@@ -565,11 +557,10 @@ class Catalog_dropbox extends Catalog
                         '',
                         '',
                         $this->sort_pattern,
-                        $this->rename_pattern,
-                        $readfile
+                        $this->rename_pattern
                     );
                     $vainfo->forceSize($filesize);
-                    $vainfo->get_info();
+                    $vainfo->gather_tags();
 
                     $key     = VaInfo::get_tag_type($vainfo->tags);
                     $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
@@ -691,7 +682,7 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @param string $file_path
-     * @return false|string
+     * @return string
      */
     public function get_rel_path($file_path)
     {

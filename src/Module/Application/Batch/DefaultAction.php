@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -109,7 +109,6 @@ final class DefaultAction implements ApplicationActionInterface
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
             }
-            $media_ids = [];
             foreach ($object_id as $item) {
                 $this->logger->debug(
                     'Requested item ' . $item,
@@ -153,8 +152,6 @@ final class DefaultAction implements ApplicationActionInterface
                         } // switch on type
                     } // foreach media_id
                     $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
-                    break;
-                default:
                     break;
             }
         }

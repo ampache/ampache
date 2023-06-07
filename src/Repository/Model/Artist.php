@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -201,7 +201,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             return false;
         }
 
-        $info = $this->get_info($artist_id);
+        $info = $this->get_info($artist_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }
@@ -1045,6 +1045,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                     Song::update_artist($artist_id, $song_id, $this->id, false);
                     Song::update_utime($song_id, $time);
                 }
+                Song::migrate_artist($artist_id, $this->id);
                 self::update_table_counts();
                 $updated    = true;
                 $current_id = $artist_id;

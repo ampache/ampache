@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,16 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
-    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
+
+    public const VALID_TYPES = array(
+        'bmp',
+        'gif',
+        'jp2',
+        'jpeg',
+        'jpg',
+        'png',
+        'webp'
+    );
 
     /**
      * @var integer $id
@@ -457,8 +466,7 @@ class Art extends database_object
             } // foreach song
         } // write_id3
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         // Insert it!
@@ -774,8 +782,7 @@ class Art extends database_object
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1186,14 +1193,20 @@ class Art extends database_object
     {
         $types = array(
             'album',
+            'album_disk',
             'artist',
-            'tvshow',
-            'tvshow_season',
-            'video',
-            'user',
+            'catalog',
+            'tag',
+            'label',
             'live_stream',
             'playlist',
-            'song'
+            'podcast',
+            'podcast_episode',
+            'song',
+            'tvshow',
+            'tvshow_season',
+            'user',
+            'video'
         );
 
         if ($object_type !== null) {

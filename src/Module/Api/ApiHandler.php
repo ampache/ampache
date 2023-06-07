@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -95,7 +95,7 @@ final class ApiHandler implements ApiHandlerInterface
         $user          = $gatekeeper->getUser();
         $userId        = $user->id ?? -1;
         $api_version   = (int)Preference::get_by_user($userId, 'api_force_version');
-        if ($api_version == 0) {
+        if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public)
                 ? (int)substr($version, 0, 1)

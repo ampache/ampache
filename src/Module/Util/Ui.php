@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
@@ -181,15 +182,15 @@ class Ui implements UiInterface
      *
      * Turns a size in bytes into the best human-readable value
      * @param $value
-     * @param integer $precision
+     * @param int $precision
+     * @param int $pass
      * @return string
      */
-    public static function format_bytes($value, $precision = 2)
+    public static function format_bytes($value, $precision = 2, $pass = 0)
     {
         if (!$value) {
             return '';
         }
-        $pass = 0;
         while (strlen((string)floor($value)) > 3) {
             $value /= 1024;
             $pass++;
@@ -276,7 +277,7 @@ class Ui implements UiInterface
 
         $title    = $title ?: T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
-        $icontype = pathinfo($icon_url, 4);
+        $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
@@ -344,7 +345,7 @@ class Ui implements UiInterface
             $filename = 'icon_' . $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -373,7 +374,7 @@ class Ui implements UiInterface
         $title = $title ?: ucfirst($name);
 
         $image_url = self::_find_image($name);
-        $imagetype = pathinfo($image_url, 4);
+        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_image($hover_name);
         }
@@ -443,7 +444,7 @@ class Ui implements UiInterface
             $filename = $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -922,7 +923,7 @@ class Ui implements UiInterface
                 $is_4 = '';
                 $is_5 = '';
                 $is_6 = '';
-                if ($value == 0) {
+                if (!in_array($value, Api::API_VERSIONS)) {
                     $is_0 = 'selected="selected"';
                 } elseif ($value == 3) {
                     $is_3 = 'selected="selected"';

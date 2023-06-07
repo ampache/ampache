@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,8 +68,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type = $source_object_type = filter_input(
                 INPUT_GET,
                 'object_type',
-                FILTER_SANITIZE_STRING,
-                FILTER_FLAG_NO_ENCODE_QUOTES
+                FILTER_SANITIZE_SPECIAL_CHARS
             );
         } else {
             $source_object_type = $object_type;
