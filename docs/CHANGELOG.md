@@ -29,6 +29,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Get album info from last.fm for similar & related objects
 * Try to bypass bad xml for podcast feeds if it can't load
 * Add more tables to the missing table checks
+* Remove all reference to deleted database updates (not required)
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -122,6 +123,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Changed
 
 * Moved composer to php8.2 minimum by default. Use `composer_old.json` for older PHP versions
+* Automated the JS minify on jplayer and prettyPhoto
 * Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
 * Add extra types to the Information pages
@@ -149,6 +151,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Play urls will rename the file name to the transcode output format
 * open RSS links in a new tab
 * Dashboard pages have Newest on top now
+* Updated the default `.htaccess.dist` files
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
@@ -243,6 +246,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ## API 6.0.0
 
+Stream token's will let you design permalinked streams and allow users to stream iwhtout re authenticating to the server. [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)
+
 ### Added
 
 * API6 (Based on API5)
@@ -321,13 +326,40 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Fixed
 
 * ALL
-  * Require and set a valid version for `api_force_version`
   * advanced_search methods were breaking with various offset and limits
 * Api6 JSON
   * Share and Bookmark object id's were not strings
 * Api3
   * Never send 0 ratings. They should always be null (e.g. `<rating/>`)
   * Artists method parameters were incorrect
+
+## Ampache 5.6.2-release
+
+### Added
+
+* Fork https://github.com/scaron/prettyphoto and add jquery3 support
+* Added an empty example plugin to the docs folder AmpacheExample.php
+* CLI
+  * New cli command `bin/cli show:version` (Print the Ampache version number)
+
+### Removed
+
+* Replace scaron/prettyphoto with fork to allow updates
+
+### Fixed
+
+* Update webplayer to fix a longstanding Google Chrome issue with playing flac
+* Being unable to view all your catalogs in the filter box
+* prettyPhoto would rewrite your link when clicking on pictures
+* Don't show an empty filter box if there are no valid filters
+* Added some dynamic class properties
+
+## API 5.6.2
+
+### Fixed
+
+* ALL
+  * Require and set a valid version for `api_force_version`
 
 ## Ampache 5.6.1-release
 
