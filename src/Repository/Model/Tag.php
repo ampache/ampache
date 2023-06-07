@@ -879,8 +879,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $params[]   = $type;
         }
 
-        $results = array();
-
+        $results    = array();
         $sql        = "SELECT DISTINCT(`object_type`), COUNT(`object_id`) AS `count` FROM `tag_map` WHERE `tag_id` = ?" . $filter_sql . " GROUP BY `object_type`";
         $db_results = Dba::read($sql, $params);
 

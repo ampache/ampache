@@ -440,7 +440,7 @@ class Playlist extends playlist_object
      * This simply returns a int of how many media elements exist in this playlist
      * For now let's consider a dyn_media a single entry
      * @param string $type
-     * @return integer
+     * @return int
      */
     public function get_media_count($type = '')
     {
