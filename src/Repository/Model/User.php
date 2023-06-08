@@ -566,7 +566,7 @@ class User extends database_object
      * get_play_size
      * A user might be missing the play_size so it needs to be calculated
      * @param int $user_id
-     * @return array
+     * @return int
      */
     public static function get_play_size($user_id)
     {
