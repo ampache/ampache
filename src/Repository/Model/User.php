@@ -563,6 +563,35 @@ class User extends database_object
     } // get_user_data
 
     /**
+     * get_play_size
+     * A user might be missing the play_size so it needs to be calculated
+     * @param int $user_id
+     * @return array
+     */
+    public static function get_play_size($user_id)
+    {
+        $params = array($user_id);
+        $total  = 0;
+        $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+        $db_s   = Dba::read($sql_s, $params);
+        while ($results = Dba::fetch_assoc($db_s)) {
+            $total = $total + (int)$results['size'];
+        }
+        $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+        $db_v  = Dba::read($sql_v, $params);
+        while ($results = Dba::fetch_assoc($db_v)) {
+            $total = $total + (int)$results['size'];
+        }
+        $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+        $db_p  = Dba::read($sql_p, $params);
+        while ($results = Dba::fetch_assoc($db_p)) {
+            $total = $total + (int)$results['size'];
+        }
+
+        return $total;
+    } // get_play_size
+
+    /**
      * update
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
@@ -1061,18 +1090,14 @@ class User extends database_object
             return;
         }
         /* If they have a last seen date */
-        if (!$this->last_seen) {
-            $this->f_last_seen = T_('Never');
-        } else {
-            $this->f_last_seen = get_datetime((int)$this->last_seen);
-        }
+        $this->f_last_seen = (!$this->last_seen)
+            ? T_('Never')
+            : get_datetime((int)$this->last_seen);
 
         /* If they have a create date */
-        if (!$this->create_date) {
-            $this->f_create_date = T_('Unknown');
-        } else {
-            $this->f_create_date = get_datetime((int)$this->create_date);
-        }
+        $this->f_create_date = (!$this->create_date)
+            ? T_('Unknown')
+            : get_datetime((int)$this->create_date);
 
         // Base link
         $this->get_f_link();
@@ -1080,23 +1105,7 @@ class User extends database_object
         if ($details) {
             $user_data = self::get_user_data($this->id, 'play_size');
             if (!isset($user_data['play_size'])) {
-                $params = array($this->id);
-                $total  = 0;
-                $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
-                $db_s   = Dba::read($sql_s, $params);
-                while ($results = Dba::fetch_assoc($db_s)) {
-                    $total = $total + (int)$results['size'];
-                }
-                $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
-                $db_v  = Dba::read($sql_v, $params);
-                while ($results = Dba::fetch_assoc($db_v)) {
-                    $total = $total + (int)$results['size'];
-                }
-                $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
-                $db_p  = Dba::read($sql_p, $params);
-                while ($results = Dba::fetch_assoc($db_p)) {
-                    $total = $total + (int)$results['size'];
-                }
+                $total = self::get_play_size($this->id);
                 // set the value for next time
                 self::set_user_data($this->id, 'play_size', $total);
                 $user_data['play_size'] = $total;
