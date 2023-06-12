@@ -4,7 +4,9 @@
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
 
-A [wiki](https://github.com/ampache/ampache/wiki/ampache6-details) page has been setup for Admins to follow the changes happening in preparation for Ampache6
+For information about Admin and backend changes check out [Ampache6 for Admins](https://github.com/ampache/ampache/wiki/ampache6-details)
+
+For information about what you'll see and changed behavior's check out [Ampache6 for Users](https://github.com/ampache/ampache/wiki/ampache6-for-users)
 
 You can now use a permanent session token for streaming. (check out the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)!)
 

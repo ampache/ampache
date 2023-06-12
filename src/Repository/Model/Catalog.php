@@ -975,7 +975,7 @@ abstract class Catalog extends database_object
      * @param string $key
      * @param int|float $value
      */
-    public static function set_update_info(string $key, int|float $value)
+    public static function set_update_info($key, $value)
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
     } // set_update_info
