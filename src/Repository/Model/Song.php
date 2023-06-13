@@ -892,6 +892,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 return 'audio/x-musepack';
             case 'mkv':
                 return 'audio/x-matroska';
+            case 'wav':
+                return 'audio/wav';
+            case 'webma':
+                return 'audio/webm';
             case 'mpeg3':
             case 'mp3':
             default:
