@@ -371,6 +371,10 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: 42 days
 ;user_ip_cardinality = "42"
 
+; Display this message on the Login page
+; DEFAULT: ""
+;login_message = "For the love of music"
+
 ; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
 ; playlist/album for download. Even if this is turned on you will
