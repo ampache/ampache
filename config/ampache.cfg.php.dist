@@ -373,7 +373,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Display this message on the Login page
 ; DEFAULT: ""
-;login_message = "For the love of music"
+;login_message = "For the Love of Music"
 
 ; Allow Zip Download
 ; This setting allows/disallows using zlib to zip up an entire
