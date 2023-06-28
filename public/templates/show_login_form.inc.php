@@ -88,9 +88,9 @@ $_SESSION['login'] = true; ?>
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERER')); ?>" />
                         <input type="hidden" name="action" value="login" />
-                        <?php echo AmpConfig::get('login_message'); ?>
                     </div>
                 </div>
+                <div class="loginmessage"><?php echo AmpConfig::get('login_message'); ?></div>
                 <div class="loginoptions">
                 <?php if (AmpConfig::get('allow_public_registration')) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
