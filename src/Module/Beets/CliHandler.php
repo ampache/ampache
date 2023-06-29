@@ -31,14 +31,13 @@ namespace Ampache\Module\Beets;
 class CliHandler extends Handler
 {
     /**
-     *
      * @var Catalog
      */
     protected $handler;
 
     /**
-     * string handler command to do whatever we need
-     * @var
+     * string handler command to do whatever we need using call_user_func
+     * @var string
      */
     protected $handlerCommand;
 

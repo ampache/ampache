@@ -33,7 +33,6 @@ class JsonHandler extends Handler
     protected $uri;
 
     /**
-     *
      * @var Catalog
      */
     protected $handler;
