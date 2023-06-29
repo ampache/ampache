@@ -52,7 +52,7 @@
         "ext-xml": "*",
         "adhocore/cli": "^0.9.0",
         "aehlke/tag-it": "2.*",
-        "ampache/ampacheapi-php": "^1.0",
+        "ampache/ampacheapi-php": "1.0.1",
         "aterrien/jquery-knob": "1.2.*",
         "blueimp/jquery-file-upload": "v10.2.0",
         "cboden/ratchet": "0.4.*",
@@ -98,7 +98,7 @@
         "xdan/datetimepicker": "2.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "~3.10",
+        "friendsofphp/php-cs-fixer": "3.16.0",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^9",

@@ -93,8 +93,8 @@ final class SongSorter implements SongSorterInterface
 
             $stats  = Catalog::get_server_counts(0);
             $total  = $stats['song'];
-            $chunks = (int)floor($total / 10000);
-            foreach (range(0, $chunks) as $chunk) {
+            $chunks = (int)floor($total / 10000) + 1;
+            foreach (range(1, $chunks) as $chunk) {
                 /* HINT: Catalog Block: 4/120 */
                 $interactor->info(
                     sprintf(T_('Catalog Block: %s'), $chunk . '/' . $chunks),

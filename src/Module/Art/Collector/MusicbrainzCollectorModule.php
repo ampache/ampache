@@ -91,7 +91,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             return $images;
         }
 
-        $asin = $release->asin;
+        $asin = $release->asin ?? false;
 
         if ($asin) {
             $this->logger->debug(
@@ -195,7 +195,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             'imguri' => '$matches[1]',
             'releaseuri' => '',
         ];
-        foreach ($release->relations as $ar) {
+        foreach ($release->relations ?? array() as $ar) {
             $arurl = $ar->url->resource;
 
             $this->logger->debug(

@@ -42,7 +42,7 @@ class Catalog_beets extends Catalog
     protected $description = 'Beets Catalog';
     protected $listCommand = 'ls';
 
-    protected string $beetsdb;
+    protected string $beetsdb = '';
 
     public int $catalog_id;
 
@@ -121,7 +121,7 @@ class Catalog_beets extends Catalog
         $db_results = Dba::read($selectSql, array($beetsdb));
 
         if (Dba::num_rows($db_results)) {
-            debug_event('catalog', 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
+            debug_event(self::class, 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
             AmpError::add('general', sprintf(T_('This path belongs to an existing Beets Catalog: %s'), $beetsdb));
 
             return false;
@@ -138,7 +138,7 @@ class Catalog_beets extends Catalog
      */
     protected function getParser()
     {
-        return new CliHandler();
+        return new CliHandler($this);
     }
 
     /**

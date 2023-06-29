@@ -250,7 +250,7 @@ class AmpacheRss
      * pubdate_now_playing
      * this is the pub date we should use for the Now Playing information,
      * this is a little specific as it uses the 'newest' expire we can find
-     * @return integer
+     * @return int|null
      */
     public static function pubdate_now_playing()
     {

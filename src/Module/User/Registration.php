@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
 
@@ -110,7 +111,7 @@ class Registration
             return false;
         }
 
-        $data = fread($filepointer, filesize($filename));
+        $data = fread($filepointer, Core::get_filesize($filename));
 
         /* Scrub and show */
         echo $data;

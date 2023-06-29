@@ -51,7 +51,6 @@ class Metadata extends DatabaseObject implements Model
     protected $data;
 
     /**
-     *
      * @var string
      */
     protected $type;

@@ -93,7 +93,7 @@ abstract class Handler
         $commandParts = array(
             $command
         );
-        if ($time) {
+        if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {
             // Add an empty part so we get a trailing slash if needed

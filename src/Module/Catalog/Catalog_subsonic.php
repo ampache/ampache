@@ -47,7 +47,7 @@ class Catalog_subsonic extends Catalog
 
     private int $catalog_id;
 
-    public string $uri;
+    public string $uri = '';
     public string $username;
     public string $password;
 

@@ -29,13 +29,11 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 trait Metadata
 {
     /**
-     *
      * @var Repository\Metadata
      */
     protected $metadataRepository;
 
     /**
-     *
      * @var Repository\MetadataField
      */
     protected $metadataFieldRepository;

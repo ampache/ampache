@@ -5493,26 +5493,10 @@ class Update
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
-        // Calculate their total Bandwidth Usage
+        // After the change recalculate their total Bandwidth Usage
         foreach ($user_list as $user_id) {
-            $params = array($user_id);
-            $total  = 0;
-            $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
-            $db_s   = Dba::read($sql_s, $params);
-            while ($results = Dba::fetch_assoc($db_s)) {
-                $total = $total + $results['size'];
-            }
-            $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
-            $db_v  = Dba::read($sql_v, $params);
-            while ($results = Dba::fetch_assoc($db_v)) {
-                $total = $total + $results['size'];
-            }
-            $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
-            $db_p  = Dba::read($sql_p, $params);
-            while ($results = Dba::fetch_assoc($db_p)) {
-                $total = $total + $results['size'];
-            }
-            $sql = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
+            $total = User::get_play_size($user_id);
+            $sql   = "REPLACE INTO `user_data` SET `user`= ?, `key`= ?, `value`= ?;";
             if (self::_write($interactor, $sql, array($user_id, 'play_size', $total)) === false) {
                 return false;
             }

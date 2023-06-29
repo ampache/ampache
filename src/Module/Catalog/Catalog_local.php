@@ -61,7 +61,7 @@ class Catalog_local extends Catalog
     private $songs_to_gather;
     private $videos_to_gather;
 
-    public string $path;
+    public string $path = '';
 
     /**
      * get_description
@@ -617,8 +617,8 @@ class Catalog_local extends Catalog
             return array('total' => $number, 'updated' => $total_updated);
         }
         $number = $number + $total;
-        $chunks = (int)floor($total / 1000);
-        foreach (range(0, $chunks) as $chunk) {
+        $chunks = (int)floor($total / 1000) + 1;
+        foreach (range(1, $chunks) as $chunk) {
             // Try to be nice about memory usage
             if (isset($media_class) && $chunk > 0) {
                 $media_class::clear_cache();
@@ -1174,8 +1174,8 @@ class Catalog_local extends Catalog
         if ($total == 0) {
             return $missing;
         }
-        $chunks = floor($total / 10000);
-        foreach (range(0, $chunks) as $chunk) {
+        $chunks = (int)floor($total / 10000) + 1;
+        foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
         }

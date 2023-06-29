@@ -46,7 +46,7 @@ class Catalog_remote extends Catalog
 
     private int $catalog_id;
 
-    public string $uri;
+    public string $uri = '';
     public string $username;
     public string $password;
 

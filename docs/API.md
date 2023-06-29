@@ -100,6 +100,18 @@ for example:
 * ampache://myuser:mypwd@localhost/ampache
 * ampache://yourapikey@localhost:993/ampache#ssl=true
 
+### Stream Token's
+
+Ampache6+ allows you to create a Stream Token for a user.
+
+The biggest bonus here is that these static tokens let you can create links that avoid the risk of the session expiring and don't require a handshake to create a session.
+
+Once a user has been given a streaming token; all Democratic, Song, Podcast Episode and Video streams will use this session token.
+
+e.g. `https://music.com.au/play/index.php?ssid=supercoolstreamingtoken&type=song&oid=1511&uid=1&player=api&name=The%20Smashing%20Pumpkins%20-%20Wound.flac`
+
+This token does not allow a user to do anything except stream music and it requires an Admin to create the token for the user.
+
 #### Application Name
 
 By default Ampache uses USER_AGENT as application name but this could also be defined through http query string. Add `&client=YourAppName` to override the application name. This parameter also works on stream sessions.
@@ -250,7 +262,7 @@ All Data methods return HTTP 200 responses
 * licenses
 * license
 * license_songs
-* list **Api6** Replaces get_indexes
+* list **Api6** (Replaces get_indexes)
 * live_streams
 * live_stream
 * live_stream_create **Api6**
@@ -301,7 +313,7 @@ All Data methods return HTTP 200 responses
 * user
 * user_create
 * user_delete
-* user_edit **Api6** Replaces user_update
+* user_edit **Api6** (Replaces user_update)
 * user_update
 * user_preference
 * videos
