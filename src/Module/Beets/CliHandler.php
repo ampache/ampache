@@ -161,7 +161,7 @@ class CliHandler extends Handler
     {
         $offset   = strlen($this->itemEnd);
         $position = (strlen($item) > $offset)
-            ? stripos($item, 'content-length: ', $offset)
+            ? strpos($item, $this->itemEnd, $offset)
             : false;
 
         return ($position !== false);

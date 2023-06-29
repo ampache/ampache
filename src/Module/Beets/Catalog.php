@@ -101,7 +101,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     *
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param integer $count song count
      * @param array $song Song array
@@ -109,6 +108,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
     {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
+            return;
+        }
         if ($ignoreTicker || Ui::check_ticker()) {
             Ui::update_text($prefix . '_count_' . $this->id, $count);
             if (isset($song)) {
@@ -139,7 +141,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         /* @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
-        $parser->start($parser->getTimedCommand($this->listCommand, 'added', null));
+        $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
