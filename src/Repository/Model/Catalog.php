@@ -342,7 +342,7 @@ abstract class Catalog extends database_object
         if (!$type) {
             return null;
         }
-
+        /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $controller */
         $controller = self::CATALOG_TYPES[$type] ?? null;
 
         if ($controller === null) {

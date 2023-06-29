@@ -61,7 +61,7 @@ class Catalog_local extends Catalog
     private $songs_to_gather;
     private $videos_to_gather;
 
-    public string $path;
+    public string $path = '';
 
     /**
      * get_description

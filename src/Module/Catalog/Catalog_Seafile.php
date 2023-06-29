@@ -50,7 +50,8 @@ class Catalog_Seafile extends Catalog
     private static $description = 'Seafile Remote Catalog';
     private static $table_name  = 'catalog_seafile';
 
-    private SeafileAdapter $seafile;
+    /** @var SeafileAdapter seafile */
+    private $seafile = null;
     private int $catalog_id;
     private int $count = 0;
 
