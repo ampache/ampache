@@ -355,6 +355,8 @@ Stream token's will let you design permalinked streams and allow users to stream
 * prettyPhoto would rewrite your link when clicking on pictures
 * Don't show an empty filter box if there are no valid filters
 * Added some dynamic class properties
+* Beets catalog actions
+* Remote catalog and Subsonic catalog streaming
 
 ## API 5.6.2
 

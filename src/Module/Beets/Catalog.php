@@ -95,7 +95,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function prepare_media($media)
     {
         /** @var Song $media */
-        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
+        debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;
     }
@@ -159,7 +159,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $song['catalog'] = $this->id;
 
         if ($this->checkSong($song)) {
-            debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
+            debug_event(self::class, 'Skipping existing song ' . $song['file'], 5);
         } else {
             $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
@@ -215,9 +215,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $inserted = Song::insert($song);
         if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5);
+            debug_event(self::class, 'Adding song ' . $song['file'], 5);
         } else {
-            debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
+            debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
             /* HINT: filename (file path) */
             AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
             echo AmpError::display('general');
@@ -233,7 +233,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function verify_catalog_proc()
     {
-        debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
+        debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
         /* @var Handler $parser */
