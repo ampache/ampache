@@ -42,7 +42,7 @@ class Catalog_beets extends Catalog
     protected $description = 'Beets Catalog';
     protected $listCommand = 'ls';
 
-    protected string $beetsdb;
+    protected string $beetsdb = '';
 
     public int $catalog_id;
 

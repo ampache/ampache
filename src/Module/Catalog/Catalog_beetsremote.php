@@ -40,7 +40,7 @@ class Catalog_beetsremote extends Catalog
     protected $description = 'Beets Remote Catalog';
     protected $listCommand = 'item/query';
 
-    protected string $uri;
+    protected string $uri = '';
 
     public int $catalog_id;
 

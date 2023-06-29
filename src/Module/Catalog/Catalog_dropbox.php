@@ -53,7 +53,7 @@ class Catalog_dropbox extends Catalog
     private int $count   = 0;
 
     private int $catalog_id;
-    private string $apikey;
+    private string $apikey = '';
     private string $secret;
     private string $authcode;
     private string $authtoken;
