@@ -161,7 +161,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {

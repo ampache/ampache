@@ -233,6 +233,12 @@ class Album extends database_object implements library_item
      */
     public $f_release_type;
 
+    /** @var integer $song_id */
+    public $song_id;
+
+    /** @var integer $artist_id */
+    public $artist_id;
+
     // cached information
 
     /**

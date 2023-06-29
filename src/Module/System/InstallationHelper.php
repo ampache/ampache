@@ -292,7 +292,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if ($create_tables) {
             $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
+            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
             $pieces   = $this->split_sql($query);
             $p_count  = count($pieces);
             $errors   = array();
@@ -648,7 +648,7 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, filesize($distfile));
+        $dist     = fread($handle, Core::get_filesize($distfile));
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);
