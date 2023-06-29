@@ -97,6 +97,15 @@ class CliHandler extends Handler
     );
 
     /**
+     * CliHandler constructor.
+     * @param Catalog $handler
+     */
+    public function __construct($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
      * Starts a command
      * @param string $command
      */

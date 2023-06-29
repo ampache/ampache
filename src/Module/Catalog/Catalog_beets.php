@@ -138,7 +138,7 @@ class Catalog_beets extends Catalog
      */
     protected function getParser()
     {
-        return new CliHandler();
+        return new CliHandler($this);
     }
 
     /**
