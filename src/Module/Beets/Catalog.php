@@ -128,12 +128,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function add_to_catalog($options = null)
     {
-        if (!defined('SSE_OUTPUT') || !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
-        if (!defined('SSE_OUTPUT') || !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
         /* @var Handler $parser */
@@ -143,7 +143,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
-        if (!defined('SSE_OUTPUT') || !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
     }
