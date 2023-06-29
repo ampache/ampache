@@ -23,6 +23,8 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
+use Ampache\Module\System\Core;
+
 /**
  * Start commands in CLI and dispatch them
  *
@@ -178,7 +180,7 @@ class CliHandler extends Handler
         $values             = explode($this->seperator, $item);
         $song               = array_combine($this->fields, $values);
         $mappedSong         = $this->mapFields($song);
-        $mappedSong['size'] = filesize($mappedSong['file']);
+        $mappedSong['size'] = Core::get_filesize($mappedSong['file']);
 
         return $mappedSong;
     }
