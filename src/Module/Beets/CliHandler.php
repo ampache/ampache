@@ -160,7 +160,12 @@ class CliHandler extends Handler
      */
     protected function itemIsComlete($item)
     {
-        return strrpos($item, $this->itemEnd, strlen($this->itemEnd)) !== false;
+        $offset   = strlen($this->itemEnd);
+        $position = (strlen($item) > $offset)
+            ? stripos($item, 'content-length: ', $offset)
+            : false;
+
+        return ($position !== false);
     }
 
     /**
