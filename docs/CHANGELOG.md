@@ -125,6 +125,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Changed
 
 * Moved composer to php8.2 minimum by default. Use `composer_old.json` for older PHP versions
+* Identify the active git branch when checking for updates
 * Automated the JS minify on jplayer and prettyPhoto
 * Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
