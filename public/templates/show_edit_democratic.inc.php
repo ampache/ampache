@@ -61,18 +61,6 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
             <td><?php echo T_('Make Default'); ?></td>
             <td><input type="checkbox" name="make_default" value="1" <?php echo $default; ?> /></td>
         </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <th><?php echo T_('Apply to All'); ?></th>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td><?php echo T_('Force Democratic Play'); ?></td>
-            <td><input type="checkbox" value="1" name="force_democratic" /></td>
-        </tr>
     </table>
     <div class="formValidation">
         <?php echo Core::form_register('create_democratic'); ?>

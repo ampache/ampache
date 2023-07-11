@@ -85,11 +85,6 @@ final class CreateAction implements ApplicationActionInterface
             );
         }
 
-        // Now check for additional things we might have to do
-        if (Core::get_post('force_democratic') !== '') {
-            Democratic::set_user_preferences();
-        }
-
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
