@@ -61,8 +61,8 @@ $configuration['database_password'] = '*********'; ?>
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
     <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
-<?php if ((string) AmpConfig::get('github_force_branch') !== '') { ?>
-    <?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
+<?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
+    <?php echo "<div>" . T_('GitHub Branch') . ': "' . (string)AutoUpdate::is_force_git_branch() . '"</div>';
 } ?>
     <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
 <?php if (AutoUpdate::is_update_available()) {

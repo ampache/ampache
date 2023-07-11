@@ -71,7 +71,7 @@ class AutoUpdate
      * Check if there is a default branch set in the config file.
      * @return string
      */
-    protected static function is_force_git_branch()
+    public static function is_force_git_branch()
     {
         $config_branch = (string)AmpConfig::get('github_force_branch');
         if (!empty($config_branch)) {
