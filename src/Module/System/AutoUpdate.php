@@ -73,7 +73,20 @@ class AutoUpdate
      */
     protected static function is_force_git_branch()
     {
-        return (string)AmpConfig::get('github_force_branch');
+        $config_branch = (string)AmpConfig::get('github_force_branch');
+        if (!empty($config_branch)) {
+            return $config_branch;
+        }
+        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
+            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
+            $pattern = '/ref: refs\/heads\/(.*)/';
+            $matches = [];
+            if (preg_match($pattern, $current, $matches)) {
+                return (string)$matches[1];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -207,18 +220,6 @@ class AutoUpdate
         $git_branch = self::is_force_git_branch();
         if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
             return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
-        }
-        // if you've checked out a branch use that one
-        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
-            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
-            $pattern = '/ref: refs\/heads\/(.*)/';
-            $matches = [];
-            if (preg_match($pattern, $current, $matches)) {
-                $git_branch = (string)$matches[1];
-                if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
-                    return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
-                }
-            }
         }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
