@@ -208,6 +208,18 @@ class AutoUpdate
         if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
             return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
+        // if you've checked out a branch use that one
+        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
+            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
+            $pattern = '/ref: refs\/heads\/(.*)/';
+            $matches = [];
+            if (preg_match($pattern, $current, $matches)) {
+                $git_branch = (string)$matches[1];
+                if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
+                    return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
+                }
+            }
+        }
         if (self::is_branch_develop_exists()) {
             return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
