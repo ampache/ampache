@@ -15,6 +15,7 @@
 ### Fixed
 
 * Checking for git updates without a forced branch
+* Update webplayer to fix a longstanding Google Chrome issue with playing flac
 * Being unable to view all your catalogs in the filter box
 * Prettyphoto would rewrite your link when clicking on pictures
 * Don't show an empty filter box if there are no valid filters
