@@ -751,7 +751,9 @@ class Stream
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = AmpConfig::get('http_port');
+        $http_port = ($local && preg_match("/:(\d+)/", $web_path, $matches))
+            ? $matches[1]
+            : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", $web_path, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
