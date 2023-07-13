@@ -125,6 +125,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 ### Changed
 
 * Moved composer to php8.2 minimum by default. Use `composer_old.json` for older PHP versions
+* Identify the active git branch when checking for updates
 * Automated the JS minify on jplayer and prettyPhoto
 * Enforce Admin (100) for system settings
 * Change all the Information pages into browses (Default to Album/Album Disk)
@@ -181,6 +182,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
+* Option to 'Force Democratic Play' has been removed from the config page
+  * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
 * Plugins
   * The Movie Database (TMDB) plugin
@@ -350,11 +353,12 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 ### Fixed
 
+* Checking for git updates without a forced branch
 * Update webplayer to fix a longstanding Google Chrome issue with playing flac
 * Being unable to view all your catalogs in the filter box
-* prettyPhoto would rewrite your link when clicking on pictures
+* Prettyphoto would rewrite your link when clicking on pictures
 * Don't show an empty filter box if there are no valid filters
-* Added some dynamic class properties
+* Some dynamic class properties
 * Beets catalog actions
 * Remote catalog and Subsonic catalog streaming
 

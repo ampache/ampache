@@ -71,9 +71,22 @@ class AutoUpdate
      * Check if there is a default branch set in the config file.
      * @return string
      */
-    protected static function is_force_git_branch()
+    public static function is_force_git_branch()
     {
-        return (string)AmpConfig::get('github_force_branch');
+        $config_branch = (string)AmpConfig::get('github_force_branch');
+        if (!empty($config_branch)) {
+            return $config_branch;
+        }
+        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
+            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
+            $pattern = '/ref: refs\/heads\/(.*)/';
+            $matches = [];
+            if (preg_match($pattern, $current, $matches)) {
+                return (string)$matches[1];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -190,9 +203,9 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        $git_branch = self::is_force_git_branch();
-        if (self::is_develop() || $git_branch !== '') {
-            return self::get_current_commit();
+        $commit = self::get_current_commit();
+        if (!empty($commit)) {
+            return $commit;
         } else {
             return AmpConfig::get('version');
         }

@@ -94,16 +94,24 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'browse':
-                $object_ids = array();
-
-                // Check 'value' with isset because it can null
-                //(user type a "start with" word and deletes it)
-                if ((array_key_exists('key', $_REQUEST) && $_REQUEST['key']) && (array_key_exists('value', $_REQUEST) && isset($_REQUEST['value']))) {
-                    $value = $_REQUEST['value'];
-                    if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
-                        $value = 0;
+                // data set by the fileter box (browse_filters.inc.php)
+                if (isset($_REQUEST['key'])) {
+                    // user typed a "start with" word
+                    if (isset($_REQUEST['multi_alpha_filter'])) {
+                        $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
                     }
-                    $browse->set_filter($_REQUEST['key'], $value);
+                    // Checkbox unplayed
+                    if (isset($_REQUEST['value'])) {
+                        $value = (int)$_REQUEST['value'] ?? 0;
+                        if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
+                            $value = 0;
+                        }
+                        $browse->set_filter($_REQUEST['key'], $value);
+                    }
+                }
+                // filter box Catalog select
+                if (isset($_REQUEST['catalog'])) {
+                    $browse->set_catalog($_SESSION['catalog']);
                 }
 
                 if (array_key_exists('sort', $_REQUEST) && $_REQUEST['sort']) {

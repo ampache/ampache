@@ -63,7 +63,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
 
-        if (!empty($results['force_ssl']) || $this->environment->isSsl() === true) {
+        if (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true) {
             $protocol = 'https';
         } else {
             $protocol = 'http';

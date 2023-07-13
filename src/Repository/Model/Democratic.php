@@ -131,31 +131,6 @@ class Democratic extends Tmp_Playlist
     } // set_parent
 
     /**
-     * set_user_preferences
-     * This sets up a (or all) user(s) to use democratic play. This sets
-     * their play method and playlist method (clear on send) If no user is
-     * passed it does it for everyone and also locks down the ability to
-     * change to admins only
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function set_user_preferences()
-    {
-        // FIXME: Code in single user stuff
-        $preference_id = Preference::id_from_name('play_type');
-        Preference::update_level($preference_id, '75');
-        Preference::update_all($preference_id, 'democratic');
-
-        $allow_demo = Preference::id_from_name('allow_democratic_playback');
-        Preference::update_all($allow_demo, '1');
-
-        $play_method = Preference::id_from_name('playlist_method');
-        Preference::update_all($play_method, 'clear');
-
-        return true;
-    } // set_user_preferences
-
-    /**
      * format
      * This makes the variables pretty so that they can be displayed
      */
