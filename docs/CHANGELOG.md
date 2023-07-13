@@ -353,11 +353,12 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 ### Fixed
 
+* Checking for git updates without a forced branch
 * Update webplayer to fix a longstanding Google Chrome issue with playing flac
 * Being unable to view all your catalogs in the filter box
-* prettyPhoto would rewrite your link when clicking on pictures
+* Prettyphoto would rewrite your link when clicking on pictures
 * Don't show an empty filter box if there are no valid filters
-* Added some dynamic class properties
+* Some dynamic class properties
 * Beets catalog actions
 * Remote catalog and Subsonic catalog streaming
 
