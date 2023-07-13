@@ -55,6 +55,7 @@ class Catalog_local extends Catalog
     private $type        = 'local';
     private $description = 'Local Catalog';
 
+    private int $catalog_id;
     private $count;
     private $songs_to_gather;
     private $videos_to_gather;

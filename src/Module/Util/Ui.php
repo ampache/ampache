@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Repository\Model\Metadata\Repository\MetadataField;
@@ -916,7 +917,7 @@ class Ui implements UiInterface
                 $is_3 = '';
                 $is_4 = '';
                 $is_5 = '';
-                if ($value == 0) {
+                if (!in_array($value, Api::API_VERSIONS)) {
                     $is_0 = 'selected="selected"';
                 } elseif ($value == 3) {
                     $is_3 = 'selected="selected"';

@@ -55,8 +55,10 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
     public $author;
     public $category;
     public $pubdate;
+    public $addition_time;
     public $enabled;
     public $total_count;
+    public $total_skip;
     public $catalog;
     public $waveform;
     public $has_art;
@@ -479,7 +481,7 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
 
     /**
      * Get transcode settings.
-     * @param string|null $target
+     * @param string $target
      * @param string $player
      * @param array $options
      * @return array

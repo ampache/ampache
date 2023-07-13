@@ -579,11 +579,15 @@ final class PlayAction implements ApplicationActionInterface
                 $media->file  = $file_target;
                 $media->size  = Core::get_filesize($file_target);
                 $media->type  = $cache_target;
-                $transcode_to = false;
+                $transcode_to = null;
             } else {
                 // Build up the catalog for our current object
                 $catalog = Catalog::create_from_id($mediaCatalogId);
                 $media   = $catalog->prepare_media($media);
+                // Subsonic and remote catalogs redirect you to the remote url so stop here
+                if ($media == null) {
+                    return null;
+                }
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
@@ -615,7 +619,7 @@ final class PlayAction implements ApplicationActionInterface
         // Format the media name
         $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
         $transcode_to = ($is_download && !$transcode_to)
-            ? false
+            ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
         header('Access-Control-Allow-Origin: *');
@@ -789,7 +793,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $troptions = array();
-        if ($transcode) {
+        if ($transcode && in_array($type, array('song', 'video', 'podcast_episode'))) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
@@ -823,7 +827,7 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
-
+            /** @var Song|Video|Podcast_Episode $media */
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
@@ -848,6 +852,7 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions
             );
             $transcode_to = $transcode_settings['format'];
+            /** @var Song|Video $media */
             $maxbitrate   = Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {

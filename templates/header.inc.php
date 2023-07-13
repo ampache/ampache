@@ -99,7 +99,7 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
         <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
+        <script src="<?php echo $web_path; ?>/lib/modules/prettyphoto/js/jquery.prettyPhoto.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
@@ -117,7 +117,10 @@ $jQueryContextMenu = (is_dir(__DIR__ . '/../lib/components/jquery-contextmenu'))
 
         <script>
             $(document).ready(function(){
-                $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+                $("a[rel^='prettyPhoto']").prettyPhoto({
+                    social_tools: false,
+                    deeplinking: false
+                });
                 <?php if (AmpConfig::get('geolocation')) { ?>
                     geolocate_user();
                 <?php } ?>

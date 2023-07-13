@@ -239,12 +239,14 @@ class Stream
         $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
             ? $options['maxbitrate']
             : 8000;
-        $string_map['%RESOLUTION%'] = (isset($options['resolution']))
-            ? $options['resolution']
-            : $media->f_resolution ?? '1280x720';
-        $string_map['%QUALITY%'] = (isset($options['quality']))
-            ? (31 * (101 - $options['quality'])) / 100
-            : 10;
+        if ($media instanceof Video) {
+            $string_map['%RESOLUTION%'] = (isset($options['resolution']))
+                ? $options['resolution']
+                : $media->f_resolution ?? '1280x720';
+            $string_map['%QUALITY%'] = (isset($options['quality']))
+                ? (31 * (101 - $options['quality'])) / 100
+                : 10;
+        }
         if (isset($options['frame'])) {
             $frame                = gmdate("H:i:s", $options['frame']);
             $string_map['%TIME%'] = $frame;
@@ -312,7 +314,7 @@ class Stream
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media
-        if ($media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
+        if (isset($media->bitrate) && $media->type == $transcode_settings['format'] && ($bit_rate * 1024) > $media->bitrate && $media->bitrate > 0) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate($media->bitrate / 1024);
         }
@@ -602,22 +604,21 @@ class Stream
      */
     public static function get_base_url($local = false)
     {
-        $session_string = '';
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::get_session() . '&';
-        }
+        $session_string = (AmpConfig::get('use_auth') && AmpConfig::get('require_session'))
+            ? 'ssid=' . self::get_session() . '&'
+            : '';
 
-        if ($local) {
-            $web_path = AmpConfig::get('local_web_path');
-        } else {
-            $web_path = AmpConfig::get('web_path');
-        }
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get('web_path');
 
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = AmpConfig::get('http_port');
+        $http_port = ($local && preg_match("/:(\d+)/", $web_path, $matches))
+            ? $matches[1]
+            : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", $web_path, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
