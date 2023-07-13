@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ use Requests;
 /**
  * AutoUpdate Class
  *
- * This class handles autoupdate check from Github.
+ * This class handles autoupdate check from GitHub.
  */
 class AutoUpdate
 {
@@ -71,9 +71,22 @@ class AutoUpdate
      * Check if there is a default branch set in the config file.
      * @return string
      */
-    protected static function is_force_git_branch()
+    public static function is_force_git_branch()
     {
-        return (string)AmpConfig::get('github_force_branch');
+        $config_branch = (string)AmpConfig::get('github_force_branch');
+        if (!empty($config_branch)) {
+            return $config_branch;
+        }
+        if (is_readable(__DIR__ . '/../../../.git/HEAD')) {
+            $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
+            $pattern = '/ref: refs\/heads\/(.*)/';
+            $matches = [];
+            if (preg_match($pattern, $current, $matches)) {
+                return (string)$matches[1];
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -99,7 +112,7 @@ class AutoUpdate
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
-                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
 
                 return null;
             }
@@ -135,7 +148,7 @@ class AutoUpdate
     public static function get_latest_version($force = false)
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
-        // Forced or last check expired, check latest version from Github
+        // Forced or last check expired, check latest version from GitHub
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time       = time();
@@ -190,9 +203,9 @@ class AutoUpdate
      */
     public static function get_current_version()
     {
-        $git_branch = self::is_force_git_branch();
-        if (self::is_develop() || $git_branch !== '') {
-            return self::get_current_commit();
+        $commit = self::get_current_commit();
+        if (!empty($commit)) {
+            return $commit;
         } else {
             return AmpConfig::get('version');
         }
@@ -249,7 +262,11 @@ class AutoUpdate
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
 
-                $available = (version_compare($cpart[0], $lpart[0]) < 0);
+                // work around any possible mistakes in the order
+                $current = ($cpart[0] == 'release') ? $cpart[1] : $cpart[0];
+                $latest  = ($lpart[0] == 'release') ? $lpart[1] : $lpart[0];
+
+                $available = (version_compare($current, $latest) < 0);
             }
         }
 
