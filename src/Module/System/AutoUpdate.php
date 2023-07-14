@@ -198,6 +198,24 @@ class AutoUpdate
     }
 
     /**
+     * Get the correct zip for your version.
+     * e.g. https://github.com/ampache/ampache/releases/download/6.0.0/ampache-6.0.0_all_php8.2.zip
+     * e.g. https://github.com/ampache/ampache/releases/download/6.0.0/ampache-6.0.0_all_squashed_php8.2.zip
+     * @return string
+     */
+    public static function get_zip_url()
+    {
+        $ampversion = self::get_latest_version();
+        $structure  = (AmpConfig::get('structure') == 'squashed')
+            ? '_squashed'
+            : '';
+        $phpversion = AmpConfig::get('phpversion');
+
+        return 'https://github.com/ampache/ampache/releases/download/' . $ampversion . '/ampache-' . $ampversion . '_all' . $structure . '_php' . $phpversion . '.zip';
+
+    }
+
+    /**
      * Get current local version.
      * @return string
      */
@@ -304,7 +322,7 @@ class AutoUpdate
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
-            echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() . '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';
+            echo ' | <a href="' . self::get_zip_url() . ' target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
