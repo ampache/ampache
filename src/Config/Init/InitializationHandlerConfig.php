@@ -34,9 +34,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 {
     private const VERSION        = '6.0.0'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '67';
+    private const STRUCTURE      = 'squashed';  // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
-    public const STRUCTURE        = 'squashed';  // Project release is using either the public html folder or squashed structure
 
     private EnvironmentInterface $environment;
 
@@ -63,6 +63,8 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         /** This is the version.... fluff nothing more... **/
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
+        $results['structure']          = static::STRUCTURE;
+        $results['phpversion']         = substr(phpversion(), 0, 3);
 
         $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)
             ? 'https'
