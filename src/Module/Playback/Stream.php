@@ -755,7 +755,7 @@ class Stream
             ? $matches[1]
             : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (preg_match("/:(\d+)/", $web_path, $matches)) {
+            if (isset($matches) && array_key_exists(1, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
             } else {
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);

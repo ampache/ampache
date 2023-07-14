@@ -3,20 +3,14 @@ LABEL maintainer="lachlan-00"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN     apt-get -q -q update \
-    &&  apt-get -q -q -y install --no-install-recommends \
-          software-properties-common \
-          wget \
-    &&  apt-add-repository contrib \
-    &&  apt-add-repository non-free \
+RUN     sh -c 'echo "Types: deb\n# http://snapshot.debian.org/archive/debian/20230612T000000Z\nURIs: http://deb.debian.org/debian\nSuites: stable stable-updates\nComponents: main contrib non-free\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n\nTypes: deb\n# http://snapshot.debian.org/archive/debian-security/20230612T000000Z\nURIs: http://deb.debian.org/debian-security\nSuites: stable-security\nComponents: main\nSigned-By: /usr/share/keyrings/debian-archive-keyring.gpg\n" > /etc/apt/sources.list.d/debian.sources' \
     &&  apt-get -q -q update \
-    &&  apt-get -q -q -y install --no-install-recommends libdvd-pkg \
-    &&  dpkg-reconfigure libdvd-pkg \
-    &&  apt-get -qq install apt-transport-https lsb-release ca-certificates curl \
+    &&  apt-get -q -q -y install --no-install-recommends wget software-properties-common libdvd-pkg \
+    &&  apt-get -q -q -y install apt-transport-https lsb-release ca-certificates curl \
     &&  wget -q -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
     &&  sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list' \
     &&  apt-get update \
-    &&  apt-get -qq install --no-install-recommends \
+    &&  apt-get -q -q -y install --no-install-recommends \
           apache2 \
           build-essential \
           cron \
