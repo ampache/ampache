@@ -36,6 +36,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
     private const CONFIG_VERSION = '67';
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
+    public const STRUCTURE        = 'public';  // Project release is using either the public html folder or squashed structure
 
     private EnvironmentInterface $environment;
 
@@ -63,11 +64,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
 
-        if (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true) {
-            $protocol = 'https';
-        } else {
-            $protocol = 'http';
-        }
+        $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)
+            ? 'https'
+            : 'http';
 
         if ($this->environment->isCli() === false) {
             if (empty($results['http_host'])) {
