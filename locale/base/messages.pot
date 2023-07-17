@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-07-17 11:33+1000\n"
+"POT-Creation-Date: 2023-07-17 14:12+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-
-#: ../../docs/examples/AmpacheExample.php:44
-msgid "Example Plugin"
-msgstr ""
 
 #: ../../public/templates/browse_filters.inc.php:40
 msgid "Filters"
@@ -5982,7 +5978,6 @@ msgstr ""
 #: ../../src/Module/Api/Method/UserDeleteMethod.php:70
 #: ../../src/Module/Api/Method/UserEditMethod.php:99
 #: ../../src/Module/Api/Method/UserEditMethod.php:153
-#: ../../tests/Module/Api/Method/AlbumMethodTest.php:69
 #, php-format
 msgid "Bad Request: %s"
 msgstr ""
@@ -6597,8 +6592,6 @@ msgstr ""
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:76
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:71
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:73
-#: ../../tests/Module/Application/Admin/License/EditActionTest.php:142
-#: ../../tests/Module/Application/Admin/License/EditActionTest.php:196
 msgid "No Problem"
 msgstr ""
 
