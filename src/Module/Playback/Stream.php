@@ -604,22 +604,21 @@ class Stream
      */
     public static function get_base_url($local = false)
     {
-        $session_string = '';
-        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::get_session() . '&';
-        }
+        $session_string = (AmpConfig::get('use_auth') && AmpConfig::get('require_session'))
+            ? 'ssid=' . self::get_session() . '&'
+            : '';
 
-        if ($local) {
-            $web_path = AmpConfig::get('local_web_path');
-        } else {
-            $web_path = AmpConfig::get('web_path');
-        }
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get('web_path');
 
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = AmpConfig::get('http_port');
+        $http_port = ($local && preg_match("/:(\d+)/", $web_path, $matches))
+            ? $matches[1]
+            : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", $web_path, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);

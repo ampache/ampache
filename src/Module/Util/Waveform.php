@@ -108,7 +108,7 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                $filepointer = $transcoder['handle'];
+                                $filepointer        = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
                                     debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 

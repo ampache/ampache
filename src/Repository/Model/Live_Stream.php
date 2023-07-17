@@ -62,7 +62,10 @@ class Live_Stream extends database_object implements Media, library_item
      * @var string $f_link
      */
     public $link;
-
+    /**
+     * @var int $genre
+     */
+    public $genre;
     /**
      * @var string $codec
      */

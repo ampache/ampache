@@ -343,6 +343,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /** @var int */
     public $total_skip;
 
+    /** @var int */
+    public $tag_id;
+
     /* Setting Variables */
     /**
      * @var boolean $_fake
@@ -1603,23 +1606,25 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function update_artist($new_artist, $song_id, $old_artist)
     {
-        self::_update_item('artist', $new_artist, $song_id, 50);
+        if ($old_artist != $new_artist) {
+            self::_update_item('artist', $new_artist, $song_id, 50);
 
-        // migrate stats for the old artist
-        Stats::migrate('artist', $old_artist, $new_artist, $song_id);
-        Useractivity::migrate('artist', $old_artist, $new_artist);
-        Recommendation::migrate('artist', $old_artist);
-        Share::migrate('artist', $old_artist, $new_artist);
-        Shoutbox::migrate('artist', $old_artist, $new_artist);
-        Tag::migrate('artist', $old_artist, $new_artist);
-        Userflag::migrate('artist', $old_artist, $new_artist);
-        Rating::migrate('artist', $old_artist, $new_artist);
-        Art::duplicate('artist', $old_artist, $new_artist);
-        Wanted::migrate('artist', $old_artist, $new_artist);
-        Catalog::migrate_map('artist', $old_artist, $new_artist);
-        Artist::add_artist_map($new_artist, 'song', $song_id);
-        Artist::remove_artist_map($old_artist, 'song', $song_id);
-        Artist::update_artist_counts();
+            // migrate stats for the old artist
+            Stats::migrate('artist', $old_artist, $new_artist, $song_id);
+            Useractivity::migrate('artist', $old_artist, $new_artist);
+            Recommendation::migrate('artist', $old_artist);
+            Share::migrate('artist', $old_artist, $new_artist);
+            Shoutbox::migrate('artist', $old_artist, $new_artist);
+            Tag::migrate('artist', $old_artist, $new_artist);
+            Userflag::migrate('artist', $old_artist, $new_artist);
+            Rating::migrate('artist', $old_artist, $new_artist);
+            Art::duplicate('artist', $old_artist, $new_artist);
+            Wanted::migrate('artist', $old_artist, $new_artist);
+            Catalog::migrate_map('artist', $old_artist, $new_artist);
+            Artist::add_artist_map($new_artist, 'song', $song_id);
+            Artist::remove_artist_map($old_artist, 'song', $song_id);
+            Artist::update_artist_counts();
+        }
     } // update_artist
 
     /**
@@ -1631,22 +1636,24 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public static function update_album($new_album, $song_id, $old_album)
     {
-        self::_update_item('album', $new_album, $song_id, 50, true);
+        if ($old_album != $new_album) {
+            self::_update_item('album', $new_album, $song_id, 50, true);
 
-        // migrate stats for the old album
-        Stats::migrate('album', $old_album, $new_album, $song_id);
-        Useractivity::migrate('album', $old_album, $new_album);
-        //Recommendation::migrate('album', $old_album);
-        Share::migrate('album', $old_album, $new_album);
-        Shoutbox::migrate('album', $old_album, $new_album);
-        Tag::migrate('album', $old_album, $new_album);
-        Userflag::migrate('album', $old_album, $new_album);
-        Rating::migrate('album', $old_album, $new_album);
-        Art::duplicate('album', $old_album, $new_album);
-        Catalog::migrate_map('album', $old_album, $new_album);
-        Album::add_album_map($new_album, 'song', $song_id);
-        Album::remove_album_map($old_album, 'song', $song_id);
-        Album::update_album_counts();
+            // migrate stats for the old album
+            Stats::migrate('album', $old_album, $new_album, $song_id);
+            Useractivity::migrate('album', $old_album, $new_album);
+            //Recommendation::migrate('album', $old_album);
+            Share::migrate('album', $old_album, $new_album);
+            Shoutbox::migrate('album', $old_album, $new_album);
+            Tag::migrate('album', $old_album, $new_album);
+            Userflag::migrate('album', $old_album, $new_album);
+            Rating::migrate('album', $old_album, $new_album);
+            Art::duplicate('album', $old_album, $new_album);
+            Catalog::migrate_map('album', $old_album, $new_album);
+            Album::add_album_map($new_album, 'song', $song_id);
+            Album::remove_album_map($old_album, 'song', $song_id);
+            Album::update_album_counts();
+        }
     } // update_album
 
     /**
