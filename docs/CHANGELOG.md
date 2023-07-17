@@ -46,7 +46,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600037
+* Database 600038
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -79,6 +79,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Convert `object_type` to an enum on `image` table
   * Add `enabled` to podcast_episode table
   * Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)
+  * Update `access_list` in case you have a bad `user` column
 * Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)

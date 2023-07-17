@@ -894,6 +894,9 @@ class Update
         $update_string = "* Update user server and user counts now that the scaling has changed";
         $version[]     = array('version' => '600037', 'description' => $update_string);
 
+        $update_string = "* Update `access_list` in case you have a bad `user` column";
+        $version[]     = array('version' => '600038', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5534,6 +5537,21 @@ class Update
         Catalog::set_update_info('time', $time);
         Catalog::set_update_info('size', $size);
         User::update_counts();
+
+        return true;
+    }
+
+    /**
+     * _update_600038
+     *
+     * Update `access_list` in case you have a bad `user` column
+     */
+    private static function _update_600038(Interactor $interactor = null): bool
+    {
+        $sql = "UPDATE `access_list` SET `user` = -1 WHERE `user` = 0;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
 
         return true;
     }
