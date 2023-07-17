@@ -791,6 +791,9 @@ class Update
         $update_string = "* Add `song_artist` and `album_artist` maps to catalog_map";
         $version[]     = array('version' => '550005', 'description' => $update_string);
 
+        $update_string = "* Update `access_list` in case you have a bad `user` column";
+        $version[]     = array('version' => '560001', 'description' => $update_string);
+
         return $version;
     }
 
@@ -4688,5 +4691,15 @@ class Update
         $retval &= (Dba::write($sql) !== false);
 
         return $retval;
+    }
+
+    /**
+     * update_560001
+     *
+     * Update `access_list` in case you have a bad `user` column
+     */
+    private static function update_560001(): bool
+    {
+        return (Dba::write("UPDATE `access_list` SET `user` = -1 WHERE `user` = 0;") !== false);
     }
 } // end update.class
