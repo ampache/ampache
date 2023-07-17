@@ -68,7 +68,7 @@ generate_pot() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
+                $(find ../../ -type f \( -name "*.php" -o -name "*.inc" \) -not -path "../../config/*" -not -path "../../docs/*" -not -path "../../public/lib/components/*" -not -path "../../vendor/*" -not -path "../../tests/*" | sort)
     if [[ $? -eq 0 ]]; then
         #echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
         #cat $tdstxt >> $potfile
@@ -91,7 +91,7 @@ generate_pot_utds() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
+                $(find ../../ -type f \( -name "*.php" -o -name "*.inc" \) -not -path "../../config/*" -not -path "../../docs/*" -not -path "../../public/lib/components/*" -not -path "../../vendor/*" -not -path "../../tests/*" | sort)
     if [[ $? -eq 0 ]]; then
 
         ampconf='../../config/ampache.cfg.php'
