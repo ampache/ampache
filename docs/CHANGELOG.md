@@ -183,6 +183,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
+* Remove the auth parameter from image urls
 * Option to 'Force Democratic Play' has been removed from the config page
   * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
@@ -247,6 +248,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Don't try to search on bad rules. (falls back to empty rules which will show all songs)
   * JS could not load your search if you were using a rule alias
 * Subsonic
+  * Forward the client ip instead the server ip using rewrite
   * Sharing some types of object
   * Filtering user and password
 
