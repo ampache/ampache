@@ -633,7 +633,7 @@ class Xml5_Data
             $tag_string  = self::genre_string($artist->tags);
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -687,7 +687,7 @@ class Xml5_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out(Core::get_request('auth'));
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
 

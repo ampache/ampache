@@ -506,7 +506,7 @@ class Json_Data
             $flag        = new Userflag($artist_id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -588,7 +588,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $objArray = [];
 
