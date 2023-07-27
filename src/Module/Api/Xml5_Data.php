@@ -450,8 +450,7 @@ class Xml5_Data
                 case 'playlist':
                     if ((int) $object_id === 0) {
                         $playlist       = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
-                        $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
-                        $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                        $playitem_total = $playlist->last_count;
                     } else {
                         $playlist       = new Playlist($object_id);
                         $playitem_total = $playlist->get_media_count('song');
@@ -742,8 +741,7 @@ class Xml5_Data
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
-                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playitem_total = $playlist->last_count;
             } else {
                 $playlist       = new Playlist($playlist_id);
                 $object_type    = 'playlist';

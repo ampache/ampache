@@ -680,8 +680,7 @@ class Json_Data
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
-                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playitem_total = $playlist->last_count;
             } else {
                 $playlist       = new Playlist($playlist_id);
                 $object_type    = 'playlist';
