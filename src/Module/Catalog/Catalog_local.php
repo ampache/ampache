@@ -1181,7 +1181,7 @@ class Catalog_local extends Catalog
         }
         $chunks = (int)floor($total / 10000) + 1;
         foreach (range(1, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
         }
 
