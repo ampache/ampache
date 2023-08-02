@@ -617,16 +617,21 @@ class Catalog_local extends Catalog
             return array('total' => $number, 'updated' => $total_updated);
         }
         $number = $number + $total;
-        $chunks = (int)floor($total / 1000) + 1;
-        foreach (range(1, $chunks) as $chunk) {
-            // Try to be nice about memory usage
+        $count  = 1;
+        $chunks = 1;
+        $chunk  = 0;
+        if ($total > 10000) {
+            $chunks = floor($total / 10000) + 1;
+        }
+        while ($chunk >= 0) {
             if (isset($media_class) && $chunk > 0) {
                 $media_class::clear_cache();
             }
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " starting verify " . $media_type . " on chunk $chunk/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
+            $chunk--;
+            $count++;
         }
-
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
 
@@ -737,14 +742,14 @@ class Catalog_local extends Catalog
         $chunk  = 0;
         if ($total > 10000) {
             $chunks = floor($total / 10000) + 1;
-            $chunk  = $chunks;
         }
         while ($chunk >= 0) {
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk--;
             $count++;
         }
+        debug_event('local.catalog', "Clean finished, $total checked in " . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
