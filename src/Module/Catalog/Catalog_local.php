@@ -627,7 +627,7 @@ class Catalog_local extends Catalog
             if (isset($media_class) && $chunk > 0) {
                 $media_class::clear_cache();
             }
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
             $chunk--;
             $count++;
@@ -744,7 +744,7 @@ class Catalog_local extends Catalog
             $chunks = floor($total / 10000) + 1;
         }
         while ($chunk >= 0) {
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
             $chunk--;
             $count++;
