@@ -220,7 +220,7 @@ abstract class Catalog extends database_object
 
     /**
      * @param array $options
-     * @return mixed
+     * @return int
      */
     abstract public function add_to_catalog($options = null);
 
@@ -3350,6 +3350,7 @@ abstract class Catalog extends database_object
      * clean_catalog
      *
      * Cleans the catalog of files that no longer exist.
+     * @return int
      */
     public function clean_catalog()
     {
@@ -3365,8 +3366,10 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        self::clean_empty_albums();
-        self::clean_duplicate_artists();
+        if ($dead_total > 0) {
+            self::clean_empty_albums();
+            self::clean_duplicate_artists();
+        }
 
         debug_event(__CLASS__, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
@@ -3380,6 +3383,8 @@ abstract class Catalog extends database_object
         }
 
         $this->update_last_clean();
+
+        return $dead_total;
     } // clean_catalog
 
     /**
@@ -3928,6 +3933,24 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Update the catalog_map table depending on table type
+     */
+    public function update_catalog_map()
+    {
+        $catalog_media_type = $this->gather_types;
+        if ($catalog_media_type == 'music') {
+            self::update_mapping('artist');
+            self::update_mapping('album');
+            self::update_mapping('album_disk');
+        } elseif ($catalog_media_type == 'podcast') {
+            self::update_mapping('podcast');
+            self::update_mapping('podcast_episode');
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            self::update_mapping('video');
+        }
+    }
+
+    /**
      * Update the catalog mapping for various types
      */
     public static function garbage_collect_mapping()
@@ -4127,7 +4150,9 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
-                            $catalog->add_to_catalog($options);
+                            if ($catalog->add_to_catalog($options)) {
+                                $catalog->update_catalog_map();
+                            }
                         }
                     }
 
@@ -4174,7 +4199,9 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
-                            $catalog->clean_catalog();
+                            if ($catalog->clean_catalog() < 0) {
+                                $catalog->update_catalog_map();
+                            }
                         }
                     } // end foreach catalogs
                     Artist::update_table_counts();
@@ -4254,15 +4281,8 @@ abstract class Catalog extends database_object
                 if ($catalog_media_type == 'music') {
                     self::clean_empty_albums();
                     Album::update_album_artist();
-                    self::update_mapping('artist');
-                    self::update_mapping('album');
-                    self::update_mapping('album_disk');
-                } elseif ($catalog_media_type == 'podcast') {
-                    self::update_mapping('podcast');
-                    self::update_mapping('podcast_episode');
-                } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                    self::update_mapping('video');
                 }
+                $catalog->update_catalog_map();
                 self::update_counts();
         }
     }

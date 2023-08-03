@@ -266,7 +266,7 @@ class Catalog_Seafile extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -277,8 +277,7 @@ class Catalog_Seafile extends Catalog
             Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
-        $success = false;
-
+        $success = 0;
         if ($this->seafile->prepare()) {
             $count = $this->seafile->for_all_files(function ($file) {
                 if ($file->size == 0) {
@@ -311,7 +310,7 @@ class Catalog_Seafile extends Catalog
             if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
-                $success = true;
+                $success = 1;
             }
         }
 
@@ -532,6 +531,7 @@ class Catalog_Seafile extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {
