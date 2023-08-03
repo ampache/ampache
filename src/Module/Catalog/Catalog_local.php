@@ -623,7 +623,7 @@ class Catalog_local extends Catalog
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
-        if ($total > 10000) {
+        if ($total > 1000) {
             $chunks = floor($total / 1000) + 1;
         }
         while ($chunk < $chunks) {
