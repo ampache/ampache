@@ -3366,8 +3366,10 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        self::clean_empty_albums();
-        self::clean_duplicate_artists();
+        if ($dead_total > 0) {
+            self::clean_empty_albums();
+            self::clean_duplicate_artists();
+        }
 
         debug_event(__CLASS__, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 

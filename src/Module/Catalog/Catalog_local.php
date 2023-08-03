@@ -753,7 +753,7 @@ class Catalog_local extends Catalog
             $chunk--;
             $count++;
         }
-        debug_event('local.catalog', "Clean finished, $total checked in " . $this->name, 5);
+        debug_event('local.catalog', "Clean finished, $total files checked in " . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
