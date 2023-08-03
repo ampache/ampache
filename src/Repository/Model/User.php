@@ -1370,7 +1370,7 @@ class User extends database_object
      */
     public function get_avatar($local = false, $session = array())
     {
-        $avatar = array();
+        $avatar          = array();
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
