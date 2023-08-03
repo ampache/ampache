@@ -624,7 +624,7 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = floor($total / 10000) + 1;
+            $chunks = floor($total / 1000) + 1;
         }
         while ($chunk < $chunks) {
             if (isset($media_class) && $chunk > 0) {
