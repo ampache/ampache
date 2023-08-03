@@ -77,9 +77,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         }
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
         $external   = false;
+        $changed    = 0;
 
         ob_end_clean();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
             /* HINT: Catalog Name */
@@ -124,7 +124,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start cleaning orphaned media entries'),
                         true
                     );
-                    $catalog->clean_catalog();
+                    $changed += $catalog->clean_catalog();
 
                     $buffer = ob_get_contents();
 
@@ -147,7 +147,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start adding new media'),
                         true
                     );
-                    $catalog->add_to_catalog($options);
+                    $changed += $catalog->add_to_catalog($options);
 
                     $buffer = ob_get_contents();
 
@@ -274,23 +274,14 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            if ($collectGarbage === true && $missing !== true) {
+            if ($changed > 0 || ($collectGarbage === true && $missing !== true)) {
                 $interactor->info(
                     T_('Update table mapping, counts and delete garbage data'),
                     true
                 );
                 // clean up after the action
                 $catalog_media_type = $catalog->gather_types;
-                if ($catalog_media_type == 'music') {
-                    Catalog::update_mapping('artist');
-                    Catalog::update_mapping('album');
-                    Catalog::update_mapping('album_disk');
-                } elseif ($catalog_media_type == 'podcast') {
-                    Catalog::update_mapping('podcast');
-                    Catalog::update_mapping('podcast_episode');
-                } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                    Catalog::update_mapping('video');
-                }
+                $catalog->update_catalog_map();
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();
                 $interactor->info(

@@ -481,6 +481,7 @@ class Catalog_local extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -583,6 +584,8 @@ class Catalog_local extends Catalog
                 sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
             Ui::show_box_bottom();
         }
+
+        return $this->count;
     } // add_to_catalog
 
     /**
@@ -711,6 +714,7 @@ class Catalog_local extends Catalog
      * clean catalog procedure
      *
      * Removes local songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {
