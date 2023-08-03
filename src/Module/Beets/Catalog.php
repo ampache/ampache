@@ -231,8 +231,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Verify songs.
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
@@ -246,7 +245,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $this->updateUi('verify', $this->verifiedSongs, null, true);
         $this->update_last_update();
 
-        return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
+        return $this->verifiedSongs;
     }
 
     /**

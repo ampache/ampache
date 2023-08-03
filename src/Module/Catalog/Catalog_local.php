@@ -589,8 +589,7 @@ class Catalog_local extends Catalog
     } // add_to_catalog
 
     /**
-     * verify_catalog_proc
-     * This function compares the DB's information with the ID3 tags
+     * @return int
      */
     public function verify_catalog_proc()
     {
@@ -617,7 +616,7 @@ class Catalog_local extends Catalog
             $total       = self::count_table($media_type, $this->catalog_id);
         }
         if ($total == 0 || !isset($media_type)) {
-            return array('total' => $number, 'updated' => $total_updated);
+            return $total_updated;
         }
         $number = $number + $total;
         $count  = 1;
@@ -638,7 +637,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
 
-        return array('total' => $number, 'updated' => $total_updated);
+        return $total_updated;
     } // verify_catalog_proc
 
     /**

@@ -225,7 +225,7 @@ abstract class Catalog extends database_object
     abstract public function add_to_catalog($options = null);
 
     /**
-     * @return mixed
+     * @return int
      */
     abstract public function verify_catalog_proc();
 
@@ -3401,13 +3401,13 @@ abstract class Catalog extends database_object
 
         $verified = $this->verify_catalog_proc();
 
-        debug_event(__CLASS__, 'verify finished, ' . $verified['updated'] . ' updated', 4);
+        debug_event(__CLASS__, 'verify finished, ' . $verified . ' updated', 4);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
         Ui::update_text(T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified));
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
