@@ -1742,6 +1742,7 @@ This returns the songs for a playlist
 | Input    | Type    | Description                                      | Optional |
 |----------|---------|--------------------------------------------------|---------:|
 | 'filter' | string  | UID of Playlist, returns song JSON               |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)  |      YES |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
 
