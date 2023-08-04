@@ -154,8 +154,12 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     true
                 );
                 // update counts after adding/verifying
-                Album::update_table_counts();
-                Artist::update_table_counts();
+                if ($type == 'song') {
+                    Catalog::clean_empty_albums();
+                    Album::update_album_artist();
+                    Album::update_table_counts();
+                    Artist::update_table_counts();
+                }
                 // clean up after the action
                 $catalog->update_catalog_map();
                 Catalog::garbage_collect_mapping();
