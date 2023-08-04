@@ -239,6 +239,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * CLI
   * export:playlist command help was incorrect
   * Get the website address from `fallback_url`
+  * run:updateCatalogFolder and run:updateCatalogFile would always verify
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
   * Added back next / back keys in the playlist js
