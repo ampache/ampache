@@ -39,7 +39,7 @@ interface UserFollowerRepositoryInterface
     public function getFollowing(int $userId): array;
 
     /**
-     * Get if an user is followed by another user
+     * Get if a user is followed by another user
      */
     public function isFollowedBy(int $userId, int $followingUserId): bool;
 

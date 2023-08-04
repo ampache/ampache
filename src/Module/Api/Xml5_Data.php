@@ -1065,7 +1065,7 @@ class Xml5_Data
     /**
      * users
      *
-     * This handles creating an xml document for an user list
+     * This handles creating an xml document for a user list
      *
      * @param  integer[] $users User identifier list
      * @return string    return xml

@@ -27,7 +27,7 @@ use Ampache\Repository\Model\User;
 interface PrivateMessageCreatorInterface
 {
     /**
-     * Sends a private message to an user
+     * Sends a private message to a user
      *
      * @throws Exception\PrivateMessageCreationException
      * @throws \PHPMailer\PHPMailer\Exception

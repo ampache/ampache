@@ -993,7 +993,7 @@ class Json4_Data
     /**
      * users
      *
-     * This handles creating an JSON document for an user list
+     * This handles creating an JSON document for a user list
      *
      * @param    integer[]    $users    User identifier list
      * @return string return JSON

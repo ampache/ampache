@@ -1360,7 +1360,7 @@ class Json_Data
     /**
      * users
      *
-     * This handles creating an JSON document for an user list
+     * This handles creating an JSON document for a user list
      *
      * @param  integer[] $users User id list
      * @param  boolean   $object (whether to return as a named object array or regular array)

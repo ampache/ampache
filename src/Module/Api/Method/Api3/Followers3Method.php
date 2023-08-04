@@ -38,7 +38,7 @@ final class Followers3Method
 
     /**
      * followers
-     * This get an user followers
+     * This gets a user's followers
      * @param array $input
      * @param User $user
      */
