@@ -40,7 +40,7 @@ final class UpdateCatalogFolderCommand extends Command
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
-            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', true)
+            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
