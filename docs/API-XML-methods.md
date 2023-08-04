@@ -1910,7 +1910,7 @@ Get a list of people that this user follows
 
 ### toggle_follow
 
-This follow/unfollow an user
+This follow/unfollow a user
 
 | Input      | Type   | Description                             | Optional |
 |------------|--------|-----------------------------------------|---------:|
