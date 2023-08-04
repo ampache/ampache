@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Ampache5 Develop
+
+### Added
+
+* Check for release branches before showing the Git hash
+* Database 560001
+  * Update `access_list` in case you have a bad `user` column
+
+### Removed
+
+* Remove auth parameter from image url's
+
+### Fixed
+
+* ACL creation may lock you out without a system user
+* Subsonic
+  * Get correct client IP for curl requests
+
+## API5 Develop
+
+### Added
+
+* API5::playlist_songs: Add `random` to get random objects filtered by limit
+
 ## Ampache 5.6.2-release
 
 ### Added
