@@ -571,6 +571,12 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
+        // don't keep adding the same episodes
+        if (self::get_id_from_guid($guid) > 0) {
+            debug_event(self::class, 'Episode guid already exists, skipped', 3);
+
+            return false;
+        }
         // don't keep adding urls
         if (self::get_id_from_source($source) > 0) {
             debug_event(self::class, 'Episode source URL already exists, skipped', 3);
@@ -696,6 +702,26 @@ class Podcast extends database_object implements library_item
     public static function get_id_from_source($url)
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_guid
+     *
+     * Get episode id from the guid.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_guid($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {

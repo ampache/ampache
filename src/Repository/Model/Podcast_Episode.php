@@ -676,7 +676,8 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
                 if (Core::get_filesize(Core::conv_lc_file($file)) == 0) {
                     // the file doesn't exist locally so download it
                     debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
-                    if (file_put_contents($file, fopen($this->source, 'r'))) {
+                    $handle = fopen($this->source, 'r');
+                    if ($handle && file_put_contents($file, $handle)) {
                         debug_event(self::class, 'Download completed.', 4);
                     }
                 }
