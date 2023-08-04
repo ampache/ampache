@@ -149,6 +149,10 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 $changed += $catalog->add_files($folderPath, $options);
             }
             if (($verificationMode == 1 && !empty($file_ids)) || $changed > 0) {
+                $interactor->info(
+                    T_('Update table mapping, counts and delete garbage data'),
+                    true
+                );
                 // update counts after adding/verifying
                 Album::update_table_counts();
                 Artist::update_table_counts();
