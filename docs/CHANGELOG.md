@@ -233,6 +233,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Send the final url for play_url's instead of figuring it on the fly
 * Don't verify Podcast Episodes that don't have a file
 * Update song channels on tag update
+* ACL creation may lock you out without a system user
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
@@ -259,6 +260,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 ### Added
 
+* API5::playlist_songs: Add `random` to get random objects filtered by limit
 * API6 (Based on API5)
   * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
   * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
