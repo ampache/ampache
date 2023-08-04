@@ -1538,7 +1538,7 @@ ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api5/d
 
 ### user
 
-This get an user public information
+This gets a user's public information
 
 | Input      | Type   | Description                         | Optional |
 |------------|--------|-------------------------------------|---------:|
@@ -2167,7 +2167,7 @@ Make sure you remember to urlencode those file names!
 
 ### timeline
 
-This get an user timeline
+This gets a user's timeline
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
