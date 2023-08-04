@@ -268,6 +268,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * API6::live_stream_delete: Delete a stream by ID
   * API6::register: Allow users to register an account (if enabled)
   * API6::playlist_create: Return an error if the playlist name already exists for that user
+  * API6::playlist_songs: Add `random` to get random objects filtered by limit
   * API6::user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display
