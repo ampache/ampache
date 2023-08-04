@@ -39,7 +39,7 @@ final class Timeline3Method
 
     /**
      * timeline
-     * This get an user timeline
+     * This gets a user's timeline
      * @param array $input
      * @param User $user
      */

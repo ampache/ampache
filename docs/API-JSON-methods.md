@@ -2456,7 +2456,7 @@ Get your server preference by name
 
 ### timeline
 
-This get an user timeline
+This gets a user's timeline
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2480,7 +2480,7 @@ This get an user timeline
 
 ### toggle_follow
 
-This follow/unfollow an user
+This follow/unfollow a user
 
 | Input      | Type   | Description                             | Optional |
 |------------|--------|-----------------------------------------|---------:|
@@ -2660,7 +2660,7 @@ This takes a url and returns the song object in question
 
 ### user
 
-This get an user public information
+This gets a user's public information
 
 | Input      | Type   | Description                         | Optional |
 |------------|--------|-------------------------------------|---------:|

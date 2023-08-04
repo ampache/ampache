@@ -581,7 +581,7 @@ class Xml3_Data
     /**
      * user
      *
-     * This handles creating an xml document for an user
+     * This handles creating an xml document for a user
      *
      * @param    User    $user    User
      * @return    string    return xml
@@ -602,7 +602,7 @@ class Xml3_Data
     /**
      * users
      *
-     * This handles creating an xml document for an user list
+     * This handles creating an xml document for a user list
      *
      * @param    int[]    $users    User identifier list
      * @return    string    return xml

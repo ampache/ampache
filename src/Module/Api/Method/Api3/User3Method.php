@@ -37,7 +37,7 @@ final class User3Method
 
     /**
      * user
-     * This get an user public information
+     * This get a user's public information
      * @param array $input
      * @param User $user
      */
