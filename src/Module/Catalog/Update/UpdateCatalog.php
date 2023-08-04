@@ -280,7 +280,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 // clean up after the action
-                $catalog_media_type = $catalog->gather_types;
                 $catalog->update_catalog_map();
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();

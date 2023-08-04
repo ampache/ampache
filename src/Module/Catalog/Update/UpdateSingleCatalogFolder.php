@@ -55,6 +55,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         ob_end_clean();
         ob_start();
 
+        $changed = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
             /** @var Catalog_local $catalog */
             $catalog = Catalog::create_from_id($row['id']);
@@ -96,7 +97,9 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 $file_test = is_file($file_path);
                 // deleted file
                 if (!$file_test && $cleanupMode == 1) {
-                    $catalog->clean_file($file_path, $type);
+                    if ($catalog->clean_file($file_path, $type)) {
+                        $changed++;
+                    }
                     $interactor->info(
                         sprintf(T_('Removing File: "%s"'), $file_path),
                         true
@@ -143,14 +146,16 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     'gather_art' => ($searchArtMode == 1)
                 );
                 // Look for new files
-                if (!$catalog->add_files($folderPath, $options)) {
-                    $addMode = 0;
-                }
+                $changed += $catalog->add_files($folderPath, $options);
             }
-            if (($verificationMode == 1 && !empty($file_ids)) || $addMode == 1) {
+            if (($verificationMode == 1 && !empty($file_ids)) || $changed > 0) {
                 // update counts after adding/verifying
                 Album::update_table_counts();
                 Artist::update_table_counts();
+                // clean up after the action
+                $catalog->update_catalog_map();
+                Catalog::garbage_collect_mapping();
+                Catalog::garbage_collect_filters();
             }
         }
 
