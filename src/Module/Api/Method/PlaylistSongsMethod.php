@@ -59,7 +59,6 @@ final class PlaylistSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
 
         $object_id = $input['filter'];
         $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
@@ -79,7 +78,8 @@ final class PlaylistSongsMethod
             return false;
         }
 
-        $items =($random)
+        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $object_id, 5);
+        $items = ($random)
             ? $playlist->get_random_items()
             : $playlist->get_items();
         if (empty($items)) {

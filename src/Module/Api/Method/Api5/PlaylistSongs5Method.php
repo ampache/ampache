@@ -48,6 +48,7 @@ final class PlaylistSongs5Method
      * @param array $input
      * @param User $user
      * filter = (string) UID of playlist
+     * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -58,9 +59,8 @@ final class PlaylistSongs5Method
             return false;
         }
         $object_id = $input['filter'];
-        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
-
-        $playlist = ((int) $object_id === 0)
+        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
+        $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
 
@@ -76,7 +76,10 @@ final class PlaylistSongs5Method
             return false;
         }
 
-        $items = $playlist->get_items();
+        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $object_id, 5);
+        $items = ($random)
+            ? $playlist->get_random_items()
+            : $playlist->get_items();
         if (empty($items)) {
             Api5::empty('song', $input['api_format']);
 
