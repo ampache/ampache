@@ -319,11 +319,11 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
-        return array('total' => 0, 'updated' => 0);
+        return 0;
     }
 
     /**

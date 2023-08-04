@@ -170,7 +170,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start verifying media related to Catalog entries'),
                         true
                     );
-                    $catalog->verify_catalog_proc();
+                    $changed += $catalog->verify_catalog_proc();
 
                     $buffer = ob_get_contents();
 
@@ -260,7 +260,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            if (($cleanup === true && $changed > 0) || $verification === true || $collectGarbage === true) {
+            if ((($cleanup === true || $verification === true) && $changed > 0) || $collectGarbage === true) {
                 $interactor->info(
                     T_('Garbage Collection'),
                     true
@@ -280,7 +280,6 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 // clean up after the action
-                $catalog_media_type = $catalog->gather_types;
                 $catalog->update_catalog_map();
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();

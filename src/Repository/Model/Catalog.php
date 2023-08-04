@@ -225,7 +225,7 @@ abstract class Catalog extends database_object
     abstract public function add_to_catalog($options = null);
 
     /**
-     * @return mixed
+     * @return int
      */
     abstract public function verify_catalog_proc();
 
@@ -2398,21 +2398,21 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            $tags    = self::getSongTags('album', $libitem->id);
-            Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
+            $genres    = self::getSongTags('album', $libitem->id);
+            Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true);
             if ($artist || $album || $tags || $maps) {
                 $artists = array();
                 // update the album artists
                 foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
-                    $tags      = self::getSongTags('artist', $albumArtist_id);
-                    Tag::update_tag_list(implode(',', $tags), 'artist', $albumArtist_id, true);
+                    $genres    = self::getSongTags('artist', $albumArtist_id);
+                    Tag::update_tag_list(implode(',', $genres), 'artist', $albumArtist_id, true);
                 }
                 // update the song artists too
                 foreach (Album::get_artist_map('song', $libitem->id) as $songArtist_id) {
                     if (!in_array($songArtist_id, $artists)) {
-                        $tags = self::getSongTags('artist', $songArtist_id);
-                        Tag::update_tag_list(implode(',', $tags), 'artist', $songArtist_id, true);
+                        $genres = self::getSongTags('artist', $songArtist_id);
+                        Tag::update_tag_list(implode(',', $genres), 'artist', $songArtist_id, true);
                     }
                 }
             }
@@ -2425,8 +2425,8 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
             // refresh the artist tags after everything else
-            $tags = self::getSongTags('artist', $libitem->id);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            $genres = self::getSongTags('artist', $libitem->id);
+            Tag::update_tag_list(implode(',', $genres), 'artist', $libitem->id, true);
         }
         // check counts
         if ($album || $maps) {
@@ -3401,13 +3401,13 @@ abstract class Catalog extends database_object
 
         $verified = $this->verify_catalog_proc();
 
-        debug_event(__CLASS__, 'verify finished, ' . $verified['updated'] . ' updated', 4);
+        debug_event(__CLASS__, 'verify finished, ' . $verified . ' updated', 4);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
         Ui::update_text(T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified));
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }

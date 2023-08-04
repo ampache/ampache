@@ -531,15 +531,14 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return int
      * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
-        $updated = array('total' => 0, 'updated' => 0);
-
         set_time_limit(0);
 
+        $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
         $app            = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox        = new Dropbox($app);
@@ -547,7 +546,6 @@ class Catalog_dropbox extends Catalog
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $updated['total']++;
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $filesize = 40960;
@@ -577,7 +575,7 @@ class Catalog_dropbox extends Catalog
                     $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
-                        $updated['updated']++;
+                        $updated++;
                     } else {
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
