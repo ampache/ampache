@@ -69,11 +69,11 @@ final class Download4Method
         }
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
