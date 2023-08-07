@@ -1,4 +1,12 @@
-# Ampache docker testing
+# Ampache and docker
+
+Make sure you check out the pre-built docker images first!
+
+https://github.com/ampache/ampache-docker
+
+This is used to help set up a dev environment for people working on the code more than a user.
+
+## Ampache docker testing
 
 Want a live docker environment on your system?
 
