@@ -262,7 +262,7 @@ class AutoUpdate
         $available  = false;
         $git_branch = self::is_force_git_branch();
         $current    = self::get_current_version();
-        $latest     = self::get_latest_version();
+        $latest     = self::get_latest_version(true);
 
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
