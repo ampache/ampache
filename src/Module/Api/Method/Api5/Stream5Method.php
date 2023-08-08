@@ -89,16 +89,16 @@ final class Stream5Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
             $song_id = Random::get_single_song($type, $user, (int)$_REQUEST['random_id']);
             $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

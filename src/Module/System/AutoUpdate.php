@@ -262,7 +262,7 @@ class AutoUpdate
         $available  = false;
         $git_branch = self::is_force_git_branch();
         $current    = self::get_current_version();
-        $latest     = self::get_latest_version();
+        $latest     = self::get_latest_version(true);
 
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
@@ -310,6 +310,11 @@ class AutoUpdate
      */
     public static function show_new_version()
     {
+        $current = self::get_current_version();
+        $latest  = self::get_latest_version();
+        if ($current === $latest) {
+            return;
+        }
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
         echo ' (' . self::get_latest_version() . ').<br />';
@@ -318,7 +323,7 @@ class AutoUpdate
         $changelog     = ($git_branch == '') ? 'master' : $git_branch;
         $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
-        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . self::get_current_version() . '...' . self::get_latest_version() : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
+        echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . $current . '...' . $latest : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
