@@ -55,6 +55,7 @@ class Catalog_local extends Catalog
     private $type        = 'local';
     private $description = 'Local Catalog';
 
+    private int $catalog_id;
     private $count;
     private $songs_to_gather;
     private $videos_to_gather;
@@ -1280,7 +1281,7 @@ class Catalog_local extends Catalog
             $results[] = (int)$row['id'];
         }
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->id);
+            $target_file     = Catalog::get_cache_path($song_id, $this->id, $path, $target);
             $old_target_file = rtrim(trim($path), '/') . '/' . $this->id . '/' . $song_id . '.' . $target;
             if (is_file($old_target_file)) {
                 // check for the old path first
@@ -1288,7 +1289,7 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'Moved: ' . $song_id . ' from: {' . $old_target_file . '}' . ' to: {' . $target_file . '}', 5);
             }
             $file_exists = ($target_file !== false && is_file($target_file));
-            $song        = new Song($song_id);
+            $media       = new Song($song_id);
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
@@ -1300,15 +1301,16 @@ class Catalog_local extends Catalog
                     $this->sort_pattern,
                     $this->rename_pattern
                 );
-                if ($song->time > 0 && !$vainfo->check_time($song->time)) {
-                    debug_event('local.catalog', 'check_time FAILED for: ' . $song->id, 5);
+                if ($media->time > 0 && !$vainfo->check_time($media->time)) {
+                    debug_event('local.catalog', 'check_time FAILED for: ' . $media->id, 5);
                     unlink($target_file);
                     $file_exists = false;
                 }
             }
             if (!$file_exists) {
                 // transcode to the new path
-                Stream::start_transcode($song, $target, 'cache_catalog_proc', array($target_file));
+                $transcode_settings = $media->get_transcode_settings($target);
+                Stream::start_transcode($media, $transcode_settings, (string)$target_file);
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }
         }

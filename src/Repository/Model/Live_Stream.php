@@ -62,7 +62,10 @@ class Live_Stream extends database_object implements Media, library_item
      * @var string $f_link
      */
     public $link;
-
+    /**
+     * @var int $genre
+     */
+    public $genre;
     /**
      * @var string $codec
      */
@@ -398,11 +401,11 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return false
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return false;
+        return array();
     }
 
     /**

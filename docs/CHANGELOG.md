@@ -1,5 +1,62 @@
 # CHANGELOG
 
+## Ampache 5.6.2-release
+
+### Added
+
+* Fork https://github.com/scaron/prettyphoto and update for jquery3
+* CLI
+  * New cli command `bin/cli show:version` (Print the Ampache version number)
+
+### Removed
+
+* Replace scaron/prettyphoto with fork to allow updates
+
+### Fixed
+
+* Checking for git updates without a forced branch
+* Update webplayer to fix a longstanding Google Chrome issue with playing flac
+* Being unable to view all your catalogs in the filter box
+* Prettyphoto would rewrite your link when clicking on pictures
+* Don't show an empty filter box if there are no valid filters
+* Some dynamic class properties
+* Beets catalog actions
+* Remote catalog and Subsonic catalog streaming
+
+## API 5.6.2
+
+### Fixed
+
+* ALL
+  * Require and set a valid version for `api_force_version`
+
+## Ampache 5.6.1-release
+
+### Added
+
+* Simplified transcode settings checks
+
+### Changed
+
+* Clean up the PlayAction class to make it a bit less complicated
+* Encode URL's with a + for segmented play urls
+
+### Removed
+
+* Soundcloud catalogs
+
+### Fixed
+
+* mptre/php-soundcloud has been removed from github
+* Podcast Episode download link
+* Filtering passwords in some places before hashing
+* Catalog caches delete and add immediately when changed
+* Check isfinite before trying to apply replaygain on webplayer
+
+## API 5.6.1
+
+**NO CHANGE**
+
 ## Ampache 5.6.0-release
 
 ### Added

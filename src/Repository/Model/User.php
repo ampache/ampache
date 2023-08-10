@@ -335,21 +335,15 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return integer[]
      */
-    public static function get_user_catalogs($userid)
+    public static function get_user_catalogs($user_id, $filter = '')
     {
-        if (parent::is_cached('user_catalog', $userid)) {
-            return parent::get_from_cache('user_catalog', $userid);
+        if (parent::is_cached('user_catalog' . $filter, $user_id)) {
+            return parent::get_from_cache('user_catalog' . $filter, $user_id);
         }
 
-        $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id`= ? AND `catalog_filter_group_map`.`enabled` = 1 ORDER BY `catalog_filter_group_map`.`catalog_id`";
-        $db_results = Dba::read($sql, array($userid));
+        $catalogs = Catalog::get_catalogs($filter, $user_id);
 
-        $catalogs = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = (int)$row['catalog_id'];
-        }
-
-        parent::add_to_cache('user_catalog', $userid, $catalogs);
+        parent::add_to_cache('user_catalog' . $filter, $user_id, $catalogs);
 
         return $catalogs;
     } // get_catalogs
@@ -1193,10 +1187,10 @@ class User extends database_object
             $increment  = (int)($row['filter_count'] ?? 0) + 1;
             $sql        = "ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = $increment;";
             Dba::write($sql);
-            // Make sure all current catalogs are in the default group
-            $sql = "INSERT INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog`;";
-            Dba::write($sql);
         }
+        // Make sure all current catalogs are in the default group map
+        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);";
+        Dba::write($sql);
 
         /* Get All Preferences for the current user */
         $sql          = "SELECT * FROM `user_preference` WHERE `user` = ?";

@@ -32,8 +32,9 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.6.0-release'; // AMPACHE_VERSION
+    private const VERSION        = '5.6.2-release'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '62';
+    private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -62,8 +63,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         /** This is the version.... fluff nothing more... **/
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
+        $results['structure']          = static::STRUCTURE;
 
-        if (!empty($results['force_ssl']) || $this->environment->isSsl() === true) {
+        if (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true) {
             $protocol = 'https';
         } else {
             $protocol = 'http';

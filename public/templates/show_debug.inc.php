@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,8 +29,12 @@ use Ampache\Module\Util\Ui;
 
 global $dic;
 
+/** @var array $configuration */
+
 $environment = $dic->get(EnvironmentInterface::class);
-$web_path    = AmpConfig::get('web_path'); ?>
+$web_path    = AmpConfig::get('web_path');
+// don't share the database password
+$configuration['database_password'] = '*********'; ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -54,101 +58,96 @@ $web_path    = AmpConfig::get('web_path'); ?>
             </li>
         </ul>
     </div>
-
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
-        <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
-        <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
-        <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
-    ?><?php echo "<div>" . T_('GitHub Branch') . ': "' . (string) AmpConfig::get('github_force_branch') . '"</div>';
+    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
+    <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
+<?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
+    <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
 } ?>
-        <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
-        <?php
-        if (AutoUpdate::is_update_available()) {
-            AutoUpdate::show_new_version();
-        } ?>
-        <br />
+    <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+<?php if (AutoUpdate::is_update_available()) {
+    AutoUpdate::show_new_version();
+} ?>
+    <br />
     <?php Ui::show_box_bottom(); ?>
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
     <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
-        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
-        <br />
+    <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
+    <br />
     <?php Ui::show_box_bottom();
 } ?>
     <?php Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
-        <table class="tabledata striped-rows">
-            <colgroup>
-                <col id="col_php_setting">
-                <col id="col_php_value">
-            </colgroup>
-            <thead>
-            <tr class="th-top">
-                <th class="cel_php_setting"><?php echo T_('Setting'); ?></th>
-                <th class="cel_php_value"><?php echo T_('Value'); ?></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><?php echo T_('Version'); ?></td>
-                <td><?php echo (string)phpversion(); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Memory Limit'); ?></td>
-                <td><?php echo ini_get('memory_limit'); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Maximum Execution Time'); ?></td>
-                <td><?php echo ini_get('max_execution_time'); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Override Execution Time'); ?></td>
-                <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Open Basedir'); ?></td>
-                <td><?php echo ini_get('open_basedir'); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Zlib Support'); ?></td>
-                <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('GD Support'); ?></td>
-                <td><?php echo print_bool(function_exists('imagecreatefromstring')); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Iconv Support'); ?></td>
-                <td><?php echo print_bool(function_exists('iconv')); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('Gettext Support'); ?></td>
-                <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
-            </tr>
-            <tr>
-                <td><?php echo T_('PHP intl extension'); ?></td>
-                <td><?php echo print_bool($environment->check_php_intl()); ?></td>
-            </tr>
-            </tbody>
-        </table>
+    <table class="tabledata striped-rows">
+        <colgroup>
+            <col id="col_php_setting">
+            <col id="col_php_value">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_php_setting"><?php echo T_('Setting'); ?></th>
+            <th class="cel_php_value"><?php echo T_('Value'); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><?php echo T_('Version'); ?></td>
+            <td><?php echo (string)phpversion(); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Memory Limit'); ?></td>
+            <td><?php echo ini_get('memory_limit'); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Maximum Execution Time'); ?></td>
+            <td><?php echo ini_get('max_execution_time'); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Override Execution Time'); ?></td>
+            <td><?php set_time_limit(0);
+echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Open Basedir'); ?></td>
+            <td><?php echo ini_get('open_basedir'); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Zlib Support'); ?></td>
+            <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('GD Support'); ?></td>
+            <td><?php echo print_bool(function_exists('imagecreatefromstring')); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Iconv Support'); ?></td>
+            <td><?php echo print_bool(function_exists('iconv')); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Gettext Support'); ?></td>
+            <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo T_('PHP intl extension'); ?></td>
+            <td><?php echo print_bool($environment->check_php_intl()); ?></td>
+        </tr>
+        </tbody>
+    </table>
     <?php Ui::show_box_bottom(); ?>
-
     <?php Ui::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
-        <table class="tabledata">
-            <colgroup>
-               <col id="col_configuration">
-               <col id="col_value">
-            </colgroup>
-            <thead>
-            <tr class="th-top">
-                <th class="cel_configuration"><?php echo T_('Preference'); ?></th>
-                <th class="cel_value"><?php echo T_('Value'); ?></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($configuration as $key => $value) {
-    if ($key == 'database_password' || $key == 'mysql_password') {
-        $value = '*********';
-    }
+    <table class="tabledata">
+        <colgroup>
+           <col id="col_configuration">
+           <col id="col_value">
+        </colgroup>
+        <thead>
+        <tr class="th-top">
+            <th class="cel_configuration"><?php echo T_('Preference'); ?></th>
+            <th class="cel_value"><?php echo T_('Value'); ?></th>
+        </tr>
+        </thead>
+        <tbody>
+<?php foreach ($configuration as $key => $value) {
     if (is_array($value)) {
         $string = '';
         foreach ($value as $setting) {
@@ -172,11 +171,10 @@ $web_path    = AmpConfig::get('web_path'); ?>
                 <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
-<?php
-            }
-} ?>
+    <?php }
+    } ?>
             </tbody>
-        </table>
+    </table>
     <?php Ui::show_box_bottom(); ?>
 
 <?php Ui::show_box_bottom(); ?>

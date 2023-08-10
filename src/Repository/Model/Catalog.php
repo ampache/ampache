@@ -34,7 +34,6 @@ use Ampache\Module\Catalog\Catalog_dropbox;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
-use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
@@ -76,7 +75,6 @@ abstract class Catalog extends database_object
         'local' => Catalog_local::class,
         'remote' => Catalog_remote::class,
         'seafile' => Catalog_Seafile::class,
-        'soundcloud' => Catalog_soundcloud::class,
         'subsonic' => Catalog_subsonic::class,
     ];
 
@@ -1176,6 +1174,8 @@ abstract class Catalog extends database_object
 
             return 0;
         }
+        // clear caches if enabled to allow getting the new object
+        parent::remove_from_cache('user_catalog');
 
         /** @var Catalog $classname */
         if (!$classname::create_type($insert_id, $data)) {
@@ -3946,14 +3946,14 @@ abstract class Catalog extends database_object
      * Return full path of the cached music file.
      * @param integer $object_id
      * @param string $catalog_id
+     * @param string $path
+     * @param string $target
      * @return false|string
      */
-    public static function get_cache_path($object_id, $catalog_id)
+    public static function get_cache_path($object_id, $catalog_id, $path = '', $target = '')
     {
-        $path   = (string)AmpConfig::get('cache_path', '');
-        $target = AmpConfig::get('cache_target');
         // need a destination and target filetype
-        if ((!is_dir($path) || !$target)) {
+        if (!is_dir($path) || empty($target)) {
             return false;
         }
         // make a folder per catalog

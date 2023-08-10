@@ -250,16 +250,15 @@ class AmpacheRss
      * pubdate_now_playing
      * this is the pub date we should use for the Now Playing information,
      * this is a little specific as it uses the 'newest' expire we can find
-     * @return integer
+     * @return int|null
      */
     public static function pubdate_now_playing()
     {
         // Little redundent, should be fixed by an improvement in the get_now_playing stuff
-        $data = Stream::get_now_playing();
-
+        $data    = Stream::get_now_playing();
         $element = array_shift($data);
 
-        return $element['expire'];
+        return $element['expire'] ?? null;
     } // pubdate_now_playing
 
     /**
@@ -306,8 +305,9 @@ class AmpacheRss
      */
     public static function load_latest_album($rsstoken = "")
     {
-        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $ids  = Stats::get_newest('album', 10, 0, 0, $user->id);
+        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user_id = $user->id ?? 0;
+        $ids     = Stats::get_newest('album', 10, 0, 0, $user_id);
 
         $results = array();
 
