@@ -178,6 +178,7 @@ class Subsonic_Api
             if (isset($headers['Range'])) {
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
+            $reqheaders[] = "X-Forwarded-For: " . Core::get_user_ip();
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);

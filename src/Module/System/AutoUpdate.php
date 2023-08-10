@@ -81,7 +81,7 @@ class AutoUpdate
             $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
             $pattern = '/ref: refs\/heads\/(.*)/';
             $matches = [];
-            if (preg_match($pattern, $current, $matches)) {
+            if (preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('release5', 'release6'))) {
                 return (string)$matches[1];
             }
         }
@@ -212,7 +212,6 @@ class AutoUpdate
         $phpversion = AmpConfig::get('phpversion');
 
         return 'https://github.com/ampache/ampache/releases/download/' . $ampversion . '/ampache-' . $ampversion . '_all' . $structure . '_php' . $phpversion . '.zip';
-
     }
 
     /**
