@@ -1742,6 +1742,7 @@ This returns the songs for a playlist
 | Input    | Type    | Description                                      | Optional |
 |----------|---------|--------------------------------------------------|---------:|
 | 'filter' | string  | UID of Playlist, returns song JSON               |       NO |
+| 'random' | integer | `0`, `1` (if true get random songs using limit)  |      YES |
 | 'offset' | integer | Return results starting from this index position |      YES |
 | 'limit'  | integer | Maximum number of results to return              |      YES |
 
@@ -2455,7 +2456,7 @@ Get your server preference by name
 
 ### timeline
 
-This get an user timeline
+This gets a user's timeline
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2479,7 +2480,7 @@ This get an user timeline
 
 ### toggle_follow
 
-This follow/unfollow an user
+This follow/unfollow a user
 
 | Input      | Type   | Description                             | Optional |
 |------------|--------|-----------------------------------------|---------:|
@@ -2659,7 +2660,7 @@ This takes a url and returns the song object in question
 
 ### user
 
-This get an user public information
+This gets a user's public information
 
 | Input      | Type   | Description                         | Optional |
 |------------|--------|-------------------------------------|---------:|

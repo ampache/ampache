@@ -28,7 +28,7 @@ use Ampache\Config\AmpConfig;
 
 /**
  * Class easy_captcha_persistent_grant
- * shortcut, allow access for an user if captcha was previously solved
+ * shortcut, allow access for a user if captcha was previously solved
  * (should be identical in each instantiation, cookie is time-bombed)
  */
 class easy_captcha_persistent_grant extends easy_captcha

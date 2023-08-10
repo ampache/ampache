@@ -206,7 +206,7 @@ class Catalog_remote extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      * @throws Exception
      */
     public function add_to_catalog($options = null)
@@ -214,12 +214,12 @@ class Catalog_remote extends Catalog
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
-        $this->update_remote_catalog();
+        $songsadded = $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_bottom();
         }
 
-        return true;
+        return $songsadded;
     } // add_to_catalog
 
     /**
@@ -265,7 +265,7 @@ class Catalog_remote extends Catalog
      * update_remote_catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the database.
-     * @return boolean
+     * @return int
      * @throws Exception
      */
     public function update_remote_catalog()
@@ -274,7 +274,7 @@ class Catalog_remote extends Catalog
 
         $remote_handle = $this->connect();
         if (!$remote_handle) {
-            return false;
+            return 0;
         }
 
         // Get the song count, etc.
@@ -287,9 +287,10 @@ class Catalog_remote extends Catalog
         );
 
         // Hardcoded for now
-        $step    = 500;
-        $current = 0;
-        $total   = $remote_catalog_info['songs'];
+        $step       = 500;
+        $current    = 0;
+        $total      = $remote_catalog_info['songs'];
+        $songsadded = 0;
 
         while ($total > $current) {
             $start = $current;
@@ -309,6 +310,8 @@ class Catalog_remote extends Catalog
                             AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
                             echo AmpError::display('general');
                             flush();
+                        } else {
+                            $songsadded++;
                         }
                     }
                 }
@@ -325,21 +328,22 @@ class Catalog_remote extends Catalog
         // Update the last update value
         $this->update_last_update();
 
-        return true;
+        return $songsadded;
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
-        return array('total' => 0, 'updated' => 0);
+        return 0;
     }
 
     /**
      * clean_catalog_proc
      *
      * Removes remote songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {

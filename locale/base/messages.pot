@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-06-08 09:20+1000\n"
+"POT-Creation-Date: 2023-07-17 14:12+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-
-#: ../../docs/examples/AmpacheExample.php:44
-msgid "Example Plugin"
-msgstr ""
 
 #: ../../public/templates/browse_filters.inc.php:40
 msgid "Filters"
@@ -112,11 +108,11 @@ msgstr ""
 #: ../../public/templates/show_wanted_albums.inc.php:32
 #: ../../src/Module/Util/AmpacheRss.php:289
 #: ../../src/Repository/Model/AlbumDisk.php:368
-#: ../../src/Repository/Model/Album.php:599
+#: ../../src/Repository/Model/Album.php:605
 #: ../../src/Repository/Model/Artist.php:548
 #: ../../src/Repository/Model/Browse.php:311
 #: ../../src/Repository/Model/Clip.php:180
-#: ../../src/Repository/Model/Song.php:1876
+#: ../../src/Repository/Model/Song.php:1880
 msgid "Artist"
 msgstr ""
 
@@ -380,7 +376,7 @@ msgstr ""
 #: ../../public/templates/sidebar.inc.php:47
 #: ../../src/Application/Api/Ajax/Handler/SearchAjaxHandler.php:89
 #: ../../src/Module/Api/Upnp_Api.php:608
-#: ../../src/Repository/Model/Album.php:724
+#: ../../src/Repository/Model/Album.php:730
 msgid "Artists"
 msgstr ""
 
@@ -610,7 +606,7 @@ msgstr ""
 #: ../../src/Gui/Song/SongViewAdapter.php:353
 #: ../../src/Module/Util/AmpacheRss.php:289
 #: ../../src/Repository/Model/AlbumDisk.php:373
-#: ../../src/Repository/Model/Album.php:604
+#: ../../src/Repository/Model/Album.php:610
 #: ../../src/Repository/Model/Search.php:586
 msgid "Album"
 msgstr ""
@@ -1100,7 +1096,7 @@ msgstr ""
 #: ../../src/Module/Util/AmpacheRss.php:289 ../../src/Module/Util/Ui.php:991
 #: ../../src/Plugin/AmpacheFlattr.php:101
 #: ../../src/Plugin/AmpachePaypal.php:104
-#: ../../src/Repository/Model/User.php:1167
+#: ../../src/Repository/Model/User.php:1176
 msgid "User"
 msgstr ""
 
@@ -1222,7 +1218,7 @@ msgstr ""
 #: ../../public/templates/show_lostpassword_form.inc.php:69
 #: ../../public/templates/show_user_registration.inc.php:105
 #: ../../src/Module/Cli/AdminAddUserCommand.php:44
-#: ../../src/Module/User/Registration.php:83
+#: ../../src/Module/User/Registration.php:84
 msgid "E-mail"
 msgstr ""
 
@@ -1246,7 +1242,7 @@ msgstr ""
 #: ../../public/templates/show_podcasts.inc.php:107
 #: ../../public/templates/show_user_registration.inc.php:113
 #: ../../src/Module/Cli/AdminAddUserCommand.php:45
-#: ../../src/Module/User/Registration.php:85
+#: ../../src/Module/User/Registration.php:86
 msgid "Website"
 msgstr ""
 
@@ -1494,7 +1490,7 @@ msgstr ""
 #: ../../public/templates/show_wanted_albums.inc.php:33
 #: ../../src/Gui/Song/SongViewAdapter.php:359
 #: ../../src/Repository/Model/AlbumDisk.php:378
-#: ../../src/Repository/Model/Album.php:609
+#: ../../src/Repository/Model/Album.php:615
 #: ../../src/Repository/Model/Search.php:591
 #: ../../src/Repository/Model/Search.php:804
 msgid "Year"
@@ -1607,7 +1603,7 @@ msgstr ""
 #: ../../src/Repository/Model/Podcast_Episode.php:232
 #: ../../src/Repository/Model/Search.php:585
 #: ../../src/Repository/Model/Search.php:800
-#: ../../src/Repository/Model/Song.php:1881
+#: ../../src/Repository/Model/Song.php:1885
 #: ../../src/Repository/Model/Video.php:374
 msgid "Title"
 msgstr ""
@@ -2076,8 +2072,8 @@ msgstr ""
 #: ../../src/Module/Catalog/Catalog_subsonic.php:135
 #: ../../src/Module/Cli/AdminAddUserCommand.php:48
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:194
-#: ../../src/Module/User/Registration.php:67
-#: ../../src/Module/User/Registration.php:81
+#: ../../src/Module/User/Registration.php:68
+#: ../../src/Module/User/Registration.php:82
 #: ../../src/Repository/Model/Search.php:1002
 msgid "Username"
 msgstr ""
@@ -2112,7 +2108,7 @@ msgstr ""
 #: ../../public/templates/show_preference_box.inc.php:104
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:128
 #: ../../src/Repository/Model/Shoutbox.php:321
-#: ../../src/Repository/Model/User.php:1169
+#: ../../src/Repository/Model/User.php:1178
 msgid "Guest"
 msgstr ""
 
@@ -2121,7 +2117,7 @@ msgstr ""
 #: ../../public/templates/show_edit_user.inc.php:120
 #: ../../public/templates/show_preference_box.inc.php:106
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:134
-#: ../../src/Module/Util/Ui.php:992 ../../src/Repository/Model/User.php:1165
+#: ../../src/Module/Util/Ui.php:992 ../../src/Repository/Model/User.php:1174
 msgid "Content Manager"
 msgstr ""
 
@@ -2130,7 +2126,7 @@ msgstr ""
 #: ../../public/templates/show_edit_user.inc.php:121
 #: ../../public/templates/show_preference_box.inc.php:107
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:137
-#: ../../src/Module/Util/Ui.php:993 ../../src/Repository/Model/User.php:1163
+#: ../../src/Module/Util/Ui.php:993 ../../src/Repository/Model/User.php:1172
 msgid "Catalog Manager"
 msgstr ""
 
@@ -2144,7 +2140,7 @@ msgstr ""
 #: ../../public/templates/show_preference_box.inc.php:108
 #: ../../public/templates/sidebar.inc.php:97
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:140
-#: ../../src/Module/Util/Ui.php:994 ../../src/Repository/Model/User.php:1161
+#: ../../src/Module/Util/Ui.php:994 ../../src/Repository/Model/User.php:1170
 msgid "Admin"
 msgstr ""
 
@@ -2394,8 +2390,8 @@ msgstr ""
 #: ../../public/templates/show_video.inc.php:112
 #: ../../public/templates/show_video_row.inc.php:125
 #: ../../src/Gui/Song/SongViewAdapter.php:239
-#: ../../src/Module/System/AutoUpdate.php:292
-#: ../../src/Module/System/AutoUpdate.php:294
+#: ../../src/Module/System/AutoUpdate.php:323
+#: ../../src/Module/System/AutoUpdate.php:325
 #: ../../src/Repository/Model/Share.php:272
 msgid "Download"
 msgstr ""
@@ -2501,8 +2497,8 @@ msgstr ""
 
 #: ../../public/templates/show_album_group_disks.inc.php:89
 #: ../../public/templates/show_lyrics.inc.php:39
-#: ../../src/Repository/Model/Album.php:396
-#: ../../src/Repository/Model/Album.php:399
+#: ../../src/Repository/Model/Album.php:402
+#: ../../src/Repository/Model/Album.php:405
 #: ../../src/Repository/Model/Artist.php:821
 msgid "Unknown (Orphaned)"
 msgstr ""
@@ -2670,7 +2666,7 @@ msgstr ""
 
 #: ../../public/templates/show_arts.inc.php:63
 #: ../../public/templates/show_ip_history.inc.php:64
-#: ../../src/Repository/Model/User.php:1110
+#: ../../src/Repository/Model/User.php:1119
 msgid "Invalid"
 msgstr ""
 
@@ -2745,11 +2741,11 @@ msgstr ""
 
 #: ../../public/templates/show_catalog_row.inc.php:52
 #: ../../public/templates/show_edit_access.inc.php:95
-#: ../../public/templates/show_edit_democratic.inc.php:79
+#: ../../public/templates/show_edit_democratic.inc.php:67
 #: ../../public/templates/show_edit_shout.inc.php:49
 #: ../../public/templates/show_manage_catalogs.inc.php:68
 #: ../../public/templates/show_preference_admin.inc.php:60
-#: ../../src/Module/System/AutoUpdate.php:297
+#: ../../src/Module/System/AutoUpdate.php:328
 msgid "Update"
 msgstr ""
 
@@ -3180,16 +3176,6 @@ msgstr ""
 
 #: ../../public/templates/show_edit_democratic.inc.php:61
 msgid "Make Default"
-msgstr ""
-
-#: ../../public/templates/show_edit_democratic.inc.php:69
-#: ../../public/templates/show_preference_box.inc.php:53
-#: ../../public/templates/show_preference_box.inc.php:124
-msgid "Apply to All"
-msgstr ""
-
-#: ../../public/templates/show_edit_democratic.inc.php:73
-msgid "Force Democratic Play"
 msgstr ""
 
 #: ../../public/templates/show_edit_filter.inc.php:31
@@ -3654,7 +3640,7 @@ msgid "Show Album"
 msgstr ""
 
 #: ../../public/templates/show_html5_player.inc.php:220
-#: ../../src/Repository/Model/Song.php:1828
+#: ../../src/Repository/Model/Song.php:1832
 msgid "Show Lyrics"
 msgstr ""
 
@@ -3838,11 +3824,11 @@ msgid ""
 msgstr ""
 
 #: ../../public/templates/show_install_config.inc.php:68
-#: ../../src/Repository/Model/Album.php:282
-#: ../../src/Repository/Model/Album.php:283
-#: ../../src/Repository/Model/Album.php:724
-#: ../../src/Repository/Model/Album.php:751
-#: ../../src/Repository/Model/Album.php:752
+#: ../../src/Repository/Model/Album.php:288
+#: ../../src/Repository/Model/Album.php:289
+#: ../../src/Repository/Model/Album.php:730
+#: ../../src/Repository/Model/Album.php:757
+#: ../../src/Repository/Model/Album.php:758
 #: ../../src/Repository/Model/Artist.php:595
 #: ../../src/Repository/Model/Artist.php:596
 msgid "Various"
@@ -4291,7 +4277,7 @@ msgstr ""
 #: ../../src/Module/Api/Edit/ShowEditObjectAction.php:66
 #: ../../src/Module/System/Update.php:3980
 #: ../../src/Module/System/Update.php:3982
-#: ../../src/Repository/Model/User.php:1387
+#: ../../src/Repository/Model/User.php:1396
 msgid "System"
 msgstr ""
 
@@ -4599,6 +4585,11 @@ msgstr ""
 
 #: ../../public/templates/show_podcasts.inc.php:98
 msgid "No podcast found"
+msgstr ""
+
+#: ../../public/templates/show_preference_box.inc.php:53
+#: ../../public/templates/show_preference_box.inc.php:124
+msgid "Apply to All"
 msgstr ""
 
 #: ../../public/templates/show_preference_box.inc.php:54
@@ -4932,7 +4923,7 @@ msgid "Do you really want to delete this Tag?"
 msgstr ""
 
 #: ../../public/templates/show_tagcloud.inc.php:89
-#: ../../src/Repository/Model/User.php:1112
+#: ../../src/Repository/Model/User.php:1121
 msgid "Not Enough Data"
 msgstr ""
 
@@ -4975,7 +4966,7 @@ msgstr ""
 
 #: ../../public/templates/show_test_table.inc.php:42
 #: ../../src/Module/Cli/UpdateDbCommand.php:90
-#: ../../src/Module/System/AutoUpdate.php:270
+#: ../../src/Module/System/AutoUpdate.php:301
 #: ../../src/Module/System/Update.php:723
 #: ../../src/Module/System/Update.php:810
 msgid "WARNING"
@@ -5295,7 +5286,7 @@ msgstr ""
 #: ../../src/Repository/Model/Catalog.php:1031
 #: ../../src/Repository/Model/Catalog.php:1032
 #: ../../src/Repository/Model/Catalog.php:1033
-#: ../../src/Repository/Model/User.php:1065
+#: ../../src/Repository/Model/User.php:1094
 msgid "Never"
 msgstr ""
 
@@ -5307,8 +5298,8 @@ msgstr ""
 #: ../../src/Repository/Model/Playlist.php:295
 #: ../../src/Repository/Model/Podcast.php:380
 #: ../../src/Repository/Model/TVShow_Episode.php:89
-#: ../../src/Repository/Model/User.php:1072
-#: ../../src/Repository/Model/User.php:1171
+#: ../../src/Repository/Model/User.php:1099
+#: ../../src/Repository/Model/User.php:1180
 #: ../../src/Repository/Model/Video.php:913
 msgid "Unknown"
 msgstr ""
@@ -5987,7 +5978,6 @@ msgstr ""
 #: ../../src/Module/Api/Method/UserDeleteMethod.php:70
 #: ../../src/Module/Api/Method/UserEditMethod.php:99
 #: ../../src/Module/Api/Method/UserEditMethod.php:153
-#: ../../tests/Module/Api/Method/AlbumMethodTest.php:69
 #, php-format
 msgid "Bad Request: %s"
 msgstr ""
@@ -6602,8 +6592,6 @@ msgstr ""
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:76
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:71
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:73
-#: ../../tests/Module/Application/Admin/License/EditActionTest.php:142
-#: ../../tests/Module/Application/Admin/License/EditActionTest.php:196
 msgid "No Problem"
 msgstr ""
 
@@ -6721,7 +6709,7 @@ msgstr ""
 #: ../../src/Module/Application/TvShow/ConfirmDeleteAction.php:82
 #: ../../src/Module/Application/TvShowSeason/ConfirmDeleteAction.php:77
 #: ../../src/Module/Application/Video/ConfirmDeleteAction.php:79
-#: ../../src/Module/Catalog/Catalog_Seafile.php:551
+#: ../../src/Module/Catalog/Catalog_Seafile.php:552
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:386
 msgid "There Was a Problem"
 msgstr ""
@@ -7356,7 +7344,7 @@ msgstr ""
 
 #: ../../src/Module/Application/Register/AddUserAction.php:160
 #: ../../src/Module/System/InstallationHelper.php:405
-#: ../../src/Repository/Model/User.php:580
+#: ../../src/Repository/Model/User.php:609
 msgid "Passwords do not match"
 msgstr ""
 
@@ -7483,12 +7471,12 @@ msgstr ""
 msgid "local_metadata_dir setting is required to store art on disk"
 msgstr ""
 
-#: ../../src/Module/Beets/Catalog.php:137
+#: ../../src/Module/Beets/Catalog.php:139
 msgid "Running Beets Update"
 msgstr ""
 
 #. HINT: filename (file path)
-#: ../../src/Module/Beets/Catalog.php:219
+#: ../../src/Module/Beets/Catalog.php:222
 #, php-format
 msgid "Unable to add Song - %s"
 msgstr ""
@@ -7578,21 +7566,21 @@ msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:571
-#: ../../src/Module/Catalog/Catalog_Seafile.php:469
+#: ../../src/Module/Catalog/Catalog_Seafile.php:470
 #, php-format
 msgid "Updated song: \"%s\""
 msgstr ""
 
 #: ../../src/Module/Catalog/Catalog_dropbox.php:574
-#: ../../src/Module/Catalog/Catalog_Seafile.php:472
+#: ../../src/Module/Catalog/Catalog_Seafile.php:473
 #, php-format
 msgid "Song up to date: \"%s\""
 msgstr ""
 
 #. HINT: filename (File path)
 #: ../../src/Module/Catalog/Catalog_dropbox.php:578
-#: ../../src/Module/Catalog/Catalog_Seafile.php:476
-#: ../../src/Module/Catalog/Catalog_Seafile.php:565
+#: ../../src/Module/Catalog/Catalog_Seafile.php:477
+#: ../../src/Module/Catalog/Catalog_Seafile.php:566
 #, php-format
 msgid "Removing song: \"%s\""
 msgstr ""
@@ -7649,7 +7637,7 @@ msgid "N/A"
 msgstr ""
 
 #: ../../src/Module/Catalog/Catalog_local.php:582
-#: ../../src/Module/Catalog/Catalog_Seafile.php:307
+#: ../../src/Module/Catalog/Catalog_Seafile.php:308
 msgid "Catalog Updated"
 msgstr ""
 
@@ -7743,117 +7731,117 @@ msgstr ""
 msgid "Completed updating remote Catalog(s)."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:105
+#: ../../src/Module/Catalog/Catalog_Seafile.php:106
 msgid "Install a Seafile server as described in the documentation"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:105
+#: ../../src/Module/Catalog/Catalog_Seafile.php:106
 msgid ""
 "Enter URL to server (e.g. 'https://seafile.example.com') and library name (e."
 "g. 'Music')."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:105
+#: ../../src/Module/Catalog/Catalog_Seafile.php:106
 msgid ""
 "API Call Delay is the delay inserted between repeated requests to Seafile "
 "(such as during an Add or Clean action) to accommodate Seafile's Rate "
 "Limiting."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:105
+#: ../../src/Module/Catalog/Catalog_Seafile.php:106
 msgid "The default is tuned towards Seafile's default rate limit settings."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:105
+#: ../../src/Module/Catalog/Catalog_Seafile.php:106
 msgid ""
 "After creating the Catalog, you must 'Make it ready' on the Catalog table."
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:151
+#: ../../src/Module/Catalog/Catalog_Seafile.php:152
 msgid "Server URI"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:155
+#: ../../src/Module/Catalog/Catalog_Seafile.php:156
 msgid "Library Name"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:156
+#: ../../src/Module/Catalog/Catalog_Seafile.php:157
 msgid "API Call Delay"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:157
+#: ../../src/Module/Catalog/Catalog_Seafile.php:158
 msgid "Seafile Username/Email"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:158
+#: ../../src/Module/Catalog/Catalog_Seafile.php:159
 msgid "Seafile Password"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:190
+#: ../../src/Module/Catalog/Catalog_Seafile.php:191
 msgid "Seafile server URL is required"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:195
+#: ../../src/Module/Catalog/Catalog_Seafile.php:196
 msgid "Seafile server library name is required"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:200
+#: ../../src/Module/Catalog/Catalog_Seafile.php:201
 msgid "Seafile username is required"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:205
+#: ../../src/Module/Catalog/Catalog_Seafile.php:206
 msgid "Seafile password is required"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:210
+#: ../../src/Module/Catalog/Catalog_Seafile.php:211
 msgid "API Call Delay must have a numeric value"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:225
+#: ../../src/Module/Catalog/Catalog_Seafile.php:226
 #, php-format
 msgid "There was a problem authenticating against the Seafile API: %s"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:276
+#: ../../src/Module/Catalog/Catalog_Seafile.php:277
 msgid "Running Seafile Remote Update"
 msgstr ""
 
 #. HINT: count of songs updated
-#: ../../src/Module/Catalog/Catalog_Seafile.php:307
+#: ../../src/Module/Catalog/Catalog_Seafile.php:308
 #, php-format
 msgid "Total Media: [%s]"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_Seafile.php:311
+#: ../../src/Module/Catalog/Catalog_Seafile.php:312
 msgid "No media was updated, did you respect the patterns?"
 msgstr ""
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:338
+#: ../../src/Module/Catalog/Catalog_Seafile.php:339
 #, php-format
 msgid "Skipping existing song: %s"
 msgstr ""
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:345
+#: ../../src/Module/Catalog/Catalog_Seafile.php:346
 #, php-format
 msgid "Adding a new song: %s"
 msgstr ""
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:361
+#: ../../src/Module/Catalog/Catalog_Seafile.php:362
 #, php-format
 msgid "Could not add song: %s"
 msgstr ""
 
 #. HINT: %1 filename (File path), %2 Error Message
-#: ../../src/Module/Catalog/Catalog_Seafile.php:552
+#: ../../src/Module/Catalog/Catalog_Seafile.php:553
 #, php-format
 msgid "There was an error while checking this song \"%1$s\": %2$s"
 msgstr ""
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_Seafile.php:562
+#: ../../src/Module/Catalog/Catalog_Seafile.php:563
 #, php-format
 msgid "Keeping song: %s"
 msgstr ""
@@ -8088,8 +8076,8 @@ msgid "UPnP broadcast... "
 msgstr ""
 
 #: ../../src/Module/Cli/BroadcastCommand.php:59
-#: ../../src/Module/System/AutoUpdate.php:322
-#: ../../src/Module/System/AutoUpdate.php:346
+#: ../../src/Module/System/AutoUpdate.php:353
+#: ../../src/Module/System/AutoUpdate.php:377
 msgid "Done"
 msgstr ""
 
@@ -8654,21 +8642,21 @@ msgstr ""
 msgid "There was an error trying to delete \"%s\""
 msgstr ""
 
-#: ../../src/Module/System/AutoUpdate.php:272
-#: ../../src/Module/System/AutoUpdate.php:290
+#: ../../src/Module/System/AutoUpdate.php:303
+#: ../../src/Module/System/AutoUpdate.php:321
 msgid "View changes"
 msgstr ""
 
-#: ../../src/Module/System/AutoUpdate.php:283
+#: ../../src/Module/System/AutoUpdate.php:314
 #: ../../src/Repository/Model/Plugin.php:332
 msgid "Update available"
 msgstr ""
 
-#: ../../src/Module/System/AutoUpdate.php:316
+#: ../../src/Module/System/AutoUpdate.php:347
 msgid "Updating Ampache sources with `"
 msgstr ""
 
-#: ../../src/Module/System/AutoUpdate.php:340
+#: ../../src/Module/System/AutoUpdate.php:371
 msgid "Updating dependencies with `"
 msgstr ""
 
@@ -8808,32 +8796,32 @@ msgid "You received a new private message from %s."
 msgstr ""
 
 #. HINT: Ampache site_title
-#: ../../src/Module/User/Registration.php:62
+#: ../../src/Module/User/Registration.php:63
 #, php-format
 msgid "New User Registration at %s"
 msgstr ""
 
-#: ../../src/Module/User/Registration.php:64
+#: ../../src/Module/User/Registration.php:65
 msgid "Thank you for registering"
 msgstr ""
 
-#: ../../src/Module/User/Registration.php:65
+#: ../../src/Module/User/Registration.php:66
 msgid ""
 "Please keep this e-mail for your records. Your account information is as "
 "follows:"
 msgstr ""
 
-#: ../../src/Module/User/Registration.php:69
+#: ../../src/Module/User/Registration.php:70
 msgid ""
 "To begin using your account, you must verify your e-mail address by vising "
 "the following link:"
 msgstr ""
 
-#: ../../src/Module/User/Registration.php:80
+#: ../../src/Module/User/Registration.php:81
 msgid "A new user has registered, the following values were entered:"
 msgstr ""
 
-#: ../../src/Module/User/Registration.php:82
+#: ../../src/Module/User/Registration.php:83
 msgid "Fullname"
 msgstr ""
 
@@ -9507,12 +9495,12 @@ msgid "YOURLS API key"
 msgstr ""
 
 #: ../../src/Repository/Model/AlbumDisk.php:358
-#: ../../src/Repository/Model/Album.php:589
+#: ../../src/Repository/Model/Album.php:595
 msgid "Album MusicBrainzID"
 msgstr ""
 
 #: ../../src/Repository/Model/AlbumDisk.php:363
-#: ../../src/Repository/Model/Album.php:594
+#: ../../src/Repository/Model/Album.php:600
 msgid "Release Group MusicBrainzID"
 msgstr ""
 
@@ -10620,15 +10608,15 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: ../../src/Repository/Model/Song.php:1871
+#: ../../src/Repository/Model/Song.php:1875
 msgid "Track MusicBrainzID"
 msgstr ""
 
-#: ../../src/Repository/Model/User.php:576
+#: ../../src/Repository/Model/User.php:605
 msgid "Username is required"
 msgstr ""
 
-#: ../../src/Repository/Model/User.php:1406
+#: ../../src/Repository/Model/User.php:1415
 msgid "User avatar"
 msgstr ""
 

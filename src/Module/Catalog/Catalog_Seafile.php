@@ -266,7 +266,7 @@ class Catalog_Seafile extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -277,8 +277,7 @@ class Catalog_Seafile extends Catalog
             Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
-        $success = false;
-
+        $success = 0;
         if ($this->seafile->prepare()) {
             $count = $this->seafile->for_all_files(function ($file) {
                 if ($file->size == 0) {
@@ -311,7 +310,7 @@ class Catalog_Seafile extends Catalog
             if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
-                $success = true;
+                $success = 1;
             }
         }
 
@@ -437,38 +436,32 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @return array
+     * @return int
      * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
-        $results = array('total' => 0, 'updated' => 0);
-
         set_time_limit(0);
 
+        $results = 0;
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results['total']++;
                 debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
-
-                $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
-
+                $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
                 $metadata = null;
-
                 if ($file !== null) {
                     $metadata = $this->download_metadata($file);
                 }
-
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
                     $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
-                        $results['updated']++;
+                        $results++;
                     } else {
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
@@ -532,6 +525,7 @@ class Catalog_Seafile extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {

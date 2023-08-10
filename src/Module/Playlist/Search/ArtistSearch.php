@@ -126,7 +126,7 @@ final class ArtistSearch implements SearchInterface
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search->search_user->id . ""))
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search->search_user->id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_artist_" . $search->search_user->id . "` ON `artist`.`id` = `favorite_artist_" . $search->search_user->id . "`.`object_id` AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'"
                         : "";
                     break;
@@ -306,7 +306,7 @@ final class ArtistSearch implements SearchInterface
                             $table['rating'] = '';
                         }
                         $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search->search_user->id))
-                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search->search_user->id . "` ON `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_id` = `$my_type`.`$column` AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . ""
+                            ? "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $search->search_user->id . "` ON `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_type`='$my_type' AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`object_id` = `$my_type`.`$column` AND `rating_" . $my_type . "_" . $search->search_user->id . "`.`user` = " . $search->search_user->id
                             : "";
                     }
                     break;

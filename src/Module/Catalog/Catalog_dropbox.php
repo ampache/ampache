@@ -254,7 +254,7 @@ class Catalog_dropbox extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -268,12 +268,12 @@ class Catalog_dropbox extends Catalog
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
-        $this->update_remote_catalog();
+        $songsadded = $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_bottom();
         }
 
-        return true;
+        return $songsadded;
     } // add_to_catalog
 
     /**
@@ -287,13 +287,13 @@ class Catalog_dropbox extends Catalog
         $app         = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox     = new Dropbox($app);
         $this->count = 0;
-        $this->add_files($dropbox, $this->path);
+        $songsadded  = $this->add_files($dropbox, $this->path);
         /* Update the Catalog last_add */
         $this->update_last_add();
 
         Ui::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
 
-        return true;
+        return $songsadded;
     }
 
     /**
@@ -302,18 +302,22 @@ class Catalog_dropbox extends Catalog
      * Recurses through directories and pulls out all media files
      * @param $dropbox
      * @param $path
+     * @return int
      */
     public function add_files($dropbox, $path)
     {
         debug_event('dropbox.catalog', "List contents for " . $path, 5);
         $listFolderContents = $dropbox->listFolder($path, ['recursive' => true]);
+        $songsadded         = 0;
 
         // Fetch items on the first page
         $items = $listFolderContents->getItems();
         foreach ($items as $item) {
             if ($item->getDataProperty('.tag') == "file") {
                 $subpath = $item->getDataProperty('path_display');
-                $this->add_file($dropbox, $subpath);
+                if ($this->add_file($dropbox, $subpath)) {
+                    $songsadded++;
+                }
             }
         }
 
@@ -327,11 +331,15 @@ class Catalog_dropbox extends Catalog
                 foreach ($remainingItems as $item) {
                     if ($item->getDataProperty('.tag') == "file") {
                         $subpath = $item->getDataProperty('path_display');
-                        $this->add_file($dropbox, $subpath);
+                        if ($this->add_file($dropbox, $subpath)) {
+                            $songsadded++;
+                        }
                     }
                 }
             } while ($listFolderContinue->hasMoreItems() == true);
         }
+
+        return $songsadded;
     }
 
     /**
@@ -523,15 +531,14 @@ class Catalog_dropbox extends Catalog
     }
 
     /**
-     * @return array
+     * @return int
      * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
-        $updated = array('total' => 0, 'updated' => 0);
-
         set_time_limit(0);
 
+        $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
         $app            = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox        = new Dropbox($app);
@@ -539,7 +546,6 @@ class Catalog_dropbox extends Catalog
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $updated['total']++;
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
                 $filesize = 40960;
@@ -569,7 +575,7 @@ class Catalog_dropbox extends Catalog
                     $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
-                        $updated['updated']++;
+                        $updated++;
                     } else {
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
@@ -592,6 +598,7 @@ class Catalog_dropbox extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {

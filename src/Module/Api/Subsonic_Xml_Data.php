@@ -1280,7 +1280,7 @@ class Subsonic_Xml_Data
         $xpodcasts = $xml->addChild('podcasts');
         foreach ($podcasts as $podcast) {
             $podcast->format();
-            $sub_id   =(string)self::_getPodcastId($podcast->id);
+            $sub_id   = (string)self::_getPodcastId($podcast->id);
             $xchannel = $xpodcasts->addChild('channel');
             $xchannel->addAttribute('id', $sub_id);
             $xchannel->addAttribute('url', (string)$podcast->feed);

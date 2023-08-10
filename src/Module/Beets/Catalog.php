@@ -127,6 +127,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Adds new songs to the catalog
      * @param array $options
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -148,6 +149,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
+
+        return $this->addedSongs;
     }
 
     /**
@@ -228,8 +231,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Verify songs.
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
@@ -243,7 +245,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $this->updateUi('verify', $this->verifiedSongs, null, true);
         $this->update_last_update();
 
-        return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
+        return $this->verifiedSongs;
     }
 
     /**
@@ -269,7 +271,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Cleans the Catalog.
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
-     * @return integer
+     * @return int
      */
     public function clean_catalog_proc()
     {

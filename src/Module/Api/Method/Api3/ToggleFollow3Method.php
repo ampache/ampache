@@ -38,7 +38,7 @@ final class ToggleFollow3Method
 
     /**
      * toggle_follow
-     * This follow/unfollow an user
+     * This follow/unfollow a user
      * @param array $input
      * @param User $user
      */

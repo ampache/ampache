@@ -46,7 +46,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * webplayer
   * Add a button next to the playlist to allow looping after the last song
   * If you enable playlist loop do not remove previous tracks
-* Database 600037
+* Database 600038
   * Add preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
   * Drop channel table
   * Add `total_skip` to podcast table
@@ -79,6 +79,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Convert `object_type` to an enum on `image` table
   * Add `enabled` to podcast_episode table
   * Update user `play_size` and catalog `size` fields to megabytes (Stop large catalogs overflowing 32bit ints)
+  * Update `access_list` in case you have a bad `user` column
 * Config version 67
   * Drop Channels from config
   * Reset the art_order defaults (replace lastfm with spotify)
@@ -182,6 +183,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * For System preferences 'Apply to All' and 'Access Level' have no effect
 * Combined a lot of duplicate functions into one
 * Art from share page
+* Remove the auth parameter from image urls
 * Option to 'Force Democratic Play' has been removed from the config page
   * Check the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#configure-democratic-playlist-options-directly) for details
 * Remove all reference to deleted database updates (not required)
@@ -231,12 +233,14 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Send the final url for play_url's instead of figuring it on the fly
 * Don't verify Podcast Episodes that don't have a file
 * Update song channels on tag update
+* ACL creation may lock you out without a system user
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments
 * CLI
   * export:playlist command help was incorrect
   * Get the website address from `fallback_url`
+  * run:updateCatalogFolder and run:updateCatalogFile would always verify
 * webplayer
   * Visible shadow hightlight and replaygain button for light theme
   * Added back next / back keys in the playlist js
@@ -246,6 +250,7 @@ You can find example Subsonic responses from an official server and Ampache serv
   * Don't try to search on bad rules. (falls back to empty rules which will show all songs)
   * JS could not load your search if you were using a rule alias
 * Subsonic
+  * Forward the client ip instead the server ip using rewrite
   * Sharing some types of object
   * Filtering user and password
 
@@ -255,6 +260,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 ### Added
 
+* API5::playlist_songs: Add `random` to get random objects filtered by limit
 * API6 (Based on API5)
   * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
   * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
@@ -265,6 +271,7 @@ Stream token's will let you design permalinked streams and allow users to stream
   * API6::live_stream_delete: Delete a stream by ID
   * API6::register: Allow users to register an account (if enabled)
   * API6::playlist_create: Return an error if the playlist name already exists for that user
+  * API6::playlist_songs: Add `random` to get random objects filtered by limit
   * API6::user_edit (previously user_create):
     * Add `group` parameter to pick a catalog filter group
     * Add `fullname_public` to enable/disable using fullname in public display

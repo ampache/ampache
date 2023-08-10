@@ -1057,7 +1057,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
 function show_user_select($name, $selected = '', $style = '')
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
-    echo "\t<option value=\"\">" . T_('All') . "</option>\n";
+    echo "\t<option value=\"-1\">" . T_('All') . "</option>\n";
 
     $sql        = "SELECT `id`, `username`, `fullname` FROM `user` ORDER BY `fullname`";
     $db_results = Dba::read($sql);

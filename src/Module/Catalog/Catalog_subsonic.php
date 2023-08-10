@@ -206,7 +206,7 @@ class Catalog_subsonic extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -216,12 +216,12 @@ class Catalog_subsonic extends Catalog
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
-        $this->update_remote_catalog();
+        $songsadded = $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_bottom();
         }
 
-        return true;
+        return $songsadded;
     } // add_to_catalog
 
     /**
@@ -237,6 +237,7 @@ class Catalog_subsonic extends Catalog
      *
      * Pulls the data from a remote catalog and adds any missing songs to the
      * database.
+     * @return int
      */
     public function update_remote_catalog()
     {
@@ -314,15 +315,15 @@ class Catalog_subsonic extends Catalog
 
         debug_event('subsonic.catalog', 'Catalog updated.', 4);
 
-        return true;
+        return $songsadded;
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
-        return array('total' => 0, 'updated' => 0);
+        return 0;
     }
 
     /**
@@ -352,6 +353,7 @@ class Catalog_subsonic extends Catalog
      * clean_catalog_proc
      *
      * Removes subsonic songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {

@@ -536,10 +536,10 @@ class Podcast extends database_object implements library_item
         $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
         $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
-        $source      = null;
+        $source      = '';
         $time        = 0;
         if ($episode->enclosure) {
-            $source = $episode->enclosure['url'];
+            $source = (string)$episode->enclosure['url'];
         }
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
@@ -566,8 +566,14 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        if (!$source) {
+        if (empty($source)) {
             debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        // don't keep adding the same episodes
+        if (self::get_id_from_guid($guid) > 0) {
+            debug_event(self::class, 'Episode guid already exists, skipped', 3);
 
             return false;
         }
@@ -696,6 +702,26 @@ class Podcast extends database_object implements library_item
     public static function get_id_from_source($url)
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_guid
+     *
+     * Get episode id from the guid.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_guid($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {

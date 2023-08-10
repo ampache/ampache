@@ -168,7 +168,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                                 }
                             }
                         } else {
-                            // Don't return success if an user already exists for this username but don't have this openid identity as website
+                            // Don't return success if a user already exists for this username but don't have this openid identity as website
                             $user = User::get_from_username($result['username']);
                             if ($user->id) {
                                 $result['success'] = false;

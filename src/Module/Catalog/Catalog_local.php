@@ -250,7 +250,7 @@ class Catalog_local extends Catalog
      * @param string $path
      * @param array $options
      * @param integer $counter
-     * @return boolean
+     * @return int
      */
     public function add_files($path, $options, $counter = 0)
     {
@@ -278,7 +278,7 @@ class Catalog_local extends Catalog
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to open: %s'), $path));
 
-            return false;
+            return 0;
         }
 
         /* Change the dir so is_dir works correctly */
@@ -287,9 +287,10 @@ class Catalog_local extends Catalog
             /* HINT: directory (file path) */
             AmpError::add('catalog_add', sprintf(T_('Unable to change to directory: %s'), $path));
 
-            return false;
+            return 0;
         }
 
+        $songsadded = 0;
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             if ('.' === $file || '..' === $file) {
@@ -304,7 +305,9 @@ class Catalog_local extends Catalog
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            $this->add_file($full_file, $options, $counter);
+            if ($this->add_file($full_file, $options, $counter)) {
+                $songsadded++;
+            }
         } // end while reading directory
 
         if ($counter % 1000 == 0) {
@@ -319,7 +322,7 @@ class Catalog_local extends Catalog
         /* Close the dir handle */
         @closedir($handle);
 
-        return true;
+        return $songsadded;
     } // add_files
 
     /**
@@ -481,6 +484,7 @@ class Catalog_local extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
@@ -583,11 +587,12 @@ class Catalog_local extends Catalog
                 sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
             Ui::show_box_bottom();
         }
+
+        return $this->count;
     } // add_to_catalog
 
     /**
-     * verify_catalog_proc
-     * This function compares the DB's information with the ID3 tags
+     * @return int
      */
     public function verify_catalog_proc()
     {
@@ -614,23 +619,27 @@ class Catalog_local extends Catalog
             $total       = self::count_table($media_type, $this->catalog_id);
         }
         if ($total == 0 || !isset($media_type)) {
-            return array('total' => $number, 'updated' => $total_updated);
+            return $total_updated;
         }
-        $number = $number + $total;
-        $chunks = (int)floor($total / 1000) + 1;
-        foreach (range(1, $chunks) as $chunk) {
-            // Try to be nice about memory usage
+        $count  = 1;
+        $chunks = 1;
+        $chunk  = 0;
+        if ($total > 1000) {
+            $chunks = floor($total / 1000) + 1;
+        }
+        while ($chunk < $chunks) {
             if (isset($media_class) && $chunk > 0) {
                 $media_class::clear_cache();
             }
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " starting verify " . $media_type . " on chunk $chunk/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " starting verify " . $media_type . " on chunk $count/$chunks", 5);
             $total_updated += $this->_verify_chunk($media_type, $chunk, 1000);
+            $chunk++;
+            $count++;
         }
-
         debug_event('local.catalog', "Verify finished, $total_updated updated in " . $this->name, 5);
         $this->update_last_update();
 
-        return array('total' => $number, 'updated' => $total_updated);
+        return $total_updated;
     } // verify_catalog_proc
 
     /**
@@ -706,6 +715,7 @@ class Catalog_local extends Catalog
      * clean catalog procedure
      *
      * Removes local songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {
@@ -737,14 +747,14 @@ class Catalog_local extends Catalog
         $chunk  = 0;
         if ($total > 10000) {
             $chunks = floor($total / 10000) + 1;
-            $chunk  = $chunks;
         }
-        while ($chunk >= 1) {
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
+        while ($chunk < $chunks) {
+            debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . " on chunk $count/$chunks", 5);
             $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000));
-            $chunk--;
+            $chunk++;
             $count++;
         }
+        debug_event('local.catalog', "Clean finished, $total files checked in " . $this->name, 5);
 
         $dead_count = count($dead);
         // Check for unmounted path
@@ -1176,7 +1186,7 @@ class Catalog_local extends Catalog
         }
         $chunks = (int)floor($total / 10000) + 1;
         foreach (range(1, $chunks) as $chunk) {
-            debug_event('local.catalog', "catalog " . $this->catalog_id . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
+            debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . " on chunk $chunk/$chunks", 5);
             $missing = array_merge($missing, $this->_check_chunk($media_type, $chunk, 10000));
         }
 

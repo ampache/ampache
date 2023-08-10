@@ -38,7 +38,7 @@ final class Following3Method
 
     /**
      * following
-     * This get the user list followed by an user
+     * This get the user list followed by a user
      * @param array $input
      * @param User $user
      */

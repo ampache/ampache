@@ -506,7 +506,7 @@ class Json_Data
             $flag        = new Userflag($artist_id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -588,7 +588,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album&auth=' . scrub_out($_REQUEST['auth']);
+            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $objArray = [];
 
@@ -680,8 +680,7 @@ class Json_Data
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
-                $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playitem_total = $playlist->last_count;
             } else {
                 $playlist       = new Playlist($playlist_id);
                 $object_type    = 'playlist';
@@ -1361,7 +1360,7 @@ class Json_Data
     /**
      * users
      *
-     * This handles creating an JSON document for an user list
+     * This handles creating an JSON document for a user list
      *
      * @param  integer[] $users User id list
      * @param  boolean   $object (whether to return as a named object array or regular array)

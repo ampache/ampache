@@ -119,12 +119,12 @@ class Album extends database_object implements library_item
     public $addition_time;
 
     /**
-     *  @var integer $total_duration
+     * @var integer $total_duration
      */
     public $total_duration;
 
     /**
-     *  @var integer $original_year
+     * @var integer $original_year
      */
     public $original_year;
 

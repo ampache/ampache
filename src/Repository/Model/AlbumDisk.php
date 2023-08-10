@@ -68,7 +68,7 @@ class AlbumDisk extends database_object implements library_item
     public $total_count;
 
     /**
-     *  @var integer $total_duration
+     * @var integer $total_duration
      */
     public $total_duration;
 
@@ -145,7 +145,7 @@ class AlbumDisk extends database_object implements library_item
     public $addition_time;
 
     /**
-     *  @var integer $original_year
+     * @var integer $original_year
      */
     public $original_year;
 

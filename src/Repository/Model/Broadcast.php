@@ -426,7 +426,7 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Get broadcasts from an user.
+     * Get broadcasts from a user.
      * @param integer $user_id
      * @return integer[]
      */

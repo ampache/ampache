@@ -1405,17 +1405,11 @@ class User extends database_object
      */
     public function get_avatar($local = false, $session = array())
     {
-        $avatar = array();
-        $auth   = '';
-        if (array_key_exists('t', $session) && $session['s']) {
-            $auth = '&t=' . $session['t'] . '&s=' . $session['s'];
-        } elseif (array_key_exists('auth', $session)) {
-            $auth = '&auth=' . $session['auth'];
-        }
+        $avatar          = array();
         $avatar['title'] = T_('User avatar');
         $upavatar        = new Art($this->id, 'user');
         if ($upavatar->has_db_info()) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id . $auth;
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';

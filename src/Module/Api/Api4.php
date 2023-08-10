@@ -125,12 +125,12 @@ class Api4
     ];
 
     /**
-     *  @var string $auth_version
+     * @var string $auth_version
      */
     public static $auth_version = '350001';
 
     /**
-     *  @var string $version
+     * @var string $version
      */
     public static $version = '443000'; // AMPACHE_VERSION
 

@@ -220,12 +220,12 @@ abstract class Catalog extends database_object
 
     /**
      * @param array $options
-     * @return mixed
+     * @return int
      */
     abstract public function add_to_catalog($options = null);
 
     /**
-     * @return mixed
+     * @return int
      */
     abstract public function verify_catalog_proc();
 
@@ -2398,21 +2398,21 @@ abstract class Catalog extends database_object
         }
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
-            $tags    = self::getSongTags('album', $libitem->id);
-            Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, true);
+            $genres    = self::getSongTags('album', $libitem->id);
+            Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true);
             if ($artist || $album || $tags || $maps) {
                 $artists = array();
                 // update the album artists
                 foreach (Album::get_artist_map('album', $libitem->id) as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
-                    $tags      = self::getSongTags('artist', $albumArtist_id);
-                    Tag::update_tag_list(implode(',', $tags), 'artist', $albumArtist_id, true);
+                    $genres    = self::getSongTags('artist', $albumArtist_id);
+                    Tag::update_tag_list(implode(',', $genres), 'artist', $albumArtist_id, true);
                 }
                 // update the song artists too
                 foreach (Album::get_artist_map('song', $libitem->id) as $songArtist_id) {
                     if (!in_array($songArtist_id, $artists)) {
-                        $tags = self::getSongTags('artist', $songArtist_id);
-                        Tag::update_tag_list(implode(',', $tags), 'artist', $songArtist_id, true);
+                        $genres = self::getSongTags('artist', $songArtist_id);
+                        Tag::update_tag_list(implode(',', $genres), 'artist', $songArtist_id, true);
                     }
                 }
             }
@@ -2425,8 +2425,8 @@ abstract class Catalog extends database_object
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
             // refresh the artist tags after everything else
-            $tags = self::getSongTags('artist', $libitem->id);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, true);
+            $genres = self::getSongTags('artist', $libitem->id);
+            Tag::update_tag_list(implode(',', $genres), 'artist', $libitem->id, true);
         }
         // check counts
         if ($album || $maps) {
@@ -3350,6 +3350,7 @@ abstract class Catalog extends database_object
      * clean_catalog
      *
      * Cleans the catalog of files that no longer exist.
+     * @return int
      */
     public function clean_catalog()
     {
@@ -3365,8 +3366,10 @@ abstract class Catalog extends database_object
         }
 
         $dead_total = $this->clean_catalog_proc();
-        self::clean_empty_albums();
-        self::clean_duplicate_artists();
+        if ($dead_total > 0) {
+            self::clean_empty_albums();
+            self::clean_duplicate_artists();
+        }
 
         debug_event(__CLASS__, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
@@ -3380,6 +3383,8 @@ abstract class Catalog extends database_object
         }
 
         $this->update_last_clean();
+
+        return $dead_total;
     } // clean_catalog
 
     /**
@@ -3396,13 +3401,13 @@ abstract class Catalog extends database_object
 
         $verified = $this->verify_catalog_proc();
 
-        debug_event(__CLASS__, 'verify finished, ' . $verified['updated'] . ' updated', 4);
+        debug_event(__CLASS__, 'verify finished, ' . $verified . ' updated', 4);
 
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
         Ui::update_text(T_("Catalog Verified"),
-            sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified));
         if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
@@ -3928,6 +3933,24 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Update the catalog_map table depending on table type
+     */
+    public function update_catalog_map()
+    {
+        $catalog_media_type = $this->gather_types;
+        if ($catalog_media_type == 'music') {
+            self::update_mapping('artist');
+            self::update_mapping('album');
+            self::update_mapping('album_disk');
+        } elseif ($catalog_media_type == 'podcast') {
+            self::update_mapping('podcast');
+            self::update_mapping('podcast_episode');
+        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+            self::update_mapping('video');
+        }
+    }
+
+    /**
      * Update the catalog mapping for various types
      */
     public static function garbage_collect_mapping()
@@ -4127,7 +4150,9 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
-                            $catalog->add_to_catalog($options);
+                            if ($catalog->add_to_catalog($options)) {
+                                $catalog->update_catalog_map();
+                            }
                         }
                     }
 
@@ -4174,7 +4199,9 @@ abstract class Catalog extends database_object
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
-                            $catalog->clean_catalog();
+                            if ($catalog->clean_catalog() < 0) {
+                                $catalog->update_catalog_map();
+                            }
                         }
                     } // end foreach catalogs
                     Artist::update_table_counts();
@@ -4254,15 +4281,8 @@ abstract class Catalog extends database_object
                 if ($catalog_media_type == 'music') {
                     self::clean_empty_albums();
                     Album::update_album_artist();
-                    self::update_mapping('artist');
-                    self::update_mapping('album');
-                    self::update_mapping('album_disk');
-                } elseif ($catalog_media_type == 'podcast') {
-                    self::update_mapping('podcast');
-                    self::update_mapping('podcast_episode');
-                } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                    self::update_mapping('video');
                 }
+                $catalog->update_catalog_map();
                 self::update_counts();
         }
     }

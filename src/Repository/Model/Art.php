@@ -211,12 +211,12 @@ class Art extends database_object
         if (is_string($source)) {
             $test  = true;
             $image = imagecreatefromstring($source);
-            if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
+            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event(self::class, 'Image failed PHP-GD test', 1);
                 $test = false;
             }
         }
-        if ($test && $image != false) {
+        if ($test && $image) {
             if (imagedestroy($image) === false) {
                 throw new RuntimeException('The image handle from source: ' . $source . ' could not be destroyed');
             }
@@ -1170,7 +1170,7 @@ class Art extends database_object
             }
             $url .= '.' . $extension;
         } else {
-            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }
