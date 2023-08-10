@@ -126,7 +126,7 @@ class AutoUpdate
     }
 
     /**
-     * Check if last github check expired.
+     * Check if last GitHub check expired.
      * @return boolean
      */
     protected static function lastcheck_expired()
@@ -256,14 +256,16 @@ class AutoUpdate
         if (!$force && (!self::lastcheck_expired() || !AmpConfig::get('autoupdate'))) {
             return AmpConfig::get('autoupdate_lastversion_new');
         }
-
-        debug_event(self::class, 'Checking latest version online...', 5);
+        $time = time();
+        Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
+        AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
         $current    = self::get_current_version();
-        $latest     = self::get_latest_version(true);
+        $latest     = self::get_latest_version($force);
 
+        debug_event(self::class, 'Checking latest version online...', 5);
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
                 $ccommit = self::github_request('/commits/' . $current);

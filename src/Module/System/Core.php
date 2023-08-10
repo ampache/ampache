@@ -286,7 +286,7 @@ class Core
 
         $image = imagecreatefromstring($image_data);
 
-        if ($image == false) {
+        if (!$image) {
             return array('width' => 0, 'height' => 0);
         }
 

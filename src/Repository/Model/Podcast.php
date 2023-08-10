@@ -536,10 +536,10 @@ class Podcast extends database_object implements library_item
         $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
         $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
-        $source      = null;
+        $source      = '';
         $time        = 0;
         if ($episode->enclosure) {
-            $source = $episode->enclosure['url'];
+            $source = (string)$episode->enclosure['url'];
         }
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
@@ -566,7 +566,7 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        if (!$source) {
+        if (empty($source)) {
             debug_event(self::class, 'Episode source URL not found, skipped', 3);
 
             return false;
