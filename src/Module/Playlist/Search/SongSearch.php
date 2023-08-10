@@ -241,7 +241,7 @@ final class SongSearch implements SearchInterface
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_" . $search->search_user->id . ""))
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_" . $search->search_user->id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_song_" . $search->search_user->id . "` ON `song`.`id` = `favorite_song_" . $search->search_user->id . "`.`object_id` AND `favorite_song_" . $search->search_user->id . "`.`object_type` = 'song'"
                         : "";
                     break;
@@ -252,7 +252,7 @@ final class SongSearch implements SearchInterface
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search->search_user->id . ""))
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search->search_user->id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_album_" . $search->search_user->id . "` ON `album`.`id` = `favorite_album_" . $search->search_user->id . "`.`object_id` AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'"
                         : "";
                     $join['album'] = true;
@@ -264,7 +264,7 @@ final class SongSearch implements SearchInterface
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search->search_user->id . ""))
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_" . $search->search_user->id))
                         ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_artist_" . $search->search_user->id . "` ON `artist`.`id` = `favorite_artist_" . $search->search_user->id . "`.`object_id` AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'"
                         : "";
                     $join['artist'] = true;

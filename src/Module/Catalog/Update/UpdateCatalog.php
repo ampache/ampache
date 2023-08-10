@@ -260,7 +260,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
             }
-            if ((($cleanup === true || $verification === true) && $changed > 0) || $collectGarbage === true) {
+            if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
                 $interactor->info(
                     T_('Garbage Collection'),
                     true

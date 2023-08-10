@@ -2327,7 +2327,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $plugin = new Plugin($plugin_name);
             if ($plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
-                if ($lyrics != false) {
+                if ($lyrics) {
                     return $lyrics;
                 }
             }

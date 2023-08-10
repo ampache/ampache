@@ -86,7 +86,7 @@ class Waveform
             } else {
                 $waveform = $media->waveform;
             }
-            if ($waveform == null || $waveform == false) {
+            if (!$waveform) {
                 $catalog = Catalog::create_from_id($media->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';

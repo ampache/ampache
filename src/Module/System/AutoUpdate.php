@@ -126,7 +126,7 @@ class AutoUpdate
     }
 
     /**
-     * Check if last github check expired.
+     * Check if last GitHub check expired.
      * @return boolean
      */
     protected static function lastcheck_expired()

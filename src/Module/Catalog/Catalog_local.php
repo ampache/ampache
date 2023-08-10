@@ -621,7 +621,6 @@ class Catalog_local extends Catalog
         if ($total == 0 || !isset($media_type)) {
             return $total_updated;
         }
-        $number = $number + $total;
         $count  = 1;
         $chunks = 1;
         $chunk  = 0;
