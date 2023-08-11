@@ -2142,7 +2142,7 @@ class Subsonic_Api
         debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 
-        if ($localplay->connect()) {
+        if (!empty($localplay->type) && $localplay->connect()) {
             $ret = false;
             switch ($_REQUEST['action']) {
                 case 'get':
