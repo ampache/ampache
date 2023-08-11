@@ -928,7 +928,7 @@ class Stats
             $join = ' AND';
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        $user_id       = (int)Core::get_global('user')->id;
+        $user_id       = (int)Core::get_global('user')->id ?? 0;
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
             $sql .= $join . " " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
             $join = ' AND';
