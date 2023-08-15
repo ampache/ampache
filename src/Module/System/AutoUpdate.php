@@ -252,26 +252,30 @@ class AutoUpdate
      */
     public static function is_update_available($force = false)
     {
-        if (!$force && (!AmpConfig::get('autoupdate'))) {
+        if (!$force || (!(self::lastcheck_expired() && AmpConfig::get('autoupdate')))) {
             return AmpConfig::get('autoupdate_lastversion_new');
         }
-
-        debug_event(self::class, 'Checking latest version online...', 5);
+        $time = time();
+        Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
+        AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
         $current    = self::get_current_version();
         $latest     = self::get_latest_version();
 
+        debug_event(self::class, 'Checking latest version online...', 5);
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
-                $ccommit = self::github_request('/commits/' . $current);
-                $lcommit = self::github_request('/commits/' . $latest);
+                $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
+                $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
 
                 if (!empty($ccommit) && !empty($lcommit)) {
                     // Comparison based on commit date
                     $ctime = strtotime($ccommit->commit->author->date);
                     $ltime = strtotime($lcommit->commit->author->date);
+                    AmpConfig::set($current, $ctime, true);
+                    AmpConfig::set($latest, $ltime, true);
 
                     $available = ($ctime < $ltime);
                 }
