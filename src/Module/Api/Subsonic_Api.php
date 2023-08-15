@@ -2184,7 +2184,7 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $since                    = (int) $input['since'];
+        $since                    = (int)($input['since'] ?? 0);
         $privateMessageRepository = static::getPrivateMessageRepository();
 
         $privateMessageRepository->cleanChatMessages();
