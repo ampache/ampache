@@ -139,7 +139,7 @@ class AutoUpdate
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
-        return ((time() - (3600 * 8)) > $lastcheck);
+        return ((time() - 3600) > $lastcheck);
     }
 
     /**
