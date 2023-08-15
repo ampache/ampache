@@ -101,7 +101,7 @@ class AutoUpdate
     /**
      * Perform a GitHub request.
      * @param string $action
-     * @return string|null
+     * @return Object|null
      */
     public static function github_request($action)
     {
