@@ -255,7 +255,7 @@ class AutoUpdate
      */
     public static function is_update_available($force = false)
     {
-        if (!$force && (!AmpConfig::get('autoupdate'))) {
+        if (!$force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             return AmpConfig::get('autoupdate_lastversion_new');
         }
         $time = time();
