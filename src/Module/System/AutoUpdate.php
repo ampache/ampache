@@ -110,12 +110,14 @@ class AutoUpdate
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
             $request = Requests::get($url, array(), Core::requests_options());
 
-            // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                // Not connected / API rate limit exceeded: just ignore, it will pass next time
+                AmpConfig::set('autoupdate_lastcheck', time(), true);
 
                 return null;
             }
+            debug_event(self::class, 'GitHub API request ' . $url, 5);
 
             return json_decode((string)$request->body);
         } catch (Exception $error) {
@@ -268,13 +270,15 @@ class AutoUpdate
         debug_event(self::class, 'Checking latest version online...', 5);
         if ($current != $latest && !empty($current)) {
             if (self::is_develop() || $git_branch !== '') {
-                $ccommit = self::github_request('/commits/' . $current);
-                $lcommit = self::github_request('/commits/' . $latest);
+                $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
+                $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
 
                 if (!empty($ccommit) && !empty($lcommit)) {
                     // Comparison based on commit date
                     $ctime = strtotime($ccommit->commit->author->date);
                     $ltime = strtotime($lcommit->commit->author->date);
+                    AmpConfig::set($current, $ctime, true);
+                    AmpConfig::set($latest, $ltime, true);
 
                     $available = ($ctime < $ltime);
                 }
