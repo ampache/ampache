@@ -36,6 +36,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
@@ -222,8 +223,8 @@ class AmpacheRss
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            /** @var Song $song */
-            $song        = $element['media'];
+            /** @var Song|Video $media */
+            $media        = $element['media'];
             /** @var User $client */
             $client      = $element['client'];
             $title       = $format;
@@ -231,13 +232,17 @@ class AmpacheRss
             foreach ($string_map as $search => $replace) {
                 switch($replace) {
                     case 'title':
-                        $text = $song->get_fullname();
+                        $text = $media->get_fullname();
                         break;
                     case 'artist':
-                        $text = $song->get_artist_fullname();
+                        $text = ($media instanceof Song)
+                            ? $media->get_artist_fullname()
+                            : '';
                         break;
                     case 'album':
-                        $text = $song->get_album_fullname($song->album, true);
+                        $text = ($media instanceof Song)
+                            ? $media->get_album_fullname($media->album, true)
+                            : '';
                         break;
                     default:
                         $text = '';
@@ -246,9 +251,9 @@ class AmpacheRss
                 $description = str_replace($search, $text, $description);
             }
             $xml_array = array(
-                'title' => $title,
-                'link' => $song->get_link(),
-                'description' => $description,
+                'title' => str_replace(' - - ', ' - ', $title),
+                'link' => $media->get_link(),
+                'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_fullname() . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
             );
