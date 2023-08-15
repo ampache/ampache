@@ -222,16 +222,28 @@ class AmpacheRss
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            /** @var User $client */
+            /** @var Song $song */
             $song        = $element['media'];
+            /** @var User $client */
             $client      = $element['client'];
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                $trep        = 'f_' . $replace;
-                $drep        = 'f_' . $replace . '_full';
-                $title       = str_replace($search, $song->$trep, $title);
-                $description = str_replace($search, $song->$drep, $description);
+                switch($replace) {
+                    case 'title':
+                        $text = $song->get_fullname();
+                        break;
+                    case 'artist':
+                        $text = $song->get_artist_fullname();
+                        break;
+                    case 'album':
+                        $text = $song->get_album_fullname($song->album, true);
+                        break;
+                    default:
+                        $text = '';
+                }
+                $title       = str_replace($search, $text, $title);
+                $description = str_replace($search, $text, $description);
             }
             $xml_array = array(
                 'title' => $title,
