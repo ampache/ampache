@@ -55,6 +55,7 @@ $t_tvShows         = T_('TV Shows');
 $t_movies          = T_('Movies');
 $t_personalVideos  = T_('Personal Videos');
 $t_genres          = T_('Genres');
+$t_upload          = T_('Upload');
 $t_uploads         = T_('Uploads');
 $t_dashboards      = T_('Dashboards');
 $t_podcastEpisodes = T_('Podcast Episodes');
