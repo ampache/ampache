@@ -96,6 +96,14 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $this->gatherMediaTags($video, 'video', array());
     }
 
+    const TAG_ART_PRIORITY = array(
+        'ID3 Front Conver',
+        'ID3 Illustration',
+        'ID3 Media',
+        'ID3 Artist',
+        'ID3 Band'
+    );
+
     /**
      * Gather tags from audio files.
      * @param Art $art
@@ -117,6 +125,14 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             $data = $this->gatherMediaTags($song, $art->type, $data);
+
+            // Sort by order of preference
+	    uasort(
+                $data,
+                function ($a, $b) {
+                    return array_search($a['title'], MetaTagCollectorModule::TAG_ART_PRIORITY) <=> array_search($b['title'], MetaTagCollectorModule::TAG_ART_PRIORITY);
+                }
+            );
 
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
