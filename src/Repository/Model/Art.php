@@ -981,6 +981,28 @@ class Art extends database_object
     } // generate_thumb
 
     /**
+     * get_image_from_tags
+     * @param array $images
+     * @param string $title
+     * @param array $keys
+     * @return string
+     */
+    private static function get_image_from_tags($images, $title, $keys)
+    {
+        foreach ($images as $image) {
+            foreach ($keys as $key) {
+                if (isset($image[$key]) && array_key_exists('data', $image)) {
+                    if ($title == 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image[$key])) {
+                        return $image['data'];
+                    }
+                }
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * get_from_source
      * This gets an image for the album art from a source as
      * defined in the passed array. Because we don't know where
@@ -1052,52 +1074,30 @@ class Art extends database_object
             }
 
             if (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['APIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
+                $image = self::get_image_from_tags($id3['id3v2']['APIC'], $data['title'], array('picturetypeid'));
+                if (!empty($image)) {
+                    return $image;
                 }
             }
 
             if (isset($id3['id3v2']['PIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['PIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
+                $image = self::get_image_from_tags($id3['id3v2']['PIC'], $data['title'], array('picturetypeid'));
+                if (!empty($image)) {
+                    return $image;
                 }
             }
 
             if (isset($id3['flac']['PICTURE'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['flac']['PICTURE'] as $image) {
-                    if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                        $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
-                        if ($data['title'] == $title) {
-                            return $image['data'];
-                        }
-                    }
+                $image = self::get_image_from_tags($id3['flac']['PICTURE'], $data['title'], array('typeid'));
+                if (!empty($image)) {
+                    return $image;
                 }
             }
 
             if (isset($id3['comments']['picture'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['comments']['picture'] as $image) {
-                    if (isset($image['picturetype']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['picturetype']) {
-                            return $image['data'];
-                        }
-                    }
-                    if (isset($image['description']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['description']) {
-                            return $image['data'];
-                        }
-                    }
+                $image = self::get_image_from_tags($id3['comments']['picture'], $data['title'], array('picturetype', 'description'));
+                if (!empty($image)) {
+                    return $image;
                 }
             }
         } // if data song
