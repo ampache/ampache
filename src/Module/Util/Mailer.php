@@ -124,7 +124,7 @@ final class Mailer implements MailerInterface
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
                 break;
             case 'inactive':
-                $inactive = time() - (30 * 86400);
+                $inactive = time() - 2592000;
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
                 break;
             case 'all':
