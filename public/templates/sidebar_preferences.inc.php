@@ -71,6 +71,7 @@ $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
     <ul class="sb3" id="sb_preference_playlist">
 <li id="sb_preference_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
+</ul>
 <?php } ?>
 <?php if ($allow_upload) { ?>
             <li>
@@ -83,7 +84,6 @@ $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
     <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
     </li>
     </ul>
-</ul>
        <?php }
 if (!AmpConfig::get('simple_user_mode')) { ?>
     <li>
