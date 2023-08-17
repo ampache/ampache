@@ -97,12 +97,25 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     const TAG_ART_PRIORITY = array(
-        'ID3 Front Conver',
+        'ID3 Front Cover',
         'ID3 Illustration',
         'ID3 Media',
         'ID3 Artist',
         'ID3 Band'
     );
+
+    /**
+     * Calculate the priority for the given art type.
+     * @param string $type
+     * @return int
+     */
+    private static function getArtTypePriority(string $type): int {
+        $priority = array_search($type, MetaTagCollectorModule::TAG_ART_PRIORITY);
+        if ($priority === false) {
+            return sizeof(MetaTagCollectorModule::TAG_ART_PRIORITY);
+        }
+        return $priority;
+    }
 
     /**
      * Gather tags from audio files.
@@ -130,7 +143,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 	    uasort(
                 $data,
                 function ($a, $b) {
-                    return array_search($a['title'], MetaTagCollectorModule::TAG_ART_PRIORITY) <=> array_search($b['title'], MetaTagCollectorModule::TAG_ART_PRIORITY);
+                    return self::getArtTypePriority($a['title']) <=> self::getArtTypePriority($b['title']);
                 }
             );
 
