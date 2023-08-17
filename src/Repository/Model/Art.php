@@ -983,15 +983,12 @@ class Art extends database_object
     /**
      * get_image_from_tags
      * @param array $images
-     * @param string title
-     * @param string type_key
-     * @param array type_keys
+     * @param string $title
+     * @param array $keys
      * @return string
      */
-    private static function get_image_from_tags($images, $title, $type_key, ...$type_keys)
+    private static function get_image_from_tags($images, $title, $keys)
     {
-	$keys = array_merge(array($type_key), $type_keys);
-        // Foreach in case they have more than one
         foreach ($images as $image) {
             foreach ($keys as $key) {
                 if (isset($image[$key]) && array_key_exists('data', $image)) {
@@ -1001,6 +998,7 @@ class Art extends database_object
                 }
             }
         }
+
         return '';
     }
 
@@ -1076,28 +1074,28 @@ class Art extends database_object
             }
 
             if (isset($id3['id3v2']['APIC'])) {
-                $image = self::get_image_from_tags($id3['id3v2']['APIC'], $data['title'], 'picturetypeid');
+                $image = self::get_image_from_tags($id3['id3v2']['APIC'], $data['title'], array('picturetypeid'));
                 if (!empty($image)) {
                     return $image;
                 }
             }
 
             if (isset($id3['id3v2']['PIC'])) {
-                $image = self::get_image_from_tags($id3['id3v2']['PIC'], $data['title'], 'picturetypeid');
+                $image = self::get_image_from_tags($id3['id3v2']['PIC'], $data['title'], array('picturetypeid'));
                 if (!empty($image)) {
                     return $image;
                 }
             }
 
             if (isset($id3['flac']['PICTURE'])) {
-                $image = self::get_image_from_tags($id3['flac']['PICTURE'], $data['title'], 'typeid');
+                $image = self::get_image_from_tags($id3['flac']['PICTURE'], $data['title'], array('typeid'));
                 if (!empty($image)) {
                     return $image;
                 }
             }
 
             if (isset($id3['comments']['picture'])) {
-                $image = self::get_image_from_tags($id3['comments']['picture'], $data['title'], 'picturetype', 'description');
+                $image = self::get_image_from_tags($id3['comments']['picture'], $data['title'], array('picturetype', 'description'));
                 if (!empty($image)) {
                     return $image;
                 }
