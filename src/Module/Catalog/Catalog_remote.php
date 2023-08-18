@@ -211,11 +211,11 @@ class Catalog_remote extends Catalog
      */
     public function add_to_catalog($options = null)
     {
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Remote Update'));
         }
         $songsadded = $this->update_remote_catalog();
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
