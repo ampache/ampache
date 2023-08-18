@@ -1132,7 +1132,7 @@ class Album extends database_object implements library_item
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $name           = $data['name'] ?? $this->name;
         $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
-        $year           = (int)$data['year'] ?? 0;
+        $year           = (int)($data['year'] ?? 0);
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : null;
         $mbid           = $data['mbid'] ?? null;
         $mbid_group     = $data['mbid_group'] ?? null;

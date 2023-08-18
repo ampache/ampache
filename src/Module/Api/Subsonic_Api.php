@@ -1211,7 +1211,7 @@ class Subsonic_Api
      */
     public static function createplaylist($input)
     {
-        $playlistId = $input['playlistId'];
+        $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'];
         $songIdList = array();
         if (is_array($input['songId'])) {
@@ -2481,7 +2481,7 @@ class Subsonic_Api
         if (!$object_id || !$position) {
             return;
         }
-        $comment   = $input['comment'];
+        $comment   = $input['comment'] ?? '';
         $type      = Subsonic_Xml_Data::_getAmpacheType($object_id);
 
         if (!empty($type)) {

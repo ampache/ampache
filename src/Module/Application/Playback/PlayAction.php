@@ -137,12 +137,12 @@ final class PlayAction implements ApplicationActionInterface
             $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
 
             // Share id and secret if used
-            $share_id = (int)scrub_in((int)$new_request['share_id'] ?? 0);
+            $share_id = (int)scrub_in($new_request['share_id'] ?? 0);
             $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
-            $random       = (int)scrub_in((int)$new_request['random'] ?? 0);
+            $demo_id      = (int)scrub_in($new_request['demo_id'] ?? 0);
+            $random       = (int)scrub_in($new_request['random'] ?? 0);
 
             // don't put this one here
             $cpaction     = null;
