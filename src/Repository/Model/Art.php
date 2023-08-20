@@ -1043,62 +1043,10 @@ class Art extends database_object
 
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
-            // If we find a good one, stop looking
-            $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
-
-            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            }
-
-            if (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['APIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['id3v2']['PIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['PIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['flac']['PICTURE'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['flac']['PICTURE'] as $image) {
-                    if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                        $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
-                        if ($data['title'] == $title) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['comments']['picture'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['comments']['picture'] as $image) {
-                    if (isset($image['picturetype']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['picturetype']) {
-                            return $image['data'];
-                        }
-                    }
-                    if (isset($image['description']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['description']) {
-                            return $image['data'];
-                        }
-                    }
-                }
+            $images = MetaTagCollectorModule::gatherFileArt($data['song']);
+            foreach ($images as $image) {
+                if ($data['title'] == $image['title']) {
+                    return $image['raw'];
             }
         } // if data song
 

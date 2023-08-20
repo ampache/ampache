@@ -156,22 +156,18 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     /**
-     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param Song|Video $media
-     * @param string $art_type
-     * @param array $data
+     * Gather all art from tags in given file.
+     * @param string file
      * @return array
      */
-    private function gatherMediaTags($media, $art_type, $data)
-    {
-        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+    public static function gatherFileArt($file) {
+        debug_event(self::class, 'file ' . $file, 2);
         try {
-            $id3 = $this->getID3->analyze($media->file);
+            $getID3 = new getID3();
+            $id3 = $getID3->analyze($file);
         } catch (Exception $error) {
-            $this->logger->error(
-                'getid3' . $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
+            debug_event(self::class, 'getid3' . $error->getMessage(), 2);
+            return [];
         }
 
         // stop collecting dupes for each album/]/
@@ -180,12 +176,13 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $raw_array[] = $image['raw'];
         }
 
+        $images = array();
+
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-            $image  = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
+            $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             if (array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                 $raw_array[] = $image['data'];
-                $data[]      = array(
-                    $mtype => $media->file,
+                $images[]    = array(
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
                     'title' => 'ID3 asf'
@@ -196,16 +193,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                if ($art_type == 'artist' && array_key_exists('picturetypeid', $image) && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
-                    $this->logger->debug(
-                        'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                if (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                     $raw_array[] = $image['data'];
                     $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $data[]      = [
-                        $mtype => $media->file,
+                    $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
                         'title' => 'ID3 ' . $type
@@ -217,16 +208,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['id3v2']['PIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
-                if ($art_type == 'artist' && array_key_exists('picturetypeid', $image) && !in_array((int)$image['picturetypeid'], array(0, 7, 8, 9, 10, 11, 12))) {
-                    $this->logger->debug(
-                        'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                if (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                     $raw_array[] = $image['data'];
                     $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $data[]      = [
-                        $mtype => $media->file,
+                    $images[]      = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -238,16 +223,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['flac']['PICTURE'])) {
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
-                if ($art_type == 'artist' && array_key_exists('typeid', $image) && !in_array((int)$image['typeid'], array(0, 7, 8, 9, 10, 11, 12))) {
-                    $this->logger->debug(
-                        'Skipping picture id ' . $image['typeid'] . ' for artist search',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif (isset($image['typeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                if (isset($image['typeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                     $raw_array[] = $image['data'];
                     $type        = self::getPictureType((int)$image['typeid']);
-                    $data[]      = [
-                        $mtype => $media->file,
+                    $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -261,8 +240,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             foreach ($id3['comments']['picture'] as $image) {
                 if (isset($image['picturetype']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                     $raw_array[] = $image['data'];
-                    $data[]      = [
-                        $mtype => $media->file,
+                    $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['picturetype']
@@ -270,13 +248,40 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                 }
                 if (isset($image['description']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
                     $raw_array[] = $image['data'];
-                    $data[]      = [
-                        $mtype => $media->file,
+                    $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['description']
                     ];
                 }
+            }
+        }
+
+        return $images;
+    }
+
+    /**
+     * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
+     * @param Song|Video $media
+     * @param string $art_type
+     * @param array $data
+     * @return array
+     */
+    private function gatherMediaTags($media, $art_type, $data)
+    {
+        $this->logger->debug('File ' . $media->file, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        $mtype = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+        $images = self::gatherFileArt($media->file);
+
+        foreach ($images as $image) {
+            if ($art_type == 'artist' && !in_array($image['title'], array('Other', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer', 'Lyricist')));
+                $this->logger->debug(
+                    'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+            } else {
+                $image[$mtype] = $media->file;
+                $data[] = $image;
             }
         }
 
