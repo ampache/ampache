@@ -62,42 +62,42 @@ $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
       <li id="sb_preference_prefs_account"><a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo T_('Account'); ?></a></li>
     </ul>
   </li>
-        <?php if ($access50) { ?>
-    <li>
+<?php if ($access50) { ?>
+  <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo $t_playlist; ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_playlist', 'header-img ' . ((isset($_COOKIE['sb_preference_playlist'])) ? $_COOKIE['sb_preference_playlist'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_preference_playlist">
-<li id="sb_preference_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
-    </li>
-</ul>
-<?php } ?>
-<?php if ($allow_upload) { ?>
-            <li>
+      <li id="sb_preference_prefs_playlist_import"><a href="<?php echo $web_path; ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
+    </ul>
+  </li>
+<?php }
+if ($allow_upload) { ?>
+    <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo $t_uploads; ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_upload', 'header-img ' . ((isset($_COOKIE['sb_preference_upload'])) ? $_COOKIE['sb_preference_upload'] : 'expanded')); ?>
     </h4>
-    <ul class="sb3" id="sb_preference_upload">
-    <li id="sb_preference_upload_browse"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_browse ?></a></li>
-    <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
+      <ul class="sb3" id="sb_preference_upload">
+        <li id="sb_preference_upload_browse"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_browse ?></a></li>
+        <li id="sb_preference_upload_upload"><a href="<?php echo $web_path; ?>/upload.php"><?php echo $t_upload ?></a></li>
+      </ul>
     </li>
-    </ul>
-       <?php }
+<?php }
 if (!AmpConfig::get('simple_user_mode')) { ?>
     <li>
-    <h4 class="header">
+      <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Help'); ?></span>
         <?php echo Ui::get_icon('all', $t_expander, 'preference_help', 'header-img ' . ((isset($_COOKIE['sb_preference_help'])) ? $_COOKIE['sb_preference_help'] : 'expanded')); ?>
-    </h4>
-    <ul class="sb3" id="sb_preference_help">
+      </h4>
+      <ul class="sb3" id="sb_preference_help">
         <li id="sb_preference_help_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
         <li id="sb_preference_help_api"><a href="https://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
         <?php if (AmpConfig::get('cookie_disclaimer')) { ?>
             <li id="sb_preference_help_cookies"><a href="<?php echo $web_path; ?>/cookie_disclaimer.php"><?php echo T_('Cookie Information') ?></a></li>
         <?php } ?>
-        </li>
-    </ul>
+      </ul>
+    </li>
 <?php } ?>
 </ul>
