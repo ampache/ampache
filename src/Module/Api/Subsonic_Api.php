@@ -877,7 +877,7 @@ class Subsonic_Api
         unset($user);
         $name   = self::_check_parameter($input, 'artist');
         $artist = Artist::get_from_name(urldecode((string)$name));
-        $count  = (int)$input['count'];
+        $count  = (int)($input['count'] ?? 50);
         $songs  = array();
         if ($count < 1) {
             $count = 50;
