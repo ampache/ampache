@@ -274,7 +274,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $images = self::gatherFileArt($media->file);
 
         foreach ($images as $image) {
-            if ($art_type == 'artist' && !in_array($image['title'], array('Other', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer', 'Lyricist')));
+            if ($art_type == 'artist' && !in_array($image['title'], array('Other', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer', 'Lyricist'))) {
                 $this->logger->debug(
                     'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
