@@ -270,8 +270,10 @@ final class InstallationHelper implements InstallationHelperInterface
                     /* HINT: %1 user, %2 database, %3 host, %4 error message */
                     T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()
                 ));
-
-                return false;
+                // this user might exist but we don't always care
+                if (!$overwrite) {
+                    return false;
+                }
             }
             // grant database access to that account
             $sql_grant = "GRANT ALL PRIVILEGES ON `" . Dba::escape($database) . "`.* TO '" . Dba::escape($db_user) . "'";
