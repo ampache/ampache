@@ -1010,7 +1010,7 @@ class Stats
             : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        $user_id       = (int)Core::get_global('user')->id;
+        $user_id       = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
             $sql .= "AND " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
         }

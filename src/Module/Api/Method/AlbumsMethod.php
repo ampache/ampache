@@ -110,8 +110,8 @@ final class AlbumsMethod implements MethodInterface
             $user,
             true,
             true,
-            (int) $input['limit'],
-            (int) $input['offset']
+            (int)($input['limit'] ?? 0),
+            (int)($input['offset'] ?? 0)
         );
 
         return $response->withBody(

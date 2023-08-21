@@ -484,13 +484,14 @@ class Podcast extends database_object implements library_item
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $lastSync);
         }
+        $change = 0;
         $time   = time();
         $params = array($this->id);
 
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
         if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` ORDER BY `podcast_episode`.`pubdate` DESC";
+            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND (`podcast_episode`.`addition_time` > `podcast`.`lastsync` OR `podcast_episode`.`state` = 'pending') ORDER BY `podcast_episode`.`pubdate` DESC";
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
@@ -500,25 +501,28 @@ class Podcast extends database_object implements library_item
                 $episode->change_state('pending');
                 if ($gather) {
                     $episode->gather();
+                    $change++;
                 }
             }
         }
-        // Remove items outside limit
-        $keepnb = AmpConfig::get('podcast_keep');
-        if ($keepnb > 0) {
-            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-            $db_results = Dba::read($sql, $params);
-            while ($row = Dba::fetch_row($db_results)) {
-                $episode = new Podcast_Episode($row[0]);
-                $episode->remove();
+        if ($change > 0) {
+            // Remove items outside limit
+            $keepnb = AmpConfig::get('podcast_keep');
+            if ($keepnb > 0) {
+                $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
+                $db_results = Dba::read($sql, $params);
+                while ($row = Dba::fetch_row($db_results)) {
+                    $episode = new Podcast_Episode($row[0]);
+                    $episode->remove();
+                }
             }
+            // update the episode count after adding / removing episodes
+            $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
+            Dba::write($sql, $params);
+            Catalog::update_mapping('podcast');
+            Catalog::update_mapping('podcast_episode');
+            Catalog::count_table('podcast_episode');
         }
-        // update the episode count after adding / removing episodes
-        $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-        Dba::write($sql, $params);
-        Catalog::update_mapping('podcast');
-        Catalog::update_mapping('podcast_episode');
-        Catalog::count_table('podcast_episode');
         $this->update_lastsync($time);
     }
 

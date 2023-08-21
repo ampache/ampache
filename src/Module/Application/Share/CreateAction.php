@@ -73,8 +73,8 @@ final class CreateAction implements ApplicationActionInterface
             Core::get_global('user')->id,
             $_REQUEST['type'],
             (int)$_REQUEST['id'],
-            (int)$_REQUEST['allow_stream'] ?? 0,
-            (int)$_REQUEST['allow_download'] ?? 0,
+            (int)($_REQUEST['allow_stream'] ?? 0),
+            (int)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']

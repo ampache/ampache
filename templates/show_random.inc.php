@@ -36,7 +36,7 @@ $web_path     = AmpConfig::get('web_path');
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
-$random_count = $_POST['random'] ?? 1;
+$random_count = $_POST['limit'] ?? 1;
 $random_type  = (in_array($get_type, Random::VALID_TYPES))
     ? $get_type
     : null;
@@ -49,7 +49,7 @@ $browse_type = ($random_type == 'video')
 
 Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
-
+<input type='hidden' name='random' value=1>
 <div class="category_options">
     <a class="category <?php echo ($random_type == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
         <?php echo T_('Songs'); ?>
@@ -71,7 +71,7 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <tr id="search_item_count">
         <td><?php echo T_('Item Count'); ?></td>
         <td>
-        <select name="random">
+        <select name="limit">
 <?php
         foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
