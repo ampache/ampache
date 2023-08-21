@@ -161,7 +161,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @return array
      */
     public static function gatherFileArt($file) {
-        debug_event(self::class, 'file ' . $file, 2);
         try {
             $getID3 = new getID3();
             $id3 = $getID3->analyze($file);
@@ -258,7 +257,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      */
     private function gatherMediaTags($media, $art_type, $data)
     {
-        $this->logger->debug('File ' . $media->file, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         $mtype = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $images = self::gatherFileArt($media->file);
 
