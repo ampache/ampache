@@ -70,7 +70,6 @@ final class CatalogActionMethod
 
         $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog) {
-            define('API', true);
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }

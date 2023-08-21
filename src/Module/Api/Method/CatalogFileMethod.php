@@ -125,7 +125,6 @@ final class CatalogFileMethod
 
         if ($catalog->catalog_type == 'local') {
             foreach ($task as $item) {
-                define('API', true);
                 if (defined('SSE_OUTPUT')) {
                     unset($SSE_OUTPUT);
                 }
