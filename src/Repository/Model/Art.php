@@ -1047,6 +1047,7 @@ class Art extends database_object
             foreach ($images as $image) {
                 if ($data['title'] == $image['title']) {
                     return $image['raw'];
+                }
             }
         } // if data song
 
