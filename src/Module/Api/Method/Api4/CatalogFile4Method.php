@@ -111,7 +111,6 @@ final class CatalogFile4Method
         }
 
         if ($catalog->catalog_type == 'local') {
-            define('API', true);
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }
