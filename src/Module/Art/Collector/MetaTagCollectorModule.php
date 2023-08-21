@@ -86,6 +86,53 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $data;
     }
 
+    const TAG_ALBUM_ART_PRIORITY = array(
+        'ID3 Front Cover',
+        'ID3 Illustration',
+        'ID3 Media'
+    );
+
+    const TAG_ARTIST_ART_PRIORITY = array(
+        'ID3 Artist',
+        'ID3 Lead Artist',
+        'ID3 Band',
+        'ID3 Conductor',
+        'ID3 Composer',
+        'ID3 Lyricist',
+        'ID3 Other'
+    );
+
+    /**
+     * Calculate the priority for the given art type.
+     * @param string $type
+     * @param array $priorities
+     * @return int
+     */
+    private static function getArtTypePriority(string $type, array $priorities): int {
+        $priority = array_search($type, $priorities);
+        if ($priority === false) {
+            return sizeof($priorities);
+        }
+        return $priority;
+    }
+
+    /**
+     * Sort obtained art using the given priority list.
+     * @param array $data
+     * @param string $art_type
+     * @return array
+     */
+    private static function sortArtByPriority($data, $art_type) {
+        $priorities = $art_type == 'artist' ? self::TAG_ARTIST_ART_PRIORITY : self::TAG_ALBUM_ART_PRIORITY;
+        uasort(
+            $data,
+            function ($a, $b) use (&$priorities) {
+                return self::getArtTypePriority($a['title'], $priorities) <=> self::getArtTypePriority($b['title'], $priorities);
+            }
+        );
+        return $data;
+    }
+
     /**
      * Gather tags from video files.
      */
@@ -94,27 +141,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $video = new Video($art->uid);
 
         return $this->gatherMediaTags($video, 'video', array());
-    }
-
-    const TAG_ART_PRIORITY = array(
-        'ID3 Front Cover',
-        'ID3 Illustration',
-        'ID3 Media',
-        'ID3 Artist',
-        'ID3 Band'
-    );
-
-    /**
-     * Calculate the priority for the given art type.
-     * @param string $type
-     * @return int
-     */
-    private static function getArtTypePriority(string $type): int {
-        $priority = array_search($type, MetaTagCollectorModule::TAG_ART_PRIORITY);
-        if ($priority === false) {
-            return sizeof(MetaTagCollectorModule::TAG_ART_PRIORITY);
-        }
-        return $priority;
     }
 
     /**
@@ -139,17 +165,15 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $song = new Song($song_id);
             $data = $this->gatherMediaTags($song, $art->type, $data);
 
-            // Sort by order of preference
-	    uasort(
-                $data,
-                function ($a, $b) {
-                    return self::getArtTypePriority($a['title']) <=> self::getArtTypePriority($b['title']);
-                }
-            );
-
             if ($limit && count($data) >= $limit) {
-                return array_slice($data, 0, $limit);
+                break;
             }
+        }
+
+        $data = self::sortArtByPriority($data, $art->type);
+
+        if ($limit && count($data) >= $limit) {
+            $data = array_slice($data, 0, $limit);
         }
 
         return $data;
@@ -235,7 +259,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                     ];
                 }
                 if (isset($image['description']) && array_key_exists('data', $image)) {
-                    $raw_array[] = $image['data'];
                     $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -267,12 +290,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         }
 
         foreach ($images as $image) {
-            if ($art_type == 'artist' && !in_array($image['title'], array('ID3 Other', 'ID3 Lead Artist', 'ID3 Artist', 'ID3 Conductor', 'ID3 Band', 'ID3 Composer', 'ID3 Lyricist'))) {
-                $this->logger->debug(
-                    'Skipping picture title ' . $image['title'] . ' for artist search',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-            } elseif (array_key_exists('raw', $image) && !in_array($image['raw'], $raw_array)) {
+            if (!in_array($image['raw'], $raw_array)) {
                 $raw_array[] = $image['raw'];
                 $image[$mtype] = $media->file;
                 $data[] = $image;
@@ -294,8 +312,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $song = new Song($art->uid);
         $data = $this->gatherMediaTags($song, 'song', array());
 
+        $data = self::sortArtByPriority($data, $art->type);
+
         if ($limit && count($data) >= $limit) {
-            return array_slice($data, 0, $limit);
+            $data = array_slice($data, 0, $limit);
         }
 
         return $data;
