@@ -831,7 +831,8 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist = self::_check_parameter($input, 'artist');
+        $name   = self::_check_parameter($input, 'artist');
+        $artist = Artist::get_from_name(urldecode((string)$name));
         $count  = (int)$input['count'];
         $songs  = array();
         if ($count < 1) {
@@ -839,7 +840,7 @@ class Subsonic_Api
         }
         if ($artist) {
             $songs = static::getSongRepository()->getTopSongsByArtist(
-                Artist::get_from_name(urldecode((string)$artist)),
+                $artist,
                 $count
             );
         }
