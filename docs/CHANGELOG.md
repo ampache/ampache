@@ -15,6 +15,8 @@
 ### Fixed
 
 * ACL creation may lock you out without a system user
+* Catch some runtime errors
+* Catch unconfigured localplay before trying to connect
 * Subsonic
   * Get correct client IP for curl requests
 

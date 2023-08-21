@@ -831,7 +831,8 @@ class Subsonic_Api
      */
     public static function gettopsongs($input)
     {
-        $artist = self::_check_parameter($input, 'artist');
+        $name   = self::_check_parameter($input, 'artist');
+        $artist = Artist::get_from_name(urldecode((string)$name));
         $count  = (int)$input['count'];
         $songs  = array();
         if ($count < 1) {
@@ -839,7 +840,7 @@ class Subsonic_Api
         }
         if ($artist) {
             $songs = static::getSongRepository()->getTopSongsByArtist(
-                Artist::get_from_name(urldecode((string)$artist)),
+                $artist,
                 $count
             );
         }
@@ -1211,7 +1212,7 @@ class Subsonic_Api
      */
     public static function createplaylist($input)
     {
-        $playlistId = $input['playlistId'];
+        $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'];
         $songIdList = array();
         if (is_array($input['songId'])) {
@@ -2067,89 +2068,93 @@ class Subsonic_Api
     {
         $action    = self::_check_parameter($input, 'action');
         $object_id = $input['id'] ?? array();
-
-        $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
-        debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 
-        if ($localplay->connect()) {
-            $ret = false;
-            switch ($_REQUEST['action']) {
-                case 'get':
-                case 'status':
-                    $ret = true;
-                    break;
-                case 'start':
-                    $ret = $localplay->play();
-                    break;
-                case 'stop':
-                    $ret = $localplay->stop();
-                    break;
-                case 'skip':
-                    if (isset($input['index'])) {
-                        if ($localplay->skip($input['index'])) {
-                            $ret = $localplay->play();
-                        }
-                    } elseif (isset($input['offset'])) {
-                        debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
-                    } else {
-                        $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
+        $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
+        if (empty($localplay->type) || !$localplay->connect()) {
+            debug_event(__CLASS__, 'Error Localplay controller: ' . AmpConfig::get('localplay_controller', 'Is not set'), 3);
+            self::_apiOutput($input, $response);
+
+            return;
+        }
+
+        debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        $ret = false;
+        switch ($_REQUEST['action']) {
+            case 'get':
+            case 'status':
+                $ret = true;
+                break;
+            case 'start':
+                $ret = $localplay->play();
+                break;
+            case 'stop':
+                $ret = $localplay->stop();
+                break;
+            case 'skip':
+                if (isset($input['index'])) {
+                    if ($localplay->skip($input['index'])) {
+                        $ret = $localplay->play();
                     }
-                    break;
-                case 'set':
-                    $localplay->delete_all();
-                // Intentional break fall-through
-                case 'add':
-                    $user = User::get_from_username($input['u']);
-                    if ($object_id) {
-                        if (!is_array($object_id)) {
-                            $rid       = array();
-                            $rid[]     = $object_id;
-                            $object_id = $rid;
-                        }
-
-                        foreach ($object_id as $song_id) {
-                            $url = null;
-
-                            if (Subsonic_Xml_Data::_isSong($song_id)) {
-                                $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
-                                $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id);
-                            }
-
-                            if ($url !== null) {
-                                debug_event(self::class, 'Adding ' . $url, 5);
-                                $stream        = array();
-                                $stream['url'] = $url;
-                                $ret           = $localplay->add_url(new Stream_Url($stream));
-                            }
-                        }
-                    }
-                    break;
-                case 'clear':
-                    $ret = $localplay->delete_all();
-                    break;
-                case 'remove':
-                    if (isset($input['index'])) {
-                        $ret = $localplay->delete_track($input['index']);
-                    } else {
-                        $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
-                    }
-                    break;
-                case 'shuffle':
-                    $ret = $localplay->random(true);
-                    break;
-                case 'setGain':
-                    $ret = $localplay->volume_set(((float)$input['gain']) * 100);
-                    break;
-            }
-
-            if ($ret) {
-                $response = Subsonic_Xml_Data::addSubsonicResponse('jukeboxcontrol');
-                if ($action == 'get') {
-                    Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+                } elseif (isset($input['offset'])) {
+                    debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
                 } else {
-                    Subsonic_Xml_Data::addJukeboxStatus($response, $localplay);
+                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
                 }
+                break;
+            case 'set':
+                $localplay->delete_all();
+            // Intentional break fall-through
+            case 'add':
+                $user = User::get_from_username($input['u']);
+                if ($object_id) {
+                    if (!is_array($object_id)) {
+                        $rid       = array();
+                        $rid[]     = $object_id;
+                        $object_id = $rid;
+                    }
+
+                    foreach ($object_id as $song_id) {
+                        $url = null;
+
+                        if (Subsonic_Xml_Data::_isSong($song_id)) {
+                            $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
+                            $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id);
+                        }
+
+                        if ($url !== null) {
+                            debug_event(self::class, 'Adding ' . $url, 5);
+                            $stream        = array();
+                            $stream['url'] = $url;
+                            $ret           = $localplay->add_url(new Stream_Url($stream));
+                        }
+                    }
+                }
+                break;
+            case 'clear':
+                $ret = $localplay->delete_all();
+                break;
+            case 'remove':
+                if (isset($input['index'])) {
+                    $ret = $localplay->delete_track($input['index']);
+                } else {
+                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
+                }
+                break;
+            case 'shuffle':
+                $ret = $localplay->random(true);
+                break;
+            case 'setGain':
+                $ret = $localplay->volume_set(((float)$input['gain']) * 100);
+                break;
+        }
+
+        if ($ret) {
+            $response = Subsonic_Xml_Data::addSubsonicResponse('jukeboxcontrol');
+            if ($action == 'get') {
+                Subsonic_Xml_Data::addJukeboxPlaylist($response, $localplay);
+            } else {
+                Subsonic_Xml_Data::addJukeboxStatus($response, $localplay);
             }
         }
 
@@ -2180,7 +2185,7 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $since                    = (int) $input['since'];
+        $since                    = (int)($input['since'] ?? 0);
         $privateMessageRepository = static::getPrivateMessageRepository();
 
         $privateMessageRepository->cleanChatMessages();
@@ -2477,7 +2482,7 @@ class Subsonic_Api
         if (!$object_id || !$position) {
             return;
         }
-        $comment   = $input['comment'];
+        $comment   = $input['comment'] ?? '';
         $type      = Subsonic_Xml_Data::_getAmpacheType($object_id);
 
         if (!empty($type)) {

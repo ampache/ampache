@@ -57,7 +57,7 @@ final class Localplay4Method
         }
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        if (!$localplay->connect() || !$localplay->status()) {
+        if (empty($localplay->type) || !$localplay->connect()) {
             Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
 
             return false;

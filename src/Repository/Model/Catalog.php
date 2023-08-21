@@ -535,7 +535,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
 
-        return (int)$row['count'] ?? 0;
+        return (int)($row['count'] ?? 0);
     }
 
     /**

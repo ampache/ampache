@@ -50,7 +50,7 @@ final class PlaylistSongsMethod
      *
      * @param array $input
      * filter = (string) UID of playlist
-     *  random = (integer) 0,1, if true get random songs using limit //optional
+     * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean

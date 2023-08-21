@@ -1181,7 +1181,9 @@ class Search extends playlist_object
     public function get_items()
     {
         $results = array();
-
+        if (!$this->id) {
+            return $results;
+        }
         $sqltbl = $this->to_sql();
         $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {

@@ -257,12 +257,12 @@ class Random
     public static function advanced($type, $data)
     {
         /* Figure out our object limit */
-        $limit     = (int)$data['random'];
+        $limit     = (int)($data['limit'] ?? -1);
         $limit_sql = "LIMIT " . Dba::escape($limit);
 
         /* If they've passed -1 as limit then get everything */
-        if ($data['random'] == "-1") {
-            unset($data['random']);
+        if ($limit == -1) {
+            unset($data['limit']);
             $limit_sql = "";
         }
 
