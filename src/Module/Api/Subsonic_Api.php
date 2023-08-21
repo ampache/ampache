@@ -833,7 +833,7 @@ class Subsonic_Api
     {
         $name   = self::_check_parameter($input, 'artist');
         $artist = Artist::get_from_name(urldecode((string)$name));
-        $count  = (int)$input['count'];
+        $count  = (int)($input['count'] ?? 50);
         $songs  = array();
         if ($count < 1) {
             $count = 50;
@@ -1165,7 +1165,7 @@ class Subsonic_Api
     public static function getplaylists($input)
     {
         $username  = (isset($input['username']))
-            ? (string)filter_var($input['username'], FILTER_SANITIZE_STRING)
+            ? $input['username']
             : $input['u'];
         $user      = User::get_from_username((string)$username);
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
@@ -1307,7 +1307,7 @@ class Subsonic_Api
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format'] ?? ''; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
-        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode$username = (string)filter_var($input['u'], FILTER_SANITIZE_STRING);
+        $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode
         $username      = $input['u'];
         $user          = User::get_from_username($username);
         $user_id       = $user->id;
@@ -2206,19 +2206,8 @@ class Subsonic_Api
     public static function addchatmessage($input)
     {
         $message = self::_check_parameter($input, 'message');
-
-        $message = trim(
-            strip_tags(
-                filter_var(
-                    $message,
-                    FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES
-                )
-            )
-        );
-
         $user_id = User::get_from_username($input['u'])->getId();
-        if (static::getPrivateMessageRepository()->sendChatMessage($message, $user_id) !== null) {
+        if (static::getPrivateMessageRepository()->sendChatMessage(trim($message), $user_id) !== null) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');
