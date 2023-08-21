@@ -1218,7 +1218,7 @@ class Subsonic_Api
     public static function getplaylists($input, $user)
     {
         $user  = (isset($input['username']))
-            ? User::get_from_username((string)filter_var($input['username'], FILTER_SANITIZE_STRING))
+            ? User::get_from_username($input['username'])
             : $user;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
         $playlists = Playlist::get_playlists($user->id, '', true, true, false);
@@ -2397,17 +2397,8 @@ class Subsonic_Api
         if (!$message) {
             return;
         }
-        $message = trim(
-            strip_tags(
-                filter_var(
-                    $message,
-                    FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES
-                )
-            )
-        );
 
-        if (static::getPrivateMessageRepository()->sendChatMessage($message, $user->id) !== null) {
+        if (static::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'addChatMessage');
