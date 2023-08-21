@@ -170,18 +170,11 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             return [];
         }
 
-        // stop collecting dupes for each album/]/
-        $raw_array = array();
-        foreach ($data as $image) {
-            $raw_array[] = $image['raw'];
-        }
-
         $images = array();
 
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            if (array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
-                $raw_array[] = $image['data'];
+            if (array_key_exists('data', $image)) {
                 $images[]    = array(
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
@@ -193,8 +186,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                if (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
-                    $raw_array[] = $image['data'];
+                if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
                     $type        = self::getPictureType((int)$image['picturetypeid']);
                     $images[]    = [
                         'raw' => $image['data'],
@@ -208,10 +200,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['id3v2']['PIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
-                if (isset($image['picturetypeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
-                    $raw_array[] = $image['data'];
+                if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
                     $type        = self::getPictureType((int)$image['picturetypeid']);
-                    $images[]      = [
+                    $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $type
@@ -223,8 +214,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['flac']['PICTURE'])) {
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
-                if (isset($image['typeid']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
-                    $raw_array[] = $image['data'];
+                if (isset($image['typeid']) && array_key_exists('data', $image)) {
                     $type        = self::getPictureType((int)$image['typeid']);
                     $images[]    = [
                         'raw' => $image['data'],
@@ -238,15 +228,14 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         if (isset($id3['comments']['picture'])) {
             // Foreach in case they have more than one
             foreach ($id3['comments']['picture'] as $image) {
-                if (isset($image['picturetype']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
-                    $raw_array[] = $image['data'];
+                if (isset($image['picturetype']) && array_key_exists('data', $image)) {
                     $images[]    = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
                         'title' => 'ID3 ' . $image['picturetype']
                     ];
                 }
-                if (isset($image['description']) && array_key_exists('data', $image) && !in_array($image['data'], $raw_array)) {
+                if (isset($image['description']) && array_key_exists('data', $image)) {
                     $raw_array[] = $image['data'];
                     $images[]    = [
                         'raw' => $image['data'],
@@ -273,13 +262,20 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $mtype = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $images = self::gatherFileArt($media->file);
 
+        // stop collecting dupes for each album
+        $raw_array = array();
+        foreach ($data as $image) {
+            $raw_array[] = $image['raw'];
+        }
+
         foreach ($images as $image) {
-            if ($art_type == 'artist' && !in_array($image['title'], array('Other', 'Lead Artist', 'Artist', 'Conductor', 'Band', 'Composer', 'Lyricist'))) {
+            if ($art_type == 'artist' && !in_array($image['title'], array('ID3 Other', 'ID3 Lead Artist', 'ID3 Artist', 'ID3 Conductor', 'ID3 Band', 'ID3 Composer', 'ID3 Lyricist'))) {
                 $this->logger->debug(
-                    'Skipping picture id ' . $image['picturetypeid'] . ' for artist search',
+                    'Skipping picture title ' . $image['title'] . ' for artist search',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-            } else {
+            } elseif (array_key_exists('raw', $image) && !in_array($image['raw'], $raw_array)) {
+                $raw_array[] = $image['raw'];
                 $image[$mtype] = $media->file;
                 $data[] = $image;
             }
