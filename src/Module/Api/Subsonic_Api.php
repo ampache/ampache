@@ -875,7 +875,8 @@ class Subsonic_Api
     public static function gettopsongs($input, $user)
     {
         unset($user);
-        $artist = self::_check_parameter($input, 'artist');
+        $name   = self::_check_parameter($input, 'artist');
+        $artist = Artist::get_from_name(urldecode((string)$name));
         $count  = (int)$input['count'];
         $songs  = array();
         if ($count < 1) {
@@ -883,7 +884,7 @@ class Subsonic_Api
         }
         if ($artist) {
             $songs = static::getSongRepository()->getTopSongsByArtist(
-                Artist::get_from_name(urldecode((string)$artist)),
+                $artist,
                 $count
             );
         }
@@ -961,7 +962,7 @@ class Subsonic_Api
 
         $data             = array();
         $data['limit']    = $size;
-        $data['random']   = $size;
+        $data['random']   = 1;
         $data['type']     = "song";
         $count            = 0;
         if ($genre) {
@@ -1217,7 +1218,7 @@ class Subsonic_Api
     public static function getplaylists($input, $user)
     {
         $user  = (isset($input['username']))
-            ? User::get_from_username((string)filter_var($input['username'], FILTER_SANITIZE_STRING))
+            ? User::get_from_username($input['username'])
             : $user;
         $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
         $playlists = Playlist::get_playlists($user->id, '', true, true, false);
@@ -1265,7 +1266,7 @@ class Subsonic_Api
      */
     public static function createplaylist($input, $user)
     {
-        $playlistId = $input['playlistId'];
+        $playlistId = $input['playlistId'] ?? null;
         $name       = $input['name'];
         $songIdList = array();
         if (is_array($input['songId'])) {
@@ -2396,17 +2397,8 @@ class Subsonic_Api
         if (!$message) {
             return;
         }
-        $message = trim(
-            strip_tags(
-                filter_var(
-                    $message,
-                    FILTER_SANITIZE_STRING,
-                    FILTER_FLAG_NO_ENCODE_QUOTES
-                )
-            )
-        );
 
-        if (static::getPrivateMessageRepository()->sendChatMessage($message, $user->id) !== null) {
+        if (static::getPrivateMessageRepository()->sendChatMessage(trim($message), $user->id) !== null) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('addchatmessage');
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'addChatMessage');
@@ -2670,7 +2662,7 @@ class Subsonic_Api
         if (!$object_id || !$position) {
             return;
         }
-        $comment   = $input['comment'];
+        $comment   = $input['comment'] ?? '';
         $type      = Subsonic_Xml_Data::_getAmpacheType($object_id);
 
         if (!empty($type)) {

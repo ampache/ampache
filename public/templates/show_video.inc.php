@@ -55,8 +55,7 @@ if (!$gart) {
 <?php echo T_('Subtitle'); ?>:
 <select name="subtitle" id="play_setting_subtitle">
     <option value=''><?php echo T_("None"); ?></option>
-<?php
-$subtitles = $video->get_subtitles();
+    <?php $subtitles = ($video->file) ? $video->get_subtitles() : array();
     foreach ($subtitles as $subtitle) {
         echo "<option value='" . $subtitle['lang_code'] . "' ";
         if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {
@@ -126,19 +125,19 @@ $subtitles = $video->get_subtitles();
         <?php } ?>
     </dd>
 <?php
-  $videoprops[T_('Title')]   = scrub_out($video->f_name);
-$videoprops[T_('Length')]    = scrub_out($video->f_time);
+$videoprops[T_('Title')]   = scrub_out($video->f_name);
+$videoprops[T_('Length')]  = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
     require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
 }
-$videoprops[T_('Release Date')]    = scrub_out($video->f_release_date);
-$videoprops[T_('Codec')]           = scrub_out($video->f_codec);
-$videoprops[T_('Resolution')]      = scrub_out($video->f_resolution);
-$videoprops[T_('Display')]         = scrub_out($video->f_display);
-$videoprops[T_('Audio Bitrate')]   = scrub_out($video->f_bitrate);
-$videoprops[T_('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
-$videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
-$videoprops[T_('Channels')]        = scrub_out($video->channels);
+$videoprops[T_('Release Date')]  = scrub_out($video->f_release_date);
+$videoprops[T_('Codec')]         = scrub_out($video->f_codec);
+$videoprops[T_('Resolution')]    = scrub_out($video->f_resolution);
+$videoprops[T_('Display')]       = scrub_out($video->f_display);
+$videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
+$videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
+$videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
+$videoprops[T_('Channels')]      = scrub_out($video->channels);
 if (Access::check('interface', 75)) {
     $data                       = pathinfo($video->file);
     $videoprops[T_('Path')]     = scrub_out((string)$data['dirname'] ?? '');
@@ -154,7 +153,7 @@ if (AmpConfig::get('show_played_times')) {
 }
 
 foreach ($videoprops as $key => $value) {
-    if (trim($value)) {
+    if (trim((string)$value)) {
         echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
     }
 } ?>

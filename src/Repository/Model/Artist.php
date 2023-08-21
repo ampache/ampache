@@ -309,16 +309,17 @@ class Artist extends database_object implements library_item, GarbageCollectible
      * get_from_name
      * This gets an artist object based on the artist name
      * @param string $name
-     * @return Artist
+     * @return Artist|false
      */
     public static function get_from_name($name)
     {
         $sql        = "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ";
         $db_results = Dba::read($sql, array($name, $name));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return new Artist((int)$row['id']);
+        }
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return new Artist($row['id']);
+        return false;
     } // get_from_name
 
     /**

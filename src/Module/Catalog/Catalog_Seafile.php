@@ -273,7 +273,7 @@ class Catalog_Seafile extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
@@ -314,7 +314,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
