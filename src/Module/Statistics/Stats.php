@@ -967,8 +967,7 @@ class Stats
             $limit = $offset . ', ' . $count;
         }
 
-        $sql = self::get_newest_sql($type, $catalog, $user_id);
-        $sql .= "LIMIT $limit";
+        $sql        = self::get_newest_sql($type, $catalog, $user_id) . "LIMIT $limit";
         $db_results = Dba::read($sql);
 
         $items = array();

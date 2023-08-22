@@ -335,8 +335,7 @@ class Userflag extends database_object
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         // Select Top objects counting by # of rows
-        $sql = self::get_latest_sql($type, $user_id);
-        $sql .= "LIMIT $limit";
+        $sql = self::get_latest_sql($type, $user_id) . "LIMIT $limit";
         //debug_event(self::class, 'get_latest ' . $sql, 5);
 
         $db_results = Dba::read($sql);
