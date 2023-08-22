@@ -20,6 +20,7 @@
 * Sidebar HTML needed some cleaning up
 * Subsonic
   * Get correct client IP for curl requests
+  * getTopSongs default fallback to 50
 
 ## API5 Develop
 
@@ -29,6 +30,8 @@
 
 ### Fixed
 
+* API4::share_create: null `expires` fall back to `share_expire` or 7 days
+* API5::share_create: null `expires` fall back to `share_expire` or 7 days
 * API5::preference_edit: Could apply to the wrong user
 
 ## Ampache 5.6.2-release
