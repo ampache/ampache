@@ -393,18 +393,18 @@ class Api
             'albums' => (int)$counts['album'],
             'artists' => (int)$counts['artist'],
             'genres' => (int)$counts['tag'],
-            'playlists' => (int)$counts['playlist'],
-            'searches' => (int)$counts['search'],
+            'playlists' => (int)($counts['playlist'] ?? 0),
+            'searches' => (int)($counts['search'] ?? 0),
             'playlists_searches' => $playlists,
-            'users' => (int)$counts['user'],
-            'catalogs' => (int)$counts['catalog'],
-            'videos' => (int)$counts['video'],
-            'podcasts' => (int)$counts['podcast'],
-            'podcast_episodes' => (int)$counts['podcast_episode'],
-            'shares' => (int)$counts['share'],
-            'licenses' => (int)$counts['license'],
-            'live_streams' => (int)$counts['live_stream'],
-            'labels' => (int)$counts['label']
+            'users' => (int)($counts['user'] ?? 0),
+            'catalogs' => (int)($counts['catalog'] ?? 0),
+            'videos' => (int)($counts['video'] ?? 0),
+            'podcasts' => (int)($counts['podcast'] ?? 0),
+            'podcast_episodes' => (int)($counts['podcast_episode'] ?? 0),
+            'shares' => (int)($counts['share'] ?? 0),
+            'licenses' => (int)($counts['license'] ?? 0),
+            'live_streams' => (int)($counts['live_stream'] ?? 0),
+            'labels' => (int)($counts['label'] ?? 0)
         );
 
         return array_merge($autharray, $outarray);

@@ -191,8 +191,7 @@ class User_Playlist extends database_object
             $values[] = $row['track'];
         }
         // remove last comma
-        $sql = substr($sql, 0, -1);
-        $sql .= ';';
+        $sql = substr($sql, 0, -1) . ';';
 
         return Dba::write($sql, $values);
     } // add_item

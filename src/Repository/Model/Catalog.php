@@ -1498,14 +1498,8 @@ abstract class Catalog extends database_object
      */
     public function get_tvshow_ids()
     {
-        $results = array();
-
-        $sql = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` ';
-        $sql .= 'JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` ';
-        $sql .= 'JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` ';
-        $sql .= 'JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
-        $sql .= 'WHERE `video`.`catalog` = ?';
-
+        $results    = array();
+        $sql        = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1882,8 +1876,7 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT `podcast`.`id` FROM `podcast` ';
-        $sql .= 'WHERE `podcast`.`catalog` = ?';
+        $sql        = 'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
