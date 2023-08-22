@@ -82,6 +82,8 @@ final class ApiHandler implements ApiHandlerInterface
             $request,
             $this->logger
         );
+        // block html and visual output
+        define('API', true);
 
         $action        = (string)Core::get_request('action');
         $is_handshake  = $action == HandshakeMethod::ACTION;

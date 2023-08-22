@@ -122,9 +122,9 @@ final class UserEditMethod
             if ($city) {
                 $update_user->update_city($city);
             }
-            if ($disable === '1') {
+            if ((int)$user->disabled === 0 && $disable === '1') {
                 $userStateToggler->disable($update_user);
-            } elseif ($disable === '0') {
+            } elseif ((int)$user->disabled === 1 && $disable === '0') {
                 $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {
