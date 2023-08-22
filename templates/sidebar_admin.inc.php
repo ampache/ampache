@@ -86,18 +86,14 @@ $web_path = AmpConfig::get('web_path');
       </ul>
     </li>
     <li>
-      <ul class="sb2" id="sb_admin_modules">
-        <li>
-          <h4 class="header">
-              <span class="sidebar-header-title"><?php echo T_('Modules'); ?></span>
-              <?php echo Ui::get_icon('all', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
-          </h4>
-          <ul class="sb3" id="sb_admin_modules">
-            <li id="sb_admin_modules_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
-            <li id="sb_admin_modules_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
-            <li id="sb_admin_modules_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
-          </ul>
-        </li>
+      <h4 class="header">
+        <span class="sidebar-header-title"><?php echo T_('Modules'); ?></span>
+        <?php echo Ui::get_icon('all', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
+      </h4>
+      <ul class="sb3" id="sb_admin_modules">
+        <li id="sb_admin_modules_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
+        <li id="sb_admin_modules_catalog_types"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
+        <li id="sb_admin_modules_plugins"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
     </li>
     <li>
       <h4 class="header">
