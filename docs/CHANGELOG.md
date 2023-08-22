@@ -17,6 +17,7 @@
 * ACL creation may lock you out without a system user
 * Catch some runtime errors
 * Catch unconfigured localplay before trying to connect
+* Sidebar HTML needed some cleaning up
 * Subsonic
   * Get correct client IP for curl requests
 
@@ -25,6 +26,10 @@
 ### Added
 
 * API5::playlist_songs: Add `random` to get random objects filtered by limit
+
+### Fixed
+
+* API5::preference_edit: Could apply to the wrong user
 
 ## Ampache 5.6.2-release
 
