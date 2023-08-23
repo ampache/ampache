@@ -49,7 +49,7 @@ abstract class DatabaseObject
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     //protected function isPropertyDirty($property)

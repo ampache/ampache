@@ -106,7 +106,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
