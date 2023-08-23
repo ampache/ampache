@@ -105,7 +105,7 @@ class Broadcast extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**

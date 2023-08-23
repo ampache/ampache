@@ -90,7 +90,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
