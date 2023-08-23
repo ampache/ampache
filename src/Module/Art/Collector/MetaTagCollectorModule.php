@@ -108,11 +108,13 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param array $priorities
      * @return int
      */
-    private static function getArtTypePriority(string $type, array $priorities): int {
+    private static function getArtTypePriority(string $type, array $priorities): int
+    {
         $priority = array_search($type, $priorities);
         if ($priority === false) {
             return sizeof($priorities);
         }
+
         return $priority;
     }
 
@@ -122,7 +124,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param string $art_type
      * @return array
      */
-    private static function sortArtByPriority($data, $art_type) {
+    private static function sortArtByPriority($data, $art_type)
+    {
         $priorities = $art_type == 'artist' ? self::TAG_ARTIST_ART_PRIORITY : self::TAG_ALBUM_ART_PRIORITY;
         uasort(
             $data,
@@ -130,6 +133,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                 return self::getArtTypePriority($a['title'], $priorities) <=> self::getArtTypePriority($b['title'], $priorities);
             }
         );
+
         return $data;
     }
 
@@ -181,15 +185,17 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather all art from tags in given file.
-     * @param string file
+     * @param string $file
      * @return array
      */
-    public static function gatherFileArt($file) {
+    public static function gatherFileArt($file)
+    {
         try {
             $getID3 = new getID3();
-            $id3 = $getID3->analyze($file);
+            $id3    = $getID3->analyze($file);
         } catch (Exception $error) {
             debug_event(self::class, 'getid3' . $error->getMessage(), 2);
+
             return [];
         }
 
@@ -280,7 +286,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      */
     private function gatherMediaTags($media, $art_type, $data)
     {
-        $mtype = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $images = self::gatherFileArt($media->file);
 
         // stop collecting dupes for each album
@@ -291,9 +297,9 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
         foreach ($images as $image) {
             if (!in_array($image['raw'], $raw_array)) {
-                $raw_array[] = $image['raw'];
+                $raw_array[]   = $image['raw'];
                 $image[$mtype] = $media->file;
-                $data[] = $image;
+                $data[]        = $image;
             }
         }
 
@@ -325,9 +331,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         // get song object directly from id, not by loop through album
         $song = new Song($song_id);
-        $data = $this->gatherMediaTags($song, $type, array());
 
-        return $data;
+        return $this->gatherMediaTags($song, $type, array());
     }
 
     /**
