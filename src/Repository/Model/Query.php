@@ -521,7 +521,7 @@ class Query
      */
     public function get_offset()
     {
-        return $this->_state['offset'];
+        return $this->_state['offset'] ?? 0;
     } // get_offset
 
     /**
