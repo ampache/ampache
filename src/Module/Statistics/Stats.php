@@ -859,7 +859,7 @@ class Stats
 
         if ((int)$user_id > 0 || !$access100) {
             $sql .= ($user_only)
-                ? "AND `object_count`.`user` = " . $user_id . " "
+                ? "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') AND `user`='$user_id') "
                 : "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$user_id') ";
         }
         $sql .= "ORDER BY `date` DESC LIMIT " . (string)$limit;
