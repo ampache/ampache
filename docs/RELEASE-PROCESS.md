@@ -206,5 +206,3 @@ After fixing up the paths you can commit then follow the regular release process
 composer.json, locale/base/gather-messages.sh
 * find `public/lib`
 * replace `lib`
-
-

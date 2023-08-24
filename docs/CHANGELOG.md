@@ -32,6 +32,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Try to bypass bad xml for podcast feeds if it can't load
 * Add more tables to the missing table checks
 * Remove all reference to deleted database updates (not required)
+* Add error info to debug from failed email attempts
 * Browse
   * Add `album_artist` and `song_artist` as valid browse types
   * Add many additional (and missing) sort types for objects
@@ -156,6 +157,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * open RSS links in a new tab
 * Dashboard pages have Newest on top now
 * Updated the default `.htaccess.dist` files
+* Only allow one password reset from 'Lost Password' per hour
+* Only reset the password from 'Lost Password' when the e-mail is successfully sent
 * Composer
   * Updated jquery to 3.5
   * Updated php-cs-fixer to 3.10+
@@ -234,6 +237,8 @@ You can find example Subsonic responses from an official server and Ampache serv
 * Don't verify Podcast Episodes that don't have a file
 * Update song channels on tag update
 * ACL creation may lock you out without a system user
+* Recently played on the show_user pages was pulling things from other users and ignoring preferences to hide
+* Missing translate on update_album_artist looking for Orphans
 * Config
   * Colon instead of semi-colon
   * Corrected default value comments

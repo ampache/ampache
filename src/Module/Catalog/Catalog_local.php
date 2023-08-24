@@ -148,7 +148,6 @@ class Catalog_local extends Catalog
         return $fields;
     }
 
-
     /**
      * Constructor
      *

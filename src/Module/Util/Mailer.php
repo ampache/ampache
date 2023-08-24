@@ -88,20 +88,9 @@ final class Mailer implements MailerInterface
      */
     public function set_default_sender()
     {
-        $user = AmpConfig::get('mail_user');
-        if (!$user) {
-            $user = 'info';
-        }
-
-        $domain = AmpConfig::get('mail_domain');
-        if (!$domain) {
-            $domain = 'example.com';
-        }
-
-        $fromname = AmpConfig::get('mail_name');
-        if (!$fromname) {
-            $fromname = 'Ampache';
-        }
+        $user     = AmpConfig::get('mail_user', 'info');
+        $domain   = AmpConfig::get('mail_domain', 'example.com');
+        $fromname = AmpConfig::get('mail_name', 'Ampache');
 
         $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
@@ -157,7 +146,7 @@ final class Mailer implements MailerInterface
      */
     public function send($phpmailer = null)
     {
-        $mailtype = AmpConfig::get('mail_type');
+        $mailtype = AmpConfig::get('mail_type', 'php');
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
@@ -218,6 +207,8 @@ final class Mailer implements MailerInterface
         if ($retval === true) {
             return true;
         } else {
+            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail['ErrorInfo'] ?? '', 5);
+
             return false;
         }
     } // send

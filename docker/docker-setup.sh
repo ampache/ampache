@@ -37,7 +37,6 @@ chmod -R 775 ../public/
 #  rm ../composer.lock
 #fi
 
-
 chown $UID:33 ./log
 chmod 775 ./log
 chown $UID:33 ./media
