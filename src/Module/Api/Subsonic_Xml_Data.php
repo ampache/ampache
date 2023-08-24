@@ -814,7 +814,8 @@ class Subsonic_Xml_Data
         $items     = $playQueue->get_items();
         if (!empty($items)) {
             $current    = $playQueue->get_current_object();
-            $date       = new DateTime($playQueue->get_time());
+            $play_time  = date("Y-m-d H:i:s", $playQueue->get_time());
+            $date       = new DateTime($play_time);
             $date->setTimezone(new DateTimeZone('UTC'));
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = $xml->addChild('playQueue');
