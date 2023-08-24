@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\User;
 
 use Ampache\Module\Util\Mailer;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPMailer\PHPMailer\Exception;
 
@@ -63,11 +64,12 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
             return false;
         }
-        if ($client->email == $email && Mailer::is_mail_enabled()) {
-            $newpassword = $this->passwordGenerator->generate();
-            $client->update_password($newpassword);
 
-            $mailer = new Mailer();
+        $time        = time();
+        $reset_limit = ($time - 3600) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? $time); // don't let a user spam resets
+        if ($client->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
+            $newpassword = $this->passwordGenerator->generate();
+            $mailer      = new Mailer();
             $mailer->set_default_sender();
             $mailer->subject        = T_('Lost Password');
             $mailer->recipient_name = $client->fullname;
@@ -83,7 +85,13 @@ final class NewPasswordSender implements NewPasswordSenderInterface
             $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
             $mailer->message = $message;
 
-            return $mailer->send();
+            if ($mailer->send()) {
+                // only update the password when the email was sent
+                $client->update_password($newpassword);
+                User::set_user_data($client->id, 'password_reset', $time);
+
+                return true;
+            }
         }
 
         return false;
