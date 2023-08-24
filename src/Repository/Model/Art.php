@@ -981,28 +981,6 @@ class Art extends database_object
     } // generate_thumb
 
     /**
-     * get_image_from_tags
-     * @param array $images
-     * @param string $title
-     * @param array $keys
-     * @return string
-     */
-    private static function get_image_from_tags($images, $title, $keys)
-    {
-        foreach ($images as $image) {
-            foreach ($keys as $key) {
-                if (isset($image[$key]) && array_key_exists('data', $image)) {
-                    if ($title == 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image[$key])) {
-                        return $image['data'];
-                    }
-                }
-            }
-        }
-
-        return '';
-    }
-
-    /**
      * get_from_source
      * This gets an image for the album art from a source as
      * defined in the passed array. Because we don't know where
@@ -1065,39 +1043,10 @@ class Art extends database_object
 
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
-            // If we find a good one, stop looking
-            $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
-
-            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            }
-
-            if (isset($id3['id3v2']['APIC'])) {
-                $image = self::get_image_from_tags($id3['id3v2']['APIC'], $data['title'], array('picturetypeid'));
-                if (!empty($image)) {
-                    return $image;
-                }
-            }
-
-            if (isset($id3['id3v2']['PIC'])) {
-                $image = self::get_image_from_tags($id3['id3v2']['PIC'], $data['title'], array('picturetypeid'));
-                if (!empty($image)) {
-                    return $image;
-                }
-            }
-
-            if (isset($id3['flac']['PICTURE'])) {
-                $image = self::get_image_from_tags($id3['flac']['PICTURE'], $data['title'], array('typeid'));
-                if (!empty($image)) {
-                    return $image;
-                }
-            }
-
-            if (isset($id3['comments']['picture'])) {
-                $image = self::get_image_from_tags($id3['comments']['picture'], $data['title'], array('picturetype', 'description'));
-                if (!empty($image)) {
-                    return $image;
+            $images = MetaTagCollectorModule::gatherFileArt($data['song']);
+            foreach ($images as $image) {
+                if ($data['title'] == $image['title']) {
+                    return $image['raw'];
                 }
             }
         } // if data song
