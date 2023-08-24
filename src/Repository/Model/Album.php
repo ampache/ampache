@@ -1238,8 +1238,8 @@ class Album extends database_object implements library_item
         $results = $album_ids;
         if (empty($results)) {
             // Find all albums that are missing an album artist
-            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != 'Unknown (Orphaned)'";
-            $db_results = Dba::read($sql);
+            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != ?;";
+            $db_results = Dba::read($sql, array(T_('Unknown (Orphaned)')));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = (int) $row['id'];
             }
