@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
@@ -38,6 +37,22 @@ use Psr\Log\LoggerInterface;
 
 final class MetaTagCollectorModule implements CollectorModuleInterface
 {
+    private const TAG_ALBUM_ART_PRIORITY = array(
+        'ID3 Front Cover',
+        'ID3 Illustration',
+        'ID3 Media'
+    );
+
+    private const TAG_ARTIST_ART_PRIORITY = array(
+        'ID3 Artist',
+        'ID3 Lead Artist',
+        'ID3 Band',
+        'ID3 Conductor',
+        'ID3 Composer',
+        'ID3 Lyricist',
+        'ID3 Other'
+    );
+
     private LoggerInterface $logger;
 
     private getID3 $getID3;
@@ -86,22 +101,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         return $data;
     }
 
-    const TAG_ALBUM_ART_PRIORITY = array(
-        'ID3 Front Cover',
-        'ID3 Illustration',
-        'ID3 Media'
-    );
-
-    const TAG_ARTIST_ART_PRIORITY = array(
-        'ID3 Artist',
-        'ID3 Lead Artist',
-        'ID3 Band',
-        'ID3 Conductor',
-        'ID3 Composer',
-        'ID3 Lyricist',
-        'ID3 Other'
-    );
-
     /**
      * Calculate the priority for the given art type.
      * @param string $type
@@ -119,18 +118,20 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     }
 
     /**
-     * Sort obtained art using the given priority list.
+     * Sort images in the data array using the ART_PRIORITY list for your art_type
      * @param array $data
      * @param string $art_type
      * @return array
      */
     private static function sortArtByPriority($data, $art_type)
     {
-        $priorities = $art_type == 'artist' ? self::TAG_ARTIST_ART_PRIORITY : self::TAG_ALBUM_ART_PRIORITY;
+        $priorities = ($art_type === 'artist')
+            ? self::TAG_ARTIST_ART_PRIORITY
+            : self::TAG_ALBUM_ART_PRIORITY; // song and album art
         uasort(
             $data,
-            function ($a, $b) use (&$priorities) {
-                return self::getArtTypePriority($a['title'], $priorities) <=> self::getArtTypePriority($b['title'], $priorities);
+            function ($image1, $image2) use (&$priorities) {
+                return self::getArtTypePriority($image1['title'], $priorities) <=> self::getArtTypePriority($image2['title'], $priorities);
             }
         );
 
@@ -144,7 +145,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $video = new Video($art->uid);
 
-        return $this->gatherMediaTags($video, 'video', array());
+        return $this->gatherMediaTags($video, array());
     }
 
     /**
@@ -167,7 +168,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // Foreach songs in this album
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
-            $data = $this->gatherMediaTags($song, $art->type, $data);
+            $data = $this->gatherMediaTags($song, $data);
 
             if ($limit && count($data) >= $limit) {
                 break;
@@ -280,11 +281,10 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
      * @param Song|Video $media
-     * @param string $art_type
      * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media, $art_type, $data)
+    private function gatherMediaTags($media, $data)
     {
         $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $images = self::gatherFileArt($media->file);
@@ -316,7 +316,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);
-        $data = $this->gatherMediaTags($song, 'song', array());
+        $data = $this->gatherMediaTags($song, array());
 
         $data = self::sortArtByPriority($data, $art->type);
 
@@ -325,14 +325,6 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         }
 
         return $data;
-    }
-
-    public function gatherTagsDirectFromSong($song_id, $type)
-    {
-        // get song object directly from id, not by loop through album
-        $song = new Song($song_id);
-
-        return $this->gatherMediaTags($song, $type, array());
     }
 
     /**
