@@ -2568,13 +2568,21 @@ class Search extends playlist_object
             switch ($rule[0]) {
                 case 'anywhere':
                     // 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
-                    $tag_string   = ($sql_match_operator == "NOT LIKE")
-                        ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
-                        : "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    switch ($sql_match_operator) {
+                        case '!=':
+                        case 'NOT':
+                            $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` = ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)" ;
+                            break;
+                        case 'NOT LIKE':
+                            $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                            break;
+                        default:
+                            $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    }
                     $parameters[] = $input;
                     // we want AND NOT and like for this query to really exclude them
                     if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT'))) {
-                        $where[] = "NOT ((`artist`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE ?) OR (`album`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE ?) OR `song_data`.`comment` LIKE ? OR `song_data`.`label` LIKE ? OR `song`.`file` LIKE ? OR `song`.`title` LIKE ? OR NOT " . $tag_string . ')';
+                        $where[] = "NOT ((`artist`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE ?) OR (`album`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE ?) OR (`song_data`.`comment` LIKE ? AND `song_data`.`comment` IS NOT NULL) OR (`song_data`.`label` LIKE ? AND `song_data`.`label` IS NOT NULL) OR `song`.`file` LIKE ? OR `song`.`title` LIKE ? OR " . $tag_string . ')';
                     } else {
                         $where[] = "((`artist`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator ?) OR (`album`.`name` $sql_match_operator ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator ?) OR `song_data`.`comment` $sql_match_operator ? OR `song_data`.`label` $sql_match_operator ? OR `song`.`file` $sql_match_operator ? OR `song`.`title` $sql_match_operator ? OR " . $tag_string . ')';
                     }
@@ -2589,9 +2597,17 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'genre':
-                    $where[]      = ($sql_match_operator == "NOT LIKE")
-                        ? "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)"
-                        : "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    switch ($sql_match_operator) {
+                        case '!=':
+                        case 'NOT':
+                            $where[] = "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` = ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                            break;
+                        case 'NOT LIKE':
+                            $where[] = "`song`.`id` NOT IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                            break;
+                        default:
+                            $where[] = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $sql_match_operator ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'album_genre':
@@ -2642,9 +2658,19 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'comment':
+                    $join['song_data'] = true;
+                    if (!$input || $input == '%%' || $input == '%') {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`comment` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`comment` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]           = "`song_data`.`comment` $sql_match_operator ?";
                     $parameters[]      = $input;
-                    $join['song_data'] = true;
                     break;
                 case 'label':
                     $join['song_data'] = true;
@@ -2662,9 +2688,19 @@ class Search extends playlist_object
                     $parameters[] = $input;
                     break;
                 case 'lyrics':
+                    $join['song_data'] = true;
+                    if (!$input || $input == '%%' || $input == '%') {
+                        if (in_array($sql_match_operator, array('=', 'LIKE', 'SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`lyrics` IS NULL";
+                            break;
+                        }
+                        if (in_array($sql_match_operator, array('!=', 'NOT LIKE', 'NOT SOUNDS LIKE'))) {
+                            $where[]      = "`song_data`.`lyrics` IS NOT NULL";
+                            break;
+                        }
+                    }
                     $where[]           = "`song_data`.`lyrics` $sql_match_operator ?";
                     $parameters[]      = $input;
-                    $join['song_data'] = true;
                     break;
                 case 'played':
                     $where[] = "`song`.`played` = '$sql_match_operator'";
