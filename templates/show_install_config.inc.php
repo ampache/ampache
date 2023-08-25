@@ -256,7 +256,7 @@ echo debug_result(check_config_values($results)); ?></div>
                 &nbsp;
 
                 <div class="col-sm-4"></div>
-                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] . "&local_host=" . $_REQUEST['local_host']; ?>
+                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] ?? '' . "&local_host=" . $_REQUEST['local_host'] ?? ''; ?>
                 <div class="col-sm-8">
                     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
                 </div>

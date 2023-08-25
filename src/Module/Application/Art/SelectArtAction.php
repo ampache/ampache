@@ -57,8 +57,7 @@ final class SelectArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check to see if we have the image url still */
-        $image_id = $_REQUEST['image'];
-
+        $image_id    = $_REQUEST['image'];
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $item = $this->getItem($gatekeeper);
