@@ -46,13 +46,9 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
     public function update(int $user_id = 0): void
     {
         // allow replacing empty values when not set on your tab
-        switch ($_REQUEST['tab']) {
-            case 'plugins':
-                $null_allowed = array('personalfav_playlist', 'personalfav_smartlist');
-                break;
-            default:
-                $null_allowed = array();
-        }
+        $null_allowed = (isset($_REQUEST['tab']) && ($_REQUEST['tab']) == 'plugins')
+            ? array('personalfav_playlist', 'personalfav_smartlist')
+            : array();
 
         // Get current keys
         $sql = ($user_id == '-1')
