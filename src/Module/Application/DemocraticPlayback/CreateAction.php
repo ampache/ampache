@@ -76,7 +76,7 @@ final class CreateAction implements ApplicationActionInterface
         if (!$democratic->id) {
             // Create the playlist
             Democratic::create($_POST);
-            $democratic = Democratic::get_current_playlist();
+            Democratic::get_current_playlist();
         } elseif (!$democratic->update($_POST)) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),

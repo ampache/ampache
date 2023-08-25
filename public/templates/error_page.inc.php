@@ -29,10 +29,7 @@ $t_ampache = T_('Ampache');
 $htmllang  = $htmllang ?? 'en_US';
 $dir       = $dir ?? 'ltr'; ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>"
-    dir="<?php echo $dir;?>">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo $dir;?>">
 <head>
 <!-- Propelled by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url;?>" />

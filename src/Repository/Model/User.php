@@ -1400,10 +1400,9 @@ class User extends database_object
      * get_avatar
      * Get the user avatar
      * @param boolean $local
-     * @param array $session
      * @return array
      */
-    public function get_avatar($local = false, $session = array())
+    public function get_avatar($local = false)
     {
         $avatar          = array();
         $avatar['title'] = T_('User avatar');

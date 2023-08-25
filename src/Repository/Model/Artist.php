@@ -811,7 +811,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
         // If Ampache support multiple artists per song one day, we should also handle other artists here
         $trimmed = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
-            debug_event(__CLASS__, "check artist: cut {{$name}} to {{$trimmed[0]}}", 4);
+            debug_event(__CLASS__, "check artist: cut {" . $name . "} to {" . $trimmed[0] . "}", 4);
         }
         $name = $trimmed[0];
 

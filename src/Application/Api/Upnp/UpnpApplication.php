@@ -40,12 +40,13 @@ final class UpnpApplication implements ApplicationInterface
             return;
         }
 
+        $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
         if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
             $msIP = 1;
             Upnp_Api::sddpSend($msIP);
         } ?>
         <!DOCTYPE html>
-        <html xmlns="http://www.w3.org/1999/xhtml">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
         <head>
             <!-- Propelled by Ampache | ampache.org -->
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
