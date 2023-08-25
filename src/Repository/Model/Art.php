@@ -36,7 +36,6 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
-use getID3;
 use PDOStatement;
 use WpOrg\Requests;
 use RuntimeException;

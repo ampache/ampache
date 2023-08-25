@@ -47,7 +47,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
             <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
                 <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
-                <span class="format-specifier">%a</span> = <?php echo T_('Artist'); ?><br />
+                <span class="format-specifier">%a</span> = <?php echo T_('Album Artist'); ?><br />
                 <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
                 <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
                 <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />

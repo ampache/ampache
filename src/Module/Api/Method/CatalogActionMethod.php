@@ -96,7 +96,7 @@ final class CatalogActionMethod
                         Catalog::clean_empty_albums();
                         Album::update_album_artist();
                     }
-                    $catalog->update_catalog_map();
+                    Catalog::update_catalog_map($catalog->gather_types);
                     Catalog::update_counts();
                     break;
             }

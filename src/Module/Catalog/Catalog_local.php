@@ -598,7 +598,6 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $number        = 0;
         $total         = 0;
         $total_updated = 0;
         $this->count   = 0;

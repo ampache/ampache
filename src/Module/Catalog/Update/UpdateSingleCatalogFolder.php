@@ -161,7 +161,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     Artist::update_table_counts();
                 }
                 // clean up after the action
-                $catalog->update_catalog_map();
+                Catalog::update_catalog_map($catalog->gather_types);
                 Catalog::garbage_collect_mapping();
                 Catalog::garbage_collect_filters();
             }
