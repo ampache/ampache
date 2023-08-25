@@ -230,7 +230,7 @@ class AmpacheRss
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                switch($replace) {
+                switch ($replace) {
                     case 'title':
                         $text = $media->get_fullname();
                         break;
