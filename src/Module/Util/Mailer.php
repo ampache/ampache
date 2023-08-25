@@ -153,7 +153,7 @@ final class Mailer implements MailerInterface
      */
     public function send($phpmailer = null)
     {
-        $mailtype = AmpConfig::get('mail_type');
+        $mailtype = AmpConfig::get('mail_type', 'php');
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
@@ -179,18 +179,12 @@ final class Mailer implements MailerInterface
         }
         $mail->Body = $this->message;
 
-        $sendmail = AmpConfig::get('sendmail_path');
-        $sendmail = $sendmail ? $sendmail : '/usr/sbin/sendmail';
-        $mailhost = AmpConfig::get('mail_host');
-        $mailhost = $mailhost ? $mailhost : 'localhost';
-        $mailport = AmpConfig::get('mail_port');
-        $mailport = $mailport ? $mailport : 25;
+        $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
+        $mailhost = AmpConfig::get('mail_host', 'localhost');
+        $mailport = AmpConfig::get('mail_port', 25);
         $mailauth = AmpConfig::get('mail_auth');
-        $mailuser = AmpConfig::get('mail_auth_user');
-        $mailuser = $mailuser ? $mailuser : '';
-        $mailpass = AmpConfig::get('mail_auth_pass');
-        $mailpass = $mailpass ? $mailpass : '';
-
+        $mailuser = AmpConfig::get('mail_auth_user', '');
+        $mailpass = AmpConfig::get('mail_auth_pass', '');
         switch ($mailtype) {
             case 'smtp':
                 $mail->IsSMTP();
@@ -231,12 +225,14 @@ final class Mailer implements MailerInterface
     public function send_to_group($group_name)
     {
         $mail = new PHPMailer();
-
         foreach (self::get_users($group_name) as $member) {
+            $name = (!empty($member['fullname']))
+                ? $member['fullname']
+                : $member['name'];
             if (function_exists('mb_encode_mimeheader')) {
-                $member['fullname'] = mb_encode_mimeheader($member['fullname']);
+                $name = mb_encode_mimeheader($name);
             }
-            $mail->AddBCC($member['email'], $member['fullname']);
+            $mail->AddBCC($member['email'], $name);
         }
 
         return $this->send($mail);
