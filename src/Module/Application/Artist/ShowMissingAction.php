@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Artist;
 
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -49,7 +50,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         set_time_limit(600);
-        $mbid    = $_REQUEST['mbid'];
+        $mbid    = VaInfo::parse_mbid($_REQUEST['mbid'] ?? '');
         $wartist = Wanted::get_missing_artist($mbid);
 
         require Ui::find_template('show_missing_artist.inc.php');

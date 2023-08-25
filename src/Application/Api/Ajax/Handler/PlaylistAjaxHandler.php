@@ -71,7 +71,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                         break;
                     }
 
-                    $name        = $_REQUEST['name'];
+                    $name = $_REQUEST['name'] ?? '';
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }

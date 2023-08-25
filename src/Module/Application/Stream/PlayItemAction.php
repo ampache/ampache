@@ -54,7 +54,7 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
-        $objectType = $_REQUEST['object_type'];
+        $objectType = $_REQUEST['object_type'] ?? null;
         $objectIds  = explode(',', Core::get_get('object_id'));
         $mediaIds   = [];
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
