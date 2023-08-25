@@ -2421,8 +2421,8 @@ abstract class Catalog extends database_object
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
-        $new_song->comment     = $results['comment'];
-        $new_song->lyrics      = str_replace(
+        $new_song->comment = $results['comment'];
+        $new_song->lyrics  = str_replace(
             ["\r\n", "\r", "\n"],
             '<br />',
             strip_tags($results['lyrics'])
@@ -2431,7 +2431,6 @@ abstract class Catalog extends database_object
             $licenseRepository = static::getLicenseRepository();
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
-
             $new_song->license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
         } else {
             $new_song->license = null;
