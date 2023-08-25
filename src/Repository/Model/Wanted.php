@@ -28,6 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
@@ -213,6 +214,9 @@ class Wanted extends database_object
     public static function get_missing_artist($mbid)
     {
         $wartist = array();
+        if (empty($mbid)) {
+            return $wartist;
+        }
 
         if (parent::is_cached('missing_artist', $mbid)) {
             $wartist = parent::get_from_cache('missing_artist', $mbid);
