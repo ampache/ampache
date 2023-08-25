@@ -1382,13 +1382,13 @@ abstract class Catalog extends database_object
             : "WHERE `song`.`user_upload` IS NOT NULL";
         switch ($type) {
             case 'song':
-                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
+                $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql AND `song`.`catalog` IN (" . implode(',', self::get_catalogs('', $user_id, true)) . ")";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
+                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql AND `album`.`catalog` IN (" . implode(',', self::get_catalogs('', $user_id, true)) . ")";
                 break;
             case 'artist':
-                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
+                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` $where_sql AND `song`.`catalog` IN (" . implode(',', self::get_catalogs('', $user_id, true)) . ")";
                 break;
         }
 
@@ -3529,7 +3529,7 @@ abstract class Catalog extends database_object
     {
         $retval = ((int)$track > 32767 || (int)$track < -32767) ? (int)substr($track, -4, 4) : (int)$track;
         if ((int)$track !== $retval) {
-            debug_event(__CLASS__, "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
+            debug_event(__CLASS__, "check_track: '{" . $track . "}' out of range. Changed into '{" . $retval . "}'", 4);
         }
 
         return $retval;
@@ -3927,18 +3927,18 @@ abstract class Catalog extends database_object
 
     /**
      * Update the catalog_map table depending on table type
+     * @param string $media_type
      */
-    public function update_catalog_map()
+    public static function update_catalog_map($media_type): void
     {
-        $catalog_media_type = $this->gather_types;
-        if ($catalog_media_type == 'music') {
+        if ($media_type == 'music') {
             self::update_mapping('artist');
             self::update_mapping('album');
             self::update_mapping('album_disk');
-        } elseif ($catalog_media_type == 'podcast') {
+        } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
-        } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+        } elseif (in_array($media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
             self::update_mapping('video');
         }
     }
@@ -4138,11 +4138,12 @@ abstract class Catalog extends database_object
             case 'add_to_catalog':
             case 'import_to_catalog':
                 if ($catalogs) {
+                    $catalog_media_types = array();
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             if ($catalog->add_to_catalog($options)) {
-                                $catalog->update_catalog_map();
+                                $catalog_media_types[] = $catalog->gather_types;
                             }
                         }
                     }
@@ -4150,9 +4151,18 @@ abstract class Catalog extends database_object
                     if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
                     }
+                    foreach ($catalog_media_types as $catalog_media_type) {
+                        if ($catalog_media_type == 'music') {
+                            self::clean_empty_albums();
+                            Album::update_album_artist();
+                        }
+                        self::update_catalog_map($catalog_media_type);
+                    }
                 }
-                Artist::update_table_counts();
-                Album::update_table_counts();
+                if (in_array('music', $catalog_media_types)) {
+                    Artist::update_table_counts();
+                    Album::update_table_counts();
+                }
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
@@ -4173,13 +4183,25 @@ abstract class Catalog extends database_object
                 }
 
                 /* This runs the clean/verify/add in that order */
+                $catalog_media_types = array();
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        $catalog->clean_catalog();
+                        if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types)) {
+                            $catalog_media_types[] = $catalog->gather_types;
+                        }
                         $catalog->verify_catalog();
-                        $catalog->add_to_catalog();
+                        if ($catalog->add_to_catalog() && !in_array($catalog->gather_types, $catalog_media_types)) {
+                            $catalog_media_types[] = $catalog->gather_types;
+                        }
                     }
+                }
+                foreach ($catalog_media_types as $catalog_media_type) {
+                    if ($catalog_media_type == 'music') {
+                        self::clean_empty_albums();
+                        Album::update_album_artist();
+                    }
+                    self::update_catalog_map($catalog_media_type);
                 }
                 break;
             case 'clean_all_catalogs':
@@ -4187,16 +4209,26 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'clean_catalog':
                 if ($catalogs) {
+                    $catalog_media_types = array();
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
-                            if ($catalog->clean_catalog() < 0) {
-                                $catalog->update_catalog_map();
+                            if ($catalog->clean_catalog() < 0 && !in_array($catalog->gather_types, $catalog_media_types)) {
+                                $catalog_media_types[] = $catalog->gather_types;
                             }
                         }
                     } // end foreach catalogs
-                    Artist::update_table_counts();
-                    Album::update_table_counts();
+                    foreach ($catalog_media_types as $catalog_media_type) {
+                        if ($catalog_media_type == 'music') {
+                            self::clean_empty_albums();
+                            Album::update_album_artist();
+                        }
+                        self::update_catalog_map($catalog_media_type);
+                    }
+                    if (in_array('music', $catalog_media_types)) {
+                        Artist::update_table_counts();
+                        Album::update_table_counts();
+                    }
                 }
                 break;
             case 'update_from':
@@ -4205,8 +4237,8 @@ abstract class Catalog extends database_object
                 if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
+                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $options['add_path']))) {
+                            self::update_catalog_map($catalog->gather_types);
                         }
                     }
                 } // end if add
@@ -4214,7 +4246,7 @@ abstract class Catalog extends database_object
                 // Now check for an update
                 if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
-                        $songs = Catalog::get_ids_from_folder($options['update_path'], 'song');
+                        $songs = self::get_ids_from_folder($options['update_path'], 'song');
                         foreach ($songs as $song_id) {
                             self::update_single_item('song', $song_id);
                         }
@@ -4273,7 +4305,9 @@ abstract class Catalog extends database_object
                     self::clean_empty_albums();
                     Album::update_album_artist();
                 }
-                $catalog->update_catalog_map();
+                self::update_catalog_map($catalog->gather_types);
+                self::garbage_collect_mapping();
+                self::garbage_collect_filters();
                 self::update_counts();
         }
     }
