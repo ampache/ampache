@@ -922,8 +922,7 @@ class Catalog_local extends Catalog
                             $pattern = str_replace($value, $results[$key], $pattern);
                         }
                         $mvfile .= DIRECTORY_SEPARATOR . $pattern . '.' . pathinfo($file, PATHINFO_EXTENSION);
-                        debug_event('local.catalog',
-                            'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
+                        debug_event('local.catalog', 'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
 
                         $mvdir = pathinfo($mvfile, PATHINFO_DIRNAME);
                         if (!is_dir($mvdir)) {
