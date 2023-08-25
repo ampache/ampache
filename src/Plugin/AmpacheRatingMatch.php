@@ -211,7 +211,7 @@ class AmpacheRatingMatch
             $fAlbumDisk->set_flag($flagged, $this->user->id);
             // rate all the album artists (If there are more than one)
             foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
-                $fArtist = new Userflag($song->artist, 'artist');
+                $fArtist = new Userflag($artist_id, 'artist');
                 if (!$fArtist->get_flag($this->user->id, false)) {
                     $fArtist->set_flag($flagged, $this->user->id);
                 }

@@ -1647,7 +1647,7 @@ class Subsonic_Api
 
             if ($update_user !== null) {
                 // Get Session key
-                $avatar = $update_user->get_avatar(true, $input);
+                $avatar = $update_user->get_avatar(true);
                 if (isset($avatar['url']) && !empty($avatar['url'])) {
                     $request = Requests::get($avatar['url'], array(), Core::requests_options());
                     header("Content-Type: " . $request->headers['Content-Type']);
