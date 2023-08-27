@@ -267,6 +267,7 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 * API5::playlist_songs: Add `random` to get random objects filtered by limit
 * API6 (Based on API5)
+  * Added podcast id and name to `podcast_episode` objects
   * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
   * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
   * API6::catalog_add: Create a catalog (Require: 75)
