@@ -96,7 +96,7 @@ final class CatalogAction5Method
                 Catalog::clean_empty_albums();
                 Album::update_album_artist();
             }
-            Catalog::update_catalog_map($catalog->gather_types);
+            Catalog::update_catalog_map($catalog_media_type);
             Catalog::update_counts();
 
             Api5::message('successfully started: ' . $task, $input['api_format']);

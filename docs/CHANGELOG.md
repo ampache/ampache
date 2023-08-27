@@ -267,10 +267,12 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 * API5::playlist_songs: Add `random` to get random objects filtered by limit
 * API6 (Based on API5)
+  * Added podcast id and name to `podcast_episode` objects
   * API6::browse: List server contents in a directory-style listing (Music, Podcast and Video catalogs)
   * API6::list: Replace get_indexes with a faster lookup and similar parameters returning `id`, `name`, `prefix` and `basename`
   * API6::catalog_add: Create a catalog (Require: 75)
   * API6::catalog_delete: Delete a catalog (Require: 75)
+  * API6::catalog_folder: Perform actions on local catalog folders. (catalog_file but for folders) (Require: 50)
   * API6::live_stream_create: Create a new live stream (radio station)
   * API6::live_stream_edit: Edit a live stream
   * API6::live_stream_delete: Delete a stream by ID

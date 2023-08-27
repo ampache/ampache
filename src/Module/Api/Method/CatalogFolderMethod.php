@@ -37,38 +37,38 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 
 /**
- * Class CatalogFileMethod
+ * Class CatalogFolderMethod
  * @package Lib\ApiMethods
  */
-final class CatalogFileMethod
+final class CatalogFolderMethod
 {
-    public const ACTION = 'catalog_file';
+    public const ACTION = 'catalog_folder';
 
     /**
-     * catalog_file
-     * MINIMUM_API_VERSION=420000
+     * catalog_folder
+     * MINIMUM_API_VERSION=600000
      *
-     * Perform actions on local catalog files.
-     * Single file versions of catalog add, clean and verify.
-     * Make sure you remember to urlencode those file names!
+     * Perform actions on local catalog folders.
+     * Single folder versions of catalog add, clean and verify.
+     * Make sure you remember to urlencode those folder names!
      *
      * @param array $input
      * @param User $user
-     * file    = (string) urlencode(FULL path to local file)
+     * folder  = (string) urlencode(FULL path to local folder)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input, User $user): bool
+    public static function catalog_folder(array $input, User $user): bool
     {
         if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('catalog', 'folder', 'task'), self::ACTION)) {
             return false;
         }
-        $file = html_entity_decode($input['file']);
-        $task = explode(',', (string)$input['task']);
+        $folder = html_entity_decode($input['folder']);
+        $task   = explode(',', (string)$input['task']);
         if (!$task) {
             $task = array();
         }
@@ -79,9 +79,9 @@ final class CatalogFileMethod
 
             return false;
         }
-        if (!file_exists($file) && !in_array('clean', $task)) {
+        if (!file_exists($folder) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $folder), '4704', self::ACTION, 'folder', $input['api_format']);
 
             return false;
         }
@@ -106,59 +106,71 @@ final class CatalogFileMethod
         }
         switch ($catalog->gather_types) {
             case 'podcast':
-                $type  = 'podcast_episode';
-                $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
+                $type      = 'podcast_episode';
+                $file_ids  = new Podcast_Episode(Catalog::get_ids_from_folder($folder, $type));
+                $className = Podcast_Episode::class;
                 break;
             case 'clip':
             case 'tvshow':
             case 'movie':
             case 'personal_video':
-                $type  = 'video';
-                $media = new Video(Catalog::get_id_from_file($file, $type));
+                $type      = 'video';
+                $file_ids  = new Video(Catalog::get_ids_from_folder($folder, $type));
+                $className = Video::class;
                 break;
             case 'music':
             default:
-                $type  = 'song';
-                $media = new Song(Catalog::get_id_from_file($file, $type));
+                $type      = 'song';
+                $file_ids  = new Song(Catalog::get_ids_from_folder($folder, $type));
+                $className = Song::class;
                 break;
         }
 
         if ($catalog->catalog_type == 'local') {
-            foreach ($task as $item) {
-                if (defined('SSE_OUTPUT')) {
-                    unset($SSE_OUTPUT);
-                }
-                switch ($item) {
-                    case 'clean':
-                        if ($media->id) {
-                            /** @var Catalog_local $catalog */
-                            $catalog->clean_file($file, $type);
-                        }
-                        break;
-                    case 'verify':
-                        if ($media->id) {
-                            Catalog::update_media_from_tags($media, array($type));
-                        }
-                        break;
-                    case 'add':
-                        if (!$media->id) {
-                            /** @var Catalog_local $catalog */
-                            $catalog->add_file($file, array());
-                        }
-                        break;
-                    case 'remove':
-                        if ($media->id) {
-                            $media->remove();
-                        }
-                        break;
+            foreach ($file_ids as $file_id) {
+                /** @var Song|Podcast_Episode|Video $class_name */
+                $media = new $className($file_id);
+                foreach ($task as $item) {
+                    if (defined('SSE_OUTPUT')) {
+                        unset($SSE_OUTPUT);
+                    }
+                    switch ($item) {
+                        case 'clean':
+                            if ($media->id) {
+                                /** @var Catalog_local $catalog */
+                                $catalog->clean_file($folder, $type);
+                            }
+                            break;
+                        case 'verify':
+                            if ($media->id) {
+                                Catalog::update_media_from_tags($media, array($type));
+                            }
+                            break;
+                        case 'add':
+                            if (!$media->id) {
+                                /** @var Catalog_local $catalog */
+                                $catalog->add_file($folder, array());
+                            }
+                            break;
+                        case 'remove':
+                            if ($media->id) {
+                                $media->remove();
+                            }
+                            break;
+                    }
                 }
             }
             // update the counts too
-            if ($media instanceof Song) {
-                Album::update_album_count($media->album);
+            $catalog_media_type = $catalog->gather_types;
+            if ($catalog_media_type == 'music') {
+                Album::update_table_counts();
                 Artist::update_table_counts();
             }
-            Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
+            // clean up after the action
+            Catalog::update_catalog_map($catalog_media_type);
+            Catalog::garbage_collect_mapping();
+            Catalog::garbage_collect_filters();
+            Api::message('successfully started: ' . $output_task . ' for ' . $folder, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
