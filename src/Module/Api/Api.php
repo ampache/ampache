@@ -61,6 +61,7 @@ class Api
         Method\CatalogAddMethod::ACTION => Method\CatalogAddMethod::class,
         Method\CatalogDeleteMethod::ACTION => Method\CatalogDeleteMethod::class,
         Method\CatalogFileMethod::ACTION => Method\CatalogFileMethod::class,
+        Method\CatalogFolderMethod::ACTION => Method\CatalogFolderMethod::class,
         Method\CatalogMethod::ACTION => Method\CatalogMethod::class,
         Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,
         Method\DeletedPodcastEpisodesMethod::ACTION => Method\DeletedPodcastEpisodesMethod::class,

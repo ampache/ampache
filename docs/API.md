@@ -240,6 +240,7 @@ All Data methods return HTTP 200 responses
 * catalog_add **Api6**
 * catalog_delete **Api6**
 * catalog_file
+* catalog_folder **Api6**
 * deleted_podcast_episodes
 * deleted_songs
 * deleted_videos
@@ -318,7 +319,6 @@ All Data methods return HTTP 200 responses
 * user_preference
 * videos
 * video
-
 
 ### Binary Data Methods
 
