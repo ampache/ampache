@@ -93,9 +93,9 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         if (strlen((string)$token) && strlen((string)$salt) && strlen((string)$username)) {
             $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, [$username]);
-            if ($row = Dba::fetch_assoc($db_results)) {
+            if ($row = Dba::fetch_assoc($db_results) && isset($row['apikey'])) {
                 $hash_token = hash('md5', ($row['apikey'] . $salt));
-                if ($token === $hash_token && $row['username'] === $username && isset($row['apikey'])) {
+                if ($token === $hash_token && $row['username'] === $username) {
                     return [
                         'success' => true,
                         'type' => 'api',
