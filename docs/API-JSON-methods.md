@@ -796,6 +796,34 @@ Make sure you remember to urlencode those file names!
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_file.json)
 
+### catalog_folder
+
+Perform actions on local catalog folders.
+Single folder versions of catalog add, clean, verify and remove (delete)
+Make sure you remember to urlencode those folder names!
+
+**ACCESS REQUIRED:** 50 (Content Manager)
+
+| Input     | Type    | Description                                                              | Optional |
+|-----------|---------|--------------------------------------------------------------------------|---------:|
+| 'folder'  | string  | FULL path to local folder                                                |       NO |
+| 'task'    | string  | `add`, `clean`, `verify`, `remove`, (can include comma-separated values) |       NO |
+| 'catalog' | integer | $catalog_id                                                              |       NO |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/catalog_folder.json)
+
 ### deleted_podcast_episodes
 
 This returns the episodes for a podcast that have been deleted

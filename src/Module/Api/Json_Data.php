@@ -1006,6 +1006,10 @@ class Json_Data
                 "id" => (string)$episode_id,
                 "title" => $episode->get_fullname(),
                 "name" => $episode->get_fullname(),
+                "podcast" => array(
+                    "id" => $episode->podcast,
+                    "name" => $episode->get_f_podcast()
+                ),
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
                 "author" => $episode->f_author,
