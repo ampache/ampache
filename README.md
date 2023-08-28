@@ -8,7 +8,7 @@
 
 ## News
 
-Ampache6 is about to shake up the develop branch. Keep track using the [wiki](https://github.com/ampache/ampache/wiki/ampache6-details)
+Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.0.0)
 
 ## Basics
 
