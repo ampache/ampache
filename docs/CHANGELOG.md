@@ -14,7 +14,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ### Added
 
-* Translations 2023-05
+* Translations 2023-08
 * Add `streamtoken` to user objects, allowing permanent stream links
 * Allow deleting a user API key Stream Token and RSS token's
 * Allow Admin users to browse all user uploads
