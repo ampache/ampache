@@ -125,8 +125,14 @@ final class CatalogFolderMethod
                 $className = Song::class;
                 break;
         }
-
+        $changed = 0;
         if ($catalog->catalog_type == 'local') {
+            if (in_array('add', $task)) {
+                /** @var Catalog_local $catalog */
+                if ($catalog->add_files($folder, array())) {
+                    $changed++;
+                }
+            }
             foreach ($file_ids as $file_id) {
                 /** @var Song|Podcast_Episode|Video $class_name */
                 $media = new $className($file_id);
@@ -138,7 +144,9 @@ final class CatalogFolderMethod
                         case 'clean':
                             if ($media->id) {
                                 /** @var Catalog_local $catalog */
-                                $catalog->clean_file($folder, $type);
+                                if ($catalog->clean_file($media->file, $type)) {
+                                    $changed++;
+                                }
                             }
                             break;
                         case 'verify':
@@ -146,30 +154,26 @@ final class CatalogFolderMethod
                                 Catalog::update_media_from_tags($media, array($type));
                             }
                             break;
-                        case 'add':
-                            if (!$media->id) {
-                                /** @var Catalog_local $catalog */
-                                $catalog->add_file($folder, array());
-                            }
-                            break;
                         case 'remove':
-                            if ($media->id) {
-                                $media->remove();
+                            if ($media->id && $media->remove()) {
+                                $changed++;
                             }
                             break;
                     }
                 }
             }
-            // update the counts too
-            $catalog_media_type = $catalog->gather_types;
-            if ($catalog_media_type == 'music') {
-                Album::update_table_counts();
-                Artist::update_table_counts();
+            if ($changed > 0) {
+                // update the counts too
+                $catalog_media_type = $catalog->gather_types;
+                if ($catalog_media_type == 'music') {
+                    Album::update_table_counts();
+                    Artist::update_table_counts();
+                }
+                // clean up after the action
+                Catalog::update_catalog_map($catalog_media_type);
+                Catalog::garbage_collect_mapping();
+                Catalog::garbage_collect_filters();
             }
-            // clean up after the action
-            Catalog::update_catalog_map($catalog_media_type);
-            Catalog::garbage_collect_mapping();
-            Catalog::garbage_collect_filters();
             Api::message('successfully started: ' . $output_task . ' for ' . $folder, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);

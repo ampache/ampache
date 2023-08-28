@@ -4305,7 +4305,7 @@ abstract class Catalog extends database_object
                     self::clean_empty_albums();
                     Album::update_album_artist();
                 }
-                self::update_catalog_map($catalog->gather_types);
+                self::update_catalog_map($catalog_media_type);
                 self::garbage_collect_mapping();
                 self::garbage_collect_filters();
                 self::update_counts();
