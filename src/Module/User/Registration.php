@@ -68,7 +68,7 @@ class Registration
         $mailer->message .= T_('Username') . ": $username" . "\n";
         $mailer->message .= "----------------------\n";
         $mailer->message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
-        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=".urlencode($username)."&auth=$validation";
+        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=" . urlencode($username) . "&auth=$validation";
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
