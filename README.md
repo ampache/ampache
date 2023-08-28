@@ -23,12 +23,12 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
-* Check out [Ampache 5 for Admins](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
-* As well as [Ampache 5 for Users](https://github.com/ampache/ampache/wiki/Ampache-5-for-users)
+* Check out [Ampache 6 for Admins](https://github.com/ampache/ampache/wiki/ampache6-details)
+* As well as [Ampache 6 for Users](https://github.com/ampache/ampache/wiki/ampache6-for-users)
 
 ## Recommended Version
 
-The recommended and most stable version is the current stable [release5 branch](https://github.com/ampache/ampache/archive/release5.tar.gz).
+The recommended and most stable version is the current stable [release6 branch](https://github.com/ampache/ampache/archive/release6.tar.gz).
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
@@ -56,7 +56,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 * PHP 8.1 (Ampache 5.5.0 and higher)
 * PHP 8.2 (Ampache 6.0.0 and higher)
 
-**NOTE** That php7.4 will not be released for Ampache6 but can still be used.
+**NOTE** That php7.4 will not be supported for Ampache6 but can still be used.
 
 * PHP modules:
   * PDO
