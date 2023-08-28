@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache5 Develop
+## Ampache 5.6.3-release
 
 ### Added
 
@@ -22,7 +22,7 @@
   * Get correct client IP for curl requests
   * getTopSongs default fallback to 50
 
-## API5 Develop
+## API 5.6.3
 
 ### Added
 
