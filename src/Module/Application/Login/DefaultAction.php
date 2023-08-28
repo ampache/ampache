@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,6 +96,10 @@ final class DefaultAction implements ApplicationActionInterface
                         'Location',
                         $this->configContainer->get('web_path')
                     );
+            } elseif (array_key_exists($name, $_COOKIE)) {
+                // now auth so unset this cookie
+                setcookie($name, '', -1, (string)AmpConfig::get('cookie_path'));
+                setcookie($name, '', -1);
             }
         }
 
@@ -132,7 +136,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';
-                    $auth['info']['offset_limit'] = 25;
+                    $auth['info']['offset_limit'] = 50;
                 } else {
                     if (Core::get_post('username') !== '') {
                         $username = (string)$_POST['username'];
@@ -255,7 +259,7 @@ final class DefaultAction implements ApplicationActionInterface
             } // end if auto_create
 
             // This allows stealing passwords validated by external means such as LDAP
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && $auth['success'] && isset($password)) {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) && isset($auth) && $auth['success'] && isset($password) && $user instanceof User) {
                 $user->update_password($password);
             }
         }

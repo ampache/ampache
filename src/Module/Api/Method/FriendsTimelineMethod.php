@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
@@ -47,11 +46,12 @@ final class FriendsTimelineMethod
      * This get current user friends timeline
      *
      * @param array $input
+     * @param User $user
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function friends_timeline(array $input): bool
+    public static function friends_timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -60,14 +60,13 @@ final class FriendsTimelineMethod
         }
         $limit = (int) ($input['limit']);
         $since = (int) ($input['since']);
-        $user  = User::get_from_username(Session::username($input['auth']))->getId();
 
-        $activities = static::getUseractivityRepository()->getFriendsActivities(
-            $user,
+        $results = static::getUseractivityRepository()->getFriendsActivities(
+            $user->getId(),
             $limit,
             $since
         );
-        if (empty($activities)) {
+        if (empty($results)) {
             Api::empty('activity', $input['api_format']);
 
             return false;
@@ -76,10 +75,10 @@ final class FriendsTimelineMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::timeline($activities);
+                echo Json_Data::timeline($results);
                 break;
             default:
-                echo Xml_Data::timeline($activities);
+                echo Xml_Data::timeline($results);
         }
 
         return true;

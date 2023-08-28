@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Song\SongFilesystemCleanupInterface;
 
 final class SongCleanupCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private SongFilesystemCleanupInterface $songFilesystemCleanup;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         SongFilesystemCleanupInterface $songFilesystemCleanup
     ) {
         parent::__construct('cleanup:songs', T_('Delete disabled songs'));
 
-        $this->configContainer       = $configContainer;
         $this->songFilesystemCleanup = $songFilesystemCleanup;
 
         $this
@@ -50,19 +45,27 @@ final class SongCleanupCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
         $delete = $this->values()['delete'];
-
         $result = $this->songFilesystemCleanup->cleanup($delete === false);
 
         if ($delete === false) {
-            $io->green(T_('The following songs would be deleted:'), true);
+            $interactor->green(
+                T_('The following songs would be deleted:'),
+                true
+            );
         } else {
-            $io->red(T_('The following songs have been deleted:'), true);
+            $interactor->red(
+                T_('The following songs have been deleted:'),
+                true
+            );
         }
         foreach ($result as $file_name) {
-            $io->white($file_name, true);
+            $interactor->white(
+                $file_name,
+                true
+            );
         }
     }
 }

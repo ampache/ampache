@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -238,12 +238,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
             return false;
         }
 
-        // Load the data from the database
-        $info = $this->get_info($video_id, 'video');
+        $info = $this->get_info($video_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -257,7 +255,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -322,8 +320,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         // Format the Bitrate
-        $this->f_bitrate       = (int) ($this->bitrate / 1000) . "-" . strtoupper((string) $this->mode);
-        $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1000);
+        $this->f_bitrate       = (int) ($this->bitrate / 1024) . "-" . strtoupper((string) $this->mode);
+        $this->f_video_bitrate = (string) (int) ($this->video_bitrate / 1024);
         if ($this->frame_rate) {
             $this->f_frame_rate = $this->frame_rate . ' fps';
         }
@@ -423,6 +421,34 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
+     * get_f_artist_link
+     *
+     * @return string
+     */
+    public function get_f_artist_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     * @return string
+     */
+    public function get_f_album_link()
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     * @return string
+     */
+    public function get_f_album_disk_link()
+    {
+        return '';
+    }
+
+    /**
      * Get parent item description.
      * @return array|null
      */
@@ -441,13 +467,13 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * Search for item childrens.
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -549,7 +575,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_stream_types($player = null)
     {
-        return Song::get_stream_types_for_type($this->type, $player);
+        return Stream::get_stream_types_for_type($this->type, $player);
     }
 
     /**
@@ -560,9 +586,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $player
      * @param boolean $local
      * @param int|string $uid
+     * @param string $streamToken
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = false)
     {
         if (!$this->id) {
             return '';
@@ -576,16 +603,13 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $uid = -1;
         }
 
-        $type = $this->type;
-
-        $this->format();
-        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = (AmpConfig::get('stream_beautiful_url'))
             ? urlencode($media_name)
             : rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=video&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }
@@ -612,7 +636,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
-        return Song::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
+        return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
 
     /**
@@ -733,9 +757,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
                     return Clip::insert($data, $gtypes, $options);
                 case 'personal_video':
                     return Personal_Video::insert($data, $gtypes, $options);
-                default:
-                    // Do nothing, video entry already created and no additional data for now
-                    break;
             }
         }
 
@@ -1151,7 +1172,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
                 $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
             }
         } else {
-            debug_event(self::class, 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event(self::class, 'Cannot delete ' . $this->file . ' file. Please check permissions.', 1);
         }
 
         return $deleted;
@@ -1169,7 +1190,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $time = time();
         }
 
-        self::_update_item('update_time', $time, $video_id, 75, true);
+        self::_update_item('update_time', $time, $video_id, 75);
     } // update_utime
 
     /**
@@ -1190,9 +1211,9 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      * @param string $field
-     * @param integer $value
-     * @param integer $video_id
-     * @param integer $level
+     * @param string|int $value
+     * @param int $video_id
+     * @param int $level
      * @return boolean
      */
     private static function _update_item($field, $value, $video_id, $level)

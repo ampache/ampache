@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Playlists3Method
@@ -39,9 +40,11 @@ final class Playlists3Method
      * playlists
      * This returns playlists based on the specified filter
      * @param array $input
+     * @param User $user
      */
-    public static function playlists(array $input)
+    public static function playlists(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('playlist');
@@ -51,11 +54,11 @@ final class Playlists3Method
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         $browse->set_filter('playlist_type', '1');
 
-        $playlists = $browse->get_objects();
+        $results = $browse->get_objects();
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
         ob_end_clean();
-        echo Xml3_Data::playlists($playlists);
+        echo Xml3_Data::playlists($results);
     } // playlists
 }

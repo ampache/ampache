@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\BookmarkRepositoryInterface;
 
@@ -48,17 +47,17 @@ final class BookmarkDeleteMethod
      * Delete an existing bookmark. (if it exists)
      *
      * @param array $input
+     * @param User $user
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('song', 'video', 'podcast_episode')
-     * client = (string) Agent string Default: 'AmpacheAPI' // optional
+     * client = (string) Agent string Default: 'AmpacheAPI' //optional
      * @return boolean
      */
-    public static function bookmark_delete(array $input): bool
+    public static function bookmark_delete(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter','type'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
         $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';

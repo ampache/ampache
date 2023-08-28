@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -82,13 +82,6 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
         return $this->album->getId();
     }
 
-    public function getAlbumSuiteIds(): string
-    {
-        return count($this->album->album_suite) <= 1 ?
-            $this->album->getId() :
-            implode(',', $this->album->album_suite);
-    }
-
     public function getRating(): string
     {
         return Rating::show($this->album->getId(), 'album');
@@ -111,12 +104,14 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getArt(): string
     {
-        $albumID = $this->album->getId();
-        $name    = '[' . $this->album->get_album_artist_fullname() . '] ' . scrub_out($this->album->get_fullname());
+        $albumId = $this->album->getId();
+        $name    = ($this->album->get_artist_fullname() != "")
+            ? '[' . $this->album->get_artist_fullname() . '] ' . scrub_out($this->album->get_fullname())
+            : scrub_out($this->album->get_fullname());
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        return Art::display_without_return('album', $albumID, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumID);
+        return Art::display_without_return('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
     }
 
     public function canAutoplayNext(): bool
@@ -143,60 +138,59 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAutoplayNextButton(): string
     {
-        $albumID = $this->album->getId();
+        $albumId = $this->album->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumID . '&playnext=true',
+            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&playnext=true',
             'play_next',
             T_('Play next'),
-            'nextplay_album_' . $albumID
+            'nextplay_album_' . $albumId
         );
     }
 
     public function getAppendNextButton(): string
     {
-        $albumID = $this->album->getId();
+        $albumId = $this->album->getId();
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=album&object_id=' . $albumID . '&append=true',
+            '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
             'play_add',
             T_('Play last'),
-            'addplay_album_' . $albumID
+            'addplay_album_' . $albumId
         );
     }
 
     public function getAddToTemporaryPlaylistButton(): string
     {
-        $albumID = $this->album->getId();
+        $albumId = $this->album->getId();
 
         return Ajax::button(
-            '?action=basket&type=album_full&id=' . $albumID,
+            '?action=basket&type=album&id=' . $albumId,
             'add',
             T_('Add to Temporary Playlist'),
-            'add_album_' . $albumID
+            'add_album_' . $albumId
         );
     }
 
     public function getRandomToTemporaryPlaylistButton(): string
     {
-        $albumID = $this->album->getId();
+        $albumId = $this->album->getId();
 
         return Ajax::button(
-            '?action=basket&type=album_random&id=' . $albumID,
+            '?action=basket&type=album_random&id=' . $albumId,
             'random',
             T_('Random to Temporary Playlist'),
-            'random_album_' . $albumID
+            'random_album_' . $albumId
         );
     }
 
     public function canPostShout(): bool
     {
         return (
-                $this->configContainer->isAuthenticationEnabled() === false ||
-                $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
-            ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) &&
-            (!$this->album->allow_group_disks || ($this->album->allow_group_disks && count($this->album->album_suite) <= 1));
+            $this->configContainer->isAuthenticationEnabled() === false ||
+            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+        ) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
     public function getPostShoutUrl(): string
@@ -216,8 +210,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function canShare(): bool
     {
         return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) &&
-            (!$this->album->allow_group_disks || ($this->album->allow_group_disks && count($this->album->album_suite) <= 1));
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function getShareUi(): string
@@ -235,9 +228,9 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getBatchDownloadUrl(): string
     {
         return sprintf(
-            '%s/batch.php?action=album&%s',
+            '%s/batch.php?action=album&id=%s',
             $this->configContainer->getWebPath(),
-            $this->album->get_http_album_query_ids('id')
+            $this->album->id
         );
     }
 
@@ -248,8 +241,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) &&
-            (!$this->album->allow_group_disks || ($this->album->allow_group_disks && count($this->album->album_suite) <= 1));
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
     }
 
     public function getEditButtonTitle(): string
@@ -304,7 +296,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return !empty($this->album->f_album_artist_link) ? $this->album->f_album_artist_link : $this->album->f_artist_link;
+        return $this->album->get_f_artist_link();
     }
 
     public function canShowYear(): bool

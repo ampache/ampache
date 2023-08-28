@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,6 +60,16 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
         return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST);
     }
 
+    public function displayAlbum(): bool
+    {
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+    }
+
+    public function displayAlbumDisk(): bool
+    {
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false);
+    }
+
     public function getCatalogStats(): CatalogStatsInterface
     {
         return $this->guiFactory->createCatalogStats(Catalog::get_stats());
@@ -70,10 +80,8 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
      */
     public function getCatalogDetails(): array
     {
+        $result   = [];
         $catalogs = Catalog::get_catalogs();
-
-        $result = [];
-
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog) {

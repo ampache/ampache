@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -80,7 +80,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             T_('This page handles all database updates to Ampache starting with %1$s. Your current version is %2$s with database version %3$s'),
             '<strong>3.3.3.5</strong>',
             '<strong>' . $this->configContainer->get(ConfigurationKeyEnum::VERSION) . '</strong>',
-            '<strong>' . Update::format_version(Update::get_version()) . '</strong>'
+            '<strong>' . Update::format_version() . '</strong>'
         );
     }
 

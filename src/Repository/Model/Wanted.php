@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -106,10 +106,7 @@ class Wanted extends database_object
      */
     public function __construct($wanted_id)
     {
-        /* Get the information from the db */
         $info = static::getWantedRepository()->getById((int) $wanted_id);
-
-        // Foreach what we've got
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -119,7 +116,7 @@ class Wanted extends database_object
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -128,24 +125,26 @@ class Wanted extends database_object
      * @param Artist|null $artist
      * @param string $mbid
      * @return array
-     * @throws \MusicBrainz\Exception
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
         $lookupId = $artist->mbid ?? $mbid;
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = array('release-groups');
-        $types    = explode(',', AmpConfig::get('wanted_types'));
+        $types    = AmpConfig::get('wanted_types', array());
+        if (!is_array($types)) {
+            $types = explode(',', $types);
+        }
         try {
             $martist = $mbrainz->lookup('artist', $lookupId, $includes);
             debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
         } catch (Exception $error) {
             debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
-            return null;
+            return array();
         }
 
-        $wartist   = array();
+        $wartist = array();
         if (!$artist) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
@@ -214,6 +213,9 @@ class Wanted extends database_object
     public static function get_missing_artist($mbid)
     {
         $wartist = array();
+        if (empty($mbid)) {
+            return $wartist;
+        }
 
         if (parent::is_cached('missing_artist', $mbid)) {
             $wartist = parent::get_from_cache('missing_artist', $mbid);
@@ -325,7 +327,7 @@ class Wanted extends database_object
     public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept');
+        $accept = Core::get_global('user')->has_access(75) ? true : AmpConfig::get('wanted_auto_accept', false);
         $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 
@@ -357,8 +359,7 @@ class Wanted extends database_object
                     $this->accepted != '1'
                 )
             ) {
-                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'),
-                        'wanted_remove_' . $this->mbid);
+                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
             echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&client=' . urlencode($this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);

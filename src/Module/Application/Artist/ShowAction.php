@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -84,8 +84,13 @@ final class ShowAction implements ApplicationActionInterface
                 'Requested an artist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_('You have requested an Artist that does not exist.');
+            echo T_('You have requested an object that does not exist');
         } else {
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+                $objectType = 'album';
+            } else {
+                $objectType = 'album_disk';
+            }
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE) === true) {
                 $multi_object_ids = $this->albumRepository->getByArtist(
                     $artistId,
@@ -106,7 +111,7 @@ final class ShowAction implements ApplicationActionInterface
                 [
                     'multi_object_ids' => $multi_object_ids,
                     'object_ids' => $object_ids,
-                    'object_type' => 'album',
+                    'object_type' => $objectType,
                     'artist' => $artist,
                     'gatekeeper' => $gatekeeper,
                 ]

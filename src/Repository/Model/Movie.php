@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,11 +48,10 @@ class Movie extends Video
     {
         parent::__construct($movie_id);
 
-        $info = $this->get_info($movie_id);
+        $info = $this->get_info($movie_id, static::DB_TABLENAME);
         if (empty($info)) {
             return false;
         }
-
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -62,7 +61,7 @@ class Movie extends Video
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -114,8 +113,8 @@ class Movie extends Video
             $name   = $this->original_name;
             $prefix = $this->prefix;
         }
-        $summary = isset($data['summary']) ? $data['summary'] : $this->summary;
-        $year    = Catalog::normalize_year(isset($data['year']) ? $data['year'] : $this->year);
+        $summary = $data['summary'] ?? $this->summary;
+        $year    = Catalog::normalize_year($data['year'] ?? $this->year);
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
@@ -172,14 +171,16 @@ class Movie extends Video
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `movie` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
         }
 
         return $deleted;

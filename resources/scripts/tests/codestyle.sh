@@ -24,7 +24,6 @@ else
     exit 1
 fi
 
-
 if [ -e "vendor/bin/phpcbf" ]
 then
     PHPCS="vendor/bin/phpcs"

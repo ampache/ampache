@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -294,8 +294,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
-        if (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream',
-                $this->sids[$from->resourceId])) {
+        if (!$broadcast->is_private || !AmpConfig::get('require_session') || Session::exists('stream', $this->sids[$from->resourceId])) {
             $this->listeners[$broadcast->id][] = $from;
 
             // Send current song and song position to

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,26 +25,25 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
+Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=add_message">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Recipient'); ?></td>
-    <td><input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
+    <td><input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user'] ?? ''); ?>" id="pvmsg_to_user" />
         <?php echo AmpError::display('to_user'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Subject'); ?></td>
-    <td><input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
+    <td><input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject'] ?? ''); ?>" />
         <?php echo AmpError::display('subject'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Message'); ?></td>
     <td>
-        <textarea name="message" cols="64" rows="10"><?php echo scrub_out($_REQUEST['message']); ?></textarea>
+        <textarea name="message" cols="64" rows="10"><?php echo scrub_out($_REQUEST['message'] ?? ''); ?></textarea>
         <?php echo AmpError::display('message'); ?>
     </td>
 </tr>

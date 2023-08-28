@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
@@ -47,14 +46,13 @@ final class BookmarksMethod
      * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function bookmarks(array $input): bool
+    public static function bookmarks(array $input, User $user): bool
     {
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
-
-        if (empty($bookmarks)) {
+        $results = static::getBookmarkRepository()->getBookmarks($user->getId());
+        if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
@@ -63,10 +61,10 @@ final class BookmarksMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($bookmarks);
+                echo Json_Data::bookmarks($results);
                 break;
             default:
-                echo Xml_Data::bookmarks($bookmarks);
+                echo Xml_Data::bookmarks($results);
         }
 
         return true;

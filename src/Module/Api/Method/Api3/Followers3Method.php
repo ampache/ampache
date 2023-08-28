@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,19 +38,21 @@ final class Followers3Method
 
     /**
      * followers
-     * This get an user followers
+     * This gets a user's followers
      * @param array $input
+     * @param User $user
      */
-    public static function followers(array $input)
+    public static function followers(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             if (!empty($username)) {
                 $user = User::get_from_username($username);
                 if ($user !== null) {
-                    $users = static::getUserFollowerRepository()->getFollowers($user->id);
+                    $results = static::getUserFollowerRepository()->getFollowers($user->id);
                     ob_end_clean();
-                    echo Xml3_Data::users($users);
+                    echo Xml3_Data::users($results);
                 } else {
                     debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 }

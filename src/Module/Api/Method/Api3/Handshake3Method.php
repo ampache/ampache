@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,6 +37,8 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Handshake3Method
@@ -52,6 +54,8 @@ final class Handshake3Method
      * Takes a timestamp, auth key, and username.
      * @param array $input
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function handshake(array $input): bool
     {
@@ -175,7 +179,8 @@ final class Handshake3Method
                     'artists' => $counts['artist'],
                     'playlists' => $counts['playlist'],
                     'videos' => $counts['video'],
-                    'catalogs' => $counts['catalog']));
+                    'catalogs' => $counts['catalog'])
+                );
 
                 return true;
             } // match

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,32 +25,28 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
 
 final class UpdateCatalogFileCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private UpdateSingleCatalogFileInterface $updateSingleCatalogFile;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         UpdateSingleCatalogFileInterface $updateSingleCatalogFile
     ) {
         parent::__construct('run:updateCatalogFile', T_('Perform catalog actions for a single file'));
 
-        $this->configContainer         = $configContainer;
         $this->updateSingleCatalogFile = $updateSingleCatalogFile;
 
         $this
             ->option('-c|--cleanup', T_('Removes missing files from the database'), 'boolval', false)
-            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', true)
+            ->option('-e|--verify', T_('Reads your files and updates the database to match changes'), 'boolval', false)
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<filePath>', T_('File Path'))
-            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . T_('Update /tmp/some-file.mp3 in the catalog `some-catalog`') . '<eol/>');
+            /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
+            ->usage('<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '<eol/>');
     }
 
     public function execute(

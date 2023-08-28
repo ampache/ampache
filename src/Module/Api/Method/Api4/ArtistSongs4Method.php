@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -47,32 +46,32 @@ final class ArtistSongs4Method
      * This returns the songs of the specified artist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs(array $input): bool
+    public static function artist_songs(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new Artist($input['filter']);
-        $songs  = static::getSongRepository()->getByArtist($artist->id);
-        $user   = User::get_from_username(Session::username($input['auth']));
+        $artist  = new Artist($input['filter']);
+        $results = static::getSongRepository()->getByArtist($artist->id);
 
-        if (!empty($songs)) {
+        if (!empty($results)) {
             ob_end_clean();
             switch ($input['api_format']) {
-            case 'json':
-                Json4_Data::set_offset($input['offset'] ?? 0);
-                Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::songs($songs, $user);
-                break;
-            default:
-                Xml4_Data::set_offset($input['offset'] ?? 0);
-                Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::songs($songs, $user);
+                case 'json':
+                    Json4_Data::set_offset($input['offset'] ?? 0);
+                    Json4_Data::set_limit($input['limit'] ?? 0);
+                    echo Json4_Data::songs($results, $user);
+                    break;
+                default:
+                    Xml4_Data::set_offset($input['offset'] ?? 0);
+                    Xml4_Data::set_limit($input['limit'] ?? 0);
+                    echo Xml4_Data::songs($results, $user);
             }
         }
 

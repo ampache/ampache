@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 /** @var \Ampache\Repository\Model\User $client */
+$web_path       = AmpConfig::get('web_path');
+$access100      = Access::check('interface', 100);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">
@@ -78,30 +80,45 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
                 <?php } ?>
             </td>
             <td>
                 <span>
                     <?php if ($client->apikey) {
-                    echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
-                } ?>
+                        echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
+                    } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($client->streamtoken) {
+                        echo $client->streamtoken;
+                    } ?>
                 </span>
             </td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
             <td>
                 <span>
                     <?php if ($client->rsstoken) {
-                    echo $client->rsstoken;
-                } ?>
+                        echo $client->rsstoken;
+                    } ?>
                 </span>
             </td>
         </tr>

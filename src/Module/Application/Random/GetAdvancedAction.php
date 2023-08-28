@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,13 +51,13 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds   = Random::advanced($_REQUEST['type'], $_POST);
         $objectType  = ($_REQUEST['type'] == 'video')
             ? 'video'
             : 'song';
 
-        // We need to add them to the active playlist
+        $objectIds = Random::advanced($objectType, $_POST);
         if (!empty($objectIds)) {
+            // We need to add them to the active playlist
             foreach ($objectIds as $object_id) {
                 Core::get_global('user')->playlist->add_object($object_id, $objectType);
             }

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -48,12 +47,13 @@ final class PodcastEpisodesMethod
      * This returns the episodes for a podcast
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function podcast_episodes(array $input): bool
+    public static function podcast_episodes(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -71,25 +71,24 @@ final class PodcastEpisodesMethod
 
             return false;
         }
-        $items = $podcast->get_episodes();
-        if (empty($items)) {
+        $results = $podcast->get_episodes();
+        if (empty($results)) {
             Api::empty('podcast_episode', $input['api_format']);
 
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::podcast_episodes($items, $user);
+                echo Json_Data::podcast_episodes($results, $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::podcast_episodes($items, $user);
+                echo Xml_Data::podcast_episodes($results, $user);
         }
 
         return true;

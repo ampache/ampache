@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,7 +78,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         if (array_key_exists('order', $_GET)) {
             $songs = explode(";", $_GET['order']);
-            $track = ((int)$_GET['offset'] ?? 0) + 1;
+            $track = (int)($_GET['offset'] ?? 0) + 1;
             if ($track < 1) {
                 $track = 1;
             }
@@ -88,6 +88,8 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
                     ++$track;
                 }
             }
+        } else {
+            $playlist->regenerate_track_numbers();
         }
         $this->ui->showQueryStats();
         $this->ui->showFooter();

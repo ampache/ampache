@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
@@ -38,22 +37,18 @@ final class ExportAlbumArtCommand extends Command
 {
     private LoggerInterface $logger;
 
-    private ConfigContainerInterface $configContainer;
-
     private AlbumArtExporterInterface $albumArtExporter;
 
     private ContainerInterface $dic;
 
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer,
         AlbumArtExporterInterface $albumArtExporter,
         ContainerInterface $dic
     ) {
         parent::__construct('export:albumArt', T_('Export album art'));
 
         $this->logger           = $logger;
-        $this->configContainer  = $configContainer;
         $this->albumArtExporter = $albumArtExporter;
         $this->dic              = $dic;
 
@@ -65,17 +60,15 @@ final class ExportAlbumArtCommand extends Command
     public function execute(
         string $type
     ): void {
-        $interactor = $this->app()->io();
-
+        $interactor         = $this->app()->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
-
-        $catalogs = Catalog::get_catalogs();
 
         $interactor->info(
             T_('Start Album Art Dump'),
             true
         );
 
+        $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
 

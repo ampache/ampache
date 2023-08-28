@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,9 +71,8 @@ final class DefaultAction implements ApplicationActionInterface
 
         define('INSTALL', 1);
 
-        $htaccess_play_file    = __DIR__ . '/../../../../public/play/.htaccess';
-        $htaccess_rest_file    = __DIR__ . '/../../../../public/rest/.htaccess';
-        $htaccess_channel_file = __DIR__ . '/../../../../public/channel/.htaccess';
+        $htaccess_play_file = __DIR__ . '/../../../../public/play/.htaccess';
+        $htaccess_rest_file = __DIR__ . '/../../../../public/rest/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in($_REQUEST['web_path'] ?? '');
@@ -194,17 +193,12 @@ final class DefaultAction implements ApplicationActionInterface
                 if (!$skip) {
                     $write                     = (isset($_POST['write']));
                     $download                  = (isset($_POST['download']));
-                    $download_htaccess_channel = (isset($_POST['download_htaccess_channel']));
                     $download_htaccess_rest    = (isset($_POST['download_htaccess_rest']));
                     $download_htaccess_play    = (isset($_POST['download_htaccess_play']));
-                    $write_htaccess_channel    = (isset($_POST['write_htaccess_channel']));
                     $write_htaccess_rest       = (isset($_POST['write_htaccess_rest']));
                     $write_htaccess_play       = (isset($_POST['write_htaccess_play']));
 
                     $created_config = true;
-                    if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
-                    }
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }

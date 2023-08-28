@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,7 +101,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <label for="local_pass" class="col-sm-4 control-label"><?php echo T_('MySQL Password'); ?></label>
     <div class="col-sm-8">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . '(' . T_("required") . ')'; ?>">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" value="<?php echo $local_pass; ?>" placeholder="<?php echo T_("Password") . ' (' . T_("required") . ')'; ?>">
     </div>
 </div>
 
@@ -115,18 +115,18 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <div class="radio">
       <label><input type="radio" name="usecase" value="default" <?php if (!$has_usecase || $_REQUEST['usecase'] == 'default') {
-    echo 'checked';
-} ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with the best features.'); ?></label>
+          echo 'checked';
+      } ?>><?php echo T_('Default'); ?> &mdash; <?php echo T_('Ampache is configured for personal use with the best features.'); ?></label>
     </div>
     <div class="radio">
       <label><input type="radio" name="usecase" value="minimalist" <?php if ($has_usecase && $_REQUEST['usecase'] == 'minimalist') {
-    echo 'checked';
-} ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('Only essential features are enabled to simply stream your music from the Web Interface.'); ?></label>
+          echo 'checked';
+      } ?>><?php echo T_('Minimalist'); ?> &mdash; <?php echo T_('Only essential features are enabled to simply stream your music from the Web Interface.'); ?></label>
     </div>
     <div class="radio">
       <label><input type="radio" name="usecase" value="community" <?php if ($has_usecase && $_REQUEST['usecase'] == 'community') {
-    echo 'checked';
-} ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('Recommended settings when using Ampache as a frontend for a music community.'); ?></label>
+          echo 'checked';
+      } ?>><?php echo T_('Community'); ?> &mdash; <?php echo T_('Recommended settings when using Ampache as a frontend for a music community.'); ?></label>
     </div>
 </div>
 
@@ -144,8 +144,8 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <select class="form-control" id="transcode_template" name="transcode_template">
         <option value=""><?php echo T_('None'); ?></option>
         <?php
-            $modes = $this->installationHelper->install_get_transcode_modes();
-            foreach ($modes as $mode) { ?>
+                  $modes = $this->installationHelper->install_get_transcode_modes();
+foreach ($modes as $mode) { ?>
             <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
                 echo 'selected';
             } ?>><?php echo $mode; ?></option>
@@ -203,32 +203,14 @@ require __DIR__ . '/install_header.inc.php'; ?>
         } ?>">
             <div class="panel-body">
                 <?php if ($this->installationHelper->install_check_server_apache()) { ?>
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
-                    <div class="col-sm-4 control-label">
-                        <?php echo T_('channel/.htaccess action'); ?>
-                    </div>
-                    <div class="col-sm-8">
-                        <button type="submit" class="btn btn-warning" name="download_htaccess_channel"><?php echo T_('Download'); ?></button>
-                        <button type="submit" class="btn btn-warning" name="write_htaccess_channel" <?php if (!check_htaccess_channel_writable()) {
-            echo "disabled ";
-        } ?>>
-                            <?php echo T_('Write'); ?>
-                        </button>
-                    </div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file)); ?></div>
-                    <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
-
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('rest/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_rest"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_rest" <?php if (!check_htaccess_rest_writable()) {
-            echo "disabled ";
-        } ?>>
+                            echo "disabled ";
+                        } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -237,15 +219,14 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
 
-                    <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('play/.htaccess action'); ?>
                     </div>
                     <div class="col-sm-8">
                         <button type="submit" class="btn btn-warning" name="download_htaccess_play"><?php echo T_('Download'); ?></button>
                         <button type="submit" class="btn btn-warning" name="write_htaccess_play" <?php if (!check_htaccess_play_writable()) {
-            echo "disabled ";
-        } ?>>
+                            echo "disabled ";
+                        } ?>>
                             <?php echo T_('Write'); ?>
                         </button>
                     </div>
@@ -255,26 +236,27 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
                 <?php } ?>
 
-                <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+                &nbsp;
                 <div class="col-sm-4">
                     <?php echo T_('config/ampache.cfg.php action'); ?>
                 </div>
                 <div class="col-sm-8">
                     <button type="submit" class="btn btn-warning" name="download"><?php echo T_('Download'); ?></button>
                     <button type="submit" class="btn btn-warning" name="write" <?php if (!check_config_writable()) {
-            echo T_('Disabled');
-        } ?>>
+                        echo T_('Disabled');
+                    } ?>>
                         <?php echo T_('Write'); ?>
                     </button>
                 </div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : ''; echo debug_result(check_config_values($results)); ?></div>
-                <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
+                <div class="col-sm-8"><?php $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+echo debug_result(check_config_values($results)); ?></div>
+                &nbsp;
 
                 <div class="col-sm-4"></div>
-                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] . "&local_host=" . $_REQUEST['local_host']; ?>
+                <?php $check_url = $web_path . "/install.php?action=show_create_config&htmllang=$htmllang&charset=$charset&local_db=" . $_REQUEST['local_db'] ?? '' . "&local_host=" . $_REQUEST['local_host'] ?? ''; ?>
                 <div class="col-sm-8">
                     <a href="<?php echo $check_url; ?>">[<?php echo T_('Recheck Config'); ?>]</a>
                 </div>

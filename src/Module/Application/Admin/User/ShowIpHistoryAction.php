@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,24 +55,27 @@ final class ShowIpHistoryAction extends AbstractUserAction
         $queryParams = $request->getQueryParams();
 
         $userId = (int) $queryParams['user_id'] ?? 0;
-
-        /* get the user and their history */
-        $working_user = $this->modelFactory->createUser($userId);
-
-        if (!isset($queryParams['all'])) {
-            $history = $this->ipHistoryRepository->getHistory($userId, 0, true);
+        if ($userId < 1) {
+            echo T_('You have requested an object that does not exist');
         } else {
-            $history = $this->ipHistoryRepository->getHistory($userId);
-        }
+            /* get the user and their history */
+            $working_user = $this->modelFactory->createUser($userId);
 
-        $this->ui->showHeader();
-        $this->ui->show(
-            'show_ip_history.inc.php',
-            [
-                'working_user' => $working_user,
-                'history' => $history
-            ]
-        );
+            if (!isset($queryParams['all'])) {
+                $history = $this->ipHistoryRepository->getHistory($userId, 0, true);
+            } else {
+                $history = $this->ipHistoryRepository->getHistory($userId);
+            }
+
+            $this->ui->showHeader();
+            $this->ui->show(
+                'show_ip_history.inc.php',
+                [
+                    'working_user' => $working_user,
+                    'history' => $history
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

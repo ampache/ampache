@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,8 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserDelete4Method
@@ -45,22 +43,22 @@ final class UserDelete4Method
      * Takes the username in parameter.
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete(array $input): bool
+    public static function user_delete(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_delete', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
-        $user     = User::get_from_username($username);
+        $del_user = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
-            $user->delete();
+        if ($del_user instanceof User && $del_user->username !== $user->username && $del_user->access < 100 && $del_user->delete()) {
             Api4::message('success', 'successfully deleted: ' . $username, null, $input['api_format']);
 
             return true;

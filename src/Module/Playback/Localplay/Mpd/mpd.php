@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -245,14 +245,12 @@ class mpd
 
                 return false;
             }
-        } else {
-            if (!$this->RefreshInfo()) {
-                // no read access, might as well be disconnected
-                $this->connected = false;
-                $this->_error('construct', 'Password required to access server');
+        } elseif (!$this->RefreshInfo()) {
+            // no read access, might as well be disconnected
+            $this->connected = false;
+            $this->_error('construct', 'Password required to access server');
 
-                return false;
-            }
+            return false;
         }
 
         return true;
@@ -314,7 +312,7 @@ class mpd
      * @param $command
      * @param $arguments
      * @param boolean $refresh_info
-     * @return boolean|string
+     * @return string|bool
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
@@ -415,7 +413,7 @@ class mpd
      * SendCommandQueue
      *
      * Sends all commands in the Command Queue to the MPD server.
-     * @return boolean|string
+     * @return string|bool
      */
     public function SendCommandQueue()
     {
@@ -449,7 +447,6 @@ class mpd
     {
         $stats  = $this->SendCommand(self::COMMAND_STATISTICS, null, false);
         $status = $this->SendCommand(self::COMMAND_STATUS, null, false);
-
 
         if (!$stats || !$status) {
             return false;
@@ -1038,8 +1035,8 @@ class mpd
     {
         $this->_debug('GetAlbums', 'start', 5);
 
-        $params[] = self::TABLE_ALBUM;
-        if ($artist === null) {
+        $params = array(self::TABLE_ALBUM);
+        if ($artist !== null) {
             $params[] = $artist;
         }
 

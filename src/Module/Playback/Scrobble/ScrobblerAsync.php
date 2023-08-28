@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Scrobble;
 
-use Requests;
+use WpOrg\Requests;
 use Thread;
 use Ampache\Repository\Model\User;
 
@@ -46,7 +46,7 @@ abstract class ScrobblerAsync extends Thread
 
     public function run()
     {
-        Requests::register_autoloader();
+        Requests\Autoload::register();
         if ($this->song_info) {
             User::save_mediaplay($this->user, $this->song_info);
         }

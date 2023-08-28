@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
-use Ampache\Module\Statistics\Stats;
 
 class Ampachelibrefm
 {
@@ -42,8 +41,8 @@ class Ampachelibrefm
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $challenge;
     private $user_id;
+    private $challenge;
     private $api_key;
     private $secret;
     private $scheme   = 'https';
@@ -153,7 +152,7 @@ class Ampachelibrefm
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time,
+        if (!$scrobbler->queue_track($song->get_artist_fullname(), $song->get_album_fullname(), $song->title, time(), $song->time,
             $song->track)) {
             return false;
         }
@@ -187,7 +186,7 @@ class Ampachelibrefm
         }
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!$scrobbler->love($flagged, $song->f_artist_full, $song->title)) {
+        if (!$scrobbler->love($flagged, $song->get_artist_fullname(), $song->title)) {
             debug_event(self::class, 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
@@ -201,11 +200,10 @@ class Ampachelibrefm
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param int $user_id
      * @param string $token
      * @return boolean
      */
-    public function get_session($user_id, $token)
+    public function get_session($token)
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
@@ -217,7 +215,7 @@ class Ampachelibrefm
         $this->challenge = $session_key;
 
         // Update the preferences
-        Preference::update('librefm_challenge', $user_id, $session_key);
+        Preference::update('librefm_challenge', $this->user_id, $session_key);
         debug_event(self::class, 'getSession Successful', 3);
 
         return true;

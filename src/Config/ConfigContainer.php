@@ -6,7 +6,7 @@ declare(strict_types=1);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -86,10 +86,13 @@ final class ConfigContainer implements ConfigContainerInterface
         if ($typeList === null) {
             return [];
         }
+        if (!is_array($typeList)) {
+            $typeList = explode(',', $typeList);
+        }
 
         return array_map(
             'trim',
-            explode(',', $typeList)
+            $typeList
         );
     }
 

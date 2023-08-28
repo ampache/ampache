@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -80,8 +80,6 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
                 </td>
         </tr>
         <tr>
-
-
 <?php if (AmpConfig::get('catalog_filter')) {
     echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
 

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,14 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $status = $localplay->status();
- ?>
+?>
 <?php Ajax::start_container('localplay_status'); ?>
 <?php Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
 <?php if ($status) {
-     $now_playing = ($status) ? $status['track_title'] : '';
-     if (!empty($status['track_album'])) {
-         $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
-     } ?>
+    $now_playing = ($status) ? $status['track_title'] : '';
+    if (!empty($status['track_album'])) {
+        $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
+    } ?>
 <?php echo T_('Now Playing'); ?>:&nbsp;<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
     <ul>
@@ -55,11 +55,11 @@ $status = $localplay->status();
     </ul>
 </div>
 <?php
- } ?>
+} ?>
 <?php $browse = new Browse();
-    $browse->set_type('playlist_localplay');
-    $browse->set_static_content(true);
-    $browse->show_objects($objects);
-    $browse->store(); ?>
+$browse->set_type('playlist_localplay');
+$browse->set_static_content(true);
+$browse->show_objects($objects);
+$browse->store(); ?>
 <?php Ui::show_box_bottom(); ?>
 <?php Ajax::end_container(); ?>

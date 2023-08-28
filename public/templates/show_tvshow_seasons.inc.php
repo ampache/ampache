@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,34 +48,31 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <th class="cel_season essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=season', T_('Season'), 'season_sort_season'); ?></th>
             <th class="cel_tvshow essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=tvshow', T_('TV Show'), 'season_sort_tvshow'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes'); ?></th>
-            <?php if ($show_ratings) {
+<?php if ($show_ratings) {
     ++$thcount; ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-            <?php
-} ?>
+<?php } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
-        <?php
-        if (AmpConfig::get('ratings')) {
-            Rating::build_cache('album', $object_ids);
-            Userflag::build_cache('album', $object_ids);
-        }
-
-        foreach ($object_ids as $season_id) {
-            $libitem = new TVShow_season($season_id);
-            $libitem->format(); ?>
+<?php if (AmpConfig::get('ratings')) {
+    Rating::build_cache('album', $object_ids);
+    Userflag::build_cache('album', $object_ids);
+}
+foreach ($object_ids as $season_id) {
+    $libitem = new TVShow_season($season_id);
+    $libitem->format(); ?>
         <tr id="tvshow_season_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>
         </tr>
         <?php
-        } ?>
-        <?php if (!count($object_ids)) { ?>
+}
+if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No season found'); ?></span></td>
         </tr>
-        <?php } ?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
@@ -93,5 +90,5 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LastShoutsMethod
@@ -45,11 +46,12 @@ final class LastShoutsMethod
      * This get the latest posted shouts
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts(array $input): bool
+    public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -59,22 +61,23 @@ final class LastShoutsMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $limit = (int) ($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
         $username = $input['username'];
-        $shouts   = (!empty($username))
+        $results  = (!empty($username))
             ? Shoutbox::get_top($limit, $username)
             : Shoutbox::get_top($limit);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::shouts($shouts);
+                echo Json_Data::shouts($results);
                 break;
             default:
-                echo Xml_Data::shouts($shouts);
+                echo Xml_Data::shouts($results);
         }
 
         return true;

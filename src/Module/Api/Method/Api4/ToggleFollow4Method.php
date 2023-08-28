@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 /**
@@ -44,10 +43,11 @@ final class ToggleFollow4Method
      * This will follow/unfollow a user
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow(array $input): bool
+    public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
@@ -59,11 +59,10 @@ final class ToggleFollow4Method
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user        = User::get_from_username(Session::username($input['auth']));
-            $follow_user = User::get_from_username($username);
-            if ($follow_user !== null) {
+            $leader = User::get_from_username($username);
+            if ($leader !== null) {
                 static::getUserFollowToggler()->toggle(
-                    $follow_user->id,
+                    $leader->id,
                     $user->id
                 );
                 ob_end_clean();

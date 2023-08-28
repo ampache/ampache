@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -137,12 +137,12 @@ final class PlayAction implements ApplicationActionInterface
             $transcode_to = (!$original && $format != '') ? $format : (string)scrub_in($new_request['transcode_to'] ?? '');
 
             // Share id and secret if used
-            $share_id = (int)scrub_in((int)$new_request['share_id'] ?? 0);
+            $share_id = (int)scrub_in($new_request['share_id'] ?? 0);
             $secret   = (string)scrub_in($new_request['share_secret'] ?? '');
 
             // This is specifically for tmp playlist requests
-            $demo_id      = (int)scrub_in((int)$new_request['demo_id'] ?? 0);
-            $random       = (int)scrub_in((int)$new_request['random'] ?? 0);
+            $demo_id      = (int)scrub_in($new_request['demo_id'] ?? 0);
+            $random       = (int)scrub_in($new_request['random'] ?? 0);
 
             // don't put this one here
             $cpaction     = null;
@@ -206,8 +206,6 @@ final class PlayAction implements ApplicationActionInterface
         $time          = time();
 
         if (AmpConfig::get('transcode_player_customize') && !$original) {
-            $transcode_to = $transcode_to ?? (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
-
             // Trick to avoid LimitInternalRecursion reconfiguration
             $vsettings = (string)scrub_in(filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
             if (!empty($vsettings)) {
@@ -270,7 +268,29 @@ final class PlayAction implements ApplicationActionInterface
         $user      = null;
         $user_auth = false;
         // If explicit user authentication was passed
-        if (!empty($apikey)) {
+        if (!empty($session_id)) {
+            $user = $this->userRepository->findByStreamToken(trim($session_id));
+            if ($user) {
+                $user_auth = true;
+                $agent     = (!empty($client))
+                    ? $client
+                    : substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
+                // this is a permastream link so create a session
+                if (!Session::exists('stream', $session_id)) {
+                    Session::create(array(
+                            'sid' => $session_id,
+                            'username' => $user->username,
+                            'value' => '',
+                            'type' => 'stream',
+                            'agent' => ''
+                        )
+                    );
+                } else {
+                    Session::update_agent($session_id, $agent);
+                    Session::extend($session_id, 'stream');
+                }
+            }
+        } elseif (!empty($apikey)) {
             $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user) {
                 $user_auth = true;
@@ -456,7 +476,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
 
                 // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url('', $player, false, $user->id), true, 303);
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
 
                 return null;
             }
@@ -508,7 +528,7 @@ final class PlayAction implements ApplicationActionInterface
                 User::set_user_data($user_id, 'random_time', ($time + (min(10, ($media->time)))));
 
                 // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url('', $player, false, $user->id), true, 303);
+                header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
 
                 return null;
             }
@@ -546,6 +566,8 @@ final class PlayAction implements ApplicationActionInterface
             );
         }
 
+        $transcode      = false;
+        $transcode_cfg  = AmpConfig::get('transcode');
         $cache_path     = (string)AmpConfig::get('cache_path', '');
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
@@ -569,7 +591,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             }
             $file_target = Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target);
-            if (!$is_download && ($file_target && is_file($file_target))) {
+            if ($transcode_cfg != 'never' && !$is_download && ($file_target && is_file($file_target))) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -617,8 +639,10 @@ final class PlayAction implements ApplicationActionInterface
         ignore_user_abort(true);
 
         // Format the media name
-        $media_name   = $stream_name ?? $media->get_stream_name() . "." . $media->type;
-        $transcode_to = ($is_download && !$transcode_to)
+        $media_name   = (!empty($stream_name))
+            ? $stream_name
+            : $media->get_stream_name() . "." . $media->type;
+        $transcode_to = ($transcode_cfg == 'never' || $cache_file || ($is_download && !$transcode_to))
             ? null
             : Stream::get_transcode_format((string)$media->type, $transcode_to, $player, $type);
 
@@ -716,10 +740,10 @@ final class PlayAction implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
         }
-        // Determine whether to transcode
-        $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
-        $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
+        $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
+            ? null
+            : $transcode_to;
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -729,8 +753,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = $media->get_stream_types($player);
+            $valid_types = $media->get_stream_types($player);
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }
@@ -793,7 +816,7 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         $troptions = array();
-        if ($transcode && in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
@@ -827,7 +850,7 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
             }
-            /** @var Song|Video|Podcast_Episode $media */
+
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->f_artist_full . " - " . $media->title . "." . ($transcoder['format'] ?? '');
@@ -844,7 +867,7 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
-            $transcode_settings = Song::get_transcode_settings_for_media(
+            $transcode_settings = Stream::get_transcode_settings_for_media(
                 (string) $media->type,
                 $transcode_to,
                 $player,
@@ -852,7 +875,6 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions
             );
             $transcode_to = $transcode_settings['format'];
-            /** @var Song|Video $media */
             $maxbitrate   = Stream::get_max_bitrate($media, $transcode_settings);
             if (Core::get_request('content_length') == 'required') {
                 if ($media->time > 0 && $maxbitrate > 0) {

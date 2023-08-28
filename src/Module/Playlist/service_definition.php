@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,4 +29,14 @@ use function DI\autowire;
 return [
     PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
     PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
+    Search\AlbumSearch::class => autowire(),
+    Search\ArtistSearch::class => autowire(),
+    Search\LabelSearch::class => autowire(),
+    Search\PlaylistSearch::class => autowire(),
+    Search\PodcastEpisodeSearch::class => autowire(),
+    Search\PodcastSearch::class => autowire(),
+    Search\SongSearch::class => autowire(),
+    Search\TagSearch::class => autowire(),
+    Search\UserSearch::class => autowire(),
+    Search\VideoSearch::class => autowire(),
 ];

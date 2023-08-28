@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,9 +32,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path'); ?>
-<?php
-$browse = new Browse();
+/* @var string $object_type */
+/* @var Ampache\Repository\Model\TVShow $tvshow */
+/* @var array $object_ids */
+
+$web_path = AmpConfig::get('web_path');
+$browse   = new Browse();
 $browse->set_type($object_type);
 
 Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
@@ -105,9 +108,8 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     </div>
     <div id="tabs_content">
         <div id="seasons" class="tab_content" style="display: block;">
-<?php
-    $browse->show_objects($object_ids, true);
-    $browse->store(); ?>
+<?php $browse->show_objects($object_ids, true);
+$browse->store(); ?>
         </div>
     </div>
 </div>

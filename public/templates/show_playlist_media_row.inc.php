@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-/** @var Playlist|Search $playlist */
+/** @var Playlist $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
 /** @var array $object */
@@ -63,7 +63,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     $libitem->display_art($thumb); ?>
 </div>
 </td>
-<td class="cel_title"><?php echo $libitem->f_link ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link() ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->id);
@@ -99,14 +99,12 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             echo Share::display_ui($object_type, $libitem->id, false);
         }
     }
-    if ($playlist) {
-        if (get_class($playlist) == Playlist::class && $playlist->has_access()) {
-            echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
+    if (isset($playlist) && $playlist->has_access()) {
+        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
         <?php echo Ui::get_icon('drag', T_('Reorder')) ?>
             </td>
-        <?php
-        }
+    <?php
     }
 } ?>

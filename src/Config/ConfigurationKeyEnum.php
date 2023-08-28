@@ -6,7 +6,7 @@ declare(strict_types=1);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,6 +58,7 @@ final class ConfigurationKeyEnum
     public const API_ENABLE_3                          = 'api_enable_3';
     public const API_ENABLE_4                          = 'api_enable_4';
     public const API_ENABLE_5                          = 'api_enable_5';
+    public const API_ENABLE_6                          = 'api_enable_6';
     public const API_FORCE_VERSION                     = 'api_force_version';
     public const API_HIDDEN_PLAYLISTS                  = 'api_hidden_playlists';
     public const ART_ZIP_ADD                           = 'art_zip_add';
@@ -79,7 +80,6 @@ final class ConfigurationKeyEnum
     public const CATALOG_CHECK_DUPLICATE               = 'catalog_check_duplicate';
     public const CATALOG_DISABLE                       = 'catalog_disable';
     public const CATALOG_FILTER                        = 'catalog_filter';
-    public const CHANNEL                               = 'channel';
     public const COMMON_ABBR                           = 'common_abbr';
     public const COMPOSER_BINARY_PATH                  = 'composer_binary_path';
     public const CRON_CACHE                            = 'cron_cache';
@@ -183,6 +183,7 @@ final class ConfigurationKeyEnum
     public const TRANSCODE                             = 'transcode';
     public const UI_FIXED                              = 'ui_fixed';
     public const UNIQUE_PLAYLIST                       = 'unique_playlist';
+    public const UPLOAD_ACCESS_LEVEL                   = 'upload_access_level';
     public const UPLOAD_ALLOW_EDIT                     = 'upload_allow_edit';
     public const UPLOAD_ALLOW_REMOVE                   = 'upload_allow_remove';
     public const UPLOAD_CATALOG_PATTERN                = 'upload_catalog_pattern';

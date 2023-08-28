@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,20 +76,13 @@ final class CreateAction implements ApplicationActionInterface
         if (!$democratic->id) {
             // Create the playlist
             Democratic::create($_POST);
-            $democratic = Democratic::get_current_playlist();
-        } else {
-            if (!$democratic->update($_POST)) {
-                $this->ui->showConfirmation(
-                    T_('There Was a Problem'),
-                    T_("Cooldown out of range."),
-                    AmpConfig::get('web_path') . "/democratic.php?action=manage"
-                );
-            }
-        }
-
-        // Now check for additional things we might have to do
-        if (Core::get_post('force_democratic') !== '') {
-            Democratic::set_user_preferences();
+            Democratic::get_current_playlist();
+        } elseif (!$democratic->update($_POST)) {
+            $this->ui->showConfirmation(
+                T_('There Was a Problem'),
+                T_("Cooldown out of range."),
+                AmpConfig::get('web_path') . "/democratic.php?action=manage"
+            );
         }
 
         return $this->responseFactory

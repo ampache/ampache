@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -295,8 +295,8 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog) {
-            $catalog_ids = Catalog::get_catalogs();
-            foreach ($catalog_ids as $catalog_id) {
+            $catalogs = Catalog::get_catalogs();
+            foreach ($catalogs as $catalog_id) {
                 $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date,
                     $end_date, $zoom);

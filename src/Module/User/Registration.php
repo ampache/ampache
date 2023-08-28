@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
 
@@ -67,7 +68,7 @@ class Registration
         $mailer->message .= T_('Username') . ": $username" . "\n";
         $mailer->message .= "----------------------\n";
         $mailer->message .= T_('To begin using your account, you must verify your e-mail address by vising the following link:') . "\n\n";
-        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=$username&auth=$validation";
+        $mailer->message .= AmpConfig::get('web_path') . "/register.php?action=validate&username=" . urlencode($username) . "&auth=$validation";
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
@@ -81,7 +82,9 @@ class Registration
             $mailer->message .= T_("Username") . ": $username\n";
             $mailer->message .= T_("Fullname") . ": $fullname\n";
             $mailer->message .= T_("E-mail") . ": $email\n";
-            $mailer->message .= T_("Website") . ": $website\n";
+            if (!empty($website)) {
+                $mailer->message .= T_("Website") . ": $website\n";
+            }
             $mailer->send_to_group('admins');
         }
 
@@ -108,7 +111,7 @@ class Registration
             return false;
         }
 
-        $data = fread($filepointer, filesize($filename));
+        $data = fread($filepointer, Core::get_filesize($filename));
 
         /* Scrub and show */
         echo $data;

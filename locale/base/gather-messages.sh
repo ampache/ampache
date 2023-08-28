@@ -2,7 +2,7 @@
 #
 # vim:set softtabstop=4 shiftwidth=4 expandtab:
 #
-# Copyright 2001 - 2022 Ampache.org
+# Copyright Ampache.org, 2001-2023
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License v2
@@ -52,7 +52,7 @@ usage() {
     echo -e "[-h|--help]\t\t Shows this help screen."
     echo ""
     echo -e "\033[32m If you encounter any bugs, please report them on Transifex (https://www.transifex.com/projects/p/ampache/)\033[0m"
-    echo -e "\033[32m See also: https://github.com/ampache/ampache/blob/master/locale/base/TRANSLATIONS\033[0m"
+    echo -e "\033[32m See also: https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md\033[0m"
     echo ""
     exit 1
 }
@@ -68,7 +68,7 @@ generate_pot() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
+                $(find ../../ -type f \( -name "*.php" -o -name "*.inc" \) -not -path "../../config/*" -not -path "../../docs/*" -not -path "../../public/lib/components/*" -not -path "../../vendor/*" -not -path "../../tests/*" | sort)
     if [[ $? -eq 0 ]]; then
         #echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
         #cat $tdstxt >> $potfile
@@ -91,7 +91,7 @@ generate_pot_utds() {
                 -L php \
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
-                $(find ../../ -type f -name \*.php -o -name \*.inc -not -path "*/vendor/*" -not -path "*/public/lib/components/*" | sort)
+                $(find ../../ -type f \( -name "*.php" -o -name "*.inc" \) -not -path "../../config/*" -not -path "../../docs/*" -not -path "../../public/lib/components/*" -not -path "../../vendor/*" -not -path "../../tests/*" | sort)
     if [[ $? -eq 0 ]]; then
 
         ampconf='../../config/ampache.cfg.php'

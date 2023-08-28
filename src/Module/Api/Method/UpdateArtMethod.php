@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class UpdateArtMethod
@@ -47,24 +46,25 @@ final class UpdateArtMethod
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
+     * @param User $user
      * type      = (string) 'artist', 'album'
      * id        = (integer) $artist_id, $album_id)
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art(array $input): bool
+    public static function update_art(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
 
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=' . $type . '&auth=' . $input['auth'];
+        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
 
         // confirm the correct data
         if (!in_array(strtolower($type), array('artist', 'album'))) {

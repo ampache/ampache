@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Catalog\Update;
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
@@ -54,9 +53,11 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $verification,
         bool $updateInfo,
         bool $optimizeDatabase,
+        bool $collectGarbage,
         ?string $catalogName,
         string $catalogType
     ): void {
+        $start_time = time();
         if ($deactivateMemoryLimit === true) {
             // Temporarily deactivate PHP memory limit
             echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
@@ -69,11 +70,16 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             'parse_playlist' => $importPlaylists
         ];
 
+        // don't look at catalogs without an action
+        if (!$addNew && !$addArt && !$importPlaylists && !$cleanup && !$missing && !$verification && !$collectGarbage) {
+            $catalogType = '';
+            $catalogName = '';
+        }
         $db_results = $this->lookupCatalogs($catalogType, $catalogName);
         $external   = false;
+        $changed    = 0;
 
         ob_end_clean();
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
             /* HINT: Catalog Name */
@@ -81,7 +87,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
                 true
             );
-
+            $interactor->eol();
             if ($missing === true) {
                 ob_start();
 
@@ -113,13 +119,12 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             } else {
                 if ($cleanup === true) {
                     ob_start();
-
                     // Clean out dead files
                     $interactor->info(
                         T_('Start cleaning orphaned media entries'),
                         true
                     );
-                    $catalog->clean_catalog();
+                    $changed += $catalog->clean_catalog();
 
                     $buffer = ob_get_contents();
 
@@ -142,7 +147,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start adding new media'),
                         true
                     );
-                    $catalog->add_to_catalog($options);
+                    $changed += $catalog->add_to_catalog($options);
 
                     $buffer = ob_get_contents();
 
@@ -165,7 +170,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start verifying media related to Catalog entries'),
                         true
                     );
-                    $catalog->verify_catalog_proc();
+                    $changed += $catalog->verify_catalog_proc();
 
                     $buffer = ob_get_contents();
 
@@ -200,9 +205,9 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $interactor->info(
-                        '------------------',
-                        true
-                    );
+                    '------------------',
+                    true
+                );
             }
             if ($updateInfo === true && !$external) {
                 ob_start();
@@ -251,28 +256,37 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     );
                 }
                 $interactor->info(
-                        '------------------',
-                        true
-                    );
+                    '------------------',
+                    true
+                );
             }
-            if ($cleanup === true || $verification === true) {
+            if ($collectGarbage === true || (($cleanup === true || $verification === true) && $changed > 0)) {
+                $interactor->info(
+                    T_('Garbage Collection'),
+                    true
+                );
                 $this->catalogGarbageCollector->collect();
-            }
-            if ($missing !== true) {
-                // clean up after the action
-                $catalog_media_type = $catalog->get_gather_type();
-                if ($catalog_media_type == 'music') {
-                    Catalog::clean_empty_albums();
-                    Album::update_album_artist();
-                    Catalog::update_mapping('artist');
-                    Catalog::update_mapping('album');
-                } elseif ($catalog_media_type == 'podcast') {
-                    Catalog::update_mapping('podcast');
-                    Catalog::update_mapping('podcast_episode');
-                } elseif (in_array($catalog_media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
-                    Catalog::update_mapping('video');
-                }
+                Catalog::clean_empty_albums();
+                Album::update_album_artist();
                 Catalog::update_counts();
+                $interactor->info(
+                    '------------------',
+                    true
+                );
+            }
+            if ($changed > 0 || ($collectGarbage === true && $missing !== true)) {
+                $interactor->info(
+                    T_('Update table mapping, counts and delete garbage data'),
+                    true
+                );
+                // clean up after the action
+                Catalog::update_catalog_map($catalog->gather_types);
+                Catalog::garbage_collect_mapping();
+                Catalog::garbage_collect_filters();
+                $interactor->info(
+                    '------------------',
+                    true
+                );
             }
         }
         if ($optimizeDatabase === true) {
@@ -295,10 +309,15 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
 
             $interactor->info(
-                        '------------------',
-                        true
-                    );
+                '------------------',
+                true
+            );
         }
+        $time_diff  = (time() - $start_time) ?? 0;
+        $interactor->info(
+            T_('Time') . ": " . date('i:s', $time_diff),
+            true
+        );
     }
 
     public function updatePath(
@@ -341,7 +360,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             );
             $interactor->eol();
             $interactor->info(
-                sprintf('%s -> %s', $catalog->path, $newPath)
+                sprintf('%s -> %s', $catalog->get_path(), $newPath)
             );
             $interactor->eol(2);
 

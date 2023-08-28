@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <em i18n:translate="">Catalogs</em>
 <table class="tabledata">
@@ -22,7 +23,12 @@
     <tr tal:define="CATALOG_STATS STATS/getCatalogStats">
         <td tal:content="CATALOG_STATS/getConnectedCount">CONNECTED COUNT</td>
         <td tal:content="CATALOG_STATS/getUserCount">USER COUNT</td>
-        <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
+        <tal:block tal:condition="STATS/displayAlbumDisk">
+            <td tal:content="CATALOG_STATS/getAlbumDiskCount">ALBUM COUNT</td>
+        </tal:block>
+        <tal:block tal:condition="STATS/displayAlbum">
+            <td tal:content="CATALOG_STATS/getAlbumCount">ALBUM COUNT</td>
+        </tal:block>
         <td tal:content="CATALOG_STATS/getArtistCount">ARTIST COUNT</td>
         <td tal:content="CATALOG_STATS/getSongCount">SONG COUNT</td>
         <td tal:condition="STATS/displayVideo" tal:content="CATALOG_STATS/getVideoCount">VIDEO COUNT</td>

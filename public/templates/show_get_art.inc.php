@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,8 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $object_type */
 /** @var int $object_id */
 /** @var string $burl */
-?>
-<?php
+
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
 $art_order = AmpConfig::get('art_order', array());
@@ -64,7 +63,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
                                  echo 'required';
                              }
                          }
-                     ?>
+                ?>
                     />
                   </td>
                 </tr>
@@ -118,7 +117,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
               </td>
 
           <?php }
-        } else { ?>
+             } else { ?>
             <td>
             </td>
             <?php } ?>
@@ -136,7 +135,7 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         } else {
             $cancelurl = (string) $burl;
         }
-         ?>
+?>
         <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>

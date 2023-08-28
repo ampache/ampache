@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,6 +45,7 @@ final class Stream4Method
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
      * @param array $input
+     * @param User $user
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
@@ -53,14 +54,13 @@ final class Stream4Method
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input): bool
+    public static function stream(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
-        $fileid  = $input['id'];
-        $type    = $input['type'];
-        $user    = User::get_from_username(Session::username($input['auth']));
+        $fileid = $input['id'];
+        $type   = $input['type'];
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
         $format        = $input['format']; // mp3, flv or raw
@@ -85,11 +85,11 @@ final class Stream4Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user->id);
+            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

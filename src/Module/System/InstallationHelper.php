@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,7 +32,6 @@ use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
-
     /**
      * splits up a standard SQL dump file into distinct sql queries
      * @param string $sql
@@ -268,10 +267,13 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
             if (!Dba::write($sql_user)) {
                 AmpError::add('general', sprintf(
-                /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
-
-                return false;
+                    /* HINT: %1 user, %2 database, %3 host, %4 error message */
+                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()
+                ));
+                // this user might exist but we don't always care
+                if (!$overwrite) {
+                    return false;
+                }
             }
             // grant database access to that account
             $sql_grant = "GRANT ALL PRIVILEGES ON `" . Dba::escape($database) . "`.* TO '" . Dba::escape($db_user) . "'";
@@ -282,8 +284,9 @@ final class InstallationHelper implements InstallationHelperInterface
 
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(
-                /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
+                    /* HINT: %1 database, %2 user, %3 host, %4 error message */
+                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()
+                ));
 
                 return false;
             }
@@ -291,7 +294,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if ($create_tables) {
             $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
+            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
             $pieces   = $this->split_sql($query);
             $p_count  = count($pieces);
             $errors   = array();
@@ -524,7 +527,6 @@ final class InstallationHelper implements InstallationHelperInterface
             'sociable' => 'true',
             'licensing' => 'false',
             'wanted' => 'false',
-            'channel' => 'false',
             'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
@@ -544,7 +546,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $trconfig['ratings']                   = 'false';
                 $trconfig['sociable']                  = 'false';
                 $trconfig['wanted']                    = 'false';
-                $trconfig['channel']                   = 'false';
                 $trconfig['live_stream']               = 'false';
 
                 $dbconfig['download']    = '0';
@@ -574,8 +575,6 @@ final class InstallationHelper implements InstallationHelperInterface
                 $dbconfig['share']                = '1';
                 $dbconfig['home_now_playing']     = '0';
                 $dbconfig['home_recently_played'] = '0';
-                break;
-            default:
                 break;
         }
 
@@ -651,7 +650,7 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, filesize($distfile));
+        $dist     = fread($handle, Core::get_filesize($distfile));
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);
@@ -672,8 +671,8 @@ final class InstallationHelper implements InstallationHelperInterface
                     if ($secret_key !== false) {
                         $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
                     }
-                    // Else, unable to generate a cryptographically secure token, use the default one
                 } elseif (isset($current[$key])) {
+                    // unable to generate a cryptographically secure token, use the default one
                     $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
                     unset($current[$key]);
                 }

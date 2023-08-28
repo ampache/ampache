@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -100,11 +100,6 @@ final class FindArtAction extends AbstractArtAction
         }
         if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
-        }
-
-        $burl = '';
-        if (isset($_GET['burl'])) {
-            $burl = base64_decode(Core::get_get('burl'));
         }
 
         $this->ui->showHeader();

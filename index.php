@@ -14,7 +14,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
-                    <img src="./public/themes/reborn/images/ampache-dark.png" title="Ampache" alt="Ampache">
+                    <img src="./public/images/ampache-dark.png" title="Ampache" alt="Ampache">
                     Ampache :: For the Love of Music                </a>
             </div>
         </div>

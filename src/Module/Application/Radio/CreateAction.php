@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,9 +68,7 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Try to create the sucker
-        $results = Live_Stream::create($_POST);
-
-        if (!$results) {
+        if (!Live_Stream::create($_POST)) {
             require_once Ui::find_template('show_add_live_stream.inc.php');
         } else {
             Catalog::update_mapping('live_stream');

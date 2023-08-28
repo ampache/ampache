@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,17 +21,24 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
-
 interface AlbumRepositoryInterface
 {
     /**
-     * This returns a number of random albums.
+     * This returns a number of random albums
      *
      * @return int[]
      */
     public function getRandom(
+        int $userId,
+        ?int $count = 1
+    ): array;
+
+    /**
+     * This returns a number of random album_disks
+     *
+     * @return int[]
+     */
+    public function getRandomAlbumDisk(
         int $userId,
         ?int $count = 1
     ): array;
@@ -46,12 +53,12 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
-     * gets songs from this album group
+     * gets songs from this album_disk id
      *
      * @return int[] Song ids
      */
-    public function getSongsGrouped(
-        array $albumIdList
+    public function getSongsByAlbumDisk(
+        int $albumDiskId
     ): array;
 
     /**
@@ -68,8 +75,8 @@ interface AlbumRepositoryInterface
      *
      * @return int[] Song ids
      */
-    public function getRandomSongsGrouped(
-        array $albumIdList
+    public function getRandomSongsByAlbumDisk(
+        int $albumDiskId
     ): array;
 
     /**
@@ -78,15 +85,6 @@ interface AlbumRepositoryInterface
     public function delete(
         int $albumId
     ): bool;
-
-    /**
-     * gets the album ids with the same musicbrainz identifier
-     *
-     * @return int[]
-     */
-    public function getAlbumSuite(
-        Album $album
-    ): array;
 
     /**
      * Cleans out unused albums
@@ -120,10 +118,35 @@ interface AlbumRepositoryInterface
 
     /**
      * gets the album ids that this artist is a part of
+     * Return Album or AlbumDisk based on album_group preference
      *
      * @return int[]
      */
     public function getByArtist(
+        int $artistId,
+        ?int $catalog = null,
+        bool $group_release_type = false
+    ): array;
+
+    /**
+     * gets the album ids that this artist is a part of
+     * Return Album only
+     *
+     * @return int[]
+     */
+    public function getAlbumByArtist(
+        int $artistId,
+        ?int $catalog = null,
+        bool $group_release_type = false
+    ): array;
+
+    /**
+     * gets the album disk ids that this artist is a part of
+     * Return AlbumDisk only
+     *
+     * @return int[]
+     */
+    public function getAlbumDiskByArtist(
         int $artistId,
         ?int $catalog = null,
         bool $group_release_type = false

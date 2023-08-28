@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -34,16 +35,17 @@ use Ampache\Module\Api\Ajax;
 /** @var string $web_path */
 /** @var string $agent */
 
+$showAlbum = AmpConfig::get('album_group');
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
         <?php
             echo scrub_out($np_user->fullname);
-            if ($np_user->f_avatar_medium) {
-                echo '<div>' . $np_user->f_avatar_medium . '</div>';
-            } ?>
+if ($np_user->f_avatar_medium) {
+    echo '<div>' . $np_user->f_avatar_medium . '</div>';
+} ?>
         </a>
     </div>
 </div>
@@ -51,11 +53,11 @@ use Ampache\Module\Api\Ajax;
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_left">
         <label><?php echo T_('Song'); ?></label>
-        <?php echo $media->f_link; ?>
+        <?php echo $media->get_f_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Album'); ?></label>
-        <?php echo $media->f_album_link; ?>
+        <?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
@@ -76,7 +78,14 @@ use Ampache\Module\Api\Ajax;
 
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
-      <?php $playing = (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) ? new Song($media->id) : new Album($media->album);
+      <?php
+      if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
+          $playing = new Song($media->id);
+      } elseif ($showAlbum) {
+          $playing = new Album($media->album);
+      } else {
+          $playing = new AlbumDisk($media->get_album_disk());
+      }
       if ($playing->id) {
           $playing->format();
           $playing->display_art(1);

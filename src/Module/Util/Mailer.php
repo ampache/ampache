@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -88,20 +88,9 @@ final class Mailer implements MailerInterface
      */
     public function set_default_sender()
     {
-        $user = AmpConfig::get('mail_user');
-        if (!$user) {
-            $user = 'info';
-        }
-
-        $domain = AmpConfig::get('mail_domain');
-        if (!$domain) {
-            $domain = 'example.com';
-        }
-
-        $fromname = AmpConfig::get('mail_name');
-        if (!$fromname) {
-            $fromname = 'Ampache';
-        }
+        $user     = AmpConfig::get('mail_user', 'info');
+        $domain   = AmpConfig::get('mail_domain', 'example.com');
+        $fromname = AmpConfig::get('mail_name', 'Ampache');
 
         $this->sender      = $user . '@' . $domain;
         $this->sender_name = $fromname;
@@ -124,7 +113,7 @@ final class Mailer implements MailerInterface
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
                 break;
             case 'inactive':
-                $inactive = time() - (30 * 86400);
+                $inactive = time() - 2592000;
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
                 break;
             case 'all':
@@ -138,7 +127,11 @@ final class Mailer implements MailerInterface
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'], 'fullname' => $row['fullname'], 'email' => $row['email']);
+            $results[] = array(
+                'id' => $row['id'],
+                'fullname' => $row['fullname'],
+                'email' => $row['email']
+            );
         }
 
         return $results;
@@ -153,7 +146,7 @@ final class Mailer implements MailerInterface
      */
     public function send($phpmailer = null)
     {
-        $mailtype = AmpConfig::get('mail_type');
+        $mailtype = AmpConfig::get('mail_type', 'php');
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
@@ -179,17 +172,12 @@ final class Mailer implements MailerInterface
         }
         $mail->Body = $this->message;
 
-        $sendmail = AmpConfig::get('sendmail_path');
-        $sendmail = $sendmail ? $sendmail : '/usr/sbin/sendmail';
-        $mailhost = AmpConfig::get('mail_host');
-        $mailhost = $mailhost ? $mailhost : 'localhost';
-        $mailport = AmpConfig::get('mail_port');
-        $mailport = $mailport ? $mailport : 25;
+        $sendmail = AmpConfig::get('sendmail_path', '/usr/sbin/sendmail');
+        $mailhost = AmpConfig::get('mail_host', 'localhost');
+        $mailport = AmpConfig::get('mail_port', 25);
         $mailauth = AmpConfig::get('mail_auth');
-        $mailuser = AmpConfig::get('mail_auth_user');
-        $mailuser = $mailuser ? $mailuser : '';
-        $mailpass = AmpConfig::get('mail_auth_pass');
-        $mailpass = $mailpass ? $mailpass : '';
+        $mailuser = AmpConfig::get('mail_auth_user', '');
+        $mailpass = AmpConfig::get('mail_auth_pass', '');
 
         switch ($mailtype) {
             case 'smtp':
@@ -219,6 +207,8 @@ final class Mailer implements MailerInterface
         if ($retval === true) {
             return true;
         } else {
+            debug_event(self::class, 'Did not send mail. ErrorInfo: ' . $mail['ErrorInfo'] ?? '', 5);
+
             return false;
         }
     } // send

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,9 +50,9 @@ final class PrintTagsCommand extends Command
     public function execute(
         string $filename
     ): void {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
-        $io->info(
+        $interactor->info(
             sprintf(T_('Reading File: "%s"'), $filename),
             true
         );
@@ -76,32 +76,35 @@ final class PrintTagsCommand extends Command
         );
         if (isset($dir_pattern) || isset($file_pattern)) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
-            $io->info(
+            $interactor->info(
                 sprintf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern),
                 true
             );
         }
         try {
-            $vainfo->get_info();
+            $vainfo->gather_tags();
             $results         = $vainfo->tags;
             $keys            = VaInfo::get_tag_type($results);
             $ampache_results = VaInfo::clean_tag_info($results, $keys, $filename);
 
-            $io->info(
+            $interactor->info(
                 T_('Raw results:'),
                 true
             );
-            $io->eol(2);
+            $interactor->eol(2);
 
             print_r($vainfo);
 
-            $io->eol();
-            $io->info('------------------------------------------------------------------', true);
-            $io->info(
+            $interactor->eol();
+            $interactor->info(
+                '------------------------------------------------------------------',
+                true
+            );
+            $interactor->info(
                 sprintf(T_('Final results seen by Ampache using %s:'), implode(' + ', $keys)),
                 true
             );
-            $io->eol(2);
+            $interactor->eol(2);
             print_r($ampache_results);
         } catch (Exception $error) {
             debug_event('print_tags', 'get_info exception: ' . $error->getMessage(), 1);

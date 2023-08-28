@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -102,6 +102,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
          */
         switch ($object_type) {
             case 'song_row':
+                /** @var \Ampache\Repository\Model\Song $libitem */
                 $hide_genres    = AmpConfig::get('hide_genres');
                 $show_license   = AmpConfig::get('licensing') && AmpConfig::get('show_license');
                 $argument_param = '&hide=' . Core::get_request('hide');
@@ -111,28 +112,29 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $hide_year      = in_array('cel_year', $argument);
                 $hide_drag      = in_array('cel_drag', $argument);
                 $results        = preg_replace(
-                '/<\/?html(.|\s)*?>/',
-                '',
-                $this->talFactory->createTalView()
-                    ->setContext('BROWSE_ARGUMENT', '')
-                    ->setContext('USER_IS_REGISTERED', true)
-                    ->setContext('USING_RATINGS', $show_ratings)
-                    ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
-                    ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
-                    ->setContext('ARGUMENT_PARAM', $argument_param)
-                    ->setContext('IS_TABLE_VIEW', true)
-                    ->setContext('IS_SHOW_TRACK', (!empty($argument)))
-                    ->setContext('IS_SHOW_LICENSE', $show_license)
-                    ->setContext('IS_HIDE_GENRE', $hide_genres)
-                    ->setContext('IS_HIDE_ARTIST', $hide_artist)
-                    ->setContext('IS_HIDE_ALBUM', $hide_album)
-                    ->setContext('IS_HIDE_YEAR', $hide_year)
-                    ->setContext('IS_HIDE_DRAG', $hide_drag)
-                    ->setTemplate('song_row.xhtml')
-                    ->render()
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('BROWSE_ARGUMENT', '')
+                        ->setContext('USER_IS_REGISTERED', true)
+                        ->setContext('USING_RATINGS', $show_ratings)
+                        ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('ARGUMENT_PARAM', $argument_param)
+                        ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_SHOW_TRACK', (!empty($argument)))
+                        ->setContext('IS_SHOW_LICENSE', $show_license)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
+                        ->setContext('IS_HIDE_ARTIST', $hide_artist)
+                        ->setContext('IS_HIDE_ALBUM', $hide_album)
+                        ->setContext('IS_HIDE_YEAR', $hide_year)
+                        ->setContext('IS_HIDE_DRAG', $hide_drag)
+                        ->setTemplate('song_row.xhtml')
+                        ->render()
                 );
                 break;
             case 'playlist_row':
+                /** @var \Ampache\Repository\Model\Playlist $libitem */
                 $show_art = AmpConfig::get('playlist_art');
                 $results  = preg_replace(
                     '/<\/?html(.|\s)*?>/',
@@ -149,6 +151,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 );
                 break;
             case 'album_row':
+                /** @var \Ampache\Repository\Model\Album $libitem */
                 $hide_genres       = AmpConfig::get('hide_genres');
                 $show_played_times = AmpConfig::get('show_played_times');
                 $results           = preg_replace(
@@ -172,7 +175,33 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         ->render()
                 );
                 break;
+            case 'album_disk_row':
+                /** @var \Ampache\Repository\Model\AlbumDisk $libitem */
+                $hide_genres       = AmpConfig::get('hide_genres');
+                $show_played_times = AmpConfig::get('show_played_times');
+                $results           = preg_replace(
+                    '/<\/?html(.|\s)*?>/',
+                    '',
+                    $this->talFactory->createTalView()
+                        ->setContext('USER_IS_REGISTERED', User::is_registered())
+                        ->setContext('USING_RATINGS', $show_ratings)
+                        ->setContext('ALBUMDISK', $this->guiFactory->createAlbumDiskViewAdapter($gatekeeper, $this->browse, $libitem))
+                        ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                        ->setContext('IS_TABLE_VIEW', true)
+                        ->setContext('IS_HIDE_GENRE', $hide_genres)
+                        ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
+                        ->setContext('IS_SHOW_PLAYLIST_ADD', true)
+                        ->setContext('CLASS_COVER', 'cel_cover')
+                        ->setContext('CLASS_ALBUM', 'cel_album')
+                        ->setContext('CLASS_ARTIST', 'cel_artist')
+                        ->setContext('CLASS_TAGS', 'cel_tags')
+                        ->setContext('CLASS_COUNTER', 'cel_counter')
+                        ->setTemplate('album_disk_row.xhtml')
+                        ->render()
+                );
+                break;
             case 'artist_row':
+                /** @var \Ampache\Repository\Model\Artist $libitem */
                 $hide_genres      = AmpConfig::get('hide_genres');
                 $show_direct_play = AmpConfig::get('directplay');
                 ob_start();
@@ -200,6 +229,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_row':
+                /** @var \Ampache\Repository\Model\Podcast $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -222,6 +252,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'podcast_episode_row':
+                /** @var \Ampache\Repository\Model\Podcast_Episode $libitem */
                 ob_start();
 
                 $this->ui->show(
@@ -244,6 +275,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_end_clean();
                 break;
             case 'video_row':
+                /** @var \Ampache\Repository\Model\Video $libitem */
                 $hide_genres = AmpConfig::get('hide_genres');
                 ob_start();
 
@@ -313,7 +345,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
                  * Templates that don't need anything special
                  *
                  * broadcast_row
-                 * channel_row
                  * label_row
                  * live_stream_row
                  * pvmsg_row
@@ -339,7 +370,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 $results = ob_get_contents();
 
                 ob_end_clean();
-    }
+        }
 
         return $this->responseFactory->createResponse()
             ->withBody(

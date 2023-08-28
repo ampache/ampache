@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,8 +50,16 @@ class Catalog_Seafile extends Catalog
     private static $description = 'Seafile Remote Catalog';
     private static $table_name  = 'catalog_seafile';
 
+    /** @var SeafileAdapter seafile */
+    private $seafile = null;
+    private int $catalog_id;
     private int $count = 0;
-    private SeafileAdapter $seafile;
+
+    private $api_key;
+    private $api_call_delay;
+
+    public $server_uri;
+    public $library_name;
 
     /**
      * get_description
@@ -70,6 +78,15 @@ class Catalog_Seafile extends Catalog
     {
         return self::$version;
     } // get_version
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->server_uri;
+    } // get_path
 
     /**
      * get_type
@@ -223,7 +240,7 @@ class Catalog_Seafile extends Catalog
     {
         if ($catalog_id) {
             $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id);
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -249,19 +266,18 @@ class Catalog_Seafile extends Catalog
      * this function adds new files to an
      * existing catalog
      * @param array $options
-     * @return boolean
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
-        $success = false;
-
+        $success = 0;
         if ($this->seafile->prepare()) {
             $count = $this->seafile->for_all_files(function ($file) {
                 if ($file->size == 0) {
@@ -277,8 +293,8 @@ class Catalog_Seafile extends Catalog
                     if ($this->insert_song($file)) {
                         return 1;
                     }
-                    //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                    //    // TODO $this->insert_video()
+                //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
+                //    // TODO $this->insert_video()
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
@@ -294,11 +310,11 @@ class Catalog_Seafile extends Catalog
             if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
-                $success = true;
+                $success = 1;
             }
         }
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -344,7 +360,9 @@ class Catalog_Seafile extends Catalog
                 /* HINT: filename (File path) */
                 Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             } finally {
-                $this->clean_tmp_file($tempfilename);
+                if (isset($tempfilename)) {
+                    $this->clean_tmp_file($tempfilename);
+                }
             }
         }
 
@@ -392,7 +410,7 @@ class Catalog_Seafile extends Catalog
         if (!$is_cached) {
             $vainfo->forceSize($file->size);
         }
-        $vainfo->get_info();
+        $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
         if (!$is_cached) {
@@ -418,38 +436,32 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @return array
+     * @return int
      * @throws ReflectionException
      */
     public function verify_catalog_proc()
     {
-        $results = array('total' => 0, 'updated' => 0);
-
         set_time_limit(0);
 
+        $results = 0;
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results['total']++;
-                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
-
-                $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
-
+                $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
                 $metadata = null;
-
                 if ($file !== null) {
                     $metadata = $this->download_metadata($file);
                 }
-
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
                     $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
-                        $results['updated']++;
+                        $results++;
                     } else {
                         Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
@@ -478,6 +490,7 @@ class Catalog_Seafile extends Catalog
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
         // if you have the file it's all good
+        /** @var Song $media */
         if (is_file($media->file)) {
             return $this->download_metadata($media->file, $sort_pattern, $rename_pattern, $gather_types);
         }
@@ -512,6 +525,7 @@ class Catalog_Seafile extends Catalog
      * clean_catalog_proc
      *
      * Removes songs that no longer exist.
+     * @return int
      */
     public function clean_catalog_proc()
     {
@@ -523,7 +537,7 @@ class Catalog_Seafile extends Catalog
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
-                debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5);
+                debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
 
                 try {

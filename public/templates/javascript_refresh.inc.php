@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,8 +22,9 @@
 
 use Ampache\Module\Api\Ajax;
 
+/** @var int $refresh_limit */
+/** @var string $ajax_url */
 ?>
-
 <script>
 // Set refresh interval (in seconds)
 var refreshInterval=<?php echo $refresh_limit ?>;
@@ -36,5 +37,10 @@ $(document).ready(function() {
     window.reloaditv = setInterval(function(){
         refresh();
     }, refreshInterval * 1000);
+});
+
+// remove the timer when navigating away
+$(window).on('popstate', function() {
+    clearInterval(window.reloaditv);
 });
 </script>

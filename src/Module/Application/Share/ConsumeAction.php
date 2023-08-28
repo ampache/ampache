@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,6 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -86,14 +85,14 @@ final class ConsumeAction implements ApplicationActionInterface
                 throw new AccessDeniedException(
                     sprintf(
                         'Access Denied:%s is not in the Interface Access list',
-                        Core::get_server('REMOTE_ADDR')
+                        filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
                     )
                 );
             }
         } // access_control is enabled
 
         $share_id = $this->requestParser->getFromRequest('id');
-        $secret   = $_REQUEST['secret'];
+        $secret   = $_REQUEST['secret'] ?? '';
 
         $share = new Share($share_id);
         if (empty($action) && $share->id) {

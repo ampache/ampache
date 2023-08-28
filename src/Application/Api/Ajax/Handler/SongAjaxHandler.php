@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,6 +44,8 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
+        $results = array();
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'flip_state':
@@ -81,10 +83,11 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                     echo "shouts = {};\r\n";
                     foreach ($shouts as $shoutsid) {
                         $shout = new Shoutbox($shoutsid);
-                        $key   = (int) ($shout->data);
+                        $key   = (int)$shout->data;
+                        $time  = (int)$media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
                         echo "shouts['" . $key . "'].push('" . addslashes($shout->get_display(false)) . "');\r\n";
-                        echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($shout->data / $media->time) * 400) - 1) . "px;\' />');\r\n";
+                        echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($key / $time) * 400) - 1) . "px;\' />');\r\n";
                     }
                     echo "</script>\r\n";
                 }

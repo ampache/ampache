@@ -3,7 +3,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab:
 *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -149,14 +149,14 @@ var SearchRow = {
                     if (i == ruleType) {
                         option.selected = true;
                     }
-                    if (groups[g] === '') {
+                    if (groups[g] === "") {
                         optionsNode.appendChild(option);
                     } else {
                         optGroupNode.appendChild(option);
                     }
                 }
             });
-            if (groups[g] !== '') {
+            if (groups[g] !== "") {
                 optionsNode.appendChild(optGroupNode);
             }
         }
@@ -236,7 +236,7 @@ var SearchRow = {
         if (sort) {
             optionValues = optionValues.sort(function(a,b){
                 return options[a].toLowerCase() > options[b].toLowerCase() ? 1 : -1;
-            })
+            });
         }
         optionValues.forEach(function (value, index) {
             $("<option>").attr("value", value).text(options[value]).appendTo($select);

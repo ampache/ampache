@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -259,7 +258,7 @@ class Daap_Api
         if (!isset($_GET['session-id'])) {
             debug_event(self::class, 'Missing session id.', 2);
         } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?";
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
             $db_results = Dba::read($sql, array(
                 Core::get_get('session-id')
             ));
@@ -310,7 +309,7 @@ class Daap_Api
     {
         self::check_auth();
 
-        $sql = "DELETE FROM `daap_session` WHERE `id` = ?";
+        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
         Dba::write($sql, array(
             $input['session-id']
         ));
@@ -339,7 +338,7 @@ class Daap_Api
      */
     private static function catalog_songs()
     {
-        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $meta   = explode(',', strtolower(Core::get_get('meta')));
         $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.updatetype', 0);
@@ -527,7 +526,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->f_composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::tlv($tag, (int)($song->bitrate / 1000));
+                        $output .= self::tlv($tag, (int)($song->bitrate / 1024));
                         break;
                     case 'daap.songcomment':
                         $output .= self::tlv($tag, $song->comment);
@@ -541,8 +540,7 @@ class Daap_Api
                         }
                         break;
                     case 'daap.songdiscnumber':
-                        $album = new Album($song->album);
-                        $output .= self::tlv($tag, $album->disk);
+                        $output .= self::tlv($tag, $song->disk);
                         break;
                     case 'daap.songformat':
                         $output .= self::tlv($tag, $song->type);
@@ -717,8 +715,7 @@ class Daap_Api
     {
         $values = explode('.', $value);
         if (count($values) == 4) {
-            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C",
-                    $values[2]) . pack("C", $values[3]);
+            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
         } else {
             debug_event(self::class, 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }
@@ -881,9 +878,11 @@ class Daap_Api
                 return 8;
             case 'string':
                 return 9;
-            case 'date': // represented as a 4 byte integer
+            case 'date':
+                // represented as a 4 byte integer
                 return 10;
-            case 'version': // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
+            case 'version':
+                // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
                 return 11;
             case 'list':
                 return 12;
@@ -935,7 +934,7 @@ class Daap_Api
         header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
-        $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
+        $html = "<!DOCTYPE html><html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
         self::apiOutput($html);
 
         return false;

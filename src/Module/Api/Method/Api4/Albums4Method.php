@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\User;
 
@@ -45,6 +44,7 @@ final class Albums4Method
      * This returns albums based on the provided search filters
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = Api::set_filter(date) //optional
@@ -53,7 +53,7 @@ final class Albums4Method
      * limit   = (integer) //optional
      * include = (array) 'songs' //optional
      */
-    public static function albums(array $input)
+    public static function albums(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -64,8 +64,7 @@ final class Albums4Method
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $albums  = $browse->get_objects();
-        $user    = User::get_from_username(Session::username($input['auth']));
+        $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
@@ -76,12 +75,12 @@ final class Albums4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::albums($albums, $include, $user);
+                echo Json4_Data::albums($results, $include, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::albums($albums, $include, $user);
+                echo Xml4_Data::albums($results, $include, $user);
         }
     } // albums
 }

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,8 +34,7 @@ use Ampache\Module\Application\Share\ShowDeleteAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-
+$action = $_REQUEST['action'] ?? '';
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
     define('OUTDATED_DATABASE_OK', 1);

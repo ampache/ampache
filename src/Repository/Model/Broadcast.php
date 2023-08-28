@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -84,6 +84,10 @@ class Broadcast extends database_object implements library_item
      * @var boolean $is_private
      */
     public $is_private;
+    /**
+     * @var string $link
+     */
+    public $link;
 
     /**
      * Constructor
@@ -91,10 +95,7 @@ class Broadcast extends database_object implements library_item
      */
     public function __construct($broadcast_id)
     {
-        /* Get the information from the db */
-        $info = $this->get_info($broadcast_id);
-
-        // Foreach what we've got
+        $info = $this->get_info($broadcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -104,7 +105,7 @@ class Broadcast extends database_object implements library_item
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -199,7 +200,7 @@ class Broadcast extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+        $this->get_f_link();
         if ($details) {
             $this->tags   = Tag::get_top_tags('broadcast', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
@@ -244,6 +245,20 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * Get parent item description.
      * @return array|null
      */
@@ -262,13 +277,13 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Search for item childrens.
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -374,11 +389,9 @@ class Broadcast extends database_object implements library_item
     public function show_action_buttons()
     {
         if ($this->id) {
-            if (Core::get_global('user')->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit',
-                        T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
-                        T_('Delete')) . "</a>";
+            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -390,8 +403,7 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast_link()
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast',
-                T_('Broadcast')) . "</a>";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
         $link .= "</div>";
 
         return $link;
@@ -414,7 +426,7 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Get broadcasts from an user.
+     * Get broadcasts from a user.
      * @param integer $user_id
      * @return integer[]
      */
@@ -439,7 +451,7 @@ class Broadcast extends database_object implements library_item
      * @param boolean $local
      * @return integer
      */
-    public function play_url($additional_params = '', $player = null, $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false)
     {
         unset($additional_params, $player, $local);
 

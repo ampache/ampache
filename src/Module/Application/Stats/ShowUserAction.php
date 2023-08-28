@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,24 +76,24 @@ final class ShowUserAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
-
-        $client = $this->modelFactory->createUser($userId);
-
-        $this->ui->show(
-            'show_user.inc.php',
-            [
-                'client' => $client,
-                'activities' => $this->useractivityRepository->getActivities($userId),
-                'followers' => $this->userFollowerRepository->getFollowers($userId),
-                'following' => $this->userFollowerRepository->getFollowing($userId),
-                'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                'userActivityRenderer' => $this->userActivityRenderer
-            ]
-        );
-
-        show_table_render(false, true);
-
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        if ($userId == 0) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $client = $this->modelFactory->createUser($userId);
+            $this->ui->show(
+                'show_user.inc.php',
+                [
+                    'client' => $client,
+                    'activities' => $this->useractivityRepository->getActivities($userId),
+                    'followers' => $this->userFollowerRepository->getFollowers($userId),
+                    'following' => $this->userFollowerRepository->getFollowing($userId),
+                    'userFollowStateRenderer' => $this->userFollowStateRenderer,
+                    'userActivityRenderer' => $this->userActivityRenderer
+                ]
+            );
+            show_table_render(false, true);
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,8 +32,8 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '5.6.2-release'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '62';
+    private const VERSION        = '6.0.0'; // AMPACHE_VERSION
+    private const CONFIG_VERSION = '67';
     private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
@@ -64,12 +64,11 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         $results['version']            = static::VERSION;
         $results['int_config_version'] = static::CONFIG_VERSION;
         $results['structure']          = static::STRUCTURE;
+        $results['phpversion']         = substr(phpversion(), 0, 3);
 
-        if (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true) {
-            $protocol = 'https';
-        } else {
-            $protocol = 'http';
-        }
+        $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)
+            ? 'https'
+            : 'http';
 
         if ($this->environment->isCli() === false) {
             if (empty($results['http_host'])) {

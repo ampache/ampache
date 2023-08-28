@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -184,9 +184,10 @@ class FileSystem
                 case 'png':
                 case 'bmp':
                     $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64, '.base64_encode(file_get_contents($dir));
-                    break;*/ default:
-                $dat['content'] = 'File not recognized: ' . $this->id($dir);
-                break;
+                    break;*/
+                default:
+                    $dat['content'] = 'File not recognized: ' . $this->id($dir);
+                    break;
             }
 
             return $dat;
@@ -234,8 +235,8 @@ class FileSystem
         }
         $new = explode(DIRECTORY_SEPARATOR, $dir);
         array_pop($new);
-        array_push($new, $name);
-        $new = implode(DIRECTORY_SEPARATOR, $new);
+        $new[] = $name;
+        $new   = implode(DIRECTORY_SEPARATOR, $new);
         if (is_file($new) || is_dir($new)) {
             throw new Exception('Path already exists: ' . $new);
         }

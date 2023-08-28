@@ -1,9 +1,6 @@
 #!/bin/sh
 
 # create the htaccess files
-if [ ! -f ../public/channel/.htaccess ]; then
-  cp ../public/channel/.htaccess.dist ../public/channel/.htaccess
-fi
 if [ ! -f ../public/play/.htaccess ]; then
   cp ../public/play/.htaccess.dist ../public/play/.htaccess
 fi
@@ -26,7 +23,7 @@ chmod 775 ./log
 chown $UID:33 ./media
 chmod 775 ./media
 
-chown $UID:33 ../composer.json 
+chown $UID:33 ../composer.json
 chmod 775 ../composer.json
 chown -R $UID:33 ../config
 chmod -R 775 ../config
@@ -39,7 +36,6 @@ chmod -R 775 ../public/
 #if [ -f ../composer.lock ]; then
 #  rm ../composer.lock
 #fi
-
 
 chown $UID:33 ./log
 chmod 775 ./log

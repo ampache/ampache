@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -105,8 +105,8 @@ class Repository
             $parts = explode('And', $matches[1]);
 
             return $this->findBy(
-                    $parts,
-                    $this->resolveObjects($arguments)
+                $parts,
+                $this->resolveObjects($arguments)
             );
         }
 
@@ -116,15 +116,15 @@ class Repository
     /**
      * @return string
      */
-    private function getTableName()
+    private function getTableName(): string
     {
         $className = get_called_class();
         $nameParts = explode('\\', $className);
         $tableName = preg_replace_callback(
-                '/(?<=.)([A-Z])/',
-                function ($name) {
-                    return '_' . strtolower((string) $name[0]);
-                }, end($nameParts));
+            '/(?<=.)([A-Z])/',
+            function ($name) {
+                return '_' . strtolower((string) $name[0]);
+            }, end($nameParts));
 
         return lcfirst($tableName);
     }
@@ -137,9 +137,9 @@ class Repository
     {
         $properties = $object->getDirtyProperties();
         $this->setPrivateProperty(
-                $object,
-                'id',
-                $this->insertRecord($properties)
+            $object,
+            'id',
+            $this->insertRecord($properties)
         );
     }
 
@@ -159,8 +159,7 @@ class Repository
      */
     public function remove(DatabaseObject $object)
     {
-        $id = $object->getId();
-        $this->deleteRecord($id);
+        $this->deleteRecord($object->getId());
     }
 
     /**
@@ -171,8 +170,8 @@ class Repository
     {
         $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ") VALUES(" . implode(',', array_fill(0, count($properties), '?')) . ")";
         Dba::write(
-                $sql,
-                array_values($this->resolveObjects($properties))
+            $sql,
+            array_values($this->resolveObjects($properties))
         );
 
         return Dba::insert_id();
@@ -184,13 +183,13 @@ class Repository
      */
     protected function updateRecord($object_id, $properties)
     {
-        $sql = 'UPDATE ' . $this->getTableName()
-                . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
-                . ' WHERE id = ?';
+        $sql = 'UPDATE ' . $this->getTableName() .
+            ' SET ' . implode(',', $this->getKeyValuePairs($properties)) .
+            ' WHERE id = ?';
         $properties[] = $object_id;
         Dba::write(
-                $sql,
-                array_values($this->resolveObjects($properties))
+            $sql,
+            array_values($this->resolveObjects($properties))
         );
     }
 

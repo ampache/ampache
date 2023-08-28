@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -40,13 +39,13 @@ final class Song3Method
      * song
      * returns a single song
      * @param array $input
+     * @param User $user
      */
-    public static function song(array $input)
+    public static function song(array $input, User $user)
     {
         $uid  = scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
-        echo Xml3_Data::songs(array($uid), $user);
+        echo Xml3_Data::songs(array((int)$uid), $user);
     } // song
 }

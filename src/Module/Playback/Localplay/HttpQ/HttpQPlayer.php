@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ declare(strict_types=0);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,7 +78,7 @@ class HttpQPlayer
      * $url     URL of the song
      * @param string $name
      * @param string $url
-     * @return mixed|null
+     * @return bool|string
      */
     public function add($name, $url)
     {
@@ -106,12 +106,7 @@ class HttpQPlayer
         $args    = array();
         $results = $this->sendCommand('getversion', $args);
 
-        // a return of 0 is a bad value
-        if ($results == '0') {
-            $results = false;
-        }
-
-        return $results;
+        return ($results !== '0'); // a return of 0 is a bad value
     } // version
 
     /**
@@ -236,7 +231,7 @@ class HttpQPlayer
      * repeat
      * This toggles the repeat state of HttpQ
      * @param $value
-     * @return mixed|null
+     * @return bool|string
      */
     public function repeat($value)
     {
@@ -254,7 +249,7 @@ class HttpQPlayer
      * random
      * this toggles the random state of HttpQ
      * @param $value
-     * @return mixed|null
+     * @return bool|string
      */
     public function random($value)
     {
@@ -272,7 +267,7 @@ class HttpQPlayer
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return mixed|null
+     * @return bool|string
      */
     public function delete_pos($track)
     {
@@ -453,7 +448,7 @@ class HttpQPlayer
      * request to the HttpQ server and getting the response
      * @param $cmd
      * @param $args
-     * @return mixed|null
+     * @return string|bool
      */
     private function sendCommand($cmd, $args)
     {
@@ -462,7 +457,7 @@ class HttpQPlayer
         if (!$fsock) {
             debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);
 
-            return null;
+            return false;
         }
 
         // Define the base message

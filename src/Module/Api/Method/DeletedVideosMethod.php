@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 /**
@@ -44,17 +45,19 @@ final class DeletedVideosMethod
      * This returns video objects that have been deleted
      *
      * @param array $input
+     * @param User $user
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return bool
      */
-    public static function deleted_videos(array $input): bool
+    public static function deleted_videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
+        unset($user);
 
         $video_ids = Video::get_deleted();
         if (empty($video_ids)) {

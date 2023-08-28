@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -84,9 +84,9 @@ final class AddFilterAction extends AbstractFilterAction
 
         $catalogs      = Catalog::get_catalogs();
         $catalog_array = array();
-        foreach ($catalogs as $catalog) {
-            $catalog_name                 = Catalog::get_catalog_name($catalog);
-            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog, FILTER_SANITIZE_NUMBER_INT);
+        foreach ($catalogs as $catalog_id) {
+            $catalog_name                 = Catalog::getName($catalog_id);
+            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Attempt to create the filter

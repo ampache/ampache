@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,33 +21,26 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
-/** @var string $filter */
+/** @var array $filter */
 /** @var int $num_users */
 /** @var int $num_catalogs */
-/** @var int $filter_id */
 ?>
-<td class="cel_name"><?php echo $filter?></td>
-<td class="cel_num_users"><?php echo $num_users ?></td>
-<td class="cel_num_catalogs"><?php echo $num_catalogs ?></td>
+<td class="cel_name"><?php echo $filter['name']; ?></td>
+<td class="cel_num_users"><?php echo $num_users; ?></td>
+<td class="cel_num_catalogs"><?php echo $num_catalogs; ?></td>
 <td class="cel_action">
 <?php if (Access::check('interface', 100)) { ?>
-        <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
+        <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter['id']; ?>&amp;filter_name=<?php echo $filter['name']; ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
-        <?php if ($filter_id > 0) { ?>
-           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter_id; ?>&amp;filter_name=<?php echo $filter; ?>">
+        <?php if ($filter['id'] > 0) { ?>
+           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&amp;filter_name=<?php echo $filter['name']; ?>">
                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
            </a>
         <?php } ?>
     <?php } ?>
 </td>
-
-
-
-

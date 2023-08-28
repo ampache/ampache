@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,14 +55,12 @@ final class UserActivityRenderer implements UserActivityRendererInterface
             return '';
         }
 
-        $user = $this->modelFactory->createUser((int) $useractivity->user);
-        $user->format();
-
+        $user       = $this->modelFactory->createUser((int) $useractivity->user);
         $class_name = ObjectTypeToClassNameMapper::map($useractivity->object_type);
-        $libitem    = new $class_name($useractivity->object_id);
-        $libitem->format();
 
-        $descr = $user->f_link . ' ';
+        /** @var \Ampache\Repository\Model\library_item $libitem */
+        $libitem = new $class_name($useractivity->object_id);
+        $descr   = $user->get_f_link() . ' ';
         switch ($useractivity->action) {
             case 'shout':
                 $descr .= T_('commented on');
@@ -88,7 +86,7 @@ final class UserActivityRenderer implements UserActivityRendererInterface
             '<div>%s %s %s</div>',
             get_datetime((int) $useractivity->activity_date),
             $descr,
-            $libitem->f_link
+            $libitem->get_f_link()
         );
     }
 }

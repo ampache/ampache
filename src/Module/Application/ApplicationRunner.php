@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,7 +68,7 @@ final class ApplicationRunner
         array $action_list,
         string $default_action
     ): void {
-        $action_name = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? '';
+        $action_name = htmlspecialchars($request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? '');
 
         if (array_key_exists($action_name, $action_list) === false) {
             $action_name = $default_action;

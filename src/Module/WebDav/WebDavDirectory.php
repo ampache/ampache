@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
-use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -43,7 +42,6 @@ class WebDavDirectory extends DAV\Collection
     public function __construct(library_item $libitem)
     {
         $this->libitem = $libitem;
-        $this->libitem->format();
     }
 
     /**
@@ -53,7 +51,7 @@ class WebDavDirectory extends DAV\Collection
      */
     public function getChildren()
     {
-        debug_event(self::class, 'Directory getChildren', 5);
+        //debug_event(self::class, 'Directory getChildren', 5);
         $children = array();
         $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
@@ -76,15 +74,8 @@ class WebDavDirectory extends DAV\Collection
      */
     public function getChild($name)
     {
-        // Clean song name
-        if (get_class($this->libitem) === Album::class) {
-            $splitname = explode('-', (string)$name, 3);
-            $name      = trim((string)$splitname[count($splitname) - 1]);
-            $nameinfo  = pathinfo($name);
-            $name      = $nameinfo['filename'];
-        }
-        debug_event(self::class, 'Directory getChild: ' . $name, 5);
-        $matches = $this->libitem->search_childrens($name);
+        //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
+        $matches = $this->libitem->get_children(unhtmlentities($name));
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
@@ -121,7 +112,7 @@ class WebDavDirectory extends DAV\Collection
      */
     public function childExists($name)
     {
-        $matches = $this->libitem->search_childrens($name);
+        $matches = $this->libitem->get_children($name);
 
         return (count($matches) > 0);
     }

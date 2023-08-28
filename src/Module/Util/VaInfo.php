@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -93,6 +92,7 @@ final class VaInfo implements VaInfoInterface
         'resolution_x' => null,
         'resolution_y' => null,
         'size' => null,
+        'version' => null,
         'summary' => null,
         'time' => null,
         'title' => null,
@@ -220,7 +220,7 @@ final class VaInfo implements VaInfoInterface
             } elseif (function_exists('mb_detect_order')) {
                 $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
-                $mb_order = "auto";
+                $mb_order = 'auto';
             }
 
             $test_tags = array('artist', 'album', 'genre', 'title');
@@ -324,9 +324,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * get_info
      *
-     * This function runs the various steps to gathering the metadata
+     * This function runs the various steps to gathering the metadata. Filling $this->tags
      */
-    public function get_info()
+    public function gather_tags()
     {
         // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
         if ($this->_broken) {
@@ -369,7 +369,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function check_time($time)
     {
-        $this->get_info();
+        $this->gather_tags();
         foreach ($this->tags as $results) {
             if (isset($results['time'])) {
                 return ($time >= $results['time'] - 2);
@@ -635,6 +635,7 @@ final class VaInfo implements VaInfoInterface
             $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string)$tags['original_year']) : $info['original_year'];
             $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string)$tags['barcode']) : $info['barcode'];
             $info['catalog_number'] = (!$info['catalog_number'] && array_key_exists('catalog_number', $tags)) ? trim((string)$tags['catalog_number']) : $info['catalog_number'];
+            $info['version']        = (!$info['version'] && array_key_exists('version', $tags)) ? trim((string)$tags['version']) : $info['version'];
 
             $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
             $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
@@ -1103,9 +1104,6 @@ final class VaInfo implements VaInfoInterface
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
-                case 'music_cd_identifier':
-                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
-                    break;
                 case 'originalyear':
                 case 'originalreleaseyear':
                     $parsed['original_year'] = $data[0];
@@ -1113,6 +1111,12 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
+                    break;
+                case 'version':
+                    $parsed['version'] = $data[0];
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
@@ -1243,6 +1247,9 @@ final class VaInfo implements VaInfoInterface
                 case 'organization':
                     $parsed['publisher'] = $data[0];
                     break;
+                case 'version':
+                    $parsed['version'] = $data[0];
+                    break;
                 case 'rating':
                     $rating_user = -1;
                     if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
@@ -1254,8 +1261,8 @@ final class VaInfo implements VaInfoInterface
                     // look for set ratings using email address
                     foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
                         $rating_user = User::get_from_email(array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? false);
-                        if ($rating_user) {
-                            $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
+                        if ($rating_user !== null) {
+                            $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
                         }
                     }
                     $parsed[strtolower($tag)] = $data[0];
@@ -1376,6 +1383,9 @@ final class VaInfo implements VaInfoInterface
                 case 'publisher':
                     $parsed['publisher'] = $data[0];
                     break;
+                case 'version':
+                    $parsed['version'] = $data[0];
+                    break;
                 case 'music_cd_identifier':
                     // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
@@ -1434,9 +1444,9 @@ final class VaInfo implements VaInfoInterface
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
-                    // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
-                    // all replaygain values aren't always correctly retrieved
                     case 'replaygain_track_gain':
+                        // FIXME: shouldn't here $txxx['data'] be replaced by $id3v2['comments']['text'][$txxx['description']]
+                        // all replaygain values aren't always correctly retrieved
                         $parsed['replaygain_track_gain'] = (float) $txxx['data'];
                         break;
                     case 'replaygain_track_peak':
@@ -1465,6 +1475,9 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'label':
                         $parsed['publisher'] = $id3v2['comments']['text'][$txxx['description']];
+                        break;
+                    case 'version':
+                        $parsed['version'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     default:
                         $frame = strtolower($this->trimAscii($txxx['description']));
@@ -1613,6 +1626,9 @@ final class VaInfo implements VaInfoInterface
                 case 'label':
                     $parsed['publisher'] = $data[0];
                     break;
+                case 'version':
+                    $parsed['version'] = $data[0];
+                    break;
                 case 'tv_episode':
                     $parsed['tvshow_episode'] = $data[0];
                     break;
@@ -1687,11 +1703,15 @@ final class VaInfo implements VaInfoInterface
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
-                case 'music_cd_identifier':
-                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                case 'releasecomment':
+                case 'version':
+                    $parsed['version'] = $data[0];
                     break;
                 case 'originalreleaseyear':
                     $parsed['original_year'] = str_replace("\x00", '', $data[0]);
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
                     break;
                 default:
                     $parsed[$tagname] = $data[0];

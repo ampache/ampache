@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -94,13 +94,15 @@ final class AuthenticationManager implements AuthenticationManagerInterface
             $sql        = 'SELECT `apikey`, `username` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, [$username]);
             $row        = Dba::fetch_assoc($db_results);
-            $hash_token = hash('md5', ($row['apikey'] . $salt));
-            if ($token === $hash_token && $row['username'] === $username && isset($row['apikey'])) {
-                return [
-                    'success' => true,
-                    'type' => 'api',
-                    'username' => $username
-                ];
+            if (isset($row['apikey'])) {
+                $hash_token = hash('md5', ($row['apikey'] . $salt));
+                if ($token === $hash_token && $row['username'] === $username) {
+                    return [
+                        'success' => true,
+                        'type' => 'api',
+                        'username' => $username
+                    ];
+                }
             }
         }
 

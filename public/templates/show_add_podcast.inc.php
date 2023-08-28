@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,20 +25,19 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
+Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
-    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed']) ?? 'http://'; ?>" />
+    <td><input type="text" name="feed" value="<?php echo scrub_out($_REQUEST['feed'] ?? '') ?? 'http://'; ?>" />
         <?php echo AmpError::display('feed'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog']), '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', (int) scrub_out($_REQUEST['catalog'] ?? 0), '', false, 'podcast'); ?>
         <?php echo AmpError::display('catalog'); ?>
     </td>
 </tr>

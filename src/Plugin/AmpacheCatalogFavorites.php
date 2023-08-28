@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -124,12 +124,10 @@ class AmpacheCatalogFavorites
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
-                $item->format();
-
                 if ($item->id) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
@@ -154,7 +152,7 @@ class AmpacheCatalogFavorites
                     echo '</td>';
 
                     if (!$this->gridview) {
-                        echo '<td>' . $item->f_link . '</td>';
+                        echo '<td>' . $item->get_f_link() . '</td>';
                     }
 
                     echo '<td class="optional">';

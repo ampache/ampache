@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
@@ -29,7 +30,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <div id="browse_header">
-<?php require_once Ui::find_template('show_browse_form.inc.php'); ?>
+<?php require_once Ui::find_template('show_form_browse.inc.php'); ?>
 </div> <!-- Close browse_header Div -->
 
 <?php $user = Core::get_global('user');
@@ -49,7 +50,12 @@ if (isset($user->id)) {
 <?php } ?>
 <!-- Randomly selected Albums of the Moment -->
 <?php if (AmpConfig::get('home_moment_albums')) {
-    echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums')); ?>
+    $showAlbum = AmpConfig::get('album_group');
+    if ($showAlbum) {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_albums', 'random_albums'));
+    } else {
+        echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=random_album_disks', 'random_album_disks'));
+    } ?>
 <div id="random_selection" class="random_selection">
     <?php Ui::show_box_top(T_('Albums of the Moment'));
     echo T_('Loading...');
@@ -70,10 +76,10 @@ if (isset($user->id)) {
 <!-- Recently Played -->
 <div id="recently_played">
     <?php
-        $data = Song::get_recently_played();
-        Song::build_cache(array_keys($data));
-        $user_id   = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1;
+        $user_id   = Core::get_global('user')->id ?? -1;
+        $data      = Stats::get_recently_played($user_id, 'stream', 'song');
         $ajax_page = 'index';
+        Song::build_cache(array_keys($data));
         require_once Ui::find_template('show_recently_played.inc.php'); ?>
 </div>
 <?php } ?>

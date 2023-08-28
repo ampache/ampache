@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -71,10 +70,11 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $share_id = Share::create_share(
+            Core::get_global('user')->id,
             $_REQUEST['type'],
             (int)$_REQUEST['id'],
-            (int)$_REQUEST['allow_stream'] ?? 0,
-            (int)$_REQUEST['allow_download'] ?? 0,
+            (int)($_REQUEST['allow_stream'] ?? 0),
+            (int)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']

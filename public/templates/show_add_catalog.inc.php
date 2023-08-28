@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
             <td style="vertical-align:top; font-family: monospace;" rowspan="6" id="patterns_example">
                 <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
                 <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
-                <span class="format-specifier">%a</span> = <?php echo T_('Artist'); ?><br />
+                <span class="format-specifier">%a</span> = <?php echo T_('Album Artist'); ?><br />
                 <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
                 <span class="format-specifier">%C</span> = <?php echo T_('Catalog Number'); ?><br />
                 <span class="format-specifier">%T</span> = <?php echo T_('Track (0 padded)'); ?><br />
@@ -58,6 +58,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
+                <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
                 <?php if ($allow_video) { ?>
                     <strong><?php echo T_('TV Shows'); ?>:</strong><br />

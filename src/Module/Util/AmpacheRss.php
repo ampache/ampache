@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,12 +35,21 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
-use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
 {
+    private const RSS_TYPES = array(
+        'now_playing',
+        'recently_played',
+        'latest_album',
+        'latest_artist',
+        'latest_shout',
+        'podcast'
+    );
+
     /**
      * @var string $type
      */
@@ -53,13 +62,13 @@ class AmpacheRss
 
     /**
      * Constructor
-     * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param string $type
+     * This takes a flagged id and then pulls in the information for said flag entry
+     * @param string $rsstype
      * @param string $rsstoken
      */
-    public function __construct($type, $rsstoken = "")
+    public function __construct($rsstype, $rsstoken = "")
     {
-        $this->type     = self::validate_type($type);
+        $this->type     = self::validate_type($rsstype);
         $this->rsstoken = $rsstoken;
     } // constructor
 
@@ -73,6 +82,7 @@ class AmpacheRss
     public function get_xml($params = null)
     {
         if ($this->type === "podcast") {
+            $user = static::getUserRepository()->getByRssToken($this->rsstoken);
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
@@ -82,7 +92,7 @@ class AmpacheRss
                     if ($libitem->id) {
                         $libitem->format();
 
-                        return Xml_Data::podcast($libitem);
+                        return Xml_Data::podcast($libitem, $user);
                     }
                 }
             }
@@ -124,7 +134,7 @@ class AmpacheRss
             'latest_shout' => T_('Newest Shouts')
         );
 
-        return scrub_out(AmpConfig::get('site_title')) . ' - ' . $titles[$this->type];
+        return AmpConfig::get('site_title') . ' - ' . $titles[$this->type];
     } // get_title
 
     /**
@@ -141,25 +151,16 @@ class AmpacheRss
     /**
      * validate_type
      * this returns a valid type for an rss feed, if the specified type is invalid it returns a default value
-     * @param string $type
+     * @param string $rsstype
      * @return string
      */
-    public static function validate_type($type)
+    public static function validate_type($rsstype)
     {
-        $valid_types = array(
-            'now_playing',
-            'recently_played',
-            'latest_album',
-            'latest_artist',
-            'latest_shout',
-            'podcast'
-        );
-
-        if (!in_array($type, $valid_types)) {
+        if (!in_array($rsstype, self::RSS_TYPES)) {
             return 'now_playing';
         }
 
-        return $type;
+        return $rsstype;
     } // validate_type
 
     /**
@@ -187,13 +188,12 @@ class AmpacheRss
         $user     = new User($user_id);
         if ($user->id > 0) {
             if (!$user->rsstoken) {
-                static::getUserAccessKeyGenerator()->generateRssToken($user);
+                static::getUserKeyGenerator()->generateRssToken($user);
             }
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . Ui::get_icon('feed',
-                T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -223,21 +223,38 @@ class AmpacheRss
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            $song        = $element['media'];
+            /** @var Song|Video $media */
+            $media        = $element['media'];
+            /** @var User $client */
             $client      = $element['client'];
             $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                $trep        = 'f_' . $replace;
-                $drep        = 'f_' . $replace . '_full';
-                $title       = str_replace($search, $song->$trep, $title);
-                $description = str_replace($search, $song->$drep, $description);
+                switch ($replace) {
+                    case 'title':
+                        $text = $media->get_fullname();
+                        break;
+                    case 'artist':
+                        $text = ($media instanceof Song)
+                            ? $media->get_artist_fullname()
+                            : '';
+                        break;
+                    case 'album':
+                        $text = ($media instanceof Song)
+                            ? $media->get_album_fullname($media->album, true)
+                            : '';
+                        break;
+                    default:
+                        $text = '';
+                }
+                $title       = str_replace($search, $text, $title);
+                $description = str_replace($search, $text, $description);
             }
             $xml_array = array(
-                'title' => $title,
-                'link' => $song->get_link(),
-                'description' => $description,
-                'comments' => $client->f_name . ' - ' . $element['agent'],
+                'title' => str_replace(' - - ', ' - ', $title),
+                'link' => $media->get_link(),
+                'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
+                'comments' => $client->get_fullname() . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
             );
             $results[] = $xml_array;
@@ -269,9 +286,13 @@ class AmpacheRss
      */
     public static function load_recently_played($rsstoken = "")
     {
-        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
+        $user    = ($rsstoken)
+            ? static::getUserRepository()->getByRssToken($rsstoken)
+            : null;
+        $data    = ($user)
+            ? Stats::get_recently_played($user->id, 'stream', 'song')
+            : Stats::get_recently_played(-1, 'stream', 'song');
 
         foreach ($data as $item) {
             $client = new User($item['user']);
@@ -335,8 +356,9 @@ class AmpacheRss
      */
     public static function load_latest_artist($rsstoken = "")
     {
-        $user = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
-        $ids  = Stats::get_newest('artist', 10, 0, 0, $user->id);
+        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
+        $user_id = $user->id ?? 0;
+        $ids     = Stats::get_newest('artist', 10, 0, 0, $user_id);
 
         $results = array();
 
@@ -400,8 +422,8 @@ class AmpacheRss
      */
     public static function pubdate_recently_played()
     {
-        $data = Song::get_recently_played();
-
+        $user_id = Core::get_global('user')->id ?? -1;
+        $data    = Stats::get_recently_played($user_id, 'stream', 'song');
         $element = array_shift($data);
 
         return $element['date'];
@@ -420,10 +442,10 @@ class AmpacheRss
     /**
      * @deprecated Inject by constructor
      */
-    private static function getUserAccessKeyGenerator(): UserAccessKeyGeneratorInterface
+    private static function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
-        return $dic->get(UserAccessKeyGeneratorInterface::class);
+        return $dic->get(UserKeyGeneratorInterface::class);
     }
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -65,7 +65,7 @@ if ($album != T_('Unknown (Orphaned)')) {
 <br /><br />
 <div class="lyrics">
     <div id="lyrics_text"><?php echo($lyrics['text']) ?? T_("No lyrics found."); ?></div>
-<?php if (array_key_exists('url', $lyrics) && $lyrics['url']) { ?>
+<?php if (array_key_exists('url', $lyrics) && !empty($lyrics['url'])) { ?>
     <div id="lyrics_url"><a href="<?php echo $lyrics['url']; ?>" target="_blank"><?php echo T_('Show more'); ?></a></div>
 <?php } ?>
 </div>

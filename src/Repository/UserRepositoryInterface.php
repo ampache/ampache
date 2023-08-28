@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,6 +85,11 @@ interface UserRepositoryInterface
     public function findByApiKey(string $apikey): ?User;
 
     /**
+     * This returns a built user from a streamToken
+     */
+    public function findByStreamToken(string $streamToken): ?User;
+
+    /**
      * updates the last seen data for this user
      */
     public function updateLastSeen(
@@ -110,6 +115,11 @@ interface UserRepositoryInterface
      * Updates a users RSS token
      */
     public function updateRssToken(int $userId, string $rssToken): void;
+
+    /**
+     * Updates a users Stream token
+     */
+    public function updateStreamToken(int $userId, string $userName, string $streamToken): void;
 
     /**
      * Updates a users api key

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogFile4Method
@@ -53,12 +52,13 @@ final class CatalogFile4Method
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add'|'clean'|'verify'|'remove'
      * catalog = (integer) $catalog_id
      * @return boolean
      */
-    public static function catalog_file(array $input): bool
+    public static function catalog_file(array $input, User $user): bool
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
@@ -66,13 +66,13 @@ final class CatalogFile4Method
 
             return false;
         }
-        if (!Api4::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'catalog_file', $input['api_format'])) {
+        if (!Api4::check_access('interface', 50, $user->id, 'catalog_file', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
-        $file = (string) html_entity_decode($input['file']);
+        $file = html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
             Api4::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);
@@ -111,7 +111,6 @@ final class CatalogFile4Method
         }
 
         if ($catalog->catalog_type == 'local') {
-            define('API', true);
             if (defined('SSE_OUTPUT')) {
                 unset($SSE_OUTPUT);
             }
@@ -132,8 +131,10 @@ final class CatalogFile4Method
                     break;
             }
             // update the counts too
-            Album::update_album_counts();
-            Artist::update_artist_counts();
+            if ($media instanceof Song) {
+                Album::update_album_count($media->album);
+                Artist::update_table_counts();
+            }
             Api4::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['api_format']);
         } else {
             Api4::message('error', T_('The requested catalog was not found'), '404', $input['api_format']);

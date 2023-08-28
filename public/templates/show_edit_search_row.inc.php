@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Search $libitem */
 
 use Ampache\Repository\Model\Search;
 
+/** @var Search $libitem */
 ?>
 <div>
     <form method="post" id="edit_playlist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -45,8 +45,8 @@ use Ampache\Repository\Model\Search;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Random') ?></td>
                 <td><input type="checkbox" name="random" value="1" <?php if ($libitem->random) {
-    echo "checked";
-} ?> /></td>
+                    echo "checked";
+                } ?> /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)') ?></td>
@@ -58,13 +58,13 @@ use Ampache\Repository\Model\Search;
                 </td>
                 <td>
                     <?php $options   = array();
-                    if (!empty($users)) {
-                        foreach ($users as $user_id => $username) {
-                            $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
-                            $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
-                        }
-                        echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
-                    } ?>
+if (!empty($users)) {
+    foreach ($users as $user_id => $username) {
+        $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
+        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+    }
+    echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
+} ?>
                 </td>
             </tr>
         </table>

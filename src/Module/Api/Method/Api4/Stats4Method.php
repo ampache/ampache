@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 
@@ -55,6 +54,7 @@ final class Stats4Method
      * but should be updated to follow the current input values
      *
      * @param array $input
+     * @param User $user
      * type     = (string)  'song'|'album'|'artist'
      * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
      * user_id  = (integer) //optional
@@ -63,13 +63,11 @@ final class Stats4Method
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
         $user_id = $user->id;
         // override your user if you're looking at others
         if ($input['username']) {
@@ -138,7 +136,7 @@ final class Stats4Method
                             $user_id,
                             $limit
                         );
-                    }
+                }
         }
 
         ob_end_clean();
@@ -153,7 +151,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::songs($results, $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::songs($results, $user);
             }
@@ -162,7 +160,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::artists($results, array(), $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::artists($results, array(), $user);
             }
@@ -171,7 +169,7 @@ final class Stats4Method
             switch ($input['api_format']) {
                 case 'json':
                     echo Json4_Data::albums($results, array(), $user);
-                break;
+                    break;
                 default:
                     echo Xml4_Data::albums($results, array(), $user);
             }

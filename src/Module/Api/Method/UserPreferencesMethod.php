@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserPreferencesMethod
@@ -45,10 +44,10 @@ final class UserPreferencesMethod
      * Get your user preferences
      *
      * @param array $input
+     * @param User $user
      */
-    public static function user_preferences(array $input)
+    public static function user_preferences(array $input, User $user)
     {
-        $user = User::get_from_username(Session::username($input['auth']));
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 

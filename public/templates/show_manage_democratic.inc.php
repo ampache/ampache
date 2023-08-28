@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,8 @@ use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+
+/** @var array $playlists */
 
 Ui::show_box_top(T_('Manage'));  ?>
 <table class="tabledata striped-rows">

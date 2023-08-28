@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,11 +54,9 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
-        $objectType = $_REQUEST['object_type'];
+        $objectType = $_REQUEST['object_type'] ?? '';
         $objectIds  = explode(',', Core::get_get('object_id'));
-
-        $mediaIds = [];
-
+        $mediaIds   = [];
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
                 $class_name = ObjectTypeToClassNameMapper::map($objectType);

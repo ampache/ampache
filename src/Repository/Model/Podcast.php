@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,6 +47,7 @@ class Podcast extends database_object implements library_item
     public $lastbuilddate;
     public $lastsync;
     public $total_count;
+    public $total_skip;
     public $episodes;
     public $has_art;
 
@@ -74,19 +75,17 @@ class Podcast extends database_object implements library_item
             return false;
         }
 
-        /* Get the information from the db */
-        $info = $this->get_info($podcast_id);
-
+        $info = $this->get_info($podcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
-        } // foreach info
+        }
 
         return true;
     } // constructor
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -148,8 +147,8 @@ class Podcast extends database_object implements library_item
         $this->f_website       = scrub_out($this->website);
         $this->f_lastbuilddate = date("c", (int)$this->lastbuilddate);
         $this->f_lastsync      = date("c", (int)$this->lastsync);
-        $this->f_link          = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         $this->f_website_link  = "<a target=\"_blank\" href=\"" . $this->website . "\">" . $this->website . "</a>";
+        $this->get_f_link();
 
         return true;
     }
@@ -213,6 +212,20 @@ class Podcast extends database_object implements library_item
     }
 
     /**
+     * Get item f_link.
+     * @return string
+     */
+    public function get_f_link()
+    {
+        // don't do anything if it's formatted
+        if (!isset($this->f_link)) {
+            $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
+        }
+
+        return $this->f_link;
+    }
+
+    /**
      * @return null
      */
     public function get_parent()
@@ -229,12 +242,13 @@ class Podcast extends database_object implements library_item
     }
 
     /**
+     * Search for direct children of an object
      * @param string $name
      * @return array
      */
-    public function search_childrens($name)
+    public function get_children($name)
     {
-        debug_event(self::class, 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'get_children ' . $name, 5);
 
         return array();
     }
@@ -390,6 +404,10 @@ class Podcast extends database_object implements library_item
         } else {
             $xml = simplexml_load_string($xmlstr);
             if ($xml === false) {
+                // I've seems some &'s in feeds that screw up
+                $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
+            }
+            if ($xml === false) {
                 AmpError::add('feed', T_('Can not read the feed'));
             } else {
                 $title            = html_entity_decode((string)$xml->channel->title);
@@ -466,13 +484,14 @@ class Podcast extends database_object implements library_item
         foreach ($episodes as $episode) {
             $this->add_episode($episode, $lastSync);
         }
+        $change = 0;
         $time   = time();
         $params = array($this->id);
 
         // Select episodes to download
         $dlnb = (int)AmpConfig::get('podcast_new_download');
         if ($dlnb <> 0) {
-            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` ORDER BY `podcast_episode`.`pubdate` DESC";
+            $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` = ? AND (`podcast_episode`.`addition_time` > `podcast`.`lastsync` OR `podcast_episode`.`state` = 'pending') ORDER BY `podcast_episode`.`pubdate` DESC";
             if ($dlnb > 0) {
                 $sql .= " LIMIT " . (string)$dlnb;
             }
@@ -482,25 +501,28 @@ class Podcast extends database_object implements library_item
                 $episode->change_state('pending');
                 if ($gather) {
                     $episode->gather();
+                    $change++;
                 }
             }
         }
-        // Remove items outside limit
-        $keepnb = AmpConfig::get('podcast_keep');
-        if ($keepnb > 0) {
-            $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
-            $db_results = Dba::read($sql, $params);
-            while ($row = Dba::fetch_row($db_results)) {
-                $episode = new Podcast_Episode($row[0]);
-                $episode->remove();
+        if ($change > 0) {
+            // Remove items outside limit
+            $keepnb = AmpConfig::get('podcast_keep');
+            if ($keepnb > 0) {
+                $sql        = "SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? ORDER BY `podcast_episode`.`pubdate` DESC LIMIT " . $keepnb . ",18446744073709551615";
+                $db_results = Dba::read($sql, $params);
+                while ($row = Dba::fetch_row($db_results)) {
+                    $episode = new Podcast_Episode($row[0]);
+                    $episode->remove();
+                }
             }
+            // update the episode count after adding / removing episodes
+            $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
+            Dba::write($sql, $params);
+            Catalog::update_mapping('podcast');
+            Catalog::update_mapping('podcast_episode');
+            Catalog::count_table('podcast_episode');
         }
-        // update the episode count after adding / removing episodes
-        $sql = "UPDATE `podcast`, (SELECT COUNT(`podcast_episode`.`id`) AS `episodes`, `podcast` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? GROUP BY `podcast_episode`.`podcast`) AS `episode_count` SET `podcast`.`episodes` = `episode_count`.`episodes` WHERE `podcast`.`episodes` != `episode_count`.`episodes` AND `podcast`.`id` = `episode_count`.`podcast`;";
-        Dba::write($sql, $params);
-        Catalog::update_mapping('podcast');
-        Catalog::update_mapping('podcast_episode');
-        Catalog::count_table('podcast_episode');
         $this->update_lastsync($time);
     }
 
@@ -518,10 +540,10 @@ class Podcast extends database_object implements library_item
         $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
         $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
         $category    = html_entity_decode((string)$episode->category);
-        $source      = null;
+        $source      = '';
         $time        = 0;
         if ($episode->enclosure) {
-            $source = $episode->enclosure['url'];
+            $source = (string)$episode->enclosure['url'];
         }
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
@@ -548,8 +570,14 @@ class Podcast extends database_object implements library_item
 
             return false;
         }
-        if (!$source) {
+        if (empty($source)) {
             debug_event(self::class, 'Episode source URL not found, skipped', 3);
+
+            return false;
+        }
+        // don't keep adding the same episodes
+        if (self::get_id_from_guid($guid) > 0) {
+            debug_event(self::class, 'Episode guid already exists, skipped', 3);
 
             return false;
         }
@@ -628,6 +656,10 @@ class Podcast extends database_object implements library_item
         }
         $xml = simplexml_load_string($xmlstr);
         if ($xml === false) {
+            // I've seems some &'s in feeds that screw up
+            $xml = simplexml_load_string(str_replace('&', '&amp;', $xmlstr));
+        }
+        if ($xml === false) {
             debug_event(self::class, 'Cannot read feed ' . $this->feed, 1);
 
             return false;
@@ -674,6 +706,26 @@ class Podcast extends database_object implements library_item
     public static function get_id_from_source($url)
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, array($url));
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_guid
+     *
+     * Get episode id from the guid.
+     *
+     * @param string $url
+     * @return integer
+     */
+    public static function get_id_from_guid($url)
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, array($url));
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -742,11 +794,11 @@ class Podcast extends database_object implements library_item
         $dirname = $this->title;
 
         // create path if it doesn't exist
-        if (!is_dir($catalog->path . DIRECTORY_SEPARATOR . $dirname)) {
-            static::create_catalog_path($catalog->path . DIRECTORY_SEPARATOR . $dirname);
+        if (!is_dir($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname) && !self::create_catalog_path($catalog->get_path() . DIRECTORY_SEPARATOR . $dirname)) {
+            return '';
         }
 
-        return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
+        return $catalog->get_path() . DIRECTORY_SEPARATOR . $dirname;
     }
 
     /**

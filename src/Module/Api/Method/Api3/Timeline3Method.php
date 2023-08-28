@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,11 +39,13 @@ final class Timeline3Method
 
     /**
      * timeline
-     * This get an user timeline
+     * This gets a user's timeline
      * @param array $input
+     * @param User $user
      */
-    public static function timeline(array $input)
+    public static function timeline(array $input, User $user)
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
             $limit    = (int)($input['limit'] ?? 0);
@@ -53,13 +55,13 @@ final class Timeline3Method
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $activities = static::getUseractivityRepository()->getActivities(
+                        $results = static::getUseractivityRepository()->getActivities(
                             $user->id,
                             $limit,
                             $since
                         );
                         ob_end_clean();
-                        echo Xml3_Data::timeline($activities);
+                        echo Xml3_Data::timeline($results);
                     }
                 }
             } else {

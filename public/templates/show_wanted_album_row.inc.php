@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Wanted $libitem */
 
 use Ampache\Repository\Model\Wanted;
 
+/** @var Wanted $libitem */
 ?>
-
 <td class="cel_album"><?php echo $libitem->f_link; ?></td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_year"><?php echo $libitem->year; ?></td>

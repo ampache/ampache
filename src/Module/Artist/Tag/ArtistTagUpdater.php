@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
         Tag::update_tag_list($tags_comma, 'artist', $artist->getId(), $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
-            $albums = $this->albumRepository->getByArtist($artist->id);
+            $albums = $this->albumRepository->getAlbumByArtist($artist->id);
 
             foreach ($albums as $albumId) {
                 $this->albumTagUpdater->updateTags(

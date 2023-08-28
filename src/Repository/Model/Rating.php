@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,6 +41,7 @@ class Rating extends database_object
     private const RATING_TYPES   = array(
         'artist',
         'album',
+        'album_disk',
         'song',
         'stream',
         'live_stream',
@@ -73,7 +74,7 @@ class Rating extends database_object
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -95,16 +96,21 @@ class Rating extends database_object
     public static function garbage_collection($object_type = null, $object_id = null)
     {
         $types = array(
-            'song',
             'album',
+            'album_disk',
             'artist',
-            'video',
+            'catalog',
+            'tag',
+            'label',
+            'live_stream',
+            'playlist',
+            'podcast',
+            'podcast_episode',
+            'song',
             'tvshow',
             'tvshow_season',
-            'playlist',
-            'label',
-            'podcast',
-            'podcast_episode'
+            'user',
+            'video'
         );
 
         if ($object_type !== null && $object_type !== '') {
@@ -242,28 +248,32 @@ class Rating extends database_object
     /**
      * get_highest_sql
      * Get highest sql
-     * @param string $type
+     * @param string $input_type
      * @param integer $user_id
      * @return string
      */
-    public static function get_highest_sql($type, $user_id = null)
+    public static function get_highest_sql($input_type, $user_id = null)
     {
-        $type              = Stats::validate_type($type);
-        $sql               = "SELECT MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`), 2) AS `rating`, COUNT(DISTINCT(`user`)) AS `count` FROM `rating`";
-        $allow_group_disks = (AmpConfig::get('album_group') && $type === 'album');
-        if ($allow_group_disks) {
-            $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
+        $type    = Stats::validate_type($input_type);
+        $user_id = (int)($user_id);
+        $sql     = "SELECT MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count` FROM `rating`";
+        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
+            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
         }
         $sql .= " WHERE `object_type` = '$type'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        if (AmpConfig::get('catalog_disable') && in_array($input_type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+            $sql .= " AND " . Catalog::get_enable_filter($input_type, '`object_id`');
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             $sql .= " AND" . Catalog::get_user_filter("rating_$type", $user_id);
         }
-        $sql .= ($allow_group_disks)
-            ? " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` ORDER BY `rating` DESC, `count` DESC, `id` DESC "
-            : " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
+        if ($input_type == 'album_artist') {
+            $sql .= " AND `artist`.`album_count` > 0";
+        }
+        if ($input_type == 'song_artist') {
+            $sql .= " AND `artist`.`song_count` > 0";
+        }
+        $sql .= " GROUP BY `rating`.`object_id` ORDER BY `rating` DESC, `count` DESC, `id` DESC ";
         //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
@@ -272,23 +282,31 @@ class Rating extends database_object
     /**
      * get_highest
      * Get objects with the highest average rating.
-     * @param string $type
+     * @param string $input_type
      * @param integer $count
      * @param integer $offset
      * @return array
      */
-    public static function get_highest($type, $count = 0, $offset = 0, $user_id = null)
+    public static function get_highest($input_type, $count = 0, $offset = 0, $user_id = null)
     {
-        if ($count < 1) {
+        if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
-        $limit = ($offset < 1) ? $count : $offset . "," . $count;
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
 
         // Select Top objects counting by # of rows
-        $sql = self::get_highest_sql($type, $user_id);
-        $sql .= " LIMIT $limit";
-        //debug_event(self::class, 'get_highest ' . $sql, 5);
+        $sql   = self::get_highest_sql($input_type, $user_id);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= "LIMIT $limit";
+        }
 
+        //debug_event(self::class, 'get_highest ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -315,13 +333,6 @@ class Rating extends database_object
         if ($user_id === 0) {
             return false;
         }
-        // albums may be a group of id's
-        if ($this->type == 'album' && AmpConfig::get('album_group')) {
-            $album       = new Album($this->id);
-            self::set_rating_for_group($rating, $album->album_suite, $user_id);
-
-            return true;
-        }
         // Everything else is a single item
         debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
         if ($rating == '-1') {
@@ -340,35 +351,6 @@ class Rating extends database_object
 
         return true;
     } // set_rating
-
-    /**
-     * set_rating_for_group
-     * This function sets the rating for the current object.
-     * This is currently only for grouped disk albums!
-     * @param string $rating
-     * @param array $album_array
-     * @param string $user_id
-     * @return boolean
-     */
-    public static function set_rating_for_group($rating, $album_array, $user_id = null)
-    {
-        foreach ($album_array as $album_id) {
-            debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
-            if ($rating == '-1') {
-                // If score is -1, then remove rating
-                $sql = "DELETE FROM `rating` WHERE `object_id` = '" . $album_id . "' AND `object_type` = 'album' AND `user` = " . $user_id;
-                Dba::write($sql);
-            } else {
-                $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`) VALUES (?, ?, ?, ?)";
-                $params = array($album_id, 'album', $rating, $user_id);
-                Dba::write($sql, $params);
-
-                parent::add_to_cache('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
-            }
-        }
-
-        return true;
-    } // set_rating_for_group
 
     /**
      * save_rating
@@ -415,7 +397,7 @@ class Rating extends database_object
         $rating = new Rating($object_id, $type);
 
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
-        $rate     = ($rating->get_user_rating() ?: 0);
+        $rate     = ($rating->get_user_rating() ?? 0);
 
         $global_rating = '';
 

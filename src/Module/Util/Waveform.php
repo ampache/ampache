@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -70,7 +70,7 @@ class Waveform
 
     /**
      * Get a song or podcast_episode waveform.
-     * @param Song|Podcast_Episode $object
+     * @param Song|Podcast_Episode $media
      * @param string $object_type
      * @return string|null|boolean
      * @throws RuntimeException
@@ -86,7 +86,7 @@ class Waveform
             } else {
                 $waveform = $media->waveform;
             }
-            if ($waveform == null || $waveform == false) {
+            if (!$waveform) {
                 $catalog = Catalog::create_from_id($media->catalog);
                 if ($catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';

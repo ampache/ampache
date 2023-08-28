@@ -66,15 +66,9 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        if (array_key_exists('browse_id', $_REQUEST)) {
-            $browse_id = $_REQUEST['browse_id'];
-        } else {
-            $browse_id = null;
-        }
-
         debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
-
-        $browse = $this->modelFactory->createBrowse($browse_id);
+        $browse_id = $_REQUEST['browse_id'] ?? null;
+        $browse    = $this->modelFactory->createBrowse($browse_id);
 
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
@@ -102,7 +96,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                     }
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
-                        $value = (int)$_REQUEST['value'] ?? 0;
+                        $value = (int)($_REQUEST['value'] ?? 0);
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
@@ -202,9 +196,8 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results['browse_filters'] = ob_get_clean();
                 break;
             case 'options':
-                $option = $_REQUEST['option'];
-                $value  = $_REQUEST['value'];
-
+                $option = $_REQUEST['option'] ?? '';
+                $value  = $_REQUEST['value'] ?? '';
                 switch ($option) {
                     case 'use_pages':
                         $value = ($value == 'true');
@@ -232,13 +225,13 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $browse->set_grid_view($value);
                         break;
                     case 'limit':
-                        $value = (int) ($value);
+                        $value = (int)$value;
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
                         break;
                     case 'custom':
-                        $value = (int) ($value);
+                        $value = (int)$value;
                         $limit = $browse->get_offset();
                         if ($limit > 0 && $value > 0) {
                             $total = $browse->get_total();

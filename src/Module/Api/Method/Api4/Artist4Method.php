@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Artist4Method
@@ -45,17 +44,17 @@ final class Artist4Method
      * This returns a single artist based on the UID of said artist
      *
      * @param array $input
+     * @param User $user
      * filter  = (string) Alpha-numeric search term
      * include = (array) 'albums'|'songs' //optional
      * @return boolean
      */
-    public static function artist(array $input): bool
+    public static function artist(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid     = scrub_in($input['filter']);
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = [];
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);

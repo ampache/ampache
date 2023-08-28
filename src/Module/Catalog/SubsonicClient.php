@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -178,10 +178,8 @@ class SubsonicClient
         if ($port == null && isset($_port)) {
             // If port parameter not set but there was one on the url, use the one from the url.
             $port = $_port;
-        } else {
-            if ($port == null) {
-                $port = ($protocol == "https") ? '443' : '80';
-            }
+        } elseif ($port == null) {
+            $port = ($protocol == "https") ? '443' : '80';
         }
         $this->_serverUrl  = $server;
         $this->_serverPort = $port;

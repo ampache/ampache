@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -42,8 +41,9 @@ final class Artists3Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      * @param array $input
+     * @param User $user
      */
-    public static function artists(array $input)
+    public static function artists(array $input, User $user)
     {
         $browse = Api::getBrowse();
         $browse->reset_filters();
@@ -59,14 +59,13 @@ final class Artists3Method
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
-        $artists = $browse->get_objects();
+        $results = $browse->get_objects();
         $include = [];
-        $user    = User::get_from_username(Session::username($input['auth']));
         if (array_key_exists('include', $input)) {
             $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
         // echo out the resulting xml document
         ob_end_clean();
-        echo Xml3_Data::artists($artists, $include, $user);
+        echo Xml3_Data::artists($results, $include, $user);
     } // artists
 }

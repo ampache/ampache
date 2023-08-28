@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,5 +43,18 @@ final class PasswordGenerator implements PasswordGeneratorInterface
         $encode   = str_replace('=', '', base64_encode($string));
 
         return strtr($encode, '+/', '^*');
+    }
+
+    /**
+     * Generate a simple token for file shares (a-z, A-Z & 0-9 only)
+     */
+    public function generate_token(): string
+    {
+        $random_bytes  = openssl_random_pseudo_bytes(self::DEFAULT_LENGTH);
+        $random_string = base64_encode($random_bytes);
+        $random_string = preg_replace("/[^a-zA-Z0-9]/", "", $random_string);
+        $random_string = substr($random_string, 0, self::DEFAULT_LENGTH);
+
+        return strtr($random_string, '+/', '^*');
     }
 }

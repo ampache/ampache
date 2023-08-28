@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 
 /**
  * Class UserCreate4Method
@@ -45,6 +44,7 @@ final class UserCreate4Method
      * Requires the username, password and email.
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
@@ -52,9 +52,9 @@ final class UserCreate4Method
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create(array $input): bool
+    public static function user_create(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
+        if (!Api4::check_access('interface', 100, $user->id, 'user_create', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
@@ -66,7 +66,7 @@ final class UserCreate4Method
         $password             = $input['password'];
         $disable              = (bool)($input['disable'] ?? false);
         $access               = 25;
-        $catalog_filter_group = $input['catalog_filter_group'] ?? 0;
+        $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, null, $password, $access, $catalog_filter_group, null, null, $disable, true);
 
         if ($user_id > 0) {

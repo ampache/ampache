@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,17 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Module\System\Core;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
-use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Democratic;
-use Ampache\Repository\Model\Random;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
-use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 class WebPlayer
 {
@@ -132,16 +130,16 @@ class WebPlayer
      */
     public static function get_media_object($urlinfo)
     {
-        $media = null;
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
-            $media      = new $class_name($urlinfo['id']);
+
+            return new $class_name($urlinfo['id']);
         }
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-            $media = new Song_Preview($urlinfo['id']);
+            return new Song_Preview($urlinfo['id']);
         }
 
-        return $media;
+        return null;
     } // get_media_object
 
     /**
@@ -199,14 +197,14 @@ class WebPlayer
         $transcode = false;
 
         // Check transcode is required
-        $valid_types = Song::get_stream_types_for_type($file_type, 'webplayer');
+        $valid_types = Stream::get_stream_types_for_type($file_type);
         if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                    debug_event("webplayer.class", "Forcing type to {{$force_type}}", 5);
+                    debug_event(__class__, "Forcing type to {{$force_type}}", 5);
                     // Transcode only if excepted type available
-                    $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                    $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                     if (!empty($transcode_settings)) {
                         $transcode = true;
                     }
@@ -215,7 +213,7 @@ class WebPlayer
                 // Transcode is not forced, transcode only if required
                 if (!$transcode) {
                     if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
-                        $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
+                        $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                         if (!empty($transcode_settings)) {
                             $transcode = true;
                         }
@@ -303,11 +301,16 @@ class WebPlayer
 
         //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
-            if ($url_data['type'] == 'song') {
+            /** @var Live_Stream|Podcast_Episode|Song|Song_Preview|Video $media */
+            if ($url_data['type'] == 'song' && $media instanceof Song) {
+                $json['artist_id'] = $media->artist;
+                if (AmpConfig::get('album_group')) {
+                    $json['album_id'] = $media->album;
+                } else {
+                    $json['albumdisk_id'] = $media->get_album_disk();
+                }
                 // get replaygain from the song_data table
                 $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
-                $json['artist_id']             = $media->artist;
-                $json['album_id']              = $media->album;
                 $json['replaygain_track_gain'] = $media->replaygain_track_gain;
                 $json['replaygain_track_peak'] = $media->replaygain_track_peak;
                 $json['replaygain_album_gain'] = $media->replaygain_album_gain;
@@ -317,7 +320,12 @@ class WebPlayer
 
                 // this should probably only be in songs
                 if ($media->type != $types['real']) {
-                    $url .= '&transcode_to=' . $types['real'];
+                    $pos = strrpos($url, '&');
+                    if ($pos !== false) {
+                        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
+                    } else {
+                        $url .= '&transcode_to=' . $types['real'];
+                    }
                 }
             }
             $json['media_id']   = $media->id;

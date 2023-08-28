@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -285,6 +285,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return $this->playlist->get_f_link();
     }
 
+    public function getUsername(): string
+    {
+        return $this->playlist->username;
+    }
+
     public function getLastUpdate(): string
     {
         return $this->playlist->f_last_update;
@@ -292,7 +297,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getType(): string
     {
-        return $this->playlist->f_type;
+        return $this->playlist->get_f_type();
     }
 
     public function getMediaCount(): int

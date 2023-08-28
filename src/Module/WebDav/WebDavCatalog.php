@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,11 +69,11 @@ class WebDavCatalog extends DAV\Collection
      */
     public function getChild($name)
     {
-        debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
-        $matches = Catalog::search_childrens($name, $this->catalog_id);
-        debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
+        $matches = Catalog::get_children($name, $this->catalog_id);
+        //debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
+        //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now
+        // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
         if (count($matches) > 0) {
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
@@ -88,7 +88,7 @@ class WebDavCatalog extends DAV\Collection
      */
     public function childExists($name)
     {
-        $matches = Catalog::search_childrens($name, $this->catalog_id);
+        $matches = Catalog::get_children($name, $this->catalog_id);
 
         return (count($matches) > 0);
     }

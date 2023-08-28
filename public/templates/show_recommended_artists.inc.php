@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,54 +54,54 @@ $cel_counter = "cel_counter"; ?>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('# Played') ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played') ?></th>
                 <?php } ?>
             <?php if (!$hide_genres) {
-    ++$thcount; ?>
+                ++$thcount; ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php
-} ?>
+            } ?>
             <?php if ($show_ratings) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
                 <?php
-    } ?>
+            } ?>
             <th class="cel_action"> <?php echo T_('Action'); ?> </th>
         </tr>
     </thead>
     <tbody>
         <?php if (AmpConfig::get('ratings')) {
-        // Cache the ratings we are going to use
-        Rating::build_cache('artist', $object_ids);
-        // Cache the userflags we are going to use
-        Userflag::build_cache('artist', $object_ids);
-    }
-        $show_direct_play_cfg = AmpConfig::get('directplay');
-        $directplay_limit     = AmpConfig::get('direct_play_limit');
+            // Cache the ratings we are going to use
+            Rating::build_cache('artist', $object_ids);
+            // Cache the userflags we are going to use
+            Userflag::build_cache('artist', $object_ids);
+        }
+                $show_direct_play_cfg = AmpConfig::get('directplay');
+$directplay_limit                     = AmpConfig::get('direct_play_limit');
 
-        /* Foreach through every artist that has been passed to us */
-        foreach ($object_ids as $artist_id) {
-            $libitem = new Artist($artist_id, $_SESSION['catalog']);
-            $libitem->format(true, $limit_threshold);
-            $show_direct_play  = $show_direct_play_cfg;
-            $show_playlist_add = Access::check('interface', 25);
-            if ($directplay_limit > 0) {
-                $show_playlist_add = ($libitem->songs <= $directplay_limit);
-                if ($show_direct_play) {
-                    $show_direct_play = $show_playlist_add;
-                }
-            } ?>
+/* Foreach through every artist that has been passed to us */
+foreach ($object_ids as $artist_id) {
+    $libitem = new Artist($artist_id, $_SESSION['catalog']);
+    $libitem->format(true, $limit_threshold);
+    $show_direct_play  = $show_direct_play_cfg;
+    $show_playlist_add = Access::check('interface', 25);
+    if ($directplay_limit > 0) {
+        $show_playlist_add = ($libitem->song_count <= $directplay_limit);
+        if ($show_direct_play) {
+            $show_direct_play = $show_playlist_add;
+        }
+    } ?>
         <tr id="artist_<?php echo $libitem->id; ?>">
             <?php require Ui::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
-        } ?>
-        <?php
-        /* Foreach through every missing artist that has been passed to us */
-        foreach ($missing_objects as $missing) { ?>
+} ?>
+        <?php $web_path = AmpConfig::get('web_path');
+/* Foreach through every missing artist that has been passed to us */
+foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">
             <td></td>
-            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
+            <td colspan="<?php echo($thcount - 1); ?>"><a class="missing_album" href="<?php echo $web_path; ?>/artists.php?action=show_missing&mbid=<?php echo $missing['mbid']; ?>" title="<?php echo scrub_out($missing['name']); ?>"><?php echo scrub_out($missing['name']); ?></a></td>
         </tr>
         <?php } ?>
         <?php if ((!$object_ids || !count($object_ids)) && (!$missing_objects || !count($missing_objects))) { ?>

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,11 +63,12 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
 
-        $this->subject->handle($gatekeeper, $response, $output, []);
+        $this->subject->handle($gatekeeper, $response, $output, [], $user);
     }
 
     public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
@@ -75,15 +76,10 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
 
         $albumId = 666;
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -98,7 +94,7 @@ class AlbumMethodTest extends MockeryTestCase
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
-        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId]);
+        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId], $user);
     }
 
     public function testHandleReturnsOutput(): void
@@ -106,19 +102,13 @@ class AlbumMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
         $albumId = 666;
-        $userId  = 42;
         $include = [3];
         $result  = 'some-result';
-
-        $gatekeeper->shouldReceive('getUser')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($user);
 
         $this->modelFactory->shouldReceive('createAlbum')
             ->with($albumId)
@@ -157,7 +147,7 @@ class AlbumMethodTest extends MockeryTestCase
 
         $this->assertSame(
             $response,
-            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include])
+            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include], $user)
         );
     }
 }

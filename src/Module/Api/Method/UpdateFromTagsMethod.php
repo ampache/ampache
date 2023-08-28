@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 
 /**
  * Class UpdateFromTagsMethod
@@ -43,15 +44,17 @@ final class UpdateFromTagsMethod
      * updates a single album, artist, song from the tag data
      *
      * @param array $input
+     * @param User $user
      * type = (string) 'artist', 'album', 'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
-    public static function update_from_tags(array $input): bool
+    public static function update_from_tags(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 
@@ -72,13 +75,7 @@ final class UpdateFromTagsMethod
             return false;
         }
         // update your object
-        if ($type == 'album') {
-            foreach ($item->album_suite as $album_id) {
-                Catalog::update_single_item($type, $album_id, true);
-            }
-        } else {
-            Catalog::update_single_item($type, $object_id, true);
-        }
+        Catalog::update_single_item($type, $object_id, true);
 
         Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
 

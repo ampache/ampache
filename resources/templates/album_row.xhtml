@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <td class="cel_play">
         <span class="cel_play_content"> </span>
@@ -18,7 +19,7 @@
                 <tal:block tal:replace="structure ALBUM/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
                 <a
                         id="add_playlist_${ALBUM/getId}"
-                        onclick="showPlaylistDialog(event, 'album', '${ALBUM/getAlbumSuiteIds}')"
+                        onclick="showPlaylistDialog(event, 'album', '${ALBUM/getId}')"
                         tal:content="structure ALBUM/getAddToPlaylistIcon"
                 >ADD TO PLAYLIST</a>
             </tal:block>

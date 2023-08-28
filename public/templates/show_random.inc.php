@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,10 +33,10 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var array $object_ids */
 
 $web_path     = AmpConfig::get('web_path');
-$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+$get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
-$random_count = $_POST['random'] ?? 1;
+$random_count = $_POST['limit'] ?? 1;
 $random_type  = (in_array($get_type, Random::VALID_TYPES))
     ? $get_type
     : null;
@@ -46,10 +46,10 @@ if (!$random_type) {
 $browse_type = ($random_type == 'video')
     ? 'video'
     : 'song';
-?>
-<?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
 
+Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
+<input type='hidden' name='random' value=1>
 <div class="category_options">
     <a class="category <?php echo ($random_type == 'song') ? 'current' : '' ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
         <?php echo T_('Songs'); ?>
@@ -71,7 +71,7 @@ $browse_type = ($random_type == 'video')
 <tr id="search_item_count">
         <td><?php echo T_('Item Count'); ?></td>
         <td>
-        <select name="random">
+        <select name="limit">
 <?php
         foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
@@ -87,22 +87,23 @@ $browse_type = ($random_type == 'video')
 <tr id="search_length">
         <td><?php echo T_('Length'); ?></td>
         <td>
-                <?php $name = 'length_' . (int) (Core::get_post('length')); ${$name} = ' selected="selected"'; ?>
+                <?php $name = 'length_' . (int) (Core::get_post('length'));
+${$name}                    = ' selected="selected"'; ?>
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                (($length == 0) ? 'selected="selected"' : '') . '>' .
-                T_('Unlimited') . "</option>\n";
-        foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '" ' .
-                (($length == $i) ? 'selected="selected"' : '') . '>';
-            if ($i < 60) {
-                printf(nT_('%d minute', '%d minutes', $i), $i);
-            } else {
-                printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
-            }
-            echo "</option>\n";
-        } ?>
+(($length == 0) ? 'selected="selected"' : '') . '>' .
+T_('Unlimited') . "</option>\n";
+foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
+    echo "\t\t\t" . '<option value="' . $i . '" ' .
+        (($length == $i) ? 'selected="selected"' : '') . '>';
+    if ($i < 60) {
+        printf(nT_('%d minute', '%d minutes', $i), $i);
+    } else {
+        printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
+    }
+    echo "</option>\n";
+} ?>
                 </select>
         </td>
 </tr>
@@ -111,14 +112,14 @@ $browse_type = ($random_type == 'video')
         <td>
                 <select name="size_limit">
 <?php
-            echo "\t\t\t" . '<option value="0" ' .
-                (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
-                T_('Unlimited') . "</option>\n";
-        foreach (array(64, 128, 256, 512, 1024) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '"' .
-                (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
-                Ui::format_bytes($i * 1048576) . "</option>\n";
-        } ?>
+    echo "\t\t\t" . '<option value="0" ' .
+        (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
+        T_('Unlimited') . "</option>\n";
+foreach (array(64, 128, 256, 512, 1024) as $i) {
+    echo "\t\t\t" . '<option value="' . $i . '"' .
+        (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
+        Ui::format_bytes($i * 1048576) . "</option>\n";
+} ?>
                 </select>
         </td>
 </tr>

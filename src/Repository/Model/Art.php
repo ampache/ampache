@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,9 +36,8 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
-use getID3;
 use PDOStatement;
-use Requests;
+use WpOrg\Requests;
 use RuntimeException;
 
 /**
@@ -49,7 +48,16 @@ use RuntimeException;
 class Art extends database_object
 {
     protected const DB_TABLENAME = 'art';
-    public const VALID_TYPES     = array('bmp', 'gif', 'jp2', 'jpeg', 'jpg', 'png', 'webp');
+
+    public const VALID_TYPES = array(
+        'bmp',
+        'gif',
+        'jp2',
+        'jpeg',
+        'jpg',
+        'png',
+        'webp'
+    );
 
     /**
      * @var integer $id
@@ -104,7 +112,7 @@ class Art extends database_object
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -202,12 +210,12 @@ class Art extends database_object
         if (is_string($source)) {
             $test  = true;
             $image = imagecreatefromstring($source);
-            if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
+            if (!$image || imagesx($image) < 5 || imagesy($image) < 5) {
                 debug_event(self::class, 'Image failed PHP-GD test', 1);
                 $test = false;
             }
         }
-        if ($test && $image != false) {
+        if ($test && $image) {
             if (imagedestroy($image) === false) {
                 throw new RuntimeException('The image handle from source: ' . $source . ' could not be destroyed');
             }
@@ -262,6 +270,9 @@ class Art extends database_object
                 }
                 $this->raw_mime = $results['mime'];
             } elseif (AmpConfig::get('resize_images')) {
+                if (!empty($this->thumb)) { // See https://github.com/ampache/ampache/issues/3386
+                    continue;
+                }
                 if (AmpConfig::get('album_art_store_disk')) {
                     $this->thumb = self::read_from_dir($results['size'], $this->type, $this->uid, $this->kind, $results['mime']);
                 } elseif ($results['size'] == '275x275') {
@@ -329,7 +340,7 @@ class Art extends database_object
         debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
-        $mime  = "image/" . $rurl['extension'];
+        $mime  = "image/" . $rurl['extension'] ?? 'jpg';
         $this->insert($image, $mime);
     }
 
@@ -386,9 +397,8 @@ class Art extends database_object
             $utilityFactory = $dic->get(UtilityFactoryInterface::class);
 
             foreach ($songs as $song_id) {
-                $song   = new Song($song_id);
-                $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
+                $song        = new Song($song_id);
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
@@ -455,8 +465,7 @@ class Art extends database_object
             } // foreach song
         } // write_id3
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         // Insert it!
@@ -627,6 +636,11 @@ class Art extends database_object
         if ($path === false) {
             return false;
         }
+        if (!Core::is_readable($path)) {
+            debug_event(self::class, 'Local image art directory ' . $path . ' does not exist.', 1);
+
+            return null;
+        }
         $path .= "art-" . $sizetext . "." . self::extension($mime);
         if (Core::is_readable($path)) {
             unlink($path);
@@ -767,8 +781,7 @@ class Art extends database_object
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
         Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
 
-        if (AmpConfig::get('album_art_store_disk')) {
-            self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime);
+        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -932,9 +945,9 @@ class Art extends database_object
                 imagegif($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_GIF);
                 break;
-            // Turn bmps into pngs
             case 'bmp':
             case 'png':
+                // Turn bmps into pngs
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
                 break;
@@ -1007,8 +1020,8 @@ class Art extends database_object
             $options = array();
             try {
                 $options['timeout'] = 10;
-                Requests::register_autoloader();
-                $request = Requests::get($data['url'], array(), Core::requests_options($options));
+                Requests\Autoload::register();
+                $request = Requests\Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
@@ -1029,61 +1042,10 @@ class Art extends database_object
 
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
-            // If we find a good one, stop looking
-            $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
-
-            if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
-                return $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
-            }
-
-            if (isset($id3['id3v2']['APIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['APIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['id3v2']['PIC'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['id3v2']['PIC'] as $image) {
-                    if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == MetaTagCollectorModule::getPictureType((int)$image['picturetypeid'])) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['flac']['PICTURE'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['flac']['PICTURE'] as $image) {
-                    if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                        $title = 'ID3 ' . MetaTagCollectorModule::getPictureType((int)$image['typeid']);
-                        if ($data['title'] == $title) {
-                            return $image['data'];
-                        }
-                    }
-                }
-            }
-
-            if (isset($id3['comments']['picture'])) {
-                // Foreach in case they have more than one
-                foreach ($id3['comments']['picture'] as $image) {
-                    if (isset($image['picturetype']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['picturetype']) {
-                            return $image['data'];
-                        }
-                    }
-                    if (isset($image['description']) && array_key_exists('data', $image)) {
-                        if ($data['title'] == 'ID3 ' . $image['description']) {
-                            return $image['data'];
-                        }
-                    }
+            $images = MetaTagCollectorModule::gatherFileArt($data['song']);
+            foreach ($images as $image) {
+                if ($data['title'] == $image['title']) {
+                    return $image['raw'];
                 }
             }
         } // if data song
@@ -1156,7 +1118,7 @@ class Art extends database_object
             }
             $url .= '.' . $extension;
         } else {
-            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type) . '&auth=' . $sid;
+            $url = AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }
@@ -1179,14 +1141,20 @@ class Art extends database_object
     {
         $types = array(
             'album',
+            'album_disk',
             'artist',
-            'tvshow',
-            'tvshow_season',
-            'video',
-            'user',
+            'catalog',
+            'tag',
+            'label',
             'live_stream',
             'playlist',
-            'song'
+            'podcast',
+            'podcast_episode',
+            'song',
+            'tvshow',
+            'tvshow_season',
+            'user',
+            'video'
         );
 
         if ($object_type !== null) {

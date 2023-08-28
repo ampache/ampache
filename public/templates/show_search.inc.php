@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,10 +31,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var Search $playlist */
 /** @var array $object_ids */
 
-?>
-<?php
 ob_start();
-require Ui::find_template('show_search_title.inc.php');
+echo $playlist->get_fullname();
 $title    = ob_get_contents();
 $web_path = AmpConfig::get('web_path');
 $browse   = new Browse();
@@ -45,25 +43,23 @@ ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <div id="information_actions">
     <ul>
-        <?php
-        // @todo remove after refactoring
-        global $dic;
-        $zipHandler = $dic->get(ZipHandlerInterface::class);
-        if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
+<?php global $dic; // @todo remove after refactoring
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
-        <?php } ?>
+<?php } ?>
         <li>
             <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
         </li>
-        <?php if ($playlist->has_access()) { ?>
+<?php if ($playlist->has_access()) { ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id ?>', '<?php echo 'edit_playlist_' . $playlist->id ?>', '<?php echo addslashes(T_('Smart Playlist Edit')) ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>
@@ -76,7 +72,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
-        <?php } ?>
+<?php } ?>
     </ul>
 </div>
 
@@ -95,8 +91,7 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 <?php Ui::show_box_bottom(); ?>
 
 <div>
-<?php
-    $browse->duration = Search::get_total_duration($object_ids);
-    $browse->show_objects($object_ids);
-    $browse->store(); ?>
+<?php $browse->duration = Search::get_total_duration($object_ids);
+$browse->show_objects($object_ids);
+$browse->store(); ?>
 </div>

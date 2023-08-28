@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class SystemPreferencesMethod
@@ -45,12 +44,11 @@ final class SystemPreferencesMethod
      * Get your system preferences
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function system_preferences(array $input): bool
+    public static function system_preferences(array $input, User $user): bool
     {
-        $user = User::get_from_username(Session::username($input['auth']));
-
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -182,15 +182,15 @@ class Ui implements UiInterface
      *
      * Turns a size in bytes into the best human-readable value
      * @param $value
-     * @param integer $precision
+     * @param int $precision
+     * @param int $pass
      * @return string
      */
-    public static function format_bytes($value, $precision = 2)
+    public static function format_bytes($value, $precision = 2, $pass = 0)
     {
         if (!$value) {
             return '';
         }
-        $pass = 0;
         while (strlen((string)floor($value)) > 3) {
             $value /= 1024;
             $pass++;
@@ -277,7 +277,7 @@ class Ui implements UiInterface
 
         $title    = $title ?: T_(ucfirst($name));
         $icon_url = self::_find_icon($name);
-        $icontype = pathinfo($icon_url, 4);
+        $icontype = pathinfo($icon_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_icon($hover_name);
         }
@@ -345,7 +345,7 @@ class Ui implements UiInterface
             $filename = 'icon_' . $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -374,7 +374,7 @@ class Ui implements UiInterface
         $title = $title ?: ucfirst($name);
 
         $image_url = self::_find_image($name);
-        $imagetype = pathinfo($image_url, 4);
+        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
         if (isset($hover_name)) {
             $hover_url = self::_find_image($hover_name);
         }
@@ -444,7 +444,7 @@ class Ui implements UiInterface
             $filename = $name . '.png';
             $path     = '/images/';
         } else {
-            $filename = pathinfo($filesearch[0], 2);
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -715,95 +715,100 @@ class Ui implements UiInterface
         } // if we don't have access to it
 
         switch ($name) {
-            case 'display_menu':
-            case 'download':
-            case 'quarantine':
-            case 'upload':
-            case 'access_list':
-            case 'lock_songs':
-            case 'xml_rpc':
-            case 'force_http_play':
-            case 'no_symlinks':
-            case 'use_auth':
             case 'access_control':
-            case 'allow_stream_playback':
+            case 'access_list':
+            case 'ajax_load':
+            case 'album_group':
+            case 'album_release_type':
             case 'allow_democratic_playback':
             case 'allow_localplay_playback':
-            case 'demo_mode':
-            case 'condPL':
-            case 'rio_track_stats':
-            case 'rio_global_stats':
-            case 'direct_link':
-            case 'ajax_load':
-            case 'now_playing_per_user':
-            case 'show_played_times':
-            case 'use_original_year':
-            case 'hide_single_artist':
-            case 'hide_genres':
-            case 'show_skipped_times':
-            case 'show_playlist_username':
-            case 'show_license':
-            case 'song_page_title':
-            case 'subsonic_backend':
-            case 'webplayer_flash':
-            case 'webplayer_html5':
+            case 'allow_personal_info_agent':
             case 'allow_personal_info_now':
             case 'allow_personal_info_recent':
             case 'allow_personal_info_time':
-            case 'allow_personal_info_agent':
-            case 'ui_fixed':
-            case 'autoupdate':
-            case 'autoupdate_lastversion_new':
-            case 'webplayer_confirmclose':
-            case 'webplayer_pausetabs':
-            case 'stream_beautiful_url':
-            case 'share':
-            case 'share_social':
-            case 'broadcast_by_default':
-            case 'album_group':
-            case 'topmenu':
-            case 'demo_clear_sessions':
-            case 'demo_use_search':
-            case 'show_donate':
+            case 'allow_stream_playback':
             case 'allow_upload':
-            case 'upload_subdir':
-            case 'upload_user_artist':
-            case 'upload_allow_edit':
-            case 'daap_backend':
-            case 'upnp_backend':
-            case 'album_release_type':
-            case 'home_moment_albums':
-            case 'home_moment_videos':
-            case 'home_recently_played':
-            case 'api_hide_dupe_searches':
-            case 'home_now_playing':
-            case 'browser_notify':
             case 'allow_video':
-            case 'geolocation':
-            case 'webplayer_aurora':
-            case 'upload_allow_remove':
-            case 'webdav_backend':
-            case 'notify_email':
-            case 'libitem_contextmenu':
-            case 'upload_catalog_pattern':
-            case 'catalogfav_gridview':
-            case 'personalfav_display':
-            case 'ratingmatch_write_tags':
-            case 'ratingmatch_flags':
-            case 'catalog_check_duplicate':
-            case 'browse_filter':
-            case 'sidebar_light':
-            case 'cron_cache':
-            case 'show_lyrics':
-            case 'unique_playlist':
-            case 'tadb_overwrite_name':
-            case 'mb_overwrite_name':
-            case 'subsonic_always_download':
             case 'api_enable_3':
             case 'api_enable_4':
             case 'api_enable_5':
+            case 'api_enable_6':
+            case 'api_hide_dupe_searches':
+            case 'autoupdate':
+            case 'autoupdate_lastversion_new':
+            case 'broadcast_by_default':
+            case 'browse_filter':
+            case 'browser_notify':
+            case 'catalog_check_duplicate':
+            case 'catalogfav_gridview':
+            case 'condPL':
+            case 'cron_cache':
+            case 'daap_backend':
+            case 'demo_clear_sessions':
+            case 'demo_mode':
+            case 'demo_use_search':
+            case 'direct_link':
+            case 'display_menu':
+            case 'download':
+            case 'force_http_play':
+            case 'geolocation':
+            case 'hide_genres':
+            case 'hide_single_artist':
+            case 'home_moment_albums':
+            case 'home_moment_videos':
+            case 'home_now_playing':
+            case 'home_recently_played':
+            case 'libitem_contextmenu':
+            case 'lock_songs':
+            case 'mb_overwrite_name':
+            case 'no_symlinks':
+            case 'notify_email':
+            case 'now_playing_per_user':
+            case 'personalfav_display':
+            case 'quarantine':
+            case 'ratingmatch_flags':
+            case 'ratingmatch_write_tags':
+            case 'rio_global_stats':
+            case 'rio_track_stats':
+            case 'share':
+            case 'share_social':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_donate':
+            case 'show_header_login':
+            case 'show_license':
+            case 'show_lyrics':
+            case 'show_original_year':
+            case 'show_played_times':
+            case 'show_playlist_username':
+            case 'show_skipped_times':
+            case 'show_subtitle':
+            case 'sidebar_light':
+            case 'song_page_title':
+            case 'stream_beautiful_url':
+            case 'subsonic_always_download':
+            case 'subsonic_backend':
+            case 'tadb_overwrite_name':
+            case 'topmenu':
+            case 'ui_fixed':
+            case 'unique_playlist':
+            case 'upload':
+            case 'upload_allow_edit':
+            case 'upload_allow_remove':
+            case 'upload_catalog_pattern':
+            case 'upload_subdir':
+            case 'upload_user_artist':
+            case 'upnp_backend':
+            case 'use_auth':
+            case 'use_original_year':
+            case 'use_play2':
+            case 'webdav_backend':
+            case 'webplayer_aurora':
+            case 'webplayer_confirmclose':
+            case 'webplayer_flash':
+            case 'webplayer_html5':
+            case 'webplayer_pausetabs':
+            case 'xml_rpc':
                 $is_true  = '';
                 $is_false = '';
                 if ($value == '1') {
@@ -817,7 +822,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true);
+                show_catalog_select('upload_catalog', $value, '', true, 'music');
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -917,6 +922,7 @@ class Ui implements UiInterface
                 $is_3 = '';
                 $is_4 = '';
                 $is_5 = '';
+                $is_6 = '';
                 if (!in_array($value, Api::API_VERSIONS)) {
                     $is_0 = 'selected="selected"';
                 } elseif ($value == 3) {
@@ -925,12 +931,15 @@ class Ui implements UiInterface
                     $is_4 = 'selected="selected"';
                 } elseif ($value == 5) {
                     $is_5 = 'selected="selected"';
+                } elseif ($value == 6) {
+                    $is_6 = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\" $is_0>" . T_('Off') . "</option>\n";
                 echo "<option value=\"3\" $is_3>" . T_('Allow API3 Only') . "</option>\n";
                 echo "<option value=\"4\" $is_4>" . T_('Allow API4 Only') . "</option>\n";
                 echo "<option value=\"5\" $is_5>" . T_('Allow API5 Only') . "</option>\n";
+                echo "<option value=\"6\" $is_6>" . T_('Allow API6 Only') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'ratingmatch_stars':
@@ -963,21 +972,57 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'localplay_level':
-                $is_user    = '';
-                $is_admin   = '';
-                $is_manager = '';
+            case 'upload_access_level':
+                $is_user            = '';
+                $is_content_manager = '';
+                $is_catalog_manager = '';
+                $is_admin           = '';
                 if ($value == '25') {
                     $is_user = 'selected="selected"';
+                } elseif ($value == '50') {
+                    $is_content_manager = 'selected="selected"';
+                } elseif ($value == '75') {
+                    $is_catalog_manager = 'selected="selected"';
                 } elseif ($value == '100') {
                     $is_admin = 'selected="selected"';
-                } elseif ($value == '50') {
-                    $is_manager = 'selected="selected"';
                 }
                 echo "<select name=\"$name\">\n";
                 echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
                 echo "<option value=\"25\" $is_user>" . T_('User') . "</option>\n";
-                echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
+                echo "<option value=\"50\" $is_content_manager>" . T_('Content Manager') . "</option>\n";
+                echo "<option value=\"75\" $is_catalog_manager>" . T_('Catalog Manager') . "</option>\n";
                 echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
+                echo "</select>\n";
+                break;
+            case 'webplayer_removeplayed':
+                $is_one   = '';
+                $is_two   = '';
+                $is_three = '';
+                $is_five  = '';
+                $is_ten   = '';
+                $is_all   = '';
+                if ($value == '1') {
+                    $is_one = 'selected="selected"';
+                } elseif ($value == '2') {
+                    $is_two = 'selected="selected"';
+                } elseif ($value == '3') {
+                    $is_three = 'selected="selected"';
+                } elseif ($value == '5') {
+                    $is_five = 'selected="selected"';
+                } elseif ($value == '10') {
+                    $is_ten = 'selected="selected"';
+                } elseif ($value == '999') {
+                    $is_all = 'selected="selected"';
+                }
+                echo "<select name=\"$name\">\n";
+                echo "<option value=\"0\">" . T_('Disabled') . "</option>\n";
+                echo "<option value=\"1\" $is_one>" . T_('Keep last played track') . "</option>\n";
+                /* HINT: Keep (2|3|4|5|10) previous tracks */
+                echo "<option value=\"2\" $is_two>" . sprintf(T_('Keep %s previous tracks'), '2') . "</option>\n";
+                echo "<option value=\"3\" $is_three>" . sprintf(T_('Keep %s previous tracks'), '3') . "</option>\n";
+                echo "<option value=\"5\" $is_five>" . sprintf(T_('Keep %s previous tracks'), '5') . "</option>\n";
+                echo "<option value=\"10\" $is_ten>" . sprintf(T_('Keep %s previous tracks'), '10') . "</option>\n";
+                echo "<option value=\"999\" $is_all>" . T_('Remove all previous tracks') . "</option>\n";
                 echo "</select>\n";
                 break;
             case 'theme_name':

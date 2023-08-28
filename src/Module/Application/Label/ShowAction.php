@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,10 @@ final class ShowAction implements ApplicationActionInterface
                 $label_id = $this->labelRepository->lookup((string) $name);
             }
         }
-        if ($label_id > 0) {
+        if ($label_id < 1) {
+            echo T_('You have requested an object that does not exist');
+            $this->ui->showFooter();
+        } else {
             $label = $this->modelFactory->createLabel($label_id);
             $label->format();
 
@@ -102,8 +105,7 @@ final class ShowAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         ) {
             $this->ui->show(
-                'show_add_label.inc.php',
-                []
+                'show_add_label.inc.php'
             );
         } else {
             echo T_('The Label cannot be found');

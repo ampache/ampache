@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PreferenceEditMethod
@@ -46,18 +45,18 @@ final class PreferenceEditMethod
      * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
+     * @param User $user
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * value  = (string|integer) Preference value
      * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function preference_edit(array $input): bool
+    public static function preference_edit(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $all  = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = (array_key_exists('all', $input) && (int)$input['all'] == 1);
         // don't apply to all when you aren't an admin
         if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -74,7 +73,7 @@ final class PreferenceEditMethod
             return false;
         }
         $value = $input['value'];
-        if (!Preference::update($pref_name, $value, $all)) {
+        if (!Preference::update($pref_name, $user->id, $value, $all)) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;

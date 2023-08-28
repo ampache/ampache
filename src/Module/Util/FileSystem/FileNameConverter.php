@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,10 +52,10 @@ final class FileNameConverter implements FileNameConverterInterface
             $catalog = Catalog::create_from_id($row['id']);
             /* HINT: %1 Catalog Name, %2 Catalog Path */
             $interactor->info(
-                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path),
+                sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
                 true
             );
-            $this->charset_directory_correct($interactor, $catalog->path, $force);
+            $this->charset_directory_correct($interactor, $catalog->get_path(), $force);
         }
 
         $interactor->ok(
@@ -242,9 +242,7 @@ final class FileNameConverter implements FileNameConverterInterface
             return false;
         }
 
-        $results = unlink($full_file);
-
-        if (!$results) {
+        if (!unlink($full_file)) {
             $interactor->error(
                 sprintf(T_('There was an error trying to delete "%s"'), $full_file),
                 true

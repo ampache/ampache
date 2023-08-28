@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -46,6 +45,7 @@ final class Scrobble4Method
      * This allows other sources to record play history to Ampache
      *
      * @param array $input
+     * @param User $user
      * song       = (string)  $song_name
      * artist     = (string)  $artist_name
      * album      = (string)  $album_name
@@ -56,7 +56,7 @@ final class Scrobble4Method
      * client     = (string)  $agent //optional
      * @return boolean
      */
-    public static function scrobble(array $input): bool
+    public static function scrobble(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
             return false;
@@ -70,7 +70,6 @@ final class Scrobble4Method
         $artist_mbid = html_entity_decode(scrub_out($input['artist_mbid'] ?? $input['artistmbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $date        = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
-        $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
         $valid       = in_array($user->id, static::getUserRepository()->getValid());
 

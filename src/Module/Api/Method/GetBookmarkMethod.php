@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
@@ -49,16 +48,16 @@ final class GetBookmarkMethod
      * Get the bookmark from it's object_id and object_type.
      *
      * @param array $input
+     * @param User $user
      * filter = (string) object_id to find
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function get_bookmark(array $input): bool
+    public static function get_bookmark(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $type      = $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -96,8 +95,8 @@ final class GetBookmarkMethod
             'object_id' => $object_id,
             'object_type' => $type
         );
-        $bookmark = Bookmark::get_bookmark($object);
-        if (empty($bookmark)) {
+        $results = Bookmark::get_bookmark($object);
+        if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
@@ -106,10 +105,10 @@ final class GetBookmarkMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($bookmark);
+                echo Json_Data::bookmarks($results);
                 break;
             default:
-                echo Xml_Data::bookmarks($bookmark);
+                echo Xml_Data::bookmarks($results);
         }
 
         return true;

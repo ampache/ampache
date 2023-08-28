@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ class TVShow_Episode extends Video
     {
         parent::__construct($episode_id);
 
-        $info = $this->get_info($episode_id);
+        $info = $this->get_info($episode_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -61,7 +61,7 @@ class TVShow_Episode extends Video
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -96,8 +96,7 @@ class TVShow_Episode extends Video
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season,
-                'tvshow_season')) {
+        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }
@@ -188,8 +187,7 @@ class TVShow_Episode extends Video
 
         $this->f_file = $this->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
-                    $this->episode_number);
+            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
         $this->f_file .= ' - ' . $this->f_name;
         $this->f_full_title = $this->f_file;
@@ -297,14 +295,16 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * Remove the video from disk.
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove()
     {
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
+            $deleted = (Dba::write($sql, array($this->id)) !== false);
         }
 
         return $deleted;

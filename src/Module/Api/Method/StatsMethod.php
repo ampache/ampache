@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,6 +56,7 @@ final class StatsMethod
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
      * @param array $input
+     * @param User $user
      * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
      * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
@@ -64,7 +65,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats(array $input): bool
+    public static function stats(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
@@ -94,18 +95,19 @@ final class StatsMethod
             return false;
         }
 
-        // set a default user
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $user_id = $user->id;
         // override your user if you're looking at others
         if (array_key_exists('username', $input)) {
-            $user    = User::get_from_username($input['username']);
-            $user_id = $user->id;
+            $user = User::get_from_username($input['username']);
         } elseif (array_key_exists('user_id', $input)) {
-            $user_id = (int) $input['user_id'];
-            $user    = new User($user_id);
+            $user = new User((int)$input['user_id']);
         }
+        if (!$user instanceof User || $user->id < 1) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), 'user'), '4710', self::ACTION, 'type', $input['api_format']);
 
+            return false;
+        }
+        $user_id = $user->id;
         $results = array();
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
@@ -132,7 +134,7 @@ final class StatsMethod
             case 'forgotten':
                 debug_event(self::class, 'stats ' . $filter, 4);
                 $newest  = $filter == 'recent';
-                $results = ($user->id)
+                $results = (array_key_exists('username', $input) || array_key_exists('user_id', $input))
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
                     : Stats::get_recent($type, $limit, $offset, $newest);
                 $offset = 0;

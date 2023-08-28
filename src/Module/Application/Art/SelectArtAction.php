@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -58,16 +57,13 @@ final class SelectArtAction extends AbstractArtAction
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check to see if we have the image url still */
-        $image_id = $_REQUEST['image'];
-
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $image_id    = $_REQUEST['image'];
+        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $item = $this->getItem($gatekeeper);
         if ($item === null) {
             throw new AccessDeniedException();
         }
-
-        $object_id = $item->getId();
 
         $burl = '';
         if (isset($_GET['burl'])) {
@@ -96,19 +92,8 @@ final class SelectArtAction extends AbstractArtAction
             return null;
         }
 
-        // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
-        if ($object_type == 'album') {
-            $class_name   = ObjectTypeToClassNameMapper::map($object_type);
-            $album        = new $class_name($object_id);
-            $album_groups = $album->get_group_disks_ids();
-            foreach ($album_groups as $a_id) {
-                $art = $this->modelFactory->createArt($a_id, $object_type);
-                $art->insert($image, $mime);
-            }
-        } else {
-            $art = $this->modelFactory->createArt($object_id, $object_type);
-            $art->insert($image, $mime);
-        }
+        $art = $this->modelFactory->createArt($item->getId(), $object_type);
+        $art->insert($image, $mime);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

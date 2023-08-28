@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -176,7 +176,6 @@ abstract class localplay_controller
         $variables = parse_url($url, PHP_URL_QUERY);
         if ($variables) {
             parse_str($variables, $data);
-
             foreach ($primary_array as $pkey) {
                 if (array_key_exists($pkey, $data)) {
                     $data['primary_key'] = $pkey;

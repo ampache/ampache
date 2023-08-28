@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -561,11 +561,6 @@ class AmpacheHttpq extends localplay_controller
         $options      = self::get_instance();
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
-        // Test our connection by retrieving the version
-        if ($this->_httpq->version() !== null) {
-            return true;
-        }
-
-        return false;
+        return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
     } // connect
 }

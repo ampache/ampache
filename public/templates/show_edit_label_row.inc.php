@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/** @var Label $libitem */
 
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 
+/** @var Label $libitem */
 ?>
 <div>
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -48,41 +48,41 @@ use Ampache\Module\Authorization\Access;
                 <td>
                     <select name="category">
                         <option value="personal" <?php if (empty($libitem->category) || $libitem->category === "personal") {
-                        echo "selected";
-                    } ?>><?php echo T_('Personal'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Personal'); ?></option>
                         <option value="association" <?php if ($libitem->category === "association") {
-                        echo "selected";
-                    } ?>><?php echo T_('Association'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Association'); ?></option>
                         <option value="company" <?php if ($libitem->category === "company") {
-                        echo "selected";
-                    } ?>><?php echo T_('Company'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Company'); ?></option>
                         <option value="imprint" <?php if ($libitem->category === "imprint") {
-                        echo "selected";
-                    } ?>><?php echo T_('Imprint'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Imprint'); ?></option>
                         <option value="production" <?php if ($libitem->category === "production") {
-                        echo "selected";
-                    } ?>><?php echo T_('Production'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Production'); ?></option>
                         <option value="original production" <?php if ($libitem->category === "original production") {
-                        echo "selected";
-                    } ?>><?php echo T_('Original Production'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Original Production'); ?></option>
                         <option value="bootleg production" <?php if ($libitem->category === "bootleg production") {
-                        echo "selected";
-                    } ?>><?php echo T_('Bootleg Production'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Bootleg Production'); ?></option>
                         <option value="reissue production" <?php if ($libitem->category === "reissue production") {
-                        echo "selected";
-                    } ?>><?php echo T_('Reissue Production'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Reissue Production'); ?></option>
                         <option value="distributor" <?php if ($libitem->category === "distributor") {
-                        echo "selected";
-                    } ?>><?php echo T_('Distributor'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Distributor'); ?></option>
                         <option value="holding" <?php if ($libitem->category === "holding") {
-                        echo "selected";
-                    } ?>><?php echo T_('Holding'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Holding'); ?></option>
                         <option value="rights society" <?php if ($libitem->category === "rights society") {
-                        echo "selected";
-                    } ?>><?php echo T_('Rights Society'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Rights Society'); ?></option>
                         <option value="tag_generated" <?php if ($libitem->category === "tag_generated") {
-                        echo "selected";
-                    } ?>><?php echo T_('Tag Generated'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Tag Generated'); ?></option>
                     </select>
                 </td>
             </tr>
@@ -111,11 +111,11 @@ use Ampache\Module\Authorization\Access;
                 <td>
                     <select name="active">
                         <option value="1" <?php if ($libitem->active === 1) {
-                        echo "selected";
-                    } ?>><?php echo T_('Active'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Active'); ?></option>
                         <option value="0" <?php if ($libitem->active === 0) {
-                        echo "selected";
-                    } ?>><?php echo T_('Inactive'); ?></option>
+                            echo "selected";
+                        } ?>><?php echo T_('Inactive'); ?></option>
                     </select>
                 </td>
             </tr>
