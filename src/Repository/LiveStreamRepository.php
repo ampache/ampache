@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 
@@ -34,13 +34,9 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
      */
     public function getAll(): array
     {
-        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "WHERE `catalog`.`enabled` = '1' ";
-        }
-        $params = [];
-
-        $db_results = Dba::read($sql, $params);
+        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $sql        = "SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = 'live_stream' AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ");";
+        $db_results = Dba::read($sql);
         $radios     = [];
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -53,12 +49,14 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
     /**
      * This deletes the object with the given id from the database
      */
-    public function delete(int $liveStreamId): void
+    public function delete(int $liveStreamId): bool
     {
-        Dba::write(
+        $result = Dba::write(
             'DELETE FROM `live_stream` WHERE `id` = ?',
             [$liveStreamId]
         );
         Catalog::count_table('live_stream');
+
+        return $result !== false;
     }
 }

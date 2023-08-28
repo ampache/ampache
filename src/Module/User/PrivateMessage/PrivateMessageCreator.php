@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
     }
 
     /**
-     * Sends a private message to an user
+     * Sends a private message to a user
      *
      * @throws Exception\PrivateMessageCreationException
      * @throws \PHPMailer\PHPMailer\Exception
@@ -80,9 +80,9 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
                 $mailer->subject        = sprintf('[%s] %s', T_('Private Message'), $subject);
                 /* HINT: User fullname */
                 $mailer->message = sprintf(
-                        T_('You received a new private message from %s.'),
-                        $sender->fullname
-                    );
+                    T_('You received a new private message from %s.'),
+                    $sender->fullname
+                );
                 $mailer->message .= "\n\n----------------------\n\n";
                 $mailer->message .= $message;
                 $mailer->message .= "\n\n----------------------\n\n";

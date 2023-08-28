@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
@@ -41,15 +40,15 @@ final class AdvancedSearch3Method
      * advanced_search
      * Perform an advanced search given passed rules
      * @param array $input
+     * @param User $user
      */
-    public static function advanced_search(array $input)
+    public static function advanced_search(array $input, User $user)
     {
         ob_end_clean();
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
-        $user           = User::get_from_username(Session::username($input['auth']));
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;

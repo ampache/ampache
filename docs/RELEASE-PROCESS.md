@@ -10,6 +10,8 @@
 It's easy to use a program like github desktop to compare between branches.
 **Use Linux**
 
+**note** this process has been automated. I now use the `build_release.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_release.sh) repo.
+
 * Export database from a fresh install (phpMyAdmin exports well.)
   * Tables: Structure; **select all tables**
   * Tables: Data; **only select** `access_list`, `license`, `preference`, `search`, `update_info` and `user_preference`
@@ -29,8 +31,8 @@ It's easy to use a program like github desktop to compare between branches.
 * Browse changes to check for things you've missed in the changelog
 * ~~Add pchart to composer~~ (part of the dev requirements so it's included in releases)
   * ~~composer require --update-no-dev szymach/c-pchart "3.*"~~
+* Grab the latest prettyphoto (if available/different from https://github.com/lachlan-00/prettyphoto)
 * ~~Run composer install~~ (adding pchart updates everything)
-* Check `public/lib/components/prettyphoto/images` exists
 * Get missing map files
 
 ```shell
@@ -65,11 +67,11 @@ read -p "Enter Ampache Version: " a_version
 * Create a zip package named "ampache-5.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist --exclude=./public/channel/.htaccess.dist ../ampache-${a_version}_all.zip ./
-rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist --exclude=./public/channel/.htaccess.dist ../ampache-${a_version}_all_php8.0.zip ./
+rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all.zip ./
+rm ../ampache-${a_version}_all_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./public/rest/.htaccess.dist --exclude=./public/play/.htaccess.dist ../ampache-${a_version}_all_php8.0.zip ./
 
-rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist --exclude=./channel/.htaccess.dist ../ampache-${a_version}_all_squashed.zip ./
-rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist --exclude=./channel/.htaccess.dist ../ampache-${a_version}_all_squashed_php8.0.zip ./
+rm ../ampache-${a_version}_all_squashed.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed.zip ./
+rm ../ampache-${a_version}_all_squashed_php8.0.zip & zip -r -q -u -9 --exclude=./config/ampache.cfg.php --exclude=./docker/* --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml --exclude=./rest/.htaccess.dist --exclude=./play/.htaccess.dist ../ampache-${a_version}_all_squashed_php8.0.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
@@ -110,6 +112,8 @@ md5sum ../ampache-${a_version}*.zip
 ## Update ampache-docker images on docker hub
 
 Update the official Ampache docker images [<https://hub.docker.com/r/ampache/ampache>]
+
+**note** this process has been automated. I now use the `build_docker.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_docker.sh) repo.
 
 * To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
 * After enabling experimental mode I installed the tools and buildx container.
@@ -175,13 +179,15 @@ For the squashed repo you need to manually copy/paste then do some find/replace 
 
 After fixing up the paths you can commit then follow the regular release process
 
+**note** this process has been automated. I now use the `build_ampache-squashed.sh` script contained at the [ampache-administrator](https://github.com/lachlan-00/ampache-administrator/blob/master/build_ampache-squashed.sh) repo.
+
 * Clone the repo `git clone -b squashed https://github.com/ampache/ampache.git ampache_squashed/`
 * Clone master `git clone -b master https://github.com/ampache/ampache.git ampache_master/`
 * Copy everything except the `/public`, `/docker` and `/vendor` folders into ampache_squashed
 * Copy everything from /public into the root on the ampache_squashed folder
 * find and replace for the following folders
 
-/admin, /channel, /daap, /play, /rest, /server, /upnp, /webdav
+/admin, /daap, /play, /rest, /server, /upnp, /webdav
 * find `$dic = require __DIR__ . '/../../src/Config/Init.php';`
 * replace `$dic = require __DIR__ . '/../src/Config/Init.php';`
 
@@ -200,5 +206,3 @@ After fixing up the paths you can commit then follow the regular release process
 composer.json, locale/base/gather-messages.sh
 * find `public/lib`
 * replace `lib`
-
-

@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  ampache:
+    build:
+      context: .
+      dockerfile: docker/Dockerfilephp82
+    restart: on-failure
+    ports:
+      - "8084:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/log:/var/log/ampache
+      - ./docker/media:/media

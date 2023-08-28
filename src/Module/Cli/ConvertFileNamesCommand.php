@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
 
 final class ConvertFileNamesCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private FileNameConverterInterface $fileNameCorrector;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         FileNameConverterInterface $fileNameCorrector
     ) {
         parent::__construct('run:convertFilenames', T_('Convert filenames using a charset'));
 
-        $this->configContainer   = $configContainer;
         $this->fileNameCorrector = $fileNameCorrector;
 
         $this
@@ -51,17 +46,20 @@ final class ConvertFileNamesCommand extends Command
 
     public function execute(): void
     {
-        $io     = $this->app()->io();
-        $values = $this->values();
+        $interactor = $this->app()->io();
+        $values     = $this->values();
 
         if (!function_exists('iconv')) {
-            $io->warn(T_('php-iconv is required for this functionality, quitting'), true);
+            $interactor->warn(
+                T_('php-iconv is required for this functionality, quitting'),
+                true
+            );
 
             return;
         }
 
         $this->fileNameCorrector->convert(
-            $io,
+            $interactor,
             $values['charset'],
             $values['fire']
         );

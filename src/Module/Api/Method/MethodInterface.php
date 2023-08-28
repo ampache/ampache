@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@ use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
 interface MethodInterface
@@ -38,6 +39,7 @@ interface MethodInterface
         GatekeeperInterface $gatekeeper,
         ResponseInterface $response,
         ApiOutputInterface $output,
-        array $input
+        array $input,
+        User $user
     ): ResponseInterface;
 }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,9 +37,9 @@ use Ampache\Module\Util\Ui;
                     echo $libitem->f_avatar_mini;
                 }
                 echo $libitem->username;
-                if ($libitem->fullname_public || Access::check('interface', 100)) {
-                    echo " (" . $libitem->fullname . ")";
-                } ?>
+if ($libitem->fullname_public || Access::check('interface', 100)) {
+    echo " (" . $libitem->fullname . ")";
+} ?>
         </a>
     </td>
     <td class="cel_lastseen"><?php echo $last_seen; ?></td>

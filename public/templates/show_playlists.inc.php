@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,37 +59,38 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
             <?php if ($show_ratings) { ?>
             <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
             <?php } ?>
+            <th class="cel_owner essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=username', T_('Owner'), 'playlist_sort_username'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php global $dic;
-        $talFactory = $dic->get(TalFactoryInterface::class);
-        $guiFactory = $dic->get(GuiFactoryInterface::class);
-        $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
+$talFactory = $dic->get(TalFactoryInterface::class);
+$guiFactory = $dic->get(GuiFactoryInterface::class);
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-        foreach ($object_ids as $playlist_id) {
-            $libitem = new Playlist($playlist_id);
-            $libitem->format();
+foreach ($object_ids as $playlist_id) {
+    $libitem = new Playlist($playlist_id);
+    $libitem->format();
 
-            // Don't show empty playlist if not admin or the owner
-            if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
+    // Don't show empty playlist if not admin or the owner
+    if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
-                ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-                ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
-                ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-                ->setContext('IS_SHOW_ART', $show_art)
-                ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
-                ->setContext('CLASS_COVER', $cel_cover)
-                ->setTemplate('playlist_row.xhtml')
-                ->render();
+        ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
+        ->setContext('PLAYLIST', $guiFactory->createPlaylistViewAdapter($gatekeeper, $libitem))
+        ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
+        ->setContext('IS_SHOW_ART', $show_art)
+        ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
+        ->setContext('CLASS_COVER', $cel_cover)
+        ->setTemplate('playlist_row.xhtml')
+        ->render();
 
-            echo $content; ?>
+        echo $content; ?>
         </tr>
         <?php
-            }
-        } // end foreach ($playlists as $playlist)?>
+    }
+} // end foreach ($playlists as $playlist)?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="10"><span class="nodata"><?php echo T_('No playlist found'); ?></span></td>
@@ -100,20 +101,21 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';?>
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if ($show_art) { ?>
-            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?>"></th>
             <?php } ?>
-            <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
-            <th class="cel_add essential"></th>
-            <th class="cel_last_update"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update_bottom'); ?></th>
-            <th class="cel_type optional"><?php echo T_('Type'); ?></th>
-            <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
+            <th class="cel_playlist"></th>
+            <th class="cel_add"></th>
+            <th class="cel_last_update"></th>
+            <th class="cel_type"></th>
+            <th class="cel_medias"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <?php if ($show_ratings) { ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings"></th>
             <?php } ?>
-            <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
+            <th class="cel_owner"></th>
+            <th class="cel_action"></th>
         </tr>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require Ui::find_template('list_header.inc.php');
-        } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

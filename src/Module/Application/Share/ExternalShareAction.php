@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,7 +37,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -95,12 +94,21 @@ final class ExternalShareAction implements ApplicationActionInterface
 
         $type           = $this->requestParser->getFromRequest('type');
         $share_id       = $this->requestParser->getFromRequest('id');
-        $secret         = $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH);
+        $secret         = $this->passwordGenerator->generate_token();
         $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
-        $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire', 7), $secret);
-        $share    = new Share($share_id);
+        $share_id = Share::create_share(
+            Core::get_global('user')->id,
+            $type,
+            $share_id,
+            true,
+            $allow_download,
+            AmpConfig::get('share_expire', 7),
+            $secret
+        );
+
+        $share = new Share($share_id);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,13 +47,12 @@ final class SystemUpdateMethod
      * Check Ampache for updates and run the update if there is one.
      *
      * @param array $input
+     * @param User $user
      * @return boolean
      */
-    public static function system_update(array $input): bool
+    public static function system_update(array $input, User $user): bool
     {
-        $user    = User::get_from_username(Session::username($input['auth']));
         $updated = false;
-
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }

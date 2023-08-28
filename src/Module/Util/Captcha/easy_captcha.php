@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,8 +47,7 @@ class easy_captcha
         }
 
         #-- create new
-        if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED",
-                "regenerating store")) {
+        if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED", "regenerating store")) {
             $this->generate();
         }
     }
@@ -220,7 +219,7 @@ class easy_captcha
 
         #-- assemble
         $HTML = //'<script>if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
-            '<div id="captcha" class="captcha">' . $error . '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' . '<img src="' . $img_url . '&" width="' . $this->image->width . '" height="' . $this->image->height . '" alt="' . $alt_text . $onClick . ' title="' . CAPTCHA_REDRAW_TEXT . '" />' . '&nbsp;' . $add_text . '<input title="' . CAPTCHA_PROMPT_TEXT . '" type="text" ' . $onKeyDown . ' id="' . $p_input . '" name="' . $p_input . '" value="' . (isset($_REQUEST[$p_input]) ? htmlentities($_REQUEST[$p_input]) : "") . '" size="8" style="' . CAPTCHA_INPUT_STYLE . '" />' . $javascript . '</div>';
+            '<div id="captcha" class="captcha">' . $error . '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' . '<img src="' . $img_url . '&" width="' . $this->image->width . '" height="' . $this->image->height . '" alt="' . $alt_text . '" ' . $onClick . ' title="' . CAPTCHA_REDRAW_TEXT . '" />' . '&nbsp;' . $add_text . '<input title="' . CAPTCHA_PROMPT_TEXT . '" type="text" ' . $onKeyDown . ' id="' . $p_input . '" name="' . $p_input . '" value="' . (isset($_REQUEST[$p_input]) ? htmlentities($_REQUEST[$p_input]) : "") . '" size="8" style="' . CAPTCHA_INPUT_STYLE . '" />' . $javascript . '</div>';
 
         return ($HTML);
     }

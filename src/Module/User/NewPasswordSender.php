@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\User;
 
 use Ampache\Module\Util\Mailer;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use PHPMailer\PHPMailer\Exception;
 
@@ -59,20 +60,23 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
         // do not allow administrator password resets
         if ($client->has_access(100)) {
+            debug_event(__CLASS__, 'Administrator can\'t reset their password.', 1);
+
             return false;
         }
-        if ($client->email == $email && Mailer::is_mail_enabled()) {
-            $newpassword = $this->passwordGenerator->generate();
-            $client->update_password($newpassword);
 
-            $mailer = new Mailer();
+        $time        = time();
+        $reset_limit = ($time - 3600) > (User::get_user_data($client->id, 'password_reset')['password_reset'] ?? $time); // don't let a user spam resets
+        if ($client->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
+            $newpassword = $this->passwordGenerator->generate();
+            $mailer      = new Mailer();
             $mailer->set_default_sender();
             $mailer->subject        = T_('Lost Password');
             $mailer->recipient_name = $client->fullname;
             $mailer->recipient      = $client->email;
 
             $message  = sprintf(
-            /* HINT: %1 IP Address, %2 Username */
+                /* HINT: %1 IP Address, %2 Username */
                 T_('A user from "%1$s" has requested a password reset for "%2$s"'),
                 $current_ip,
                 $client->username
@@ -81,7 +85,13 @@ final class NewPasswordSender implements NewPasswordSenderInterface
             $message .= sprintf(T_("The password has been set to: %s"), $newpassword);
             $mailer->message = $message;
 
-            return $mailer->send();
+            if ($mailer->send()) {
+                // only update the password when the email was sent
+                $client->update_password($newpassword);
+                User::set_user_data($client->id, 'password_reset', $time);
+
+                return true;
+            }
         }
 
         return false;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,9 +44,12 @@ final class ArtSizeCalculationCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
-        $io->white(T_('Started art size calculation'), true);
+        $interactor->white(
+            T_('Started art size calculation'),
+            true
+        );
 
         $inDisk   = $this->configContainer->get('album_art_store_disk');
         $localDir = $this->configContainer->get('local_metadata_dir');
@@ -72,6 +75,9 @@ final class ArtSizeCalculationCommand extends Command
             }
         }
 
-        $io->white(T_('Finished art size calculation'), true);
+        $interactor->white(
+            T_('Finished art size calculation'),
+            true
+        );
     }
 }

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,12 +104,11 @@ final class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type) && $object_type !== 'album') {
-            $object_id = $_REQUEST['id'];
+        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+            $object_id = $_REQUEST['id'] ?? array();
             if (!is_array($object_id)) {
                 $object_id = [$object_id];
             }
-            $media_ids = [];
             foreach ($object_id as $item) {
                 $this->logger->debug(
                     'Requested item ' . $item,
@@ -130,18 +129,6 @@ final class DefaultAction implements ApplicationActionInterface
                     $media_ids = Core::get_global('user')->playlist->get_items();
                     $name      = Core::get_global('user')->username . ' - Playlist';
                     break;
-                case 'album':
-                    $albumList  = (is_array($_REQUEST['id']))
-                        ? $_REQUEST['id']
-                        : explode(',', $_REQUEST['id']);
-                    $media_ids  = $this->albumRepository->getSongsGrouped($albumList);
-                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
-                    $libitem    = new $class_name((int)$albumList[0]);
-                    if ($libitem->id) {
-                        $libitem->format();
-                        $name = $libitem->get_fullname();
-                    }
-                    break;
                 case 'browse':
                     $object_id        = (int)Core::get_request('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
@@ -152,6 +139,10 @@ final class DefaultAction implements ApplicationActionInterface
                                 $album     = $this->modelFactory->createAlbum($media_id);
                                 $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
                                 break;
+                            case 'album_disk':
+                                $albumDisk = $this->modelFactory->createAlbumDisk($media_id);
+                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbumDisk($albumDisk->id));
+                                break;
                             case 'song':
                                 $media_ids[] = $media_id;
                                 break;
@@ -161,8 +152,6 @@ final class DefaultAction implements ApplicationActionInterface
                         } // switch on type
                     } // foreach media_id
                     $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
-                    break;
-                default:
                     break;
             }
         }
@@ -227,7 +216,7 @@ final class DefaultAction implements ApplicationActionInterface
                 if (!array_key_exists($dirname, $media_files)) {
                     $media_files[$dirname] = [];
                 }
-                array_push($media_files[$dirname], Core::conv_lc_file($media->file));
+                $media_files[$dirname][] = Core::conv_lc_file($media->file);
             }
         }
 

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,7 +90,7 @@ final class WantedRepository implements WantedRepositoryInterface
     public function getAcceptedCount(): int
     {
         $db_results = Dba::read(
-            'SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1'
+            "SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1;"
         );
         if ($row = Dba::fetch_assoc($db_results)) {
             return (int) $row['wanted_cnt'];

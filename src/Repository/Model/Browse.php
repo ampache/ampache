@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,37 +43,37 @@ use Ampache\Module\Util\Ui;
 class Browse extends Query
 {
     private const BROWSE_TYPES = array(
-        'song',
         'album',
-        'user',
+        'album_disk',
         'artist',
-        'live_stream',
-        'playlist',
-        'playlist_media',
-        'playlist_localplay',
-        'smartplaylist',
+        'broadcast',
         'catalog',
+        'clip',
+        'democratic',
+        'label',
+        'license',
+        'live_stream',
+        'movie',
+        'personal_video',
+        'playlist',
+        'playlist_localplay',
+        'playlist_media',
+        'podcast',
+        'podcast_episode',
+        'pvmsg',
+        'share',
         'shoutbox',
+        'smartplaylist',
+        'song',
+        'song_preview',
         'tag',
         'tag_hidden',
-        'video',
-        'democratic',
-        'wanted',
-        'share',
-        'song_preview',
-        'channel',
-        'broadcast',
-        'license',
         'tvshow',
-        'tvshow_season',
         'tvshow_episode',
-        'movie',
-        'clip',
-        'personal_video',
-        'label',
-        'pvmsg',
-        'podcast',
-        'podcast_episode'
+        'tvshow_season',
+        'user',
+        'video',
+        'wanted'
     );
 
     /**
@@ -106,7 +106,7 @@ class Browse extends Query
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -215,10 +215,8 @@ class Browse extends Query
         // simple browse because we've got too much here
         if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
-        } else {
-            if (!count($object_ids)) {
-                $this->set_total(0);
-            }
+        } elseif (!count($object_ids)) {
+            $this->set_total(0);
         }
 
         // Load any additional object we need for this
@@ -236,10 +234,10 @@ class Browse extends Query
             $match = ' (' . (string)$filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
             $match = ' (' . (string)$filter_value . ')';
-        /*} elseif ($filter_value = $this->get_filter('regex_match')) {
-            $match = ' (' . (string) $filter_value . ')';
-        } elseif ($filter_value = $this->get_filter('regex_not_match')) {
-            $match = ' (' . (string) $filter_value . ')';*/
+        //} elseif ($filter_value = $this->get_filter('regex_match')) {
+        //    $match = ' (' . (string) $filter_value . ')';
+        //} elseif ($filter_value = $this->get_filter('regex_not_match')) {
+        //    $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id((int)((string)$filter_value));
@@ -288,26 +286,30 @@ class Browse extends Query
             case 'album':
                 Album::build_cache($object_ids);
                 $box_title         = T_('Albums') . $match;
-                $allow_group_disks = false;
-                if (is_array($argument)) {
-                    $allow_group_disks = $argument['group_disks'];
-                    if (array_key_exists('title', $argument)) {
-                        $box_title = $argument['title'];
-                    }
-                }
-                if (AmpConfig::get('album_group')) {
-                    $allow_group_disks = true;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
                 }
                 $box_req = Ui::find_template('show_albums.inc.php');
+                break;
+            case 'album_disk':
+                $box_title         = T_('Albums') . $match;
+                if (is_array($argument) && array_key_exists('title', $argument)) {
+                    $box_title = $argument['title'];
+                }
+                $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
             case 'user':
                 $box_title = T_('Browse Users') . $match;
                 $box_req   = Ui::find_template('show_users.inc.php');
                 break;
             case 'artist':
-                $box_title = ($this->is_album_artist())
-                    ? T_('Album Artists') . $match
-                    : T_('Artists') . $match;
+                if ($this->is_album_artist()) {
+                    $box_title = T_('Album Artist') . $match;
+                } elseif ($this->is_song_artist()) {
+                    $box_title = T_('Song Artist') . $match;
+                } else {
+                    $box_title = T_('Artist') . $match;
+                }
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
@@ -373,10 +375,6 @@ class Browse extends Query
                 $box_title = T_('Songs');
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;
-            case 'channel':
-                $box_title = T_('Channels');
-                $box_req   = Ui::find_template('show_channels.inc.php');
-                break;
             case 'broadcast':
                 $box_title = T_('Broadcasts');
                 $box_req   = Ui::find_template('show_broadcasts.inc.php');
@@ -429,8 +427,6 @@ class Browse extends Query
                 $box_title = T_('Podcast Episodes');
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;
-            default:
-                break;
         } // end switch on type
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
@@ -451,10 +447,8 @@ class Browse extends Query
             echo '<script>';
             echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
             echo ';</script>';
-        } else {
-            if (!$this->is_use_pages()) {
-                $this->show_next_link($argument);
-            }
+        } elseif (!$this->is_use_pages()) {
+            $this->show_next_link($argument);
         }
         Ajax::end_container();
     } // show_object
@@ -483,6 +477,18 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = '')
     {
+        if ($type === 'album_artist') {
+            $this->set_type('artist', $custom_base);
+            $this->set_album_artist(true);
+
+            return;
+        }
+        if ($type === 'song_artist') {
+            $this->set_type('artist', $custom_base);
+            $this->set_song_artist(true);
+
+            return;
+        }
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
@@ -588,12 +594,34 @@ class Browse extends Query
 
     /**
      *
+     * @param boolean $song_artist
+     */
+    public function set_song_artist($song_artist)
+    {
+        $this->_state['song_artist'] = $song_artist;
+    }
+
+    /**
+     *
      * @return boolean
      */
     public function is_album_artist()
     {
         if (array_key_exists('album_artist', $this->_state)) {
             return make_bool($this->_state['album_artist']);
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function is_song_artist()
+    {
+        if (array_key_exists('song_artist', $this->_state)) {
+            return make_bool($this->_state['song_artist']);
         }
 
         return false;

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -47,10 +46,11 @@ final class LicenseSongs4Method
      * This returns all songs attached to a license ID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs(array $input): bool
+    public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
             Api4::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
@@ -60,15 +60,14 @@ final class LicenseSongs4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user     = User::get_from_username(Session::username($input['auth']));
-        $song_ids = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
+        $results = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs($song_ids, $user);
+                echo Json4_Data::songs($results, $user);
                 break;
             default:
-                echo Xml4_Data::songs($song_ids, $user);
+                echo Xml4_Data::songs($results, $user);
         }
 
         return true;

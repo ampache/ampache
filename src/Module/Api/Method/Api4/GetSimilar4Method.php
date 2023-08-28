@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\User;
 
@@ -46,13 +45,14 @@ final class GetSimilar4Method
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * @param array $input
+     * @param User $user
      * type   = (string) 'song'|'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar(array $input): bool
+    public static function get_similar(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
@@ -66,8 +66,7 @@ final class GetSimilar4Method
             return false;
         }
 
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $objects = array();
+        $results = array();
         $similar = array();
         switch ($type) {
             case 'artist':
@@ -77,7 +76,7 @@ final class GetSimilar4Method
                 $similar = Recommendation::get_songs_like($filter);
         }
         foreach ($similar as $child) {
-            $objects[] = $child['id'];
+            $results[] = $child['id'];
         }
 
         ob_end_clean();
@@ -85,12 +84,12 @@ final class GetSimilar4Method
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::indexes($objects, $type, $user);
+                echo Json4_Data::indexes($results, $type, $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::indexes($objects, $type, $user);
+                echo Xml4_Data::indexes($results, $type, $user);
         }
 
         return true;

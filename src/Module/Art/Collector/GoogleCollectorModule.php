@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Requests;
+use WpOrg\Requests\Requests;
 
 final class GoogleCollectorModule implements CollectorModuleInterface
 {
@@ -102,7 +102,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     }
 
                     $mime = 'image/';
-                    $mime .= $results['extension'] ?? 'jpeg';
+                    $mime .= $results['extension'] ?? 'jpg';
 
                     $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
                     if ($limit > 0 && count($images) >= $limit) {

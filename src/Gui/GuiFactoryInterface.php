@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@
 namespace Ampache\Gui;
 
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
+use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
@@ -32,6 +33,7 @@ use Ampache\Gui\Stats\StatsViewAdapterInterface;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
@@ -50,6 +52,12 @@ interface GuiFactoryInterface
         Browse $browse,
         Album $album
     ): AlbumViewAdapterInterface;
+
+    public function createAlbumDiskViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        AlbumDisk $albumDisk
+    ): AlbumDiskViewAdapterInterface;
 
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,

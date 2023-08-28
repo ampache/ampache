@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,8 @@ namespace Ampache\Gui;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Album\AlbumViewAdapter;
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
+use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapter;
+use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
@@ -44,6 +46,7 @@ use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -115,6 +118,22 @@ final class GuiFactory implements GuiFactoryInterface
             $gatekeeper,
             $browse,
             $album
+        );
+    }
+
+    public function createAlbumDiskViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Browse $browse,
+        AlbumDisk $albumDisk
+    ): AlbumDiskViewAdapterInterface {
+        return new AlbumDiskViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $gatekeeper,
+            $browse,
+            $albumDisk
         );
     }
 

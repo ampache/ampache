@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Videos3Method
@@ -39,9 +40,11 @@ final class Videos3Method
      * videos
      * This returns video objects!
      * @param array $input
+     * @param User $user
      */
-    public static function videos(array $input)
+    public static function videos(array $input, User $user)
     {
+        unset($user);
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('video');
@@ -50,11 +53,11 @@ final class Videos3Method
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
 
-        $video_ids = $browse->get_objects();
+        $results = $browse->get_objects();
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
 
-        echo Xml3_Data::videos($video_ids);
+        echo Xml3_Data::videos($results);
     } // videos
 }

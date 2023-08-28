@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,16 +28,16 @@ use Ampache\Module\System\Core;
 <ul>
 <?php
     $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
-    foreach ($broadcasts as $broadcast_id) {
-        $broadcast = new Broadcast($broadcast_id);
-        $broadcast->format(); ?>
+foreach ($broadcasts as $broadcast_id) {
+    $broadcast = new Broadcast($broadcast_id);
+    $broadcast->format(); ?>
     <li>
         <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
             <?php echo $broadcast->get_fullname(); ?>
         </a>
     </li>
 <?php
-    } ?>
+} ?>
 </ul><br />
 <a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
     <?php echo T_('New broadcast'); ?>

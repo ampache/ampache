@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,6 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_time */
 /** @var string $cel_counter */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -57,19 +56,19 @@ use Ampache\Module\Util\Ui;
 </td>
 <?php
 if ($is_mashup) {
-            $name = scrub_out($libitem->get_fullname()); ?>
+    $name = scrub_out($libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
-            Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
+    Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
-        } ?>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+} ?>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
     echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
-    if (Access::check('interface', 25)) { ?>
+if (Access::check('interface', 25)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
             <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
@@ -77,7 +76,7 @@ if ($is_mashup) {
     </span>
 </td>
 <?php if (!$is_table) { ?>
-<td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
+<td class="cel_podcast"><?php echo $libitem->get_f_podcast_link(); ?></td>
 <?php } ?>
 <td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>
@@ -86,7 +85,7 @@ if ($is_mashup) {
 <td class="cel_pubdate optional"><?php echo $libitem->f_pubdate; ?></td>
 <td class="cel_state optional"><?php echo $libitem->f_state; ?></td>
 <?php
-    if ($show_ratings) { ?>
+if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
@@ -103,7 +102,7 @@ if ($is_mashup) {
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php } ?>
 <?php
-    if (Access::check('interface', 50)) { ?>
+if (Access::check('interface', 50)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
@@ -111,8 +110,8 @@ if ($is_mashup) {
         <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php
-    }
-    if (Catalog::can_remove($libitem)) { ?>
+}
+if (Catalog::can_remove($libitem)) { ?>
     <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\WebPlayer;
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
@@ -32,8 +33,8 @@ function PlayerFrame()
 {
     var appendmedia = false;
     var playnext = false;
-    var $webplayer = $("#webplayer");
-    if ($webplayer.is(':visible')) {
+    var webplayer = $("#webplayer");
+    if (webplayer.is(':visible')) {
 <?php
 if (array_key_exists('append', $_REQUEST)) { ?>
         appendmedia = true;
@@ -41,7 +42,7 @@ if (array_key_exists('append', $_REQUEST)) { ?>
     if (array_key_exists('playnext', $_REQUEST)) { ?>
         playnext = true;
 <?php
-        }
+    }
 } ?>
     }
 
@@ -53,11 +54,11 @@ if (array_key_exists('append', $_REQUEST)) { ?>
     } else if (playnext) {
         <?php echo WebPlayer::play_next_js($this); ?>
     } else {
-        $webplayer.show();
+        webplayer.show();
         $("#webplayer-minimize").show();
         $.get('<?php echo AmpConfig::get('web_path'); ?>/web_player_embedded.php?playlist_id=<?php echo $this->id; ?>', function (data) {
             var $response = $(data);
-            $webplayer.empty().append($response);
+            webplayer.empty().append($response);
         }, 'html');
     }
     return false;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,8 +67,7 @@ class Democratic extends Tmp_Playlist
     {
         parent::__construct($democratic_id);
 
-        $info = $this->get_info($democratic_id);
-
+        $info = $this->get_info($democratic_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -76,7 +75,7 @@ class Democratic extends Tmp_Playlist
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -130,31 +129,6 @@ class Democratic extends Tmp_Playlist
             $this->tmp_playlist = $row['id'] ?? null;
         }
     } // set_parent
-
-    /**
-     * set_user_preferences
-     * This sets up a (or all) user(s) to use democratic play. This sets
-     * their play method and playlist method (clear on send) If no user is
-     * passed it does it for everyone and also locks down the ability to
-     * change to admins only
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function set_user_preferences()
-    {
-        // FIXME: Code in single user stuff
-        $preference_id = Preference::id_from_name('play_type');
-        Preference::update_level($preference_id, '75');
-        Preference::update_all($preference_id, 'democratic');
-
-        $allow_demo = Preference::id_from_name('allow_democratic_playback');
-        Preference::update_all($allow_demo, '1');
-
-        $play_method = Preference::id_from_name('playlist_method');
-        Preference::update_all($play_method, 'clear');
-
-        return true;
-    } // set_user_preferences
 
     /**
      * format
@@ -246,10 +220,15 @@ class Democratic extends Tmp_Playlist
     /**
      * play_url
      * This returns the special play URL for democratic play, only open to ADMINs
+     * @param User|null $user
+     * @return string
      */
-    public function play_url()
+    public function play_url($user = null)
     {
-        $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out($user->id) . '&demo_id=' . scrub_out($this->id);
 
         return Stream_Url::format($link);
     } // play_url
@@ -275,8 +254,7 @@ class Democratic extends Tmp_Playlist
             return $items[$offset]['object_id'];
         }
 
-        // If nothing was found and this is a voting playlist then get
-        // from base_playlist
+        // If nothing was found and this is a voting playlist then get from base_playlist
         if ($this->base_playlist) {
             $base_playlist = ($use_search)
                 ? new Search($this->base_playlist)
@@ -312,7 +290,7 @@ class Democratic extends Tmp_Playlist
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `object_type` = ? AND `tmp_playlist` = ? AND `object_id` = ?;";
         $db_results = Dba::read($sql, array($object_type, $this->tmp_playlist, $object_id));
         $row        = Dba::fetch_assoc($db_results);
-        if (!$row) {
+        if (empty($row)) {
             return null;
         }
 
@@ -407,6 +385,7 @@ class Democratic extends Tmp_Playlist
         if (!$results = Dba::fetch_assoc($db_results)) {
             $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($this->tmp_playlist, $object_id, $object_type, $track));
+            $results       = array();
             $results['id'] = Dba::insert_id();
         }
 

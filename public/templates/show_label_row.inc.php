@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,14 +28,14 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
-?>
-<?php $name = scrub_out($libitem->get_fullname()); ?>
+
+$name = scrub_out($libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
 </td>
 <td class="cel_label"><?php echo $libitem->f_link; ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
-<td class="cel_artists"><?php echo $libitem->artists; ?></td>
+<td class="cel_artists"><?php echo $libitem->artist_count; ?></td>
 <td class="cel_country"><?php echo $libitem->country; ?></td>
 <?php if ($libitem->active == 1) {
     echo "<td class=\"cel_active\">" . T_('Active') . "</td>";
@@ -54,5 +54,5 @@ use Ampache\Module\Util\Ui;
             <?php echo Ui::get_icon('delete', T_('Delete')) ?>
         </a>
     <?php }
-} ?>
+    } ?>
 </td>

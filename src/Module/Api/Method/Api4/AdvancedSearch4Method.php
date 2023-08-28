@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class AdvancedSearch4Method
@@ -57,6 +56,7 @@ final class AdvancedSearch4Method
      * https://github.com/ampache/ampache/wiki/XML-methods
      *
      * @param array $input
+     * @param User $user
      * operator        = (string) 'and'|'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -65,11 +65,10 @@ final class AdvancedSearch4Method
      * offset          = (integer)
      * limit           = (integer))
      */
-    public static function advanced_search(array $input)
+    public static function advanced_search(array $input, User $user)
     {
         ob_end_clean();
 
-        $user           = User::get_from_username(Session::username($input['auth']));
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;

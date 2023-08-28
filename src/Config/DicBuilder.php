@@ -6,7 +6,7 @@ declare(strict_types=1);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,6 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/WebDav/service_definition.php',
     require_once __DIR__ . '/../Module/Authentication/service_definition.php',
     require_once __DIR__ . '/../Module/Cache/service_definition.php',
-    require_once __DIR__ . '/../Module/Channel/service_definition.php',
     require_once __DIR__ . '/../Module/Song/service_definition.php',
     require_once __DIR__ . '/../Module/Playlist/service_definition.php',
     require_once __DIR__ . '/../Module/Album/service_definition.php',

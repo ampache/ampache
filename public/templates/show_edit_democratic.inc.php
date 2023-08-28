@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Democratic;
 
@@ -61,18 +60,6 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
         <tr>
             <td><?php echo T_('Make Default'); ?></td>
             <td><input type="checkbox" name="make_default" value="1" <?php echo $default; ?> /></td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <th><?php echo T_('Apply to All'); ?></th>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td><?php echo T_('Force Democratic Play'); ?></td>
-            <td><input type="checkbox" value="1" name="force_democratic" /></td>
         </tr>
     </table>
     <div class="formValidation">

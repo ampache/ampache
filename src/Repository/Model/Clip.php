@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,8 +48,7 @@ class Clip extends Video
     {
         parent::__construct($clip_id);
 
-        $info = $this->get_info($clip_id);
-
+        $info = $this->get_info($clip_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -59,7 +58,7 @@ class Clip extends Video
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int)($this->id ?? 0);
     }
 
     /**
@@ -81,10 +80,10 @@ class Clip extends Video
      */
     private static function _get_artist_id($data)
     {
-        if (isset($data['artist_id']) && !empty($data['artist_id'])) {
+        if (array_key_exists('artist_id', $data) && !empty($data['artist_id'])) {
             return $data['artist_id'];
         }
-        if (!isset($data['artist']) || empty($data['artist'])) {
+        if (!array_key_exists('artist_id', $data) || empty($data['artist'])) {
             return null;
         }
         $artist_mbid = $data['mbid_artistid'] ?? null;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -92,13 +92,10 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Tmp_Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
-        database_object::remove_from_cache('user_catalog');
+        Catalog::clear_catalog_cache();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
         MetadataField::garbage_collection();
-
-        Catalog::garbage_collect_mapping();
-        Catalog::garbage_collect_filters();
     }
 }

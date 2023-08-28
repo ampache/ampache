@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,8 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
+use Ampache\Module\System\Core;
+
 /**
  * Start commands in CLI and dispatch them
  *
@@ -31,14 +33,13 @@ namespace Ampache\Module\Beets;
 class CliHandler extends Handler
 {
     /**
-     *
      * @var Catalog
      */
     protected $handler;
 
     /**
-     * string handler command to do whatever we need
-     * @var
+     * string handler command to do whatever we need using call_user_func
+     * @var string
      */
     protected $handlerCommand;
 
@@ -97,6 +98,15 @@ class CliHandler extends Handler
     );
 
     /**
+     * CliHandler constructor.
+     * @param Catalog $handler
+     */
+    public function __construct($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
      * Starts a command
      * @param string $command
      */
@@ -134,7 +144,7 @@ class CliHandler extends Handler
     {
         $commandParts = array(
             escapeshellcmd($this->beetsCommand),
-            ' -l ' . escapeshellarg($this->handler->getBeetsDb()),
+            ' -l ' . escapeshellarg($this->handler->get_path()),
             escapeshellcmd($command)
         );
         if ($this->useCustomFields && !$disableCostomFields) {
@@ -151,7 +161,12 @@ class CliHandler extends Handler
      */
     protected function itemIsComlete($item)
     {
-        return strrpos($item, $this->itemEnd, strlen($this->itemEnd)) !== false;
+        $offset   = strlen($this->itemEnd);
+        $position = (strlen($item) > $offset)
+            ? strpos($item, $this->itemEnd, $offset)
+            : false;
+
+        return ($position !== false);
     }
 
     /**
@@ -165,7 +180,7 @@ class CliHandler extends Handler
         $values             = explode($this->seperator, $item);
         $song               = array_combine($this->fields, $values);
         $mappedSong         = $this->mapFields($song);
-        $mappedSong['size'] = filesize($mappedSong['file']);
+        $mappedSong['size'] = Core::get_filesize($mappedSong['file']);
 
         return $mappedSong;
     }

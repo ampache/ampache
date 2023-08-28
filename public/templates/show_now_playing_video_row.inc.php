@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,11 +36,11 @@ $media->format(); ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>
-        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id; ?>">
+        <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
         <?php echo scrub_out($np_user->fullname);
-            if ($np_user->f_avatar_medium) {
-                echo '<div>' . $np_user->f_avatar_medium . '</div>';
-            } ?>
+if ($np_user->f_avatar_medium) {
+    echo '<div>' . $np_user->f_avatar_medium . '</div>';
+} ?>
         </a>
     </div>
 </div>
@@ -48,7 +48,7 @@ $media->format(); ?>
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_video">
         <label><?php echo T_('Video'); ?></label>
-        <?php echo $media->f_link; ?>
+        <?php echo $media->get_f_link(); ?>
     </div>
 </div>
 

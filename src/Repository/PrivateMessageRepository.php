@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ namespace Ampache\Repository;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\PrivateMessageInterface;
-use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Exception\ItemNotFoundException;
 
@@ -68,10 +67,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
             return array();
         }
 
-        $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
-        $sql .= " AND `user_pvmsg`.`creation_date` > " . (string)$since;
-        $sql .= " ORDER BY `user_pvmsg`.`creation_date` DESC";
-
+        $sql        = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > " . (string)$since . " ORDER BY `user_pvmsg`.`creation_date` DESC";
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -86,8 +82,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
      */
     public function cleanChatMessages(int $days = 30): void
     {
-        $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND ";
-        $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string)$days . " day))";
+        $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND `creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string)$days . " day))";
         Dba::write($sql);
     }
 
@@ -100,8 +95,7 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
             return null;
         }
 
-        $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) ";
-        $sql .= "VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) VALUES (?, ?, ?, ?, ?, ?)";
         if (Dba::write($sql, array(null, $message, $userId, 0, time(), 0))) {
             return (int) Dba::insert_id();
         }

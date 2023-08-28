@@ -5,7 +5,7 @@ declare(strict_types=0);
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,8 +41,10 @@ final class InterfaceImplementationChecker
      */
     private static function is_class_typeof(string $instance, string $interface_name): bool
     {
+        if (empty($instance)) {
+            return false;
+        }
         $instance = ObjectTypeToClassNameMapper::map($instance);
-
         if (class_exists($instance)) {
             return in_array(
                 $interface_name,

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -54,9 +55,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog   = Catalog::create_from_id($row['id']);
-            $artist_id = 0;
-            $album_id  = 0;
+            /** @var Catalog_local $catalog */
+            $catalog = Catalog::create_from_id($row['id']);
             ob_flush();
             if (!$catalog) {
                 $interactor->error(
@@ -86,8 +86,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $type      = 'song';
                     $file_id   = Catalog::get_id_from_file($filePath, $type);
                     $media     = new Song($file_id);
-                    $artist_id = $media->artist;
-                    $album_id  = $media->album;
                     break;
             }
             $file_test = is_file($filePath);
@@ -99,8 +97,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     true
                 );
                 // update counts after cleaning a missing file
-                Album::update_album_counts();
-                Artist::update_artist_counts();
+                Album::update_table_counts();
+                Artist::update_table_counts();
 
                 return;
             }
@@ -112,13 +110,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 );
                 if ($media->id && $verificationMode == 1) {
                     // Verify Existing files
-                    $catalog = $media->catalog;
-                    $change  = Catalog::update_media_from_tags($media);
-                    if (array_key_exists('element', $change) && is_array($change['element']) && !empty($info['element'])) {
-                        // update counts after adding/verifying
-                        Album::update_album_counts();
-                        Artist::update_artist_counts();
-                    }
+                    Catalog::update_media_from_tags($media);
                 }
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
@@ -128,8 +120,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                     // update counts after adding/verifying
-                    Album::update_album_counts();
-                    Artist::update_artist_counts();
+                    Album::update_table_counts();
+                    Artist::update_table_counts();
                 }
                 if ($searchArtMode == 1 && $file_id) {
                     // Look for media art after adding new files

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,15 +66,9 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        if (array_key_exists('browse_id', $_REQUEST)) {
-            $browse_id = $_REQUEST['browse_id'];
-        } else {
-            $browse_id = null;
-        }
-
         debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
-
-        $browse = $this->modelFactory->createBrowse($browse_id);
+        $browse_id = $_REQUEST['browse_id'] ?? null;
+        $browse    = $this->modelFactory->createBrowse($browse_id);
 
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
@@ -94,28 +88,39 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'browse':
-                $object_ids = array();
-
-                // Check 'value' with isset because it can null
-                //(user type a "start with" word and deletes it)
-                if ($_REQUEST['key'] && (isset($_REQUEST['multi_alpha_filter']) || isset($_REQUEST['value']))) {
-                    // Set any new filters we've just added
-                    $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                // data set by the fileter box (browse_filters.inc.php)
+                if (isset($_REQUEST['key'])) {
+                    // user typed a "start with" word
+                    if (isset($_REQUEST['multi_alpha_filter'])) {
+                        $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                    }
+                    // Checkbox unplayed
+                    if (isset($_REQUEST['value'])) {
+                        $value = (int)($_REQUEST['value'] ?? 0);
+                        if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
+                            $value = 0;
+                        }
+                        $browse->set_filter($_REQUEST['key'], $value);
+                    }
+                }
+                // filter box Catalog select
+                if (isset($_REQUEST['catalog'])) {
                     $browse->set_catalog($_SESSION['catalog']);
                 }
 
-                if ($_REQUEST['sort']) {
+                if (array_key_exists('sort', $_REQUEST) && $_REQUEST['sort']) {
                     // Set the new sort value
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
-                if ($_REQUEST['catalog_key'] || $_SESSION['catalog'] != 0) {
+                if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $_SESSION['catalog'] = $_REQUEST['catalog_key'];
-                } elseif ((int) Core::get_request('catalog_key') == 0) {
+                } else {
                     $browse->set_filter('catalog', null);
-                    unset($_SESSION['catalog']);
+                    $_SESSION['catalog'] = null;
                 }
+                $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
                 $browse->show_objects(null, $argument);
@@ -135,7 +140,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
-                $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
+                $type = $_SESSION['tagcloud_type'] ?? 'song';
                 $browse->set_type($type);
                 break;
             case 'delete_object':
@@ -160,7 +165,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (!Core::get_global('user')->has_access('75')) {
+                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');
@@ -175,7 +180,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'page':
-                $browse->set_start($_REQUEST['start']);
+                $browse->set_start((int)$_REQUEST['start']);
                 ob_start();
                 $browse->show_objects(null, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
@@ -191,9 +196,8 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results['browse_filters'] = ob_get_clean();
                 break;
             case 'options':
-                $option = $_REQUEST['option'];
-                $value  = $_REQUEST['value'];
-
+                $option = $_REQUEST['option'] ?? '';
+                $value  = $_REQUEST['value'] ?? '';
                 switch ($option) {
                     case 'use_pages':
                         $value = ($value == 'true');
@@ -221,13 +225,13 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $browse->set_grid_view($value);
                         break;
                     case 'limit':
-                        $value = (int) ($value);
+                        $value = (int)$value;
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
                         break;
                     case 'custom':
-                        $value = (int) ($value);
+                        $value = (int)$value;
                         $limit = $browse->get_offset();
                         if ($limit > 0 && $value > 0) {
                             $total = $browse->get_total();

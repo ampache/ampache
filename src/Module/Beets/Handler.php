@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,6 +35,8 @@ abstract class Handler
      * @var string
      */
     protected $commandSeperator;
+    private $handler;
+    private $handlerCommand;
 
     /**
      * @param $command
@@ -44,7 +46,7 @@ abstract class Handler
 
     /**
      * @param Catalog $handler
-     * @param $command
+     * @param string $command
      */
     public function setHandler(Catalog $handler, $command)
     {
@@ -91,7 +93,7 @@ abstract class Handler
         $commandParts = array(
             $command
         );
-        if ($time) {
+        if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {
             // Add an empty part so we get a trailing slash if needed

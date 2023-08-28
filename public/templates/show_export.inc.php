@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,13 +46,13 @@ Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
                 <select id="export_catalog" name="export_catalog">
                     <option value=""><?php echo T_('All'); ?></option>
                     <?php
-                    $catalog_ids = Catalog::get_catalogs();
-                    foreach ($catalog_ids as $catalog_id) {
-                        $catalog      = Catalog::create_from_id($catalog_id);
-                        $current_name = 'catalog_' . $catalog->id; ?>
+                    $catalogs = Catalog::get_catalogs();
+foreach ($catalogs as $catalog_id) {
+    $catalog      = Catalog::create_from_id($catalog_id);
+    $current_name = 'catalog_' . $catalog->id; ?>
                         <option value="<?php echo $catalog->id; ?>" <?php echo $current_name; ?>><?php echo scrub_out($catalog->name); ?></option>
                     <?php
-                    } ?>
+} ?>
                 </select>
             </td>
         </tr>

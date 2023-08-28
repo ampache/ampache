@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -72,11 +71,11 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                         break;
                     }
 
-                    $name        = $_REQUEST['name'];
+                    $name = $_REQUEST['name'] ?? '';
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }
-                    $playlist_id = (int) Playlist::create($name, 'private');
+                    $playlist_id = (int)Playlist::create($name, 'private');
                     if ($playlist_id < 1) {
                         break;
                     }

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,10 +30,18 @@ use Ampache\Repository\Model\Label;
 use Ampache\Module\Util\Ui;
 
 /** @var Label $label */
+/** @var array $object_ids */
 /** @var string $object_type */
+/** @var bool $isLabelEditable */
 
 $browse = new Browse();
 $browse->set_type($object_type);
+// these are usually set so not sure why missing
+$limit_threshold = AmpConfig::get('stats_threshold', 7);
+$argument        = false;
+if (array_key_exists('argument', $_REQUEST)) {
+    $argument = scrub_in($_REQUEST['argument']);
+}
 
 Ui::show_box_top($label->get_fullname(), 'info-box');
 if ($label->website) {
@@ -108,15 +116,15 @@ if ($label->website) {
     </div>
     <div id="tabs_content">
         <div id="artists" class="tab_content" style="display: block;">
-<?php
-    $browse->show_objects($object_ids, true);
-    $browse->set_use_alpha(false, false);
-    $browse->store(); ?>
+<?php $browse->show_objects($object_ids, true);
+$browse->set_use_alpha(false, false);
+$browse->store(); ?>
         </div>
-<?php
-    echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
+<?php echo Ajax::observe('songs_link', 'click', Ajax::action('?page=index&action=songs&label=' . $label->id, 'songs')); ?>
         <div id="songs" class="tab_content">
-        <?php Ui::show_box_top(T_('Songs'), 'info-box'); echo T_('Loading...'); Ui::show_box_bottom(); ?>
+        <?php Ui::show_box_top(T_('Songs'), 'info-box');
+echo T_('Loading...');
+Ui::show_box_bottom(); ?>
         </div>
     </div>
 </div>

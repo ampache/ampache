@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,29 +22,26 @@
 
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Module\Util\Ui;
 
 /** @var Artist $artist */
 /** @var array $biography */
-
 ?>
-
 <div class="item_info">
     <?php if ($artist instanceof Artist) {
-    $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
-    Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
-} ?>
+        $thumb = (empty(trim($biography['summary'] ?? ''))) ? 32 : 2;
+        Art::display('artist', $artist->id, scrub_out($artist->get_fullname() ?? $artist->name), $thumb);
+    } ?>
     <div class="item_properties">
         <?php $dcol = array();
-        if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
-            $dcol[] = $biography['placeformed'];
-        }
-        if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
-            $dcol[] = $biography['yearformed'];
-        }
-        if (count($dcol) > 0) {
-            echo implode(', ', $dcol);
-        } ?>
+if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
+    $dcol[] = $biography['placeformed'];
+}
+if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
+    $dcol[] = $biography['yearformed'];
+}
+if (count($dcol) > 0) {
+    echo implode(', ', $dcol);
+} ?>
     </div>
 </div>
 <div id="item_summary">
@@ -55,6 +52,9 @@ use Ampache\Module\Util\Ui;
 </div>
 <script>
     $(document).ready(function(){
-        $("a[rel^='prettyPhoto']").prettyPhoto({social_tools:false});
+        $("a[rel^='prettyPhoto']").prettyPhoto({
+            social_tools: false,
+            deeplinking: false
+        });
     });
 </script>

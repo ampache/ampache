@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,9 +33,11 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\User;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShareCreateMethod
@@ -52,13 +54,16 @@ final class ShareCreateMethod
      * Takes the file id with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) object_id
      * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public static function share_create(array $input): bool
+    public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -72,7 +77,7 @@ final class ShareCreateMethod
         $object_id   = $input['filter'];
         $object_type = $input['type'];
         $description = $input['description'] ?? null;
-        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : null;
+        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
         if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -83,7 +88,7 @@ final class ShareCreateMethod
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
 
-        $share = array();
+        $results = array();
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -100,18 +105,19 @@ final class ShareCreateMethod
             $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
 
-            $share[] = Share::create_share(
+            $results[] = Share::create_share(
+                $user->id,
                 $object_type,
                 $object_id,
                 true,
                 $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
-                $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                $passwordGenerator->generate_token(),
                 0,
                 $description
             );
         }
-        if (empty($share)) {
+        if (empty($results)) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
@@ -121,10 +127,10 @@ final class ShareCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::shares($share, false);
+                echo Json_Data::shares($results, false);
                 break;
             default:
-                echo Xml_Data::shares($share);
+                echo Xml_Data::shares($results, $user);
         }
 
         return true;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,6 +35,6 @@ return [
     Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
     Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
     Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
-    Authorization\UserAccessKeyGeneratorInterface::class => autowire(Authorization\UserAccessKeyGenerator::class),
+    Authorization\UserKeyGeneratorInterface::class => autowire(Authorization\UserKeyGenerator::class),
     PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
 ];

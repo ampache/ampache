@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Localplay4Method
@@ -44,20 +45,22 @@ final class Localplay4Method
      * This is for controlling Localplay
      *
      * @param array $input
+     * @param User $user
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * @return boolean
      */
-    public static function localplay(array $input): bool
+    public static function localplay(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('command'), self::ACTION)) {
             return false;
         }
+        unset($user);
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        if (!$localplay->connect() || !$localplay->status()) {
+        if (empty($localplay->type) || !$localplay->connect()) {
             Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
 
             return false;
@@ -127,15 +130,15 @@ final class Localplay4Method
 
                 return false;
         } // end switch on command
-        $output_array = (!empty($status))
+        $results = (!empty($status))
             ? array('localplay' => array('command' => array($input['command'] => $status)))
             : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml4_Data::keyed_array($output_array);
+                echo Xml4_Data::keyed_array($results);
         }
 
         return true;

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,10 +47,11 @@ final class Followers4Method
      * Error when user not found or no followers
      *
      * @param array $input
+     * @param User $user
      * username = (string) $username
      * @return boolean
      */
-    public static function followers(array $input): bool
+    public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
             Api4::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
@@ -60,21 +61,22 @@ final class Followers4Method
         if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $username = $input['username'];
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
-                $users = static::getUserFollowerRepository()->getFollowers($user->id);
-                if (!count($users)) {
+                $results = static::getUserFollowerRepository()->getFollowers($user->id);
+                if (!count($results)) {
                     Api4::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
                 } else {
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo Json4_Data::users($users);
+                            echo Json4_Data::users($results);
                             break;
                         default:
-                            echo Xml4_Data::users($users);
+                            echo Xml4_Data::users($results);
                     }
                 }
             } else {

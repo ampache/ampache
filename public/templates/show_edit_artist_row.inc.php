@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,8 +41,8 @@ use Ampache\Module\Authorization\Access;
                     <?php if (Access::check('interface', 50)) { ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php } else {
-    echo $libitem->mbid;
-} ?>
+                        echo $libitem->mbid;
+                    } ?>
                 </td>
             </tr>
             <tr>
@@ -59,7 +59,7 @@ use Ampache\Module\Authorization\Access;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
-                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display(Tag::get_top_tags('artist', $libitem->id, 20)); ?>" /></td>
             </tr>
             <?php if (AmpConfig::get('label')) { ?>
             <tr>

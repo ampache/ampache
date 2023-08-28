@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,34 +50,35 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $response = null;
-
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
-            return $response;
+            return null;
         }
 
         $albumId = $request->getQueryParams()['album_id'] ?? 0;
 
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            T_('The Album and all files will be deleted'),
-            sprintf(
-                '%s/albums.php?action=confirm_delete&album_id=%d',
-                $this->configContainer->getWebPath(),
-                $albumId
-            ),
-            1,
-            'delete_album'
-        );
-
+        $this->ui->showHeader();
+        if ($albumId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('The Album and all files will be deleted'),
+                sprintf(
+                    '%s/albums.php?action=confirm_delete&album_id=%d',
+                    $this->configContainer->getWebPath(),
+                    $albumId
+                ),
+                1,
+                'delete_album'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
-        return $response;
+        return null;
     }
 }

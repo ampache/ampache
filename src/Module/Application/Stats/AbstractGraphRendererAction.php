@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,6 @@ use Ampache\Module\Util\Ui;
 
 abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 {
-
     /**
      * @throws ApplicationException
      */
@@ -86,12 +85,10 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
             if (isset($libitem->f_link)) {
                 $blink = $libitem->f_link;
             }
-        } else {
-            if ($user_id) {
-                $user = new User($user_id);
-                $user->format();
-                $blink = $user->f_link;
-            }
+        } elseif ($user_id) {
+            $user = new User($user_id);
+            $user->format();
+            $blink = $user->f_link;
         }
 
         require_once Ui::find_template('show_graphs.inc.php');

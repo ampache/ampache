@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,7 +62,6 @@ class OAuthServer
      * process a request_token request
      * returns the request token on success
      * @param $request
-     * @return
      * @throws OAuthException
      */
     public function fetch_request_token(&$request)
@@ -162,8 +161,7 @@ class OAuthServer
         }
 
         if (!in_array($signature_method, array_keys($this->signature_methods))) {
-            throw new OAuthException("Signature method '$signature_method' not supported " . "try one of the following: " . implode(", ",
-                    array_keys($this->signature_methods)));
+            throw new OAuthException("Signature method '$signature_method' not supported " . "try one of the following: " . implode(", ", array_keys($this->signature_methods)));
         }
 
         return $this->signature_methods[$signature_method];
@@ -172,7 +170,6 @@ class OAuthServer
     /**
      * try to find the consumer for the provided request's consumer key
      * @param $request
-     * @return
      * @throws OAuthException
      */
     private function get_consumer($request)
@@ -196,7 +193,6 @@ class OAuthServer
      * @param $request
      * @param $consumer
      * @param string $token_type
-     * @return
      * @throws OAuthException
      */
     private function get_token($request, $consumer, $token_type = "access")

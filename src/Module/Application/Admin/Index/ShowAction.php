@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,13 +60,12 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Show Catalogs
-        $catalog_ids = Catalog::get_catalogs();
-
-        $browse = $this->modelFactory->createBrowse();
+        $catalogs = Catalog::get_catalogs();
+        $browse   = $this->modelFactory->createBrowse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
-        $browse->save_objects($catalog_ids);
-        $browse->show_objects($catalog_ids);
+        $browse->save_objects($catalogs);
+        $browse->show_objects($catalogs);
         $browse->store();
 
         $this->ui->showQueryStats();

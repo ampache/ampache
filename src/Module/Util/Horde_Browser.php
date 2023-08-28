@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -187,8 +187,7 @@ class Horde_Browser
         $agent      = $this->_agent;
         $lowerAgent = $this->_lowerAgent;
 
-        if (strpos($lowerAgent, 'iemobile') !== false || strpos($lowerAgent,
-                'mobileexplorer') !== false || strpos($lowerAgent, 'openwave') !== false) {
+        if (strpos($lowerAgent, 'iemobile') !== false || strpos($lowerAgent, 'mobileexplorer') !== false || strpos($lowerAgent, 'openwave') !== false) {
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
@@ -247,16 +246,14 @@ class Horde_Browser
                 $this->setFeature('optgroup');
                 $this->setQuirk('double_linebreak_textarea');
             }
-        } elseif (strpos($lowerAgent, 'elaine/') !== false || strpos($lowerAgent,
-                'palmsource') !== false || strpos($lowerAgent, 'digital paths') !== false) {
+        } elseif (strpos($lowerAgent, 'elaine/') !== false || strpos($lowerAgent, 'palmsource') !== false || strpos($lowerAgent, 'digital paths') !== false) {
             $this->setBrowser('palm');
             $this->setFeature('images', false);
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
             $this->_mobile = true;
-        } elseif ((preg_match('|MSIE ([0-9.]+)|', $agent, $version)) || (preg_match('|Internet Explorer/([0-9.]+)|',
-                $agent, $version))) {
+        } elseif ((preg_match('|MSIE ([0-9.]+)|', $agent, $version)) || (preg_match('|Internet Explorer/([0-9.]+)|', $agent, $version))) {
             $this->setBrowser('msie');
             $this->setQuirk('cache_ssl_downloads');
             $this->setQuirk('cache_same_url');
@@ -361,18 +358,16 @@ class Horde_Browser
         } elseif (strpos($lowerAgent, 'avantgo') !== false) {
             $this->setBrowser('avantgo');
             $this->_mobile = true;
-        } elseif (preg_match('|Konqueror/([0-9]+)\.?([0-9]+)?|', $agent,
-                $version) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $agent, $version)) {
+        } elseif (preg_match('|Konqueror/([0-9]+)\.?([0-9]+)?|', $agent, $version) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $agent, $version)) {
             $this->setBrowser('webkit');
             $this->setQuirk('empty_file_input_value');
             $this->setQuirk('no_hidden_overflow_tables');
             $this->setFeature('dataurl');
 
-            if (strpos($agent, 'Mobile') !== false || strpos($agent, 'Android') !== false || strpos($agent,
-                    'SAMSUNG-GT') !== false || ((strpos($agent, 'Nokia') !== false || strpos($agent,
-                            'Symbian') !== false) && strpos($agent, 'WebKit') !== false) || (strpos($agent,
-                        'N900') !== false && strpos($agent, 'Maemo Browser') !== false) || (strpos($agent,
-                        'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)) {
+            if (strpos($agent, 'Mobile') !== false || strpos($agent, 'Android') !== false || strpos($agent, 'SAMSUNG-GT') !== false ||
+                ((strpos($agent, 'Nokia') !== false || strpos($agent, 'Symbian') !== false) && strpos($agent, 'WebKit') !== false) ||
+                (strpos($agent, 'N900') !== false && strpos($agent, 'Maemo Browser') !== false) ||
+                (strpos($agent, 'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);
                 $this->setFeature('javascript');
@@ -517,8 +512,7 @@ class Horde_Browser
         } elseif (preg_match('|HotJava/([0-9]+)|', $agent, $version)) {
             $this->setBrowser('hotjava');
             $this->setFeature('javascript', false);
-        } elseif (strpos($agent, 'UP/') !== false || strpos($agent, 'UP.B') !== false || strpos($agent,
-                'UP.L') !== false) {
+        } elseif (strpos($agent, 'UP/') !== false || strpos($agent, 'UP.B') !== false || strpos($agent, 'UP.L') !== false) {
             $this->setBrowser('up');
             $this->setFeature('html', false);
             $this->setFeature('javascript', false);

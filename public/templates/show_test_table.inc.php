@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,8 +48,7 @@ function debug_wresult($status = false, $value = null, $comment = '')
 
 // TODO remove me
 global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
-?>
+$environment = $dic->get(EnvironmentInterface::class); ?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td><?php echo debug_result($environment->check_php_version()); ?></td>
@@ -59,11 +58,11 @@ $environment = $dic->get(EnvironmentInterface::class);
     <td><?php echo T_('Dependencies'); ?></td>
     <td><?php echo debug_result($environment->check_dependencies_folder()); ?></td>
     <td>
-    <?php echo T_('This tests whether Ampache dependencies are installed.'); ?>
-    <?php if (!$environment->check_dependencies_folder()) { ?>
+<?php echo T_('This tests whether Ampache dependencies are installed.');
+if (!$environment->check_dependencies_folder()) { ?>
         <br />
         <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
-    <?php } ?>
+<?php } ?>
     </td>
 </tr>
 <tr>
@@ -151,8 +150,7 @@ $environment = $dic->get(EnvironmentInterface::class);
     <td><?php echo debug_result($environment->check_mbstring_func_overload()); ?></td>
     <td><?php /* HINT: Shows mbstring.func_overload */ printf(T_('This tests whether PHP %s is set as it may break the ID3 tag support. This is not strictly necessary, but enabling Ampache ID3 tag write support (disabled by default) along with mbstring.func_overload may result in irreversible corruption of your music files.'), '<a href="http://php.net/manual/en/mbstring.overload.php">mbstring.func_overload</a>'); ?></td>
 </tr>
-<?php
-if (!defined('INSTALL')) { ?>
+<?php if (!defined('INSTALL')) { ?>
 <tr>
     <td><?php echo T_('Configuration file readability'); ?></td>
     <td><?php echo debug_result(is_readable($configfile), "WARNING"); ?></td>
@@ -161,12 +159,11 @@ if (!defined('INSTALL')) { ?>
         <?php echo T_('If you are installing Ampache for the first time you can ignore this warning and proceed to the installer.'); ?> &nbsp;<a href="install.php"><?php echo T_('Web Installation'); ?></a>
     </td>
 </tr>
-<?php if (is_readable($configfile)) { ?>
+    <?php if (is_readable($configfile)) { ?>
 <tr>
     <td><?php echo T_('Configuration file validity'); ?></td>
     <td>
-    <?php
-        $results = @parse_ini_file($configfile);
+        <?php $results = @parse_ini_file($configfile);
         if ($results) {
             AmpConfig::set_by_array($results);
             echo debug_result(check_config_values($results));
@@ -187,8 +184,7 @@ if (!defined('INSTALL')) { ?>
 <tr>
     <td><?php echo T_('Web Path'); ?></td>
     <td>
-    <?php
-        if ($results && check_config_values($results)) {
+        <?php if ($results && check_config_values($results)) {
             echo "&nbsp;&nbsp;&nbsp;" . Ui::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
@@ -196,6 +192,5 @@ if (!defined('INSTALL')) { ?>
     </td>
     <td><?php echo T_('This test makes sure that your web_path variable is set correctly and that we are able to get to the index page. If you do not see a check mark here then your web_path is not set correctly.'); ?></td>
 </tr>
-<?php
-    }
-} ?>
+    <?php }
+    } ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,10 +34,9 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
 $web_path = AmpConfig::get('web_path');
-?>
-<?php Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
-<dl class="media_details">
 
+Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->get_f_podcast_link(), 'box box_podcast_episode_details'); ?>
+<dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
         <dt><?php echo T_('Rating'); ?></dt>
@@ -108,25 +107,27 @@ $web_path = AmpConfig::get('web_path');
     </dd>
 <?php
     $songprops[T_('Title')]                  = $episode->get_fullname();
-    $songprops[T_('Description')]            = $episode->f_description;
-    $songprops[T_('Category')]               = $episode->f_category;
-    $songprops[T_('Author')]                 = $episode->f_author;
-    $songprops[T_('Publication Date')]       = $episode->f_pubdate;
-    $songprops[T_('State')]                  = $episode->f_state;
-    $songprops[T_('Website')]                = $episode->f_website;
-    if ($episode->time > 0) {
-        $songprops[T_('Length')]           = $episode->f_time;
-    }
+$songprops[T_('Description')]                = $episode->description;
+$songprops[T_('Category')]                   = $episode->f_category;
+$songprops[T_('Author')]                     = $episode->f_author;
+$songprops[T_('Publication Date')]           = $episode->f_pubdate;
+$songprops[T_('State')]                      = $episode->f_state;
+$songprops[T_('Website')]                    = $episode->f_website;
+if ($episode->time > 0) {
+    $songprops[T_('Length')]           = $episode->f_time;
+}
 
-    if (!empty($episode->file)) {
-        $songprops[T_('File')] = $episode->file;
-        $songprops[T_('Size')] = $episode->f_size;
-    }
+if (!empty($episode->file)) {
+    $songprops[T_('File')]     = $episode->file;
+    $songprops[T_('Size')]     = $episode->f_size;
+    $songprops[T_('Bitrate')]  = scrub_out($episode->f_bitrate);
+    $songprops[T_('Channels')] = scrub_out($episode->channels);
+}
 
-    foreach ($songprops as $key => $value) {
-        if (trim($value)) {
-            echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
-        }
-    } ?>
+foreach ($songprops as $key => $value) {
+    if (trim($value)) {
+        echo "<dt>" . T_($key) . "</dt><dd>" . $value . "</dd>";
+    }
+} ?>
 </dl>
 <?php Ui::show_box_bottom(); ?>

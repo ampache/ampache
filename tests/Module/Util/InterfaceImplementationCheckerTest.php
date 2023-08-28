@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\playable_item;
@@ -54,30 +53,12 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
         );
     }
 
-    public function testIsLibraryItemReturnsTrueIfImplemented(): void
-    {
-        $instance = Mockery::mock(Channel::class, library_item::class);
-
-        static::assertTrue(
-            InterfaceImplementationChecker::is_library_item(get_class($instance))
-        );
-    }
-
     public function testIsLibraryItemReturnsFalseIfNotImplemented(): void
     {
         $instance = new stdClass();
 
         static::assertFalse(
             InterfaceImplementationChecker::is_library_item(get_class($instance))
-        );
-    }
-
-    public function testIsMediaReturnsTrueIfImplemented(): void
-    {
-        $instance = Mockery::mock(Channel::class, Media::class);
-
-        static::assertTrue(
-            InterfaceImplementationChecker::is_media(get_class($instance))
         );
     }
 

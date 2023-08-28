@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -236,13 +236,8 @@ final class Environment implements EnvironmentInterface
     public function isSsl(): bool
     {
         return (
-            (
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
-            ) || (
-                isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') == 'on'
-            )
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https') ||
+            (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') == 'on')
         );
     }
 
@@ -262,10 +257,8 @@ final class Environment implements EnvironmentInterface
         $port = 80;
         if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
             $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
-        } else {
-            if (isset($_SERVER['SERVER_PORT'])) {
-                $port = (int) $_SERVER['SERVER_PORT'];
-            }
+        } elseif (isset($_SERVER['SERVER_PORT'])) {
+            $port = (int) $_SERVER['SERVER_PORT'];
         }
 
         return $port;
@@ -285,14 +278,14 @@ final class Environment implements EnvironmentInterface
 
         // In case the local setting is 0
         ini_set('session.gc_probability', '5');
-
-        if (!isset($results['memory_limit']) ||
-            (Ui::unformat_bytes($results['memory_limit']) < Ui::unformat_bytes('32M'))
+        $current_memory = ini_get('memory_limit');
+        if (!$current_memory ||
+            (Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M'))
         ) {
-            $results['memory_limit'] = '32M';
+            $current_memory = '32M';
         }
 
-        set_memory_limit($results['memory_limit']);
+        set_memory_limit($current_memory);
     }
 
     /**

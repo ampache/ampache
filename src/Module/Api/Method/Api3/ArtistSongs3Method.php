@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Artist;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
@@ -42,18 +41,18 @@ final class ArtistSongs3Method
      * artist_songs
      * This returns the songs of the specified artist
      * @param array $input
+     * @param User $user
      */
-    public static function artist_songs(array $input)
+    public static function artist_songs(array $input, User $user)
     {
-        $artist = new Artist($input['filter']);
-        $songs  = static::getSongRepository()->getByArtist($artist->id);
-        $user   = User::get_from_username(Session::username($input['auth']));
+        $artist  = new Artist($input['filter']);
+        $results = static::getSongRepository()->getByArtist($artist->id);
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::songs($songs, $user);
+        echo Xml3_Data::songs($results, $user);
     } // artist_songs
 
     private static function getSongRepository(): SongRepositoryInterface

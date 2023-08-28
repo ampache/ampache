@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
 
 /**
  * Class CatalogFileMethod
@@ -54,20 +53,21 @@ final class CatalogFileMethod
      * Make sure you remember to urlencode those file names!
      *
      * @param array $input
+     * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file(array $input): bool
+    public static function catalog_file(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
-        $file = (string) html_entity_decode($input['file']);
+        $file = html_entity_decode($input['file']);
         $task = explode(',', (string)$input['task']);
         if (!$task) {
             $task = array();
@@ -85,6 +85,7 @@ final class CatalogFileMethod
 
             return false;
         }
+        $output_task = '';
         foreach ($task as $item) {
             if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,9 +93,11 @@ final class CatalogFileMethod
 
                 return false;
             }
+            $output_task .= $item . ', ';
         }
-        $catalog_id = (int) $input['catalog'];
-        $catalog    = Catalog::create_from_id($catalog_id);
+        $output_task = rtrim($output_task, ', ');
+        $catalog_id  = (int) $input['catalog'];
+        $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
@@ -122,7 +125,6 @@ final class CatalogFileMethod
 
         if ($catalog->catalog_type == 'local') {
             foreach ($task as $item) {
-                define('API', true);
                 if (defined('SSE_OUTPUT')) {
                     unset($SSE_OUTPUT);
                 }
@@ -152,23 +154,15 @@ final class CatalogFileMethod
                 }
             }
             // update the counts too
-            Album::update_album_counts();
-            Artist::update_artist_counts();
-            Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
+            if ($media instanceof Song) {
+                Album::update_album_count($media->album);
+                Artist::update_table_counts();
+            }
+            Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

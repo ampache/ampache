@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -36,14 +35,10 @@ final class GraphAction extends AbstractGraphRendererAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        UiInterface $ui
     ) {
         $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,22 +25,17 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
 
 final class MoveCatalogPathCommand extends Command
 {
-    private ConfigContainerInterface $configContainer;
-
     private UpdateCatalogInterface $updateCatalog;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
         UpdateCatalogInterface $updateCatalog
     ) {
         parent::__construct('run:moveCatalogPath', T_('Change a Catalog path'));
 
-        $this->configContainer = $configContainer;
         $this->updateCatalog   = $updateCatalog;
 
         $this

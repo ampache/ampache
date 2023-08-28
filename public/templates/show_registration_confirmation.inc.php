@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang'));
-$web_path = AmpConfig::get('web_path');
-
+$htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
+$web_path          = AmpConfig::get('web_path');
 $_SESSION['login'] = true; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
@@ -46,18 +45,16 @@ $_SESSION['login'] = true; ?>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div id="content">
                 <div id="guts">
-                    <?php
-                    $url  = $web_path . '/login.php';
-                    $text = T_('Return to Login Page');
-                    if (AmpConfig::get('admin_enable_required')) {
-                        $text = T_('Please wait for an administrator to activate your account');
-                    }
-                    if (!AmpConfig::get('user_no_email_confirm')) {
-                        $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
-                    }
-                    $this->ui->showConfirmation(T_('Your account has been created'), $text, $url); ?>
+<?php $url = $web_path . '/login.php';
+$text      = T_('Return to Login Page');
+if (AmpConfig::get('admin_enable_required')) {
+    $text = T_('Please wait for an administrator to activate your account');
+}
+if (!AmpConfig::get('user_no_email_confirm')) {
+    $text = T_('An activation key has been sent to the e-mail address you provided. Please check your e-mail for further information');
+}
+$this->ui->showConfirmation(T_('Your account has been created'), $text, $url); ?>
                 </div>
             </div>
         </div>
-<?php
-Ui::show_footer(); ?>
+<?php Ui::show_footer(); ?>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,8 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
-?>
-<?php if ($browse->is_show_header()) {
+
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
@@ -68,5 +68,5 @@ use Ampache\Module\Util\Ui;
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-                require Ui::find_template('list_header.inc.php');
-            } ?>
+    require Ui::find_template('list_header.inc.php');
+} ?>

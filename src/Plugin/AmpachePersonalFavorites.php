@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;

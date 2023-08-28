@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Genre4Method
@@ -43,14 +44,16 @@ final class Genre4Method
      * This returns a single genre based on UID
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre(array $input): bool
+    public static function genre(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
+        unset($user);
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {

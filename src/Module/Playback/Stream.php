@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -107,6 +107,12 @@ class Stream
         $player = null,
         $media_type = 'song'
     ) {
+        // check if we've done this before
+        $format = self::get_output_cache($source, $target, $player, $media_type);
+        if (!empty($format)) {
+            return $format;
+        }
+        $input_target = $target;
         // default target for songs
         $setting_target = 'encode_target';
         // default target for video
@@ -134,21 +140,21 @@ class Stream
         // TARGET > PLAYER > CODEC > DEFAULT
         if ($target) {
             return $target;
-        } elseif ($has_player_target) {
+        } elseif ($has_player_target && $source !== $has_player_target) {
             $target = $has_player_target;
             debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_codec_target) {
+        } elseif ($has_codec_target && $source !== $has_codec_target) {
             $target = $has_codec_target;
             debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
-        } elseif ($has_default_target) {
+        } elseif ($has_default_target && $source !== $has_default_target) {
             $target = $has_default_target;
             debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no default
         if (!$target) {
             $target = $source;
-            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
+        self::set_output_cache($target, $source, $input_target, $player, $media_type);
 
         return $target;
     }
@@ -202,6 +208,124 @@ class Stream
         return (int)$bit_rate;
     }
 
+    /**
+     * Get stream types for media type.
+     * @param string $type
+     * @param string $player
+     * @return array
+     */
+    public static function get_stream_types_for_type($type, $player = 'webplayer')
+    {
+        $types     = array();
+        $transcode = AmpConfig::get('transcode_' . $type);
+        if ($player !== '') {
+            $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
+            $player_encode    = AmpConfig::get('encode_player_' . $player . '_target');
+            if ($player_transcode) {
+                // Override the default TYPE transcoding behavior on a per-player basis
+                // (e.g. transcode_player_webplayer_flac = "required")
+                $transcode = $player_transcode;
+            } elseif ($player_encode) {
+                // Override the default PLAYER output format.
+                // (e.g. encode_player_webplayer_target = "ogg")
+                $transcode = $player_encode;
+            }
+        }
+
+        if ($transcode != 'required') {
+            $types[] = 'native';
+        }
+        if (make_bool($transcode)) {
+            $types[] = 'transcode';
+        }
+
+        return $types;
+    }
+
+    /**
+     * Get transcode settings for media.
+     * It can be confusing but when waveforms are enabled it will transcode the file twice.
+     *
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @param array $options
+     * @return array
+     */
+    public static function get_transcode_settings_for_media(
+        $source,
+        $target = null,
+        $player = null,
+        $media_type = 'song',
+        $options = array()
+    ) {
+        $target = self::get_transcode_format($source, $target, $player, $media_type);
+        $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
+        if (empty($cmd)) {
+            debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
+
+            return array();
+        }
+
+        $args = '';
+        if (AmpConfig::get('encode_ss_frame') && array_key_exists('frame', $options)) {
+            $args .= ' ' . AmpConfig::get('encode_ss_frame');
+        }
+        if (AmpConfig::get('encode_ss_duration') && array_key_exists('duration', $options)) {
+            $args .= ' ' . AmpConfig::get('encode_ss_duration');
+        }
+        $args .= ' ' . AmpConfig::get('transcode_input');
+
+        if (AmpConfig::get('encode_srt') && array_key_exists('subtitle', $options)) {
+            debug_event(self::class, 'Using subtitle ' . $options['subtitle'], 5);
+            $args .= ' ' . AmpConfig::get('encode_srt');
+        }
+
+        $argst = AmpConfig::get('encode_args_' . $target);
+        if (!$args) {
+            debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
+
+            return array();
+        }
+        $args .= ' ' . $argst;
+
+        debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+
+        return array('format' => $target, 'command' => $cmd . $args);
+    }
+
+    /**
+     * get_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     * @return string
+     */
+    public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (!empty(Core::get_global('transcode'))) {
+            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        }
+
+        return '';
+    }
+
+    /**
+     * set_output_cache
+     * @param string $source
+     * @param string $target
+     * @param string $player
+     * @param string $media_type
+     */
+    public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song')
+    {
+        if (Core::get_global('transcode') == '') {
+            $GLOBALS['transcode'] = array();
+        }
+        $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
+    }
     /**
      * start_transcode
      *
@@ -410,9 +534,9 @@ class Stream
     public static function kill_process($transcoder)
     {
         $status = proc_get_status($transcoder['process']);
-        if ($status['running'] == true) {
+        if ($status['running']) {
             $pid = $status['pid'];
-            debug_event(self::class, 'Stream process about to be killed. pid:' . $pid, 1);
+            debug_event(self::class, 'WARNING Stream is probably being killed early! pid:' . $pid, 1);
 
             (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') ? exec("kill -9 $pid") : exec("taskkill /F /T /PID $pid");
 
@@ -600,34 +724,44 @@ class Stream
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      * @param boolean $local
+     * @param string $streamToken
      * @return string
      */
-    public static function get_base_url($local = false)
+    public static function get_base_url($local = false, $streamToken = null)
     {
-        $session_string = '';
+        $base_url = '/play/index.php?';
+        if (AmpConfig::get('use_play2')) {
+            $base_url .= 'action=play2&';
+        }
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $session_string = 'ssid=' . self::get_session() . '&';
+            $session_id = (!empty($streamToken))
+                ? $streamToken:
+                self::get_session();
+            $base_url .= 'ssid=' . $session_id . '&';
         }
 
-        if ($local) {
-            $web_path = AmpConfig::get('local_web_path');
-        } else {
-            $web_path = AmpConfig::get('web_path');
+        $web_path = ($local)
+            ? AmpConfig::get('local_web_path')
+            : AmpConfig::get('web_path');
+        if (empty($web_path)) {
+            $web_path = AmpConfig::get('fallback_url');
         }
 
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = AmpConfig::get('http_port');
+        $http_port = ($local && preg_match("/:(\d+)/", $web_path, $matches))
+            ? $matches[1]
+            : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (preg_match("/:(\d+)/", $web_path, $matches)) {
+            if (isset($matches) && array_key_exists(1, $matches)) {
                 $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
             } else {
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
         }
 
-        return $web_path . "/play/index.php?$session_string";
+        return $web_path . $base_url;
     } // get_base_url
 }

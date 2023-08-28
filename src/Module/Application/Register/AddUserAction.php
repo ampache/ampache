@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -108,25 +108,15 @@ final class AddUserAction implements ApplicationActionInterface
         $state          = (string) scrub_in(Core::get_post('state'));
         $city           = (string) scrub_in(Core::get_post('city'));
 
-        if ($website === null) {
-            $website = '';
-        }
-        if ($state === null) {
-            $state = '';
-        }
-        if ($city === null) {
-            $city = '';
-        }
-
         /* If we're using the captcha stuff */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            $captcha         = captcha::solved();
+            $captcha = captcha::solved();
             if (!isset($captcha)) {
                 AmpError::add('captcha', T_('Captcha is required'));
             }
             if (isset($captcha)) {
                 if ($captcha) {
-                    $msg="SUCCESS";
+                    $msg = "SUCCESS";
                 } else {
                     AmpError::add('captcha', T_('Captcha failed'));
                 }
@@ -182,7 +172,6 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         /* Attempt to create the new user */
-        $access = 5;
         switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
             case 'admin':
                 $access = 100;

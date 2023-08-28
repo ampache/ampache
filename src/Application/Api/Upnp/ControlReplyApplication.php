@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,10 +96,10 @@ final class ControlReplyApplication implements ApplicationInterface
                     "</SOAP-ENV:Body> " .
                     "</SOAP-ENV:Envelope>";
                 break;
-            // "<SearchCaps>dc:creator,dc:date,dc:title,upnp:album,upnp:actor,upnp:artist,upnp:class,upnp:genre,@id,@parentID,@refID</SearchCaps>" .
-            // 17/10 removed upnp:author@role, from searchcaps as this is not trivial to implement
-            // 20/10 put it back because it stops M1000 from searching for anything ("Search not supported on this server")
             case 'searchcapabilities':
+                // "<SearchCaps>dc:creator,dc:date,dc:title,upnp:album,upnp:actor,upnp:artist,upnp:class,upnp:genre,@id,@parentID,@refID</SearchCaps>" .
+                // 17/10 removed upnp:author@role, from searchcaps as this is not trivial to implement
+                // 20/10 put it back because it stops M1000 from searching for anything ("Search not supported on this server")
                 $soapXML = "<?xml version=\"1.0\"?>" .
                     "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
                     "<s:Body>" .
@@ -196,8 +196,6 @@ final class ControlReplyApplication implements ApplicationInterface
                             break;
                     }
                 }
-                break;
-            default:
                 break;
         }
 

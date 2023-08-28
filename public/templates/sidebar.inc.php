@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,8 +28,12 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** require@ public/templates/header.inc.php */
+/** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
+/** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
+
 $web_path         = AmpConfig::get('web_path');
-$is_session       = (!empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
+$is_session       = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
@@ -44,7 +48,6 @@ $t_artists         = T_('Artists');
 $t_a_artists       = T_('Album Artists');
 $t_albums          = T_('Albums');
 $t_labels          = T_('Labels');
-$t_channels        = T_('Channels');
 $t_broadcasts      = T_('Broadcasts');
 $t_radioStations   = T_('Radio Stations');
 $t_radio           = T_('Radio');
@@ -55,6 +58,7 @@ $t_tvShows         = T_('TV Shows');
 $t_movies          = T_('Movies');
 $t_personalVideos  = T_('Personal Videos');
 $t_genres          = T_('Genres');
+$t_upload          = T_('Upload');
 $t_uploads         = T_('Uploads');
 $t_dashboards      = T_('Dashboards');
 $t_podcastEpisodes = T_('Podcast Episodes');
@@ -86,10 +90,12 @@ $t_logout          = T_('Log out'); ?>
     // List of buttons ( id, title, icon, access level)
     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) {
-        $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
+        $sidebar_items[] = array('id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volumeup', 'access' => 5);
     }
-    $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
-    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
+    if ($is_session) {
+        $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5);
+        $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
+    } ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $class_name) ? ' active' : '';
@@ -105,13 +111,16 @@ $t_logout          = T_('Log out'); ?>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
             echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
-        }
+        } ?>
+    <?php
     } ?>
+    <?php if ($is_session && !empty(Session::get())) { ?>
     <li id="sb_tab_logout" class="sb1">
         <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
         <?php echo Ui::get_icon('logout', $t_logout); ?>
         </a>
     </li>
+    <?php } ?>
 <?php
 } else { ?>
     <li id="sb_tab_home" class="sb1">

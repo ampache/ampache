@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ use Ampache\Module\Util\Ui;
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('podcast', $libitem->id, $libitem->get_fullname(), 2, $libitem->get_link()); ?>
 </td>
-<td class="cel_title"><?php echo $libitem->f_link; ?></td>
+<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_siteurl"><?php echo $libitem->f_website_link; ?></td>
 <td class="cel_episodes"><?php echo $libitem->episodes; ?></td>
 <?php if (AmpConfig::get('show_played_times')) { ?>

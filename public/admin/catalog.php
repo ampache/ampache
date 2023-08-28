@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,7 @@ use Ampache\Module\Application\Admin\Catalog\ClearStatsAction;
 use Ampache\Module\Application\Admin\Catalog\DeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\EnableDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\FullServiceAction;
+use Ampache\Module\Application\Admin\Catalog\GarbageCollectAction;
 use Ampache\Module\Application\Admin\Catalog\GatherMediaArtAction;
 use Ampache\Module\Application\Admin\Catalog\ImportToCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
@@ -70,6 +71,7 @@ $dic->get(ApplicationRunner::class)->run(
         AddToCatalogAction::REQUEST_KEY => AddToCatalogAction::class,
         CleanAllCatalogsAction::REQUEST_KEY => CleanAllCatalogsAction::class,
         CleanCatalogAction::REQUEST_KEY => CleanCatalogAction::class,
+        GarbageCollectAction::REQUEST_KEY => GarbageCollectAction::class,
         UpdateFileTagsAction::REQUEST_KEY => UpdateFileTagsAction::class,
         UpdateAllFileTagsActions::REQUEST_KEY => UpdateAllFileTagsActions::class,
         GatherMediaArtAction::REQUEST_KEY => GatherMediaArtAction::class,

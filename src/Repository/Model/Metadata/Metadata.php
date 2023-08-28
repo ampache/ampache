@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,13 +29,11 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 trait Metadata
 {
     /**
-     *
      * @var Repository\Metadata
      */
     protected $metadataRepository;
 
     /**
-     *
      * @var Repository\MetadataField
      */
     protected $metadataFieldRepository;
@@ -176,7 +174,7 @@ trait Metadata
                 }
             }
             $this->disabledMetadataFields = array_merge(
-                    $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
+                $fields, explode(',', AmpConfig::get('disabled_custom_metadata_fields_input'))
             );
         }
 

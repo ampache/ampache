@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,6 +34,8 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
+        $results = array();
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'sync':
@@ -52,10 +54,10 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
                     }
                 } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
                     $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-                    if ($episode->id !== null) {
-                        $episode->gather();
-                    } else {
+                    if (!isset($episode->id)) {
                         debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
+                    } else {
+                        $episode->gather();
                     }
                 }
         }

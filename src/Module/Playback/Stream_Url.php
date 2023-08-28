@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -131,10 +131,10 @@ class Stream_Url extends MemoryObject
             $newel = explode('&', $options);
 
             if (count($curel) > 2) {
-                foreach ($newel as $element) {
-                    if (strpos((string)$element, '=')) {
-                        $el = explode('=', $element);
-                        array_splice($curel, count($curel) - 2, 0, $el);
+                foreach ($newel as $urlParameter) {
+                    if (strpos((string)$urlParameter, '=')) {
+                        $element = explode('=', $urlParameter);
+                        array_splice($curel, count($curel) - 2, 0, $element);
                     }
                 }
                 $url = implode('/', $curel);

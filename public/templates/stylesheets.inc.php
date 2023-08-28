@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@ if (is_rtl(AmpConfig::get('lang'))
     && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')) { ?>
 <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
 <?php } ?>
-<link rel="stylesheet" href="<?php echo $web_path . '/lib/components/prettyphoto/css/prettyPhoto.css'; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path . '/lib/modules/prettyphoto/css/prettyPhoto.min.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-editdialog.css'; ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-file-upload.css'; ?>" type="text/css" media="screen" />

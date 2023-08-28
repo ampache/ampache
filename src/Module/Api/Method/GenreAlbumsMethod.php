@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class GenreAlbumsMethod
@@ -47,32 +46,32 @@ final class GenreAlbumsMethod
      * This returns the albums associated with the genre in question
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_albums(array $input): bool
+    public static function genre_albums(array $input, User $user): bool
     {
-        $albums = Tag::get_tag_objects('album', $input['filter']);
-        if (empty($albums)) {
+        $results = Tag::get_tag_objects('album', $input['filter']);
+        if (empty($results)) {
             Api::empty('album', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::albums($albums, array(), $user);
+                echo Json_Data::albums($results, array(), $user);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::albums($albums, array(), $user);
+                echo Xml_Data::albums($results, array(), $user);
         }
 
         return true;

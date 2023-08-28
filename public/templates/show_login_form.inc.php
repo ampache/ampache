@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,10 +63,10 @@ $_SESSION['login'] = true; ?>
 <body id="loginPage">
     <div id="maincontainer">
         <?php if (!$mobile_session) {
-    echo "<div id=\"header\"><!-- This is the header -->";
-    echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
-    echo "</div>";
-} ?>
+            echo "<div id=\"header\"><!-- This is the header -->";
+            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+            echo "</div>";
+        } ?>
         <div id="loginbox">
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
@@ -88,31 +88,30 @@ $_SESSION['login'] = true; ?>
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERER')); ?>" />
                         <input type="hidden" name="action" value="login" />
-                        <?php echo AmpConfig::get('login_message'); ?>
                     </div>
                 </div>
+                <div class="loginmessage"><?php echo AmpConfig::get('login_message'); ?></div>
                 <div class="loginoptions">
                 <?php if (AmpConfig::get('allow_public_registration')) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
-
                 <?php } ?>
                 </div>
             </form>
             <?php if ($mobile_session) {
-    echo '<div id="mobileheader"><!-- This is the header -->';
-    echo '<h1 id="headerlogo"></h1>';
-    echo '</div>';
-}
-    if (AmpConfig::get('cookie_disclaimer')) {
-        echo '<div id="cookie_notice>';
-        echo T_("Ampache places cookies on your computer to help make this website better.");
-        echo '</br>';
-        echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
-        echo '</br>';
-        echo T_("By logging in you agree to the use of cookies while using this site.");
-        echo '</div>';
-    }
-    UI::show_footer();
+                echo '<div id="mobileheader"><!-- This is the header -->';
+                echo '<h1 id="headerlogo"></h1>';
+                echo '</div>';
+            }
+            if (AmpConfig::get('cookie_disclaimer')) {
+                echo '<div id="cookie_notice>';
+                echo T_("Ampache places cookies on your computer to help make this website better.");
+                echo '</br>';
+                echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
+                echo '</br>';
+                echo T_("By logging in you agree to the use of cookies while using this site.");
+                echo '</div>';
+            }
+            UI::show_footer();

@@ -43,8 +43,8 @@ function ssdpShutdown($signal)
 function sayAlive()
 {
     // Send a couple of times as UDP is unreliable
-    Upnp_Api::sddpSend(1, "239.255.255.250", 1900, "NT", true);
-    Upnp_Api::sddpSend(1, "239.255.255.250", 1900, "NT", true);
+    Upnp_Api::sddpSend(1);
+    Upnp_Api::sddpSend(1);
 }
 
 // dump all incoming messages

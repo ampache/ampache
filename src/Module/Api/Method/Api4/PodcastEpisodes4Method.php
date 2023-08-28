@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 /**
@@ -47,12 +46,13 @@ final class PodcastEpisodes4Method
      * This returns the episodes for a podcast
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of podcast
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function podcast_episodes(array $input): bool
+    public static function podcast_episodes(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
             Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
@@ -62,23 +62,22 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user       = User::get_from_username(Session::username($input['auth']));
         $podcast_id = (int) scrub_in($input['filter']);
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcast = new Podcast($podcast_id);
-        $items   = $podcast->get_episodes();
+        $results = $podcast->get_episodes();
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcast_episodes($items, $user, true, false);
+                echo Json4_Data::podcast_episodes($results, $user, true, false);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::podcast_episodes($items, $user);
+                echo Xml4_Data::podcast_episodes($results, $user);
         }
 
         return true;

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,9 +44,8 @@ $tag_types = array(
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
-?>
-<?php $ui->show(
-        'show_genre_browse_form.inc.php',
+$ui->show(
+    'show_form_genre.inc.php',
     [
         'type' => $browse_type
     ]

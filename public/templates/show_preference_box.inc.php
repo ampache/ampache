@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,45 +30,51 @@ use Ampache\Module\Util\UiInterface;
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 
-$is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
+$is_system = ($preferences['title'] === 'System');
+$is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')) ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
-    <?php if ($is_admin) { ?>
+    <?php if ($is_admin) {
+        if (!$is_system) { ?>
   <col id="col_applytoall" />
   <col id="col_level" />
-    <?php } ?>
+    <?php }
+        } ?>
 </colgroup>
 <thead>
     <tr class="th-top">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) { ?>
+        <?php if ($is_admin) {
+            if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
-        <?php } ?>
+        <?php }
+            } ?>
     </tr>
 </thead>
 <tbody>
     <?php
-    $lastsubcat = '';
-    foreach ($preferences['prefs'] as $pref) {
-        if ($pref['subcategory'] != $lastsubcat) {
-            $lastsubcat = $pref['subcategory'];
-            $fsubcat    = $lastsubcat;
-            if (!empty($fsubcat)) { ?>
+                $lastsubcat = '';
+foreach ($preferences['prefs'] as $pref) {
+    if ($pref['subcategory'] != $lastsubcat) {
+        $lastsubcat = $pref['subcategory'];
+        $fsubcat    = $lastsubcat;
+        if (!empty($fsubcat)) { ?>
                 <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
                 <?php
-            }
-        } ?>
+        }
+    } ?>
         <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
                 <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
-            <?php if ($is_admin) { ?>
+            <?php if ($is_admin) {
+                if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
                     <?php $name         = 'on_' . (string)$pref['level'];
@@ -103,19 +109,23 @@ $is_admin = (Access::check('interface', 100) && (array_key_exists('action', $_RE
                     </select>
                     <?php unset(${$name}); ?>
                 </td>
-            <?php } ?>
+            <?php }
+                } ?>
         </tr>
     <?php
-    } // End foreach ($preferences['prefs'] as $pref)?>
+} // End foreach ($preferences['prefs'] as $pref)?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">
         <th class="cel_preference"><?php echo T_('Preference'); ?></th>
         <th class="cel_value"><?php echo T_('Value'); ?></th>
-        <?php if ($is_admin) { ?>
+        <?php if ($is_admin) {
+            if (!$is_system) { ?>
         <th class="cel_applytoall"><?php echo T_('Apply to All'); ?></th>
         <th class="cel_level"><?php echo T_('Access Level'); ?></th>
         <?php } ?>
+        <?php
+        } ?>
     </tr>
 </tfoot>
 </table>

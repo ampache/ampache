@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results      = array();
-        $request_id   = $this->requestParser->getFromRequest('id');
+        $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
@@ -69,16 +69,14 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                switch ($request_type) {
-                    case 'delete':
-                        Core::get_global('user')->playlist->delete_track($request_id);
-                        break;
+                if ($request_type == 'delete') {
+                    Core::get_global('user')->playlist->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            // Handle the users basketcases...
             case 'basket':
+                // Handle the users basketcases...
                 $object_type = $request_type ?? $this->requestParser->getFromRequest('object_type');
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $object_id = $request_id ?? $this->requestParser->getFromRequest('object_id');
@@ -120,14 +118,14 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 Core::get_global('user')->playlist->add_object($object_id, 'song');
                             }
                             break;
-                        case 'album_full':
-                            $songs = $this->albumRepository->getSongsGrouped(explode(',', $request_id));
+                        case 'album_random':
+                            $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
                             break;
-                        case 'album_random':
-                            $songs = $this->albumRepository->getRandomSongsGrouped(explode(',', $request_id));
+                        case 'album_disk_random':
+                            $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }
@@ -158,8 +156,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            /* Setting ratings */
             case 'set_rating':
+                /* Setting ratings */
                 if (User::is_registered()) {
                     ob_start();
                     $rating = new Rating(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), Core::get_get('rating_type'));
@@ -172,8 +170,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     $results['rfc3514'] = '0x1';
                 }
                 break;
-            /* Setting userflags */
             case 'set_userflag':
+                /* Setting userflags */
                 if (User::is_registered()) {
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');

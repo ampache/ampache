@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,6 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 
         $show_browse = false;
         $results     = array();
-        $action      = Core::get_request('action');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -58,7 +57,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'delete':
-                if (!Core::get_global('user')->has_access('75')) {
+                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
                     echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;

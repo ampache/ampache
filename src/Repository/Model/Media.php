@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,6 @@
 
 namespace Ampache\Repository\Model;
 
-use PDOStatement;
-
 /**
  * media Interface
  *
@@ -37,11 +35,13 @@ interface Media
     /**
      * get_stream_types
      *
-     * Returns an array of strings; current types are 'native'
-     * and 'transcode'
-     * @param array $player
+     * Returns an array of strings
+     * 'native' = can be streamed natively
+     * 'transcode' = transcode required
+     * @param string $player
+     * @return array
      */
-    public function get_stream_types($player = array());
+    public function get_stream_types($player = null);
 
     /**
      * play_url
@@ -92,8 +92,8 @@ interface Media
 
     /**
      * remove
-     * Remove the song from disk.
-     * @return PDOStatement|boolean
+     * Delete the object from disk and/or database where applicable.
+     * @return bool
      */
     public function remove();
 }

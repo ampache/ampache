@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Repository\Model\User;
 
 /**
  * Class Localplay3Method
@@ -39,11 +40,12 @@ final class Localplay3Method
      * localplay
      * This is for controling localplay
      */
-    public static function localplay(array $input)
+    public static function localplay(array $input, User $user): bool
     {
+        unset($user);
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        if (!$localplay->connect()) {
+        if (empty($localplay->type) || !$localplay->connect()) {
             echo Xml3_Data::error('405', T_('Invalid Request'));
 
             return false;
@@ -69,8 +71,14 @@ final class Localplay3Method
                 return false;
         } // end switch on command
 
-        $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result))));
-        echo Xml3_Data::keyed_array($xml_array);
+        $results = array(
+            'localplay' => array(
+                'command' => array(
+                    $input['command'] => make_bool($result)
+                )
+            )
+        );
+        echo Xml3_Data::keyed_array($results);
 
         return true;
     } // localplay

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,12 +60,12 @@ if ($server_allow && $controller && $access_check) { ?>
   </li>
 <?php } ?>
   <li>
-      <h4 class="header">
+    <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span>
           <?php echo Ui::get_icon('all', $t_expander, 'localplay_instance', 'header-img ' . ((isset($_COOKIE['sb_localplay_instance'])) ? $_COOKIE['sb_localplay_instance'] : 'expanded')); ?>
-      </h4>
+    </h4>
     <ul class="sb3" id="sb_localplay_instance">
-    <li id="sb_localplay_instance_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
+      <li id="sb_localplay_instance_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
     <?php
         // Requires a little work.. :(
         $instances = $localplay->get_instances();
@@ -75,25 +75,25 @@ if ($server_allow && $controller && $access_check) { ?>
         if ($uid == $current_instance) {
             $class = ' class="active_instance"';
         } ?>
-    <li id="sb_localplay_instance_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid, $name, 'localplay_instance_' . $uid); ?></li>
+      <li id="sb_localplay_instance_<?php echo $uid; ?>"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=' . $uid, $name, 'localplay_instance_' . $uid); ?></li>
     <?php
     } ?>
     </ul>
   </li>
 <?php } else { ?>
   <li>
-      <h4 class="header">
+    <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Localplay Disabled'); ?></span>
           <?php echo Ui::get_icon('all', $t_expander, 'localplay_disabled', 'header-img ' . ((isset($_COOKIE['sb_localplay_disabled'])) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?>
-      </h4>
+    </h4>
   </li>
   <?php if (!$server_allow) { ?>
     <li><?php echo T_('Allow Localplay Set to False'); ?></li>
   <?php
-        } elseif (!$controller) { ?>
+  } elseif (!$controller) { ?>
     <li><?php echo T_('Localplay Controller Not Defined'); ?></li>
   <?php
-        } elseif (!$access_check) { ?>
+  } elseif (!$access_check) { ?>
     <li><?php echo T_('Access Denied'); ?></li>
   <?php } ?>
 <?php } ?>

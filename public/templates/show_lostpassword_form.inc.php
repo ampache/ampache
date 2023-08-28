@@ -4,7 +4,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,10 +58,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 <body id="loginPage">
     <div id="maincontainer">
         <?php if (!$mobile_session) {
-    echo "<div id=\"header\"><!-- This is the header -->";
-    echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
-    echo "</div>";
-} ?>
+            echo "<div id=\"header\"><!-- This is the header -->";
+            echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+            echo "</div>";
+        } ?>
         <div id="loginbox">
             <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/lostpassword.php">
@@ -75,10 +75,10 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                 </div>
             </form>
             <?php if ($mobile_session) {
-    echo "<div id=\"mobileheader\"><!-- This is the header -->";
-    echo "<h1 id=\"headerlogo\"></h1>";
-    echo "</div>";
-} ?>
+                echo "<div id=\"mobileheader\"><!-- This is the header -->";
+                echo "<h1 id=\"headerlogo\"></h1>";
+                echo "</div>";
+            } ?>
         </div>
         <?php
-        Ui::show_footer(); ?>
+                    Ui::show_footer(); ?>

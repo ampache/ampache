@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
-use Requests;
+use WpOrg\Requests\Requests;
 
 class AmpacheTheaudiodb
 {
@@ -291,7 +291,7 @@ class AmpacheTheaudiodb
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && strtolower($data['name']) !== strtolower($object->get_fullname())) {
+                    if ($this->overwrite_name && Vainfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower($object->get_fullname())) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -309,6 +309,7 @@ class AmpacheTheaudiodb
 
         return true;
     } // get_external_metadata
+
     /**
      * @param string $type
      * @param array $options
@@ -319,7 +320,7 @@ class AmpacheTheaudiodb
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return Art::gather_metadata_plugin($this, $type, $options);
+        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }
 
     /**

@@ -2,13 +2,15 @@
 
 ## Supported Versions
 
-Now that version 5 is out all 4.x releases are considered supported until the end of PHP7.4 security support.
+Version 6 is in development and version 4 is now considered depreciated after the php7.4 EOL
+
+Version 5 will likely remain supported for as long as php8 is supported.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 6.x.x   | :white_check_mark: |
 | 5.x.x   | :white_check_mark: |
-| 4.x.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| <= 4.0  | :x:                |
 
 ## Reporting a Vulnerability
 

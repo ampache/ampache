@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,14 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

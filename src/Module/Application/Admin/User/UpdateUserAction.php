@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -89,7 +88,7 @@ final class UpdateUserAction extends AbstractUserAction
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
-        $client = new User($user_id);
+        $client = $this->modelFactory->createUser($user_id);
 
         /* Verify Input */
         if (empty($username)) {

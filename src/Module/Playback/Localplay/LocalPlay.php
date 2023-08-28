@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ class LocalPlay
 {
     /* Base Variables */
     public $type;
-
     public $f_name;
     public $f_description;
     public $f_version;
@@ -139,11 +138,7 @@ class LocalPlay
      */
     public function format_name($name, $object_id)
     {
-        $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name,
-            'localplay_skip_' . $object_id);
-
-        return $name;
+        return Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, scrub_out($name), 'localplay_skip_' . $object_id);
     } // format_name
 
     /**
@@ -311,16 +306,16 @@ class LocalPlay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
-     * @return array|false
+     * @return array
      */
     public function status(): array
     {
         $data = $this->_player->status();
 
-        if (empty($data)) {
+        if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return false;
+            return array();
         }
 
         return $data;
@@ -528,9 +523,7 @@ class LocalPlay
      */
     public function update_instance($uid, $data)
     {
-        $data = $this->_player->update_instance($uid, $data);
-
-        return $data;
+        return $this->_player->update_instance($uid, $data);
     } // update_instance
 
     /**

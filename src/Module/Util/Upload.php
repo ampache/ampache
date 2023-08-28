@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use RuntimeException;
 
 class Upload
@@ -55,7 +56,8 @@ class Upload
         define('CLI', true);
 
         $catalog_id = AmpConfig::get('upload_catalog');
-        if ($catalog = self::check($catalog_id)) {
+        $catalog    = self::check($catalog_id);
+        if ($catalog !== null) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);
@@ -120,8 +122,8 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
-                Album::update_album_counts();
-                Artist::update_artist_counts();
+                Album::update_table_counts();
+                Artist::update_table_counts();
 
                 ob_get_contents();
                 ob_end_clean();
@@ -165,6 +167,26 @@ class Upload
 
         return null;
     } // check
+
+    /**
+     * can_upload
+     * check settings and permissions for uploads
+     * @param User|string|null $user
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public static function can_upload($user): bool
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+        $user_id     = $user->id ?? 0;
+        $user_access = $user->access ?? -1;
+
+        return AmpConfig::get('allow_upload') &&
+            $user_access >= AmpConfig::get('upload_access_level', 0) &&
+            Catalog::check_filter_access(AmpConfig::get('upload_catalog', 0), $user_id);
+    }
 
     /**
      * rerror
@@ -244,7 +266,7 @@ class Upload
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
-            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, 0, null, null, $artist_id);
+            $album_id = Album::check(AmpConfig::get('upload_catalog'), $album_name, 0, null, null, $artist_id);
             if ((int)$album_id < 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
@@ -325,7 +347,7 @@ class Upload
 
         $rootdir = "";
         if ($catalog != null && $catalog->id) {
-            $rootdir = realpath($catalog->path);
+            $rootdir = realpath($catalog->get_path());
             if (!empty($rootdir)) {
                 if (AmpConfig::get('upload_subdir')) {
                     $rootdir .= DIRECTORY_SEPARATOR . $username;

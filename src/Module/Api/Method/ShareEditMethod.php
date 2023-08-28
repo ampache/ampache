@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
 
 /**
  * Class ShareEditMethod
@@ -46,6 +45,7 @@ final class ShareEditMethod
      * Takes the share id to update with optional description and expires parameters.
      *
      * @param array $input
+     * @param User $user
      * filter      = (string) Alpha-numeric search term
      * stream      = (boolean) 0,1 //optional
      * download    = (boolean) 0,1 //optional
@@ -53,7 +53,7 @@ final class ShareEditMethod
      * description = (string) update description //optional
      * @return boolean
      */
-    public static function share_edit(array $input): bool
+    public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -63,7 +63,6 @@ final class ShareEditMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user     = User::get_from_username(Session::username($input['auth']));
         $share_id = $input['filter'];
         if (in_array($share_id, Share::get_share_list($user))) {
             $share       = new Share($share_id);

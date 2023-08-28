@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,6 +35,7 @@ $ajaxfs   = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
 $web_path = AmpConfig::get('web_path');
+$access50 = Access::check('interface', 50);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 <div id="container" role="main">
     <div id="tree"></div>
@@ -175,7 +176,7 @@ if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php } ?>
 <table class="tabledata">
-<?php if (Access::check('interface', 50)) {
+<?php if ($access50) {
     ?>
     <tr>
     <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
@@ -185,7 +186,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
     <td class="upload_select">
-        <?php show_artist_select('artist', $artist, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
+        <?php show_artist_select('artist', $artist, true, 1, $access50, $access50 ? null : $user_id); ?>
         <div id="artist_select_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
@@ -194,7 +195,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album') ?></td>
     <td class="upload_select">
-        <?php show_album_select('album_id', $album, true, 1, Access::check('interface', 50), Access::check('interface', 50) ? null : $user_id); ?>
+        <?php show_album_select('album_id', $album, true, 1, $access50, $access50 ? null : $user_id); ?>
         <div id="album_select_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>

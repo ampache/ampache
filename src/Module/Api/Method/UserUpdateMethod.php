@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,18 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
-use Ampache\Module\User\UserStateTogglerInterface;
-use Ampache\Module\Util\Mailer;
+use Ampache\Repository\Model\User;
 
 /**
- * Class UserUpdateMethod
- * @package Lib\ApiMethods
+ * Class TagAlbums4Method
  */
 final class UserUpdateMethod
 {
@@ -50,92 +43,29 @@ final class UserUpdateMethod
      * Takes the username with optional parameters.
      *
      * @param array $input
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
-     * maxbitrate = (integer) $maxbitrate //optional
+     * @param User $user
+     * username          = (string) $username
+     * password          = (string) hash('sha256', $password)) //optional
+     * fullname          = (string) $fullname //optional
+     * email             = (string) $email //optional
+     * website           = (string) $website //optional
+     * state             = (string) $state //optional
+     * city              = (string) $city //optional
+     * disable           = (integer) 0,1 true to disable, false to enable //optional
+     * group             = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate        = (integer) $maxbitrate //optional
+     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
+     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
      * @return boolean
      */
-    public static function user_update(array $input): bool
+    public static function user_update(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        $username   = $input['username'];
-        $password   = $input['password'] ?? null;
-        $fullname   = $input['fullname'] ?? null;
-        $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = $input['website'] ?? null;
-        $state      = $input['state'] ?? null;
-        $city       = $input['city'] ?? null;
-        $disable    = $input['disable'] ?? null;
-        $maxbitrate = (int)($input['maxBitRate'] ?? 0);
-
-        // identify the user to modify
-        $user    = User::get_from_username($username);
-        $user_id = $user->getId();
-
-        if ($password && Access::check('interface', 100, $user_id)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
-        $userStateToggler = static::getUserStateToggler();
-
-        if ($user_id > 0) {
-            if ($password && !AmpConfig::get('simple_user_mode')) {
-                $user->update_password('', $password);
-            }
-            if ($fullname) {
-                $user->update_fullname($fullname);
-            }
-            if (Mailer::validate_address($email)) {
-                $user->update_email($email);
-            }
-            if ($website) {
-                $user->update_website($website);
-            }
-            if ($state) {
-                $user->update_state($state);
-            }
-            if ($city) {
-                $user->update_city($city);
-            }
-            if ($disable === '1') {
-                $userStateToggler->disable($user);
-            } elseif ($disable === '0') {
-                $userStateToggler->enable($user);
-            }
-            if ($maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
-            }
-            Api::message('successfully updated: ' . $username, $input['api_format']);
-
-            return true;
-        }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
-    }
+        return UserEditMethod::user_edit($input, $user);
+    } // tag_albums
 }

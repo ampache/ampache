@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,25 +24,27 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
+
+/** @var string $message */
+/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video $object */
 
 $has_failed     = $message ?? false;
 $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
-?>
-<?php Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
+
+Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
 <input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td><?php echo $object->f_link ?? '' ?></td>
+    <td><?php echo $object->get_f_link() ?? '' ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
+    <td><input type="text" name="secret" maxlength="20" value="<?php echo scrub_out($_REQUEST['secret'] ?? $this->passwordGenerator->generate_token()); ?>" />
         <?php echo AmpError::display('secret'); ?>
     </td>
 </tr>

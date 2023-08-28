@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,8 +30,8 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path = AmpConfig::get('web_path');
-?>
+$web_path  = AmpConfig::get('web_path');
+$access100 = Access::check('interface', 100); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $web_path . "/admin/users.php"; ?>">
@@ -49,8 +49,8 @@ $web_path = AmpConfig::get('web_path');
             <td><?php echo T_('Full Name'); ?>:</td>
             <td><input type="text" name="fullname" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
-    echo "checked";
-} ?> /> <?php echo T_('Public'); ?>
+                    echo "checked";
+                } ?> /> <?php echo T_('Public'); ?>
                 <?php echo AmpError::display('fullname'); ?>
             </td>
         </tr>
@@ -92,28 +92,28 @@ $web_path = AmpConfig::get('web_path');
             <td><?php echo T_('User Access Level'); ?>:</td>
             <td>
                 <?php $var_name = 'on_' . (string)$client->access;
-                $on_5           = '';
-                $on_25          = '';
-                $on_50          = '';
-                $on_75          = '';
-                $on_100         = '';
-                switch ($var_name) {
-                    case 'on_5':
-                        $on_5 = 'selected="selected"';
-                        break;
-                    case 'on_25':
-                        $on_25 = 'selected="selected"';
-                        break;
-                    case 'on_50':
-                        $on_50 = 'selected="selected"';
-                        break;
-                    case 'on_75':
-                        $on_75 = 'selected="selected"';
-                        break;
-                    case 'on_100':
-                        $on_100 = 'selected="selected"';
-                        break;
-                } ?>
+$on_5                           = '';
+$on_25                          = '';
+$on_50                          = '';
+$on_75                          = '';
+$on_100                         = '';
+switch ($var_name) {
+    case 'on_5':
+        $on_5 = 'selected="selected"';
+        break;
+    case 'on_25':
+        $on_25 = 'selected="selected"';
+        break;
+    case 'on_50':
+        $on_50 = 'selected="selected"';
+        break;
+    case 'on_75':
+        $on_75 = 'selected="selected"';
+        break;
+    case 'on_100':
+        $on_100 = 'selected="selected"';
+        break;
+} ?>
                 <select name="access">
                     <option value="5" <?php echo $on_5; ?>><?php echo T_('Guest'); ?></option>
                     <option value="25" <?php echo $on_25; ?>><?php echo T_('User'); ?></option>
@@ -164,32 +164,49 @@ $web_path = AmpConfig::get('web_path');
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
             </td>
             <td>
                 <span>
                     <?php if ($client->apikey) {
-                    echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
-                } ?>
+                        echo "<br /><div style=\"background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;\"><div id=\"apikey_qrcode\"></div></div><br /><script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '" . $client->apikey . "', background: '#ffffff', foreground: '#000000'});</script>" . $client->apikey;
+                    } ?>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo T_('Stream Token'); ?>
+                <?php if ($access100) { ?>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php if ($client->streamtoken) {
+                        echo $client->streamtoken;
+                    } ?>
                 </span>
             </td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('RSS Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
+                <?php if ($access100) { ?>
                     <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
                 <span>
                     <?php if ($client->rsstoken) {
-                    echo $client->rsstoken;
-                } ?>
+                        echo $client->rsstoken;
+                    } ?>
                 </span>
             </td>
         </tr>
-
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>

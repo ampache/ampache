@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -46,37 +45,38 @@ final class RecordPlay4Method
      * Require 100 (Admin) permission to change other user's play history
      *
      * @param array $input
+     * @param User $user
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function record_play(array $input): bool
+    public static function record_play(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
-        $api_user  = User::get_from_username(Session::username($input['auth']));
-        $play_user = (isset($input['user']) && (int) $input['user'] > 0)
-            ? new User((int) $input['user'])
-            : User::get_from_username((string) $input['user']);
-
-        // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $api_user->id && !Api4::check_access('interface', 100, $api_user->id, 'record_play', $input['api_format'])) {
-            return false;
+        $play_user = $user;
+        if (isset($input['user'])) {
+            $play_user =  ((int)$input['user'] > 0)
+                ? new User((int)$input['user'])
+                : User::get_from_username((string)$input['user']);
         }
-        ob_end_clean();
-        $object_id = (int) $input['id'];
-        $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
-        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
-
         // validate supplied user
+        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
         if ($valid === false) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 
             return false;
         }
+        // If you are setting plays for other users make sure we have an admin
+        if ($play_user->id !== $user->id && !Api4::check_access('interface', 100, $user->id, 'record_play', $input['api_format'])) {
+            return false;
+        }
+        ob_end_clean();
+        $object_id = (int) $input['id'];
+        $date      = (array_key_exists('date', $input) && is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
         $agent = (array_key_exists('client', $input))

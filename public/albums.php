@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,9 +27,10 @@ use Ampache\Module\Application\Album\ConfirmDeleteAction;
 use Ampache\Module\Application\Album\DeleteAction;
 use Ampache\Module\Application\Album\SetTrackNumbersAction;
 use Ampache\Module\Application\Album\ShowAction;
+use Ampache\Module\Application\Album\ShowDiskAction;
 use Ampache\Module\Application\Album\ShowMissingAction;
 use Ampache\Module\Application\Album\UpdateFromTagsAction;
-use Ampache\Module\Application\Album\UpdateGroupFromTagsAction;
+use Ampache\Module\Application\Album\UpdateDiskFromTagsAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -43,9 +44,10 @@ $dic->get(ApplicationRunner::class)->run(
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
         UpdateFromTagsAction::REQUEST_KEY => UpdateFromTagsAction::class,
-        UpdateGroupFromTagsAction::REQUEST_KEY => UpdateGroupFromTagsAction::class,
+        UpdateDiskFromTagsAction::REQUEST_KEY => UpdateDiskFromTagsAction::class,
         SetTrackNumbersAction::REQUEST_KEY => SetTrackNumbersAction::class,
         ShowMissingAction::REQUEST_KEY => ShowMissingAction::class,
+        ShowDiskAction::REQUEST_KEY => ShowDiskAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
     ],
     ShowAction::REQUEST_KEY

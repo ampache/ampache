@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,9 +58,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
@@ -74,6 +73,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        $this->ui->showHeader();
         if ($this->labelDeleter->delete($label)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),

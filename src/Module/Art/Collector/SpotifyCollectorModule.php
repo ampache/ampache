@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -110,9 +110,9 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             $query   = $data['artist'];
             $getType = 'getArtist';
         } elseif ($art->type == 'album') {
-            $logString = (!empty($data['artist']))
-                ? sprintf('gather_spotify album: %s, artist: %s', $data['album'], $data['artist'])
-                : sprintf('gather_spotify album: %s', $data['album']);
+            $album_str  = $data['album'] ?? '';
+            $artist_str = $data['artist'] ?? '';
+            $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str ?? '');
             $this->logger->debug(
                 $logString,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -120,7 +120,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             // Check for manual search
             if (key_exists('search_limit', $data)) {
                 $limit = $data['search_limit'];
-                if (key_exists('artist', $data) && !empty($data['artist'])) {
+                if (key_exists('artist', $data) && !empty($artist_str)) {
                     $filter[]= 'artist';
                 }
                 if (key_exists('year_filter', $data)) {
@@ -136,17 +136,17 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 foreach ($filter as $item) {
                     switch (trim($item)) {
                         case 'artist':
-                          $query1 .= " artist:\"{$data['artist']}\"";
-                        break;
+                            $query1 .= " artist:\"{$artist_str}\"";
+                            break;
                         case preg_match('/year:.*/', $item):
-                           $query1 .= ' ' . $item;
-                        break;
+                            $query1 .= ' ' . $item;
+                            break;
                         default:
                     }
                 }
-                $query = "album:" . "\"{$data['album']}\"" . $query1;
+                $query = "album:" . "\"{$album_str}\"" . $query1;
             } else {
-                $query = "\"{$data['album']}\"";
+                $query = "\"{$album_str}\"";
             }
         } else {
             return $images;
@@ -171,7 +171,16 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
                 $item_id = $item->id;
-                $result  = $this->spotifyWebAPI->{$getType}($item_id);
+                try {
+                    $result = $this->spotifyWebAPI->{$getType}($item_id);
+                } catch (SpotifyWebAPIException $error) {
+                    $this->logger->error(
+                        'gather_spotify' . $error->getMessage(),
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
+
+                    return $images;
+                }
 
                 foreach ($result->images as $image) {
                     $images[] = [

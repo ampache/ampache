@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -95,12 +95,13 @@ final class Session implements SessionInterface
 
             $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } elseif (!$useAuth) {
+            $auth                 = array();
             $auth['success']      = 1;
             $auth['username']     = '-1';
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
+            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '5';
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);
@@ -118,7 +119,7 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
-                    $GLOBALS['user']->access   = (int) ($auth['access']);
+                    $GLOBALS['user']->access   = (int)$auth['access'];
                 }
                 $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
                 if (!$user_id && !$isDemoMode) {
@@ -195,6 +196,7 @@ final class Session implements SessionInterface
 
         // Destroy our cookie!
         setcookie($session_name, '', $cookie_options);
+        setcookie($session_name, '', -1);
         setcookie($session_name . '_user', '', $cookie_options);
         setcookie($session_name . '_lang', '', $cookie_options);
 
@@ -211,7 +213,7 @@ final class Session implements SessionInterface
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
-        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?';
+        $sql = 'DELETE FROM `session_remember` WHERE `expire` < ?;';
         Dba::write($sql, array(time()));
 
         // Also clean up things that use sessions as keys
@@ -378,6 +380,11 @@ final class Session implements SessionInterface
             debug_event(self::class, 'auth_remember session found', 5);
         }
 
+        // Can't do cookie is the session is already started
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            return true;
+        }
+
         $cookie_params = [
             'lifetime' => (int)AmpConfig::get('cookie_life'),
             'path' => (string)AmpConfig::get('cookie_path'),
@@ -514,6 +521,21 @@ final class Session implements SessionInterface
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id`= ?';
 
         return Dba::write($sql, array($username, $sid));
+    }
+
+    /**
+     * update_agent
+     *
+     * This takes a SID and update associated agent.
+     * @param string $sid
+     * @param string $agent
+     * @return PDOStatement|boolean
+     */
+    public static function update_agent($sid, $agent)
+    {
+        $sql = 'UPDATE `session` SET `agent` = ? WHERE `id`= ?';
+
+        return Dba::write($sql, array($agent, $sid));
     }
 
     /**
@@ -716,7 +738,7 @@ final class Session implements SessionInterface
         if (empty(Core::get_global('user'))) {
             if ($user instanceof User && $user->id > 0) {
                 $GLOBALS['user'] = $user;
-            } elseif (isset($_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
+            } elseif (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
                 $GLOBALS['user'] =  User::get_from_username($_SESSION['userdata']['username']);
             }
         }

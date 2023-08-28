@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class PlaylistCreateMethod
@@ -48,23 +47,23 @@ final class PlaylistCreateMethod
      * This create a new playlist and return it
      *
      * @param array $input
+     * @param User $user
      * name = (string) Playlist name
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create(array $input): bool
+    public static function playlist_create(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;
         }
         $name = $input['name'];
         $type = (isset($input['type'])) ? $input['type'] : 'private';
-        $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
         }
 
-        $object_id = Playlist::create($name, $type, $user->id);
+        $object_id = Playlist::create($name, $type, $user->id, false);
         if (!$object_id) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 

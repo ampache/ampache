@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,10 +31,6 @@ use Ampache\Repository\Model\Tag;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Name') ?></td>
                 <td><input type="text" name="name" value="<?php echo scrub_out($libitem->name); ?>" autofocus /></td>
-            </tr>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Description') ?></td>
-                <td><input type="text" name="description" value="<?php echo scrub_out($libitem->description); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"></td>

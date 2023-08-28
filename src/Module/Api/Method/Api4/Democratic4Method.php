@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class Democratic4Method
@@ -46,16 +45,16 @@ final class Democratic4Method
      * This is for controlling democratic play
      *
      * @param array $input
+     * @param User $user
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
      * @return boolean
      */
-    public static function democratic(array $input): bool
+    public static function democratic(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('method'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
         // Load up democratic information
         $democratic = Democratic::get_current_playlist($user);
         $democratic->set_parent();
@@ -77,13 +76,16 @@ final class Democratic4Method
                 ));
 
                 // If everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
+                $results = array(
+                    'method' => $input['method'],
+                    'result' => true
+                );
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($xml_array);
+                        echo Xml4_Data::keyed_array($results);
                 }
                 break;
             case 'devote':
@@ -99,36 +101,41 @@ final class Democratic4Method
                 $democratic->remove_vote($object_id);
 
                 // Everything was ok
-                $xml_array = array('method' => $input['method'], 'result' => true);
+                $results = array(
+                    'method' => $input['method'],
+                    'result' => true
+                );
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($xml_array);
+                        echo Xml4_Data::keyed_array($results);
                 }
                 break;
             case 'playlist':
-                $objects = $democratic->get_items();
+                $results = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json4_Data::democratic($objects, $user);
+                        echo Json4_Data::democratic($results, $user);
                         break;
                     default:
-                        echo Xml4_Data::democratic($objects, $user);
+                        echo Xml4_Data::democratic($results, $user);
                 }
                 break;
             case 'play':
-                $url       = $democratic->play_url();
-                $xml_array = array('url' => $url);
+                $url     = $democratic->play_url($user);
+                $results = array(
+                    'url' => $url
+                );
                 switch ($input['api_format']) {
                     case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
+                        echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($xml_array);
+                        echo Xml4_Data::keyed_array($results);
                 }
                 break;
             default:

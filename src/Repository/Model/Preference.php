@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,6 +57,7 @@ class Preference extends database_object
         'api_enable_3',
         'api_enable_4',
         'api_enable_5',
+        'api_enable_6',
         'api_force_version',
         'api_hidden_playlists',
         'api_hide_dupe_searches',
@@ -140,6 +141,7 @@ class Preference extends database_object
         'transcode_bitrate',
         'ui_fixed',
         'unique_playlist',
+        'upload_access_level',
         'upload_allow_edit',
         'upload_allow_remove',
         'upload_catalog',
@@ -150,12 +152,74 @@ class Preference extends database_object
         'upnp_active',
         'upnp_backend',
         'use_original_year',
+        'use_play2',
         'webdav_backend',
         'webplayer_aurora',
         'webplayer_confirmclose',
         'webplayer_flash',
         'webplayer_html5',
-        'webplayer_pausetabs'
+        'webplayer_pausetabs',
+        'webplayer_removeplayed',
+        // plugin preferences might not be there but they need to be kept if you're using them
+        '7digital_api_key',
+        '7digital_secret_api_key',
+        'amazon_base_url',
+        'amazon_developer_associate_tag',
+        'amazon_developer_private_api_key',
+        'amazon_developer_public_key',
+        'amazon_max_results_pages',
+        'bitly_api_key',
+        'bitly_username',
+        'catalogfav_gridview',
+        'catalogfav_max_items',
+        'discogs_api_key',
+        'discogs_secret_api_key',
+        'flattr_user_id',
+        'flickr_api_key',
+        'ftl_max_items',
+        'gmaps_api_key',
+        'googleanalytics_tracking_id',
+        'headphones_api_key',
+        'headphones_api_url',
+        'lastfm_challenge',
+        'lastfm_grant_link',
+        'librefm_challenge',
+        'librefm_grant_link',
+        'listenbrainz_token',
+        'matomo_site_id',
+        'matomo_url',
+        'mb_overwrite_name',
+        'paypal_business',
+        'paypal_currency_code',
+        'personalfav_display',
+        'personalfav_playlist',
+        'personalfav_smartlist',
+        'piwik_site_id',
+        'piwik_url',
+        'ratingmatch_flag_rule',
+        'ratingmatch_flags',
+        'ratingmatch_star1_rule',
+        'ratingmatch_star2_rule',
+        'ratingmatch_star3_rule',
+        'ratingmatch_star4_rule',
+        'ratingmatch_star5_rule',
+        'ratingmatch_stars',
+        'ratingmatch_write_tags',
+        'rssview_feed_url',
+        'rssview_max_items',
+        'shouthome_max_items',
+        'stream_control_bandwidth_days',
+        'stream_control_bandwidth_max',
+        'stream_control_hits_days',
+        'stream_control_hits_max',
+        'stream_control_time_days',
+        'stream_control_time_max',
+        'tadb_api_key',
+        'tadb_overwrite_name',
+        'tvdb_api_key',
+        'yourls_api_key',
+        'yourls_domain',
+        'yourls_use_idn'
     );
 
     /**
@@ -210,6 +274,7 @@ class Preference extends database_object
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false)
     {
+        $access100 = Access::check('interface', 100);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
@@ -223,20 +288,20 @@ class Preference extends database_object
         }
         $params = array($value, $pref_id);
 
-        if ($applytoall && Access::check('interface', 100)) {
+        if ($applytoall && $access100) {
             $user_check = "";
         } else {
             $user_check = "AND `user` = ?";
             $params[]   = $user_id;
         }
 
-        if ($applytodefault && Access::check('interface', 100)) {
+        if ($applytodefault && $access100) {
             $sql = "UPDATE `preference` SET `value` = ? WHERE `id`= ?";
             Dba::write($sql, $params);
         }
 
         if (self::has_access($name)) {
-            $sql = "UPDATE `user_preference` SET `value` = ?  WHERE `preference` = ? $user_check";
+            $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? $user_check";
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -558,17 +623,21 @@ class Preference extends database_object
     public static function fix_preferences($results)
     {
         $arrays = array(
+            'allow_zip_types',
+            'art_order',
             'auth_methods',
             'getid3_tag_order',
             'metadata_order',
             'metadata_order_video',
-            'art_order',
             'registration_display_fields',
-            'registration_mandatory_fields'
+            'registration_mandatory_fields',
+            'wanted_types'
         );
 
         foreach ($arrays as $item) {
-            $results[$item] = (trim((string)$results[$item])) ? explode(',', $results[$item]) : array();
+            $results[$item] = (array_key_exists($item, $results) && trim((string)$results[$item]))
+                ? explode(',', $results[$item])
+                : array();
         }
 
         foreach ($results as $key => $data) {
@@ -587,7 +656,7 @@ class Preference extends database_object
 
     /**
      * set_defaults
-     * Make sure the default prefs are set!
+     * Make sure the default prefs are set! (taken from the default DB file `resources/sql/ampache.sql`)
      */
     public static function set_defaults()
     {
@@ -629,7 +698,7 @@ class Preference extends database_object
             "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
             "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
             "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'), " .
+            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'), " .
             "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
             "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
             "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
@@ -644,12 +713,12 @@ class Preference extends database_object
             "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
             "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
             "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'), " .
-            "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " .
-            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " .
-            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 75, 'boolean', 'system', 'upload'), " .
+            "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'), " .
+            "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'), " .
+            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'), " .
+            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'), " .
             "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " .
+            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'), " .
             "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
             "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
             "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
@@ -667,7 +736,7 @@ class Preference extends database_object
             "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
             "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
             "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'), " .
+            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'), " .
             "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
             "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
             "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
@@ -688,7 +757,7 @@ class Preference extends database_object
             "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
             "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
             "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'), " .
+            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'), " .
             "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
             "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'), " .
             "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'), " .
@@ -705,150 +774,113 @@ class Preference extends database_object
             "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null), " .
             "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
             "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme');";
+            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
+            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
         Dba::write($sql);
     } // set_defaults
 
     /**
      * translate_db
-     * Make sure the default prefs are set!
+     * Make sure the default prefs are readable by the users
      */
     public static function translate_db()
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
         $pref_array = array(
-            'download' => T_('Allow Downloads'),
-            'popular_threshold' => T_('Popular Threshold'),
-            'transcode_bitrate' => T_('Transcode Bitrate'),
-            'site_title' => T_('Website Title'),
-            'lock_songs' => T_('Lock Songs'),
-            'force_http_play' => T_('Force HTTP playback regardless of port'),
-            'play_type' => T_('Playback Type'),
-            'lang' => T_('Language'),
-            'playlist_type' => T_('Playlist Type'),
-            'theme_name' => T_('Theme'),
-            'localplay_level' => T_('Localplay Access'),
-            'localplay_controller' => T_('Localplay Type'),
-            'allow_stream_playback' => T_('Allow Streaming'),
+            '7digital_api_key' => T_('7digital consumer key'),
+            '7digital_secret_api_key' => T_('7digital secret'),
+            'ajax_load' => T_('Ajax page load'),
+            'album_group' => T_('Album - Group multiple disks'),
+            'album_release_type_sort' => T_('Album - Group per release type sort'),
+            'album_release_type' => T_('Album - Group per release type'),
+            'album_sort' => T_('Album - Default sort'),
             'allow_democratic_playback' => T_('Allow Democratic Play'),
             'allow_localplay_playback' => T_('Allow Localplay Play'),
-            'stats_threshold' => T_('Statistics Day Threshold'),
-            'offset_limit' => T_('Offset Limit'),
-            'rate_limit' => T_('Rate Limit'),
-            'playlist_method' => T_('Playlist Method'),
-            'transcode' => T_('Allow Transcoding'),
-            'show_lyrics' => T_('Show lyrics'),
-            'lastfm_grant_link' => T_('Last.FM Grant URL'),
-            'lastfm_challenge' => T_('Last.FM Submit Challenge'),
-            'now_playing_per_user' => T_('Now Playing filtered per user'),
-            'album_sort' => T_('Album - Default sort'),
-            'show_played_times' => T_('Show # played'),
-            'song_page_title' => T_('Show current song in Web player page title'),
-            'subsonic_backend' => T_('Use Subsonic backend'),
-            'webplayer_flash' => T_('Authorize Flash Web Player'),
-            'webplayer_html5' => T_('Authorize HTML5 Web Player'),
+            'allow_personal_info_agent' => T_('Share Recently Played information - Allow access to streaming agent'),
             'allow_personal_info_now' => T_('Share Now Playing information'),
             'allow_personal_info_recent' => T_('Share Recently Played information'),
             'allow_personal_info_time' => T_('Share Recently Played information - Allow access to streaming date/time'),
-            'allow_personal_info_agent' => T_('Share Recently Played information - Allow access to streaming agent'),
-            'ui_fixed' => T_('Fix header position on compatible themes'),
-            'autoupdate' => T_('Check for Ampache updates automatically'),
-            'autoupdate_lastcheck' => T_('AutoUpdate last check time'),
-            'autoupdate_lastversion' => T_('AutoUpdate last version from last check'),
-            'autoupdate_lastversion_new' => T_('AutoUpdate last version from last check is newer'),
-            'webplayer_confirmclose' => T_('Confirmation when closing current playing window'),
-            'webplayer_pausetabs' => T_('Auto-pause between tabs'),
-            'stream_beautiful_url' => T_('Enable URL Rewriting'),
-            'share' => T_('Allow Share'),
-            'share_expire' => T_('Share links default expiration days (0=never)'),
-            'slideshow_time' => T_('Artist slideshow inactivity time'),
-            'broadcast_by_default' => T_('Broadcast web player by default'),
-            'album_group' => T_('Album - Group multiple disks'),
-            'topmenu' => T_('Top menu'),
-            'demo_clear_sessions' => T_('Democratic - Clear votes for expired user sessions'),
-            'demo_use_search' => T_('Democratic - Use smartlists for base playlist'),
-            'show_donate' => T_('Show donate button in footer'),
-            'upload_catalog' => T_('Destination catalog'),
+            'allow_stream_playback' => T_('Allow Streaming'),
             'allow_upload' => T_('Allow user uploads'),
-            'upload_subdir' => T_('Create a subdirectory per user'),
-            'upload_user_artist' => T_("Consider the user sender as the track's artist"),
-            'upload_script' => T_('Post-upload script (current directory = upload target directory)'),
-            'upload_allow_edit' => T_('Allow users to edit uploaded songs'),
-            'daap_backend' => T_('Use DAAP backend'),
-            'daap_pass' => T_('DAAP backend password'),
-            'upnp_backend' => T_('Use UPnP backend'),
             'allow_video' => T_('Allow Video Features'),
-            'album_release_type' => T_('Album - Group per release type'),
-            'ajax_load' => T_('Ajax page load'),
-            'direct_play_limit' => T_('Limit direct play to maximum media count'),
-            'home_moment_albums' => T_('Show Albums of the Moment'),
-            'home_moment_videos' => T_('Show Videos of the Moment'),
-            'home_recently_played' => T_('Show Recently Played'),
-            'home_now_playing' => T_('Show Now Playing'),
-            'custom_logo' => T_('Custom URL - Logo'),
-            'album_release_type_sort' => T_('Album - Group per release type sort'),
-            'browser_notify' => T_('Web Player browser notifications'),
-            'browser_notify_timeout' => T_('Web Player browser notifications timeout (seconds)'),
-            'geolocation' => T_('Allow Geolocation'),
-            'webplayer_aurora' => T_('Authorize JavaScript decoder (Aurora.js) in Web Player'),
-            'upload_allow_remove' => T_('Allow users to remove uploaded songs'),
-            'custom_login_logo' => T_('Custom URL - Login page logo'),
-            'custom_favicon' => T_('Custom URL - Favicon'),
-            'custom_text_footer' => T_('Custom text footer'),
-            'webdav_backend' => T_('Use WebDAV backend'),
-            'notify_email' => T_('Allow E-mail notifications'),
-            'theme_color' => T_('Theme color'),
-            'disabled_custom_metadata_fields' => T_('Custom metadata - Disable these fields'),
-            'disabled_custom_metadata_fields_input' => T_('Custom metadata - Define field list'),
-            'podcast_keep' => T_('# latest episodes to keep'),
-            'podcast_new_download' => T_('# episodes to download when new episodes are available'),
-            'libitem_contextmenu' => T_('Library item context menu'),
-            'upload_catalog_pattern' => T_('Rename uploaded file according to catalog pattern'),
-            'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
+            'amazon_base_url' => T_('Amazon base url'),
+            'amazon_developer_associate_tag' => T_('Amazon associate tag'),
+            'amazon_developer_private_api_key' => T_('Amazon Secret Access Key'),
+            'amazon_developer_public_key' => T_('Amazon Access Key ID'),
+            'amazon_max_results_pages' => T_('Amazon max results pages'),
+            'api_enable_3' => T_('Allow Ampache API3 responses'),
+            'api_enable_4' => T_('Allow Ampache API4 responses'),
+            'api_enable_5' => T_('Allow Ampache API5 responses'),
+            'api_enable_6' => T_('Allow Ampache API6 responses'),
+            'api_force_version' => T_('Force a specific API response no matter what version you send'),
+            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string'),
+            'api_hide_dupe_searches' => T_('Hide smartlists that match playlist names in Subsonic and API clients'),
+            'autoupdate_lastcheck' => T_('AutoUpdate last check time'),
+            'autoupdate_lastversion_new' => T_('AutoUpdate last version from last check is newer'),
+            'autoupdate_lastversion' => T_('AutoUpdate last version from last check'),
+            'autoupdate' => T_('Check for Ampache updates automatically'),
+            'bitly_api_key' => T_('Bit.ly API key'),
+            'bitly_username' => T_('Bit.ly Username'),
+            'broadcast_by_default' => T_('Broadcast web player by default'),
             'browse_filter' => T_('Show filter box on browse'),
-            'sidebar_light' => T_('Light sidebar by default'),
+            'browser_notify_timeout' => T_('Web Player browser notifications timeout (seconds)'),
+            'browser_notify' => T_('Web Player browser notifications'),
+            'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
+            'catalogfav_gridview' => T_('Catalog favorites grid view display'),
+            'catalogfav_max_items' => T_('Catalog favorites max items'),
+            'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
             'custom_blankmovie' => T_('Custom blank video default image'),
-            'libitem_browse_alpha' => T_('Alphabet browsing by default for following library items (album,artist,...)'),
-            'show_skipped_times' => T_('Show # skipped'),
             'custom_datetime' => T_('Custom datetime'),
-            'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
-            'unique_playlist' => T_('Only add unique items to playlists'),
-            'of_the_moment' => T_('Set the amount of items Album/Video of the Moment will display'),
+            'custom_favicon' => T_('Custom URL - Favicon'),
             'custom_login_background' => T_('Custom URL - Login page background'),
-            'show_license' => T_('Show License'),
-            'use_original_year' => T_('Browse by Original Year for albums (falls back to Year)'),
-            'hide_single_artist' => T_('Hide the Song Artist column for Albums with one Artist'),
-            'hide_genres' => T_('Hide the Genre column in browse table rows'),
-            'httpq_active' => T_('HTTPQ Active Instance'),
-            'mpd_active' => T_('MPD Active Instance'),
-            'upnp_active' => T_('UPnP Active Instance'),
-            'vlc_active' => T_('VLC Active Instance'),
-            'xbmc_active' => T_('XBMC Active Instance'),
-            '7digital_api_key' => T_('7digital consumer key'),
-            '7digital_secret_api_key' => T_('7digital secret'),
-            'amazon_base_url' => T_('Amazon base url'),
-            'amazon_max_results_pages' => T_('Amazon max results pages'),
-            'amazon_developer_public_key' => T_('Amazon Access Key ID'),
-            'amazon_developer_private_api_key' => T_('Amazon Secret Access Key'),
-            'amazon_developer_associate_tag' => T_('Amazon associate tag'),
-            'bitly_username' => T_('Bit.ly Username'),
-            'bitly_api_key' => T_('Bit.ly API key'),
-            'catalogfav_max_items' => T_('Catalog favorites max items'),
-            'catalogfav_gridview' => T_('Catalog favorites grid view display'),
+            'custom_login_logo' => T_('Custom URL - Login page logo'),
+            'custom_logo' => T_('Custom URL - Logo'),
+            'custom_text_footer' => T_('Custom text footer'),
+            'daap_backend' => T_('Use DAAP backend'),
+            'daap_pass' => T_('DAAP backend password'),
+            'demo_clear_sessions' => T_('Democratic - Clear votes for expired user sessions'),
+            'demo_use_search' => T_('Democratic - Use smartlists for base playlist'),
+            'direct_play_limit' => T_('Limit direct play to maximum media count'),
+            'disabled_custom_metadata_fields_input' => T_('Custom metadata - Define field list'),
+            'disabled_custom_metadata_fields' => T_('Custom metadata - Disable these fields'),
             'discogs_api_key' => T_('Discogs consumer key'),
             'discogs_secret_api_key' => T_('Discogs secret'),
+            'download' => T_('Allow Downloads'),
             'flattr_user_id' => T_('Flattr User ID'),
             'flickr_api_key' => T_('Flickr API key'),
+            'force_http_play' => T_('Force HTTP playback regardless of port'),
             'ftl_max_items' => T_('Friends timeline max items'),
-            'googleanalytics_tracking_id' => T_('Google Analytics Tracking ID'),
+            'geolocation' => T_('Allow Geolocation'),
             'gmaps_api_key' => T_('Google Maps API key'),
-            'headphones_api_url' => T_('Headphones URL'),
+            'googleanalytics_tracking_id' => T_('Google Analytics Tracking ID'),
             'headphones_api_key' => T_('Headphones API key'),
+            'headphones_api_url' => T_('Headphones URL'),
+            'hide_genres' => T_('Hide the Genre column in browse table rows'),
+            'hide_single_artist' => T_('Hide the Song Artist column for Albums with one Artist'),
+            'home_moment_albums' => T_('Show Albums of the Moment'),
+            'home_moment_videos' => T_('Show Videos of the Moment'),
+            'home_now_playing' => T_('Show Now Playing'),
+            'home_recently_played' => T_('Show Recently Played'),
+            'httpq_active' => T_('HTTPQ Active Instance'),
+            'lang' => T_('Language'),
+            'lastfm_challenge' => T_('Last.FM Submit Challenge'),
+            'lastfm_grant_link' => T_('Last.FM Grant URL'),
+            'libitem_browse_alpha' => T_('Alphabet browsing by default for following library items (album,artist,...)'),
+            'libitem_contextmenu' => T_('Library item context menu'),
             'librefm_challenge' => T_('Libre.FM Submit Challenge'),
             'listenbrainz_token' => T_('ListenBrainz User Token'),
+            'localplay_controller' => T_('Localplay Type'),
+            'localplay_level' => T_('Localplay Access'),
+            'lock_songs' => T_('Lock Songs'),
             'matomo_site_id' => T_('Matomo Site ID'),
             'matomo_url' => T_('Matomo URL'),
+            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
+            'mpd_active' => T_('MPD Active Instance'),
+            'notify_email' => T_('Allow E-mail notifications'),
+            'now_playing_per_user' => T_('Now Playing filtered per user'),
+            'offset_limit' => T_('Offset Limit'),
+            'of_the_moment' => T_('Set the amount of items Album/Video of the Moment will display'),
             'paypal_business' => T_('PayPal ID'),
             'paypal_currency_code' => T_('PayPal Currency Code'),
             'personalfav_display' => T_('Personal favorites on the homepage'),
@@ -856,41 +888,85 @@ class Preference extends database_object
             'personalfav_smartlist' => T_('Favorite Smartlists'),
             'piwik_site_id' => T_('Piwik Site ID'),
             'piwik_url' => T_('Piwik URL'),
-            'ratingmatch_stars' => T_('Minimum star rating to match'),
+            'playlist_method' => T_('Playlist Method'),
+            'playlist_type' => T_('Playlist Type'),
+            'play_type' => T_('Playback Type'),
+            'podcast_keep' => T_('# latest episodes to keep'),
+            'podcast_new_download' => T_('# episodes to download when new episodes are available'),
+            'popular_threshold' => T_('Popular Threshold'),
+            'rate_limit' => T_('Rate Limit'),
+            'ratingmatch_flag_rule' => T_('Match rule for Flags'),
             'ratingmatch_flags' => T_('When you love a track, flag the album and artist'),
             'ratingmatch_star1_rule' => T_('Match rule for 1 Star ($play,$skip)'),
             'ratingmatch_star2_rule' => T_('Match rule for 2 Stars'),
             'ratingmatch_star3_rule' => T_('Match rule for 3 Stars'),
             'ratingmatch_star4_rule' => T_('Match rule for 4 Stars'),
             'ratingmatch_star5_rule' => T_('Match rule for 5 Stars'),
-            'ratingmatch_flag_rule' => T_('Match rule for Flags'),
+            'ratingmatch_stars' => T_('Minimum star rating to match'),
             'rssview_feed_url' => T_('RSS Feed URL'),
             'rssview_max_items' => T_('RSS Feed max items'),
+            'share_expire' => T_('Share links default expiration days (0=never)'),
+            'share' => T_('Allow Share'),
             'shouthome_max_items' => T_('Shoutbox on homepage max items'),
-            'stream_control_bandwidth_max' => T_('Stream control maximal bandwidth (month)'),
-            'stream_control_bandwidth_days' => T_('Stream control bandwidth history (days)'),
-            'stream_control_hits_max' => T_('Stream control maximal hits'),
-            'stream_control_hits_days' => T_('Stream control hits history (days)'),
-            'stream_control_time_max' => T_('Stream control maximal time (minutes)'),
-            'stream_control_time_days' => T_('Stream control time history (days)'),
-            'tadb_api_key' => T_('TheAudioDb API key'),
-            'tmdb_api_key' => T_('TMDb API key'),
-            'tvdb_api_key' => T_('TVDb API key'),
-            'yourls_domain' => T_('YOURLS domain name'),
-            'yourls_use_idn' => T_('YOURLS use IDN'),
-            'yourls_api_key' => T_('YOURLS API key'),
-            'tadb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
-            'mb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
-            'subsonic_always_download' => T_('Force Subsonic streams to download. (Enable scrobble in your client to record stats)'),
-            'api_enable_3' => T_('Allow Ampache API3 responses'),
-            'api_enable_4' => T_('Allow Ampache API4 responses'),
-            'api_enable_5' => T_('Allow Ampache API5 responses'),
-            'api_force_version' => T_('Force a specific API response no matter what version you send'),
-            'show_playlist_username' => T_('Show playlist owner username in titles'),
-            'api_hidden_playlists' => T_('Hide playlists in Subsonic and API clients that start with this string'),
-            'api_hide_dupe_searches' => T_('Hide smartlists that match playlist names in Subsonic and API clients'),
             'show_album_artist' => T_("Show 'Album Artists' link in the main sidebar"),
-            'show_artist' => T_("Show 'Artists' link in the main sidebar")
+            'show_artist' => T_("Show 'Artists' link in the main sidebar"),
+            'show_donate' => T_('Show donate button in footer'),
+            'show_header_login' => T_('Show the login / registration links in the site header'),
+            'show_license' => T_('Show License'),
+            'show_lyrics' => T_('Show lyrics'),
+            'show_original_year' => T_('Show Album original year on links (if available)'),
+            'show_played_times' => T_('Show # played'),
+            'show_playlist_username' => T_('Show playlist owner username in titles'),
+            'show_skipped_times' => T_('Show # skipped'),
+            'show_subtitle' => T_('Show Album subtitle on links (if available)'),
+            'sidebar_light' => T_('Light sidebar by default'),
+            'site_title' => T_('Website Title'),
+            'slideshow_time' => T_('Artist slideshow inactivity time'),
+            'song_page_title' => T_('Show current song in Web player page title'),
+            'stats_threshold' => T_('Statistics Day Threshold'),
+            'stream_beautiful_url' => T_('Enable URL Rewriting'),
+            'stream_control_bandwidth_days' => T_('Stream control bandwidth history (days)'),
+            'stream_control_bandwidth_max' => T_('Stream control maximal bandwidth (month)'),
+            'stream_control_hits_days' => T_('Stream control hits history (days)'),
+            'stream_control_hits_max' => T_('Stream control maximal hits'),
+            'stream_control_time_days' => T_('Stream control time history (days)'),
+            'stream_control_time_max' => T_('Stream control maximal time (minutes)'),
+            'subsonic_always_download' => T_('Force Subsonic streams to download. (Enable scrobble in your client to record stats)'),
+            'subsonic_backend' => T_('Use Subsonic backend'),
+            'tadb_api_key' => T_('TheAudioDb API key'),
+            'tadb_overwrite_name' => T_('Overwrite Artist names that match an mbid'),
+            'theme_color' => T_('Theme color'),
+            'theme_name' => T_('Theme'),
+            'topmenu' => T_('Top menu'),
+            'transcode_bitrate' => T_('Transcode Bitrate'),
+            'transcode' => T_('Allow Transcoding'),
+            'tvdb_api_key' => T_('TVDb API key'),
+            'ui_fixed' => T_('Fix header position on compatible themes'),
+            'unique_playlist' => T_('Only add unique items to playlists'),
+            'upload_access_level' => T_('Upload Access Level'),
+            'upload_allow_edit' => T_('Allow users to edit uploaded songs'),
+            'upload_allow_remove' => T_('Allow users to remove uploaded songs'),
+            'upload_catalog_pattern' => T_('Rename uploaded file according to catalog pattern'),
+            'upload_catalog' => T_('Destination catalog'),
+            'upload_script' => T_('Post-upload script (current directory = upload target directory)'),
+            'upload_subdir' => T_('Create a subdirectory per user'),
+            'upload_user_artist' => T_("Consider the user sender as the track's artist"),
+            'upnp_active' => T_('UPnP Active Instance'),
+            'upnp_backend' => T_('Use UPnP backend'),
+            'use_original_year' => T_('Browse by Original Year for albums (falls back to Year)'),
+            'use_play2' => T_('Use an alternative playback action for streaming if you have issues with playing music'),
+            'vlc_active' => T_('VLC Active Instance'),
+            'webdav_backend' => T_('Use WebDAV backend'),
+            'webplayer_aurora' => T_('Authorize JavaScript decoder (Aurora.js) in Web Player'),
+            'webplayer_confirmclose' => T_('Confirmation when closing current playing window'),
+            'webplayer_flash' => T_('Authorize Flash Web Player'),
+            'webplayer_html5' => T_('Authorize HTML5 Web Player'),
+            'webplayer_pausetabs' => T_('Auto-pause between tabs'),
+            'webplayer_removeplayed' => T_('Remove tracks before the current playlist item in the webplayer when played'),
+            'xbmc_active' => T_('XBMC Active Instance'),
+            'yourls_api_key' => T_('YOURLS API key'),
+            'yourls_domain' => T_('YOURLS domain name'),
+            'yourls_use_idn' => T_('YOURLS use IDN')
         );
         foreach ($pref_array as $key => $value) {
             Dba::write($sql, array($value, $key, $value));
@@ -940,39 +1016,186 @@ class Preference extends database_object
     public static function is_boolean($key)
     {
         $boolean_array = array(
-            'session_cookiesecure',
-            'require_session',
             'access_control',
-            'require_localnet_session',
-            'downsample_remote',
-            'track_user_ip',
-            'xml_rpc',
-            'allow_zip_download',
-            'ratings',
-            'shoutbox',
-            'resize_images',
-            'show_played_times',
-            'show_skipped_times',
-            'show_album_art',
-            'allow_public_registration',
-            'captcha_public_reg',
+            'access_list',
+            'admin_enable_required',
             'admin_notify_reg',
-            'use_rss',
-            'download',
-            'force_http_play',
-            'cookie_secure',
-            'allow_stream_playback',
+            'ajax_load',
+            'album_art_store_disk',
+            'album_group',
+            'album_release_type',
             'allow_democratic_playback',
-            'use_auth',
             'allow_localplay_playback',
+            'allow_personal_info_agent',
+            'allow_personal_info_now',
+            'allow_personal_info_recent',
+            'allow_personal_info_time',
+            'allow_php_themes',
+            'allow_public_registration',
+            'allow_stream_playback',
+            'allow_upload',
+            'allow_upload_scripts',
+            'allow_video',
+            'allow_zip_download',
+            'api_enable_3',
+            'api_enable_4',
+            'api_enable_5',
+            'api_enable_6',
+            'api_hide_dupe_searches',
+            'art_zip_add',
+            'auth_password_save',
+            'auto_create',
+            'autoupdate',
+            'autoupdate_lastversion_new',
+            'broadcast',
+            'broadcast_by_default',
+            'browse_filter',
+            'browser_notify',
+            'cache_aif',
+            'cache_aiff',
+            'cache_ape',
+            'cache_flac',
+            'cache_m4a',
+            'cache_mp3',
+            'cache_mpc',
+            'cache_oga',
+            'cache_ogg',
+            'cache_opus',
+            'cache_remote',
+            'cache_shn',
+            'cache_wav',
+            'cache_wma',
+            'captcha_public_reg',
+            'catalog_check_duplicate',
+            'catalog_disable',
+            'catalogfav_gridview',
+            'catalog_filter',
+            'catalog_verify_by_time',
+            'condPL',
+            'cookie_disclaimer',
+            'cookie_secure',
+            'cron_cache',
+            'daap_backend',
             'debug',
-            'lock_songs',
-            'transcode_m4a',
-            'transcode_mp3',
-            'transcode_ogg',
-            'transcode_flac',
+            'deferred_ext_metadata',
+            'delete_from_disk',
+            'demo_clear_sessions',
+            'demo_mode',
+            'demo_use_search',
+            'direct_link',
+            'directplay',
+            'disable_xframe_sameorigin',
+            'display_menu',
+            'download',
+            'downsample_remote',
+            'enable_custom_metadata',
+            'external_auto_update',
+            'force_http_play',
+            'force_ssl',
+            'gather_song_art',
+            'generate_video_preview',
+            'geolocation',
+            'getid3_detect_id3v2_encoding',
+            'hide_ampache_messages',
+            'hide_genres',
+            'hide_search',
+            'hide_single_artist',
+            'home_moment_albums',
+            'home_moment_videos',
+            'home_now_playing',
+            'home_recently_played',
             'httpq_active',
-            'show_lyrics'
+            'label',
+            'ldap_start_tls',
+            'libitem_contextmenu',
+            'licensing',
+            'live_stream',
+            'lock_songs',
+            'mail_auth',
+            'mail_enable',
+            'mb_overwrite_name',
+            'memory_cache',
+            'mpd_active',
+            'no_symlinks',
+            'notify_email',
+            'now_playing_per_user',
+            'personalfav_display',
+            'playlist_art',
+            'podcast',
+            'prevent_multiple_logins',
+            'quarantine',
+            'rating_browse_filter',
+            'rating_browse_minimum_stars',
+            'ratingmatch_flags',
+            'ratingmatch_write_tags',
+            'ratings',
+            'require_localnet_session',
+            'require_session',
+            'resize_images',
+            'rio_global_stats',
+            'rio_track_stats',
+            'send_full_stream',
+            'session_cookiesecure',
+            'share',
+            'share_social',
+            'show_album_artist',
+            'show_artist',
+            'show_donate',
+            'show_footer_statistics',
+            'show_header_login',
+            'show_license',
+            'show_lyrics',
+            'show_original_year',
+            'show_played_times',
+            'show_playlist_username',
+            'show_similar',
+            'show_skipped_times',
+            'show_song_art',
+            'show_subtitle',
+            'sidebar_light',
+            'simple_user_mode',
+            'sociable',
+            'song_page_title',
+            'statistical_graphs',
+            'stream_beautiful_url',
+            'subsonic_always_download',
+            'subsonic_backend',
+            'tadb_overwrite_name',
+            'topmenu',
+            'track_user_ip',
+            'transcode_player_customize',
+            'ui_fixed',
+            'unique_playlist',
+            'upload',
+            'upload_allow_edit',
+            'upload_allow_remove',
+            'upload_catalog',
+            'upload_catalog_pattern',
+            'upload_script',
+            'upload_subdir',
+            'upload_user_artist',
+            'upnp_active',
+            'upnp_backend',
+            'use_auth',
+            'use_now_playing_embedded',
+            'use_original_year',
+            'user_agreement',
+            'user_no_email_confirm',
+            'use_rss',
+            'wanted',
+            'wanted_auto_accept',
+            'waveform',
+            'webdav_backend',
+            'webplayer_aurora',
+            'webplayer_confirmclose',
+            'webplayer_debug',
+            'webplayer_flash',
+            'webplayer_html5',
+            'webplayer_pausetabs',
+            'write_id3',
+            'write_id3_art',
+            'write_tags',
+            'xml_rpc'
         );
 
         if (in_array($key, $boolean_array)) {
@@ -1004,7 +1227,7 @@ class Preference extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $value          = $row['system_value'] ? $row['system_value'] : $row['value'];
+            $value          = $row['system_value'] ?? $row['value'];
             $name           = $row['name'];
             $results[$name] = $value;
         } // end while sys prefs

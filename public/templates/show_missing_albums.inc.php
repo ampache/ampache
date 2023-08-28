@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,6 +22,8 @@
 
 use Ampache\Module\Util\Ui;
 
+/** @var array $walbums */
+
 $thcount = 5; ?>
 <?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
 <table class="tabledata striped-rows">
@@ -36,7 +38,7 @@ $thcount = 5; ?>
     </thead>
     <tbody>
         <?php
-        if ($walbums) {
+        if (!empty($walbums)) {
             foreach ($walbums as $libitem) { ?>
         <tr id="walbum_<?php echo $libitem->mbid; ?>">
             <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>

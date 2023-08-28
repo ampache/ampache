@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
 
 /**
  * Class AdvancedSearchMethod
@@ -61,6 +60,7 @@ final class AdvancedSearchMethod
      * https://ampache.org/api/api-json-methods
      *
      * @param array $input
+     * @param User $user
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
@@ -71,7 +71,7 @@ final class AdvancedSearchMethod
      * limit           = (integer) //optional
      * @return boolean
      */
-    public static function advanced_search(array $input): bool
+    public static function advanced_search(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
@@ -89,7 +89,7 @@ final class AdvancedSearchMethod
 
             return false;
         }
-        $user           = User::get_from_username(Session::username($input['auth']));
+
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
@@ -102,6 +102,8 @@ final class AdvancedSearchMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Json_Data::albums($results, array(), $user);
@@ -125,7 +127,7 @@ final class AdvancedSearchMethod
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json_Data::genres($results, $user);
+                        echo Json_Data::genres($results);
                         break;
                     case 'user':
                         echo Json_Data::users($results);
@@ -139,6 +141,8 @@ final class AdvancedSearchMethod
                 }
                 break;
             default:
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
                         echo Xml_Data::albums($results, array(), $user);
@@ -147,7 +151,7 @@ final class AdvancedSearchMethod
                         echo Xml_Data::artists($results, array(), $user);
                         break;
                     case 'label':
-                        echo Xml_Data::labels($results);
+                        echo Xml_Data::labels($results, $user);
                         break;
                     case 'playlist':
                         echo Xml_Data::playlists($results, $user);
@@ -160,7 +164,7 @@ final class AdvancedSearchMethod
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results);
+                        echo Xml_Data::genres($results, $user);
                         break;
                     case 'user':
                         echo Xml_Data::users($results);

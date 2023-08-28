@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,20 +59,23 @@ final class DeleteAction extends AbstractUserAction
 
         $this->ui->showHeader();
 
-        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
-        $user   = $this->modelFactory->createUser($userId);
-        $this->ui->showConfirmation(
-            T_('Are You Sure?'),
-            /* HINT: User Fullname */
-            sprintf(T_('This will permanently delete the user "%s"'), $user->fullname),
-            sprintf(
-                'admin/users.php?action=confirm_delete&amp;user_id=%s',
-                $userId
-            ),
-            1,
-            'delete_user'
-        );
-
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        if ($userId < 1) {
+            echo T_('You have requested an object that does not exist');
+        } else {
+            $user = $this->modelFactory->createUser($userId);
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                /* HINT: User Fullname */
+                sprintf(T_('This will permanently delete the user "%s"'), $user->fullname),
+                sprintf(
+                    'admin/users.php?action=confirm_delete&amp;user_id=%s',
+                    $userId
+                ),
+                1,
+                'delete_user'
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

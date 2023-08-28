@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,12 +67,12 @@ final class CronProcessCommand extends Command
 
     public function execute(): void
     {
-        $io = $this->app()->io();
+        $interactor = $this->app()->io();
 
         if (!$this->configContainer->get('cron_cache')) {
             debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
 
-            $io->error(
+            $interactor->error(
                 T_('Cron cache not enabled'),
                 true
             );
@@ -133,6 +133,9 @@ final class CronProcessCommand extends Command
 
         debug_event('cron', 'finished cron process', 4);
 
-        $io->white(T_('Cron process finished'), true);
+        $interactor->info(
+            T_('Cron process finished'),
+            true
+        );
     }
 }

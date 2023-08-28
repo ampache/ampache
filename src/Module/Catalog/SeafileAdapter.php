@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,8 +33,8 @@ use GuzzleHttp\Exception\ClientException;
 
 class SeafileAdapter
 {
-    // request API key from Seafile Server based on username and password
     /**
+     * request API key from Seafile Server based on username and password
      * @param string $server_uri
      * @param string $username
      * @param string $password
@@ -244,11 +244,11 @@ class SeafileAdapter
         }
     }
 
-    // run a function for all files in the Seafile library.
-    // the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
-    // (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
-    // Returns number added, or -1 on failure
     /**
+     * run a function for all files in the Seafile library.
+     * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
+     * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
+     * Returns number added, or -1 on failure
      * @param $func
      * @param string $path
      * @return integer

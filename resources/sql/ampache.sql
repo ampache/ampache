@@ -1,5 +1,5 @@
 -- GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
--- Copyright 2001 - 2022 Ampache.org
+-- Copyright Ampache.org, 2001-2023
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU Affero General Public License as published by
@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Dec 08, 2022 at 08:40 AM
--- Server version: 10.5.15-MariaDB-0+deb11u1
--- PHP Version: 8.1.11
+-- Generation Time: Aug 21, 2023 at 11:03 PM
+-- Server version: 10.5.19-MariaDB-0+deb11u2
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -34,7 +34,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache556`
+-- Database: `ampache6`
 --
 
 -- --------------------------------------------------------
@@ -46,11 +46,11 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `access_list`;
 CREATE TABLE IF NOT EXISTS `access_list` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `start` varbinary(255) NOT NULL,
   `end` varbinary(255) NOT NULL,
   `level` smallint(3) UNSIGNED NOT NULL DEFAULT 5,
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(64) DEFAULT NULL,
   `user` int(11) NOT NULL,
   `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
@@ -81,19 +81,20 @@ INSERT INTO `access_list` (`id`, `name`, `start`, `end`, `level`, `type`, `user`
 DROP TABLE IF EXISTS `album`;
 CREATE TABLE IF NOT EXISTS `album` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `prefix` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `prefix` varchar(32) DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `year` int(4) UNSIGNED NOT NULL DEFAULT 1984,
-  `disk` smallint(5) UNSIGNED DEFAULT NULL,
+  `disk_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `mbid_group` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `release_type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `release_type` varchar(32) DEFAULT NULL,
   `album_artist` int(11) UNSIGNED DEFAULT NULL,
   `original_year` int(4) DEFAULT NULL,
-  `barcode` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `catalog_number` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `barcode` varchar(64) DEFAULT NULL,
+  `catalog_number` varchar(64) DEFAULT NULL,
+  `version` varchar(64) DEFAULT NULL,
   `time` bigint(20) UNSIGNED DEFAULT NULL,
-  `release_status` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `release_status` varchar(32) DEFAULT NULL,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -103,7 +104,6 @@ CREATE TABLE IF NOT EXISTS `album` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `year` (`year`),
-  KEY `disk` (`disk`),
   KEY `catalog_IDX` (`catalog`) USING BTREE,
   KEY `album_artist_IDX` (`album_artist`) USING BTREE,
   KEY `original_year_IDX` (`original_year`) USING BTREE,
@@ -116,6 +116,28 @@ CREATE TABLE IF NOT EXISTS `album` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `album_disk`
+--
+
+DROP TABLE IF EXISTS `album_disk`;
+CREATE TABLE IF NOT EXISTS `album_disk` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `album_id` int(11) UNSIGNED NOT NULL,
+  `disk` int(11) UNSIGNED NOT NULL,
+  `disk_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `time` bigint(20) UNSIGNED DEFAULT NULL,
+  `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `song_count` smallint(5) UNSIGNED DEFAULT 0,
+  `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  UNIQUE KEY `unique_album_disk` (`album_id`,`disk`,`catalog`),
+  KEY `id_index` (`id`),
+  KEY `album_id_type_index` (`album_id`,`disk`),
+  KEY `id_disk_index` (`id`,`disk`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `album_map`
 --
 
@@ -123,11 +145,12 @@ DROP TABLE IF EXISTS `album_map`;
 CREATE TABLE IF NOT EXISTS `album_map` (
   `album_id` int(11) UNSIGNED NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `object_type` varchar(16) DEFAULT NULL,
   UNIQUE KEY `unique_album_map` (`object_id`,`object_type`,`album_id`),
   KEY `object_id_index` (`object_id`),
   KEY `album_id_type_index` (`album_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`)
+  KEY `object_id_type_index` (`object_id`,`object_type`),
+  KEY `object_type_IDX` (`object_type`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -139,11 +162,11 @@ CREATE TABLE IF NOT EXISTS `album_map` (
 DROP TABLE IF EXISTS `artist`;
 CREATE TABLE IF NOT EXISTS `artist` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `prefix` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `prefix` varchar(32) DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `summary` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `placeformed` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `summary` text DEFAULT NULL,
+  `placeformed` varchar(64) DEFAULT NULL,
   `yearformed` int(4) DEFAULT NULL,
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `user` int(11) DEFAULT NULL,
@@ -151,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `time` int(11) UNSIGNED DEFAULT NULL,
   `song_count` smallint(5) UNSIGNED DEFAULT 0,
   `album_count` smallint(5) UNSIGNED DEFAULT 0,
-  `album_group_count` smallint(5) UNSIGNED DEFAULT 0,
+  `album_disk_count` smallint(5) UNSIGNED DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
@@ -167,7 +190,7 @@ DROP TABLE IF EXISTS `artist_map`;
 CREATE TABLE IF NOT EXISTS `artist_map` (
   `artist_id` int(11) UNSIGNED NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `object_type` varchar(16) DEFAULT NULL,
   UNIQUE KEY `unique_artist_map` (`object_id`,`object_type`,`artist_id`),
   KEY `object_id_index` (`object_id`),
   KEY `artist_id_index` (`artist_id`),
@@ -186,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `bookmark` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `position` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL,
   `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `creation_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -204,13 +227,13 @@ DROP TABLE IF EXISTS `broadcast`;
 CREATE TABLE IF NOT EXISTS `broadcast` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) UNSIGNED NOT NULL,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
   `is_private` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `song` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `started` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `listeners` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `key` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `key` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -256,14 +279,14 @@ DROP TABLE IF EXISTS `catalog`;
 CREATE TABLE IF NOT EXISTS `catalog` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `catalog_type` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `catalog_type` varchar(128) DEFAULT NULL,
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `last_clean` int(11) UNSIGNED DEFAULT NULL,
   `last_add` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
-  `rename_pattern` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sort_pattern` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gather_types` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rename_pattern` varchar(255) DEFAULT NULL,
+  `sort_pattern` varchar(255) DEFAULT NULL,
+  `gather_types` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `enabled` (`enabled`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -277,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `catalog` (
 DROP TABLE IF EXISTS `catalog_filter_group`;
 CREATE TABLE IF NOT EXISTS `catalog_filter_group` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -305,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (
 DROP TABLE IF EXISTS `catalog_local`;
 CREATE TABLE IF NOT EXISTS `catalog_local` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
   `catalog_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -321,7 +344,8 @@ CREATE TABLE IF NOT EXISTS `catalog_map` (
   `catalog_id` int(11) UNSIGNED NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  UNIQUE KEY `unique_catalog_map` (`object_id`,`object_type`,`catalog_id`)
+  UNIQUE KEY `unique_catalog_map` (`object_id`,`object_type`,`catalog_id`),
+  KEY `object_type_IDX` (`object_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -333,42 +357,10 @@ CREATE TABLE IF NOT EXISTS `catalog_map` (
 DROP TABLE IF EXISTS `catalog_remote`;
 CREATE TABLE IF NOT EXISTS `catalog_remote` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `uri` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uri` varchar(255) DEFAULT NULL,
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `catalog_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `channel`
---
-
-DROP TABLE IF EXISTS `channel`;
-CREATE TABLE IF NOT EXISTS `channel` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `interface` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `port` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `fixed_endpoint` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `object_id` int(11) UNSIGNED NOT NULL,
-  `is_private` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `random` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `loop` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-  `admin_password` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `start_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `max_listeners` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `peak_listeners` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `listeners` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `connections` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `stream_type` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `bitrate` int(11) UNSIGNED NOT NULL DEFAULT 128,
-  `pid` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -410,8 +402,8 @@ CREATE TABLE IF NOT EXISTS `deleted_podcast_episode` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `addition_time` int(11) UNSIGNED NOT NULL,
   `delete_time` int(11) UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -430,8 +422,8 @@ CREATE TABLE IF NOT EXISTS `deleted_song` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
   `delete_time` int(11) UNSIGNED DEFAULT 0,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -452,8 +444,8 @@ CREATE TABLE IF NOT EXISTS `deleted_video` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `addition_time` int(11) UNSIGNED NOT NULL,
   `delete_time` int(11) UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -469,7 +461,7 @@ CREATE TABLE IF NOT EXISTS `deleted_video` (
 DROP TABLE IF EXISTS `democratic`;
 CREATE TABLE IF NOT EXISTS `democratic` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
   `cooldown` int(11) UNSIGNED DEFAULT NULL,
   `level` tinyint(4) UNSIGNED NOT NULL DEFAULT 25,
   `user` int(11) NOT NULL,
@@ -492,11 +484,11 @@ CREATE TABLE IF NOT EXISTS `image` (
   `image` mediumblob DEFAULT NULL,
   `width` int(4) UNSIGNED DEFAULT 0,
   `height` int(4) UNSIGNED DEFAULT 0,
-  `mime` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `size` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mime` varchar(64) DEFAULT NULL,
+  `size` varchar(64) DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `kind` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kind` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`)
@@ -514,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `ip_history` (
   `user` int(11) NOT NULL,
   `ip` varbinary(255) DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `agent` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`user`),
   KEY `date` (`date`),
@@ -530,16 +522,16 @@ CREATE TABLE IF NOT EXISTS `ip_history` (
 DROP TABLE IF EXISTS `label`;
 CREATE TABLE IF NOT EXISTS `label` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `summary` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `website` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(80) DEFAULT NULL,
+  `category` varchar(40) DEFAULT NULL,
+  `summary` text DEFAULT NULL,
+  `address` varchar(256) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `website` varchar(256) DEFAULT NULL,
   `user` int(11) UNSIGNED DEFAULT NULL,
   `creation_date` int(11) UNSIGNED DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country` varchar(64) DEFAULT NULL,
   `active` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -568,9 +560,9 @@ CREATE TABLE IF NOT EXISTS `label_asso` (
 DROP TABLE IF EXISTS `license`;
 CREATE TABLE IF NOT EXISTS `license` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `external_link` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(80) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  `external_link` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -604,11 +596,11 @@ DROP TABLE IF EXISTS `live_stream`;
 CREATE TABLE IF NOT EXISTS `live_stream` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `site_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `site_url` varchar(255) DEFAULT NULL,
+  `url` varchar(4096) DEFAULT NULL,
   `genre` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `catalog` (`catalog`),
   KEY `genre` (`genre`),
@@ -626,9 +618,9 @@ CREATE TABLE IF NOT EXISTS `localplay_httpq` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `owner` int(11) NOT NULL,
-  `host` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `host` varchar(255) DEFAULT NULL,
   `port` int(11) UNSIGNED NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `access` smallint(4) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -644,9 +636,9 @@ CREATE TABLE IF NOT EXISTS `localplay_mpd` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `owner` int(11) NOT NULL,
-  `host` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `host` varchar(255) DEFAULT NULL,
   `port` int(11) UNSIGNED NOT NULL DEFAULT 6600,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `access` smallint(4) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -662,8 +654,8 @@ CREATE TABLE IF NOT EXISTS `metadata` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `object_id` int(11) UNSIGNED NOT NULL,
   `field` int(11) UNSIGNED NOT NULL,
-  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `data` text NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `field` (`field`),
   KEY `object_id` (`object_id`),
@@ -681,7 +673,7 @@ CREATE TABLE IF NOT EXISTS `metadata` (
 DROP TABLE IF EXISTS `metadata_field`;
 CREATE TABLE IF NOT EXISTS `metadata_field` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `public` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
@@ -696,10 +688,10 @@ CREATE TABLE IF NOT EXISTS `metadata_field` (
 DROP TABLE IF EXISTS `movie`;
 CREATE TABLE IF NOT EXISTS `movie` (
   `id` int(11) UNSIGNED NOT NULL,
-  `original_name` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `summary` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `original_name` varchar(80) DEFAULT NULL,
+  `summary` varchar(256) DEFAULT NULL,
   `year` int(11) UNSIGNED DEFAULT NULL,
-  `prefix` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `prefix` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -711,7 +703,7 @@ CREATE TABLE IF NOT EXISTS `movie` (
 
 DROP TABLE IF EXISTS `now_playing`;
 CREATE TABLE IF NOT EXISTS `now_playing` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `user` int(11) NOT NULL,
@@ -730,7 +722,7 @@ CREATE TABLE IF NOT EXISTS `now_playing` (
 DROP TABLE IF EXISTS `object_count`;
 CREATE TABLE IF NOT EXISTS `object_count` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','genre','live_stream','playlist','podcast','podcast_episode','song','stream','tvshow','tvshow_season','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `user` int(11) NOT NULL,
@@ -761,8 +753,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
 DROP TABLE IF EXISTS `personal_video`;
 CREATE TABLE IF NOT EXISTS `personal_video` (
   `id` int(11) UNSIGNED NOT NULL,
-  `location` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `summary` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location` varchar(256) DEFAULT NULL,
+  `summary` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -776,8 +768,8 @@ DROP TABLE IF EXISTS `player_control`;
 CREATE TABLE IF NOT EXISTS `player_control` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) UNSIGNED NOT NULL,
-  `cmd` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cmd` varchar(32) DEFAULT NULL,
+  `value` varchar(256) DEFAULT NULL,
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `send_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -793,7 +785,7 @@ CREATE TABLE IF NOT EXISTS `player_control` (
 DROP TABLE IF EXISTS `playlist`;
 CREATE TABLE IF NOT EXISTS `playlist` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(128) DEFAULT NULL,
   `user` int(11) DEFAULT NULL,
   `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL,
@@ -831,17 +823,18 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
 DROP TABLE IF EXISTS `podcast`;
 CREATE TABLE IF NOT EXISTS `podcast` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `feed` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `feed` varchar(4096) DEFAULT NULL,
   `catalog` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `language` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `copyright` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `generator` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `language` varchar(5) DEFAULT NULL,
+  `copyright` varchar(255) DEFAULT NULL,
+  `generator` varchar(64) DEFAULT NULL,
   `lastbuilddate` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `lastsync` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `episodes` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -855,24 +848,29 @@ CREATE TABLE IF NOT EXISTS `podcast` (
 DROP TABLE IF EXISTS `podcast_episode`;
 CREATE TABLE IF NOT EXISTS `podcast_episode` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `guid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `guid` varchar(255) DEFAULT NULL,
   `podcast` int(11) NOT NULL,
-  `state` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `source` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `state` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
+  `source` varchar(4096) DEFAULT NULL,
   `size` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
   `time` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `author` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `author` varchar(64) DEFAULT NULL,
+  `category` varchar(64) DEFAULT NULL,
   `played` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+  `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
   `pubdate` int(11) UNSIGNED NOT NULL,
   `addition_time` int(11) UNSIGNED NOT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
+  `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
+  `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `channels` mediumint(9) DEFAULT NULL,
   `waveform` mediumblob DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -887,17 +885,17 @@ DROP TABLE IF EXISTS `preference`;
 CREATE TABLE IF NOT EXISTS `preference` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `level` int(11) UNSIGNED NOT NULL DEFAULT 100,
-  `type` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `catagory` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subcatagory` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(128) DEFAULT NULL,
+  `catagory` varchar(128) DEFAULT NULL,
+  `subcatagory` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_UN` (`name`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -941,7 +939,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'),
 (93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'),
 (94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'),
-(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'),
+(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'),
 (96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'),
 (97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'),
 (98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'),
@@ -956,12 +954,12 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
 (110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', NULL),
 (111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', NULL),
-(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'),
-(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'),
-(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'),
-(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 75, 'boolean', 'system', 'upload'),
-(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 75, 'string', 'system', 'upload'),
-(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'),
+(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'),
+(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'),
+(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'),
+(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'),
+(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'),
+(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'),
 (118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'),
 (119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'),
 (120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'),
@@ -979,7 +977,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'),
 (133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'),
 (134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'),
-(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'),
+(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'),
 (136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
 (137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'),
 (138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'),
@@ -1000,7 +998,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'),
 (154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'),
 (155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'),
-(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'),
+(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'),
 (157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL),
 (158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'),
 (159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'),
@@ -1018,7 +1016,14 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL),
 (172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
 (173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
-(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 25, 'boolean', 'system', NULL);
+(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL),
+(176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player'),
+(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', NULL),
+(178, 'upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload'),
+(179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse'),
+(180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
+(181, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface'),
+(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player');
 
 -- --------------------------------------------------------
 
@@ -1030,7 +1035,7 @@ DROP TABLE IF EXISTS `rating`;
 CREATE TABLE IF NOT EXISTS `rating` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
-  `object_type` enum('artist','album','song','stream','live_stream','video','playlist','tvshow','tvshow_season','podcast','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `rating` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`),
@@ -1064,8 +1069,8 @@ CREATE TABLE IF NOT EXISTS `recommendation_item` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `recommendation` int(11) UNSIGNED NOT NULL,
   `recommendation_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `rel` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `rel` varchar(256) DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1081,9 +1086,9 @@ CREATE TABLE IF NOT EXISTS `search` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `type` enum('private','public') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `rules` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `logic_operator` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rules` mediumtext NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `logic_operator` varchar(3) DEFAULT NULL,
   `random` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `limit` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `last_count` int(11) DEFAULT NULL,
@@ -1124,13 +1129,13 @@ CREATE TABLE IF NOT EXISTS `session` (
   `id` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `expire` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext NOT NULL,
   `ip` varbinary(255) DEFAULT NULL,
-  `type` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `agent` varchar(255) DEFAULT NULL,
   `geo_latitude` decimal(10,6) DEFAULT NULL,
   `geo_longitude` decimal(10,6) DEFAULT NULL,
-  `geo_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `geo_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `expire` (`expire`),
   KEY `type` (`type`)
@@ -1145,7 +1150,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 DROP TABLE IF EXISTS `session_remember`;
 CREATE TABLE IF NOT EXISTS `session_remember` (
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `expire` int(11) DEFAULT NULL,
   PRIMARY KEY (`username`,`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1158,9 +1163,9 @@ CREATE TABLE IF NOT EXISTS `session_remember` (
 
 DROP TABLE IF EXISTS `session_stream`;
 CREATE TABLE IF NOT EXISTS `session_stream` (
-  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `user` int(11) UNSIGNED NOT NULL,
-  `agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `agent` varchar(255) DEFAULT NULL,
   `expire` int(11) UNSIGNED NOT NULL,
   `ip` varbinary(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -1182,12 +1187,12 @@ CREATE TABLE IF NOT EXISTS `share` (
   `allow_download` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `expire_days` int(4) UNSIGNED NOT NULL DEFAULT 0,
   `max_counter` int(4) UNSIGNED NOT NULL DEFAULT 0,
-  `secret` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `secret` varchar(20) DEFAULT NULL,
   `counter` int(4) UNSIGNED NOT NULL DEFAULT 0,
   `creation_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `lastvisit_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `public_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `public_url` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1200,17 +1205,18 @@ CREATE TABLE IF NOT EXISTS `share` (
 DROP TABLE IF EXISTS `song`;
 CREATE TABLE IF NOT EXISTS `song` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `album` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `disk` smallint(5) UNSIGNED DEFAULT NULL,
   `year` mediumint(4) UNSIGNED NOT NULL DEFAULT 0,
   `artist` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
   `bitrate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
   `rate` mediumint(8) UNSIGNED NOT NULL DEFAULT 0,
   `mode` enum('abr','vbr','cbr') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `size` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `time` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `time` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `track` smallint(6) DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `played` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
@@ -1219,7 +1225,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `addition_time` int(11) UNSIGNED DEFAULT 0,
   `user_upload` int(11) DEFAULT NULL,
   `license` int(11) DEFAULT NULL,
-  `composer` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `composer` varchar(256) DEFAULT NULL,
   `channels` mediumint(9) DEFAULT NULL,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -1244,10 +1250,10 @@ CREATE TABLE IF NOT EXISTS `song` (
 DROP TABLE IF EXISTS `song_data`;
 CREATE TABLE IF NOT EXISTS `song_data` (
   `song_id` int(11) UNSIGNED NOT NULL,
-  `comment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lyrics` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `label` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `language` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `lyrics` text DEFAULT NULL,
+  `label` varchar(128) DEFAULT NULL,
+  `language` varchar(128) DEFAULT NULL,
   `waveform` mediumblob DEFAULT NULL,
   `replaygain_track_gain` decimal(10,6) DEFAULT NULL,
   `replaygain_track_peak` decimal(10,6) DEFAULT NULL,
@@ -1270,12 +1276,12 @@ CREATE TABLE IF NOT EXISTS `song_preview` (
   `session` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `artist` int(11) DEFAULT NULL,
   `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
   `album_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `disk` int(11) DEFAULT NULL,
   `track` int(11) DEFAULT NULL,
-  `file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1289,15 +1295,15 @@ DROP TABLE IF EXISTS `stream_playlist`;
 CREATE TABLE IF NOT EXISTS `stream_playlist` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sid` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `info_url` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `image_url` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `author` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `album` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `time` smallint(5) DEFAULT NULL,
-  `codec` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` text NOT NULL,
+  `info_url` text DEFAULT NULL,
+  `image_url` text DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `album` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `time` int(11) DEFAULT NULL,
+  `codec` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `track_num` smallint(5) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `sid` (`sid`)
@@ -1358,9 +1364,9 @@ CREATE TABLE IF NOT EXISTS `tag_merge` (
 DROP TABLE IF EXISTS `tmp_browse`;
 CREATE TABLE IF NOT EXISTS `tmp_browse` (
   `id` int(13) NOT NULL AUTO_INCREMENT,
-  `sid` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `data` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `object_data` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sid` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `data` longtext NOT NULL,
+  `object_data` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`sid`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1374,7 +1380,7 @@ DROP TABLE IF EXISTS `tmp_playlist`;
 CREATE TABLE IF NOT EXISTS `tmp_playlist` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `session` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(32) DEFAULT NULL,
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `session` (`session`),
@@ -1407,10 +1413,10 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist_data` (
 DROP TABLE IF EXISTS `tvshow`;
 CREATE TABLE IF NOT EXISTS `tvshow` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `summary` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(80) DEFAULT NULL,
+  `summary` varchar(256) DEFAULT NULL,
   `year` int(11) UNSIGNED DEFAULT NULL,
-  `prefix` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `prefix` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1423,10 +1429,10 @@ CREATE TABLE IF NOT EXISTS `tvshow` (
 DROP TABLE IF EXISTS `tvshow_episode`;
 CREATE TABLE IF NOT EXISTS `tvshow_episode` (
   `id` int(11) UNSIGNED NOT NULL,
-  `original_name` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `original_name` varchar(80) DEFAULT NULL,
   `season` int(11) UNSIGNED NOT NULL,
   `episode_number` int(11) UNSIGNED NOT NULL,
-  `summary` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `summary` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1452,8 +1458,8 @@ CREATE TABLE IF NOT EXISTS `tvshow_season` (
 
 DROP TABLE IF EXISTS `update_info`;
 CREATE TABLE IF NOT EXISTS `update_info` (
-  `key` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `key` varchar(128) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1462,7 +1468,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '550005'),
+('db_version', '600038'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1475,9 +1481,9 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fullname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
   `apikey` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `access` tinyint(4) UNSIGNED NOT NULL,
@@ -1485,10 +1491,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   `last_seen` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `create_date` int(11) UNSIGNED DEFAULT NULL,
   `validation` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `state` varchar(64) DEFAULT NULL,
+  `city` varchar(64) DEFAULT NULL,
   `fullname_public` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `rsstoken` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `streamtoken` varchar(255) DEFAULT NULL,
   `catalog_filter_group` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
@@ -1504,7 +1511,7 @@ DROP TABLE IF EXISTS `user_activity`;
 CREATE TABLE IF NOT EXISTS `user_activity` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) UNSIGNED NOT NULL,
-  `action` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action` varchar(20) DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
@@ -1520,8 +1527,8 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
 DROP TABLE IF EXISTS `user_data`;
 CREATE TABLE IF NOT EXISTS `user_data` (
   `user` int(11) DEFAULT NULL,
-  `key` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `key` varchar(128) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_data` (`user`,`key`),
   KEY `user` (`user`),
   KEY `key` (`key`)
@@ -1538,7 +1545,7 @@ CREATE TABLE IF NOT EXISTS `user_flag` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`),
@@ -1569,15 +1576,18 @@ CREATE TABLE IF NOT EXISTS `user_follower` (
 
 DROP TABLE IF EXISTS `user_playlist`;
 CREATE TABLE IF NOT EXISTS `user_playlist` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user` int(11) DEFAULT NULL,
+  `playqueue_time` int(11) UNSIGNED NOT NULL,
+  `playqueue_client` varchar(255) NOT NULL,
+  `user` int(11) NOT NULL DEFAULT 0,
   `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `track` smallint(6) DEFAULT NULL,
+  `track` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
   `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `user` (`user`)
+  PRIMARY KEY (`playqueue_time`,`playqueue_client`,`user`,`track`),
+  KEY `user` (`user`),
+  KEY `object_type` (`object_type`),
+  KEY `object_id` (`object_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1590,7 +1600,7 @@ DROP TABLE IF EXISTS `user_preference`;
 CREATE TABLE IF NOT EXISTS `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
   KEY `user` (`user`),
   KEY `preference` (`preference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1715,7 +1725,14 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 172, '0'),
 (-1, 173, '1'),
 (-1, 174, '0'),
-(-1, 175, '0');
+(-1, 175, '0'),
+(-1, 176, '0'),
+(-1, 177, '1'),
+(-1, 178, '25'),
+(-1, 179, '1'),
+(-1, 180, '1'),
+(-1, 181, '1'),
+(-1, 182, '0');
 
 -- --------------------------------------------------------
 
@@ -1726,8 +1743,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 DROP TABLE IF EXISTS `user_pvmsg`;
 CREATE TABLE IF NOT EXISTS `user_pvmsg` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `subject` varchar(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `message` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subject` varchar(80) DEFAULT NULL,
+  `message` text DEFAULT NULL,
   `from_user` int(11) UNSIGNED NOT NULL,
   `to_user` int(11) UNSIGNED NOT NULL,
   `is_read` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
@@ -1745,12 +1762,12 @@ DROP TABLE IF EXISTS `user_shout`;
 CREATE TABLE IF NOT EXISTS `user_shout` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
-  `text` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` text NOT NULL,
   `date` int(11) UNSIGNED NOT NULL,
   `sticky` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `data` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sticky` (`sticky`),
   KEY `date` (`date`),
@@ -1783,16 +1800,16 @@ CREATE TABLE IF NOT EXISTS `user_vote` (
 DROP TABLE IF EXISTS `video`;
 CREATE TABLE IF NOT EXISTS `video` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `file` varchar(4096) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `video_codec` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `audio_codec` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `video_codec` varchar(255) DEFAULT NULL,
+  `audio_codec` varchar(255) DEFAULT NULL,
   `resolution_x` mediumint(8) UNSIGNED NOT NULL,
   `resolution_y` mediumint(8) UNSIGNED NOT NULL,
   `time` int(11) UNSIGNED NOT NULL,
   `size` bigint(20) UNSIGNED NOT NULL,
-  `mime` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mime` varchar(255) DEFAULT NULL,
   `addition_time` int(11) UNSIGNED NOT NULL,
   `update_time` int(11) UNSIGNED DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT 1,
@@ -1828,7 +1845,7 @@ CREATE TABLE IF NOT EXISTS `wanted` (
   `artist` int(11) DEFAULT NULL,
   `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `year` int(4) DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `accepted` tinyint(1) NOT NULL DEFAULT 0,

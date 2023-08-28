@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -80,8 +80,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
-            $info     = $this->get_info($catalog_id);
-
+            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -95,13 +94,13 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function prepare_media($media)
     {
-        debug_event('beets_catalog', 'Play: Started remote stream - ' . $media->file, 5);
+        /** @var Song $media */
+        debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
 
         return $media;
     }
 
     /**
-     *
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param integer $count song count
      * @param array $song Song array
@@ -109,6 +108,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
     {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
+            return;
+        }
         if ($ignoreTicker || Ui::check_ticker()) {
             Ui::update_text($prefix . '_count_' . $this->id, $count);
             if (isset($song)) {
@@ -125,26 +127,30 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Adds new songs to the catalog
      * @param array $options
+     * @return int
      */
     public function add_to_catalog($options = null)
     {
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
+        /* @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
-        $parser->start($parser->getTimedCommand($this->listCommand, 'added', null));
+        $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_bottom();
         }
+
+        return $this->addedSongs;
     }
 
     /**
@@ -156,9 +162,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $song['catalog'] = $this->id;
 
         if ($this->checkSong($song)) {
-            debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
+            debug_event(self::class, 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
+            $album_id         = Album::check($song['catalog'], $song['album'], $song['year'], $song['mbid'] ?? null, $song['mb_releasegroupid'] ?? null, $song['album_artist'] ?? null, $song['release_type'] ?? null, $song['release_status'] ?? null, $song['original_year'] ?? null, $song['barcode'] ?? null, $song['catalog_number'] ?? null, $song['version'] ?? null);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
@@ -212,9 +218,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $inserted = Song::insert($song);
         if ($inserted) {
-            debug_event('beets_catalog', 'Adding song ' . $song['file'], 5, 'ampache-catalog');
+            debug_event(self::class, 'Adding song ' . $song['file'], 5);
         } else {
-            debug_event('beets_catalog', 'Insert failed for ' . $song['file'], 1);
+            debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
             /* HINT: filename (file path) */
             AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
             echo AmpError::display('general');
@@ -225,12 +231,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Verify songs.
-     * @return array
+     * @return int
      */
     public function verify_catalog_proc()
     {
-        debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
+        debug_event(self::class, 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
         /* @var Handler $parser */
@@ -240,7 +245,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $this->updateUi('verify', $this->verifiedSongs, null, true);
         $this->update_last_update();
 
-        return array('updated' => $this->verifiedSongs, 'total' => $this->verifiedSongs);
+        return $this->verifiedSongs;
     }
 
     /**
@@ -266,10 +271,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Cleans the Catalog.
      * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
      * So first we get the difference between our and the beets database and then clean up the rest.
-     * @return integer
+     * @return int
      */
     public function clean_catalog_proc()
     {
+        /* @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
         $parser->setHandler($this, 'removeFromDeleteList');
@@ -348,11 +354,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($path));
         $row        = Dba::fetch_row($db_results);
-        if (empty($row)) {
-            return false;
-        }
 
-        return $row[0];
+        return $row[0] ?? 0;
     }
 
     /**

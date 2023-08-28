@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,7 +62,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 
     protected function showRefresh(): void
     {
-        $refresh_limit = $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
+        $refresh_limit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0;
         if ($refresh_limit > 5) {
             $ajax_url      = '?page=localplay&action=command&command=refresh';
             require_once Ui::find_template('javascript_refresh.inc.php');

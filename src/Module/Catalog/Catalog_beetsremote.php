@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,14 +38,11 @@ class Catalog_beetsremote extends Catalog
     protected $version     = '000001';
     protected $type        = 'beetsremote';
     protected $description = 'Beets Remote Catalog';
-
     protected $listCommand = 'item/query';
 
-    /**
-     * Beets Database File
-     * @var string
-     */
-    protected $uri;
+    protected string $uri = '';
+
+    public int $catalog_id;
 
     /**
      * get_create_help
@@ -158,4 +155,13 @@ class Catalog_beetsremote extends Catalog
 
         return (boolean)$this->getIdFromPath($song['file']);
     }
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path()
+    {
+        return $this->uri;
+    } // get_path
 }

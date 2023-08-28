@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -35,14 +36,16 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Podcast $podcast */
 /** @var string $object_type */
 
-$browse = new Browse();
+$access75 = Access::check('interface', 75);
+$access50 = ($access75 || Access::check('interface', 50));
+$browse   = new Browse();
 $browse->set_type($object_type);
 
 Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
     $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
-    Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
+Art::display('podcast', $podcast->id, $podcast->get_fullname(), $thumb); ?>
 </div>
 <?php if ($podcast->description) { ?>
 <div id="item_summary">
@@ -77,7 +80,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->id); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if ($access50) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>">
@@ -89,7 +92,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
     <?php if (AmpConfig::get('use_rss')) {
         ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
     } ?>
@@ -109,7 +112,7 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
             <?php echo Ajax::button_with_text('?page=podcast&action=sync&podcast_id=' . $podcast->id, 'file_refresh', T_('Sync'), 'sync_podcast_' . $podcast->id); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check('interface', 75)) { ?>
+        <?php if ($access75) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
@@ -130,9 +133,8 @@ Ui::show_box_top($podcast->get_fullname(), 'info-box'); ?>
     </div>
     <div id="tabs_content">
         <div id="episodes" class="tab_content" style="display: block;">
-<?php
-    $browse->show_objects($object_ids, true);
-    $browse->store(); ?>
+<?php $browse->show_objects($object_ids, true);
+$browse->store(); ?>
         </div>
     </div>
 </div>

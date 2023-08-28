@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,6 @@ use Ampache\Module\Util\Ui;
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
 /** @var string $cel_tags */
-
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

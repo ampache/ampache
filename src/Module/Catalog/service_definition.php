@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,10 +28,13 @@ use Ampache\Module\Catalog\Update\UpdateCatalog;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
+use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolder;
+use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
 use function DI\autowire;
 
 return [
     UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
+    UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
     GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
 ];

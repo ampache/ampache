@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
 
 final class ArtistAlbums4Method
@@ -44,34 +43,34 @@ final class ArtistAlbums4Method
      * This returns the albums of an artist
      *
      * @param array $input
+     * @param User $user
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums(array $input): bool
+    public static function artist_albums(array $input, User $user): bool
     {
         if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new Artist($input['filter']);
-        $albums = array();
+        $artist  = new Artist($input['filter']);
+        $results = array();
         if (isset($artist->id)) {
-            $albums = static::getAlbumRepository()->getByArtist($artist->id);
+            $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
-        $user   = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::albums($albums, array(), $user);
+                echo Json4_Data::albums($results, array(), $user);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);
                 Xml4_Data::set_limit($input['limit'] ?? 0);
-                echo Xml4_Data::albums($albums, array(), $user);
+                echo Xml4_Data::albums($results, array(), $user);
         }
 
         return true;

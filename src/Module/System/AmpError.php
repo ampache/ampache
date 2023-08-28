@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ namespace Ampache\Module\System;
 class AmpError
 {
     private static $state  = false; // set to one when an error occurs
-     public static $errors = array(); // Errors array key'd array with errors that have occurred
+    public static $errors  = array(); // Errors array key'd array with errors that have occurred
 
     /**
      * __destruct

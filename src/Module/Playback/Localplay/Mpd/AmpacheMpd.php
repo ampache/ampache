@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -122,7 +122,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`)  VALUES (?, ?, ?, ?, ?)";
+        $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = !empty(Core::get_global('user'))
             ? Core::get_global('user')->id
             : -1;
@@ -590,10 +590,6 @@ class AmpacheMpd extends localplay_controller
         }
         $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
 
-        if ($this->_mpd->connected) {
-            return true;
-        }
-
-        return false;
+        return $this->_mpd->connected;
     } // connect
 }

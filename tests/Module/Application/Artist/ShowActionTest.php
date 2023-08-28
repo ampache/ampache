@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -114,7 +114,7 @@ class ShowActionTest extends MockeryTestCase
             )
             ->once();
 
-        $this->expectOutputString('You have requested an Artist that does not exist.');
+        $this->expectOutputString('You have requested an object that does not exist');
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
@@ -130,6 +130,7 @@ class ShowActionTest extends MockeryTestCase
         $artistId         = 666;
         $catalogId        = 42;
         $multi_object_ids = ['some-ids'];
+        $objectType       = 'album_disk';
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -146,7 +147,7 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'multi_object_ids' => $multi_object_ids,
                     'object_ids' => null,
-                    'object_type' => 'album',
+                    'object_type' => $objectType,
                     'artist' => $artist,
                     'gatekeeper' => $gatekeeper,
                 ]
@@ -175,6 +176,11 @@ class ShowActionTest extends MockeryTestCase
             ->andReturnFalse();
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE)
             ->once()
             ->andReturnTrue();
@@ -198,6 +204,7 @@ class ShowActionTest extends MockeryTestCase
         $artistId   = 666;
         $catalogId  = 42;
         $object_ids = ['some-ids'];
+        $objectType = 'album_disk';
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -214,7 +221,7 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'multi_object_ids' => null,
                     'object_ids' => $object_ids,
-                    'object_type' => 'album',
+                    'object_type' => $objectType,
                     'artist' => $artist,
                     'gatekeeper' => $gatekeeper,
                 ]
@@ -239,6 +246,11 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $artist->shouldReceive('isNew')
             ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::ALBUM_GROUP)
             ->once()
             ->andReturnFalse();
 

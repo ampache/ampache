@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,15 +52,15 @@ if (!empty($albums)) {
         <?php if ($show_play) { ?>
         <div class="play_album">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'play_album_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', T_('Play'), 'play_album_' . $album->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $album->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $album->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
             <?php } ?>
         <?php } ?>
-        <?php echo Ajax::button('?action=basket&type=album_full&' . $album->get_http_album_query_ids('id'), 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album->id); ?>
+        <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album->id); ?>
         </div>
         <?php } ?>
         <?php

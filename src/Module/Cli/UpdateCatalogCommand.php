@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,6 +47,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-u|--update', T_('Update local object metadata using external plugins'), 'boolval', false)
             ->option('-i|--import', T_('Adds new media files and imports playlist files'),  'boolval',false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
+            ->option('-t|--garbage', T_('Update table mapping, counts and delete garbage data'), 'boolval', false)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
             ->argument('[catalogType]', T_('Type of Catalog (optional)'), 'local')
@@ -59,10 +60,11 @@ final class UpdateCatalogCommand extends Command
     ): void {
         $values = $this->values();
         // do a default list of actions if you don't have anything set
-        if (empty($values['cleanup']) && empty($values['verify']) && empty($values['add']) && empty($values['art']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local' && !empty($values['safe'])) {
+        if (empty($values['cleanup']) && empty($values['add']) && empty($values['art']) && empty($values['verify']) && empty($values['update']) && empty($values['import']) && empty($values['optimize']) && empty($values['memorylimit']) && empty($values['catalogName']) && $values['catalogType'] === 'local') {
             $values['cleanup'] = true;
             $values['add']     = true;
             $values['art']     = true;
+            $values['garbage'] = true;
             $values['verify']  = true;
         }
 
@@ -77,6 +79,7 @@ final class UpdateCatalogCommand extends Command
             $values['verify'],
             $values['update'],
             $values['optimize'],
+            $values['garbage'],
             $catalogName,
             $catalogType
         );

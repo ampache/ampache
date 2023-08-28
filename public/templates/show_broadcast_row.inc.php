@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,8 +30,8 @@ use Ampache\Module\Api\Ajax;
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if (AmpConfig::get('directplay')) {
-    echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id, 'play', T_('Play'), 'play_broadcast_' . $libitem->id);
-} ?>
+        echo Ajax::button('?page=stream&action=directplay&object_type=broadcast&object_id=' . $libitem->id, 'play', T_('Play'), 'play_broadcast_' . $libitem->id);
+    } ?>
     </div>
 </td>
 <td class="cel_name"><?php echo $libitem->name; ?></td>

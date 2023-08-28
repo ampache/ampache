@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,13 +46,15 @@ final class Timeline4Method
      * This gets a user timeline from their username
      *
      * @param array $input
+     * @param User $user
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline(array $input): bool
+    public static function timeline(array $input, User $user): bool
     {
+        unset($user);
         if (AmpConfig::get('sociable')) {
             if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
                 return false;
@@ -65,7 +67,7 @@ final class Timeline4Method
                 $user = User::get_from_username($username);
                 if ($user !== null) {
                     if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $activities = static::getUseractivityRepository()->getActivities(
+                        $results = static::getUseractivityRepository()->getActivities(
                             $user->id,
                             $limit,
                             $since
@@ -73,10 +75,10 @@ final class Timeline4Method
                         ob_end_clean();
                         switch ($input['api_format']) {
                             case 'json':
-                                echo Json4_Data::timeline($activities);
-                            break;
+                                echo Json4_Data::timeline($results);
+                                break;
                             default:
-                                echo Xml4_Data::timeline($activities);
+                                echo Xml4_Data::timeline($results);
                         }
                     }
                 }

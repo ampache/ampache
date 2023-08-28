@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,6 +58,11 @@ class DeleteActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -67,11 +72,6 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

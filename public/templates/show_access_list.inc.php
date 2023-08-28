@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,12 +22,12 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\Util\Ui;
 
-?>
-<?php Ui::show_box_top(T_('Access Control'), 'box box_access_control');
+/** @var Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface $access $access */
+
+Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');
@@ -66,7 +66,6 @@ $web_path   = AmpConfig::get('web_path'); ?>
 <tbody>
 <?php
     /* Start foreach List Item */
-    /** @var AccessListItemInterface $access $access */
     foreach ($list as $access) { ?>
 <tr>
     <td><?php echo scrub_out($access->getName()); ?></td>

@@ -3,7 +3,7 @@
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,17 +32,17 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="form-group">
         <?php $languages = get_languages();
-            $var_name    = $htmllang . "_lang";
+$var_name                = $htmllang . "_lang";
 
-            echo "<select class=\"form-control\" name=\"htmllang\">\n";
+echo "<select class=\"form-control\" name=\"htmllang\">\n";
 
-            foreach ($languages as $lang => $name) {
-                $lang_name = $lang . "_lang";
-                $selected  = ($var_name == $lang_name) ? "selected=\"selected\"" : '';
+foreach ($languages as $lang => $name) {
+    $lang_name = $lang . "_lang";
+    $selected  = ($var_name == $lang_name) ? "selected=\"selected\"" : '';
 
-                echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
-            } // end foreach
-            echo "</select>\n"; ?>
+    echo "\t<option value=\"$lang\" " . $selected . ">$name</option>\n";
+} // end foreach
+echo "</select>\n"; ?>
             </div>
             <button type="submit" class="btn btn-warning"><?php echo T_('Start Configuration'); ?></button>
         </form>

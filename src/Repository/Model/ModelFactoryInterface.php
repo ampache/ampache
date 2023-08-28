@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,8 +36,7 @@ interface ModelFactoryInterface
     ): Browse;
 
     public function createSong(
-        ?int $songId = null,
-        string $limitThreshold = ''
+        ?int $songId = null
     ): Song;
 
     public function createRating(
@@ -52,6 +51,10 @@ interface ModelFactoryInterface
     public function createAlbum(
         ?int $albumId = null
     ): Album;
+
+    public function createAlbumDisk(
+        ?int $albumDiskId = null
+    ): AlbumDisk;
 
     public function createArtist(
         ?int $artistId = null
@@ -74,10 +77,6 @@ interface ModelFactoryInterface
     public function createLiveStream(
         int $liveStreamId
     ): Live_Stream;
-
-    public function createChannel(
-        int $channelId
-    ): Channel;
 
     public function createPodcast(
         int $podcastId

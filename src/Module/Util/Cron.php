@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -37,13 +37,11 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
 {
-
     /**
      * set_cron_date
      * Record when the cron has finished.

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GoodbyeMethod
@@ -43,14 +44,16 @@ final class GoodbyeMethod
      * Destroy session for auth key.
      *
      * @param array $input
+     * @param User $user
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye(array $input): bool
+    public static function goodbye(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
+        unset($user);
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";

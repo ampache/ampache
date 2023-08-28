@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,6 +30,7 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -63,19 +64,20 @@ final class AlbumMethod implements MethodInterface
      * @param ResponseInterface $response
      * @param ApiOutputInterface $output
      * @param array $input
+     * @param User $user
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
-     *
      * @return ResponseInterface
      *
-     * @throws ResultEmptyException
      * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
         ResponseInterface $response,
         ApiOutputInterface $output,
-        array $input
+        array $input,
+        User $user
     ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 
@@ -85,9 +87,8 @@ final class AlbumMethod implements MethodInterface
             );
         }
 
-        $user  = $gatekeeper->getUser();
         $album = $this->modelFactory->createAlbum((int) $objectId);
-        if ($album->isNew() || !$user) {
+        if ($album->isNew()) {
             throw new ResultEmptyException((string) $objectId);
         }
         $include = [];

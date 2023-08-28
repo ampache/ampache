@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,17 +96,17 @@ final class LicenseRepository implements LicenseRepositoryInterface
     public function find(string $searchValue): ?int
     {
         // lookup the license by name
-        $sql        = 'SELECT `id` FROM `license` WHERE `name` = ?';
+        $sql        = 'SELECT `id` FROM `license` WHERE `name` = ? LIMIT 1;';
         $db_results = Dba::read($sql, array($searchValue));
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        if ($row = Dba::fetch_assoc($db_results)) {
             return (int) $row['id'];
         }
         // lookup the license by external_link
-        $sql        = 'SELECT `id` FROM `license` WHERE `external_link` = ?';
+        $sql        = 'SELECT `id` FROM `license` WHERE `external_link` = ? LIMIT 1;';
         $db_results = Dba::read($sql, array($searchValue));
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        if ($row = Dba::fetch_assoc($db_results)) {
             return (int) $row['id'];
         }
 

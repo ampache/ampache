@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2022 Ampache.org
+ * Copyright Ampache.org, 2001-2023
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Clip;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
-use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
@@ -43,26 +38,9 @@ final class VideoRepository implements VideoRepositoryInterface
         int $userId,
         ?int $count = 1
     ): array {
-        $results = [];
-
-        if (!$count) {
-            $count = 1;
-        }
-
-        $sql   = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ";
-        $where = "WHERE `video`.`enabled` = '1' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-            $where .= "AND `catalog`.`enabled` = '1' ";
-        }
-
-        $sql .= $where;
-        if (AmpConfig::get('catalog_filter') && $userId > 0) {
-            $sql .= " AND" . Catalog::get_user_filter('video', $userId);
-        }
-        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
+        $results    = [];
+        $sql        = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY RAND() LIMIT " . (string) ($count);
         $db_results = Dba::read($sql);
-
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }
@@ -82,7 +60,7 @@ final class VideoRepository implements VideoRepositoryInterface
         $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
 
         $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower((string) $type) . '`;';
-        $db_results = Dba::read($sql,array());
+        $db_results = Dba::read($sql);
         if ($results = Dba::fetch_assoc($db_results)) {
             if (array_key_exists('count', $results)) {
                 return (int) $results['count'];
