@@ -762,7 +762,9 @@ class Stream
             }
         }
         // check for dupe ports
-        $web_path = preg_replace('/(^.*?):([0-9]+)(:.*)?$/', '$1$3', $web_path);
+        if (substr_count($web_path, ':') === 2) {
+            $web_path = preg_replace('/(^.*?):([0-9]+)(:.*)?$/', '$1$3', $web_path);
+        }
 
         return $web_path . $base_url;
     } // get_base_url
