@@ -90,12 +90,24 @@ final class GetSimilarMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::indexes($results, $type, $user);
+                switch ($type) {
+                    case 'artist':
+                        echo Json_Data::artists($results, array(), $user);
+                        break;
+                    case 'song':
+                        echo Json_Data::songs($results, $user);
+                }
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::indexes($results, $type, $user);
+                switch ($type) {
+                    case 'artist':
+                        echo Xml_Data::artists($results, array(), $user);
+                        break;
+                    case 'song':
+                        echo Xml_Data::songs($results, $user);
+                }
         }
 
         return true;
