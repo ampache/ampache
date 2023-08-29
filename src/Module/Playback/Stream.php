@@ -761,6 +761,8 @@ class Stream
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
         }
+        // check for dupe ports
+        $web_path = preg_replace('/(^.*?):([0-9]+)(:.*)?$/', '$1$3', $web_path);
 
         return $web_path . $base_url;
     } // get_base_url
