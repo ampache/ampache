@@ -2657,7 +2657,7 @@ abstract class Catalog extends database_object
             ? $song->artist
             : Artist::check($artist, $artist_mbid);
         if ($albumartist || !empty($song->albumartist)) {
-            $new_song->albumartist = ($is_upload_albumartist)
+            $new_song->albumartist = ($is_upload_albumartist || !$albumartist)
                 ? $song->albumartist
                 : Artist::check($albumartist, $albumartist_mbid);
             if (!$new_song->albumartist) {
