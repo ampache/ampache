@@ -78,14 +78,13 @@ final class PreferenceEditMethod
 
             return false;
         }
-        $preference   = Preference::get($pref_name, $user->id);
-        $output_array = array('preference' => $preference);
+        $results = Preference::get($pref_name, $user->id);
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($results, 'preference');
         }
 
         return true;

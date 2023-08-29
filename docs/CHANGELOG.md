@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Ampache 6.0.1
+
+### Fixed
+
+* Check for duplicate ports in stream URL's
+* Songs and podcast_episodes with ABR being overwritten with VBR
+
+## API 6.0.1
+
+### Changed
+
+* API6 XML
+  * get_similar: return song objects to match json
+
+### Fixed
+
+* API6
+  * user_preference: returned array instead of object
+  * system_preference: returned array instead of object
+  * preference_create: returned array instead of object
+  * preference_edit: returned array instead of object
+
 ## Ampache 6.0.0
 
 **NOTE** For database update 600005; please consider using the CLI update command (`php bin/cli admin:updateDatabase -e`)
