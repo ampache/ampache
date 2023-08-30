@@ -199,11 +199,17 @@ final class ArtistSearch implements SearchInterface
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
                         $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking')))";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking')))";
+                        $where[]      = "(`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?))) OR `artist`.`id` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking'))))";
                         $parameters[] = $input;
                     } else {
                         $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?)))";
                         $parameters[] = $input;
+                    }
+                    if ($looking == 'album') {
+                        $join['album'] = true;
+                    }
+                    if ($looking == 'song') {
+                        $join['song'] = true;
                     }
                     break;
                 case 'myplayed':
