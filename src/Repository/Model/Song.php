@@ -2327,7 +2327,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics) {
                     // save the lyrics if not set before
-                    self::update_lyrics($lyrics, $this->id);
+                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                        self::update_lyrics($lyrics['text'], $this->id);
+                    }
 
                     return $lyrics;
                 }
