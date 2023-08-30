@@ -247,7 +247,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $data              = pathinfo($this->file);
-        $this->type        = strtolower((string) $data['extension']);
+        $this->type        = strtolower((string)($data['extension'] ?? ''));
         $this->total_count = (int)$this->total_count;
 
         return true;
