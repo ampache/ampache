@@ -2331,7 +2331,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
 
-        return null;
+        return array();
     }
 
     /**
