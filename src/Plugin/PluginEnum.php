@@ -48,6 +48,7 @@ final class PluginEnum
         'libravatar' => AmpacheLibravatar::class,
         'librefm' => Ampachelibrefm::class,
         'listenbrainz' => Ampachelistenbrainz::class,
+        'lyrist' => AmpacheLyristLyrics::class,
         'matomo' => AmpacheMatomo::class,
         'musicbrainz' => AmpacheMusicBrainz::class,
         'omdb' => AmpacheOmdb::class,
