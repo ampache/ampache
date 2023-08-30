@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## Ampache 6.0.2
+
+### Added
+
+* Plugins
+  * Lyrist Lyrics (https://github.com/asrvd/lyrist)
+
+### Fixed
+
+* Avoid Orphan album artist when song has empty albumartist tag
+* Various runtime errors with missing data
+* Admin page 'browse uploads' didn't need to be so strict
+* Search
+  * ArtistSearch: Joins for songrating and albumrating were missing
+
+## API 6.0.1
+
+**NO CHANGE**
+
 ## Ampache 6.0.1
 
 ### Fixed
@@ -283,7 +302,7 @@ You can find example Subsonic responses from an official server and Ampache serv
 
 ## API 6.0.0
 
-Stream token's will let you design permalinked streams and allow users to stream iwhtout re authenticating to the server. [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)
+Stream token's will let you design permalinked streams and allow users to stream without re authenticating to the server. [wiki](https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams)
 
 ### Added
 
@@ -2062,7 +2081,7 @@ There also a few API changes to enable a bit better control for older clients.
 
 * Scrobble plugins fire after stat recording
 * Split art search by 5 instead of 4
-* Increase autoupdate check time and don't force it on each logon
+* Increase AutoUpdate check time and don't force it on each logon
 * Updated CSS and separated mashup covers from other types
 * Don't use mail_enabled for registration checks
 * WebUI - Browse by album_artist instead of single artists
@@ -2838,7 +2857,7 @@ Notes about this release that can't be summed up in a log line
 ## 3.9.1
 
 * Fixed Beets catalog creation and updating.
-* Autoupdate now ignores pre-release (preview) versions.
+* AutoUpdate now ignores pre-release (preview) versions.
 * Fixed various command ine utilities in bin folder.
 * Fixed XML api syntax for logging in with user name.
 * Fixed newline display in xml data returned in playlist, etc.
@@ -2963,7 +2982,7 @@ Notes about this release that can't be summed up in a log line
 * Fixed potential security vulnerability on smartplaylist search rule and catalog management actions (thanks Roman Ammann)
 * Fixed song comparison issue on arrays (genre ...) when updating from tag
 * Fixed song insertion issue if track year is out of range
-* Fixed unexpected artist summary autoupdate
+* Fixed unexpected artist summary AutoUpdate
 * Improved generated playlist filename (thanks yam655)
 * Fixed user avatar upload (thanks vader083)
 * Fixed waveform temporary file deletion issue if GD library is unavailable
