@@ -7,12 +7,17 @@
 * Plugins
   * Lyrist Lyrics (https://github.com/asrvd/lyrist)
 
+### Changed
+
+* Don't require catalog access to upload songs. (Ignore catalog_filter for upload actions)
+
 ### Fixed
 
 * Avoid Orphan album artist when song has empty albumartist tag
 * Various runtime errors with missing data during session timeouts
 * Admin page 'browse uploads' didn't need to be so strict
 * Database 600037 missing interactor check for the web updater
+* get_uploads_sql for artists could miss mapped artists
 * Search
   * ArtistSearch: Joins for songrating and albumrating were missing
 
