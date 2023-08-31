@@ -5515,10 +5515,12 @@ class Update
      */
     private static function _update_600037(Interactor $interactor = null): bool
     {
-        $interactor->info(
-            'update_table_counts',
-            true
-        );
+        if ($interactor) {
+            $interactor->info(
+                'update_table_counts',
+                true
+            );
+        }
         // update server total counts
         $catalog_disable = AmpConfig::get('catalog_disable');
         // tables with media items to count, song-related tables and the rest

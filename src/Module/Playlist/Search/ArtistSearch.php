@@ -48,6 +48,7 @@ final class ArtistSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
+        $search_user_id     = $search->search_user->id ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -124,7 +125,7 @@ final class ArtistSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'";
+                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
@@ -199,11 +200,17 @@ final class ArtistSearch implements SearchInterface
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
                         $where[] = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` NOT IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking')))";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
-                        $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?))) OR `$looking`.`$column` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking')))";
+                        $where[]      = "(`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?))) OR `artist`.`id` NOT IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `$column` FROM `$looking` WHERE `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking'))))";
                         $parameters[] = $input;
                     } else {
                         $where[]      = "`artist`.`id` IN (SELECT `id` FROM `artist` WHERE `id` IN (SELECT `artist_map`.`artist_id` FROM `$looking` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `$looking`.`id` WHERE `artist_map`.`object_type` = '$looking' AND `id` IN (SELECT `object_id` FROM `rating` WHERE `user` = " . $search->search_user->id . " AND `object_type`='$looking' AND `rating` $operator_sql ?)))";
                         $parameters[] = $input;
+                    }
+                    if ($looking == 'album') {
+                        $join['album'] = true;
+                    }
+                    if ($looking == 'song') {
+                        $join['song'] = true;
                     }
                     break;
                 case 'myplayed':

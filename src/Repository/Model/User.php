@@ -279,6 +279,27 @@ class User extends database_object
     } // load_playlist
 
     /**
+     * get_playlists
+     * Get your playlists and just your playlists
+     * @var bool $show_all
+     */
+    public function get_playlists($show_all): array
+    {
+        $results    = array();
+        $sql        = ($show_all)
+            ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
+            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
+
+        $params     = array($this->id);
+        $db_results = Dba::read($sql, $params);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance

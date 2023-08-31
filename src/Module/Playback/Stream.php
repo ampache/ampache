@@ -735,15 +735,15 @@ class Stream
         }
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_id = (!empty($streamToken))
-                ? $streamToken:
-                self::get_session();
+                ? $streamToken
+                : self::get_session();
             $base_url .= 'ssid=' . $session_id . '&';
         }
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get('web_path');
-        if (empty($web_path)) {
+        if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = AmpConfig::get('fallback_url');
         }
 
@@ -755,15 +755,11 @@ class Stream
             ? $matches[1]
             : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
-            if (isset($matches) && array_key_exists(1, $matches)) {
-                $web_path = str_replace(':' . $matches['1'], ':' . $http_port, (string)$web_path);
+            if (preg_match("/:(\d+)/", $web_path, $matches)) {
+                $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string)$web_path);
             } else {
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
-        }
-        // check for dupe ports
-        if (substr_count($web_path, ':') === 2) {
-            $web_path = preg_replace('/(^.*?):([0-9]+)(:.*)?$/', '$1$3', $web_path);
         }
 
         return $web_path . $base_url;

@@ -1131,15 +1131,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * Update artist associated user.
-     * @param integer $user
+     * Update artist associated user_id.
+     * @param integer $user_id
      * @return PDOStatement|boolean
      */
-    public function update_artist_user($user)
+    public function update_artist_user($user_id)
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($user, $this->id));
+        return Dba::write($sql, array($user_id, $this->id));
     }
 
     /**
