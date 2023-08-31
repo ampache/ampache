@@ -604,14 +604,23 @@ class Stream
      */
     public static function get_base_url($local = false)
     {
-        $session_string = (AmpConfig::get('use_auth') && AmpConfig::get('require_session'))
-            ? 'ssid=' . self::get_session() . '&'
-            : '';
+        $base_url = '/play/index.php?';
+        if (AmpConfig::get('use_play2')) {
+            $base_url .= 'action=play2&';
+        }
+        if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+            $session_id = (!empty($streamToken))
+                ? $streamToken:
+                self::get_session();
+            $base_url .= 'ssid=' . $session_id . '&';
+        }
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get('web_path');
-
+        if (empty($web_path)) {
+            $web_path = AmpConfig::get('fallback_url', '');
+        }
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
@@ -626,7 +635,11 @@ class Stream
                 $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
             }
         }
+        // check for dupe ports
+        if (substr_count($web_path, ':') === 2) {
+            $web_path = preg_replace('/(^.*?):([0-9]+)(:.*)?$/', '$1$3', $web_path);
+        }
 
-        return $web_path . "/play/index.php?$session_string";
+        return $web_path . $base_url;
     } // get_base_url
 }
