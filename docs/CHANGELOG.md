@@ -12,7 +12,7 @@
 * Avoid Orphan album artist when song has empty albumartist tag
 * Various runtime errors with missing data during session timeouts
 * Admin page 'browse uploads' didn't need to be so strict
-* Database 600037 missing interactor check
+* Database 600037 missing interactor check for the web updater
 * Search
   * ArtistSearch: Joins for songrating and albumrating were missing
 
