@@ -187,7 +187,7 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
 <?php } ?>
         <div id="playlists" class="tab_content">
         <?php
-$playlist_ids = Playlist::get_playlists($client->id, '', true, false);
+$playlist_ids = $client->get_playlists();
 $browse       = new Browse();
 $browse->set_type('playlist');
 $browse->set_simple_browse(false);
