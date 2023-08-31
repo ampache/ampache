@@ -55,6 +55,7 @@ class Upload
         ob_start();
         define('CLI', true);
 
+        $can_upload = Access::check('interface', AmpConfig::get('upload_access_level', 25));
         $catalog_id = AmpConfig::get('upload_catalog');
         $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
@@ -69,7 +70,10 @@ class Upload
             if (!$targetfile = self::check_target_path($targetdir . DIRECTORY_SEPARATOR . $_FILES['upl']['name'])) {
                 return self::rerror();
             }
-
+            // check that the minimum level of permission is there
+            if (!$can_upload) {
+                return self::rerror($targetfile);
+            }
             if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
                 debug_event(self::class, 'File uploaded to `' . $targetfile . '`.', 5);
 
@@ -91,7 +95,7 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
-                    if (!Access::check('interface', 25) && $artist->get_user_owner() != $options['user_upload']) {
+                    if (!$can_upload && $artist->get_user_owner() != $options['user_upload']) {
                         debug_event(self::class, "Artist owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);
@@ -105,7 +109,7 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
-                    if (!Access::check('interface', 25) && $album->get_user_owner() != $options['user_upload']) {
+                    if (!$can_upload && $album->get_user_owner() != $options['user_upload']) {
                         debug_event(self::class, "Album owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);
@@ -183,7 +187,7 @@ class Upload
         $user_access = $user->access ?? -1;
 
         return AmpConfig::get('allow_upload') &&
-            $user_access >= AmpConfig::get('upload_access_level', 0);
+            $user_access >= AmpConfig::get('upload_access_level', 25);
     }
 
     /**
@@ -233,8 +237,8 @@ class Upload
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
             $artist_id = Artist::check($artist_name, null);
-            if ($artist_id !== null && !Access::check('interface', 50)) {
-                debug_event(self::class, 'An artist with the same name already exists, uploaded song skipped.', 3);
+            if ($artist_id !== null) {
+                debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
 
                 return false;
             }

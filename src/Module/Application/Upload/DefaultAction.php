@@ -69,7 +69,7 @@ final class DefaultAction implements ApplicationActionInterface
         $access_level = $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            $access_level == 0 ||
+            $access_level == $this->configContainer->get('upload_access_level') ?? 25 ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();
