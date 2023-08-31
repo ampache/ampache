@@ -77,7 +77,7 @@ final class ShowUserAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
-        if ($userId == 0) {
+        if ($userId < 1) {
             echo T_('You have requested an object that does not exist');
         } else {
             $client = $this->modelFactory->createUser($userId);
