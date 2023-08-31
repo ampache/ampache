@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
@@ -53,6 +54,8 @@ $title    = ($album->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_artist_link()
     : scrub_out($f_name);
 
+
+$current_user      = Core::get_global('user');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
@@ -157,7 +160,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
         <?php }
 if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
@@ -179,7 +182,7 @@ if (Access::check('interface', 25)) {
             </li>
             <?php }
     }
-if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
+if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
     $saveorder  = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
@@ -206,7 +209,7 @@ if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Cor
 }
 if ($isAlbumEditable) {
     $t_upload = T_('Upload');
-    if (AmpConfig::get('allow_upload') && $album->album_artist > 0) { ?>
+    if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload);
