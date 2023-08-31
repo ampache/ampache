@@ -25,7 +25,7 @@
 * Search
   * ArtistSearch: Joins for songrating and albumrating were missing
 
-## API 6.0.1
+## API 6.0.2
 
 **NO CHANGE**
 
