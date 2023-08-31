@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -57,9 +58,9 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-$user   = Core::get_global('user');
-$f_name = $artist->get_fullname();
-$title  = scrub_out($f_name);
+$current_user = Core::get_global('user');
+$f_name       = $artist->get_fullname();
+$title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
@@ -161,7 +162,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
-    <?php if ($artist->mbid && Preference::get_by_user($user->id, 'mb_overwrite_name')) { ?>
+    <?php if ($artist->mbid && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
@@ -172,7 +173,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
         </li>
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
@@ -197,7 +198,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')
             </a>
         </li>
 <?php }
-if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50)) { ?>
+if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
@@ -208,7 +209,7 @@ if (($owner_id > 0 && $owner_id == $user->id) || Access::check('interface', 50))
             <?php }
             }
 if (canEditArtist($artist, $gatekeeper->getUserId())) {
-    if (AmpConfig::get('allow_upload')) {
+    if (Upload::can_upload($current_user)) {
         $t_upload = T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">

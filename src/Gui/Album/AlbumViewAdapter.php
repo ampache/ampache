@@ -241,7 +241,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
+        return ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->album->get_user_owner());
     }
 
     public function getEditButtonTitle(): string

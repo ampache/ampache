@@ -1852,8 +1852,7 @@ final class VaInfo implements VaInfoInterface
                     $results['tvshow'] = $this->formatVideoName($filetitle);
                 } else {
                     // Or we assume each parent folder contains one missing information
-                    if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i',
-                        $filepath, $matches)) {
+                    if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
                         if ($matches != null) {
                             $results['tvshow']        = $this->formatVideoName($matches[1]);
                             $results['tvshow_season'] = $matches[2];

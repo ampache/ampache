@@ -90,7 +90,7 @@ abstract class playlist_object extends database_object implements library_item
     public function format($details = true)
     {
         // format shared lists using the username
-        $this->f_name = (($this->user == Core::get_global('user')->id))
+        $this->f_name = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id))
             ? scrub_out($this->name)
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
@@ -128,7 +128,7 @@ abstract class playlist_object extends database_object implements library_item
             return false;
         }
         // allow the owner
-        if (($this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
+        if ((!empty(Core::get_global('user')) && $this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
             return true;
         }
 
@@ -170,7 +170,7 @@ abstract class playlist_object extends database_object implements library_item
     public function get_fullname()
     {
         $show_fullname = AmpConfig::get('show_playlist_username');
-        $my_playlist   = $this->user == Core::get_global('user')->id;
+        $my_playlist   = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id));
         $this->f_name  = ($my_playlist || !$show_fullname)
             ? $this->name
             : $this->name . " (" . $this->username . ")";

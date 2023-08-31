@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -45,9 +46,12 @@ use Ampache\Module\Util\Ui;
 /** @var int[] $followers */
 /** @var int[] $activities */
 
-$last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
-$create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$web_path    = AmpConfig::get('web_path');
+/** @var User $current_user */
+$current_user = Core::get_global('user');
+$last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
+$create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
+$web_path     = AmpConfig::get('web_path');
+$allow_upload = Upload::can_upload($current_user);
 $client->format();
 Ui::show_box_top($client->get_fullname()); ?>
 <?php if ($client->id > 0) { ?>
@@ -58,7 +62,7 @@ Ui::show_box_top($client->get_fullname()); ?>
 if (AmpConfig::get('sociable')) {
     echo $userFollowStateRenderer->render(
         $client->getId(),
-        Core::get_global('user')->getId()
+        $current_user->getId()
     );
 
     $plugins = Plugin::get_plugins('display_user_field'); ?>
@@ -86,7 +90,7 @@ if (AmpConfig::get('sociable')) {
         <?php if (Access::check('interface', 100)) { ?>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
-        <?php } elseif ($client->id == Core::get_global('user')->id) { ?>
+        <?php } elseif ($client->id == $current_user->id) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
 
         <?php } ?>
@@ -122,7 +126,7 @@ if (AmpConfig::get('sociable')) {
         <ul id="tabs">
             <li class="tab_active"><a href="#recently_played"><?php echo T_('Played'); ?></a></li>
             <li ><a href="#recently_skipped"><?php echo T_('Skipped'); ?></a></li>
-            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <?php if ($allow_upload) { ?>
             <li><a href="#artists"><?php echo T_('Artists'); ?></a></li>
             <?php } ?>
             <li><a href="#playlists"><?php echo T_('Playlists'); ?></a></li>
@@ -172,7 +176,7 @@ $data            = Stats::get_recently_played($client->getId(), 'skip', 'song', 
 Song::build_cache(array_keys($data));
 require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
-<?php if (AmpConfig::get('allow_upload')) { ?>
+<?php if ($allow_upload) { ?>
         <div id="artists" class="tab_content">
     <?php $sql  = Catalog::get_uploads_sql('artist', $client->id);
     $browse     = new Browse();
@@ -184,7 +188,8 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
 <?php } ?>
         <div id="playlists" class="tab_content">
         <?php
-$playlist_ids = Playlist::get_playlists($client->id);
+$show_all     = (($current_user->id ?? 0) == $client->id || ($current_user->access ?? 0) == 100);
+$playlist_ids = $client->get_playlists($show_all);
 $browse       = new Browse();
 $browse->set_type('playlist');
 $browse->set_simple_browse(false);

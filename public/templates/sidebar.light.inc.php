@@ -42,8 +42,8 @@ use Ampache\Repository\Model\User;
 /** @var bool $access25 */
 /** @var bool $allow_upload */
 
-$is_session   = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $current_user = $current_user ?? Core::get_global('user');
+$is_session   = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
 $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
 $albumString  = (AmpConfig::get('album_group'))
     ? 'album'

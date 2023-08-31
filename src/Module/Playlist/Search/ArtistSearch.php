@@ -48,6 +48,7 @@ final class ArtistSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
+        $search_user_id     = $search->search_user->id ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -124,7 +125,7 @@ final class ArtistSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'";
+                    $where[]    = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search->search_user->id . "`.`object_type` = 'artist'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
