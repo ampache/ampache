@@ -172,7 +172,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
                 <td><?php echo $value; ?></td>
             </tr>
     <?php }
-} ?>
+    } ?>
             </tbody>
     </table>
     <?php Ui::show_box_bottom(); ?>

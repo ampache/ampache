@@ -212,6 +212,7 @@ class AutoUpdate
         $phpversion = AmpConfig::get('phpversion');
 
         return 'https://github.com/ampache/ampache/releases/download/' . $ampversion . '/ampache-' . $ampversion . '_all' . $structure . '_php' . $phpversion . '.zip';
+
     }
 
     /**
