@@ -64,6 +64,7 @@ class AmpacheLyristLyrics
             return false;
         }
         Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name);
+
         return true;
     } // install
 

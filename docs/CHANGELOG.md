@@ -13,12 +13,15 @@
 
 ### Fixed
 
+* Correct stream get_base_url
 * Database 600037 missing interactor check for the web updater
 * Avoid Orphan album artist when song has empty albumartist tag
 * Various runtime errors with missing data during session timeouts
 * Admin page 'browse uploads' didn't need to be so strict
 * Show album edit button on uploads correctly
 * get_uploads_sql for artists could miss mapped artists
+* Only show user playlists on user page (public only if you aren't an admin)
+* Don't show admin user page (-1)
 * Search
   * ArtistSearch: Joins for songrating and albumrating were missing
 
