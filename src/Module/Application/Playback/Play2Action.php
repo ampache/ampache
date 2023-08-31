@@ -598,13 +598,16 @@ final class Play2Action implements ApplicationActionInterface
         $cache_target   = (string)AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
+        $mediaOwnerId   = ($media instanceof Song_Preview)
+            ? null
+            : $media->get_user_owner();
         $mediaCatalogId = ($media instanceof Song_Preview)
             ? null
             : $media->catalog;
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
-            if (!Catalog::has_access($mediaCatalogId, $user->id)) {
+            if (!Catalog::has_access($mediaCatalogId, $user->id) && ($mediaOwnerId && (int)$mediaOwnerId !== $user->id)) {
                 $this->logger->warning(
                     "Error: You are not allowed to play $media->file",
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]

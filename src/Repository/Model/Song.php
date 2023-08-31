@@ -2326,12 +2326,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics) {
+                    // save the lyrics if not set before
+                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                        self::update_lyrics($lyrics['text'], $this->id);
+                    }
+
                     return $lyrics;
                 }
             }
         }
 
-        return null;
+        return array();
     }
 
     /**
