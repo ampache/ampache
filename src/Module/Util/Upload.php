@@ -175,7 +175,7 @@ class Upload
      * @return boolean
      * @throws RuntimeException
      */
-    public static function can_upload($user): bool
+    public static function can_upload($user = null): bool
     {
         if (empty($user)) {
             $user = Core::get_global('user');
