@@ -236,21 +236,19 @@ class Upload
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            $artist_id = Artist::check($artist_name, null);
-            if ($artist_id !== null) {
+            if (Artist::check($artist_name, null, true) !== null) {
                 debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
 
                 return false;
             }
+            $artist_id = Artist::check($artist_name, null);
             if ((int) $artist_id < 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
                 return false;
             }
             $artist = new Artist($artist_id);
-            if (!$artist->get_user_owner()) {
-                $artist->update_artist_user($user_id);
-            }
+            $artist->update_artist_user($user_id); // take ownership of the new artist
 
             return (int) $artist_id;
         }
