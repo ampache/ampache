@@ -176,8 +176,6 @@ if ($upload_max > 0) { ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $upload_max; ?>" />
 <?php } ?>
 <table class="tabledata">
-<?php if ($access50) {
-    ?>
     <tr>
     <h5><?php echo T_('Leave the artist and album fields blank to read file tags') ?></h5>
     </tr>
@@ -201,8 +199,6 @@ if ($upload_max > 0) { ?>
         </div>
     </td>
 </tr>
-<?php
-} ?>
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
