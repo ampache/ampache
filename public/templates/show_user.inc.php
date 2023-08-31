@@ -46,6 +46,7 @@ use Ampache\Module\Util\Ui;
 /** @var int[] $followers */
 /** @var int[] $activities */
 
+/** @var User $current_user */
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
@@ -187,7 +188,8 @@ require Ui::find_template('show_recently_skipped.inc.php'); ?>
 <?php } ?>
         <div id="playlists" class="tab_content">
         <?php
-$playlist_ids = $client->get_playlists();
+$show_all     = (($current_user->id ?? 0) == $client->id || ($current_user->access ?? 0) == 100);
+$playlist_ids = $client->get_playlists($show_all);
 $browse       = new Browse();
 $browse->set_type('playlist');
 $browse->set_simple_browse(false);

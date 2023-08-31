@@ -281,11 +281,15 @@ class User extends database_object
     /**
      * get_playlists
      * Get your playlists and just your playlists
+     * @var bool $show_all
      */
-    public function get_playlists(): array
+    public function get_playlists($show_all): array
     {
         $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;";
+        $sql        = ($show_all)
+            ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
+            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
+
         $params     = array($this->id);
         $db_results = Dba::read($sql, $params);
         while ($row = Dba::fetch_assoc($db_results)) {
