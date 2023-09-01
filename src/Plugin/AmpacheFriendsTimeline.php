@@ -109,7 +109,7 @@ class AmpacheFriendsTimeline
                     (int) $user_id,
                     (int) $this->maxitems
                 );
-                if (count($activities) > 0) {
+                if (!empty($activities)) {
                     Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
 
