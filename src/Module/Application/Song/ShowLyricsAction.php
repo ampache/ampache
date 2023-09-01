@@ -54,7 +54,7 @@ final class ShowLyricsAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song = $this->modelFactory->createSong((int) $_REQUEST['song_id']);
+        $song = $this->modelFactory->createSong((int)($_REQUEST['song_id'] ?? 0));
         $song->format();
         $song->fill_ext_info();
         $lyrics = $song->get_lyrics();

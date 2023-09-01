@@ -840,7 +840,7 @@ class Query
     public function set_sort($sort, $order = '')
     {
         // If it's not in our list, smeg off!
-        if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
+        if (!empty($this->get_type()) && !in_array($sort, self::$allowed_sorts[$this->get_type()])) {
             return false;
         }
 
