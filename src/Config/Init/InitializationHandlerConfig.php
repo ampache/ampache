@@ -29,6 +29,7 @@ use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\EnvironmentInterface;
+use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
@@ -115,7 +116,14 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['cookie_secure'] = $results['session_cookiesecure'];
         }
         if (empty($results['date_timezone'])) {
+            // fallback to the server timezone if not set
             $results['date_timezone'] = date_default_timezone_get();
+        }
+        if (!empty($results['date_timezone'])) {
+            $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+            if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
+                $results['date_timezone'] = "UTC";
+            }
         }
 
         // Temp Fixes

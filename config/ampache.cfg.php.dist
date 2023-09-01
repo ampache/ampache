@@ -10,10 +10,10 @@ config_version = 68
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
-; Fall back to date_default_timezone_get() if not set.
+; If not set fallback to date_default_timezone_get() (https://www.php.net/manual/en/function.date-default-timezone-get.php)
 ; EXAMPLE VALUES: "Universal", "Etc/GMT+10", "America/Los_Angeles" (https://www.php.net/manual/en/timezones.php)
-; DEFAULT: none
-;date_timezone =
+; DEFAULT: "UTC"
+;date_timezone = "UTC"
 
 ;#########################################################
 ; Auto Update                                            #
