@@ -443,11 +443,12 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
     $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     // if no override is set but you have a custom_datetime
-    $pattern = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
+    $pattern  = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
+    $timezone = AmpConfig::get('date_timezone', date_default_timezone_get());
 
     // get your locale and set the date based on that, unless you have 'custom_datetime set'
     $locale = AmpConfig::get('lang', 'en_US');
-    $format = new IntlDateFormatter($locale, $date_type, $time_type, date_default_timezone_get(), null, $pattern);
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, $timezone, null, $pattern);
 
     return $format->format($time);
 }

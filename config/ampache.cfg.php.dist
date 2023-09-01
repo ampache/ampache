@@ -6,7 +6,14 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 67
+config_version = 68
+
+; Defines the default timezone used by the date functions
+; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
+; Fall back to date_default_timezone_get() if not set.
+; EXAMPLE VALUES: "Universal", "Etc/GMT+10", "America/Los_Angeles" (https://www.php.net/manual/en/timezones.php)
+; DEFAULT: none
+;date_timezone =
 
 ;#########################################################
 ; Auto Update                                            #

@@ -33,7 +33,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = '6.0.2'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '67';
+    private const CONFIG_VERSION = '68';
     private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
@@ -113,6 +113,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['cookie_domain'] = $results['http_host'];
             $results['cookie_life']   = $results['session_cookielife'];
             $results['cookie_secure'] = $results['session_cookiesecure'];
+        }
+        if (empty($results['date_timezone'])) {
+            $results['date_timezone'] = date_default_timezone_get();
         }
 
         // Temp Fixes
