@@ -568,7 +568,7 @@ class Xml_Data
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'];
             $basename = $trimmed['string'];
-            $string .= "<list id=\"" . $object['id'] . "\">\n" .
+            $string .= "<browse id=\"" . $object['id'] . "\">\n" .
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
                 "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
                 "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
