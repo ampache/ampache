@@ -305,10 +305,10 @@ function get_languages()
                 case 'zh_TW':
                     $name = '&#32321;&#39636;&#20013;&#25991;';
                     break; /* Chinese (traditional)*/
-                case 'zh_Hant':
+                case 'zh-Hant':
                     $name = '&#32321;&#39636;&#20013;&#25991; (' . $file . ')';
-                    break; /* Chinese (traditional)*/
-                case 'zh-SG':
+                    break; /* Chinese (traditional) (zh_Hant)*/
+                case 'zh_SG':
                     $name = 'Chinese (Singapore)';
                     break; /* Chinese (Singapore)*/
                 case 'ar_SA':
