@@ -607,7 +607,7 @@ Return children of a parent object in a folder traversal/browse style. If you do
 * return array
 
 ```JSON
-"list": []
+"browse": []
 
 ```
 
