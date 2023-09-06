@@ -462,7 +462,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
     $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     // if no override is set but you have a custom_datetime
     $pattern  = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
-    $timezone = AmpConfig::get('date_timezone');
+    $timezone = AmpConfig::get('custom_timezone') ?? AmpConfig::get('date_timezone');
 
     // get your locale and set the date based on that, unless you have 'custom_datetime set'
     $locale = AmpConfig::get('lang', 'en_US');
