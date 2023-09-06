@@ -898,7 +898,7 @@ class Update
         $version[]     = array('version' => '600038', 'description' => $update_string);
 
         $update_string = "* Add user preference `custom_timezone`, Display dates using a different timezone to the server timezone";
-        $version[]     = array('version' => '610001', 'description' => $update_string);
+        $version[]     = array('version' => '600039', 'description' => $update_string);
 
         return $version;
     }
