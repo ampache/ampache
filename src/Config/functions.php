@@ -179,6 +179,9 @@ function get_languages()
                 case 'da_DK':
                     $name = 'Dansk';
                     break; /* Danish */
+                case 'de_CH':
+                    $name = 'Deutschschweiz';
+                    break; /* German (Switzerland) */
                 case 'de_DE':
                     $name = 'Deutsch';
                     break; /* German */
@@ -212,12 +215,21 @@ function get_languages()
                 case 'fi_FI':
                     $name = 'Suomi';
                     break; /* Finnish */
+                case 'fr_BE':
+                    $name = 'Fran&#231;ais de Belgique ';
+                    break; /* French (Belgium) */
                 case 'fr_FR':
                     $name = 'Fran&#231;ais';
                     break; /* French */
                 case 'ga_IE':
                     $name = 'Gaeilge';
                     break; /* Irish */
+                case 'gl_ES':
+                    $name = 'Galician';
+                    break; /* Galician (gl_ES) */
+                case 'hi_IN':
+                    $name = 'Hindi';
+                    break; /* Hindi (India) */
                 case 'hu_HU':
                     $name = 'Magyar';
                     break; /* Hungarian */
@@ -293,6 +305,12 @@ function get_languages()
                 case 'zh_TW':
                     $name = '&#32321;&#39636;&#20013;&#25991;';
                     break; /* Chinese (traditional)*/
+                case 'zh_Hant':
+                    $name = '&#32321;&#39636;&#20013;&#25991; (' . $file . ')';
+                    break; /* Chinese (traditional)*/
+                case 'zh-SG':
+                    $name = 'Chinese (Singapore)';
+                    break; /* Chinese (Singapore)*/
                 case 'ar_SA':
                     $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;';
                     break; /* Arabic (Right to Left RTL) */
