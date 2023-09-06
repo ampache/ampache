@@ -1377,20 +1377,24 @@ abstract class Catalog extends database_object
     public static function get_uploads_sql($type, $user_id = 0)
     {
         $sql       = '';
+        $column    = ($type == 'song')
+            ? 'user_upload'
+            : 'user';
         $where_sql = ($user_id > 0)
-            ? "WHERE `song`.`user_upload` = '" . $user_id . "'"
-            : "WHERE `song`.`user_upload` IS NOT NULL";
+            ? "WHERE `$type`.`$column` = '" . $user_id . "';"
+            : "WHERE `$type`.`$column` IS NOT NULL;";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql";
+                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` $where_sql";
                 break;
             case 'artist':
-                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` $where_sql AND `artist_id` IS NOT NULL";
+                $sql = "SELECT DISTINCT `id` FROM `artist` $where_sql";
                 break;
         }
+        //debug_event(self::class, 'get_uploads_sql ' . $sql, 5);
 
         return $sql;
     } // get_uploads_sql
