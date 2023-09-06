@@ -107,10 +107,15 @@ final class ListMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
+        $name_type = $type;
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
+                $name_type = 'playlist_search';
+                $objects   = array(
+                    'playlist' => $browse->get_objects(),
+                    'search' => Playlist::get_smartlists($user->id)
+                );
             } else {
                 $objects = $browse->get_objects();
             }
@@ -123,7 +128,7 @@ final class ListMethod
             return false;
         }
 
-        $results = Catalog::get_name_array($objects, $type);
+        $results = Catalog::get_name_array($objects, $name_type);
 
         ob_end_clean();
         switch ($input['api_format']) {

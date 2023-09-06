@@ -1544,26 +1544,37 @@ abstract class Catalog extends database_object
         switch ($table) {
             case 'album':
             case 'artist':
-                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'catalog':
             case 'live_stream':
             case 'playlist':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
+            case 'search':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'podcast':
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'share':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+                break;
+            case 'playlist_search':
+                $empty_playlist = empty($objects['playlist']);
+                $empty_search   = empty($objects['search']);
+                if (!$empty_playlist && !$empty_search) {
+                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects['playlist']) . ") UNION SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
+                } elseif ($empty_playlist && !$empty_search) {
+                    $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
+                } elseif ($empty_search && !$empty_playlist) {
+                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
+                }
                 break;
             default:
                 return array();
         }
-        $sql .= "FROM $table WHERE `id` IN (" . implode(",", $objects) . ");";
 
         $db_results = Dba::read($sql);
         $results    = array();
