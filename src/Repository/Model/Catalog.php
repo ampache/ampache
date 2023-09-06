@@ -1381,8 +1381,8 @@ abstract class Catalog extends database_object
             ? 'user_upload'
             : 'user';
         $where_sql = ($user_id > 0)
-            ? "WHERE `$type`.`$column` = '" . $user_id . "';"
-            : "WHERE `$type`.`$column` IS NOT NULL;";
+            ? "WHERE `$type`.`$column` = '" . $user_id . "'"
+            : "WHERE `$type`.`$column` IS NOT NULL";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
