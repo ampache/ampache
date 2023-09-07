@@ -1035,7 +1035,7 @@ class Search extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
-        $sql      = "SELECT `id` FROM `search` ";
+        $sql      = "SELECT `id`, `name` FROM `search` ";
         $params   = array();
 
         if (!$is_admin) {
