@@ -721,7 +721,10 @@ final class PlayAction implements ApplicationActionInterface
                 );
                 $force_downsample = true;
             } elseif ($transcode_to) {
-                $transcode_to = null;
+                // play the song instead of going through all the crap
+                header('Location: ' . $media->play_url('&format=raw', $player, false, $user->id), true, 303);
+
+                return null;
             }
         }
         if ($transcode_to) {
