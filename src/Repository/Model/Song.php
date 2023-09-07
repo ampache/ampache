@@ -551,6 +551,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // create the album_disk
         $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
         Dba::write($sql, array($song_id, $disk, $catalog));
+
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
         if ((int)$artist_id > 0) {
@@ -565,8 +566,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $song_artist_id = Artist::check_mbid($songArtist_mbid);
             if ($song_artist_id > 0) {
                 $artists[] = $song_artist_id;
-                Artist::add_artist_map($song_artist_id, 'song', $song_id);
-                Album::add_album_map($album_id, 'song', $song_artist_id);
+                if ($song_artist_id != $artist_id) {
+                    Artist::add_artist_map($song_artist_id, 'song', $song_id);
+                    Album::add_album_map($album_id, 'song', $song_artist_id);
+                }
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
@@ -575,8 +578,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $song_artist_id = Artist::check($artist_name);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
-                    Artist::add_artist_map($song_artist_id, 'song', $song_id);
-                    Album::add_album_map($album_id, 'song', $song_artist_id);
+                    if ($song_artist_id != $artist_id) {
+                        Artist::add_artist_map($song_artist_id, 'song', $song_id);
+                        Album::add_album_map($album_id, 'song', $song_artist_id);
+                    }
                 }
             }
         }
@@ -584,8 +589,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = Artist::check_mbid($albumArtist_mbid);
             if ($album_artist_id > 0) {
                 $artists[] = $album_artist_id;
-                Artist::add_artist_map($album_artist_id, 'album', $album_id);
-                Album::add_album_map($album_id, 'album', $album_artist_id);
+                if ($song_artist_id != $albumartist_id) {
+                    Artist::add_artist_map($album_artist_id, 'album', $album_id);
+                    Album::add_album_map($album_id, 'album', $album_artist_id);
+                }
             }
         }
         // update the all the counts for the album right away
