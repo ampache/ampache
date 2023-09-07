@@ -2548,6 +2548,7 @@ abstract class Catalog extends database_object
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
         $new_song->disk     = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $new_song->disksubtitle = $results['disksubtitle'];
         $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate  = $results['bitrate'];
         $new_song->rate     = $results['rate'];
@@ -2887,6 +2888,12 @@ abstract class Catalog extends database_object
             if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
+            }
+
+            // a change on any song will update for the entire disk
+            if ($new_song->disksubtitle !== $song->disksubtitle) {
+                $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?";
+                Dba::write($sql, array($new_song->disksubtitle, $song->get_album_disk()));
             }
 
             if ($song->tags != $new_song->tags) {

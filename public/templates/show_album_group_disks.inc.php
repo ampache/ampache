@@ -258,7 +258,10 @@ foreach ($album->get_album_disk_ids() as $albumDiskId) {
             $show_direct_play = $show_playlist_add;
         }
     } ?>
-    <div class="album_group_disks_title"><span> <?php echo $sub_title; ?></span></div>
+    <div class="album_group_disks_title"><span>
+            <?php echo $sub_title; ?><?php if ($album_disk->disksubtitle) {
+                echo ": " . scrub_out($album_disk->disksubtitle);
+            } ?></span></div>
     <div class="album_group_disks_actions">
         <?php
         if ($show_direct_play) {

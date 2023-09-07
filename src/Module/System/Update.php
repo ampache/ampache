@@ -900,6 +900,9 @@ class Update
         $update_string = "* Add user preference `custom_timezone`, Display dates using a different timezone to the server timezone";
         $version[]     = array('version' => '600039', 'description' => $update_string);
 
+        $update_string = "* Add disk subtitle";
+        $version[]     = array('version' => '600040', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5579,5 +5582,24 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
 
         return (self::_write($interactor, $sql, array($row_id)) !== false);
+    }
+
+    /** _update_600040
+     *
+     * Add disk subtitle
+     */
+    private static function _update_600040(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        $sql = "ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        return true;
     }
 } // end update.class
