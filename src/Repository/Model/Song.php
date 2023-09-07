@@ -589,7 +589,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = Artist::check_mbid($albumArtist_mbid);
             if ($album_artist_id > 0) {
                 $artists[] = $album_artist_id;
-                if ($song_artist_id != $albumartist_id) {
+                if ($album_artist_id != $albumartist_id) {
                     Artist::add_artist_map($album_artist_id, 'album', $album_id);
                     Album::add_album_map($album_id, 'album', $album_artist_id);
                 }
