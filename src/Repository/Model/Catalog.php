@@ -1574,6 +1574,8 @@ abstract class Catalog extends database_object
                     $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
                 } elseif ($empty_search && !$empty_playlist) {
                     $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
+                } else {
+                    return array();
                 }
                 break;
             default:
