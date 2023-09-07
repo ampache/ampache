@@ -690,17 +690,6 @@ final class PlayAction implements ApplicationActionInterface
             Core::get_global('user')->insert_ip_history();
         }
 
-        $force_downsample = false;
-        if (AmpConfig::get('downsample_remote')) {
-            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT)) {
-                $this->logger->debug(
-                    'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $force_downsample = true;
-            }
-        }
-
         $this->logger->debug(
             $action . ' file (' . $stream_file . '}...',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -720,6 +709,21 @@ final class PlayAction implements ApplicationActionInterface
         $transcode    = false;
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
+
+        // enforce or disable transcoding depending on local network ACL
+        $force_downsample = false;
+        if (AmpConfig::get('downsample_remote')) {
+            $local_network = $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT);
+            if (!$local_network) {
+                $this->logger->debug(
+                    'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                $force_downsample = true;
+            } elseif ($transcode_to) {
+                $transcode_to = null;
+            }
+        }
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
