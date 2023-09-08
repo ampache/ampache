@@ -747,6 +747,7 @@ final class PlayAction implements ApplicationActionInterface
                 $force_downsample = true;
             } elseif ($transcode_to) {
                 // redirect the play to the original file
+                /* @var $media Song|Video|Podcast_Episode */
                 header('Location: ' . $media->play_url('&format=raw', $player, false, $user->id, $user->streamtoken), true, 303);
 
                 return null;
