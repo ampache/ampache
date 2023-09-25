@@ -1680,6 +1680,7 @@ class Query
                         }
                         break;
                 }
+                $filter_sql .= " `album`.`id` IS NOT NULL AND ";
                 break;
             case 'artist':
                 switch ($filter) {
