@@ -250,10 +250,14 @@ class AlbumDisk extends database_object implements library_item
         if (empty($info)) {
             return false;
         }
+        // make sure the album is valid before going further
+        $this->album = new Album($info['album']);
+        if (!($this->album)) {
+            return false;
+        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-        $this->album = new Album($this->album_id);
 
         // Little bit of formatting here
         $this->total_duration = (int)$this->time;
