@@ -256,7 +256,7 @@ class AlbumDisk extends database_object implements library_item
             return false;
         }
         // make sure the album is valid before going further
-        $this->album = new Album($info['album']);
+        $this->album = new Album($info['album_id']);
         if (!($this->album)) {
             return false;
         }
