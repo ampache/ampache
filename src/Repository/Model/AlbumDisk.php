@@ -53,6 +53,11 @@ class AlbumDisk extends database_object implements library_item
     public $disk;
 
     /**
+     * @var string $disksubtitle
+     */
+    public $disksubtitle;
+
+    /**
      * @var integer $time
      */
     public $time;

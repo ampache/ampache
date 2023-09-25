@@ -57,6 +57,7 @@ final class VaInfo implements VaInfoInterface
         'composer' => null,
         'description' => null,
         'disk' => null,
+        'disksubtitle' => null,
         'display_x' => null,
         'display_y' => null,
         'encoding' => null,
@@ -592,7 +593,8 @@ final class VaInfo implements VaInfoInterface
             $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']): $info['year'];
             $info['disk'] = (!$info['disk'] && array_key_exists('disk', $tags)) ? abs((int) $tags['disk']) : $info['disk'];
 
-            $info['totaldisks'] = (!$info['totaldisks'] && array_key_exists('totaldisks', $tags)) ? (int) $tags['totaldisks'] : $info['totaldisks'];
+            $info['totaldisks']   = (!$info['totaldisks'] && array_key_exists('totaldisks', $tags)) ? (int) $tags['totaldisks'] : $info['totaldisks'];
+            $info['disksubtitle'] = (!$info['disksubtitle'] && array_key_exists('disksubtitle', $tags)) ? trim((string)$tags['disksubtitle']) : $info['disksubtitle'];
 
             $info['artist']      = (!$info['artist'] && array_key_exists('artist', $tags)) ? trim((string)$tags['artist']) : $info['artist'];
             $info['albumartist'] = (!$info['albumartist'] && array_key_exists('albumartist', $tags)) ? trim((string)$tags['albumartist']) : $info['albumartist'];
@@ -1068,6 +1070,9 @@ final class VaInfo implements VaInfoInterface
                     // Pass the array through
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
+                case 'disksubtitle':
+                    $parsed['discsubtitle'] = $data[0];
+                    break;
                 case 'partofset':
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
@@ -1178,6 +1183,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'discnumber':
                     $parsed['disk']       = $data[0];
+                    break;
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'totaldiscs':
                 case 'disctotal':
@@ -1328,6 +1336,9 @@ final class VaInfo implements VaInfoInterface
                     break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'part_of_a_set':
                     $elements             = explode('/', $data[0]);
@@ -1601,6 +1612,9 @@ final class VaInfo implements VaInfoInterface
                     $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1] ?? null;
                     break;
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
+                    break;
                 case 'isrc':
                     $parsed['isrc'] = $data[0];
                     break;
@@ -1731,6 +1745,9 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'wm/albumartist':
                         $parsed['albumartist'] = $value;
+                        break;
+                    case 'wm/setsubtitle':
+                        $parsed['disksubtitle'] = $value;
                         break;
                     case 'musicbrainz/artist id':
                         $parsed['mb_artistid']       = self::parse_mbid($value);

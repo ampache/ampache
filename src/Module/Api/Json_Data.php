@@ -1130,6 +1130,7 @@ class Json_Data
             }
 
             $objArray['disk']                  = (int)$song->disk;
+            $objArray['disksubtitle']          = $song->disksubtitle;
             $objArray['track']                 = (int)$song->track;
             $objArray['filename']              = $song->file;
             $objArray['genre']                 = self::genre_array($song->tags);
