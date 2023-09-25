@@ -2547,15 +2547,15 @@ abstract class Catalog extends database_object
         $new_song->year = (strlen((string)$results['year']) > 4)
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
-        $new_song->disk     = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
         $new_song->disksubtitle = $results['disksubtitle'];
-        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate  = $results['bitrate'];
-        $new_song->rate     = $results['rate'];
-        $new_song->mode     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $new_song->channels = $results['channels'];
-        $new_song->size     = $results['size'];
-        $new_song->time     = (strlen((string)$results['time']) > 5)
+        $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
+        $new_song->bitrate      = $results['bitrate'];
+        $new_song->rate         = $results['rate'];
+        $new_song->mode         = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
+        $new_song->channels     = $results['channels'];
+        $new_song->size         = $results['size'];
+        $new_song->time         = (strlen((string)$results['time']) > 5)
             ? (int)substr($results['time'], -5, 5)
             : (int)($results['time']);
         if ($new_song->time < 0) {
