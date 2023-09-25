@@ -23,6 +23,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -2257,8 +2259,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
+        $downsample_remote = false;
+        // enforce or disable transcoding depending on local network ACL
+        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
+            $downsample_remote = true;
+            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+        }
+
         // if you transcode the media mime will change
-        if (AmpConfig::get('transcode') != 'never' && (empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
+        if (AmpConfig::get('transcode') != 'never' && ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
@@ -2559,6 +2568,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(SongTagWriterInterface::class);
+    }
+    /**
+     * @deprecated
+     */
+    private function getNetworkChecker(): NetworkCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(NetworkCheckerInterface::class);
     }
 
     /**

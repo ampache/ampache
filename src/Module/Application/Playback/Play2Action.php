@@ -767,24 +767,6 @@ final class Play2Action implements ApplicationActionInterface
             ? null
             : $transcode_to;
 
-        // enforce or disable transcoding depending on local network ACL
-        $force_downsample = false;
-        if (AmpConfig::get('downsample_remote')) {
-            $local_network = $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT);
-            if (!$local_network) {
-                $this->logger->debug(
-                    'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $force_downsample = true;
-            } elseif ($transcode_to) {
-                // redirect the play to the original file
-                /* @var $media Song|Video|Podcast_Episode */
-                header('Location: ' . $media->play_url('&format=raw', $player, false, $user->id, $user->streamtoken), true, 303);
-
-                return null;
-            }
-        }
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -809,12 +791,6 @@ final class Play2Action implements ApplicationActionInterface
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif ($force_downsample) {
-                    $transcode = true;
-                    $this->logger->debug(
-                        'Transcoding due to downsample_remote',
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
