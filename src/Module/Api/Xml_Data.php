@@ -558,10 +558,10 @@ class Xml_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
-        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n";
-        $string .= "<parent_id>" . $parent_id . "</parent_id>\n";
-        $string .= "<parent_type>" . $parent_type . "</parent_type>\n";
-        $string .= "<child_type>" . $child_type . "</child_type>\n";
+        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n" .
+            "<parent_id>" . $parent_id . "</parent_id>\n" .
+            "<parent_type>" . $parent_type . "</parent_type>\n" .
+            "<child_type>" . $child_type . "</child_type>\n";
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
