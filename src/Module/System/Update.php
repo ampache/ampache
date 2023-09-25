@@ -900,7 +900,7 @@ class Update
         $update_string = "* Add user preference `custom_timezone`, Display dates using a different timezone to the server timezone";
         $version[]     = array('version' => '600039', 'description' => $update_string);
 
-        $update_string = "* Add disk subtitle";
+        $update_string = "* Add `disksubtitle` to `song_data` and `album_disk` table";
         $version[]     = array('version' => '600040', 'description' => $update_string);
 
         return $version;
@@ -5586,7 +5586,7 @@ class Update
 
     /** _update_600040
      *
-     * Add disk subtitle
+     * Add `disksubtitle` to `song_data` and `album_disk` table
      */
     private static function _update_600040(Interactor $interactor = null): bool
     {

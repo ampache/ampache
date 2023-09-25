@@ -251,7 +251,7 @@ if (Catalog::can_remove($album)) {
 define('TABLE_RENDERED', 1);
 foreach ($album->get_album_disk_ids() as $albumDiskId) {
     $album_disk = new AlbumDisk($albumDiskId);
-    $sub_title  = ($album_disk->disksubtitle)
+    $sub_title  = (!empty($album_disk->disksubtitle))
         ? scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . ": " . scrub_out($album_disk->disksubtitle) . "</span>"
         : scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";
     if ($directplay_limit > 0) {
