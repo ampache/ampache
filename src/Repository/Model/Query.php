@@ -848,7 +848,7 @@ class Query
 
         if ($sort == 'random') {
             // don't sort random
-        } elseif (!$sort == 'random' && !empty($order)) {
+        } elseif (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
                 : 'ASC';
@@ -2203,8 +2203,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
-                    case 'year':
                     case 'original_year':
+                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`)";
+                        break;
+                    case 'year':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
@@ -2241,8 +2243,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
-                    case 'year':
                     case 'original_year':
+                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        break;
+                    case 'year':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
