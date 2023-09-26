@@ -69,7 +69,7 @@ final class CatalogFolderMethod
         }
         $folder = html_entity_decode($input['folder']);
         $task   = explode(',', (string)$input['task']);
-        if (!$task) {
+        if (!is_array($task)) {
             $task = array();
         }
 

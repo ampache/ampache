@@ -598,7 +598,6 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Verify starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        $total         = 0;
         $total_updated = 0;
         $this->count   = 0;
 
@@ -615,8 +614,7 @@ class Catalog_local extends Catalog
             $media_type  = 'video';
             $media_class = Video::class;
             $total       = self::count_table($media_type, $this->catalog_id);
-        }
-        if ($total == 0 || !isset($media_type)) {
+        } else {
             return $total_updated;
         }
         $count  = 1;

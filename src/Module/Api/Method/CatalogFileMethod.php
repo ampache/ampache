@@ -69,7 +69,7 @@ final class CatalogFileMethod
         }
         $file = html_entity_decode($input['file']);
         $task = explode(',', (string)$input['task']);
-        if (!$task) {
+        if (!is_array($task)) {
             $task = array();
         }
 

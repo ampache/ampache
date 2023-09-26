@@ -62,8 +62,6 @@ final class ConfigAction implements ApplicationActionInterface
             return null;
         }
 
-        // Load config from file
-        $results = [];
         if (!file_exists($configfile)) {
             return $this->responseFactory
                 ->createResponse()
@@ -71,13 +69,11 @@ final class ConfigAction implements ApplicationActionInterface
                     'Location',
                     '/install.php'
                 );
-        } else {
-            // Make sure the config file is set up and parsable
-            $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
-
-            if (empty($results)) {
-                $link = __DIR__ . '/../../../../public/test.php?action=config';
-            }
+        }
+        // Make sure the config file is set up and parsable
+        $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+        if (empty($results)) {
+            $link = __DIR__ . '/../../../../public/test.php?action=config';
         }
         /* Temp Fixes */
         $results = Preference::fix_preferences($results);
