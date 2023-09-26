@@ -48,7 +48,22 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
+    public const VALID_TYPES     = array(
+        'song',
+        'album',
+        'album_disk',
+        'song_artist',
+        'album_artist',
+        'artist',
+        'genre',
+        'label',
+        'playlist',
+        'podcast',
+        'podcast_episode',
+        'tag',
+        'user',
+        'video'
+    );
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
 

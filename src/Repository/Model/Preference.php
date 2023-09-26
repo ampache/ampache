@@ -522,8 +522,16 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
-                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
+            $results[] = array(
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'type' => $row['type'],
+                'category' => $row['catagory'],
+                'subcategory' => $row['subcatagory']
+            );
         }
 
         return $results;

@@ -56,7 +56,7 @@ final class CatalogFileMethod
      * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
-     * catalog = (integer) $catalog_id)
+     * catalog = (integer) $catalog_id
      * @return boolean
      */
     public static function catalog_file(array $input, User $user): bool
