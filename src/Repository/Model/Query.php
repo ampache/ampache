@@ -71,6 +71,18 @@ class Query
     private static $allowed_filters;
 
     /**
+     * @var array $sort_state
+     */
+    private static $sort_state = [
+        'year' => 'ASC',
+        'original_year' => 'ASC',
+        'rating' => 'ASC',
+        'song_count' => 'ASC',
+        'total_count' => 'ASC',
+        'total_skip' => 'ASC',
+        ];
+
+    /**
      * @var array $allowed_sorts
      */
     private static $allowed_sorts = [
@@ -854,7 +866,9 @@ class Query
                 : 'ASC';
         } else {
             // if the sort already exists you want the reverse
-            $state = $this->_state['sort'][$sort] ?? 'DESC';
+            $state = array_key_exists($sort, $this->_state['sort'])
+                ? $this->_state['sort'][$sort]
+                : self::$sort_state[$sort] ?? 'DESC';
             $order = ($state == 'ASC')
                 ? 'DESC'
                 : 'ASC';
