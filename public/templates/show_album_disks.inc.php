@@ -35,6 +35,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */
 /** @var string $limit_threshold */
+/** @var bool $group_release */
 
 $web_path          = AmpConfig::get('web_path');
 $access25          = Access::check('interface', 25);
@@ -44,7 +45,6 @@ $directplay_limit  = AmpConfig::get('direct_play_limit', 0);
 // album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
-$group_release     = AmpConfig::get('album_release_type');
 $original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
