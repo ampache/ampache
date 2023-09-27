@@ -300,11 +300,13 @@ class Browse extends Query
             case 'album_disk':
                 $box_title     = T_('Albums') . $match;
                 $group_release = false;
-                if (is_array($argument) && array_key_exists('title', $argument)) {
-                    $box_title = $argument['title'];
-                }
-                if (array_key_exists('group_disks', $argument)) {
-                    $group_release = (bool)$argument['group_disks'];
+                if (is_array($argument)) {
+                    if (array_key_exists('title', $argument)) {
+                        $box_title = $argument['title'];
+                    }
+                    if (array_key_exists('group_disks', $argument)) {
+                        $group_release = (bool)$argument['group_disks'];
+                    }
                 }
                 $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
