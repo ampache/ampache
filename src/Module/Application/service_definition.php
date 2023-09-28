@@ -184,6 +184,7 @@ return [
     Random\GetAdvancedAction::class => autowire(Random\GetAdvancedAction::class),
     Batch\DefaultAction::class => autowire(Batch\DefaultAction::class),
     SmartPlaylist\ShowAction::class => autowire(SmartPlaylist\ShowAction::class),
+    SmartPlaylist\RefreshPlaylistAction::class => autowire(SmartPlaylist\RefreshPlaylistAction::class),
     SmartPlaylist\UpdatePlaylistAction::class => autowire(SmartPlaylist\UpdatePlaylistAction::class),
     SmartPlaylist\ShowPlaylistAction::class => autowire(SmartPlaylist\ShowPlaylistAction::class),
     SmartPlaylist\DeletePlaylistAction::class => autowire(SmartPlaylist\DeletePlaylistAction::class),
