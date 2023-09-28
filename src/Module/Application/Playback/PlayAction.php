@@ -710,23 +710,6 @@ final class PlayAction implements ApplicationActionInterface
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = $transcode_to == $media->type ? null : $transcode_to;
 
-        // enforce or disable transcoding depending on local network ACL
-        $force_downsample = false;
-        if (AmpConfig::get('downsample_remote')) {
-            $local_network = $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT);
-            if (!$local_network) {
-                $this->logger->debug(
-                    'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $force_downsample = true;
-            } elseif ($transcode_to) {
-                // play the song instead of going through all the crap
-                header('Location: ' . $media->play_url('&format=raw', $player, false, $user->id), true, 303);
-
-                return null;
-            }
-        }
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -752,12 +735,6 @@ final class PlayAction implements ApplicationActionInterface
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif ($force_downsample) {
-                    $transcode = true;
-                    $this->logger->debug(
-                        'Transcoding due to downsample_remote',
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {
