@@ -269,9 +269,12 @@ final class InstallationHelper implements InstallationHelperInterface
             if (!Dba::write($sql_user)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()));
-
-                return false;
+                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'), $db_user, $database, $db_host, Dba::error()
+                ));
+                // this user might exist but we don't always care
+                if (!$overwrite) {
+                    return false;
+                }
             }
             // grant database access to that account
             $sql_grant = "GRANT ALL PRIVILEGES ON `" . Dba::escape($database) . "`.* TO '" . Dba::escape($db_user) . "'";
@@ -283,7 +286,8 @@ final class InstallationHelper implements InstallationHelperInterface
             if (!Dba::write($sql_grant)) {
                 AmpError::add('general', sprintf(
                 /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()));
+                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'), $database, $db_user, $db_host, Dba::error()
+                ));
 
                 return false;
             }
@@ -291,7 +295,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if ($create_tables) {
             $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
+            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
             $pieces   = $this->split_sql($query);
             $p_count  = count($pieces);
             $errors   = array();
@@ -651,7 +655,7 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, filesize($distfile));
+        $dist     = fread($handle, Core::get_filesize($distfile));
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);
