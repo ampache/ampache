@@ -1333,38 +1333,7 @@ function get_theme($name)
 } // get_theme
 
 /**
- * get_theme_author
- * returns the author of this theme
- * @param string $theme_name
- * @return string
- */
-function get_theme_author($theme_name)
-{
-    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
-    $results    = read_config($theme_path);
-
-    return $results['author'];
-} // get_theme_author
-
-/**
- * theme_exists
- * this function checks to make sure that a theme actually exists
- * @param string $theme_name
- * @return boolean
- */
-function theme_exists($theme_name)
-{
-    $theme_path = __DIR__ . '/../../public/themes/' . $theme_name . '/theme.cfg.php';
-
-    if (!file_exists($theme_path)) {
-        return false;
-    }
-
-    return true;
-} // theme_exists
-
-/**
- * Used in graph class als format string
+ * Used in graph class also format string
  *
  * @see \Ampache\Module\Util\Graph
  *
