@@ -2569,6 +2569,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         return $dic->get(SongTagWriterInterface::class);
     }
+
     /**
      * @deprecated
      */
