@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
+use DateTimeZone;
 
 final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
 {
@@ -79,6 +80,12 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             switch ($name) {
                 case 'transcode_bitrate':
                     $value = (string) Stream::validate_bitrate($value);
+                    break;
+                case 'custom_timezone':
+                    $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+                    if (!in_array($value, $listIdentifiers)) {
+                        $value = '';
+                    }
                     break;
             }
 

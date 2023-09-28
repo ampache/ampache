@@ -60,9 +60,6 @@ final class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
-
-        // Load config from file
-        $results = array();
         if (!file_exists($configfile)) {
             return $this->responseFactory
                 ->createResponse(StatusCode::FOUND)
@@ -70,13 +67,12 @@ final class ShowAction implements ApplicationActionInterface
                     'Location',
                     '/install.php'
                 );
-        } else {
-            // Make sure the config file is set up and parsable
-            $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+        }
 
-            if (empty($results)) {
-                $link = __DIR__ . '/../../test.php?action=config';
-            }
+        // Make sure the config file is set up and parsable
+        $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
+        if (empty($results)) {
+            $link = __DIR__ . '/../../public/test.php?action=config';
         }
         /* Temp Fixes */
         $results = Preference::fix_preferences($results);

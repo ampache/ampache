@@ -47,7 +47,7 @@ final class CatalogAction5Method
      * @param array $input
      * @param User $user
      * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
-     * catalog = (integer) $catalog_id)
+     * catalog = (integer) $catalog_id
      * @return boolean
      */
     public static function catalog_action(array $input, User $user): bool

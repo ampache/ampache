@@ -897,6 +897,12 @@ class Update
         $update_string = "* Update `access_list` in case you have a bad `user` column";
         $version[]     = array('version' => '600038', 'description' => $update_string);
 
+        $update_string = "* Add user preference `custom_timezone`, Display dates using a different timezone to the server timezone";
+        $version[]     = array('version' => '600039', 'description' => $update_string);
+
+        $update_string = "* Add `disksubtitle` to `song_data` and `album_disk` table";
+        $version[]     = array('version' => '600040', 'description' => $update_string);
+
         return $version;
     }
 
@@ -5555,6 +5561,41 @@ class Update
     private static function _update_600038(Interactor $interactor = null): bool
     {
         $sql = "UPDATE `access_list` SET `user` = -1 WHERE `user` = 0;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** _update_600039
+     *
+     * Add user preference `custom_timezone`, Custom timezone (Override PHP date.timezone)
+     */
+    private static function _update_600039(Interactor $interactor = null): bool
+    {
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES ('custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom')";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
+
+        return (self::_write($interactor, $sql, array($row_id)) !== false);
+    }
+
+    /** _update_600040
+     *
+     * Add `disksubtitle` to `song_data` and `album_disk` table
+     */
+    private static function _update_600040(Interactor $interactor = null): bool
+    {
+        $sql = "ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
+        if (self::_write($interactor, $sql) === false) {
+            return false;
+        }
+
+        $sql = "ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;";
         if (self::_write($interactor, $sql) === false) {
             return false;
         }

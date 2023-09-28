@@ -172,12 +172,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '6.0.2'; // AMPACHE_VERSION
+    public static $version = '6.0.3'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '602000'; // AMPACHE_VERSION
+    public static $version_numeric = '603000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -385,7 +385,8 @@ class Api
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('api' => self::$version,
+        $outarray = array(
+            'api' => self::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),

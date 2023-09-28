@@ -79,6 +79,7 @@ class Preference extends database_object
         'custom_login_logo',
         'custom_logo',
         'custom_text_footer',
+        'custom_timezone',
         'daap_backend',
         'daap_pass',
         'demo_clear_sessions',
@@ -521,8 +522,16 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
-                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
+            $results[] = array(
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'type' => $row['type'],
+                'category' => $row['catagory'],
+                'subcategory' => $row['subcatagory']
+            );
         }
 
         return $results;
@@ -837,6 +846,7 @@ class Preference extends database_object
             'custom_login_logo' => T_('Custom URL - Login page logo'),
             'custom_logo' => T_('Custom URL - Logo'),
             'custom_text_footer' => T_('Custom text footer'),
+            'custom_timezone' => T_('Custom timezone (Override PHP date.timezone)'),
             'daap_backend' => T_('Use DAAP backend'),
             'daap_pass' => T_('DAAP backend password'),
             'demo_clear_sessions' => T_('Democratic - Clear votes for expired user sessions'),

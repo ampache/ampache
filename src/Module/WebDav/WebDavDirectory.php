@@ -78,7 +78,7 @@ class WebDavDirectory extends DAV\Collection
         $matches = $this->libitem->get_children(unhtmlentities($name));
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
-        if (count($matches) > 0) {
+        if (!empty($matches)) {
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
@@ -114,7 +114,7 @@ class WebDavDirectory extends DAV\Collection
     {
         $matches = $this->libitem->get_children($name);
 
-        return (count($matches) > 0);
+        return (!empty($matches));
     }
 
     /**

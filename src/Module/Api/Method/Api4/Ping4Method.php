@@ -74,7 +74,8 @@ final class Ping4Method
             $user   = User::get_from_username(Session::username($input['auth']));
             $counts = Catalog::get_server_counts($user->id ?? 0);
             // now add it all together
-            $countarray = array('api' => Api4::$version,
+            $countarray = array(
+                'api' => Api4::$version,
                 'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
                 'update' => date("c", (int) $row['update']),
                 'add' => date("c", (int) $row['add']),

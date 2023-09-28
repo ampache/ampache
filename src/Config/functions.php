@@ -179,6 +179,9 @@ function get_languages()
                 case 'da_DK':
                     $name = 'Dansk';
                     break; /* Danish */
+                case 'de_CH':
+                    $name = 'Deutschschweiz';
+                    break; /* German (Switzerland) */
                 case 'de_DE':
                     $name = 'Deutsch';
                     break; /* German */
@@ -212,12 +215,21 @@ function get_languages()
                 case 'fi_FI':
                     $name = 'Suomi';
                     break; /* Finnish */
+                case 'fr_BE':
+                    $name = 'Fran&#231;ais de Belgique ';
+                    break; /* French (Belgium) */
                 case 'fr_FR':
                     $name = 'Fran&#231;ais';
                     break; /* French */
                 case 'ga_IE':
                     $name = 'Gaeilge';
                     break; /* Irish */
+                case 'gl_ES':
+                    $name = 'Galician';
+                    break; /* Galician (gl_ES) */
+                case 'hi_IN':
+                    $name = 'Hindi';
+                    break; /* Hindi (India) */
                 case 'hu_HU':
                     $name = 'Magyar';
                     break; /* Hungarian */
@@ -293,6 +305,12 @@ function get_languages()
                 case 'zh_TW':
                     $name = '&#32321;&#39636;&#20013;&#25991;';
                     break; /* Chinese (traditional)*/
+                case 'zh-Hant':
+                    $name = '&#32321;&#39636;&#20013;&#25991; (' . $file . ')';
+                    break; /* Chinese (traditional) (zh_Hant)*/
+                case 'zh_SG':
+                    $name = 'Chinese (Singapore)';
+                    break; /* Chinese (Singapore)*/
                 case 'ar_SA':
                     $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;';
                     break; /* Arabic (Right to Left RTL) */
@@ -443,11 +461,14 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
     $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
     // if no override is set but you have a custom_datetime
-    $pattern = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
+    $pattern  = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
+    $timezone = (!empty(AmpConfig::get('custom_timezone')))
+        ? AmpConfig::get('custom_timezone')
+        : AmpConfig::get('date_timezone');
 
     // get your locale and set the date based on that, unless you have 'custom_datetime set'
     $locale = AmpConfig::get('lang', 'en_US');
-    $format = new IntlDateFormatter($locale, $date_type, $time_type, date_default_timezone_get(), null, $pattern);
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, $timezone, null, $pattern);
 
     return $format->format($time);
 }
@@ -1312,38 +1333,7 @@ function get_theme($name)
 } // get_theme
 
 /**
- * get_theme_author
- * returns the author of this theme
- * @param string $theme_name
- * @return string
- */
-function get_theme_author($theme_name)
-{
-    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
-    $results    = read_config($theme_path);
-
-    return $results['author'];
-} // get_theme_author
-
-/**
- * theme_exists
- * this function checks to make sure that a theme actually exists
- * @param string $theme_name
- * @return boolean
- */
-function theme_exists($theme_name)
-{
-    $theme_path = __DIR__ . '/../../themes/' . $theme_name . '/theme.cfg.php';
-
-    if (!file_exists($theme_path)) {
-        return false;
-    }
-
-    return true;
-} // theme_exists
-
-/**
- * Used in graph class als format string
+ * Used in graph class also format string
  *
  * @see \Ampache\Module\Util\Graph
  *

@@ -46,7 +46,7 @@ final class UpdateFromTagsMethod
      * @param array $input
      * @param User $user
      * type = (string) 'artist', 'album', 'song'
-     * id   = (integer) $artist_id, $album_id, $song_id)
+     * id   = (integer) $artist_id, $album_id, $song_id
      * @return boolean
      */
     public static function update_from_tags(array $input, User $user): bool

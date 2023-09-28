@@ -22,41 +22,46 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Application\Preferences;
+namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final class RefreshPlaylistAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show';
+    public const REQUEST_KEY = 'refresh_playlist';
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $user = $gatekeeper->getUser();
+        $playlist = $this->modelFactory->createSearch(
+            (int) ($request->getQueryParams()['playlist_id'] ?? 0)
+        );
 
         $this->ui->showHeader();
-        if ($user) {
-            $this->ui->show(
-                'show_preferences.inc.php',
-                [
-                    'fullname' => $user->fullname,
-                    'preferences' => $user->get_preferences($request->getQueryParams()['tab'] ?? ''),
-                    'ui' => $this->ui,
-                ]
-            );
-        }
+        $this->ui->show(
+            'show_search.inc.php',
+            [
+                'playlist' => $playlist,
+                'object_ids' => $playlist->get_items()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -293,8 +293,8 @@ class Catalog_Seafile extends Catalog
                     if ($this->insert_song($file)) {
                         return 1;
                     }
-                //} elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                //    // TODO $this->insert_video()
+                } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
+                    //TODO $this->insert_video();
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
@@ -304,8 +304,7 @@ class Catalog_Seafile extends Catalog
                 return 0;
             });
 
-            Ui::update_text(T_('Catalog Updated'), /* HINT: count of songs updated */ sprintf(T_('Total Media: [%s]'),
-                $count));
+            Ui::update_text(T_('Catalog Updated'), /* HINT: count of songs updated */ sprintf(T_('Total Media: [%s]'), $count));
 
             if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));

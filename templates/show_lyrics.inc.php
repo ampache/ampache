@@ -41,21 +41,21 @@ if ($album != T_('Unknown (Orphaned)')) {
 } ?>
 
 <div class="np_group">
-  <div class="np_cell cel_song">
+  <div class="np_cell">
       <label><?php echo T_('Song'); ?>:</label>
       <a title="<?php echo scrub_out($song->title); ?>" href="<?php echo $web_path; ?>/song.php?action=show_song&song_id=<?php echo $song->id; ?>">
           <?php echo $title; ?>
       </a>
   </div>
 
-  <div class="np_cell cel_album">
+  <div class="np_cell">
       <label><?php echo T_('Album'); ?>:</label>
       <a title="<?php echo $album; ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
               <?php echo $album; ?>
       </a>
   </div>
 
-  <div class="np_cell cel_artist">
+  <div class="np_cell">
       <label><?php echo T_('Artist'); ?>:</label>
       <a title="<?php echo $artist; ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
               <?php echo $artist; ?>

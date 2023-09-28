@@ -112,7 +112,14 @@ class Json_Data
      */
     public static function error($code, $string, $action, $type): string
     {
-        $message = array("error" => array("errorCode" => (string)$code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
+        $message = array(
+            "error" => array(
+                "errorCode" => (string)$code,
+                "errorAction" => $action,
+                "errorType" => $type,
+                "errorMessage" => $string
+            )
+        );
 
         return json_encode($message, JSON_PRETTY_PRINT);
     } // error
@@ -129,7 +136,9 @@ class Json_Data
      */
     public static function success($string, $return_data = array()): string
     {
-        $message = array("success" => $string);
+        $message = array(
+            "success" => $string
+        );
         foreach ($return_data as $title => $data) {
             $message[$title] = $data;
         }
@@ -1130,6 +1139,7 @@ class Json_Data
             }
 
             $objArray['disk']                  = (int)$song->disk;
+            $objArray['disksubtitle']          = $song->disksubtitle;
             $objArray['track']                 = (int)$song->track;
             $objArray['filename']              = $song->file;
             $objArray['genre']                 = self::genre_array($song->tags);

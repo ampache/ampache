@@ -370,9 +370,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_keywords()
     {
         $keywords          = array();
-        $keywords['title'] = array('important' => true,
+        $keywords['title'] = array(
+            'important' => true,
             'label' => T_('Title'),
-            'value' => $this->get_fullname());
+            'value' => $this->get_fullname()
+        );
 
         return $keywords;
     }

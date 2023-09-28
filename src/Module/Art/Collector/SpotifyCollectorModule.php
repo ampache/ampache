@@ -165,7 +165,11 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
-            $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
+            try {
+                $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
+            } catch (SpotifyWebAPIException $error) {
+                $response = array();
+            }
         }
 
         if (count($response->{$types}->items)) {

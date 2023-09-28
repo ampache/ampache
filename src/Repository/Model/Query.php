@@ -71,6 +71,18 @@ class Query
     private static $allowed_filters;
 
     /**
+     * @var array $sort_state
+     */
+    private static $sort_state = [
+        'year' => 'ASC',
+        'original_year' => 'ASC',
+        'rating' => 'ASC',
+        'song_count' => 'ASC',
+        'total_count' => 'ASC',
+        'total_skip' => 'ASC',
+        ];
+
+    /**
      * @var array $allowed_sorts
      */
     private static $allowed_sorts = [
@@ -840,7 +852,7 @@ class Query
     public function set_sort($sort, $order = '')
     {
         // If it's not in our list, smeg off!
-        if (!in_array($sort, self::$allowed_sorts[$this->get_type()])) {
+        if (!empty($this->get_type()) && !in_array($sort, self::$allowed_sorts[$this->get_type()])) {
             return false;
         }
 
@@ -848,13 +860,15 @@ class Query
 
         if ($sort == 'random') {
             // don't sort random
-        } elseif (!$sort == 'random' && !empty($order)) {
+        } elseif (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
                 : 'ASC';
         } else {
             // if the sort already exists you want the reverse
-            $state = $this->_state['sort'][$sort] ?? 'DESC';
+            $state = array_key_exists($sort, $this->_state['sort'])
+                ? $this->_state['sort'][$sort]
+                : self::$sort_state[$sort] ?? 'DESC';
             $order = ($state == 'ASC')
                 ? 'DESC'
                 : 'ASC';
@@ -1680,6 +1694,7 @@ class Query
                         }
                         break;
                 }
+                $filter_sql .= " `album`.`id` IS NOT NULL AND ";
                 break;
             case 'artist':
                 switch ($filter) {
@@ -2183,6 +2198,12 @@ class Query
                     case 'name':
                         $sql = "`album`.`name`";
                         break;
+                    case 'name_original_year':
+                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`)";
+                        break;
+                    case 'name_year':
+                        $sql = "`album`.`name`, `album`.`year`";
+                        break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -2202,8 +2223,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
-                    case 'year':
                     case 'original_year':
+                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`)";
+                        break;
+                    case 'year':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
@@ -2220,6 +2243,12 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`album`.`name`, `album_disk`.`disk`";
+                        break;
+                    case 'name_original_year':
+                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`), `album_disk`.`disk`";
+                        break;
+                    case 'name_year':
+                        $sql = "`album`.`name`, `album`.`year`, `album_disk`.`disk`";
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
@@ -2240,8 +2269,10 @@ class Query
                         $sql = "`rating`.`rating`";
                         $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (int)$this->user_id, 100);
                         break;
-                    case 'year':
                     case 'original_year':
+                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`), `album`.`name`, `album_disk`.`disk`";
+                        break;
+                    case 'year':
                     case 'song_count':
                     case 'total_count':
                     case 'release_type':
