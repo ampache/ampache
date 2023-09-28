@@ -163,18 +163,21 @@ final class Handshake3Method
                 // Now we need to quickly get the totals
                 $counts = Catalog::get_server_counts($user_id);
 
-                echo Xml3_Data::keyed_array(array('auth' => $token,
+                $results = array(
+                    'auth' => $token,
                     'api' => Api3::$version,
                     'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
                     'update' => date("c", $row['update']),
                     'add' => date("c", $row['add']),
                     'clean' => date("c", $row['clean']),
-                    'songs' => $counts['song'],
-                    'albums' => $counts['album'],
-                    'artists' => $counts['artist'],
-                    'playlists' => $counts['playlist'],
-                    'videos' => $counts['video'],
-                    'catalogs' => $counts['catalog']));
+                    'songs' => ($counts['song'] ?? 0),
+                    'albums' => ($counts['album'] ?? 0),
+                    'artists' => ($counts['artist'] ?? 0),
+                    'playlists' => ($counts['playlist'] ?? 0),
+                    'videos' => ($counts['video'] ?? 0),
+                    'catalogs' => ($counts['catalog'] ?? 0)
+                );
+                echo Xml3_Data::keyed_array($results);
 
                 return true;
             } // match
