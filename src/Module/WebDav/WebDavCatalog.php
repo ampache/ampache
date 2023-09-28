@@ -74,7 +74,7 @@ class WebDavCatalog extends DAV\Collection
         //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
-        if (count($matches) > 0) {
+        if (!empty($matches)) {
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
@@ -90,7 +90,7 @@ class WebDavCatalog extends DAV\Collection
     {
         $matches = Catalog::get_children($name, $this->catalog_id);
 
-        return (count($matches) > 0);
+        return (!empty($matches));
     }
 
     /**

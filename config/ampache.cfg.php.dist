@@ -6,7 +6,14 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 67
+config_version = 68
+
+; Defines the default timezone used by the date functions
+; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
+; If not set fallback to date_default_timezone_get() (https://www.php.net/manual/en/function.date-default-timezone-get.php)
+; EXAMPLE VALUES: "UTC", "Europe/London", "America/Los_Angeles" (https://www.php.net/manual/en/timezones.php)
+; DEFAULT: "UTC"
+;date_timezone = "UTC"
 
 ;#########################################################
 ; Auto Update                                            #
@@ -14,7 +21,7 @@ config_version = 67
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
-; POSSIBLE VALUES: master develop
+; POSSIBLE VALUES: master develop patch6 release6
 ; DEFAULT: none
 ;github_force_branch = "develop"
 

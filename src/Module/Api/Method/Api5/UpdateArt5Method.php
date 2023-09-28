@@ -47,7 +47,7 @@ final class UpdateArt5Method
      * @param array $input
      * @param User $user
      * type      = (string) 'artist', 'album'
-     * id        = (integer) $artist_id, $album_id)
+     * id        = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */

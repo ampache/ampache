@@ -341,7 +341,7 @@ class AmpacheRss
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
-                'pubDate' => date('c', $album->addition_time)
+                'pubDate' => date("c", $album->addition_time)
             );
             $results[] = $xml_array;
         } // end foreach

@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## Ampache 6.0.3
+
+### Added
+
+* Translations 2023-09
+* Added refresh button on smartlists so you don't have to overwrite the rules each time
+* Database 600040
+  * Add `custom_timezone` as a user preference
+  * Add `disksubtitle` to `song_data` and `album_disk` table
+* Config version 68
+  * Add `date_timezone` (Allow custom timezone for date formatting)
+
+### Changed
+
+* Lyrist plugin regex be a bit looser with user input and regex /api/ on the end of api_host
+* Don't try and load preferences page without a user to load
+* Check for downsample_remote conditions on play_url generation
+* Sort album browse pages based on your `album_sort` preference
+
+### Fixed
+
+* Error checkin user temp playlist could give you a blank index page
+* Runtime errors with missing data
+* Missing translations for language list
+* Select uploaded artists using the artist instead of song
+* missing column in Search::get_searches SQL
+* updating artist_map too much
+* Last.fm lookup url was missing a & for albums
+* Don't try to load an album_disk that doesn't have an album
+* Restore sorting on album lists and browses that aren't grouped by release_type
+* Catch Spotify runtime error on retry as well as initial attempt
+
+## API 6.0.3
+
+### Fixed
+
+* Api6::list for playlists was missing searches
+* Api6::browse XML returned a list instead of a browse object
+
 ## Ampache 6.0.2
 
 ### Added

@@ -81,13 +81,12 @@ final class Handshake3Method
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client = static::getUserRepository()->findByApiKey(trim($passphrase));
-            if ($client) {
-                $user_id = $client->id;
-            }
+            $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
             $client  = User::get_from_username($username);
+        }
+        if ($client) {
             $user_id = $client->id;
         }
 

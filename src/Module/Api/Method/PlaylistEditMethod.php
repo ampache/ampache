@@ -66,7 +66,7 @@ final class PlaylistEditMethod
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
-        if (count($items) == count($order) && count($items) > 0) {
+        if (!empty($items) && (count($items) == count($order))) {
             $playlist_edit = array_combine($order, $items);
         }
 

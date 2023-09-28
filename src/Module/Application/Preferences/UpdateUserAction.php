@@ -99,15 +99,16 @@ final class UpdateUserAction implements ApplicationActionInterface
         }
 
         $user = $gatekeeper->getUser();
-
-        $this->ui->show(
-            'show_preferences.inc.php',
-            [
-                'fullname' => $user->fullname,
-                'preferences' => $user->get_preferences($_REQUEST['tab']),
-                'ui' => $this->ui
-            ]
-        );
+        if ($user) {
+            $this->ui->show(
+                'show_preferences.inc.php',
+                [
+                    'fullname' => $user->fullname,
+                    'preferences' => $user->get_preferences($_REQUEST['tab']),
+                    'ui' => $this->ui
+                ]
+            );
+        }
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
