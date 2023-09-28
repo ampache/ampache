@@ -4698,7 +4698,7 @@ class Update
      *
      * Update `access_list` in case you have a bad `user` column
      */
-    private static function update_560001(): bool
+    public static function update_560001(): bool
     {
         return (Dba::write("UPDATE `access_list` SET `user` = -1 WHERE `user` = 0;") !== false);
     }
