@@ -377,35 +377,37 @@ class Api
         $client      = static::getUserRepository()->findByApiKey(trim($token));
         $counts      = Catalog::get_server_counts($client->id);
         $album_count = (array_key_exists('album_group', $counts) && Preference::get('album_group', $client->id))
-            ? (int)$counts['album_group']
-            : (int)$counts['album'];
+            ? (int)($counts['album_group'] ?? 0)
+            : (int)($counts['album'] ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
-            ? ((int)$counts['playlist'])
-            : ((int)$counts['playlist'] + (int)$counts['search']);
+            ? (int)($counts['playlist'] ?? 0)
+            : ((int)($counts['playlist'] ?? 0) + (int)($counts['search'] ?? 0));
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('api' => self::$version,
+        $outarray = array(
+            'api' => self::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
-            'songs' => (int)$counts['song'],
+            'songs' => (int)($counts['song'] ?? 0),
             'albums' => $album_count,
-            'artists' => (int)$counts['artist'],
-            'genres' => (int)$counts['tag'],
-            'playlists' => (int)$counts['playlist'],
-            'searches' => (int)$counts['search'],
+            'artists' => (int)($counts['artist'] ?? 0),
+            'genres' => (int)($counts['tag'] ?? 0),
+            'playlists' => (int)($counts['playlist'] ?? 0),
+            'searches' => (int)($counts['search'] ?? 0),
             'playlists_searches' => $playlists,
-            'users' => (int)$counts['user'],
-            'catalogs' => (int)$counts['catalog'],
-            'videos' => (int)$counts['video'],
-            'podcasts' => (int)$counts['podcast'],
-            'podcast_episodes' => (int)$counts['podcast_episode'],
-            'shares' => (int)$counts['share'],
-            'licenses' => (int)$counts['license'],
-            'live_streams' => (int)$counts['live_stream'],
-            'labels' => (int)$counts['label']);
+            'users' => (int)($counts['user'] ?? 0),
+            'catalogs' => (int)($counts['catalog'] ?? 0),
+            'videos' => (int)($counts['video'] ?? 0),
+            'podcasts' => (int)($counts['podcast'] ?? 0),
+            'podcast_episodes' => (int)($counts['podcast_episode'] ?? 0),
+            'shares' => (int)($counts['share'] ?? 0),
+            'licenses' => (int)($counts['license'] ?? 0),
+            'live_streams' => (int)($counts['live_stream'] ?? 0),
+            'labels' => (int)($counts['label'] ?? 0)
+        );
 
         return array_merge($autharray, $outarray);
     } // server_details
