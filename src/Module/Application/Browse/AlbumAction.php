@@ -77,18 +77,20 @@ final class AlbumAction implements ApplicationActionInterface
         $year_sort = $this->configContainer->get('use_original_year') ? "original_year" : "year";
         $sort_type = $this->configContainer->get('album_sort');
         switch ($sort_type) {
+            case 'name_asc':
+                $browse->set_sort('name', 'ASC');
+                break;
+            case 'name_desc':
+                $browse->set_sort('name', 'DESC');
+                break;
             case 'year_asc':
                 $browse->set_sort($year_sort, 'ASC');
                 break;
             case 'year_desc':
                 $browse->set_sort($year_sort, 'DESC');
                 break;
-            case 'name_desc':
-                $browse->set_sort('name', 'DESC');
-                break;
-            case 'name_asc':
             default:
-                $browse->set_sort('name', 'ASC');
+                $browse->set_sort('name_' . $year_sort, 'ASC');
         }
         $browse->update_browse_from_session(); // Update current index depending on what is in session.
         $browse->show_objects();

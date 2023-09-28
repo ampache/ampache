@@ -2198,6 +2198,12 @@ class Query
                     case 'name':
                         $sql = "`album`.`name`";
                         break;
+                    case 'name_original_year':
+                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`)";
+                        break;
+                    case 'name_year':
+                        $sql = "`album`.`name`, `album`.`year`";
+                        break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -2237,6 +2243,12 @@ class Query
                 switch ($field) {
                     case 'name':
                         $sql = "`album`.`name`, `album_disk`.`disk`";
+                        break;
+                    case 'name_original_year':
+                        $sql = "`album`.`name`, IFNULL(`album`.`original_year`, `album`.`year`), `album_disk`.`disk`";
+                        break;
+                    case 'name_year':
+                        $sql = "`album`.`name`, `album`.`year`, `album_disk`.`disk`";
                         break;
                     case 'generic_artist':
                         $sql = "`artist`.`name`";

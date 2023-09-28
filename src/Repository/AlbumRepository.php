@@ -318,20 +318,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sort_type     = AmpConfig::get('album_sort');
         $showAlbum     = AmpConfig::get('album_group');
         switch ($sort_type) {
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
             case 'name_asc':
                 $sql_sort = "`album`.`name` ASC";
                 break;
             case 'name_desc':
                 $sql_sort = "`album`.`name` DESC";
                 break;
+            case 'year_asc':
+                $sql_sort = "$original_year ASC";
+                break;
+            case 'year_desc':
+                $sql_sort = "$original_year DESC";
+                break;
             default:
-                $sql_sort = "`album`.`name`" . ", $original_year";
+                $sql_sort = "`album`.`name`, $original_year";
         }
 
         $sql        = ($showAlbum)
@@ -389,20 +389,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         switch ($sort_type) {
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
             case 'name_asc':
                 $sql_sort = "`album`.`name` ASC";
                 break;
             case 'name_desc':
                 $sql_sort = "`album`.`name` DESC";
                 break;
+            case 'year_asc':
+                $sql_sort = "$original_year ASC";
+                break;
+            case 'year_desc':
+                $sql_sort = "$original_year DESC";
+                break;
             default:
-                $sql_sort = "`album`.`name`" . ", $original_year";
+                $sql_sort = "`album`.`name`, $original_year";
         }
 
         $sql        = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
@@ -458,17 +458,17 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         switch ($sort_type) {
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
             case 'name_asc':
                 $sql_sort = "`album`.`name` ASC";
                 break;
             case 'name_desc':
                 $sql_sort = "`album`.`name` DESC";
+                break;
+            case 'year_asc':
+                $sql_sort = "$original_year ASC";
+                break;
+            case 'year_desc':
+                $sql_sort = "$original_year DESC";
                 break;
             default:
                 $sql_sort = "`album`.`name`, $original_year";
