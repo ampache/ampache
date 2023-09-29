@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2023-09-28 16:50+1000\n"
+"POT-Creation-Date: 2023-09-29 12:25+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -282,7 +282,7 @@ msgstr ""
 #: ../../src/Config/functions.php:587
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:63
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:104
-#: ../../src/Repository/Model/Catalog.php:2400
+#: ../../src/Repository/Model/Catalog.php:2426
 msgid "Error"
 msgstr ""
 
@@ -627,7 +627,7 @@ msgstr ""
 #: ../../public/templates/show_recently_skipped.inc_user.php:165
 #: ../../public/templates/show_tagcloud_hidden.inc.php:33
 #: ../../public/templates/show_tagcloud.inc.php:34
-#: ../../src/Repository/Model/Catalog.php:2376
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Song"
 msgstr ""
 
@@ -1828,7 +1828,7 @@ msgstr ""
 #: ../../public/templates/show_test.inc.php:62
 #: ../../public/templates/show_user.inc.php:113
 #: ../../src/Module/Application/Playlist/ImportPlaylistAction.php:74
-#: ../../src/Repository/Model/Catalog.php:2376
+#: ../../src/Repository/Model/Catalog.php:2402
 msgid "Status"
 msgstr ""
 
@@ -2662,7 +2662,7 @@ msgstr ""
 #: ../../public/templates/show_disabled_songs.inc.php:32
 #: ../../public/templates/show_disabled_songs.inc.php:59
 #: ../../public/templates/show_pvmsg_row.inc.php:29
-#: ../../src/Repository/Model/Catalog.php:382
+#: ../../src/Repository/Model/Catalog.php:405
 msgid "Select"
 msgstr ""
 
@@ -2775,6 +2775,7 @@ msgstr ""
 #: ../../src/Gui/Song/SongViewAdapter.php:406
 #: ../../src/Module/Catalog/Catalog_dropbox.php:148
 #: ../../src/Module/Catalog/Catalog_local.php:146
+#: ../../src/Module/Cli/AddCatalogCommand.php:43
 #: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:47
 msgid "Path"
 msgstr ""
@@ -5286,9 +5287,9 @@ msgstr ""
 #: ../../public/templates/show_user.inc.php:51
 #: ../../public/templates/show_users.inc.php:75
 #: ../../src/Module/Util/Ui.php:1088
-#: ../../src/Repository/Model/Catalog.php:1031
-#: ../../src/Repository/Model/Catalog.php:1032
-#: ../../src/Repository/Model/Catalog.php:1033
+#: ../../src/Repository/Model/Catalog.php:1054
+#: ../../src/Repository/Model/Catalog.php:1055
+#: ../../src/Repository/Model/Catalog.php:1056
 #: ../../src/Repository/Model/User.php:1115
 msgid "Never"
 msgstr ""
@@ -6082,13 +6083,13 @@ msgstr ""
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:108
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Error Invalid Handshake - "
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:118
 #: ../../src/Module/Api/Method/Api3/Handshake3Method.php:119
-#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:189
+#: ../../src/Module/Api/Method/Api3/Handshake3Method.php:190
 msgid "Invalid Username/Password"
 msgstr ""
 
@@ -7376,7 +7377,7 @@ msgid "Your search has been saved as a Playlist with the name %s"
 msgstr ""
 
 #: ../../src/Module/Application/Search/SaveAsPlaylistAction.php:106
-#: ../../src/Repository/Model/Catalog.php:3702
+#: ../../src/Repository/Model/Catalog.php:3728
 msgid "Failed to create playlist"
 msgstr ""
 
@@ -7735,7 +7736,7 @@ msgstr ""
 #: ../../src/Module/Catalog/Catalog_remote.php:326
 #: ../../src/Module/Catalog/Catalog_subsonic.php:309
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:124
-#: ../../src/Repository/Model/Catalog.php:2398
+#: ../../src/Repository/Model/Catalog.php:2424
 #: ../../src/Repository/Model/Search.php:687
 msgid "Updated"
 msgstr ""
@@ -7890,6 +7891,15 @@ msgstr ""
 msgid "Could not find the Seafile library called \"%s\", no media was updated"
 msgstr ""
 
+#: ../../src/Module/Catalog/Update/AddCatalog.php:85
+#: ../../src/Repository/Model/Catalog.php:1230
+msgid "Failed to create the catalog, check the debug logs"
+msgstr ""
+
+#: ../../src/Module/Catalog/Update/AddCatalog.php:104
+msgid "Catalog created"
+msgstr ""
+
 #: ../../src/Module/Catalog/Update/UpdateCatalog.php:63
 msgid "Deactivated PHP memory limit"
 msgstr ""
@@ -7978,6 +7988,30 @@ msgstr ""
 #: ../../src/Module/Cli/PrintTagsCommand.php:56
 #, php-format
 msgid "Reading File: \"%s\""
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:37
+msgid "Create a local media catalog"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:42
+msgid "Catalog name"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:44
+msgid "Catalog Media Type (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:45
+msgid "Filename Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:46
+msgid "Folder Pattern (optional)"
+msgstr ""
+
+#: ../../src/Module/Cli/AddCatalogCommand.php:47
+msgid "Create a local music catalog called `some-catalog`"
 msgstr ""
 
 #: ../../src/Module/Cli/AdminAddUserCommand.php:38
@@ -8597,7 +8631,7 @@ msgstr ""
 
 #: ../../src/Module/Song/SongSorter.php:109
 #: ../../src/Module/Song/SongSorter.php:183
-#: ../../src/Repository/Model/Catalog.php:3427
+#: ../../src/Repository/Model/Catalog.php:3453
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
@@ -9575,46 +9609,42 @@ msgstr ""
 msgid "Private Messages"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:1161
+#: ../../src/Repository/Model/Catalog.php:1184
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:1163
+#: ../../src/Repository/Model/Catalog.php:1186
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:1208
-msgid "Failed to create the catalog, check the debug logs"
-msgstr ""
-
-#: ../../src/Repository/Model/Catalog.php:2402
+#: ../../src/Repository/Model/Catalog.php:2428
 msgid "No Update Needed"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3396
+#: ../../src/Repository/Model/Catalog.php:3422
 msgid "Catalog Cleaned"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3397
+#: ../../src/Repository/Model/Catalog.php:3423
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/Repository/Model/Catalog.php:3426
+#: ../../src/Repository/Model/Catalog.php:3452
 msgid "Catalog Verified"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:3720
+#: ../../src/Repository/Model/Catalog.php:3746
 msgid "No valid songs found in playlist file"
 msgstr ""
 
-#: ../../src/Repository/Model/Catalog.php:4282
+#: ../../src/Repository/Model/Catalog.php:4308
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
