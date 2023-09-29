@@ -77,6 +77,29 @@ abstract class Catalog extends database_object
         'subsonic' => Catalog_subsonic::class,
     ];
 
+    private const SERVER_COUNTS = [
+        'album' => 0,
+        'album_disk' => 0,
+        'album_group' => 0,
+        'artist' => 0,
+        'catalog' => 0,
+        'items' => 0,
+        'label' => 0,
+        'license' => 0,
+        'live_stream' => 0,
+        'playlist' => 0,
+        'podcast' => 0,
+        'podcast_episode' => 0,
+        'search' => 0,
+        'share' => 0,
+        'size' => 0,
+        'song' => 0,
+        'tag' => 0,
+        'time' => 0,
+        'user' => 0,
+        'video' => 0
+    ];
+
     /**
      * @var integer $id
      */
@@ -1292,11 +1315,11 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
      * @param int $user_id
-     * @return array
+     * @return int[]
      */
     public static function get_server_counts($user_id)
     {
-        $results = array();
+        $results = self::SERVER_COUNTS;
         if ($user_id > 0) {
             $sql        = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?;";
             $db_results = Dba::read($sql, array($user_id));
@@ -1342,26 +1365,30 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @param integer $catalog_id
-     * @return array
+     * @return int[]
      */
     public static function count_catalog($catalog_id)
     {
+        $catalog   = self::create_from_id($catalog_id);
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
-        $results   = array();
-        $catalog   = self::create_from_id($catalog_id);
+        $results   = array(
+            'items' => 0,
+            'time' => 0,
+            'size' => 0
+        );
 
         if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
-            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `" . $table . "` " . $where_sql;
+            $sql              = "SELECT COUNT(`id`) AS `items`, IFNULL(SUM(`time`), 0) AS `time`, IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
-            $row              = Dba::fetch_row($db_results);
-            $results['items'] = ($row[0] ?? 0);
-            $results['time']  = ($row[1] ?? 0);
-            $results['size']  = ($row[2] ?? 0);
+            $row              = Dba::fetch_assoc($db_results);
+            $results['items'] = (int)($row['items'] ?? 0);
+            $results['time']  = (int)($row['time'] ?? 0);
+            $results['size']  = (int)($row['size'] ?? 0);
         }
 
         return $results;
