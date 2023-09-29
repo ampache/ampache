@@ -77,6 +77,29 @@ abstract class Catalog extends database_object
         'subsonic' => Catalog_subsonic::class,
     ];
 
+    private const SERVER_COUNTS = [
+        'album' => 0,
+        'album_disk' => 0,
+        'album_group' => 0,
+        'artist' => 0,
+        'catalog' => 0,
+        'items' => 0,
+        'label' => 0,
+        'license' => 0,
+        'live_stream' => 0,
+        'playlist' => 0,
+        'podcast' => 0,
+        'podcast_episode' => 0,
+        'search' => 0,
+        'share' => 0,
+        'size' => 0,
+        'song' => 0,
+        'tag' => 0,
+        'time' => 0,
+        'user' => 0,
+        'video' => 0
+    ];
+
     /**
      * @var integer $id
      */
@@ -1183,8 +1206,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types,
-            array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
+        if (!in_array($gather_types,  array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
             return 0;
         }
 
@@ -1292,11 +1314,11 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
      * @param int $user_id
-     * @return array
+     * @return int[]
      */
     public static function get_server_counts($user_id)
     {
-        $results = array();
+        $results = self::SERVER_COUNTS;
         if ($user_id > 0) {
             $sql        = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?;";
             $db_results = Dba::read($sql, array($user_id));
@@ -1342,26 +1364,30 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @param integer $catalog_id
-     * @return array
+     * @return int[]
      */
     public static function count_catalog($catalog_id)
     {
+        $catalog   = self::create_from_id($catalog_id);
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
-        $results   = array();
-        $catalog   = self::create_from_id($catalog_id);
+        $results   = array(
+            'items' => 0,
+            'time' => 0,
+            'size' => 0
+        );
 
         if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN (SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
-            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `" . $table . "` " . $where_sql;
+            $sql              = "SELECT COUNT(`id`) AS `items`, IFNULL(SUM(`time`), 0) AS `time`, IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `" . $table . "` " . $where_sql;
             $db_results       = Dba::read($sql, $params);
-            $row              = Dba::fetch_row($db_results);
-            $results['items'] = ($row[0] ?? 0);
-            $results['time']  = ($row[1] ?? 0);
-            $results['size']  = ($row[2] ?? 0);
+            $row              = Dba::fetch_assoc($db_results);
+            $results['items'] = (int)($row['items'] ?? 0);
+            $results['time']  = (int)($row['time'] ?? 0);
+            $results['size']  = (int)($row['size'] ?? 0);
         }
 
         return $results;
@@ -1377,20 +1403,24 @@ abstract class Catalog extends database_object
     public static function get_uploads_sql($type, $user_id = 0)
     {
         $sql       = '';
+        $column    = ($type == 'song')
+            ? 'user_upload'
+            : 'user';
         $where_sql = ($user_id > 0)
-            ? "WHERE `song`.`user_upload` = '" . $user_id . "'"
-            : "WHERE `song`.`user_upload` IS NOT NULL";
+            ? "WHERE `$type`.`$column` = '" . $user_id . "'"
+            : "WHERE `$type`.`$column` IS NOT NULL";
         switch ($type) {
             case 'song':
                 $sql = "SELECT `song`.`id` AS `id` FROM `song` $where_sql";
                 break;
             case 'album':
-                $sql = "SELECT `album`.`id` AS `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` $where_sql";
+                $sql = "SELECT DISTINCT `album`.`id` AS `id` FROM `album` LEFT JOIN `artist` on `album`.`album_artist` = `artist`.`id` $where_sql";
                 break;
             case 'artist':
-                $sql = "SELECT DISTINCT `artist_map`.`artist_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `song`.`id` = `artist_map`.`object_id` $where_sql AND `artist_id` IS NOT NULL";
+                $sql = "SELECT DISTINCT `id` FROM `artist` $where_sql";
                 break;
         }
+        //debug_event(self::class, 'get_uploads_sql ' . $sql, 5);
 
         return $sql;
     } // get_uploads_sql
@@ -1544,26 +1574,39 @@ abstract class Catalog extends database_object
         switch ($table) {
             case 'album':
             case 'artist':
-                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'catalog':
             case 'live_stream':
             case 'playlist':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` ";
+            case 'search':
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'podcast':
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'share':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` ";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+                break;
+            case 'playlist_search':
+                $empty_playlist = empty($objects['playlist']);
+                $empty_search   = empty($objects['search']);
+                if (!$empty_playlist && !$empty_search) {
+                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects['playlist']) . ") UNION SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
+                } elseif ($empty_playlist && !$empty_search) {
+                    $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
+                } elseif ($empty_search && !$empty_playlist) {
+                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
+                } else {
+                    return array();
+                }
                 break;
             default:
                 return array();
         }
-        $sql .= "FROM $table WHERE `id` IN (" . implode(",", $objects) . ");";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -2532,14 +2575,15 @@ abstract class Catalog extends database_object
         $new_song->year = (strlen((string)$results['year']) > 4)
             ? (int)substr($results['year'], -4, 4)
             : (int)($results['year']);
-        $new_song->disk     = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate  = $results['bitrate'];
-        $new_song->rate     = $results['rate'];
-        $new_song->mode     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        $new_song->channels = $results['channels'];
-        $new_song->size     = $results['size'];
-        $new_song->time     = (strlen((string)$results['time']) > 5)
+        $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $new_song->disksubtitle = $results['disksubtitle'];
+        $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
+        $new_song->bitrate      = $results['bitrate'];
+        $new_song->rate         = $results['rate'];
+        $new_song->mode         = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
+        $new_song->channels     = $results['channels'];
+        $new_song->size         = $results['size'];
+        $new_song->time         = (strlen((string)$results['time']) > 5)
             ? (int)substr($results['time'], -5, 5)
             : (int)($results['time']);
         if ($new_song->time < 0) {
@@ -2872,6 +2916,12 @@ abstract class Catalog extends database_object
             if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
                 Dba::write($sql, array($new_song->album, $song->get_album_disk()));
+            }
+
+            // a change on any song will update for the entire disk
+            if ($new_song->disksubtitle !== $song->disksubtitle) {
+                $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?";
+                Dba::write($sql, array($new_song->disksubtitle, $song->get_album_disk()));
             }
 
             if ($song->tags != $new_song->tags) {
@@ -4137,8 +4187,8 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'add_to_catalog':
             case 'import_to_catalog':
+                $catalog_media_types = array();
                 if ($catalogs) {
-                    $catalog_media_types = array();
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {

@@ -49,7 +49,7 @@ final class RegisterMethod
      * @param array $input
      * username = (string) $username
      * fullname = (string) $fullname //optional
-     * password = (string) hash('sha256', $password))
+     * password = (string) hash('sha256', $password)
      * email    = (string) $email
      * @return boolean
      */

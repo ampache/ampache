@@ -351,7 +351,7 @@ class Song_Preview extends database_object implements Media, playable_item
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsampling mojo and everything
+     * stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
      * @param string $additional_params
      * @param string $player

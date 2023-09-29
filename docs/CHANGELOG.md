@@ -1,5 +1,56 @@
 # CHANGELOG
 
+## Ampache 6.0.3
+
+### Added
+
+* Translations 2023-09
+* Added refresh button on smartlists so you don't have to overwrite the rules each time
+* CLI
+  * New cli command `bin/cli run:addCatalog` (Create a local catalog)
+* Database 600040
+  * Add `custom_timezone` as a user preference
+  * Add `disksubtitle` to `song_data` and `album_disk` table
+* Config version 68
+  * Add `date_timezone` (Allow custom timezone for date formatting)
+
+### Changed
+
+* Lyrist plugin regex be a bit looser with user input and regex /api/ on the end of api_host
+* Don't try and load preferences page without a user to load
+* Check for `downsample_remote` conditions on song play_url generation
+* Don't downsample songs during a stream (play_url should catch this before you stream)
+* Sort album browse pages based on your `album_sort` preference
+
+### Fixed
+
+* Error checking user temp playlist could give you a blank index page
+* Runtime errors with missing data
+* Missing translations for language list
+* Select uploaded artists using the artist instead of song
+* Missing column in Search::get_searches SQL
+* Updating artist_map too much
+* Last.fm lookup url was missing an `&` for albums
+* Don't try to load an album_disk that doesn't have an album
+* Restore sorting on album lists and browses that aren't grouped by release_type
+* Catch Spotify runtime error on retry as well as initial attempt
+
+## API 6.0.3
+
+### Added
+
+* API5::playlist_songs: Add `random` to get random objects filtered by limit
+
+### Fixed
+
+* ALL
+  * handshake: runtime errors with bad username
+  * handshake: Don't error on empty data counts
+  * ping: Don't error on empty data counts
+* Api6
+  * list: searches were missing from playlists
+  * browse: XML returned a list instead of a browse object
+
 ## Ampache 6.0.2
 
 ### Added
@@ -397,6 +448,11 @@ Stream token's will let you design permalinked streams and allow users to stream
 
 * ALL
   * advanced_search methods were breaking with various offset and limits
+* API4
+  * share_create: null `expires` fall back to `share_expire` or 7 days
+* API5
+  * share_create: null `expires` fall back to `share_expire` or 7 days
+  * preference_edit: Could apply to the wrong user
 * Api6 JSON
   * Share and Bookmark object id's were not strings
 * Api3

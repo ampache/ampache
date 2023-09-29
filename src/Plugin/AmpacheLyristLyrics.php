@@ -108,7 +108,7 @@ class AmpacheLyristLyrics
      */
     public function get_lyrics($song)
     {
-        $uri     = rtrim($this->api_host, '/') . '/api/' . urlencode($song->title) . '/' . urlencode($song->get_artist_fullname());
+        $uri     = rtrim(preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode($song->title) . '/' . urlencode($song->get_artist_fullname());
         $request = Requests::get($uri, array(), Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);

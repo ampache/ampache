@@ -55,7 +55,7 @@ final class CatalogFile5Method
      * @param User $user
      * file    = (string) urlencode(FULL path to local file)
      * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
-     * catalog = (integer) $catalog_id)
+     * catalog = (integer) $catalog_id
      * @return boolean
      */
     public static function catalog_file(array $input, User $user): bool
@@ -68,7 +68,7 @@ final class CatalogFile5Method
         }
         $file = html_entity_decode($input['file']);
         $task = explode(',', (string)$input['task']);
-        if (!$task) {
+        if (!is_array($task)) {
             $task = array();
         }
 

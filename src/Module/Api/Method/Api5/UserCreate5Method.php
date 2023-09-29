@@ -47,7 +47,7 @@ final class UserCreate5Method
      * @param User $user
      * username = (string) $username
      * fullname = (string) $fullname //optional
-     * password = (string) hash('sha256', $password))
+     * password = (string) hash('sha256', $password)
      * email    = (string) $email
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean

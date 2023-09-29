@@ -45,7 +45,7 @@ final class UpdateArtistInfo4Method
      *
      * @param array $input
      * @param User $user
-     * id   = (integer) $artist_id)
+     * id   = (integer) $artist_id
      * @return boolean
      */
     public static function update_artist_info(array $input, User $user): bool

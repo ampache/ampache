@@ -62,6 +62,7 @@ class OAuthServer
      * process a request_token request
      * returns the request token on success
      * @param $request
+     * @return mixed
      * @throws OAuthException
      */
     public function fetch_request_token(&$request)
@@ -170,6 +171,7 @@ class OAuthServer
     /**
      * try to find the consumer for the provided request's consumer key
      * @param $request
+     * @return mixed
      * @throws OAuthException
      */
     private function get_consumer($request)
@@ -193,6 +195,7 @@ class OAuthServer
      * @param $request
      * @param $consumer
      * @param string $token_type
+     * @return mixed
      * @throws OAuthException
      */
     private function get_token($request, $consumer, $token_type = "access")

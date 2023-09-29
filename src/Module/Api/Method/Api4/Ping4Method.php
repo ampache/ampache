@@ -74,25 +74,26 @@ final class Ping4Method
             $user   = User::get_from_username(Session::username($input['auth']));
             $counts = Catalog::get_server_counts($user->id ?? 0);
             // now add it all together
-            $countarray = array('api' => Api4::$version,
+            $countarray = array(
+                'api' => Api4::$version,
                 'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                'update' => date("c", (int) $row['update']),
-                'add' => date("c", (int) $row['add']),
-                'clean' => date("c", (int) $row['clean']),
-                'songs' => (int) $counts['song'],
-                'albums' => (int) $counts['album'],
-                'artists' => (int) $counts['artist'],
-                'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-                'videos' => (int) $counts['video'],
-                'catalogs' => (int) $counts['catalog'],
-                'users' => (int) $counts['user'],
-                'tags' => (int) $counts['tag'],
-                'podcasts' => (int) $counts['podcast'],
-                'podcast_episodes' => (int) $counts['podcast_episode'],
-                'shares' => (int) $counts['share'],
-                'licenses' => (int) $counts['license'],
-                'live_streams' => (int) $counts['live_stream'],
-                'labels' => (int) $counts['label']
+                'update' => date("c", (int)$row['update']),
+                'add' => date("c", (int)$row['add']),
+                'clean' => date("c", (int)$row['clean']),
+                'songs' => $counts['song'],
+                'albums' => $counts['album'],
+                'artists' => $counts['artist'],
+                'playlists' => ($counts['playlist'] + $counts['search']),
+                'videos' => $counts['video'],
+                'catalogs' => $counts['catalog'],
+                'users' => $counts['user'],
+                'tags' => $counts['tag'],
+                'podcasts' => $counts['podcast'],
+                'podcast_episodes' => $counts['podcast_episode'],
+                'shares' => $counts['share'],
+                'licenses' => $counts['license'],
+                'live_streams' => $counts['live_stream'],
+                'labels' => $counts['label']
             );
             $results = array_merge($results, $countarray);
         }

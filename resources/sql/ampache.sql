@@ -18,7 +18,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Aug 21, 2023 at 11:03 PM
+-- Generation Time: Sep 29, 2023 at 06:09 AM
 -- Server version: 10.5.19-MariaDB-0+deb11u2
 -- PHP Version: 8.2.8
 
@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `album_disk` (
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `song_count` smallint(5) UNSIGNED DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `disksubtitle` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_album_disk` (`album_id`,`disk`,`catalog`),
   KEY `id_index` (`id`),
   KEY `album_id_type_index` (`album_id`,`disk`),
@@ -895,7 +896,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `catagory` (`catagory`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1023,7 +1024,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (181, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface'),
-(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player');
+(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'special', 'streaming', 'player'),
+(183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom');
 
 -- --------------------------------------------------------
 
@@ -1261,6 +1263,7 @@ CREATE TABLE IF NOT EXISTS `song_data` (
   `replaygain_album_peak` decimal(10,6) DEFAULT NULL,
   `r128_track_gain` smallint(5) DEFAULT NULL,
   `r128_album_gain` smallint(5) DEFAULT NULL,
+  `disksubtitle` varchar(255) DEFAULT NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1468,7 +1471,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600038'),
+('db_version', '600040'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
