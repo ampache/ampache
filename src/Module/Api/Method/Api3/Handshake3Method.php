@@ -183,7 +183,7 @@ final class Handshake3Method
             } // match
         } // end while
 
-        debug_event(self::class, 'Login Failed, unable to match passphrase for ' . $username, 1);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         echo Xml3_Data::error('401', T_('Error Invalid Handshake - ') . T_('Invalid Username/Password'));
 
         return false;

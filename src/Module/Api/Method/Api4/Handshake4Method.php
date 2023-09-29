@@ -83,7 +83,7 @@ final class Handshake4Method
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client = static::getUserRepository()->findByApiKey(trim($passphrase));
+            $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
             $client = User::get_from_username($username);
@@ -202,7 +202,7 @@ final class Handshake4Method
             } // match
         } // end while
 
-        debug_event(self::class, 'Login Failed, unable to match passphrase for ' . $username, 1);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api4::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);
 
         return false;
