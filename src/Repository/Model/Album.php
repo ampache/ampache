@@ -121,12 +121,12 @@ class Album extends database_object implements library_item
     public $addition_time;
 
     /**
-     *  @var integer $total_duration
+     * @var integer $total_duration
      */
     public $total_duration;
 
     /**
-     *  @var integer $original_year
+     * @var integer $original_year
      */
     public $original_year;
 
@@ -1132,7 +1132,7 @@ class Album extends database_object implements library_item
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $name           = $data['name'] ?? $this->name;
         $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
-        $year           = (int)$data['year'] ?? 0;
+        $year           = (int)($data['year'] ?? 0);
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : null;
         $mbid           = $data['mbid'] ?? null;
         $mbid_group     = $data['mbid_group'] ?? null;
@@ -1304,8 +1304,8 @@ class Album extends database_object implements library_item
         $results = $album_ids;
         if (empty($results)) {
             // Find all albums that are missing an album artist
-            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != 'Unknown (Orphaned)'";
-            $db_results = Dba::read($sql);
+            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != ?;";
+            $db_results = Dba::read($sql, array(T_('Unknown (Orphaned)')));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = (int) $row['id'];
             }

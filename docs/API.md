@@ -1,6 +1,6 @@
 ---
-title: "Ampache API"
-metaTitle: "Ampache API"
+title: "API5"
+metaTitle: "API5"
 description: "API documentation"
 ---
 
@@ -14,19 +14,6 @@ pass offset as an additional parameter.
 
 If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
 All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
-
-## Archived Version Documentation
-
-After each release, a documentation page will be created to allow pruning old features from the current version.
-
-* [API 5.5 Documentation](https://ampache.org/api/api-5)
-* [API 5.1 Documentation](https://ampache.org/api/versions/api-5.1)
-* [API 5.0 Documentation](https://ampache.org/api/versions/api-5.0)
-* [API 4.4 Documentation](https://ampache.org/api/api-4)
-* [API 4.3 Documentation](https://ampache.org/api/versions/api-4.3)
-* [API 4.2 Documentation](https://ampache.org/api/versions/api-4.2)
-* [API 4.1 Documentation](https://ampache.org/api/versions/api-4.1)
-* [API 3.9 Documentation](https://ampache.org/api/api-3)
 
 ## Changelog API develop
 
@@ -63,7 +50,7 @@ $passphrase = hash('sha256', $time . $key);
 Once you've generated the encoded passphrase, you can call the following URL (localhost/ampache is the location of your Ampache installation)
 
 ```Text
-http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&timestamp=TIME&version=350001&user=USER
+http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&timestamp=TIME&version=5.5.3&user=USER
 ```
 
 ### Api Key
@@ -71,7 +58,7 @@ http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&
 The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one). Then call the following URL (localhost/ampache is the location of your Ampache installation):
 
 ```Text
-http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=350001
+http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=5.5.3
 ```
 
 If you are using Ampache 4.0.0 and higher; the key can be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example

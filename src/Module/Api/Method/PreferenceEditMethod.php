@@ -74,7 +74,7 @@ final class PreferenceEditMethod
             return false;
         }
         $value = $input['value'];
-        if (!Preference::update($pref_name, $value, $all)) {
+        if (!Preference::update($pref_name, $user->id, $value, $all)) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;

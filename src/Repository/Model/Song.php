@@ -23,6 +23,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -2222,7 +2224,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        if (empty($additional_params) && !strpos($additional_params, 'action=download')) {
+        $downsample_remote = false;
+        // enforce or disable transcoding depending on local network ACL
+        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
+            $downsample_remote = true;
+            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+        }
+
+        // if you transcode the media mime will change
+        if (AmpConfig::get('transcode') != 'never' && ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
             $this->type    = Stream::get_transcode_format($this->type, null, $player);
             $this->mime    = self::type_to_mime($this->type);
             $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
@@ -2544,11 +2554,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * @deprecated
      */
-    private static function getLicenseRepository(): LicenseRepositoryInterface
+    private function getNetworkChecker(): NetworkCheckerInterface
     {
         global $dic;
 
-        return $dic->get(LicenseRepositoryInterface::class);
+        return $dic->get(NetworkCheckerInterface::class);
     }
 
     /**

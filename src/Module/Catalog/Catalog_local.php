@@ -498,7 +498,7 @@ class Catalog_local extends Catalog
         $this->songs_to_gather  = array();
         $this->videos_to_gather = array();
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
@@ -545,7 +545,7 @@ class Catalog_local extends Catalog
 
             if ($options['gather_art']) {
                 $catalog_id = $this->id;
-                if (!defined('SSE_OUTPUT')) {
+                if (!defined('SSE_OUTPUT') && !defined('API')) {
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
@@ -567,7 +567,7 @@ class Catalog_local extends Catalog
             $rate = T_('N/A');
         }
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('API')) {
             Ui::show_box_top();
             Ui::update_text(T_('Catalog Updated'),
                 sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff),
@@ -922,8 +922,7 @@ class Catalog_local extends Catalog
                             $pattern = str_replace($value, $results[$key], $pattern);
                         }
                         $mvfile .= DIRECTORY_SEPARATOR . $pattern . '.' . pathinfo($file, PATHINFO_EXTENSION);
-                        debug_event('local.catalog',
-                            'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
+                        debug_event('local.catalog', 'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
 
                         $mvdir = pathinfo($mvfile, PATHINFO_DIRNAME);
                         if (!is_dir($mvdir)) {

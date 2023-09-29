@@ -97,7 +97,6 @@ $_SESSION['login'] = true; ?>
                 <?php } ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
-
                 <?php } ?>
                 </div>
             </form>

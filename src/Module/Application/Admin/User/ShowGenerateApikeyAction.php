@@ -49,7 +49,7 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
     {
         $this->ui->showHeader();
 
-        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
 
         $this->ui->showConfirmation(
             T_('Are You Sure?'),

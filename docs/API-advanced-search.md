@@ -1,6 +1,6 @@
 ---
-title: "advanced_search"
-metaTitle: "advanced_search"
+title: "API5 advanced_search"
+metaTitle: "API5 advanced_search"
 description: "API documentation"
 ---
 
@@ -24,7 +24,7 @@ This is passed as a type argument and will only return this object in results
 * [label](https://ampache.org/api/advanced-search/label-advanced-search)
 * [playlist](https://ampache.org/api/advanced-search/playlist-advanced-search)
 * [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache 5.5.0+**)
-* [podcast_episode](https://ampache.org/api/advanced-search/podcast-episode-advanced-search) (**Ampache 5.5.0+**)
+* [podcast_episode](https://ampache.org/api/advanced-search/podcast_episode-advanced-search) (**Ampache 5.5.0+**)
 * [genre](https://ampache.org/api/advanced-search/genre-advanced-search)
 * tag (*Alias of genre)
 * [user](https://ampache.org/api/advanced-search/user-advanced-search)
@@ -93,8 +93,6 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | placeformed              | Place Formed                            | text              |                                artist                                 |
 | release_type             | Release Type                            | text              |                                 album                                 |
 | release_status           | Release Status                          | text              |                                 album                                 |
-| barcode                  | Barcode                                 | text              |                                 album                                 |
-| catalog_number           | Catalog Number                          | text              |                                 album                                 |
 | myrating                 | My Rating                               | numeric           |                          song, album, artist                          |
 | rating                   | Rating (Average)                        | numeric           |                          song, album, artist                          |
 | songrating               | My Rating (Song)                        | numeric           |                             album, artist                             |

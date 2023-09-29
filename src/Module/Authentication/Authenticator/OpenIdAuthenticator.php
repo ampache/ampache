@@ -54,9 +54,9 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
             if ($consumer) {
                 $auth_request = $consumer->begin($website);
                 if ($auth_request) {
-                    $sreg_request = Auth_OpenID_SRegRequest::build(// Required
-                        array('nickname'), // Optional
-                        array('fullname', 'email'));
+                    $sreg_request = Auth_OpenID_SRegRequest::build(
+                        array('nickname'), // Required
+                        array('fullname', 'email')); // Optional
                     if ($sreg_request) {
                         $auth_request->addExtension($sreg_request);
                     }

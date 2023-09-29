@@ -59,7 +59,7 @@ final class DisableAction extends AbstractUserAction
 
         $this->ui->showHeader();
 
-        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
         $this->ui->showConfirmation(
             T_('Are You Sure?'),

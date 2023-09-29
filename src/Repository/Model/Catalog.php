@@ -535,7 +535,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
 
-        return (int)$row['count'] ?? 0;
+        return (int)($row['count'] ?? 0);
     }
 
     /**
@@ -1144,8 +1144,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types,
-            array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
             return 0;
         }
 
@@ -1441,14 +1440,8 @@ abstract class Catalog extends database_object
      */
     public function get_tvshow_ids()
     {
-        $results = array();
-
-        $sql = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` ';
-        $sql .= 'JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` ';
-        $sql .= 'JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` ';
-        $sql .= 'JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` ';
-        $sql .= 'WHERE `video`.`catalog` = ?';
-
+        $results    = array();
+        $sql        = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1762,10 +1755,8 @@ abstract class Catalog extends database_object
      */
     public function get_podcast_ids()
     {
-        $results = array();
-
-        $sql = 'SELECT `podcast`.`id` FROM `podcast` ';
-        $sql .= 'WHERE `podcast`.`catalog` = ?';
+        $results    = array();
+        $sql        = 'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -2429,8 +2420,8 @@ abstract class Catalog extends database_object
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
-        $new_song->comment     = $results['comment'];
-        $new_song->lyrics      = str_replace(
+        $new_song->comment = $results['comment'];
+        $new_song->lyrics  = str_replace(
             ["\r\n", "\r", "\n"],
             '<br />',
             strip_tags($results['lyrics'])
@@ -2439,7 +2430,6 @@ abstract class Catalog extends database_object
             $licenseRepository = static::getLicenseRepository();
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
-
             $new_song->license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
         } else {
             $new_song->license = null;
@@ -3835,15 +3825,14 @@ abstract class Catalog extends database_object
      */
     public static function update_map($catalog, $object_type, $object_id)
     {
-        if ($catalog > 0) {
-            debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
-            if ($object_type == 'artist') {
-                $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog`, 'artist' AS `object_type`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `song`.`catalog` > 0 AND `artist_map`.`object_type` = 'song' UNION SELECT DISTINCT `album`.`catalog`, 'artist' AS `object_type`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`artist_id` = ? AND `album`.`catalog` > 0 AND `artist_map`.`object_type` = 'album'  UNION  SELECT DISTINCT `song`.`catalog`, 'song_artist' AS `object_type`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `song`.`catalog` > 0 AND `artist_map`.`object_type` = 'song' UNION  SELECT DISTINCT `album`.`catalog`, 'album_artist' AS `object_type`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`artist_id` = ? AND `album`.`catalog` > 0 AND `artist_map`.`object_type` = 'album' GROUP BY `catalog`, `object_type`, `artist_map`.`artist_id`;";
-                Dba::write($sql, array($object_id, $object_id, $object_id, $object_id));
-            } else {
-                $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
-                Dba::write($sql, array($catalog, $object_type, $object_id));
-            }
+        debug_event(__CLASS__, "update_map $object_type: {{$object_id}}", 5);
+        if ($object_type == 'artist') {
+            // insert catalog_map artists
+            $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
+            Dba::write($sql, array($object_id, $object_id, $object_id, $object_id));
+        } elseif ($catalog > 0) {
+            $sql = "REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
+            Dba::write($sql, array($catalog, $object_type, $object_id));
         }
     }
 

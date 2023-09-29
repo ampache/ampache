@@ -43,7 +43,7 @@ final class Localplay3Method
     {
         // Load their localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        if (!$localplay->connect()) {
+        if (empty($localplay->type) || !$localplay->connect()) {
             echo Xml3_Data::error('405', T_('Invalid Request'));
 
             return false;
