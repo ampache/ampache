@@ -24,7 +24,7 @@
 
 ### Fixed
 
-* Error checkin user temp playlist could give you a blank index page
+* Error checking user temp playlist could give you a blank index page
 * Runtime errors with missing data
 * Missing translations for language list
 * Select uploaded artists using the artist instead of song
