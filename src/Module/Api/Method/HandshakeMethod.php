@@ -175,7 +175,7 @@ final class HandshakeMethod
             } // match
         } // end while
 
-        debug_event(self::class, 'Login Failed, unable to match passphrase for ' . $username, 1);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
 
         return false;

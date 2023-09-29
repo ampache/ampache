@@ -8,6 +8,12 @@
 * Database 560001
   * Update `access_list` in case you have a bad `user` column
 
+### Changed
+
+* Don't fail cli install when the user exists and you are overwriting the database
+* Check for `downsample_remote` conditions on song play_url generation
+* Don't downsample songs during a stream (play_url should catch this before you stream)
+
 ### Removed
 
 * Remove auth parameter from image url's
@@ -18,6 +24,8 @@
 * Catch some runtime errors
 * Catch unconfigured localplay before trying to connect
 * Sidebar HTML needed some cleaning up
+* Missing column in Search::get_searches SQL
+* Fix up genre, label and lyric search SQL to return better results
 * Subsonic
   * Get correct client IP for curl requests
   * getTopSongs default fallback to 50
@@ -30,9 +38,15 @@
 
 ### Fixed
 
-* API4::share_create: null `expires` fall back to `share_expire` or 7 days
-* API5::share_create: null `expires` fall back to `share_expire` or 7 days
-* API5::preference_edit: Could apply to the wrong user
+* ALL
+  * handshake: runtime errors with bad username
+  * handshake: Don't error on empty data counts
+  * ping: Don't error on empty data counts
+* API4
+  * share_create: null `expires` fall back to `share_expire` or 7 days
+* API5
+  * share_create: null `expires` fall back to `share_expire` or 7 days
+  * preference_edit: Could apply to the wrong user
 
 ## Ampache 5.6.2-release
 
