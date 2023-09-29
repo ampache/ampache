@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
+use Ampache\Module\Catalog\Update\AddCatalog;
+use Ampache\Module\Catalog\Update\AddCatalogInterface;
 use Ampache\Module\Catalog\Update\UpdateCatalog;
 use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
 use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
@@ -33,6 +35,7 @@ use Ampache\Module\Catalog\Update\UpdateSingleCatalogFolderInterface;
 use function DI\autowire;
 
 return [
+    AddCatalogInterface::class => autowire(AddCatalog::class),
     UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
     UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),

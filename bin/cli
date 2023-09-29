@@ -45,6 +45,7 @@ $app = new Ahc\Cli\Application(
 );
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
+$app->add($dic->get(Cli\AddCatalogCommand::class));
 $app->add($dic->get(Cli\ArtCleanupCommand::class));
 $app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
 $app->add($dic->get(Cli\BroadcastCommand::class));
