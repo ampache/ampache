@@ -44,7 +44,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ConfigContainerInterface $configContainer,
+        ConfigContainerInterface $configContainer
     ) {
         $this->configContainer = $configContainer;
     }
