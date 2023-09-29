@@ -356,32 +356,33 @@ class Api5
         $client    = static::getUserRepository()->findByApiKey(trim($token));
         $counts    = Catalog::get_server_counts($client->id);
         $playlists = (AmpConfig::get('hide_search', false))
-            ? ((int)$counts['playlist'])
-            : ((int)$counts['playlist'] + (int)$counts['search']);
+            ? ($counts['playlist'])
+            : ($counts['playlist'] + $counts['search']);
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('api' => self::$version,
+        $outarray = array(
+            'api' => self::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
-            'songs' => (int)$counts['song'],
-            'albums' => (int)$counts['album'],
-            'artists' => (int)$counts['artist'],
-            'genres' => (int)$counts['tag'],
-            'playlists' => (int)$counts['playlist'],
-            'searches' => (int)$counts['search'],
+            'songs' => $counts['song'],
+            'albums' => $counts['album'],
+            'artists' => $counts['artist'],
+            'genres' => $counts['tag'],
+            'playlists' => $counts['playlist'],
+            'searches' => $counts['search'],
             'playlists_searches' => $playlists,
-            'users' => ((int)$counts['user']),
-            'catalogs' => (int)$counts['catalog'],
-            'videos' => (int)$counts['video'],
-            'podcasts' => (int)$counts['podcast'],
-            'podcast_episodes' => (int)$counts['podcast_episode'],
-            'shares' => (int)$counts['share'],
-            'licenses' => (int)$counts['license'],
-            'live_streams' => (int)$counts['live_stream'],
-            'labels' => (int)$counts['label']
+            'users' => ($counts['user']),
+            'catalogs' => $counts['catalog'],
+            'videos' => $counts['video'],
+            'podcasts' => $counts['podcast'],
+            'podcast_episodes' => $counts['podcast_episode'],
+            'shares' => $counts['share'],
+            'licenses' => $counts['license'],
+            'live_streams' => $counts['live_stream'],
+            'labels' => $counts['label']
         );
 
         return array_merge($autharray, $outarray);

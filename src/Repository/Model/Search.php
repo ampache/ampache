@@ -48,7 +48,22 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'genre', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video');
+    public const VALID_TYPES     = array(
+        'song',
+        'album',
+        'album_disk',
+        'song_artist',
+        'album_artist',
+        'artist',
+        'genre',
+        'label',
+        'playlist',
+        'podcast',
+        'podcast_episode',
+        'tag',
+        'user',
+        'video'
+    );
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
 
@@ -1100,7 +1115,7 @@ class Search extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
         $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
-        $sql      = "SELECT `id` FROM `search` ";
+        $sql      = "SELECT `id`, `name` FROM `search` ";
         $params   = array();
 
         if (!$is_admin) {

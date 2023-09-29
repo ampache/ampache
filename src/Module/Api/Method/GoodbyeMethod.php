@@ -45,7 +45,7 @@ final class GoodbyeMethod
      *
      * @param array $input
      * @param User $user
-     * auth = (string))
+     * auth = (string)
      * @return boolean
      */
     public static function goodbye(array $input, User $user): bool

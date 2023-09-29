@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -43,12 +44,16 @@ $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
 $_SESSION['login'] = false;
-$is_session        = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $current_user      = Core::get_global('user');
+$is_session        = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
 $allow_upload      = $access25 && Upload::can_upload($current_user);
 $cookie_string     = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 30, path: '/', samesite: 'Strict'";
+
+$count_temp_playlist = (!empty($current_user->playlist) && $current_user->playlist instanceof Tmp_Playlist)
+    ? count($current_user->playlist->get_items())
+    : 0;
 // strings for the main page and templates
 $t_home      = T_('Home');
 $t_play      = T_('Play');
@@ -624,10 +629,6 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                         Plugin::show_update_available();
                         echo '<br />';
                     }
-                    $count_temp_playlist = (!empty($current_user))
-                        ? count($current_user->playlist->get_items())
-                        : 0;
-
                     if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>

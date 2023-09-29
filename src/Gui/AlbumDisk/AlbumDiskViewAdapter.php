@@ -246,7 +246,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
+        return ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->albumDisk->get_user_owner());
     }
 
     public function getEditButtonTitle(): string

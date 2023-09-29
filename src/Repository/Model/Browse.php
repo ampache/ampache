@@ -234,10 +234,6 @@ class Browse extends Query
             $match = ' (' . (string)$filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
             $match = ' (' . (string)$filter_value . ')';
-        //} elseif ($filter_value = $this->get_filter('regex_match')) {
-        //    $match = ' (' . (string) $filter_value . ')';
-        //} elseif ($filter_value = $this->get_filter('regex_not_match')) {
-        //    $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
             $catalog = Catalog::create_from_id((int)((string)$filter_value));
@@ -285,16 +281,28 @@ class Browse extends Query
                 break;
             case 'album':
                 Album::build_cache($object_ids);
-                $box_title         = T_('Albums') . $match;
-                if (is_array($argument) && array_key_exists('title', $argument)) {
-                    $box_title = $argument['title'];
+                $box_title     = T_('Albums') . $match;
+                $group_release = false;
+                if (is_array($argument)) {
+                    if (array_key_exists('title', $argument)) {
+                        $box_title = $argument['title'];
+                    }
+                    if (array_key_exists('group_disks', $argument)) {
+                        $group_release = (bool)$argument['group_disks'];
+                    }
                 }
                 $box_req = Ui::find_template('show_albums.inc.php');
                 break;
             case 'album_disk':
-                $box_title         = T_('Albums') . $match;
-                if (is_array($argument) && array_key_exists('title', $argument)) {
-                    $box_title = $argument['title'];
+                $box_title     = T_('Albums') . $match;
+                $group_release = false;
+                if (is_array($argument)) {
+                    if (array_key_exists('title', $argument)) {
+                        $box_title = $argument['title'];
+                    }
+                    if (array_key_exists('group_disks', $argument)) {
+                        $group_release = (bool)$argument['group_disks'];
+                    }
                 }
                 $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;

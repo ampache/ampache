@@ -37,6 +37,7 @@ final class AlbumDiskSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
+        $search_user_id     = $search->search_user->id ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -95,14 +96,14 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search->search_user->id . "`.`user` = " . $search->search_user->id . " AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'";
+                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'";
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
                         $table['favorite'] = '';
                     }
-                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search->search_user->id . ") AS `favorite_album_" . $search->search_user->id . "` ON `album`.`id` = `favorite_album_" . $search->search_user->id . "`.`object_id` AND `favorite_album_" . $search->search_user->id . "`.`object_type` = 'album'"
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `user_flag` WHERE `user` = " . $search_user_id . ") AS `favorite_album_" . $search_user_id . "` ON `album`.`id` = `favorite_album_" . $search_user_id . "`.`object_id` AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'"
                         : "";
                     break;
                 case 'myrating':
@@ -123,7 +124,7 @@ final class AlbumDiskSearch implements SearchInterface
                         $operator_sql = '>=';
                     }
                     if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL";
+                        $where[] = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL";
                     } elseif (in_array($operator_sql, array('<>', '<', '<=', '!='))) {
                         $where[]      = "(`rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search->search_user->id . "`.`rating` IS NULL)";
                         $parameters[] = $input;

@@ -36,7 +36,13 @@ use PDOStatement;
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
-    public const VALID_TYPES     = array('song', 'album', 'album_disk', 'playlist', 'video');
+    public const VALID_TYPES     = array(
+        'song',
+        'album',
+        'album_disk',
+        'playlist',
+        'video'
+    );
 
     public $id;
     public $user;

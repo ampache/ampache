@@ -81,13 +81,12 @@ final class Handshake3Method
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client = static::getUserRepository()->findByApiKey(trim($passphrase));
-            if ($client) {
-                $user_id = $client->id;
-            }
+            $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
             $client  = User::get_from_username($username);
+        }
+        if ($client) {
             $user_id = $client->id;
         }
 
@@ -166,9 +165,9 @@ final class Handshake3Method
                 $row        = Dba::fetch_assoc($db_results);
 
                 // Now we need to quickly get the totals
-                $counts = Catalog::get_server_counts($user_id);
-
-                echo Xml3_Data::keyed_array(array('auth' => $token,
+                $counts  = Catalog::get_server_counts($user_id);
+                $results = array(
+                    'auth' => $token,
                     'api' => Api3::$version,
                     'session_expire' => date("c", $now_time + AmpConfig::get('session_length') - 60),
                     'update' => date("c", $row['update']),
@@ -179,8 +178,9 @@ final class Handshake3Method
                     'artists' => $counts['artist'],
                     'playlists' => $counts['playlist'],
                     'videos' => $counts['video'],
-                    'catalogs' => $counts['catalog'])
+                    'catalogs' => $counts['catalog']
                 );
+                echo Xml3_Data::keyed_array($results);
 
                 return true;
             } // match

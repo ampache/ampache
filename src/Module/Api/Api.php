@@ -172,12 +172,12 @@ class Api
     /**
      * @var string $version
      */
-    public static $version = '6.0.1'; // AMPACHE_VERSION
+    public static $version = '6.0.3'; // AMPACHE_VERSION
 
     /**
      * @var string $version_numeric
      */
-    public static $version_numeric = '601000'; // AMPACHE_VERSION
+    public static $version_numeric = '603000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -380,32 +380,33 @@ class Api
         $client    = static::getUserRepository()->findByApiKey(trim($token));
         $counts    = Catalog::get_server_counts($client->id);
         $playlists = (AmpConfig::get('hide_search', false))
-            ? ((int)$counts['playlist'])
-            : ((int)$counts['playlist'] + (int)$counts['search']);
+            ? $counts['playlist']
+            : $counts['playlist'] + $counts['search'];
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('api' => self::$version,
+        $outarray = array(
+            'api' => self::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length', 3600) - 60),
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
-            'songs' => (int)$counts['song'],
-            'albums' => (int)$counts['album'],
-            'artists' => (int)$counts['artist'],
-            'genres' => (int)$counts['tag'],
-            'playlists' => (int)($counts['playlist'] ?? 0),
-            'searches' => (int)($counts['search'] ?? 0),
+            'songs' => $counts['song'],
+            'albums' => $counts['album'],
+            'artists' => $counts['artist'],
+            'genres' => $counts['tag'],
+            'playlists' => $counts['playlist'],
+            'searches' => $counts['search'],
             'playlists_searches' => $playlists,
-            'users' => (int)($counts['user'] ?? 0),
-            'catalogs' => (int)($counts['catalog'] ?? 0),
-            'videos' => (int)($counts['video'] ?? 0),
-            'podcasts' => (int)($counts['podcast'] ?? 0),
-            'podcast_episodes' => (int)($counts['podcast_episode'] ?? 0),
-            'shares' => (int)($counts['share'] ?? 0),
-            'licenses' => (int)($counts['license'] ?? 0),
-            'live_streams' => (int)($counts['live_stream'] ?? 0),
-            'labels' => (int)($counts['label'] ?? 0)
+            'users' => $counts['user'],
+            'catalogs' => $counts['catalog'],
+            'videos' => $counts['video'],
+            'podcasts' => $counts['podcast'],
+            'podcast_episodes' => $counts['podcast_episode'],
+            'shares' => $counts['share'],
+            'licenses' => $counts['license'],
+            'live_streams' => $counts['live_stream'],
+            'labels' => $counts['label']
         );
 
         return array_merge($autharray, $outarray);

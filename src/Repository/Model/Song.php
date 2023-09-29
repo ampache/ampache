@@ -23,6 +23,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -269,6 +271,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $disk;
     /**
+     * @var string $disksubtitle
+     */
+    public $disksubtitle;
+    /**
      * @var string $f_bitrate
      */
     public $f_bitrate;
@@ -444,6 +450,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
         $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $disksubtitle     = $results['disksubtitle'];
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'];
         $tags             = $results['genre']; // multiple genre support makes this an array
@@ -551,6 +558,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // create the album_disk
         $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
         Dba::write($sql, array($song_id, $disk, $catalog));
+
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
         if ((int)$artist_id > 0) {
@@ -565,8 +573,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $song_artist_id = Artist::check_mbid($songArtist_mbid);
             if ($song_artist_id > 0) {
                 $artists[] = $song_artist_id;
-                Artist::add_artist_map($song_artist_id, 'song', $song_id);
-                Album::add_album_map($album_id, 'song', $song_artist_id);
+                if ($song_artist_id != $artist_id) {
+                    Artist::add_artist_map($song_artist_id, 'song', $song_id);
+                    Album::add_album_map($album_id, 'song', $song_artist_id);
+                }
             }
         }
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
@@ -575,8 +585,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $song_artist_id = Artist::check($artist_name);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
-                    Artist::add_artist_map($song_artist_id, 'song', $song_id);
-                    Album::add_album_map($album_id, 'song', $song_artist_id);
+                    if ($song_artist_id != $artist_id) {
+                        Artist::add_artist_map($song_artist_id, 'song', $song_id);
+                        Album::add_album_map($album_id, 'song', $song_artist_id);
+                    }
                 }
             }
         }
@@ -584,8 +596,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $album_artist_id = Artist::check_mbid($albumArtist_mbid);
             if ($album_artist_id > 0) {
                 $artists[] = $album_artist_id;
-                Artist::add_artist_map($album_artist_id, 'album', $album_id);
-                Album::add_album_map($album_id, 'album', $album_artist_id);
+                if ($album_artist_id != $albumartist_id) {
+                    Artist::add_artist_map($album_artist_id, 'album', $album_id);
+                    Album::add_album_map($album_id, 'album', $album_artist_id);
+                }
             }
         }
         // update the all the counts for the album right away
@@ -616,8 +630,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
 
-        $sql = "INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
+        $sql = "INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, array($song_id, $disksubtitle, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
 
         return $song_id;
     }
@@ -1427,14 +1441,10 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $update_time = time();
 
         $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist,
-                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels,
-                                (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
-                                $update_time, $song_id));
+        Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels, (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id));
 
-        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
-        Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->comment, $new_song->replaygain_track_gain,
-            $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
+        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
+        Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
     } // update_song
 
     /**
@@ -2228,7 +2238,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsampling mojo and everything
+     * stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
      * @param string $additional_params
      * @param string $player
@@ -2249,8 +2259,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
+        $downsample_remote = false;
+        // enforce or disable transcoding depending on local network ACL
+        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
+            $downsample_remote = true;
+            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+        }
+
         // if you transcode the media mime will change
-        if (AmpConfig::get('transcode') != 'never' && (empty($additional_params) || !strpos($additional_params, 'action=download'))) {
+        if (AmpConfig::get('transcode') != 'never' && ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
@@ -2326,12 +2343,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if ($plugin->load(Core::get_global('user'))) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics) {
+                    // save the lyrics if not set before
+                    if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
+                        self::update_lyrics($lyrics['text'], $this->id);
+                    }
+
                     return $lyrics;
                 }
             }
         }
 
-        return null;
+        return array();
     }
 
     /**
@@ -2546,6 +2568,16 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(SongTagWriterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getNetworkChecker(): NetworkCheckerInterface
+    {
+        global $dic;
+
+        return $dic->get(NetworkCheckerInterface::class);
     }
 
     /**

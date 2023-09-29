@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -51,6 +52,7 @@ $title    = ($albumDisk->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $albumDisk->get_f_artist_link()
     : scrub_out($f_name);
 
+$current_user      = Core::get_global('user');
 $access50          = Access::check('interface', 50);
 $access25          = ($access50 || Access::check('interface', 25));
 $show_direct_play  = AmpConfig::get('directplay');
@@ -158,7 +160,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', Core::get_global('user')->id, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $albumDisk->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $albumDisk->id)); ?>
         </li>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || $access25) { ?>
@@ -180,7 +182,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (($owner_id > 0 && !empty(Core::get_global('user')) && $owner_id == (int) Core::get_global('user')->id) || $access50) {
+        <?php if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user->id) || $access50) {
             $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
@@ -200,7 +202,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php if ($isAlbumEditable) {
             $t_upload = T_('Upload');
-            if (AmpConfig::get('allow_upload') && $albumDisk->album_artist > 0) { ?>
+            if (Upload::can_upload($current_user) && $albumDisk->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>

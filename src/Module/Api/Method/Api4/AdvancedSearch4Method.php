@@ -63,7 +63,7 @@ final class AdvancedSearch4Method
      * rule_1_input    = (mixed) The string, date, integer you are searching for
      * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
      * offset          = (integer)
-     * limit           = (integer))
+     * limit           = (integer)
      */
     public static function advanced_search(array $input, User $user)
     {

@@ -37,6 +37,7 @@ final class PodcastEpisodeSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
+        $search_user_id     = $search->search_user->id ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -104,30 +105,30 @@ final class PodcastEpisodeSearch implements SearchInterface
                     if (!array_key_exists('last_play', $table)) {
                         $table['last_play'] = '';
                     }
-                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search->search_user->id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`last_play_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[] = "`last_play_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_skip':
                     $my_type = 'podcast_episode';
                     if (!array_key_exists('last_skip', $table)) {
                         $table['last_skip'] = '';
                     }
-                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search->search_user->id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type' "
+                    $table['last_skip'] .= (!strpos((string) $table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type' "
                         : "";
-                    $where[] = "`last_skip_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'podcast_episode';
                     if (!array_key_exists('last_play_or_skip', $table)) {
                         $table['last_play_or_skip'] = '';
                     }
-                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                    $table['last_play_or_skip'] .= (!strpos((string) $table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
-                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search->search_user->id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
+                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`date` $operator_sql (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = "(`podcast_episode`.`total_count` $operator_sql ?)";
@@ -152,8 +153,8 @@ final class PodcastEpisodeSearch implements SearchInterface
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
                     }
-                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search->search_user->id))
-                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search->search_user->id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search->search_user->id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_type` = '$my_type'"
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '$my_type'"
                         : "";
                     $where[] = "`myplayed_" . $my_type . "_" . $search->search_user->id . "`.`object_id` $operator_sql";
                     break;

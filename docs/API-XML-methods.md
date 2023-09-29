@@ -622,7 +622,7 @@ Return children of a parent object in a folder traversal/browse style. If you do
 ```XML
 <root>
     <total_count>
-    <list>
+    <browse>
 </root>
 ```
 

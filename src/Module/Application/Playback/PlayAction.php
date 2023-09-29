@@ -572,11 +572,12 @@ final class PlayAction implements ApplicationActionInterface
         $cache_target   = AmpConfig::get('cache_target', '');
         $cache_file     = false;
         $file_target    = false;
+        $mediaOwnerId   = ($media instanceof Song_Preview) ? null : $media->get_user_owner();
         $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
-            if (!Catalog::has_access($mediaCatalogId, $user->id)) {
+            if (!Catalog::has_access($mediaCatalogId, $user->id) && ($mediaOwnerId && (int)$mediaOwnerId !== $user->id)) {
                 $this->logger->warning(
                     "Error: You are not allowed to play $media->file",
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -714,17 +715,6 @@ final class PlayAction implements ApplicationActionInterface
             Core::get_global('user')->insert_ip_history();
         }
 
-        $force_downsample = false;
-        if (AmpConfig::get('downsample_remote')) {
-            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT)) {
-                $this->logger->debug(
-                    'Downsampling enabled for non-local address ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $force_downsample = true;
-            }
-        }
-
         $this->logger->debug(
             $action . ' file (' . $stream_file . '}...',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -744,6 +734,7 @@ final class PlayAction implements ApplicationActionInterface
         $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $media->type)
             ? null
             : $transcode_to;
+
         if ($transcode_to) {
             $this->logger->debug(
                 'Transcode to {' . (string) $transcode_to . '}',
@@ -768,12 +759,6 @@ final class PlayAction implements ApplicationActionInterface
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } elseif ($force_downsample) {
-                    $transcode = true;
-                    $this->logger->debug(
-                        'Transcoding due to downsample_remote',
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                 } else {

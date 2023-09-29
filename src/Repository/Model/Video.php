@@ -247,7 +247,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
         }
 
         $data              = pathinfo($this->file);
-        $this->type        = strtolower((string) $data['extension']);
+        $this->type        = strtolower((string)($data['extension'] ?? ''));
         $this->total_count = (int)$this->total_count;
 
         return true;
@@ -370,9 +370,11 @@ class Video extends database_object implements Media, library_item, GarbageColle
     public function get_keywords()
     {
         $keywords          = array();
-        $keywords['title'] = array('important' => true,
+        $keywords['title'] = array(
+            'important' => true,
             'label' => T_('Title'),
-            'value' => $this->get_fullname());
+            'value' => $this->get_fullname()
+        );
 
         return $keywords;
     }
