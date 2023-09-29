@@ -43,6 +43,7 @@ $app = new Ahc\Cli\Application(
     'Ampache CLI',
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
+$app->add($dic->get(Cli\AddCatalogCommand::class));
 $app->add($dic->get(Cli\BroadcastCommand::class));
 $app->add($dic->get(Cli\ComputeCacheCommand::class));
 $app->add($dic->get(Cli\CronProcessCommand::class));
@@ -60,6 +61,7 @@ $app->add($dic->get(Cli\RunWebsocketCommand::class));
 $app->add($dic->get(Cli\UpdateDbCommand::class));
 $app->add($dic->get(Cli\ConvertFileNamesCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogFolderCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));

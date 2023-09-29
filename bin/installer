@@ -23,6 +23,7 @@
 
 declare(strict_types=1);
 
+use Ampache\Module\Cli\HtaccessCommand;
 use Ampache\Module\Cli\InstallerCommand;
 use Psr\Container\ContainerInterface;
 
@@ -39,6 +40,7 @@ $app = new Ahc\Cli\Application(
     'install'
 );
 $app->add($dic->get(InstallerCommand::class));
+$app->add($dic->get(HtaccessCommand::class));
 
 $logo = <<<LOGO
     _                               _          
