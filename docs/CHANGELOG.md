@@ -5,6 +5,10 @@
 ### Added
 
 * Check for release branches before showing the Git hash
+* CLI
+  * New installer command `bin/installer htaccess` (recreate .htaccess files from .dist)
+  * New cli command `bin/cli run:updateCatalogFolder` (run catalog actions on a catalog subfolder)
+  * New cli command `bin/cli run:addCatalog` (Create a local catalog)
 * Database 560001
   * Update `access_list` in case you have a bad `user` column
 
