@@ -6,6 +6,8 @@
 
 * Translations 2023-09
 * Added refresh button on smartlists so you don't have to overwrite the rules each time
+* CLI
+  * New cli command `bin/cli run:addCatalog` (Create a local catalog)
 * Database 600040
   * Add `custom_timezone` as a user preference
   * Add `disksubtitle` to `song_data` and `album_disk` table
