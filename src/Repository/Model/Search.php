@@ -1319,9 +1319,9 @@ class Search extends playlist_object
         }
 
         //$sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by; // MYSQL would want file for order by
-        //if ($this->limit > 0) { // FIXME MYSQL 'This version of MariaDB doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery''
-        //    $sql .= " LIMIT " . (string)($this->limit);
-        //}
+        if ($this->limit > 0) {
+            $sql .= " LIMIT " . (string)($this->limit);
+        }
         //debug_event(self::class, 'SQL get_subsearch: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
 
         return array(

@@ -41,6 +41,7 @@ final class AlbumSearch implements SearchInterface
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
+        $subsearch_count    = 0;
 
         $where       = array();
         $table       = array();
@@ -299,7 +300,8 @@ final class AlbumSearch implements SearchInterface
                     $subsearch = new Search($input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
                     if (!empty($results)) {
-                        $where[]      = "`song`.`id` $operator_sql IN (" . $results['sql'] . ")";
+                        $subsearch_count++;
+                        $where[] = "`song`.`id` $operator_sql IN (SELECT * FROM (" . $results['sql'] . ") AS sp_" . $subsearch_count . ")";
                         foreach ($results['parameters'] as $parameter) {
                             $parameters[] = $parameter;
                         }
