@@ -123,8 +123,7 @@ class Browse extends Query
 
     /**
      * is_valid_type
-     * This sets the current browse object to a 'simple' browse method
-     * which means use the base query provided and expand from there
+     * Validate the browse is a type of object you can actually browse
      *
      * @param string $type
      * @return bool
@@ -177,7 +176,7 @@ class Browse extends Query
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
-                $start = $_SESSION[$name]['start'];
+                $start = (int)($_SESSION[$name]['start'] ?? 0);
                 if ($this->get_offset() > 0) {
                     $set_page = floor($start / $this->get_offset());
                     if ($this->get_total() > $this->get_offset()) {

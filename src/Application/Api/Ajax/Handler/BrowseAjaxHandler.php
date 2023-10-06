@@ -180,7 +180,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'page':
-                $browse->set_start((int)$_REQUEST['start']);
+                $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
                 $browse->show_objects(null, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
@@ -238,7 +238,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                             $pages = ceil($total / $limit);
 
                             if ($value <= $pages) {
-                                $offset = ($value - 1) * $limit;
+                                $offset = (int)(($value - 1) * $limit);
                                 $browse->set_start($offset);
                             }
                         }
