@@ -65,11 +65,11 @@ final class UploadAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $this->ui->showBoxTop(T_('Uploads'));
-
-        $browse = $this->modelFactory->createBrowse();
+        $user_id = Core::get_global('user')->id ?? 0;
+        $browse  = $this->modelFactory->createBrowse();
         $browse->set_type(
             'song',
-            Catalog::get_uploads_sql('song', (int) Core::get_global('user')->id)
+            Catalog::get_uploads_sql('song', (int)$user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -78,7 +78,7 @@ final class UploadAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(
             'album',
-            Catalog::get_uploads_sql('album', (int) Core::get_global('user')->id)
+            Catalog::get_uploads_sql('album', (int)$user_id)
         );
         $browse->set_simple_browse(true);
         $browse->show_objects();
@@ -88,7 +88,7 @@ final class UploadAction implements ApplicationActionInterface
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(
                 'artist',
-                Catalog::get_uploads_sql('artist', (int) Core::get_global('user')->id)
+                Catalog::get_uploads_sql('artist', (int)$user_id)
             );
             $browse->set_simple_browse(true);
             $browse->show_objects();

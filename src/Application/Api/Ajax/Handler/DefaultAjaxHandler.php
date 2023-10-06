@@ -62,9 +62,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
         $results      = array();
         $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
+        $action       = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'refresh_rightbar':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;

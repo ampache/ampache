@@ -508,8 +508,12 @@ class mpd
         }
 
         // Forcibly prevent out of range errors
-        $value = $value > 0 ? $value : 0;
-        $value = $value < 100 ? $value : 100;
+        $value = ($value > 0)
+            ? $value
+            : 0;
+        $value = ($value < 100)
+            ? $value
+            : 100;
 
         // If we're not compatible with SETVOL, we'll try adjusting
         // using VOLUME
