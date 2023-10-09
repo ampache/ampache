@@ -133,6 +133,10 @@ class AutoUpdate
      */
     protected static function lastcheck_expired()
     {
+        // if you're not auto updating the check should never expire
+        if (!AmpConfig::get('autoupdate', false)) {
+            return false;
+        }
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
             Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, 1);
@@ -151,7 +155,7 @@ class AutoUpdate
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
         // Forced or last check expired, check latest version from GitHub
-        if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
+        if ($force || self::lastcheck_expired()) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time       = time();
             $git_branch = self::is_force_git_branch();
@@ -256,7 +260,7 @@ class AutoUpdate
     public static function is_update_available($force = false)
     {
         $current = self::get_current_version();
-        if (!$force || (!(self::lastcheck_expired() && AmpConfig::get('autoupdate')))) {
+        if (!$force || (!self::lastcheck_expired())) {
             return AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
