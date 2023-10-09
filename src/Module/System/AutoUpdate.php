@@ -255,8 +255,10 @@ class AutoUpdate
      */
     public static function is_update_available($force = false)
     {
+        $current = self::get_current_version();
         if (!$force || (!(self::lastcheck_expired() && AmpConfig::get('autoupdate')))) {
-            return AmpConfig::get('autoupdate_lastversion_new');
+            $latest = AmpConfig::get('autoupdate_lastversion_new');
+            return (!empty($latest) && $current !== $latest);
         }
         $time = time();
         Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
@@ -264,7 +266,6 @@ class AutoUpdate
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
-        $current    = self::get_current_version();
         $latest     = self::get_latest_version($force);
 
         debug_event(self::class, 'Checking latest version online...', 5);
