@@ -28,21 +28,27 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
+use Psr\Log\LoggerInterface;
 
 final class SubsonicApiApplication implements ApiApplicationInterface
 {
     private AuthenticationManagerInterface $authenticationManager;
 
+    private LoggerInterface $logger;
+
     private NetworkCheckerInterface $networkChecker;
 
     public function __construct(
         AuthenticationManagerInterface $authenticationManager,
+        LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker
     ) {
         $this->authenticationManager = $authenticationManager;
+        $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
     }
 
@@ -68,7 +74,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
-            debug_event('rest/index', 'Error Attempted to use Subsonic API with Access Control turned off', 3);
+            $this->logger->warning(
+                'Error Attempted to use Subsonic API with Access Control turned off',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action));
 
@@ -96,7 +105,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         if (empty($userName) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
             ob_end_clean();
-            debug_event('rest/index', 'Missing Subsonic base parameters', 3);
+            $this->logger->warning(
+                'Missing Subsonic base parameters',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, $action), $callback);
 
             return;
@@ -110,7 +122,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $auth = $this->authenticationManager->login($userName, $password, true);
         }
         if (!$auth['success']) {
-            debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', 3);
+            $this->logger->warning(
+                'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
 
@@ -121,7 +136,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         Session::createGlobalUser($user);
 
         if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
-            debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ']', 3);
+            $this->logger->warning(
+                'Unauthorized access attempt to Subsonic API [' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ']',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action), $callback);
 
@@ -134,7 +152,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             !($clientapp == 'Sublime Music' && $version == '1.15.0')
         ) {
             ob_end_clean();
-            debug_event('rest/index', 'Requested client version is not supported', 3);
+            $this->logger->warning(
+                'Requested client version is not supported',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_CLIENT, $action), $callback);
 
             return;
@@ -188,10 +209,16 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
                 $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
                 if ($calc) {
-                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc", 4);
+                    $this->logger->notice(
+                "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
                     $decvalue = $calc;
                 } else {
-                    debug_event('rest/index', "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though", 3);
+                    $this->logger->warning(
+                "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
                 }
             }
 
@@ -206,8 +233,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $input[$decname] = $decvalue;
             }
         }
-        //debug_event('rest/index', print_r($input, true), 5);
-        //debug_event('rest/index', print_r(apache_request_headers(), true), 5);
+        //$this->logger->debug(print_r($input, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
 
         // Call your function if it's valid
         if (in_array($action, $methods)) {
