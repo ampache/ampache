@@ -107,7 +107,7 @@ final class CatalogFolderMethod
         switch ($catalog->gather_types) {
             case 'podcast':
                 $type      = 'podcast_episode';
-                $file_ids  = new Podcast_Episode(Catalog::get_ids_from_folder($folder, $type));
+                $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Podcast_Episode::class;
                 break;
             case 'clip':
@@ -115,13 +115,13 @@ final class CatalogFolderMethod
             case 'movie':
             case 'personal_video':
                 $type      = 'video';
-                $file_ids  = new Video(Catalog::get_ids_from_folder($folder, $type));
+                $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Video::class;
                 break;
             case 'music':
             default:
                 $type      = 'song';
-                $file_ids  = new Song(Catalog::get_ids_from_folder($folder, $type));
+                $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Song::class;
                 break;
         }
