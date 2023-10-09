@@ -342,7 +342,7 @@ final class PlayAction implements ApplicationActionInterface
             // If require_session is set then we need to make sure we're legit
             if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
                 if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)) {
-                    $this->logger->info(
+                    $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
@@ -657,7 +657,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // If they are just trying to download make sure they have rights and then present them with the download file
         if ($is_download && !$transcode_to) {
-            $this->logger->info(
+            $this->logger->notice(
                 'Downloading raw file...',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
@@ -784,7 +784,7 @@ final class PlayAction implements ApplicationActionInterface
                 }
             } else {
                 if ($transcode_cfg != 'never') {
-                    $this->logger->info(
+                    $this->logger->notice(
                         'Transcoding is not enforced for ' . $media->type,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
@@ -955,7 +955,7 @@ final class PlayAction implements ApplicationActionInterface
                             Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
                         }
                     } elseif (!$share_id && $record_stats) {
-                        $this->logger->info(
+                        $this->logger->notice(
                             'Registering stream @' . $time . ' for ' . $user_id . ': ' . $media->get_stream_name() . ' {' . $media->id . '}',
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                         );

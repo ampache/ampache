@@ -395,7 +395,7 @@ final class ApiHandler implements ApiHandlerInterface
              *
              * @todo cleanup
              */
-            $this->logger->info(
+            $this->logger->notice(
                 sprintf('API function [%s]', $handlerClassName),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
