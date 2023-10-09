@@ -257,8 +257,7 @@ class AutoUpdate
     {
         $current = self::get_current_version();
         if (!$force || (!(self::lastcheck_expired() && AmpConfig::get('autoupdate')))) {
-            $latest = AmpConfig::get('autoupdate_lastversion_new');
-            return (!empty($latest) && $current !== $latest);
+            return AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
         Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
