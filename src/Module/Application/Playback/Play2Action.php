@@ -410,7 +410,7 @@ final class Play2Action implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if (!$user->id && (!$share_id && !$secret)) {
+        if (!$user && (!$share_id && !$secret)) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
