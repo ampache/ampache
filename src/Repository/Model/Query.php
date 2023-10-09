@@ -33,10 +33,9 @@ use Ampache\Module\System\Dba;
 /**
  * Query Class
  *
- * This handles all of the sql/filtering for the ampache database
- * FIXME: flowerysong didn't know about this when he wrote all the fancy stuff
- * for newsearch, and they should be merged if possible.
- *
+ * This handles all of the sql/filtering for the Ampache database
+ * The Search and Query classes do the same thing different ways.
+ * It would be good to merge the classes (may not be possible now)
  */
 class Query
 {
@@ -60,7 +59,7 @@ class Query
         'extended_key_name' => null,
         'filter' => array(),
         'grid_view' => true,
-        'having' => '', // HAVING is not currently use in Query SQL
+        'having' => '', // HAVING is not currently use in Query class SQL
         'join' => null,
         'mashup' => null,
         'offset' => 0,
@@ -1440,7 +1439,7 @@ class Query
     /**
      * post_process
      * This does some additional work on the results that we've received
-     * before returning them.
+     * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
      * @param array $data
      * @return array
      */

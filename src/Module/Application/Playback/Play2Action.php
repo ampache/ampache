@@ -375,7 +375,7 @@ final class Play2Action implements ApplicationActionInterface
                 } elseif (!Session::exists('stream', $session_id)) {
                     // No valid session id given, try with cookie session from web interface
                     $session_id = $_COOKIE[$session_name] ?? false;
-                    if (!Session::exists('interface', $session_id)) {
+                    if ($session_id === false || !Session::exists('interface', $session_id)) {
                         $this->logger->warning(
                             "Streaming access denied: Session $session_id has expired",
                             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -410,7 +410,7 @@ final class Play2Action implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if (!($user instanceof User) && (!$share_id && !$secret)) {
+        if (!$user->id && (!$share_id && !$secret)) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -777,9 +777,6 @@ final class Play2Action implements ApplicationActionInterface
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
             $valid_types = $media->get_stream_types($player);
-            if (!is_array($valid_types)) {
-                $valid_types = array($valid_types);
-            }
             if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
                 if ($transcode_to) {
                     $transcode = true;
