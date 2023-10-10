@@ -50,7 +50,7 @@ final class BookmarkDeleteMethod
      * @param User $user
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('song', 'video', 'podcast_episode')
-     * client = (string) Agent string Default: 'AmpacheAPI' //optional
+     * client = (string) Agent string //optional
      * @return boolean
      */
     public static function bookmark_delete(array $input, User $user): bool
@@ -60,7 +60,7 @@ final class BookmarkDeleteMethod
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
