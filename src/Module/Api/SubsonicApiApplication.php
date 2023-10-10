@@ -210,15 +210,15 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $calc = (($matches[1] << 24) + ($matches[2] << 16) + ($matches[3] << 8) + $matches[4]);
                 if ($calc) {
                     $this->logger->notice(
-                "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
+                        "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                     $decvalue = $calc;
                 } else {
                     $this->logger->warning(
-                "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
+                        "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
+                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    );
                 }
             }
 

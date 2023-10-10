@@ -59,7 +59,7 @@ class Query
         'extended_key_name' => null,
         'filter' => array(),
         'grid_view' => true,
-        'having' => '', // HAVING is not currently use in Query class SQL
+        'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'mashup' => null,
         'offset' => 0,
