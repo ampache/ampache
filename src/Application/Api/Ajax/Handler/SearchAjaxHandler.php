@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\AlbumDisk;
@@ -43,14 +44,18 @@ use Ampache\Module\Wanted\MissingArtistFinderInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private ConfigContainerInterface $configContainer;
 
     private MissingArtistFinderInterface $missingArtistFinder;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ConfigContainerInterface $configContainer,
         MissingArtistFinderInterface $missingArtistFinder
     ) {
+        $this->requestParser       = $requestParser;
         $this->configContainer     = $configContainer;
         $this->missingArtistFinder = $missingArtistFinder;
     }
@@ -58,9 +63,10 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
     public function handle(): void
     {
         $results = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'search':
                 $web_path    = AmpConfig::get('web_path');
                 $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);

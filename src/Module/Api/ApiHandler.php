@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
@@ -49,6 +50,8 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private StreamFactoryInterface $streamFactory;
 
     private LoggerInterface $logger;
@@ -60,12 +63,14 @@ final class ApiHandler implements ApiHandlerInterface
     private ContainerInterface $dic;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic
     ) {
+        $this->requestParser   = $requestParser;
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
@@ -85,7 +90,7 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $action        = (string)Core::get_request('action');
+        $action        = $this->requestParser->getFromRequest('action');
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
         $is_register   = $action == RegisterMethod::ACTION;

@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
@@ -38,20 +38,18 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
     private ModelFactoryInterface $modelFactory;
 
-    private FunctionCheckerInterface $functionChecker;
-
     private LiveStreamRepositoryInterface $liveStreamRepository;
 
     private ShareUiLinkRendererInterface $shareUiLinkRenderer;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
-        FunctionCheckerInterface $functionChecker,
         LiveStreamRepositoryInterface $liveStreamRepository,
         ShareUiLinkRendererInterface $shareUiLinkRenderer
     ) {
+        $this->requestParser        = $requestParser;
         $this->modelFactory         = $modelFactory;
-        $this->functionChecker      = $functionChecker;
         $this->liveStreamRepository = $liveStreamRepository;
         $this->shareUiLinkRenderer  = $shareUiLinkRenderer;
     }
@@ -84,9 +82,10 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         }
 
         $results = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'browse':
                 // data set by the fileter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {

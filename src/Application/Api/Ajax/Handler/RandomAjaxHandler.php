@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\AlbumDisk;
@@ -38,14 +39,18 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private AlbumRepositoryInterface $albumRepository;
 
     private SongRepositoryInterface $songRepository;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         AlbumRepositoryInterface $albumRepository,
         SongRepositoryInterface $songRepository
     ) {
+        $this->requestParser   = $requestParser;
         $this->albumRepository = $albumRepository;
         $this->songRepository  = $songRepository;
     }
@@ -54,9 +59,10 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
     {
         $results = array();
         $songs   = array();
+        $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
+        switch ($action) {
             case 'song':
                 $songs = Random::get_default(null, Core::get_global('user'));
 
