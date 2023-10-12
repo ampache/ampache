@@ -325,14 +325,14 @@ class AutoUpdate
         if ($current === $latest) {
             return;
         }
-        echo '<div id="autoupdate">';
-        echo '<span>' . T_('Update available') . '</span>';
-        echo ' (' . self::get_latest_version() . ').<br />';
         $git_branch    = self::is_force_git_branch();
         $develop_check = self::is_develop() || $git_branch != '';
         $changelog     = ($git_branch == '') ? 'master' : $git_branch;
         $zip_name      = ($git_branch == '') ? 'develop' : $git_branch;
 
+        echo '<div id="autoupdate">';
+        echo '<span>' . T_('Update available') . '</span>';
+        echo ' (' . $latest . ').<br />';
         echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . $current . '...' . $latest : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
