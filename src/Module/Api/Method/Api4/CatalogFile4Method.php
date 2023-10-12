@@ -60,16 +60,16 @@ final class CatalogFile4Method
      */
     public static function catalog_file(array $input, User $user): bool
     {
-        $task = (string) $input['task'];
-        if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            Api4::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['api_format']);
-
+        if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
         if (!Api4::check_access('interface', 50, $user->id, 'catalog_file', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
+        $task = (string) $input['task'];
+        if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
+            Api4::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['api_format']);
+
             return false;
         }
         $file = html_entity_decode($input['file']);
