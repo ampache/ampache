@@ -66,7 +66,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $msgId = (int) $request->getQueryParams()['pvmsg_id'] ?? 0;
+        $msgId = (int)($request->getQueryParams()['pvmsg_id'] ?? 0);
 
         try {
             $pvmsg = $this->privateMessageRepository->getById($msgId);

@@ -65,9 +65,7 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $shout = $this->modelFactory->createShoutbox(
-            (int) $request->getQueryParams()['shout_id'] ?? 0
-        );
+        $shout = $this->modelFactory->createShoutbox((int)($request->getQueryParams()['shout_id'] ?? 0));
 
         $this->shoutRepository->delete(
             $shout->getId()

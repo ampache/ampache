@@ -56,7 +56,7 @@ final class RandomAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
-        $randomId   = (int) $request->getQueryParams()['random_id'];
+        $randomId   = (int)($request->getQueryParams()['random_id'] ?? 0);
         $randomType = $request->getQueryParams()['random_type'];
         $urls       = [Random::get_play_url($randomType, $randomId)];
 

@@ -2149,8 +2149,9 @@ class Subsonic_Api
         }
 
         debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
-        $ret = false;
-        switch ($_REQUEST['action']) {
+        $ret    = false;
+        $action = $input['id'] ?? '';
+        switch ($action) {
             case 'get':
             case 'status':
                 $ret = true;

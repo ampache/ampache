@@ -1833,7 +1833,9 @@ class Query
                         $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id    = ((int) Core::get_global('user')->id > 0) ? Core::get_global('user')->id : $value;
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
                         break;
                 } // end filter
@@ -1860,7 +1862,9 @@ class Query
                         $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id    = ((int) Core::get_global('user')->id > 0) ? Core::get_global('user')->id : $value;
+                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                            ? Core::get_global('user')->id
+                            : $value;
                         $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
                         break;
                 } // end switch on $filter

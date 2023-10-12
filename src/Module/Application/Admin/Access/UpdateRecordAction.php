@@ -76,15 +76,15 @@ final class UpdateRecordAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $data     = $request->getParsedBody();
-        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
+        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
         try {
             $this->accessListManager->update(
                 $accessId,
                 $data['start'] ?? '',
                 $data['end'] ?? '',
                 $data['name'] ?? '',
-                (int) ($data['user'] ?? -1),
-                (int) $data['level'] ?? 0,
+                (int)($data['user'] ?? -1),
+                (int)($data['level'] ?? 0),
                 $data['type'] ?? ''
             );
         } catch (InvalidIpRangeException $e) {
