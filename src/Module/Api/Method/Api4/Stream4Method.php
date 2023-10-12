@@ -63,10 +63,10 @@ final class Stream4Method
         $user    = User::get_from_username(Session::username($input['auth']));
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
-        $format        = $input['format']; // mp3, flv or raw
+        $format        = $input['format'] ?? null; // mp3, flv or raw
         $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {

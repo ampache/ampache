@@ -58,7 +58,7 @@ final class BookmarkEditMethod
      */
     public static function bookmark_edit(array $input): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));

@@ -88,8 +88,8 @@ final class PreferenceCreateMethod
         }
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $description = (string) $input['description'];
-        $subcategory = (string) $input['subcategory'];
+        $description = (string)($input['description'] ?? '');
+        $subcategory = (string)($input['subcategory'] ?? '');
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
