@@ -36,6 +36,8 @@ use Ampache\Repository\LiveStreamRepositoryInterface;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
+    private RequestParserInterface $requestParser;
+
     private ModelFactoryInterface $modelFactory;
 
     private LiveStreamRepositoryInterface $liveStreamRepository;
