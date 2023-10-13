@@ -2472,6 +2472,8 @@ class Query
         if (array_key_exists('ak', $this->_state)) {
             $key .= '_' . $this->_state['ak'];
         }
+        $key .= '_' . $this->id;
+
 
         return $key;
     }
