@@ -2484,6 +2484,6 @@ class Query
      */
     public function set_content_div_ak($key)
     {
-        $this->_state['ak'] = $key;
+        $this->_state['ak'] = str_replace(", ", "_", $key);
     }
 }
