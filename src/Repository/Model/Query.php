@@ -2605,7 +2605,7 @@ class Query
             foreach ($this->_state['sort'] as $key => $value) {
                 $sql_sort = $this->sql_sort($key, $value);
                 $order_sql .= $sql_sort;
-                $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
+                $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
             }
             // Clean her up
             $order_sql = rtrim((string)$order_sql, "ORDER BY ");
