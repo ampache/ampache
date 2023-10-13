@@ -247,8 +247,8 @@ class Browse extends Query
         }
 
         // Set the correct classes based on type
-        $class = "box browse_" . $type;
-        debug_event(self::class, 'Show objects called for type {' . $type . '}', 5);
+        $class = "box browse_" . $type . '_' . $this->id;
+        debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
         $hide_columns   = array();

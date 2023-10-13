@@ -2602,6 +2602,7 @@ class Query
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
+            // There should only be one of these in a browse
             foreach ($this->_state['sort'] as $key => $value) {
                 $sql_sort = $this->sql_sort($key, $value);
                 $order_sql .= $sql_sort;
@@ -2691,6 +2692,7 @@ class Query
         if (!empty($this->_state['extended_key_name'])) {
             $key .= '_' . $this->_state['extended_key_name'];
         }
+        $key .= '_' . $this->id;
 
         return $key;
     }
