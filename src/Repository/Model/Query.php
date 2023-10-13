@@ -70,6 +70,7 @@ class Query
         'start' => 0,
         'static' => false,
         'threshold' => '',
+        'title' => null,
         'total' => null,
         'type' => '',
         'update_session' => false,
