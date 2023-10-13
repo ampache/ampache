@@ -2704,6 +2704,6 @@ class Query
      */
     public function set_content_div_ak($key)
     {
-        $this->_state['extended_key_name'] = $key;
+        $this->_state['extended_key_name'] = str_replace(", ", "_", $key);
     }
 }
