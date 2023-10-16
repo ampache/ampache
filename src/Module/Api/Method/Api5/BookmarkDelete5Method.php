@@ -59,7 +59,7 @@ final class BookmarkDelete5Method
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : 'AmpacheAPI';
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : 'AmpacheAPI';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api5::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
@@ -98,7 +98,8 @@ final class BookmarkDelete5Method
 
         $find = Bookmark::get_bookmark($object);
         if (empty($find)) {
-            Api5::empty('bookmark', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

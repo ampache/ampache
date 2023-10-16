@@ -13,6 +13,7 @@
 
 ### Fixed
 
+* SQL generation for browse sorting with comma and space in the text
 * Don't overwrite a browse box title if set
 * Genre browse page HTML div name using bad names
 * Autoupdate notifications
@@ -26,8 +27,11 @@
 
 ### Changed
 
+* API5
+  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
 * API6
-  * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value (Default: 'AmpacheAPI')
+  * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value ('AmpacheAPI')
+  * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
 
 ### Fixed
 

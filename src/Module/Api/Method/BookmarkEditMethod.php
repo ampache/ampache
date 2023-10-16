@@ -64,7 +64,7 @@ final class BookmarkEditMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT) ?? 0;
-        $comment   = (isset($input['client'])) ? filter_var($input['client'], FILTER_SANITIZE_STRING) : null;
+        $comment   = (isset($input['client'])) ? scrub_in($input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
@@ -104,7 +104,8 @@ final class BookmarkEditMethod
         // check for the bookmark first
         $results = Bookmark::get_bookmark($object);
         if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }
