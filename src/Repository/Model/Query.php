@@ -2382,10 +2382,11 @@ class Query
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
+            // There should only be one of these in a browse
             foreach ($this->_state['sort'] as $key => $value) {
                 $sql_sort = $this->sql_sort($key, $value);
                 $order_sql .= $sql_sort;
-                $group_sql .= ", " . substr($sql_sort, 0, strpos($sql_sort, " "));
+                $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
             }
             // Clean her up
             $order_sql = rtrim((string)$order_sql, "ORDER BY ");
@@ -2471,6 +2472,8 @@ class Query
         if (array_key_exists('ak', $this->_state)) {
             $key .= '_' . $this->_state['ak'];
         }
+        $key .= '_' . $this->id;
+
 
         return $key;
     }
@@ -2481,6 +2484,6 @@ class Query
      */
     public function set_content_div_ak($key)
     {
-        $this->_state['ak'] = $key;
+        $this->_state['ak'] = str_replace(", ", "_", $key);
     }
 }

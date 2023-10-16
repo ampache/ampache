@@ -79,14 +79,14 @@ final class LocalplayMethod
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int) $input['oid'];
+                $object_id = (int)($input['oid'] ?? 0);
                 $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
                     Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
-                $clear       = (int) $input['clear'];
+                $clear       = (int)($input['clear'] ?? 0);
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();

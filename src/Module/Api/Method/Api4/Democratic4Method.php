@@ -63,7 +63,7 @@ final class Democratic4Method
         switch ($input['method']) {
             case 'vote':
                 $type      = 'song';
-                $object_id = (int) $input['oid'];
+                $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
@@ -88,7 +88,7 @@ final class Democratic4Method
                 break;
             case 'devote':
                 $type      = 'song';
-                $object_id = (int) $input['oid'];
+                $object_id = (int)($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if (!$media->id) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);

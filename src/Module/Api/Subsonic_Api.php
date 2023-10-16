@@ -1305,7 +1305,7 @@ class Subsonic_Api
         $fileid = self::_check_parameter($input, 'id', true);
 
         $maxBitRate    = (int)($input['maxBitRate'] ?? 0);
-        $format        = $input['format'] ?? ''; // mp3, flv or raw
+        $format        = $input['format'] ?? null; // mp3, flv or raw
         $timeOffset    = $input['timeOffset'] ?? false;
         $contentLength = $input['estimateContentLength'] ?? false; // Force content-length guessing if transcode
         $username      = $input['u'];

@@ -81,8 +81,8 @@ final class Stats4Method
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
-        $offset = (int) $input['offset'];
-        $limit  = (int) $input['limit'];
+        $offset = (int) ($input['offset'] ?? 0);
+        $limit  = (int) ($input['limit'] ?? 0);
         // original method only searched albums and had poor method inputs
         if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
             $type            = 'album';
