@@ -87,6 +87,23 @@ final class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
+     */
+    public function idByResetToken(string $token): int
+    {
+        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $email_hash = hash('sha256', $row['email']);
+            $user_token = hash('sha256', $row['username'] . $email_hash);
+            if ($token === $user_token) {
+                return (int)$row['id'];
+            }
+        }
+
+        return 0;
+    }
+    /**
      * This returns all valid users in database.
      *
      * @return int[]

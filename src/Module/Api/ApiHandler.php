@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\RequestParserInterface;
@@ -94,7 +95,8 @@ final class ApiHandler implements ApiHandlerInterface
         $is_handshake  = $action == HandshakeMethod::ACTION;
         $is_ping       = $action == PingMethod::ACTION;
         $is_register   = $action == RegisterMethod::ACTION;
-        $is_public     = ($is_handshake || $is_ping || $is_register);
+        $is_forgotten  = $action == LostPasswordMethod::ACTION;
+        $is_public     = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $input         = $request->getQueryParams();
         $input['auth'] = $gatekeeper->getAuth();
         $api_format    = $input['api_format'];

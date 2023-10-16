@@ -358,6 +358,17 @@ class User extends database_object
     } // id_from_email
 
     /**
+     * id_from_token
+     * This returns a built user from a reset token.
+     * @param string $token
+     * @return int
+     */
+    public static function id_from_token($token)
+    {
+        return static::getUserRepository()->idByResetToken($token);
+    } // id_from_username
+
+    /**
      * get_user_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @param int $user_id

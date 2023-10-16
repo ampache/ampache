@@ -41,6 +41,11 @@ interface UserRepositoryInterface
     public function idByEmail(string $email): int;
 
     /**
+     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
+     */
+    public function idByResetToken(string $token): int;
+
+    /**
      * This returns all valid users in database.
      *
      * @return int[]

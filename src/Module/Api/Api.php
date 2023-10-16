@@ -72,6 +72,7 @@ class Api
         Method\FlagMethod::ACTION => Method\FlagMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         Method\FollowingMethod::ACTION => Method\FollowingMethod::class,
+        Method\LostPasswordMethod::ACTION => Method\LostPasswordMethod::class,
         Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
         Method\GenreAlbumsMethod::ACTION => Method\GenreAlbumsMethod::class,
         Method\GenreArtistsMethod::ACTION => Method\GenreArtistsMethod::class,
@@ -339,7 +340,7 @@ class Api
      * check_access
      *
      * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id)
+     * 'interface', 100, $user->id
      *
      * @param string $type
      * @param integer $level
