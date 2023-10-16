@@ -762,8 +762,8 @@ function return_referer()
 
 /**
  * show_album_select
- * This displays a select of every album that we've got in Ampache (which can be
- * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * This displays a select of every album that we've got in Ampache (which can be hella long).
+ * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
  * @param integer $album_id
  * @param boolean $allow_add
@@ -1024,8 +1024,8 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
 
 /**
  * show_album_select
- * This displays a select of every album that we've got in Ampache (which can be
- * hella long). It's used by the Edit page and takes a $name and a $album_id
+ * This displays a select of every album that we've got in Ampache (which can be hella long).
+ * It's used by the Edit page and takes a $name and an $album_id
  * @param string $name
  * @param integer $license_id
  * @param integer $song_id

@@ -1306,9 +1306,8 @@ class Catalog_local extends Catalog
             return false;
         }
         $sql .= ');';
-        $results    = array();
         $db_results = Dba::read($sql, $params);
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }

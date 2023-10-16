@@ -929,8 +929,8 @@ final class VaInfo implements VaInfoInterface
     /**
      * _parse_general
      *
-     * Gather and return the general information about a file (vbr/cbr,
-     * sample rate, channels, etc.)
+     * Gather and return the general information about a file
+     * (vbr/cbr, sample rate, channels, etc.)
      * @param $tags
      * @return array
      */

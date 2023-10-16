@@ -1227,8 +1227,8 @@ class Update
     /**
      * _update_360010
      *
-     * MBz NGS means collaborations have more than one MBID (the ones
-     * belonging to the underlying artists).  We need a bigger column.
+     * MBz NGS means collaborations have more than one MBID
+     * (the ones belonging to the underlying artists).  We need a bigger column.
      */
     private static function _update_360010(Interactor $interactor = null): bool
     {

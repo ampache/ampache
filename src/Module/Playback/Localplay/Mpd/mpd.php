@@ -307,8 +307,7 @@ class mpd
      * SendCommand
      *
      * Sends a generic command to the MPD server. Several command constants
-     * are pre-defined for use (see self::COMMAND_* constant definitions
-     * above).
+     * are pre-defined for use (see self::COMMAND_* constant definitions above).
      * @param $command
      * @param $arguments
      * @param boolean $refresh_info

@@ -1253,8 +1253,8 @@ class Search extends playlist_object
     /**
      * get_items
      *
-     * Return an array of the items output by our search (part of the
-     * playlist interface).
+     * Return an array of the items output by our search
+     * (part of the playlist interface).
      * @return array
      */
     public function get_items()
