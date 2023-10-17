@@ -557,7 +557,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // create the album_disk
         $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
-        Dba::write($sql, array($song_id, $disk, $catalog));
+        Dba::write($sql, array($album_id, $disk, $catalog));
 
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
