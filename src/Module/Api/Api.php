@@ -55,6 +55,7 @@ class Api
         Method\BookmarkCreateMethod::ACTION => Method\BookmarkCreateMethod::class,
         Method\BookmarkDeleteMethod::ACTION => Method\BookmarkDeleteMethod::class,
         Method\BookmarkEditMethod::ACTION => Method\BookmarkEditMethod::class,
+        Method\BookmarkMethod::ACTION => Method\BookmarkMethod::class,
         Method\BookmarksMethod::ACTION => Method\BookmarksMethod::class,
         Method\BrowseMethod::ACTION => Method\BrowseMethod::class,
         Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
