@@ -30,7 +30,6 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Core;
-use Ampache\Repository\UserRepositoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -95,15 +94,5 @@ final class LostPasswordMethod
         Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
         return false;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }
