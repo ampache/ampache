@@ -99,9 +99,15 @@ class Bookmark extends database_object
     public static function get_bookmark($data)
     {
         $bookmarks   = array();
-        $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
-        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
-        $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        if ($data['object_type'] !== 'bookmark') {
+            $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
+            $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
+            $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        } else {
+            // bookmarks are per user
+            $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
+            $db_results = Dba::read($sql, array($data['user'], $data['object_id']));
+        }
         while ($results = Dba::fetch_assoc($db_results)) {
             $bookmarks[] = (int) $results['id'];
         }
