@@ -97,7 +97,7 @@ if ($browse->is_show_header()) {
             }
 if ($show_ratings) {
     ++$thcount; ?>
-            <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+            <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
 <?php
 } ?>
             <th class="cel_action essential"><?php echo $action_text; ?></th>
