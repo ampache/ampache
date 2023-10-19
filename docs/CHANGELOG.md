@@ -4,6 +4,7 @@
 
 ### Added
 
+* Read more tag frames for `disksubtitle`
 * Database 600041
   * Index `label` column on the `label_asso` table
 
@@ -13,6 +14,10 @@
 
 ### Fixed
 
+* Rating album_disk objects would not refresh the value
+* Multiple code quality updates to the browse/query class
+* Sorting and filtering on browses works correctly
+* album_disk was inserting the song id instead of the album id
 * SQL generation for browse sorting with comma and space in the text
 * Don't overwrite a browse box title if set
 * Genre browse page HTML div name using bad names
@@ -25,6 +30,12 @@
 
 ## API develop
 
+### Added
+
+* API6
+  * bookmark: Get single bookmark by bookmark_id
+  * lost_password: Allows a non-admin user to reset their password
+
 ### Changed
 
 * API5
@@ -32,6 +43,7 @@
 * API6
   * bookmark_create, bookmark_edit, bookmark_delete: Remove `client` parameter default value ('AmpacheAPI')
   * bookmark_edit, bookmark_delete: show error on missing bookmark instead of empty object
+  * bookmark_delete, bookmark_delete: add bookmark as a valid `object_type`
 
 ### Fixed
 
